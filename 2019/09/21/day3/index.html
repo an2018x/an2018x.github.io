@@ -90,7 +90,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="day3P1031 均分纸牌 （模拟、贪心、概率论、统计）题目： 有N堆纸牌，编号分别为1，2，…，N。每堆上有若干张，但纸牌总数必为N的倍数。可以在任一堆上取若干张纸牌，然后移动。 移牌规则为：在编号为1堆上取的纸牌，只能移到编号为2的堆上；在编号为N的堆上取的纸牌，只能一到编号为N-1的堆上；其他堆上取的纸牌，可以移到相邻左边或者右边的堆上。 现在要求找出一种移动方法，用最少的移动次数使每堆上">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-21T05:07:36.904Z">
+<meta property="og:updated_time" content="2019-09-21T08:03:58.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="day3">
 <meta name="twitter:description" content="day3P1031 均分纸牌 （模拟、贪心、概率论、统计）题目： 有N堆纸牌，编号分别为1，2，…，N。每堆上有若干张，但纸牌总数必为N的倍数。可以在任一堆上取若干张纸牌，然后移动。 移牌规则为：在编号为1堆上取的纸牌，只能移到编号为2的堆上；在编号为N的堆上取的纸牌，只能一到编号为N-1的堆上；其他堆上取的纸牌，可以移到相邻左边或者右边的堆上。 现在要求找出一种移动方法，用最少的移动次数使每堆上">
@@ -342,15 +342,14 @@
 <p>A  (3) 4-&gt;(4)   B (3) 3-&gt;(2)    C    (2) 1-&gt;(1)</p>
 <p>输入格式：</p>
 <p>第一行：N(N堆纸牌，1&lt;=N&lt;=100)</p>
-<p>第二行：$A_1,A_2,…,A_n$(N堆纸牌，每堆纸牌初始数，$1\leq A_i \leq 10000$)</p>
+<p>第二行：$A_1,A_2,…,A_n$(N堆纸牌，每堆纸牌初始数，($1\leq A_i \leq 10000$)</p>
 <p>输出格式：</p>
 <p>一行：最少移动次数。</p>
 <hr>
 <p>解 1：1、算平均数</p>
 <p>2、求每堆纸牌与平均数的关系（多记为正，少记为负）</p>
-<p>3、当$q[y]$（第y堆纸牌与平均数的关系）不等于0时，$’q[y+1]=q[y+1]+q[y]’$，移动次数加1</p>
+<p>3、当$q[y]$（第y堆纸牌与平均数的关系）不等于0时，$q[y+1]=q[y+1]+q[y]$，移动次数加1</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> q[<span class="number">10010</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> N,cnt=<span class="number">0</span>,ave=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;N;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;q[i];</span><br><span class="line">        ave+=q[i];</span><br><span class="line">    &#125;</span><br><span class="line">    ave/=N;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">        q[i]-=ave;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(q[i]!=<span class="number">0</span>)&#123;</span><br><span class="line">            q[i+<span class="number">1</span>]+=q[i];</span><br><span class="line">            cnt++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;cnt;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h4 id="P1042-乒乓球（模拟，字符串）"><a href="#P1042-乒乓球（模拟，字符串）" class="headerlink" title="P1042 乒乓球（模拟，字符串）"></a>P1042 乒乓球（模拟，字符串）</h4><p>题目：</p>
 <p>小明想要弄明白乒乓球11分制和21分制对选手的影响，对多年比赛的统计数据进行分析。首先他将比赛每个球的胜负列成一张表，然后分别计算在11分制和21分制下，双方的比赛结果。</p>
 <p>现在有一份数据，其中W表示小明得一分，L表示小明对手得一分。</p>
@@ -363,16 +362,13 @@
 <p>输出由两部分组成，每部分有若干行，每一行对应一局比赛的得分（按比赛信息输入顺序）。其中第一部分是11分制下的结果，第二部分是21分制下的结果，两部分由一个空行分隔。</p>
 <p>输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WWWWWWWWWWWWWWWWWWWW</span><br><span class="line">WWLWE</span><br></pre></td></tr></table></figure>
-
 <p>输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">11:0</span><br><span class="line">11:0</span><br><span class="line">1:1</span><br><span class="line"></span><br><span class="line">21:0</span><br><span class="line">2:1</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>解：</p>
 <p>1、E不一定出现在文件的末尾</p>
 <p>2、比赛要领先2个球才能获胜</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="built_in">string</span> s[<span class="number">100001</span>];</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">100001</span>], b[<span class="number">100001</span>], a2[<span class="number">100001</span>], b2[<span class="number">100001</span>];</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> t = s[x].size();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; t; i++)</span><br><span class="line">        <span class="keyword">if</span> (s[x][i] == <span class="string">'E'</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">1</span>, i, j, t = <span class="number">1</span>, t2 = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; s[n];</span><br><span class="line">    <span class="keyword">while</span> (check(n)) &#123;</span><br><span class="line">        n++;</span><br><span class="line">        <span class="built_in">cin</span> &gt;&gt; s[n];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> sz = s[i].size();</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; sz; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (s[i][j] == <span class="string">'E'</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= t; i++) <span class="built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="string">":"</span> &lt;&lt; b[i] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">                <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">                <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= t2; i++) <span class="built_in">cout</span> &lt;&lt; a2[i] &lt;&lt; <span class="string">":"</span> &lt;&lt; b2[i] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (s[i][j] == <span class="string">'W'</span>)</span><br><span class="line">                a[t]++, a2[t2]++;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (s[i][j] == <span class="string">'L'</span>)</span><br><span class="line">                b[t]++, b2[t2]++;</span><br><span class="line">            <span class="keyword">if</span> ((a[t] &gt;= <span class="number">11</span> || b[t] &gt;= <span class="number">11</span>) &amp;&amp; <span class="built_in">abs</span>(a[t] - b[t]) &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">                t++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> ((a2[t2] &gt;= <span class="number">21</span> || b2[t2] &gt;= <span class="number">21</span>) &amp;&amp; <span class="built_in">abs</span>(a2[t2] - b2[t2]) &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">                t2++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -402,6 +398,10 @@
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/21/Day5/" rel="next" title="day5">
+                <i class="fa fa-chevron-left"></i> day5
+              </a>
             
           </div>
 
@@ -484,7 +484,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -728,6 +728,8 @@
   
 
   
+  
+
 
   
 
