@@ -84,13 +84,17 @@
 
 
 
+<meta name="description" content="Day11P1090合并果子在一个果园里，多多将所有的果子打了下来，而且按果子的不同种类分成了不同的堆。多多决定把所有的果子合并到一堆。 每一次合并，多多可以把两堆果子合到一起，消耗的体力等于两堆果子的重量之和。可以看出，所有的果子在经过$n-1$次合并后，就只剩下一堆了。多多在合并果子时总共消耗的体力等于每次合并所消耗的体力之和。 因为还要花大力气把这些果子搬回家，所以多多在和并果子时要尽可能地">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta property="og:title" content="day11">
+<meta property="og:url" content="http://yoursite.com/算法/Day11.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Day11P1090合并果子在一个果园里，多多将所有的果子打了下来，而且按果子的不同种类分成了不同的堆。多多决定把所有的果子合并到一堆。 每一次合并，多多可以把两堆果子合到一起，消耗的体力等于两堆果子的重量之和。可以看出，所有的果子在经过$n-1$次合并后，就只剩下一堆了。多多在合并果子时总共消耗的体力等于每次合并所消耗的体力之和。 因为还要花大力气把这些果子搬回家，所以多多在和并果子时要尽可能地">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-21T04:09:34.990Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="day11">
+<meta name="twitter:description" content="Day11P1090合并果子在一个果园里，多多将所有的果子打了下来，而且按果子的不同种类分成了不同的堆。多多决定把所有的果子合并到一堆。 每一次合并，多多可以把两堆果子合到一起，消耗的体力等于两堆果子的重量之和。可以看出，所有的果子在经过$n-1$次合并后，就只剩下一堆了。多多在合并果子时总共消耗的体力等于每次合并所消耗的体力之和。 因为还要花大力气把这些果子搬回家，所以多多在和并果子时要尽可能地">
 
 
 
@@ -120,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/">
+  <link rel="canonical" href="http://yoursite.com/算法/Day11.html">
 
 
 
 
 
-  <title>归档 | Hexo</title>
+  <title>day11 | Hexo</title>
   
 
 
@@ -146,7 +150,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -250,107 +254,53 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
 
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 2 篇日志。 继续努力。
-      </span>
+	<h1 class="post-title" itemprop="name headline">day11</h1>
+
+
+
+</header>
 
       
+      
+      
+      <div class="post-body">
+        
+        
+          <h2 id="Day11"><a href="#Day11" class="headerlink" title="Day11"></a>Day11</h2><h5 id="P1090合并果子"><a href="#P1090合并果子" class="headerlink" title="P1090合并果子"></a>P1090合并果子</h5><p>在一个果园里，多多将所有的果子打了下来，而且按果子的不同种类分成了不同的堆。多多决定把所有的果子合并到一堆。</p>
+<p>每一次合并，多多可以把两堆果子合到一起，消耗的体力等于两堆果子的重量之和。可以看出，所有的果子在经过$n-1$次合并后，就只剩下一堆了。多多在合并果子时总共消耗的体力等于每次合并所消耗的体力之和。</p>
+<p>因为还要花大力气把这些果子搬回家，所以多多在和并果子时要尽可能地节省体力。假定每个果子的重量都为1，并且已知果子的种类数和每种果子的数目，你的任务是设计出合并的次序方案，式多多耗费的体力最少，并输出这个最少的体力耗费值。</p>
+<p>输入格式</p>
+<p>第一行：整数n$(1\leq n \leq 10000)$表示果子的个数</p>
+<p>第二行：包含n个整数，用空格分隔，第$i$个整数$a_i(1\leq a_i \leq 20000)$是第$i$种果子的数目</p>
+<p>输出格式</p>
+<p>最小的体力耗费值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3 </span><br><span class="line">1 2 9</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">15</span><br></pre></td></tr></table></figure>
+
+<p>解：</p>
+<p>优先队列</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,x,ans;</span><br><span class="line">priority_queue&lt;<span class="keyword">int</span> ,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt; &gt; q;<span class="comment">//越小的整数优先级越大</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;x,q.push(x);</span><br><span class="line">    <span class="keyword">while</span>(q.size()&gt;=<span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">int</span> a=q.top();</span><br><span class="line">        q.pop();</span><br><span class="line">        <span class="keyword">int</span> b=q.top();</span><br><span class="line">        q.pop();</span><br><span class="line">        ans+=a+b;</span><br><span class="line">        q.push(a+b);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ans&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不能用sort否则超时</p>
 
         
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/09/21/第一篇博客/" itemprop="url">
-              
-                <span itemprop="name">第一篇博客</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-09-21T10:19:48+08:00" content="2019-09-21">
-          09-21
-        </time>
       </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/09/21/day3/" itemprop="url">
-              
-                <span itemprop="name">day3</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-09-21T00:00:00+08:00" content="2019-09-21">
-          09-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
+      
     </div>
+    
+    
+    
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -378,8 +328,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -430,6 +389,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Day11"><span class="nav-number">1.</span> <span class="nav-text">Day11</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#P1090合并果子"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">P1090合并果子</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -555,6 +530,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
