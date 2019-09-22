@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="数组由数量固定且类型相同的数据元素组成的有序集合。 是实现数据顺序存储表示的基本数据结构。 线性表、树、图、集合等借助数组实现顺序存储。 数组的基本概念数组与结构体 线性表是通过结构体来定义线性表类型的。 顺序表实现时，在结构体内部定义了一个数组。 相同点：类型变量一旦定义，一次性申请连续存储空间用于存放指定数量的数据元素。 不同点：     数组元素 结构体成员     相同类型 多重类型">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数组">
+<meta property="og:url" content="http://yoursite.com/2019/09/22/数组/index.html">
+<meta property="og:site_name" content="An&#39;s personal blog">
+<meta property="og:description" content="数组由数量固定且类型相同的数据元素组成的有序集合。 是实现数据顺序存储表示的基本数据结构。 线性表、树、图、集合等借助数组实现顺序存储。 数组的基本概念数组与结构体 线性表是通过结构体来定义线性表类型的。 顺序表实现时，在结构体内部定义了一个数组。 相同点：类型变量一旦定义，一次性申请连续存储空间用于存放指定数量的数据元素。 不同点：     数组元素 结构体成员     相同类型 多重类型">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568512596790.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568512714905.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568513679634.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568515879206.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568516100941.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568516274044.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568516305340.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568516605660.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568516649474.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568516671426.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568518198332.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568699038382.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568699498299.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568700303631.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568700812543.png">
+<meta property="og:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568700845048.png">
+<meta property="og:updated_time" content="2019-09-22T14:31:02.754Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数组">
+<meta name="twitter:description" content="数组由数量固定且类型相同的数据元素组成的有序集合。 是实现数据顺序存储表示的基本数据结构。 线性表、树、图、集合等借助数组实现顺序存储。 数组的基本概念数组与结构体 线性表是通过结构体来定义线性表类型的。 顺序表实现时，在结构体内部定义了一个数组。 相同点：类型变量一旦定义，一次性申请连续存储空间用于存放指定数量的数据元素。 不同点：     数组元素 结构体成员     相同类型 多重类型">
+<meta name="twitter:image" content="c:/Users/陈安/AppData/Roaming/Typora/typora-user-images/1568512596790.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/22/数组/">
+
+
+
+
+
+  <title>数组 | An's personal blog</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">An's personal blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/数组/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AN">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="An's personal blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数组</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-22T00:00:00+08:00">
+                2019-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>由数量固定且类型相同的数据元素组成的有序集合。</p>
+<p>是实现数据顺序存储表示的基本数据结构。</p>
+<p>线性表、树、图、集合等借助数组实现顺序存储。</p>
+<h5 id="数组的基本概念"><a href="#数组的基本概念" class="headerlink" title="数组的基本概念"></a>数组的基本概念</h5><p>数组与结构体</p>
+<p>线性表是通过结构体来定义线性表类型的。</p>
+<p>顺序表实现时，在结构体内部定义了一个数组。</p>
+<p>相同点：类型变量一旦定义，一次性申请连续存储空间用于存放指定数量的数据元素。</p>
+<p>不同点：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>数组元素</th>
+<th>结构体成员</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>相同类型</td>
+<td>多重类型</td>
+</tr>
+<tr>
+<td>用下标(index)标识</td>
+<td>由域名(field name)引用</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>数组与指针</p>
+<p>数组名本身存储了指针值，其保存数组的首地址。</p>
+<p>借助指针可以实现动态数组</p>
+<p>C语言提供的数组实现方式都是静态数组，必须在创建时就指定数组长度为一个确定值。</p>
+<p>动态数组通过malloc来获取所需空间</p>
+<h5 id="数组的顺序存储"><a href="#数组的顺序存储" class="headerlink" title="数组的顺序存储"></a>数组的顺序存储</h5><p>一维数组可直接映射到存储空间中。</p>
+<p>设给长度为n的一维数组a所分配的存储块的起始地址是$Loc(a[0])$，若已知a的每个元素占k个存储单元，则下标为i的数组元素$a[i]$的存放地址是：</p>
+<script type="math/tex; mode=display">
+Loc(a[i])=Loc(a[0])+i*k \space \space 0\leq i<n</script><p>二维数组需要按一定规则映射到一维存储空间中。</p>
+<p>行优先存储：</p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568512596790.png" alt="1568512596790"></p>
+<p>地址计算：</p>
+<script type="math/tex; mode=display">
+loc(a[i][j])=loc(a[0][0])+(i*n+j)*k</script><p>列优先存储：</p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568512714905.png" alt="1568512714905"></p>
+<script type="math/tex; mode=display">
+loc(a[i][j])=loc(a[0][0])+(j*m+i)*k</script><p>$Loc(a[0][0])$被称为基地址，它是存储数组的存储空间的起始地址。</p>
+<p>数组一旦规定了它的维数和各维的长度，便可为它分配存储空间。</p>
+<p>只要给出数组元素下标，就可根据相应的地址计算公式求得数组元素的存储位置来存取元素。</p>
+<p>三维及以上数组：</p>
+<p>没有行列的概念</p>
+<p>没有优先存储原则</p>
+<p>多维数组的顺序存储</p>
+<p>多维数组$a[m_1][m_2]…[m_n]$，数组元素$a[i_1][i_2]…[i_n]$的存储地址为：</p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568513679634.png" alt="1568513679634"></p>
+<h5 id="数组的抽象数据类型"><a href="#数组的抽象数据类型" class="headerlink" title="数组的抽象数据类型"></a>数组的抽象数据类型</h5><p>C语言提供的数组并非一个完备的数据结构：</p>
+<ul>
+<li>不能实现数组的整体赋值；</li>
+<li>不能将数组作为函数值返回；</li>
+<li>对数组元素下标不提供边界检查；</li>
+<li>数组名作为返回值传递，返回的是基地址</li>
+</ul>
+<p>数组是index和值value组成的偶对的集合</p>
+<ul>
+<li>每个下标都与一个值对应，二者组成数组元素</li>
+<li>每个偶对形如：(index,value)</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ADT Array&#123;</span><br><span class="line">数据：下标i=&lt;i_1,i_2,...,i_n&gt;和元素v的偶对&lt;i,v&gt;集合，n是数组维度的数量，i_1,i_2为元素在各个维度的下标值。</span><br><span class="line">运算：</span><br><span class="line">    CreateArray(A,m_1,..m_n)</span><br><span class="line">    创建运算：申请n维数组A所需的存储空间并分配给数组A,成功分配则函数返回OK，否则返回ERROR</span><br><span class="line">    Destroy(A)</span><br><span class="line">    清除运算：释放数组所占空间</span><br><span class="line">    RetrieveArray(A,i_1,i_2,...i_n)</span><br><span class="line">    数组查询运算：边界检查</span><br><span class="line">    Copy(A,B)</span><br><span class="line">    数组拷贝运算：检查维度大小是否相同  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个三维数组的实现</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">tdarray</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> m1,m2,m3;</span><br><span class="line">    <span class="keyword">int</span> *<span class="built_in">array</span>;</span><br><span class="line">&#125;TDArray;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Status <span class="title">CreateArray</span><span class="params">(TDArray *tdarray,<span class="keyword">int</span> m1,<span class="keyword">int</span> m2,<span class="keyword">int</span> m3)</span></span>&#123;</span><br><span class="line">    tdarray-&gt;m1=m1;</span><br><span class="line">    tdarray-&gt;m2=m2;</span><br><span class="line">    tdarray-&gt;m3=m3;</span><br><span class="line">    tdarray-&gt;<span class="built_in">array</span>=(<span class="keyword">int</span> *)<span class="built_in">malloc</span>(m1*m2*m3*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">if</span>(!tdarray-&gt;<span class="built_in">array</span>) <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Destroy</span><span class="params">(TDArray *tdarray)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">RetrieveArray</span><span class="params">(TDArray tdarray,<span class="keyword">int</span> i1,<span class="keyword">int</span> i2,<span class="keyword">int</span> i3,<span class="keyword">int</span> *x)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!tdarray.<span class="built_in">array</span>) <span class="keyword">return</span> NotPresent;</span><br><span class="line">    <span class="keyword">if</span>(i1&lt;<span class="number">0</span>||i2&lt;<span class="number">0</span>||i3&lt;<span class="number">0</span>||i1&gt;tdarray.m1||i2&gt;tdarray.m2||i3&gt;tdarray.m3)</span><br><span class="line">        <span class="keyword">return</span> Illegallndex;</span><br><span class="line">    *x=*(tdarray.<span class="built_in">array</span>+i1*m2*m3+i2*m3+i3);</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="特殊矩阵"><a href="#特殊矩阵" class="headerlink" title="特殊矩阵"></a>特殊矩阵</h2><p>矩阵在数学中描述维一个按照长方形排列的复数或实数集合。</p>
+<p>矩阵具有行列的概念，二维数组很适合描述矩阵。</p>
+<p>对称矩阵:在n*n的方阵中，$a[i][j]=a[j][i]$。</p>
+<p>只存储上三角（或下三角）中的元素（包括对角线上的元素）。</p>
+<p>需要n(n+1)/2个元素的存储空间，提高了存储效率。</p>
+<p>对称矩阵的顺序存储</p>
+<p>以行优先顺序在一维数组B中存储下三角元素。</p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568515879206.png" alt="1568515879206"></p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568516100941.png" alt="1568516100941"></p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568516274044.png" alt="1568516274044"></p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568516305340.png" alt="1568516305340"></p>
+<p>上下三角矩阵</p>
+<ul>
+<li>主对角线以下元素全为0的方阵称为上三角矩阵</li>
+<li>主对角线以上元素全为0的方阵称为下三角矩阵</li>
+<li>上下三角矩阵采用对称矩阵的存储，只存储主对角线以上或以下的元素</li>
+</ul>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568516605660.png" alt="1568516605660"></p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568516649474.png" alt="1568516649474"></p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568516671426.png" alt="1568516671426"></p>
+<h2 id="稀疏矩阵"><a href="#稀疏矩阵" class="headerlink" title="稀疏矩阵"></a>稀疏矩阵</h2><ul>
+<li><p>矩阵中非零元素数量占元素总数的比例称为矩阵的稠密度</p>
+</li>
+<li><p>当矩阵的稠密度很小，即包含大量零元素的矩阵称为稀疏矩阵</p>
+</li>
+<li><p>通常认为稠密度小于5%的矩阵为稀疏矩阵</p>
+</li>
+<li><p>稀疏矩阵中零元素的位置分布没有规律</p>
+</li>
+<li><p>常出现于大规模集成电路设计、图像处理等领域</p>
+</li>
+<li><p>由于稀疏矩阵的性质，存储时可以只存储非零元素</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ADT SparseMatrix&#123;</span><br><span class="line">数据：</span><br><span class="line">    大多数元素为零的矩阵</span><br><span class="line">运算：</span><br><span class="line">    CreateMatrix(M,rows,cols)</span><br><span class="line">    构造运算，构造一个rows*cols的空稀疏矩阵</span><br><span class="line">    Clear(M)</span><br><span class="line">    清除矩阵：清除稀疏矩阵中的所有非零元素</span><br><span class="line">    Transpose(M)</span><br><span class="line">    转置运算：返回稀疏矩阵M的转置矩阵</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>稀疏矩阵的顺序存储</p>
+<ul>
+<li>非零元的位置分布没有规律，需同其位置一起存储</li>
+<li>只存储非零元是一种压缩存储的思想</li>
+<li>解压必须无损：稀疏矩阵无论是零元还是非零元以及他们的位置信息都要能够在任何时候被读取出来</li>
+</ul>
+<p>将稀疏矩阵中非零元$a_{ij}$以三元组$<i,j,a_{ij}>$表示</i,j,a_{ij}></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> maxSize 100</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> ElemType;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">term</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> col,row;</span><br><span class="line">    ElemType value;</span><br><span class="line">&#125;Term;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">sparsematrix</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> m,n,t;</span><br><span class="line">    Term table[maxSize];</span><br><span class="line">&#125;SparseMatrix;</span><br></pre></td></tr></table></figure>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568518198332.png" alt="1568518198332"></p>
+<h5 id="矩阵转置算法"><a href="#矩阵转置算法" class="headerlink" title="矩阵转置算法"></a>矩阵转置算法</h5><p>普通矩阵的转置算法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++)</span><br><span class="line">        B[i][j]=A[i][j]</span><br></pre></td></tr></table></figure>
+<p>稀疏矩阵转置方法。</p>
+<p>算法1：</p>
+<p>步骤1：依次访问A的行三元组表中各个三元组$<i,j,a_{ij}>$，交换元素行列号后依次保存到B的三元组表中。</i,j,a_{ij}></p>
+<p>步骤2：将B的行三元组中的行三元组按照行下标值从小到大重新排序。</p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568699038382.png" alt="1568699038382"></p>
+<p>分析时间复杂度：</p>
+<p>步骤1的时间复杂度为$O(t)$</p>
+<p>步骤2是一个排序过程，采用不同排序算法时间复杂度为$O(t^2)$或$O(tlog_2t)$</p>
+<p>算法2：</p>
+<p>步骤1：对A的行三元组表进行第一次扫描，找到列下标j=0的所有三元组$<i,0,a_0>$，交换元素行列号后依次保存到B的行三元组表中。</i,0,a_0></p>
+<p>步骤2：对A的行三元组表进行第二次扫描，找到列下标j=1的所有三元组$<i,1,a_{i1}>$，交换元素行列号后依次保存到B的行三元组表中。</i,1,a_{i1}></p>
+<p>…</p>
+<p>步骤n:</p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568699498299.png" alt="1568699498299"></p>
+<p>时间复杂度为$O(nt)$。</p>
+<p>稀疏矩阵的快速转置算法。$O(列数+非零元个数)$</p>
+<p>快速转置的准备工作：</p>
+<p>观察规律</p>
+<p>转置前A中列号为j的第一个元素，变成转置后B中行号为j的第一个元素</p>
+<p>B中行号为j的第一个元素在B的下标等于A中前j列非零元个数</p>
+<p>num数组求解：</p>
+<ul>
+<li><p>数组num的数组元素$num[j]$统计稀疏矩阵A中列号为j的非零元个数</p>
+</li>
+<li><p>只需要对A的行三元组表进行一次扫描，即可统计出A的每一列非零元个数</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++)	num[j]=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;t;i++)	num[A.table[i].col]++;</span><br></pre></td></tr></table></figure>
+<p>计算数组num的时间复杂度为O(n+t)</p>
+<ul>
+<li>数组k中k[i]统计稀疏矩阵A中列号从0到j-1（前j列）的非零元个数总和</li>
+<li>k[j]表示A中j列第一个非零元在转置稀疏矩阵B的行三元组表中的下标</li>
+</ul>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568700303631.png" alt="1568700303631"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++) k[j]=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++) k[j]=k[j<span class="number">-1</span>]+num[j<span class="number">-1</span>];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>k[j]的值表示稀疏矩阵列号为j的列中第一个非零元在转置矩阵中的存储位置</li>
+<li>k[j]每被访问一次执行一次自加操作，暗示该列中下一个非零元的存储位置</li>
+<li>只需要对稀疏矩阵A的行三元组表进行一遍扫描，时间复杂度为$O(t)$</li>
+<li>稀疏矩阵的快速转置矩阵时间复杂度为$O(n+t)$</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;t;i++)&#123;</span><br><span class="line">    <span class="keyword">int</span> index=k[A.table[i].col]++;</span><br><span class="line">    B.table[index].col=A.table[i].row;</span><br><span class="line">    B.table[index].row=A.table[i].col;</span><br><span class="line">    B.table[index].value=A.table[i].value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以空间换时间</p>
+<p>快速转置算法实例演示</p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568700812543.png" alt="1568700812543"></p>
+<p><img src="C:\Users\陈安\AppData\Roaming\Typora\typora-user-images\1568700845048.png" alt="1568700845048"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/21/第一篇博客/" rel="next" title="第一篇博客">
+                <i class="fa fa-chevron-left"></i> 第一篇博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/22/线性表/" rel="prev" title="线性表">
+                线性表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AN</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数组的基本概念"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">数组的基本概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数组的顺序存储"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">数组的顺序存储</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数组的抽象数据类型"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">数组的抽象数据类型</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊矩阵"><span class="nav-number">2.</span> <span class="nav-text">特殊矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#稀疏矩阵"><span class="nav-number">3.</span> <span class="nav-text">稀疏矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#矩阵转置算法"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">矩阵转置算法</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love-click.js"></script>
+
+
