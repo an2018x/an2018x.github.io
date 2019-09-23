@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="实验1    线性表及多项式的运算1、顺序表的基本操作 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;g">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构实验一">
+<meta property="og:url" content="http://yoursite.com/2019/09/23/数据结构实验一/index.html">
+<meta property="og:site_name" content="An&#39;s personal blog">
+<meta property="og:description" content="实验1    线性表及多项式的运算1、顺序表的基本操作 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;g">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-23T03:10:40.791Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构实验一">
+<meta name="twitter:description" content="实验1    线性表及多项式的运算1、顺序表的基本操作 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;g">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/23/数据结构实验一/">
+
+
+
+
+
+  <title>数据结构实验一 | An's personal blog</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">An's personal blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/23/数据结构实验一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AN">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="An's personal blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据结构实验一</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-23T11:06:04+08:00">
+                2019-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="实验1-线性表及多项式的运算"><a href="#实验1-线性表及多项式的运算" class="headerlink" title="实验1    线性表及多项式的运算"></a>实验1    线性表及多项式的运算</h2><p>1、顺序表的基本操作</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Elemtype int</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OK 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Overflow 2               <span class="comment">//上溢</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Underflow 3                <span class="comment">//下溢</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NotPresent 4            <span class="comment">//元素不存在</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Duplicate 5             <span class="comment">//有重复元素</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">seqList</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">int</span> maxLength;</span><br><span class="line">    Elemtype *element;</span><br><span class="line">&#125;SeqList;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> Status;</span><br><span class="line"><span class="function">Status <span class="title">Init</span><span class="params">(SeqList *L,<span class="keyword">int</span> mSize)</span></span>&#123;</span><br><span class="line">    L-&gt;maxLength=mSize;</span><br><span class="line">    L-&gt;n=<span class="number">0</span>;</span><br><span class="line">    L-&gt;element=(Elemtype *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Elemtype)*mSize);</span><br><span class="line">    <span class="keyword">if</span>(!L-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Find</span><span class="params">(SeqList L,<span class="keyword">int</span> i,Elemtype *x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;L.n<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    *x=L.element[i];</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Insert</span><span class="params">(SeqList *L,<span class="keyword">int</span> i,Elemtype x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">-1</span>||i&gt;L-&gt;n<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">if</span>(L-&gt;n==L-&gt;maxLength)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">for</span>(j=L-&gt;n<span class="number">-1</span>;j&gt;i;j--)</span><br><span class="line">        L-&gt;element[j+<span class="number">1</span>]=L-&gt;element[j];</span><br><span class="line">    L-&gt;element[i+<span class="number">1</span>]=x;</span><br><span class="line">    L-&gt;n=L-&gt;n+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Delete</span><span class="params">(SeqList *L,<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;L-&gt;n<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">if</span>(!L-&gt;n)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">for</span>(j=i+<span class="number">1</span>;j&lt;L-&gt;n;j++)&#123;</span><br><span class="line">        L-&gt;element[j<span class="number">-2</span>\<span class="number">1</span>]=L-&gt;element[j];</span><br><span class="line">    &#125;</span><br><span class="line">    L-&gt;n--;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Output</span><span class="params">(SeqList *L)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">if</span>(L-&gt;n==<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;L-&gt;n<span class="number">-1</span>;i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>,L-&gt;element[i]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Destroy</span><span class="params">(SeqList *L)</span></span>&#123;</span><br><span class="line">    L-&gt;n=<span class="number">0</span>;</span><br><span class="line">    L-&gt;maxLength=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">free</span>(L-&gt;element);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、带表头结点单链表基本操作</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElemType int</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OK 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Status int</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></span><br><span class="line">    ElemType element;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">link</span>;</span></span><br><span class="line">&#125;Node;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">headerList</span>&#123;</span></span><br><span class="line">    Node *head;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">&#125;HeaderList;</span><br><span class="line"><span class="function">Status <span class="title">Init</span><span class="params">(HeaderList *h)</span></span>&#123;</span><br><span class="line">    h-&gt;head=(Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    <span class="keyword">if</span>(!h-&gt;head)&#123;</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    &#125;</span><br><span class="line">    h-&gt;head-&gt;link=<span class="literal">NULL</span>;</span><br><span class="line">    h-&gt;n=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Find</span><span class="params">(HeaderList h,<span class="keyword">int</span> i,ElemType *x)</span></span>&#123;</span><br><span class="line">    Node *p;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;h.n<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    p=h.head;</span><br><span class="line">    <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;=i;j++)</span><br><span class="line">        p=p-&gt;link;</span><br><span class="line">    *x=p-&gt;element;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Insert</span><span class="params">(HeaderList *h,<span class="keyword">int</span> i,ElemType x)</span></span>&#123;</span><br><span class="line">    Node *p,*q;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">-1</span>||i&gt;h-&gt;n<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    p=h-&gt;head;</span><br><span class="line">    <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;=i;j++)&#123;</span><br><span class="line">        p=p-&gt;link;</span><br><span class="line">    &#125;</span><br><span class="line">    q=(Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    q-&gt;element=x;</span><br><span class="line">    q-&gt;link=p-&gt;link;</span><br><span class="line">    p-&gt;link=q;</span><br><span class="line">    h-&gt;n++;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Delete</span><span class="params">(HeaderList *h,<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    Node *p,*q;</span><br><span class="line">    <span class="keyword">if</span>(!h-&gt;n)&#123;</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;h-&gt;n<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    q=h-&gt;head;</span><br><span class="line">    <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++)&#123;</span><br><span class="line">        q=q-&gt;link;</span><br><span class="line">    &#125;</span><br><span class="line">    p=q-&gt;link;</span><br><span class="line">    q-&gt;link=p-&gt;link;</span><br><span class="line">    <span class="built_in">free</span>(p);</span><br><span class="line">    h-&gt;n--;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Output</span><span class="params">(HeaderList *h)</span></span>&#123;</span><br><span class="line">    Node *p;</span><br><span class="line">    <span class="keyword">if</span>(!h-&gt;n)</span><br><span class="line">        <span class="keyword">return</span> ERROR;</span><br><span class="line">    p=h-&gt;head-&gt;link;</span><br><span class="line">    <span class="keyword">while</span>(p)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>,p-&gt;element);</span><br><span class="line">        p=p-&gt;link;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Destroy</span><span class="params">(HeaderList *h)</span></span>&#123;</span><br><span class="line">    Node *p,*q;</span><br><span class="line">    <span class="keyword">while</span>(h-&gt;head-&gt;link)&#123;</span><br><span class="line">        p=h-&gt;head-&gt;link;</span><br><span class="line">        q=p-&gt;link;</span><br><span class="line">        <span class="built_in">free</span>(h-&gt;head-&gt;link);</span><br><span class="line">        h-&gt;head-&gt;link=q;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3、带表头单链表逆置</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//带表头结点单链表的逆置</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Inverse</span><span class="params">(HeaderList *h)</span></span>&#123;</span><br><span class="line">	Node *p=h-&gt;head-&gt;link,*q;</span><br><span class="line">	h-&gt;head-&gt;link = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">while</span>(p)&#123;</span><br><span class="line">		q=p-&gt;link;</span><br><span class="line">		p-&gt;link=h-&gt;head-&gt;link;    <span class="comment">//p-&gt;link=NULL</span></span><br><span class="line">		h-&gt;head-&gt;link=p;          <span class="comment">//为下一次逆置做准备</span></span><br><span class="line">		p=q;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4、单链表排序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//简单选择排序：每次选择min的排到前面</span></span><br><span class="line"><span class="function">Status <span class="title">Order</span><span class="params">(HeaderList *h)</span></span>&#123;</span><br><span class="line">    Node *s1,*s2,*s3,*s4,*p,*q;</span><br><span class="line">    <span class="keyword">for</span> (p=h-&gt;head;p!=<span class="literal">NULL</span> &amp;&amp; p-&gt;link!=<span class="literal">NULL</span>;p=p-&gt;link) &#123;     <span class="comment">// p从指向头结点开始</span></span><br><span class="line">        <span class="keyword">for</span> (q=p-&gt;link;q!=<span class="literal">NULL</span> &amp;&amp; q-&gt;link!=<span class="literal">NULL</span>;q=q-&gt;link) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;link-&gt;element &gt; q-&gt;link-&gt;element) &#123;       </span><br><span class="line">                s1=p-&gt;link;                                  <span class="comment">// s1指向p后面的结点</span></span><br><span class="line">                s2=p-&gt;link-&gt;link;                            <span class="comment">// s2指向p后面的后面的结点</span></span><br><span class="line">                s3=q-&gt;link;                                  <span class="comment">// s2指向q后面的结点</span></span><br><span class="line">                s4=q-&gt;link-&gt;link;                            <span class="comment">// s4指向q后面的后面结点</span></span><br><span class="line">                <span class="keyword">if</span> (s2!=s3) &#123;              </span><br><span class="line">                    p-&gt;link=s3;</span><br><span class="line">                    s3-&gt;link=s2;</span><br><span class="line">                    q-&gt;link=s1;</span><br><span class="line">                    s1-&gt;link=s4;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;                                       <span class="comment">// s2和s3指向同一个结点</span></span><br><span class="line">                    p-&gt;link=s3;</span><br><span class="line">                    s3-&gt;link=s1;</span><br><span class="line">                    q=s3;</span><br><span class="line">                    s1-&gt;link=s4;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>5、一元多项式基本操作</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//多项式的创建</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Create</span><span class="params">(polynominal *p)</span></span>&#123;</span><br><span class="line">    PNode *pn,*pre,*q;</span><br><span class="line">    p-&gt;head = (PNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PNode));</span><br><span class="line">    p-&gt;head-&gt;<span class="built_in">exp</span> = <span class="number">-1</span>;</span><br><span class="line">    p-&gt;head-&gt;link = p-&gt;head;               <span class="comment">//对教材做了修改</span></span><br><span class="line">    <span class="comment">//p-&gt;head-&gt;link = NULL;                //教材原代码</span></span><br><span class="line">    <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">        pn=(PNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PNode));</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"coef:\n"</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;pn-&gt;coef);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"exp:\n"</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;pn-&gt;<span class="built_in">exp</span>);</span><br><span class="line">        <span class="keyword">if</span>(pn-&gt;<span class="built_in">exp</span>&lt;<span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">        pre = p-&gt;head;</span><br><span class="line">        q = p-&gt;head-&gt;link;</span><br><span class="line">        <span class="keyword">while</span>(q &amp;&amp; q-&gt;<span class="built_in">exp</span> &gt; pn-&gt;<span class="built_in">exp</span>)&#123;</span><br><span class="line">            pre = q;</span><br><span class="line">            q = q-&gt;link;</span><br><span class="line">        &#125;</span><br><span class="line">        pn-&gt;link = q;</span><br><span class="line">        pre-&gt;link = pn;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//多项式输出</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Output</span><span class="params">(polynominal p)</span></span>&#123;</span><br><span class="line">    PNode *q;</span><br><span class="line">    <span class="keyword">int</span> flag = <span class="number">1</span>;                                   <span class="comment">//打标记,记录是否为第一项</span></span><br><span class="line">    q = p.head-&gt;link;</span><br><span class="line">    <span class="keyword">if</span> (!q)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(q != p.head)&#123;</span><br><span class="line">        <span class="keyword">if</span> (!flag &amp;&amp; (q-&gt;coef &gt; <span class="number">0</span>)) <span class="built_in">printf</span>(<span class="string">"+"</span>);	<span class="comment">//在非第一项的正系数前输出+号</span></span><br><span class="line">        flag = <span class="number">0</span>;                                   <span class="comment">//flag置为0,表示不是第一项</span></span><br><span class="line">        <span class="keyword">if</span>(q-&gt;coef == <span class="number">0</span>)&#123;                           <span class="comment">//当前项系数为0</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d"</span>,q-&gt;coef);                       <span class="comment">//当前项系数不为0</span></span><br><span class="line">        <span class="keyword">switch</span>(q-&gt;<span class="built_in">exp</span>)&#123;                             <span class="comment">//判断当前项指数</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:<span class="keyword">break</span>;                           <span class="comment">//当前项指数为0,退出</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:<span class="built_in">printf</span>(<span class="string">"X"</span>);<span class="keyword">break</span>;               <span class="comment">//当前项指数为1,输出X</span></span><br><span class="line">            <span class="keyword">default</span>:<span class="built_in">printf</span>(<span class="string">"X^%d"</span>,q-&gt;<span class="built_in">exp</span>);<span class="keyword">break</span>;    <span class="comment">//当前项指数不为0,也不为1</span></span><br><span class="line">        &#125;</span><br><span class="line">        q = q-&gt;link;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//多项式的相加,结果存入qx中</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Add</span><span class="params">(polynominal *px,polynominal *qx)</span></span>&#123;</span><br><span class="line">    PNode *q,*q1 = qx-&gt;head,*p, *p1,*temp;    <span class="comment">//q1指向qx的表头结点</span></span><br><span class="line">    p = px-&gt;head-&gt;link;                       <span class="comment">//p指向多项式px的第一个结点</span></span><br><span class="line">    p1 = px-&gt;head;</span><br><span class="line">    q = q1-&gt;link;                             <span class="comment">//q1是q的前驱</span></span><br><span class="line">    <span class="keyword">while</span>(p-&gt;<span class="built_in">exp</span> &gt;= <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">while</span>(p-&gt;<span class="built_in">exp</span> &lt; q-&gt;<span class="built_in">exp</span>)&#123;               <span class="comment">//跳过q-&gt;exp大的项</span></span><br><span class="line">            q1 = q;</span><br><span class="line">            q = q-&gt;link;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(p-&gt;<span class="built_in">exp</span> == q-&gt;<span class="built_in">exp</span>)&#123;                 <span class="comment">//当指数相等时,系数相加</span></span><br><span class="line">            q-&gt;coef = q-&gt;coef + p-&gt;coef;</span><br><span class="line">            <span class="keyword">if</span>(q-&gt;coef == <span class="number">0</span>)&#123;                 <span class="comment">//若相加后系数为0</span></span><br><span class="line">                q1-&gt;link = q-&gt;link;           <span class="comment">//删除q</span></span><br><span class="line">                <span class="built_in">free</span>(q);                      <span class="comment">//释放q的空间</span></span><br><span class="line">                q = q1-&gt;link;                 <span class="comment">//重置q指针</span></span><br><span class="line">                p = p-&gt;link;</span><br><span class="line">            &#125; </span><br><span class="line">            <span class="keyword">else</span>&#123;                             <span class="comment">//若相加后系数不为0</span></span><br><span class="line">                q1 = q;                       <span class="comment">//q1后移</span></span><br><span class="line">                q = q-&gt;link;</span><br><span class="line">                p = p-&gt;link;                  <span class="comment">//p也后移</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;                                 <span class="comment">//p-&gt;exp &gt; q-&gt;exp的情况</span></span><br><span class="line">            temp = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PNode));     <span class="comment">//以p的系数和指数生成新结点</span></span><br><span class="line">            temp-&gt;coef = p-&gt;coef;</span><br><span class="line">            temp-&gt;<span class="built_in">exp</span> = p-&gt;<span class="built_in">exp</span>;</span><br><span class="line">            temp-&gt;link = q1-&gt;link;</span><br><span class="line">            q1-&gt;link = temp;</span><br><span class="line">            q1 = q1-&gt;link;</span><br><span class="line">            p = p-&gt;link;</span><br><span class="line">        &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//多项式乘法,暂时没有问题</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Multiply</span><span class="params">(polynominal *px,polynominal *qx)</span></span>&#123;</span><br><span class="line">    polynominal qx1,qx2;</span><br><span class="line">    PNode *q1,*q2,*q3,*q4,*pre,*q;</span><br><span class="line">    qx1.head = (PNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PNode));       <span class="comment">//生成新多项式qx1</span></span><br><span class="line">    qx1.head-&gt;<span class="built_in">exp</span> = <span class="number">-1</span>;</span><br><span class="line">    qx1.head-&gt;link = qx1.head;                      <span class="comment">//qx1改造成循环链表</span></span><br><span class="line">    q1 = px-&gt;head-&gt;link;                            <span class="comment">//q1指向px的第一项</span></span><br><span class="line">    q2 = qx-&gt;head-&gt;link;                            <span class="comment">//q2指向qx的第一项</span></span><br><span class="line">    <span class="keyword">while</span>(q2-&gt;<span class="built_in">exp</span> != <span class="number">-1</span>)&#123;                           <span class="comment">//当q2的指数不为-1时,px先和qx的每一项相乘</span></span><br><span class="line">        q3 = (PNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PNode));         <span class="comment">//q3存放相乘的结果</span></span><br><span class="line">        q3-&gt;coef = q1-&gt;coef * q2-&gt;coef;</span><br><span class="line">        q3-&gt;<span class="built_in">exp</span> = q1-&gt;<span class="built_in">exp</span> + q2-&gt;<span class="built_in">exp</span>;</span><br><span class="line">        <span class="keyword">if</span>(qx1.head-&gt;link-&gt;<span class="built_in">exp</span> == <span class="number">-1</span>)&#123;              <span class="comment">//q3插入到qx1多项式第一项中</span></span><br><span class="line">            q3-&gt;link = qx1.head-&gt;link;</span><br><span class="line">            qx1.head-&gt;link = q3;</span><br><span class="line">            pre = qx1.head-&gt;link;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;                                       <span class="comment">//q3插入到qx1多项式最后一项中</span></span><br><span class="line">            q3-&gt;link = qx1.head;</span><br><span class="line">            pre-&gt;link = q3;</span><br><span class="line">            pre = pre-&gt;link;</span><br><span class="line">        &#125;</span><br><span class="line">        q2 = q2-&gt;link;</span><br><span class="line">    &#125;</span><br><span class="line">    q1 = q1-&gt;link;                                 <span class="comment">//q1后移一位</span></span><br><span class="line">    <span class="keyword">while</span>(q1-&gt;<span class="built_in">exp</span> != <span class="number">-1</span>)&#123;                          <span class="comment">//px剩下来每一项都和qx每一项相乘</span></span><br><span class="line">        q2 = q2-&gt;link;</span><br><span class="line">        qx2.head = (PNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PNode));  <span class="comment">//生成新多项式qx2</span></span><br><span class="line">        qx2.head-&gt;<span class="built_in">exp</span> = <span class="number">-1</span>;</span><br><span class="line">        qx2.head-&gt;link = qx2.head;</span><br><span class="line">        <span class="keyword">while</span>(q2-&gt;<span class="built_in">exp</span> != <span class="number">-1</span>)&#123;   	</span><br><span class="line">            q4 = (PNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PNode));</span><br><span class="line">            q4-&gt;coef = q1-&gt;coef * q2-&gt;coef;</span><br><span class="line">            q4-&gt;<span class="built_in">exp</span> = q1-&gt;<span class="built_in">exp</span> + q2-&gt;<span class="built_in">exp</span>;</span><br><span class="line">            <span class="keyword">if</span>(qx2.head-&gt;link-&gt;<span class="built_in">exp</span> == <span class="number">-1</span>)&#123;</span><br><span class="line">                q4-&gt;link = qx2.head-&gt;link;</span><br><span class="line">                qx2.head-&gt;link = q4;</span><br><span class="line">                pre = qx2.head-&gt;link;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                q4-&gt;link = qx2.head;</span><br><span class="line">                pre-&gt;link = q4;</span><br><span class="line">                pre = pre-&gt;link;</span><br><span class="line">            &#125;</span><br><span class="line">            q2 = q2-&gt;link;</span><br><span class="line">        &#125;</span><br><span class="line">        Add(&amp;qx2,&amp;qx1);                            <span class="comment">//合并同类项</span></span><br><span class="line">        q1 = q1-&gt;link;</span><br><span class="line">    &#125;</span><br><span class="line">    Output(qx1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/22/博客个性/" rel="next" title="博客个性化">
+                <i class="fa fa-chevron-left"></i> 博客个性化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AN</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验1-线性表及多项式的运算"><span class="nav-number">1.</span> <span class="nav-text">实验1    线性表及多项式的运算</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love-click.js"></script>
+
+
