@@ -71,7 +71,7 @@
 
 
 
-  <meta name="keywords" content="数据结构,">
+  <meta name="keywords" content="贪吃蛇AI,">
 
 
 
@@ -82,18 +82,23 @@
 
 
 
-<meta name="description" content="数据结构绪论算法的基本概念1.算法 对特定问题的求解步骤，是指令的有限序列。  输入 输出 可行性 确定性 有穷性   如果一个方法没有返回值，这个方法也有可能是算法。  2.算法的描述方法  自然语言  伪代码  编程语言   Q:算法和程序最显著的区别 A:算法必须是有穷的，而程序不一定要满足有穷性。 3.算法优劣的衡量标准 (1) 正确性 满足预先规定的功能和性能要求 (2) 可读性 思路清">
-<meta name="keywords" content="数据结构">
+<meta name="description" content="卷积神经网络处理图像在传统计算机视觉任务中，卷积运算的身影也是无处不在，卷积运算的本质是将卷积核作用于图像矩阵的一个滑动窗口函数，将卷积核与图片进行一一比对，对图片中每一个像素点的数值与卷积核中对应位置处的依次做数值做乘积，最后求和得到特征图（feature map）上的一个点，然后向其他方向滑动卷积核，使其扫过矩阵的所有像素并做同样的操作，即可对整幅图像完成卷积运算。假设以下为一张灰度图（1代表">
+<meta name="keywords" content="贪吃蛇AI">
 <meta property="og:type" content="article">
-<meta property="og:title" content="绪论">
-<meta property="og:url" content="http://yoursite.com/2019/09/22/数据结构绪论/index.html">
+<meta property="og:title" content="卷积神经网络处理图像">
+<meta property="og:url" content="http://yoursite.com/2019/09/26/卷积神经网络处理图像/index.html">
 <meta property="og:site_name" content="An&#39;s personal blog">
-<meta property="og:description" content="数据结构绪论算法的基本概念1.算法 对特定问题的求解步骤，是指令的有限序列。  输入 输出 可行性 确定性 有穷性   如果一个方法没有返回值，这个方法也有可能是算法。  2.算法的描述方法  自然语言  伪代码  编程语言   Q:算法和程序最显著的区别 A:算法必须是有穷的，而程序不一定要满足有穷性。 3.算法优劣的衡量标准 (1) 正确性 满足预先规定的功能和性能要求 (2) 可读性 思路清">
+<meta property="og:description" content="卷积神经网络处理图像在传统计算机视觉任务中，卷积运算的身影也是无处不在，卷积运算的本质是将卷积核作用于图像矩阵的一个滑动窗口函数，将卷积核与图片进行一一比对，对图片中每一个像素点的数值与卷积核中对应位置处的依次做数值做乘积，最后求和得到特征图（feature map）上的一个点，然后向其他方向滑动卷积核，使其扫过矩阵的所有像素并做同样的操作，即可对整幅图像完成卷积运算。假设以下为一张灰度图（1代表">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-22T14:31:20.159Z">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20190926164608.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20190926164704.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20190926164745.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20190926165327.png">
+<meta property="og:updated_time" content="2019-09-26T08:56:43.262Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="绪论">
-<meta name="twitter:description" content="数据结构绪论算法的基本概念1.算法 对特定问题的求解步骤，是指令的有限序列。  输入 输出 可行性 确定性 有穷性   如果一个方法没有返回值，这个方法也有可能是算法。  2.算法的描述方法  自然语言  伪代码  编程语言   Q:算法和程序最显著的区别 A:算法必须是有穷的，而程序不一定要满足有穷性。 3.算法优劣的衡量标准 (1) 正确性 满足预先规定的功能和性能要求 (2) 可读性 思路清">
+<meta name="twitter:title" content="卷积神经网络处理图像">
+<meta name="twitter:description" content="卷积神经网络处理图像在传统计算机视觉任务中，卷积运算的身影也是无处不在，卷积运算的本质是将卷积核作用于图像矩阵的一个滑动窗口函数，将卷积核与图片进行一一比对，对图片中每一个像素点的数值与卷积核中对应位置处的依次做数值做乘积，最后求和得到特征图（feature map）上的一个点，然后向其他方向滑动卷积核，使其扫过矩阵的所有像素并做同样的操作，即可对整幅图像完成卷积运算。假设以下为一张灰度图（1代表">
+<meta name="twitter:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20190926164608.png">
 
 
 
@@ -123,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/09/22/数据结构绪论/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/26/卷积神经网络处理图像/">
 
 
 
 
 
-  <title>绪论 | An's personal blog</title>
+  <title>卷积神经网络处理图像 | An's personal blog</title>
   
 
 
@@ -257,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/数据结构绪论/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/26/卷积神经网络处理图像/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="AN">
@@ -274,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">绪论</h1>
+          <h1 class="post-title" itemprop="name headline">卷积神经网络处理图像</h1>
         
 
         <div class="post-meta">
@@ -286,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-22T00:00:00+08:00">
-                2019-09-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-26T16:54:16+08:00">
+                2019-09-26
               </time>
             
 
@@ -309,8 +314,19 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构</span>
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/贪吃蛇AI/" itemprop="url" rel="index">
+                    <span itemprop="name">贪吃蛇AI</span>
                   </a>
                 </span>
 
@@ -320,6 +336,8 @@
             </span>
           
 
+          
+            
           
 
           
@@ -344,68 +362,15 @@
       
 
       
-        <h3 id="数据结构绪论"><a href="#数据结构绪论" class="headerlink" title="数据结构绪论"></a>数据结构绪论</h3><h4 id="算法的基本概念"><a href="#算法的基本概念" class="headerlink" title="算法的基本概念"></a>算法的基本概念</h4><p>1.算法</p>
-<p>对特定问题的求解步骤，是指令的有限序列。</p>
-<ul>
-<li>输入</li>
-<li>输出</li>
-<li>可行性</li>
-<li>确定性</li>
-<li>有穷性</li>
-</ul>
-<blockquote>
-<p>如果一个方法没有返回值，这个方法也有可能是算法。</p>
-</blockquote>
-<p>2.算法的描述方法</p>
-<ul>
-<li><p>自然语言</p>
-</li>
-<li><p>伪代码</p>
-</li>
-<li><p>编程语言</p>
-</li>
-</ul>
-<p>Q:算法和程序最显著的区别</p>
-<p>A:算法必须是有穷的，而程序不一定要满足有穷性。</p>
-<p>3.算法优劣的衡量标准</p>
-<p>(1) 正确性 满足预先规定的功能和性能要求</p>
-<p>(2) 可读性 思路清晰，层次分明，易读易懂</p>
-<p>(3) 健壮性 输入不合法时，能做适当处理</p>
-<p>(4) 高效性</p>
-<h4 id="算法的时间复杂度"><a href="#算法的时间复杂度" class="headerlink" title="算法的时间复杂度"></a>算法的时间复杂度</h4><p>1.什么是算法的时间复杂度</p>
-<font color="red">算法的时间复杂度</font>是程序运行从开始到结束所需的时间。
-
-一般情况下，可以通过考察算法所对应的程序中的<font color="red">程序步数</font>来衡量算法的时间复杂度。
-
-一个算法的时间花销与算法中语句的执行次数成正比例，算法中语句执行次数多，时间花销也多。
-
-算法中语句的执行次数称为语句频度。
-
-2.渐进时间复杂度
-
-<font color="red">大O记号(Big O notation)</font>
-
-<p>如果存在两个正常数$c$和$n_0$，使得对所有的自然数n，当$n\geq n_0$，有$f(n)\leq cg(n)$，则称$f(n)=O(g(n))$。(g(n)是f(n)的渐进上界)</p>
-<p><strong>定理</strong>:如果$f(n)=a_mn^m+a_{m-1}n^{m-1}+…+a_1n+a_0$是m次多项式，则$f(n)=O(n^m)$。</p>
-<p>使用大O记号表示的算法的时间复杂度，称为算法的<font color="red">渐近时间复杂度</font>。渐近时间复杂度也常称为时间复杂度。</p>
-<p>通常用O(1)表示常数计算时间，即算法只需执行有限个程序步。</p>
-<ul>
-<li><p>在大O记号下，可用程序步来估计算法的执行时间，</p>
-</li>
-<li><p>很多情况下，可以通过考察一个算法中的关键操作（关键操作被认为是一个执行次数最多的程序步）的执行次数来计算算法的渐进时间复杂度。有时也需要同时考虑几个关键操作，以反映算法的执行时间。</p>
-</li>
-</ul>
-<p>常见渐进时间复杂度从小到大依次为:</p>
-<p>$O(1)&lt;O(log_2n)&lt;O(n)&lt;O(nlog_2n)&lt;O(n^2)&lt;O(n^3)&lt;O(2^n)&lt;O(n!)&lt;O(n^n)$</p>
-<p>3.最好、最坏和平均时间复杂度</p>
-<h4 id="算法的空间复杂度"><a href="#算法的空间复杂度" class="headerlink" title="算法的空间复杂度"></a>算法的空间复杂度</h4><p>程序运行从开始到结束所需的存储量。</p>
-<p>空间复杂度一般按最坏情况来分析。</p>
-<p><font color="red">问题实例的特征</font>：与问题的具体实例有关的量。</p>
-<p>程序运行所需的存储空间包括两部分:</p>
-<p>(1) 固定部分</p>
-<p>这部分空间与所处理数据的大小和个数无关，主要包括程序代码、常量、简单变量、定长成分的结构变量所占的空间。</p>
-<p>(2) 可变部分</p>
-<p>这部分空间大小与算法在某次执行中处理的特定数据的大小和规模有关。</p>
+        <h2 id="卷积神经网络处理图像"><a href="#卷积神经网络处理图像" class="headerlink" title="卷积神经网络处理图像"></a>卷积神经网络处理图像</h2><p>在传统计算机视觉任务中，卷积运算的身影也是无处不在，卷积运算的本质是将卷积核作用于图像矩阵的一个滑动窗口函数，将卷积核与图片进行一一比对，对图片中每一个像素点的数值与卷积核中对应位置处的依次做数值做乘积，最后求和得到特征图（feature map）上的一个点，然后向其他方向滑动卷积核，使其扫过矩阵的所有像素并做同样的操作，即可对整幅图像完成卷积运算。假设以下为一张灰度图（1代表白点，0代表黑点）：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20190926164608.png" alt></p>
+<p>并且有以下滑动窗口（在卷积运算中一般又称作卷积核或者是滤波器）：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20190926164704.png" alt></p>
+<p>对图片做无填充、步长为1的卷积操作可以得到以下特征图：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20190926164745.png" alt></p>
+<p>卷积运算在传统计算机视觉领域中用处主要有模糊图像以及边缘检查等。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20190926165327.png" alt></p>
+<p>想象图像中平滑的部分，其里面的像素点与周围像素的颜色几乎一致，求和的结果趋近于0，在特征图中表现为黑色；如果有一条明显的边缘线，比如黑白分界线，那么像素值的差值将会很大，相当于白色。<br>卷积运算在深度学习诞生以前就被广泛应用于计算机视觉领域中，然而真正把卷积核的威力发挥到极限的是卷积神经网络的出现，卷积神经网络本质上就是多层卷积运算，外加对每层的输出用非线性激活函数做转换，比如用ReLU和tanh。在传统的前馈神经网络中，我们把每个输入神经元与下一层的每一个输出神经元相连接。这种方式也被称作是全连接层，或者仿射层。在卷积神经网络中，图片经过卷积核卷积运算得到特征图（feature map），这相当于是局部连接，每块局部的输入区域与输出的一个神经元相连接。对每一层应用不同的滤波器，往往是如上图所示成百上千个，然后汇总它们的结果，得到多个通道（channels）的特征图，然后将其当作新的图片送入下一层网络中进行下一步卷积运算。<br>上面提到的通过卷积运算得到特征图后，理论上是可以直接送入下一个卷积层中进行卷积运算的，然而由于卷积运算本身是一个计算量很大的操作，因此为了达到简化网络计算复杂度的目的，卷积神经网络中通常会在每一层卷积层得到的特征图上进行池化操作（pooling）。所谓的池化操作其实也是通过设定一个特定大小的滑动窗口（比如2×2，3×3）对原图进行滑动实现的，其中最常用的是最大池化（max pooling），即在特征图上进行滑动，然后在每个窗口内取最大值，舍弃掉其他元素，这样即可达到缩小特征图规模的作用。后来在论文[31]提出的SPPNet模型中使用的空间金字塔池化（Spatial Pyramid Pooling），其原理是将滑动窗口大小设定为自适应形式，使得其能对不同大小的特征图进行池化操作，输出相同大小的特征图。</p>
 
       
     </div>
@@ -423,7 +388,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"> <i class="fa fa-tag"></i> 数据结构</a>
+            <a href="/tags/贪吃蛇AI/" rel="tag"> <i class="fa fa-tag"></i> 贪吃蛇AI</a>
           
         </div>
       
@@ -436,8 +401,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/21/第一篇博客/" rel="next" title="第一篇博客">
-                <i class="fa fa-chevron-left"></i> 第一篇博客
+              <a href="/2019/09/25/深度强化学习/" rel="next" title="基于知识的深度强化学习研究综述（1）">
+                <i class="fa fa-chevron-left"></i> 基于知识的深度强化学习研究综述（1）
               </a>
             
           </div>
@@ -445,10 +410,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/22/博客个性/" rel="prev" title="博客个性化">
-                博客个性化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -476,6 +437,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -578,7 +543,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构绪论"><span class="nav-number">1.</span> <span class="nav-text">数据结构绪论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#算法的基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">算法的基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算法的时间复杂度"><span class="nav-number">1.2.</span> <span class="nav-text">算法的时间复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算法的空间复杂度"><span class="nav-number">1.3.</span> <span class="nav-text">算法的空间复杂度</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#卷积神经网络处理图像"><span class="nav-number">1.</span> <span class="nav-text">卷积神经网络处理图像</span></a></li></ol></div>
             
 
           </div>
@@ -763,26 +728,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 
