@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="贪吃蛇AI,深度学习,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从Q-Learning 到 DQN国庆时一直在搞DQN，但感觉对于其基本原理还没有了解的很透彻，今天把物理作业写完了，正好可以总结一下。 Q-Learning我先回顾一下Q-Learning算法。 为了得到最优策略Policy，我们考虑估算每一个状态下每一种选择的价值有多大。然后我们通过分析发现，每一个时间片的Q(s,a)和当前得到的Reward以及下一个时间片的Q(s,a)有关。那么首先一个疑点">
+<meta name="keywords" content="贪吃蛇AI,深度学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DQN">
+<meta property="og:url" content="http://yoursite.com/2019/10/09/从Q-Learning 到 DQN/index.html">
+<meta property="og:site_name" content="An&#39;s personal blog">
+<meta property="og:description" content="从Q-Learning 到 DQN国庆时一直在搞DQN，但感觉对于其基本原理还没有了解的很透彻，今天把物理作业写完了，正好可以总结一下。 Q-Learning我先回顾一下Q-Learning算法。 为了得到最优策略Policy，我们考虑估算每一个状态下每一种选择的价值有多大。然后我们通过分析发现，每一个时间片的Q(s,a)和当前得到的Reward以及下一个时间片的Q(s,a)有关。那么首先一个疑点">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic4.zhimg.com/80/e6905f69595ed51e9a406a47603d49ef_hd.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/153a0529f2b86c87d5827999f13a1709_hd.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=Q%28S_%7Bt%7D%2CA_%7Bt%7D%29+%5Cleftarrow+Q%28S_%7Bt%7D%2CA_%7Bt%7D%29%2B%5Calpha%28%7BR_%7Bt%2B1%7D%2B%5Clambda+%5Cmax+_aQ%28S_%7Bt%2B1%7D%2Ca%29%7D+-+Q%28S_t%2CA_t%29%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=Q%28s_1%2Ca_2%29+%3D+1+%2B++%5Cmax_a+Q%28s_3%2Ca%29">
+<meta property="og:image" content="https://pic1.zhimg.com/80/b5f21544706393b859b7380595356f9c_hd.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=Q%28s_3%2Ca_3%29+%3D+2+%2B+%5Cmax_a+Q%28s_1%2Ca%29+%3D+2+%2B+1+%3D+3">
+<meta property="og:image" content="https://pic1.zhimg.com/80/ebf8d1cff2b1365a91c3367c48a4c4c4_hd.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/e7df063e461eef1079943eceda1c3e2d_hd.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/82aa8bad9d6669907ba229a7c5490c58_hd.png">
+<meta property="og:image" content="https://pic4.zhimg.com/80/3858f07818d129668fc83d48d855bb1f_hd.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/c24454f472843ef5caef2733d50aba00_hd.png">
+<meta property="og:updated_time" content="2019-10-09T13:45:02.738Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DQN">
+<meta name="twitter:description" content="从Q-Learning 到 DQN国庆时一直在搞DQN，但感觉对于其基本原理还没有了解的很透彻，今天把物理作业写完了，正好可以总结一下。 Q-Learning我先回顾一下Q-Learning算法。 为了得到最优策略Policy，我们考虑估算每一个状态下每一种选择的价值有多大。然后我们通过分析发现，每一个时间片的Q(s,a)和当前得到的Reward以及下一个时间片的Q(s,a)有关。那么首先一个疑点">
+<meta name="twitter:image" content="https://pic4.zhimg.com/80/e6905f69595ed51e9a406a47603d49ef_hd.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/09/从Q-Learning 到 DQN/">
+
+
+
+
+
+  <title>DQN | An's personal blog</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">An's personal blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/09/从Q-Learning 到 DQN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AN">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="An's personal blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DQN</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-09T00:00:00+08:00">
+                2019-10-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度强化学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度强化学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度强化学习/贪吃蛇AI/" itemprop="url" rel="index">
+                    <span itemprop="name">贪吃蛇AI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="从Q-Learning-到-DQN"><a href="#从Q-Learning-到-DQN" class="headerlink" title="从Q-Learning 到 DQN"></a>从Q-Learning 到 DQN</h2><p>国庆时一直在搞DQN，但感觉对于其基本原理还没有了解的很透彻，今天把物理作业写完了，正好可以总结一下。</p>
+<h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p>我先回顾一下Q-Learning算法。</p>
+<p>为了得到最优策略Policy，我们考虑估算每一个状态下每一种选择的价值有多大。然后我们通过分析发现，每一个时间片的Q(s,a)和当前得到的Reward以及下一个时间片的Q(s,a)有关。那么首先一个疑点就是如何得到下一个时间的Q值，这个也困扰了我很长的时间。其实，Q-Learing是建立在多次训练的基础上的，这意味着我们可以把之前的计算过的Q值拿来使用。这样，就可以根据当前的Reward以及上次实验中的数据来更新Q值，下面详细阐述一下相关算法：</p>
+<p><img src="https://pic4.zhimg.com/80/e6905f69595ed51e9a406a47603d49ef_hd.png" alt></p>
+<p>对于Q-Learning，关键就在于如何存储Q值，最简单的方法是使用表格或者是矩阵来维护Q值，我们创建一个表格，行为s，纵为a，里面的数字代表Q值（一般称为Q值表）：</p>
+<p><img src="https://pic2.zhimg.com/80/153a0529f2b86c87d5827999f13a1709_hd.png" alt></p>
+<p>接下来就是更新的事了，主要有四个步骤：</p>
+<ul>
+<li><p>初始化Q值表，比如可以初始化为0</p>
+</li>
+<li><p>开始训练，根据当前的Q矩阵以及$\epsilon-greedy$方法获取动作。比如当前处在状态s1，那么s1列每一个Q值都为0，那么这个时候可以随机选择。</p>
+<ul>
+<li><p>假设我们选择a2动作，然后得到的reward是1，并且进入s3状态，接下来我们根据下面公式进行更新:</p>
+<p><img src="https://www.zhihu.com/equation?tex=Q%28S_%7Bt%7D%2CA_%7Bt%7D%29+%5Cleftarrow+Q%28S_%7Bt%7D%2CA_%7Bt%7D%29%2B%5Calpha%28%7BR_%7Bt%2B1%7D%2B%5Clambda+%5Cmax+_aQ%28S_%7Bt%2B1%7D%2Ca%29%7D+-+Q%28S_t%2CA_t%29%29" alt></p>
+<p>这里假设$\alpha=1,\lambda=1$，也就是每一次都把目标Q值赋给Q。那么这里公式变成:</p>
+<p><img src="https://www.zhihu.com/equation?tex=Q%28s_1%2Ca_2%29+%3D+1+%2B++%5Cmax_a+Q%28s_3%2Ca%29" alt></p>
+<p>表格变成:</p>
+<p><img src="https://pic1.zhimg.com/80/b5f21544706393b859b7380595356f9c_hd.png" alt></p>
+</li>
+</ul>
+</li>
+<li><p>开始进行下一次决策，这时状态是s3，假设选择动作a3，然后得到reward=1，状态变成s1，这时更新公式变成:</p>
+<p><img src="https://www.zhihu.com/equation?tex=Q%28s_3%2Ca_3%29+%3D+2+%2B+%5Cmax_a+Q%28s_1%2Ca%29+%3D+2+%2B+1+%3D+3" alt></p>
+<p>Q值表变成：</p>
+<p><img src="https://pic1.zhimg.com/80/ebf8d1cff2b1365a91c3367c48a4c4c4_hd.png" alt></p>
+</li>
+<li><p>重复上述步骤。反复更新Q值，直到Q值收敛（也就是Q值表的值趋向于不变）</p>
+</li>
+</ul>
+<p>接下来，我们可以拓展到DQN算法。</p>
+<h3 id="Q-learning算法的局限性（维度灾难）"><a href="#Q-learning算法的局限性（维度灾难）" class="headerlink" title="Q-learning算法的局限性（维度灾难）"></a>Q-learning算法的局限性（维度灾难）</h3><p>我们在上面的分析中使用Q值表来维护Q值，但这个方法也有很多问题，最显著的就是维度问题，Q值表一次只能维护两个维度，这在很多现实问题中是行不通的，因为现实中的问题通常有多个维度，而且状态太多，Q值表不可能存的下。</p>
+<p><img src="https://pic2.zhimg.com/80/e7df063e461eef1079943eceda1c3e2d_hd.png" alt></p>
+<p>以谷歌早期DQN算法游戏实例Atari为例子，要求输入原始图像信息，在这里是$210\times 160$像素的图片，然后输出几个按键来控制Agent运动。也就是模拟人类玩游戏，用视觉输入，处理后进行输出。我们可以分析一下这里包含了多少种状态？假设每个像素有256种选择，那么就有：$256^{210\times160}$，如此多的状态Q值表显然无法存放。所以，我们要对状态数进行压缩，我们可以采用价值函数近似的方法来解决这个问题。</p>
+<h3 id="价值函数近似-Value-Function-Approximation"><a href="#价值函数近似-Value-Function-Approximation" class="headerlink" title="价值函数近似(Value Function Approximation)"></a>价值函数近似(Value Function Approximation)</h3><p>价值函数近似，顾名思义，就是用一个函数来表示Q(s,a)，而不是采用表格的形式枚举。</p>
+<script type="math/tex; mode=display">Q(s,a)=f(s,a)</script><p>f()可以是任何函数，比如说线性函数:$Q(s,a)=w_1s+w_2a+b$。通过函数我们可以以矩阵运算的形式来降低s的维度，最终降维为单值Q。</p>
+<p>如果我们用$w$来表示函数的参数，那么就有：</p>
+<p>$Q(s,a)=f(s,a,w)$</p>
+<p>为什么叫近似呢，因为我们并不知道Q值的实际分布情况，本质上是用一个函数来近似模拟Q值的分布，也就是：</p>
+<p>$Q(s,a)\approx f(s,a,w)$</p>
+<h3 id="价值函数的表示"><a href="#价值函数的表示" class="headerlink" title="价值函数的表示"></a>价值函数的表示</h3><p>对于Atari游戏而言，这是一个高维状态输入（原始图像），低维动作输出（只有几个离散的动作，比如上下左右）。那么怎么来表示这个函数f呢？</p>
+<p>我们难道要把高维s和低维a加在一起作为输出？这显然是不合适的。因为我们只需要对动作s进行降维，而不需要对动作进行降维处理。</p>
+<p>我们可以不把动作a放进输入里，而是把它当做输出值。也就是$Q(s)\approx f(s,w)$，只有状态s作为输入，但输出时输出每个动作的Q值，也就是输出一个向量$[Q(s,a_1),Q(s,a_2),…,Q(s,a_n)]$，这里输出的是包含了所有动作的Q值的向量。这样我们只要输入状态s，而且还同时会得到所有动作的Q值，可以更方便进行动作的选择和更新。</p>
+<h3 id="重大突破！Q值神经网络化"><a href="#重大突破！Q值神经网络化" class="headerlink" title="重大突破！Q值神经网络化"></a>重大突破！Q值神经网络化</h3><p>接下来就是把神经网络和Q-Learning算法结合起来了，也就是说，我们要用一个深度神经网络来表示这个函数f。</p>
+<p>输入经过处理的图像，然后经过两个卷积层，两个全连接层，最后输出包含每个动作Q值的向量。</p>
+<p><img src="https://pic1.zhimg.com/80/82aa8bad9d6669907ba229a7c5490c58_hd.png" alt></p>
+<h3 id="训练Q网络（DQN算法）"><a href="#训练Q网络（DQN算法）" class="headerlink" title="训练Q网络（DQN算法）"></a>训练Q网络（DQN算法）</h3><p>神经网络的训练是一个最优化的问题，最优化一个损失函数(loss function)，也就是标签和网络输出的偏差，目标是让损失函数最小化。为此，我们需要有样本、标签数据，然后通过反向传播使用梯度下降的方法来更新神经网络的参数。</p>
+<p>所以，我们该怎么提供带标签的样本呢?</p>
+<p>答案是Q-Learning算法，我们通过Reward和Q计算出目标Q值，因此我们把目标Q值作为标签就可以了。</p>
+<p>因此损失函数定义为:</p>
+<p><img src="https://pic4.zhimg.com/80/3858f07818d129668fc83d48d855bb1f_hd.png" alt></p>
+<h3 id="DQN训练"><a href="#DQN训练" class="headerlink" title="DQN训练"></a>DQN训练</h3><p>这里给出版本1的DQN，也就是2013年提出的第一版。</p>
+<p><img src="https://pic1.zhimg.com/80/c24454f472843ef5caef2733d50aba00_hd.png" alt></p>
+<p>这里涉及到了经验池(Experience Replay)的方法，就是如何存储样本及采样的技巧，暂时不懂。</p>
+<p>由于玩游戏采集的样本是一个时间序列，样本之间具有连续性，如果每次得到样本就更新Q值，受样本分布影响，效果会很不好。为此，我们可以先把样本存起来，然后随机采样，这就是经验池。</p>
+<p>版本1的DQN就是反复试验，然后存储数据。等到数据存储到一定程度，就进行随机采样，进行梯度下降。</p>
+<p>也就是说通过Q-Learing获取无限量的训练样本，然后对神经网络进行训练。两者同步进行。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/贪吃蛇AI/" rel="tag"> <i class="fa fa-tag"></i> 贪吃蛇AI</a>
+          
+            <a href="/tags/深度学习/" rel="tag"> <i class="fa fa-tag"></i> 深度学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/02/Pygame 使用/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="AN">
+            
+              <p class="site-author-name" itemprop="name">AN</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#从Q-Learning-到-DQN"><span class="nav-number">1.</span> <span class="nav-text">从Q-Learning 到 DQN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-Learning"><span class="nav-number">1.1.</span> <span class="nav-text">Q-Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-learning算法的局限性（维度灾难）"><span class="nav-number">1.2.</span> <span class="nav-text">Q-learning算法的局限性（维度灾难）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#价值函数近似-Value-Function-Approximation"><span class="nav-number">1.3.</span> <span class="nav-text">价值函数近似(Value Function Approximation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#价值函数的表示"><span class="nav-number">1.4.</span> <span class="nav-text">价值函数的表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重大突破！Q值神经网络化"><span class="nav-number">1.5.</span> <span class="nav-text">重大突破！Q值神经网络化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练Q网络（DQN算法）"><span class="nav-number">1.6.</span> <span class="nav-text">训练Q网络（DQN算法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DQN训练"><span class="nav-number">1.7.</span> <span class="nav-text">DQN训练</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love-click.js"></script>
+
+
