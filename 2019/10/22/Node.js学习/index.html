@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="后端,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Node.js学习简介简单的说 Node.js 就是运行在服务端的 JavaScript。 Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。 Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。 如果你是一个前端程序员，你不懂得像PHP、Python或Ruby等动">
+<meta name="keywords" content="后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.js学习">
+<meta property="og:url" content="http://yoursite.com/2019/10/22/Node.js学习/index.html">
+<meta property="og:site_name" content="An&#39;s personal blog">
+<meta property="og:description" content="Node.js学习简介简单的说 Node.js 就是运行在服务端的 JavaScript。 Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。 Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。 如果你是一个前端程序员，你不懂得像PHP、Python或Ruby等动">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/03/nodejs-gif1.gif">
+<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/03/nodejs-helloworld.jpg">
+<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2015/09/nodejs-gif2.gif">
+<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2015/09/event_loop.jpg">
+<meta property="og:updated_time" content="2019-10-22T14:46:17.153Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node.js学习">
+<meta name="twitter:description" content="Node.js学习简介简单的说 Node.js 就是运行在服务端的 JavaScript。 Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。 Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。 如果你是一个前端程序员，你不懂得像PHP、Python或Ruby等动">
+<meta name="twitter:image" content="https://www.runoob.com/wp-content/uploads/2014/03/nodejs-gif1.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/22/Node.js学习/">
+
+
+
+
+
+  <title>Node.js学习 | An's personal blog</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">An's personal blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/22/Node.js学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AN">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="An's personal blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Node.js学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-22T00:00:00+08:00">
+                2019-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端/" itemprop="url" rel="index">
+                    <span itemprop="name">后端</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端/node-js/" itemprop="url" rel="index">
+                    <span itemprop="name">node.js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Node-js学习"><a href="#Node-js学习" class="headerlink" title="Node.js学习"></a>Node.js学习</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>简单的说 Node.js 就是运行在服务端的 JavaScript。</p>
+<p>Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。</p>
+<p>Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。</p>
+<p>如果你是一个前端程序员，你不懂得像PHP、Python或Ruby等动态编程语言，然后你想创建自己的服务，那么Node.js是一个非常好的选择。</p>
+<p>Node.js 是运行在服务端的 JavaScript，如果你熟悉Javascript，那么你将会很容易的学会Node.js。</p>
+<p>当然，如果你是后端程序员，想部署一些高性能的服务，那么学习Node.js也是一个非常好的选择。</p>
+<h3 id="第一个Node-js程序：Hello-World！"><a href="#第一个Node-js程序：Hello-World！" class="headerlink" title="第一个Node.js程序：Hello World！"></a>第一个Node.js程序：Hello World！</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">"Hello World"</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="https://www.runoob.com/wp-content/uploads/2014/03/nodejs-gif1.gif" alt></p>
+<h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><p> Node.js 安装包及源码下载地址为：<a href="https://nodejs.org/en/download/。" target="_blank" rel="noopener">https://nodejs.org/en/download/。</a> </p>
+<h4 id="创建第一个应用"><a href="#创建第一个应用" class="headerlink" title="创建第一个应用"></a>创建第一个应用</h4><p>如果我们使用PHP来编写后端的代码时，需要Apache 或者 Nginx 的HTTP 服务器，并配上 mod_php5 模块和php-cgi。</p>
+<p>从这个角度看，整个”接收 HTTP 请求并提供 Web 页面”的需求根本不需 要 PHP 来处理。</p>
+<p>不过对 Node.js 来说，概念完全不一样了。使用 Node.js 时，我们不仅仅 在实现一个应用，同时还实现了整个 HTTP 服务器。事实上，我们的 Web 应用以及对应的 Web 服务器基本上是一样的。</p>
+<p>在我们创建 Node.js 第一个 “Hello, World!” 应用前，让我们先了解下 Node.js 应用是由哪几部分组成的：</p>
+<ol>
+<li><strong>引入 required 模块：</strong>我们可以使用 <strong>require</strong> 指令来载入 Node.js 模块。</li>
+<li><strong>创建服务器：</strong>服务器可以监听客户端的请求，类似于 Apache 、Nginx 等 HTTP 服务器。</li>
+<li><strong>接收请求与响应请求</strong> 服务器很容易创建，客户端可以使用浏览器或终端发送 HTTP 请求，服务器接收请求后返回响应数据。</li>
+</ol>
+<h4 id="引入-required-模块"><a href="#引入-required-模块" class="headerlink" title="引入 required 模块"></a>引入 required 模块</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">"http"</span>);</span><br></pre></td></tr></table></figure>
+<p> 使用 <strong>require</strong> 指令来载入 http 模块，并将实例化的 HTTP 赋值给变量 http 。</p>
+<h4 id="创建服务器"><a href="#创建服务器" class="headerlink" title="创建服务器"></a>创建服务器</h4><p> 接下来我们使用 http.createServer() 方法创建服务器，并使用 listen 方法绑定 8888 端口。 函数通过 request, response 参数来接收和响应数据。 </p>
+<p> 实例如下，在你项目的根目录下创建一个叫 server.js 的文件，并写入以下代码： </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line">http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">request, response</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送 HTTP 头部 </span></span><br><span class="line">    <span class="comment">// HTTP 状态值: 200 : OK</span></span><br><span class="line">    <span class="comment">// 内容类型: text/plain</span></span><br><span class="line">    response.writeHead(<span class="number">200</span>, &#123;<span class="string">'Content-Type'</span>: <span class="string">'text/plain'</span>&#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送响应数据 "Hello World"</span></span><br><span class="line">    response.end(<span class="string">'Hello World\n'</span>);</span><br><span class="line">&#125;).listen(<span class="number">8888</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 终端打印如下信息</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:8888/'</span>);</span><br></pre></td></tr></table></figure>
+<p>以上代码我们完成了一个可以工作的 HTTP 服务器。</p>
+<p>使用 <strong>node</strong> 命令执行以上的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node server.js</span><br><span class="line">Server running at http:<span class="comment">//127.0.0.1:8888/</span></span><br></pre></td></tr></table></figure>
+<p> 接下来，打开浏览器访问 <a href="http://127.0.0.1:8888/，你会看到一个写着" target="_blank" rel="noopener">http://127.0.0.1:8888/，你会看到一个写着</a> “Hello World”的网页。 </p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2014/03/nodejs-helloworld.jpg" alt></p>
+<h4 id="NPM-使用介绍"><a href="#NPM-使用介绍" class="headerlink" title="NPM 使用介绍"></a>NPM 使用介绍</h4><p>NPM是随同NodeJS一起安装的包管理工具，能解决NodeJS代码部署上的很多问题，常见的使用场景有以下几种：</p>
+<ul>
+<li>允许用户从NPM服务器下载别人编写的第三方包到本地使用。</li>
+<li>允许用户从NPM服务器下载并安装别人编写的命令行程序到本地使用。</li>
+<li>允许用户将自己编写的包或命令行程序上传到NPM服务器供别人使用。</li>
+</ul>
+<p>由于新版的nodejs已经集成了npm，所以之前npm也一并安装好了。同样可以通过输入 <strong>“npm -v”</strong> 来测试是否成功安装。</p>
+<h4 id="使用-npm-命令安装模块"><a href="#使用-npm-命令安装模块" class="headerlink" title="使用 npm 命令安装模块"></a>使用 npm 命令安装模块</h4><p> npm 安装 Node.js 模块语法格式如下： </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;Module Name&gt;</span><br></pre></td></tr></table></figure>
+<p> 以下实例，我们使用 npm 命令安装常用的 Node.js web框架模块 <strong>express</strong>: </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install express</span><br></pre></td></tr></table></figure>
+<p> 安装好之后，express 包就放在了工程目录下的 node_modules 目录中，因此在代码中只需要通过 <strong>require(‘express’)</strong> 的方式就好，无需指定第三方包路径。 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="全局安装与本地安装"><a href="#全局安装与本地安装" class="headerlink" title="全局安装与本地安装"></a>全局安装与本地安装</h4><p> npm 的包安装分为本地安装（local）、全局安装（global）两种，从敲的命令行来看，差别只是有没有-g而已，比如 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install express          # 本地安装</span><br><span class="line">npm install express -g   # 全局安装</span><br></pre></td></tr></table></figure>
+<p> 如果出现以下错误： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm err! Error: connect ECONNREFUSED 127.0.0.1:8087</span><br></pre></td></tr></table></figure>
+<p> 解决办法为： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm config set proxy null</span><br></pre></td></tr></table></figure>
+<h4 id="本地安装"><a href="#本地安装" class="headerlink" title="本地安装"></a>本地安装</h4><ul>
+<li><ol>
+<li>将安装包放在 ./node_modules 下（运行 npm 命令时所在的目录），如果没有 node_modules 目录，会在当前执行 npm 命令的目录下生成 node_modules 目录。</li>
+</ol>
+</li>
+<li><ol>
+<li>可以通过 require() 来引入本地安装的包。</li>
+</ol>
+</li>
+</ul>
+<h4 id="全局安装"><a href="#全局安装" class="headerlink" title="全局安装"></a>全局安装</h4><ol>
+<li>将安装包放在 /usr/local 下或者你 node 的安装目录。</li>
+<li>可以直接在命令行里使用。<br>如果你希望具备两者功能，则需要在两个地方安装它或使用 npm link。</li>
+</ol>
+<p>接下来我们使用全局方式安装 express</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install express -g</span><br></pre></td></tr></table></figure>
+<p> 安装过程输出如下内容，第一行输出了模块的版本号及安装位置。 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">express@4.13.3 node_modules/express</span><br><span class="line">├── escape-html@1.0.2</span><br><span class="line">├── range-parser@1.0.2</span><br><span class="line">├── merge-descriptors@1.0.0</span><br><span class="line">├── array-flatten@1.1.1</span><br><span class="line">├── cookie@0.1.3</span><br><span class="line">├── utils-merge@1.0.0</span><br><span class="line">├── parseurl@1.3.0</span><br><span class="line">├── cookie-signature@1.0.6</span><br><span class="line">├── methods@1.1.1</span><br><span class="line">├── fresh@0.3.0</span><br><span class="line">├── vary@1.0.1</span><br><span class="line">├── path-to-regexp@0.1.7</span><br><span class="line">├── content-type@1.0.1</span><br><span class="line">├── etag@1.7.0</span><br><span class="line">├── serve-static@1.10.0</span><br><span class="line">├── content-disposition@0.5.0</span><br><span class="line">├── depd@1.0.1</span><br><span class="line">├── qs@4.0.0</span><br><span class="line">├── finalhandler@0.4.0 (unpipe@1.0.0)</span><br><span class="line">├── on-finished@2.3.0 (ee-first@1.1.1)</span><br><span class="line">├── proxy-addr@1.0.8 (forwarded@0.1.0, ipaddr.js@1.0.1)</span><br><span class="line">├── debug@2.2.0 (ms@0.7.1)</span><br><span class="line">├── type-is@1.6.8 (media-typer@0.3.0, mime-types@2.1.6)</span><br><span class="line">├── accepts@1.2.12 (negotiator@0.5.3, mime-types@2.1.6)</span><br><span class="line">└── send@0.13.0 (destroy@1.0.3, statuses@1.2.1, ms@0.7.1, mime@1.3.4, http-errors@1.3.1)</span><br></pre></td></tr></table></figure>
+<h4 id="查看安装信息"><a href="#查看安装信息" class="headerlink" title="查看安装信息"></a>查看安装信息</h4><p> 你可以使用以下命令来查看所有全局安装的模块： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm list -g</span><br><span class="line"></span><br><span class="line">├─┬ cnpm@4.3.2</span><br><span class="line">│ ├── auto-correct@1.0.0</span><br><span class="line">│ ├── bagpipe@0.3.5</span><br><span class="line">│ ├── colors@1.1.2</span><br><span class="line">│ ├─┬ commander@2.9.0</span><br><span class="line">│ │ └── graceful-readlink@1.0.1</span><br><span class="line">│ ├─┬ cross-spawn@0.2.9</span><br><span class="line">│ │ └── lru-cache@2.7.3</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
+<h4 id="使用-package-json"><a href="#使用-package-json" class="headerlink" title="使用 package.json"></a>使用 package.json</h4><p> package.json 位于模块的目录下，用于定义包的属性。 </p>
+<h4 id="Package-json-属性说明"><a href="#Package-json-属性说明" class="headerlink" title="Package.json 属性说明"></a>Package.json 属性说明</h4><ul>
+<li><strong>name</strong> - 包名。</li>
+<li><strong>version</strong> - 包的版本号。</li>
+<li><strong>description</strong> - 包的描述。</li>
+<li><strong>homepage</strong> - 包的官网 url 。</li>
+<li><strong>author</strong> - 包的作者姓名。</li>
+<li><strong>contributors</strong> - 包的其他贡献者姓名。</li>
+<li><strong>dependencies</strong> - 依赖包列表。如果依赖包没有安装，npm 会自动将依赖包安装在 node_module 目录下。</li>
+<li><strong>repository</strong> - 包代码存放的地方的类型，可以是 git 或 svn，git 可在 Github 上。</li>
+<li><strong>main</strong> - main 字段指定了程序的主入口文件，require(‘moduleName’) 就会加载这个文件。这个字段的默认值是模块根目录下面的 index.js。</li>
+<li><strong>keywords</strong> - 关键字</li>
+</ul>
+<h4 id="卸载模块"><a href="#卸载模块" class="headerlink" title="卸载模块"></a>卸载模块</h4><p> 我们可以使用以下命令来卸载 Node.js 模块。 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm uninstall express</span><br></pre></td></tr></table></figure>
+<p> 卸载后，你可以到 /node_modules/ 目录下查看包是否还存在，或者使用以下命令查看： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm ls</span><br></pre></td></tr></table></figure>
+<h4 id="更新模块"><a href="#更新模块" class="headerlink" title="更新模块"></a>更新模块</h4><p>我们可以使用以下命令更新模块：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm update express</span><br></pre></td></tr></table></figure>
+<h4 id="搜索模块"><a href="#搜索模块" class="headerlink" title="搜索模块"></a>搜索模块</h4><p> 使用以下来搜索模块： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm search express</span><br></pre></td></tr></table></figure>
+<h4 id="使用淘宝-NPM-镜像"><a href="#使用淘宝-NPM-镜像" class="headerlink" title="使用淘宝 NPM 镜像"></a>使用淘宝 NPM 镜像</h4><p>大家都知道国内直接使用 npm 的官方镜像是非常慢的，这里推荐使用淘宝 NPM 镜像。</p>
+<p>淘宝 NPM 镜像是一个完整 npmjs.org 镜像，你可以用此代替官方版本(只读)，同步频率目前为 10分钟 一次以保证尽量与官方服务同步。</p>
+<p>你可以使用淘宝定制的 cnpm (gzip 压缩支持) 命令行工具代替默认的 npm:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+<p> 这样就可以使用 cnpm 命令来安装模块了： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cnpm install [name]</span><br></pre></td></tr></table></figure>
+<h3 id="Node-js-REPL-交互式解释器"><a href="#Node-js-REPL-交互式解释器" class="headerlink" title="Node.js REPL(交互式解释器)"></a>Node.js REPL(交互式解释器)</h3><p>Node.js REPL(Read Eval Print Loop:交互式解释器) 表示一个电脑的环境，类似 Window 系统的终端或 Unix/Linux shell，我们可以在终端中输入命令，并接收系统的响应。</p>
+<p>Node 自带了交互式解释器，可以执行以下任务：</p>
+<ul>
+<li><strong>读取</strong> - 读取用户输入，解析输入了Javascript 数据结构并存储在内存中。</li>
+<li><strong>执行</strong> - 执行输入的数据结构</li>
+<li><strong>打印</strong> - 输出结果</li>
+<li><strong>循环</strong> - 循环操作以上步骤直到用户两次按下 <strong>ctrl-c</strong> 按钮退出。</li>
+</ul>
+<p>Node 的交互式解释器可以很好的调试 Javascript 代码。</p>
+<p>开始学习 REPL</p>
+<p>我们可以输入以下命令来启动 Node 的终端：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> node</span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
+<p> 这时我们就可以在 &gt; 后输入简单的表达式，并按下回车键来计算结果。 </p>
+<h4 id="简单的表达式运算"><a href="#简单的表达式运算" class="headerlink" title="简单的表达式运算"></a>简单的表达式运算</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> node</span><br><span class="line"><span class="meta">&gt;</span> 1 +4</span><br><span class="line">5</span><br><span class="line"><span class="meta">&gt;</span> 5 / 2</span><br><span class="line">2.5</span><br><span class="line"><span class="meta">&gt;</span> 3 * 6</span><br><span class="line">18</span><br><span class="line"><span class="meta">&gt;</span> 4 - 1</span><br><span class="line">3</span><br><span class="line"><span class="meta">&gt;</span> 1 + ( 2 * 3 ) - 4</span><br><span class="line">3</span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="使用变量"><a href="#使用变量" class="headerlink" title="使用变量"></a>使用变量</h4><p>你可以将数据存储在变量中，并在你需要的时候使用它。</p>
+<p>变量声明需要使用 <strong>var</strong> 关键字，如果没有使用 var 关键字变量会直接打印出来。</p>
+<p>使用 <strong>var</strong> 关键字的变量可以使用 console.log() 来输出变量。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> node</span><br><span class="line"><span class="meta">&gt;</span> x = 10</span><br><span class="line">10</span><br><span class="line"><span class="meta">&gt;</span> var y = 10</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span> x + y</span><br><span class="line">20</span><br><span class="line"><span class="meta">&gt;</span> console.log("Hello World")</span><br><span class="line">Hello World</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span> console.log("www.runoob.com")</span><br><span class="line">www.runoob.com</span><br><span class="line">undefined</span><br></pre></td></tr></table></figure>
+<h4 id="多行表达式"><a href="#多行表达式" class="headerlink" title="多行表达式"></a>多行表达式</h4><p> Node REPL 支持输入多行表达式，这就有点类似 JavaScript。接下来让我们来执行一个 do-while 循环： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> node</span><br><span class="line"><span class="meta">&gt;</span> var x = 0</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span> do &#123;</span><br><span class="line">... x++;</span><br><span class="line">... console.log("x: " + x);</span><br><span class="line">... &#125; while ( x &lt; 5 );</span><br><span class="line">x: 1</span><br><span class="line">x: 2</span><br><span class="line">x: 3</span><br><span class="line">x: 4</span><br><span class="line">x: 5</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
+<p> <strong>…</strong> 三个点的符号是系统自动生成的，你回车换行后即可。Node 会自动检测是否为连续的表达式。 </p>
+<h4 id="下划线-变量"><a href="#下划线-变量" class="headerlink" title="下划线(_)变量"></a>下划线(_)变量</h4><p> 你可以使用下划线(_)获取上一个表达式的运算结果： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> node</span><br><span class="line"><span class="meta">&gt;</span> var x = 10</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span> var y = 20</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span> x + y</span><br><span class="line">30</span><br><span class="line"><span class="meta">&gt;</span> var sum = _</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span> console.log(sum)</span><br><span class="line">30</span><br><span class="line">undefined</span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="REPL-命令"><a href="#REPL-命令" class="headerlink" title="REPL 命令"></a>REPL 命令</h4><ul>
+<li><strong>ctrl + c</strong> - 退出当前终端。</li>
+<li><strong>ctrl + c 按下两次</strong> - 退出 Node REPL。</li>
+<li><strong>ctrl + d</strong> - 退出 Node REPL.</li>
+<li><strong>向上/向下 键</strong> - 查看输入的历史命令</li>
+<li><strong>tab 键</strong> - 列出当前命令</li>
+<li><strong>.help</strong> - 列出使用命令</li>
+<li><strong>.break</strong> - 退出多行表达式</li>
+<li><strong>.clear</strong> - 退出多行表达式</li>
+<li><strong>.save <em>filename</em></strong> - 保存当前的 Node REPL 会话到指定文件</li>
+<li><strong>.load <em>filename</em></strong> - 载入当前 Node REPL 会话的文件内容。</li>
+</ul>
+<h4 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h4><p><img src="https://www.runoob.com/wp-content/uploads/2015/09/nodejs-gif2.gif" alt></p>
+<h3 id="Node-js-回调函数"><a href="#Node-js-回调函数" class="headerlink" title="Node.js 回调函数"></a>Node.js 回调函数</h3><p>Node.js 异步编程的直接体现就是回调。</p>
+<p>异步编程依托于回调来实现，但不能说使用了回调后程序就异步化了。</p>
+<p>回调函数在完成任务后就会被调用，Node 使用了大量的回调函数，Node 所有 API 都支持回调函数。</p>
+<p>例如，我们可以一边读取文件，一边执行其他命令，在文件读取完成后，我们将文件内容作为回调函数的参数返回。这样在执行代码时就没有阻塞或等待文件 I/O 操作。这就大大提高了 Node.js 的性能，可以处理大量的并发请求。</p>
+<p>回调函数一般作为函数的最后一个参数出现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo1</span>(<span class="params">name, age, callback</span>) </span>&#123; &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo2</span>(<span class="params">value, callback1, callback2</span>) </span>&#123; &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="阻塞代码实例"><a href="#阻塞代码实例" class="headerlink" title="阻塞代码实例"></a>阻塞代码实例</h4><p> 创建一个文件 input.txt 。</p>
+<p> 创建 main.js 文件, 代码如下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var fs = require(&quot;fs&quot;);</span><br><span class="line"></span><br><span class="line">var data = fs.readFileSync(&apos;input.txt&apos;);</span><br><span class="line"></span><br><span class="line">console.log(data.toString());</span><br><span class="line">console.log(&quot;程序执行结束!&quot;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> node main.js</span><br><span class="line">菜鸟教程官网地址：www.runoob.com</span><br><span class="line"></span><br><span class="line">程序执行结束!</span><br></pre></td></tr></table></figure>
+<h4 id="非阻塞代码实例"><a href="#非阻塞代码实例" class="headerlink" title="非阻塞代码实例"></a>非阻塞代码实例</h4><p> 创建 main.js 文件, 代码如下： </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">'input.txt'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</span><br><span class="line">    <span class="built_in">console</span>.log(data.toString());</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"程序执行结束!"</span>);</span><br></pre></td></tr></table></figure>
+<p> 以上代码执行结果如下： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> node main.js</span><br><span class="line">程序执行结束!</span><br><span class="line">菜鸟教程官网地址：www.runoob.com</span><br></pre></td></tr></table></figure>
+<p>以上两个实例我们了解了阻塞与非阻塞调用的不同。第一个实例在文件读取完后才执行完程序。 第二个实例我们不需要等待文件读取完，这样就可以在读取文件时同时执行接下来的代码，大大提高了程序的性能。</p>
+<p>因此，阻塞是按顺序执行的，而非阻塞是不需要按顺序的，所以如果需要处理回调函数的参数，我们就需要写在回调函数内。</p>
+<h3 id="事件循环"><a href="#事件循环" class="headerlink" title="事件循环"></a>事件循环</h3><p>Node.js 是单进程单线程应用程序，但是因为 V8 引擎提供的异步执行回调接口，通过这些接口可以处理大量的并发，所以性能非常高。</p>
+<p>Node.js 几乎每一个 API 都是支持回调函数的。</p>
+<p>Node.js 基本上所有的事件机制都是用设计模式中观察者模式实现。</p>
+<p>Node.js 单线程类似进入一个while(true)的事件循环，直到没有事件观察者退出，每个异步事件都生成一个事件观察者，如果有事件发生就调用该回调函数.</p>
+<h4 id="事件驱动程序"><a href="#事件驱动程序" class="headerlink" title="事件驱动程序"></a>事件驱动程序</h4><p>Node.js 使用事件驱动模型，当web server接收到请求，就把它关闭然后进行处理，然后去服务下一个web请求。</p>
+<p>当这个请求完成，它被放回处理队列，当到达队列开头，这个结果被返回给用户。</p>
+<p>这个模型非常高效可扩展性非常强，因为webserver一直接受请求而不等待任何读写操作。（这也被称之为非阻塞式IO或者事件驱动IO）</p>
+<p>在事件驱动模型中，会生成一个主循环来监听事件，当检测到事件时触发回调函数。</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2015/09/event_loop.jpg" alt></p>
+<p>整个事件驱动的流程就是这么实现的，非常简洁。有点类似于观察者模式，事件相当于一个主题(Subject)，而所有注册到这个事件上的处理函数相当于观察者(Observer)。</p>
+<p>Node.js 有多个内置的事件，我们可以通过引入 events 模块，并通过实例化 EventEmitter 类来绑定和监听事件，如下实例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入 events 模块</span></span><br><span class="line"><span class="keyword">var</span> events = <span class="built_in">require</span>(<span class="string">'events'</span>);</span><br><span class="line"><span class="comment">// 创建 eventEmitter 对象</span></span><br><span class="line"><span class="keyword">var</span> eventEmitter = <span class="keyword">new</span> events.EventEmitter();</span><br></pre></td></tr></table></figure>
+<p> 以下程序绑定事件处理程序： </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绑定事件及事件的处理程序</span></span><br><span class="line">eventEmitter.on(<span class="string">'eventName'</span>, eventHandler);</span><br></pre></td></tr></table></figure>
+<p> 我们可以通过程序触发事件： </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 触发事件</span></span><br><span class="line">eventEmitter.emit(<span class="string">'eventName'</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入 events 模块</span></span><br><span class="line"><span class="keyword">var</span> events = <span class="built_in">require</span>(<span class="string">'events'</span>);</span><br><span class="line"><span class="comment">// 创建 eventEmitter 对象</span></span><br><span class="line"><span class="keyword">var</span> eventEmitter = <span class="keyword">new</span> events.EventEmitter();</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建事件处理程序</span></span><br><span class="line"><span class="keyword">var</span> connectHandler = <span class="function"><span class="keyword">function</span> <span class="title">connected</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'连接成功。'</span>);</span><br><span class="line">  </span><br><span class="line">   <span class="comment">// 触发 data_received 事件 </span></span><br><span class="line">   eventEmitter.emit(<span class="string">'data_received'</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 绑定 connection 事件处理程序</span></span><br><span class="line">eventEmitter.on(<span class="string">'connection'</span>, connectHandler);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 使用匿名函数绑定 data_received 事件</span></span><br><span class="line">eventEmitter.on(<span class="string">'data_received'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'数据接收成功。'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 触发 connection 事件 </span></span><br><span class="line">eventEmitter.emit(<span class="string">'connection'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"程序执行完毕。"</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ node main.js</span><br><span class="line">连接成功。</span><br><span class="line">数据接收成功。</span><br><span class="line">程序执行完毕。</span><br></pre></td></tr></table></figure>
+<h4 id="Node-应用程序是如何工作的？"><a href="#Node-应用程序是如何工作的？" class="headerlink" title="Node 应用程序是如何工作的？"></a>Node 应用程序是如何工作的？</h4><p> 在 Node 应用程序中，执行异步操作的函数将回调函数作为最后一个参数， 回调函数接收错误对象作为第一个参数 </p>
+<p>以上程序中 fs.readFile() 是异步函数用于读取文件。 如果在读取文件过程中发生错误，错误 err 对象就会输出错误信息。</p>
+<p>如果没发生错误，readFile 跳过 err 对象的输出，文件内容就通过回调函数输出。</p>
+<h3 id="Node-js-EventEmitter"><a href="#Node-js-EventEmitter" class="headerlink" title="Node.js EventEmitter"></a>Node.js EventEmitter</h3><p>Node.js 所有的异步 I/O 操作在完成时都会发送一个事件到事件队列。</p>
+<p>Node.js 里面的许多对象都会分发事件：一个 net.Server 对象会在每次有新连接时触发一个事件， 一个 fs.readStream 对象会在文件被打开的时候触发一个事件。 所有这些产生事件的对象都是 events.EventEmitter 的实例。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/后端/" rel="tag"> <i class="fa fa-tag"></i> 后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/22/Web知识汇总(5)(jQuery)/" rel="next" title="Web知识汇总(5)(jQuery)">
+                <i class="fa fa-chevron-left"></i> Web知识汇总(5)(jQuery)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/22/正则表达式/" rel="prev" title="正则表达式">
+                正则表达式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="AN">
+            
+              <p class="site-author-name" itemprop="name">AN</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Node-js学习"><span class="nav-number">1.</span> <span class="nav-text">Node.js学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第一个Node-js程序：Hello-World！"><span class="nav-number">1.2.</span> <span class="nav-text">第一个Node.js程序：Hello World！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装node-js"><span class="nav-number">1.3.</span> <span class="nav-text">安装node.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建第一个应用"><span class="nav-number">1.3.1.</span> <span class="nav-text">创建第一个应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引入-required-模块"><span class="nav-number">1.3.2.</span> <span class="nav-text">引入 required 模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建服务器"><span class="nav-number">1.3.3.</span> <span class="nav-text">创建服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NPM-使用介绍"><span class="nav-number">1.3.4.</span> <span class="nav-text">NPM 使用介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-npm-命令安装模块"><span class="nav-number">1.3.5.</span> <span class="nav-text">使用 npm 命令安装模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局安装与本地安装"><span class="nav-number">1.3.6.</span> <span class="nav-text">全局安装与本地安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#本地安装"><span class="nav-number">1.3.7.</span> <span class="nav-text">本地安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局安装"><span class="nav-number">1.3.8.</span> <span class="nav-text">全局安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看安装信息"><span class="nav-number">1.3.9.</span> <span class="nav-text">查看安装信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-package-json"><span class="nav-number">1.3.10.</span> <span class="nav-text">使用 package.json</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Package-json-属性说明"><span class="nav-number">1.3.11.</span> <span class="nav-text">Package.json 属性说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卸载模块"><span class="nav-number">1.3.12.</span> <span class="nav-text">卸载模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新模块"><span class="nav-number">1.3.13.</span> <span class="nav-text">更新模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#搜索模块"><span class="nav-number">1.3.14.</span> <span class="nav-text">搜索模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用淘宝-NPM-镜像"><span class="nav-number">1.3.15.</span> <span class="nav-text">使用淘宝 NPM 镜像</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-js-REPL-交互式解释器"><span class="nav-number">1.4.</span> <span class="nav-text">Node.js REPL(交互式解释器)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单的表达式运算"><span class="nav-number">1.4.1.</span> <span class="nav-text">简单的表达式运算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用变量"><span class="nav-number">1.4.2.</span> <span class="nav-text">使用变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多行表达式"><span class="nav-number">1.4.3.</span> <span class="nav-text">多行表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下划线-变量"><span class="nav-number">1.4.4.</span> <span class="nav-text">下划线(_)变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REPL-命令"><span class="nav-number">1.4.5.</span> <span class="nav-text">REPL 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#演示"><span class="nav-number">1.4.6.</span> <span class="nav-text">演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-js-回调函数"><span class="nav-number">1.5.</span> <span class="nav-text">Node.js 回调函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#阻塞代码实例"><span class="nav-number">1.5.1.</span> <span class="nav-text">阻塞代码实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非阻塞代码实例"><span class="nav-number">1.5.2.</span> <span class="nav-text">非阻塞代码实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件循环"><span class="nav-number">1.6.</span> <span class="nav-text">事件循环</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事件驱动程序"><span class="nav-number">1.6.1.</span> <span class="nav-text">事件驱动程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-number">1.6.2.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node-应用程序是如何工作的？"><span class="nav-number">1.6.3.</span> <span class="nav-text">Node 应用程序是如何工作的？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-js-EventEmitter"><span class="nav-number">1.7.</span> <span class="nav-text">Node.js EventEmitter</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love-click.js"></script>
+
+
