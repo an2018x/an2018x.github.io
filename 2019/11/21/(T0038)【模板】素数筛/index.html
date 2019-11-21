@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="算法,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="(T0038)【模板】素数筛12345678910111213141516171819202122232425262728#include&amp;lt;bits/stdc++.h&amp;gt;using namespace std;int n,m,x;bool f[10000000];int main()&amp;#123;    cin&amp;gt;&amp;gt;n&amp;gt;&amp;gt;m;    f[1]=true;    /*">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法之路（3）">
+<meta property="og:url" content="http://yoursite.com/2019/11/21/(T0038)【模板】素数筛/index.html">
+<meta property="og:site_name" content="An&#39;s personal blog">
+<meta property="og:description" content="(T0038)【模板】素数筛12345678910111213141516171819202122232425262728#include&amp;lt;bits/stdc++.h&amp;gt;using namespace std;int n,m,x;bool f[10000000];int main()&amp;#123;    cin&amp;gt;&amp;gt;n&amp;gt;&amp;gt;m;    f[1]=true;    /*">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://s1.ax1x.com/2018/10/25/is46XT.png">
+<meta property="og:updated_time" content="2019-11-21T13:00:44.041Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法之路（3）">
+<meta name="twitter:description" content="(T0038)【模板】素数筛12345678910111213141516171819202122232425262728#include&amp;lt;bits/stdc++.h&amp;gt;using namespace std;int n,m,x;bool f[10000000];int main()&amp;#123;    cin&amp;gt;&amp;gt;n&amp;gt;&amp;gt;m;    f[1]=true;    /*">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/10/25/is46XT.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/11/21/(T0038)【模板】素数筛/">
+
+
+
+
+
+  <title>算法之路（3） | An's personal blog</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">An's personal blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/21/(T0038)【模板】素数筛/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AN">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="An's personal blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">算法之路（3）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-21T00:00:00+08:00">
+                2019-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="T0038-【模板】素数筛"><a href="#T0038-【模板】素数筛" class="headerlink" title="(T0038)【模板】素数筛"></a>(T0038)【模板】素数筛</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,m,x;</span><br><span class="line"><span class="keyword">bool</span> f[<span class="number">10000000</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    f[<span class="number">1</span>]=<span class="literal">true</span>;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    for(int i=2;i&lt;=n;i++)</span></span><br><span class="line"><span class="comment">     if(!f[i])</span></span><br><span class="line"><span class="comment">     &#123;</span></span><br><span class="line"><span class="comment">         int j=2;</span></span><br><span class="line"><span class="comment">         while(i*j&lt;=n)</span></span><br><span class="line"><span class="comment">         &#123;</span></span><br><span class="line"><span class="comment">             f[i*j]=true;</span></span><br><span class="line"><span class="comment">             j++;</span></span><br><span class="line"><span class="comment">         &#125;</span></span><br><span class="line"><span class="comment">     &#125;</span></span><br><span class="line"><span class="comment">     重点*/</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=m;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;x;</span><br><span class="line">        <span class="keyword">if</span>(f[x]) <span class="built_in">cout</span>&lt;&lt;<span class="string">"No"</span>&lt;&lt;<span class="string">'\n'</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="built_in">cout</span>&lt;&lt;<span class="string">"Yes"</span>&lt;&lt;<span class="string">'\n'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0039-A-B-Problem"><a href="#T0039-A-B-Problem" class="headerlink" title="(T0039)A % B Problem"></a>(T0039)A % B Problem</h4><p>题目描述<br>区间质数个数</p>
+<p>输入格式<br>一行两个整数 询问次数n，范围m</p>
+<p>接下来n行，每行两个整数 l,r 表示区间</p>
+<p>输出格式<br>对于每次询问输出个数 t，如l或r∉[1,m]输出 Crossing the line</p>
+<p>输入输出样例<br>输入 #1<br>2 5<br>1 3<br>2 6<br>输出 #1<br>2<br>Crossing the line</p>
+<p>解：</p>
+<p>合数显然是可以分解质因数的，既然如此，也就说明，质数的倍数（倍数&gt;1）都是合数，所以就有了埃氏筛。</p>
+<p>本质上就是从2开始把它除本身的倍数全部删去，以此类推（这时你可能要问那到这个数的时候怎么判断它是不是质数，事实上，如果自然数N在N-1的时候没有把它标记掉就肯定是质数（具体证明可百度））</p>
+<p>区间和可以用前缀和处理；</p>
+<p>下面是代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> f[<span class="number">1000001</span>];</span><br><span class="line"><span class="keyword">bool</span> vis[<span class="number">1000001</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shai</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    f[<span class="number">1</span>]=<span class="number">0</span>;</span><br><span class="line">    vis[<span class="number">1</span>]=<span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=n;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(vis[i]==<span class="literal">false</span>) <span class="comment">//在筛里进行前缀和</span></span><br><span class="line">        &#123;</span><br><span class="line">            f[i]=f[i<span class="number">-1</span>]+<span class="number">1</span>;<span class="comment">//前缀和计算</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=i+i;j&lt;=n;j=j+i)</span><br><span class="line">            &#123;</span><br><span class="line">                vis[j]=<span class="literal">true</span>;<span class="comment">//标记操作</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> f[i]=f[i<span class="number">-1</span>];<span class="comment">//前缀和转移</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,m;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;m,&amp;n);</span><br><span class="line">    shai(n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=m;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> l,r;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;l,&amp;r);</span><br><span class="line">        <span class="keyword">if</span>(l&lt;<span class="number">1</span> || r&gt;n) <span class="built_in">cout</span>&lt;&lt;<span class="string">"Crossing the line"</span>&lt;&lt;<span class="built_in">endl</span>;<span class="comment">//判断是否超出区间</span></span><br><span class="line">        <span class="keyword">else</span> </span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> y=f[r]-f[l<span class="number">-1</span>];<span class="comment">//此处已经修改</span></span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;y&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0040-P1372-又是毕业季I"><a href="#T0040-P1372-又是毕业季I" class="headerlink" title="(T0040)P1372 又是毕业季I"></a>(T0040)P1372 又是毕业季I</h4><p>题目描述<br>为了把毕业晚会办得更好，老师想要挑出默契程度最大的k个人参与毕业晚会彩排。可是如何挑呢？老师列出全班同学的号数1，2，……，n，并且相信k个人的默契程度便是他们的最大公约数（这不是迷信哦~）。这可难为了他，请你帮帮忙吧！</p>
+<p>PS：一个数的最大公约数即本身。</p>
+<p>输入格式<br>两个空格分开的正整数n和k。（n&gt;=k&gt;=1）</p>
+<p>输出格式<br>一个整数，为最大的默契值。</p>
+<p>输入输出样例<br>输入 #1<br>4 2<br>输出 #1<br>2</p>
+<p>解</p>
+<p>二分查找</p>
+<p>n/k真的没有想到唉</p>
+<p>我找的最大公约数，如果当前的mid对应的个数比k大，就往大了找，否则往小里找，</p>
+<p>对于边界问题，要加一些特判。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,k;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">p</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;=n&amp;&amp;i*x&lt;=n;i++)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(i<span class="number">-1</span>&gt;=k)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;k;</span><br><span class="line">  <span class="keyword">if</span>(n==k)</span><br><span class="line">  &#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="number">1</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span> l=<span class="number">1</span>,r=n,mid;</span><br><span class="line">  <span class="keyword">while</span>(l&lt;r)</span><br><span class="line">  &#123;</span><br><span class="line">    mid=(l+r)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(p(mid))</span><br><span class="line">    l=mid+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    r=mid;    </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;n;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;max(l<span class="number">-1</span>,<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先，若可能的最大公约数为a，取出的k个数为X1，X2，……，Xk且满足X1<x2<……<xk，那么有x1>=a，X2&gt;=2a，……，Xk&gt;=ka。又∵Xk&lt;=n，∴n&gt;=ka，∴a&lt;=n/k，又∵a为整数，∴a&lt;=[n/k]（[]为取整符号）。</x2<……<xk，那么有x1></p>
+<p>另一方面，我们取[n/k]，2<em>[n/k]，……，k</em>[n/k]，它们的最大公约数a=[n/k]，且它们都小于等于n大于等于1，且互不相等，满足条件。</p>
+<p>∴答案即为[n/k]。</p>
+<p>算法复杂度o(1)</p>
+<h4 id="T0041-P1045-麦森数"><a href="#T0041-P1045-麦森数" class="headerlink" title="(T0041)P1045 麦森数"></a>(T0041)P1045 麦森数</h4><p>题目描述<br>形如$2^{P}-1$的素数称为麦森数，这时PP一定也是个素数。但反过来不一定，即如果P是个素数，$2^{P}-1$不一定也是素数。到1998年底，人们已找到了37个麦森数。最大的一个是P=3021377，它有909526位。麦森数有许多重要应用，它与完全数密切相关。</p>
+<p>任务：从文件中输入P（1000&lt;P&lt;3100000），计算$2^{P}-1$的位数和最后500位数字（用十进制高精度数表示）</p>
+<p>输入格式<br>文件中只包含一个整数P（1000&lt;P&lt;3100000）</p>
+<p>输出格式<br>第一行：十进制高精度数$2^{P}-1$的位数。</p>
+<p>第2-11行：十进制高精度数$2^{P}-1$的最后500位数字。（每行输出50位，共输出10行，不足500位时高位补0）</p>
+<p>不必验证$2^{P}-1$与P是否为素数。</p>
+<p>输入输出样例<br>输入 #1<br>1279<br>输出 #1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">386</span><br><span class="line">00000000000000000000000000000000000000000000000000</span><br><span class="line">00000000000000000000000000000000000000000000000000</span><br><span class="line">00000000000000104079321946643990819252403273640855</span><br><span class="line">38615262247266704805319112350403608059673360298012</span><br><span class="line">23944173232418484242161395428100779138356624832346</span><br><span class="line">49081399066056773207629241295093892203457731833496</span><br><span class="line">61583550472959420547689811211693677147548478866962</span><br><span class="line">50138443826029173234888531116082853841658502825560</span><br><span class="line">46662248318909188018470682222031405210266984354887</span><br><span class="line">32958028878050869736186900714720710555703168729087</span><br></pre></td></tr></table></figure>
+<p>解：<br>这道题可以分为两个模块，第一个模块为求的位数，第二个模块为求的后500位（不足补零）。我们主要来解决第一个模块：</p>
+<p>一、求位数</p>
+<p>首先我们知道  与  有着相同的位数，因为2的次方满足了最后一位不为零的要求，所以减一后位数并不会改变，那么我们可以直接求  的位数。那么怎么求位数呢？我们不妨设  ，根据  的位数为  ，我们只要想办法把  中的底数2改为10，指数加一就是位数了。由此想到用10的几次方来代替2，那么就不难想到  ，这样便可以把  中的2代换掉，变为  。根据乘方的原理，将p乘进去，原式便可化为我们最终想要的形式  了，所以位数就是  。（提醒一下，C++中cmath库自带log10()函数…）</p>
+<p>二、求最后500位数</p>
+<p>这个绝对难不倒大家，裸的高精快速幂，经过NOIP2017初赛的RP++后，相信很多人都已经会了快速幂了，所以我在这里不再赘述，只是提供一种相对较为简便的高精乘法（见程序）</p>
+<p>代码如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> f[<span class="number">1001</span>],p,res[<span class="number">1001</span>],sav[<span class="number">1001</span>];<span class="comment">//乘法要开两倍长度</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">result_1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(sav,<span class="number">0</span>,<span class="keyword">sizeof</span>(sav));</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">500</span>;i+=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">500</span>;j+=<span class="number">1</span>)</span><br><span class="line">            sav[i+j<span class="number">-1</span>]+=res[i]*f[j];<span class="comment">//先计算每一位上的值（不进位）</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">500</span>;i+=<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        sav[i+<span class="number">1</span>]+=sav[i]/<span class="number">10</span>;<span class="comment">//单独处理进位问题，不容易出错</span></span><br><span class="line">        sav[i]%=<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memcpy</span>(res,sav,<span class="keyword">sizeof</span>(res));<span class="comment">//cstring库里的赋值函数，把sav的值赋给res</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">result_2</span><span class="params">()</span><span class="comment">//只是在result_1的基础上进行了细微的修改</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(sav,<span class="number">0</span>,<span class="keyword">sizeof</span>(sav));</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">500</span>;i+=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">500</span>;j+=<span class="number">1</span>)</span><br><span class="line">            sav[i+j<span class="number">-1</span>]+=f[i]*f[j];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">500</span>;i+=<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        sav[i+<span class="number">1</span>]+=sav[i]/<span class="number">10</span>;</span><br><span class="line">        sav[i]%=<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memcpy</span>(f,sav,<span class="keyword">sizeof</span>(f));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,(<span class="keyword">int</span>)(<span class="built_in">log10</span>(<span class="number">2</span>)*p+<span class="number">1</span>));</span><br><span class="line">    res[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    f[<span class="number">1</span>]=<span class="number">2</span>;<span class="comment">//高精度赋初值</span></span><br><span class="line">    <span class="keyword">while</span>(p!=<span class="number">0</span>)<span class="comment">//快速幂模板</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(p%<span class="number">2</span>==<span class="number">1</span>)result_1();</span><br><span class="line">        p/=<span class="number">2</span>;</span><br><span class="line">        result_2();</span><br><span class="line">    &#125;</span><br><span class="line">    res[<span class="number">1</span>]-=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">500</span>;i&gt;=<span class="number">1</span>;i-=<span class="number">1</span>)<span class="comment">//注意输出格式，50个换一行，第一个不用</span></span><br><span class="line">        <span class="keyword">if</span>(i!=<span class="number">500</span>&amp;&amp;i%<span class="number">50</span>==<span class="number">0</span>)<span class="built_in">printf</span>(<span class="string">"\n%d"</span>,res[i]);</span><br><span class="line">        <span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"%d"</span>,res[i]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="T0042-P1029-最大公约数和最小公倍数问题"><a href="#T0042-P1029-最大公约数和最小公倍数问题" class="headerlink" title="(T0042)P1029 最大公约数和最小公倍数问题"></a>(T0042)P1029 最大公约数和最小公倍数问题</h4><p>题目描述<br>输入22个正整数$x_0,y_0$($2 \le x_0&lt;100000,2 \le y_0&lt;=1000000$),求出满足下列条件的P,Q的个数条件:<br>P,Q是正整数要求P,Q以$x_0$为最大公约数,以$y_0$为最小公倍数.</p>
+<p>试求:满足条件的所有可能的2个正整数的个数.</p>
+<p>输入格式<br>2个正整数$x_0,y_0$</p>
+<p>输出格式<br>1个数，表示求出满足条件的P,Q的个数</p>
+<p>输入输出样例<br>输入 #1<br>3 60<br>输出 #1<br>4<br>说明/提示<br>P,Q有4种</p>
+<p>1、3,60<br>2、15,12<br>3、12,15<br>4、60,3</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//大家应该知道最大公约数和最小公倍数的乘积就是原两个数的积</span></span><br><span class="line"><span class="comment">//所以我先把两数相乘，再遍历他的因子即可</span></span><br><span class="line"><span class="comment">//代码如下</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> m,n,ans;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gcd</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(y==<span class="number">0</span>)    &#123;<span class="keyword">return</span> x;&#125;</span><br><span class="line">    <span class="keyword">return</span> gcd(y,x%y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="built_in">sqrt</span>(m*n);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n*m)%i==<span class="number">0</span>&amp;&amp;gcd(i,(n*m)/i)==n)  ans++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ans*<span class="number">2</span>;<span class="comment">//最后乘以二是因为只遍历了一半</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0043-P3367-【模板】并查集"><a href="#T0043-P3367-【模板】并查集" class="headerlink" title="(T0043)P3367 【模板】并查集"></a>(T0043)P3367 【模板】并查集</h4><p>题目描述<br>如题，现在有一个并查集，你需要完成合并和查询操作。</p>
+<p>输入格式<br>第一行包含两个整数N、M，表示共有N个元素和M个操作。</p>
+<p>接下来M行，每行包含三个整数Zi、Xi、Yi</p>
+<p>当Zi=1时，将Xi与Yi所在的集合合并</p>
+<p>当Zi=2时，输出Xi与Yi是否在同一集合内，是的话输出Y；否则话输出N</p>
+<p>输出格式<br>如上，对于每一个Zi=2的操作，都有一行输出，每行包含一个大写字母，为Y或者N</p>
+<p>输入输出样例<br>输入 #1<br>4 7<br>2 1 2<br>1 1 2<br>2 1 2<br>1 3 4<br>2 1 4<br>1 2 3<br>2 1 4<br>输出 #1<br>N<br>Y<br>N<br>Y</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;//并查集 </span></span></span><br><span class="line">  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line">  <span class="keyword">int</span> a1,a2,a3,f[<span class="number">200001</span>],n,m;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">getf</span><span class="params">(<span class="keyword">int</span> o)</span> </span>&#123;<span class="comment">//不停找爹，直到找到祖宗为止 </span></span><br><span class="line">      <span class="keyword">if</span> (f[o]==o) <span class="keyword">return</span> o;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">return</span> f[o]=getf(f[o]);<span class="comment">//这里是路径压缩，把递归过程中遇到的</span></span><br><span class="line">                                  <span class="comment">//结点的祖宗结点也直接修改了。</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> u)</span> </span>&#123;<span class="comment">//合并子集 </span></span><br><span class="line">      <span class="keyword">int</span> t1,t2;<span class="comment">//t1,t2分别为v和u的祖宗</span></span><br><span class="line">      t1=getf(v);<span class="comment">//获取祖宗结点值</span></span><br><span class="line">      t2=getf(u);</span><br><span class="line">      <span class="keyword">if</span> (t1!=t2) f[t2]=t1;<span class="comment">//靠左。即将右边的集合，作为左边的子集</span></span><br><span class="line">      <span class="keyword">return</span>; </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> u)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> t1,t2;<span class="comment">//同上</span></span><br><span class="line">      t1=getf(v);</span><br><span class="line">      t2=getf(u);</span><br><span class="line">      <span class="keyword">if</span> (t1==t2) <span class="built_in">printf</span>(<span class="string">"Y\n"</span>);</span><br><span class="line">      <span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"N\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>,&amp;n,&amp;m);</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++) f[i]=i;<span class="comment">//初始化集合</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=m;i++) &#123;</span><br><span class="line">          <span class="built_in">scanf</span>(<span class="string">"%d %d %d"</span>,&amp;a1,&amp;a2,&amp;a3);</span><br><span class="line">          <span class="keyword">if</span> (a1==<span class="number">1</span>) merge(a2,a3);</span><br><span class="line">          <span class="keyword">else</span> find(a2,a3);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0044-P1182-数列分段-Section-II"><a href="#T0044-P1182-数列分段-Section-II" class="headerlink" title="(T0044)P1182 数列分段 Section II"></a>(T0044)P1182 数列分段 Section II</h4><p>题目描述<br>对于给定的一个长度为N的正整数数列A-i，现要将其分成M(M≤N)段，并要求每段连续，且每段和的最大值最小。</p>
+<p>关于最大值最小：</p>
+<p>例如一数列42451要分成3段</p>
+<p>将其如下分段：</p>
+<p>$[4 2][4 5][1]$</p>
+<p>第一段和为6，第2段和为9，第3段和为1，和最大值为9。</p>
+<p>将其如下分段：</p>
+<p>$[4][2 4][5 1]$</p>
+<p>第一段和为4，第2段和为6，第3段和为6，和最大值66。</p>
+<p>并且无论如何分段，最大值不会小于6。</p>
+<p>所以可以得到要将数列42451要分成3段，每段和的最大值最小为6。</p>
+<p>输入格式<br>第1行包含两个正整数N，M。</p>
+<p>第2行包含N个空格隔开的非负整数$A_i$，含义如题目所述。</p>
+<p>输出格式<br>一个正整数，即每段和最大值最小为多少。</p>
+<p>输入输出样例<br>输入 #1<br>5 3<br>4 2 4 5 1<br>输出 #1<br>6</p>
+<p>本题解法：二分答案+贪心</p>
+<p><strong>思路：</strong>首先，分析题目，求最大值的最小化，直接联想到二分，So我们直接二分答案，关键是要怎么去高效的check，我看了大家基本上使用了前缀和，但实际上这个空间是可以省略的，为什么呢？我们考虑一个贪心的思路，能加的就加上，不能则新开一段，so对于二分的值x，我们从数列a从前往后扫，如果tot大于了x，我们不加而是tot重新赋值并且num++，最后只需判断num是否不小于m就行了。这样判断与前缀和一样是O(n)的复杂度，但是节省了空间且容易思考。</p>
+<p><strong>注意：</strong>二分时的区间取值问题，很明显，对于l的赋值应该取数列中的最大值，而r应该取数列的总和。(亲测，如果l赋值为0或1，第4个点会wa)。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,m,a[<span class="number">100005</span>],l,r,mid,ans;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tot=<span class="number">0</span>,num=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(tot+a[i]&lt;=x)tot+=a[i];</span><br><span class="line">        <span class="keyword">else</span> tot=a[i],num++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num&gt;=m;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;m);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;a[i]),l=max(l,a[i]),r+=a[i];</span><br><span class="line">    <span class="keyword">while</span>(l&lt;=r)</span><br><span class="line">    &#123;</span><br><span class="line">        mid=l+r&gt;&gt;<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(check(mid))l=mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> r=mid<span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;l;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0045-P1316-丢瓶盖"><a href="#T0045-P1316-丢瓶盖" class="headerlink" title="(T0045)P1316 丢瓶盖"></a>(T0045)P1316 丢瓶盖</h4><p>题目描述<br>陶陶是个贪玩的孩子，他在地上丢了A个瓶盖，为了简化问题，我们可以当作这A个瓶盖丢在一条直线上，现在他想从这些瓶盖里找出B个，使得距离最近的2个距离最大，他想知道，最大可以到多少呢？</p>
+<p>输入格式<br>第一行，两个整数，A,B。（B&lt;=A&lt;=100000）</p>
+<p>第二行，A个整数，分别为这A个瓶盖坐标。</p>
+<p>输出格式<br>仅一个整数，为所求答案。</p>
+<p>输入输出样例<br>输入 #1<br>5 3<br>1 2 3 4 5<br>输出 #1<br>2</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*类似的最大值最小化或者最小值最大化问题，通常用二分法就可以很好地解决。我们定义：</span></span><br><span class="line"><span class="comment">设 C(d)表示可以安排瓶盖的位置使得最近的两个瓶盖的距离不小于 d</span></span><br><span class="line"><span class="comment">那么问题就变成了求满足 C(d)的最大的 d，另外，最近的间距不小于 d 也可以说成是所有瓶盖的间距都不小于 d，因此就有 C(d)表示可以安排瓶盖的位置使得任意的两个瓶盖的距离不小于 d。</span></span><br><span class="line"><span class="comment">这个问题的判断使用贪心法便可非常容易地求解。</span></span><br><span class="line"><span class="comment">    1.对瓶盖的位置 x 进行排序</span></span><br><span class="line"><span class="comment">    2.把第一个瓶盖放入 x0 的位置</span></span><br><span class="line"><span class="comment">    3.如果第 i 个瓶盖放入了 xj 的话，第 i+1 个瓶盖就要放入满足 xj+d≤xk 的最小的 xk 中</span></span><br><span class="line"><span class="comment">对 x 的排序只需在最开始时进行一次就可以了，每一次判断对每个瓶盖最多进行一次处理，因此时间复杂度是 O(nlogn)</span></span><br><span class="line"><span class="comment">代码如下：*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> a,b,l,r,mid;</span><br><span class="line"><span class="keyword">int</span> A[<span class="number">1000001</span>];</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> rgt=A[<span class="number">1</span>]+x;</span><br><span class="line">    <span class="keyword">int</span> sum=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=a;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(A[i]&gt;=rgt)</span><br><span class="line">        &#123;</span><br><span class="line">            sum++;</span><br><span class="line">            rgt=A[i]+x;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum&gt;=b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=a;i++)</span><br><span class="line">       <span class="built_in">cin</span>&gt;&gt;A[i];</span><br><span class="line">    <span class="built_in">std</span>::sort(A+<span class="number">1</span>,A+<span class="number">1</span>+a);</span><br><span class="line">    l=<span class="number">0</span>,r=A[a]-A[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">while</span>(l&lt;=r)</span><br><span class="line">    &#123;</span><br><span class="line">        mid=(l+r)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(check(mid))l=mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> r=mid<span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;r&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0046-P1508-Likecloud-吃、吃、吃"><a href="#T0046-P1508-Likecloud-吃、吃、吃" class="headerlink" title="(T0046)P1508 Likecloud-吃、吃、吃"></a>(T0046)P1508 Likecloud-吃、吃、吃</h4><p>题目描述<br>正处在某一特定时期之中的李大水牛由于消化系统比较发达，最近一直处在饥饿的状态中。某日上课，正当他饿得头昏眼花之时，眼前突然闪现出了一个$n<em>m(n \space and \space  m&lt;=200$)的矩型的巨型大餐桌，而自己正处在这个大餐桌的一侧的中点下边。餐桌被划分为了$n</em>m$个小方格，每一个方格中都有一个圆形的巨型大餐盘，上面盛满了令李大水牛朝思暮想的食物。李大水牛已将餐桌上所有的食物按其所能提供的能量打了分（有些是负的，因为吃了要拉肚子），他决定从自己所处的位置吃到餐桌的另一侧，但他吃东西有一个习惯——只吃自己前方或左前方或右前方的盘中的食物。</p>
+<p>由于李大水牛已饿得不想动脑了，而他又想获得最大的能量，因此，他将这个问题交给了你。</p>
+<p>每组数据的出发点都是最后一行的中间位置的下方！</p>
+<p>输入格式<br>[输入数据：]</p>
+<p>第一行为m n.(n为奇数)，李大水牛一开始在最后一行的中间的下方</p>
+<p>接下来为m*n的数字距阵.</p>
+<p>共有m行,每行n个数字.数字间用空格隔开.代表该格子上的盘中的食物所能提供的能量.</p>
+<p>数字全是整数.</p>
+<p>输出格式<br>[输出数据：]</p>
+<p>一个数,为你所找出的最大能量值.</p>
+<p>输入输出样例<br>输入 #1<br>6 7<br>16 4 3 12 6 0 3<br>4 -5 6 7 0 0 2<br>6 0 -1 -2 3 6 8<br>5 3 4 0 0 -2 7<br>-1 7 4 0 7 -5 6<br>0 -1 3 4 12 4 2<br>输出 #1<br>41</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">这题跟数字金字塔的做法类似。。</span><br><span class="line"></span><br><span class="line">只不过数字金字塔是往两条路线搜索，这题是往三条路线搜。。。</span><br><span class="line"></span><br><span class="line">动态方程： f[i][j]=max(max(f[i<span class="number">-1</span>][j],f[i<span class="number">-1</span>][j<span class="number">-1</span>]),f[i<span class="number">-1</span>][j+<span class="number">1</span>])+a[i][j];</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;                             //头文件</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,m,a[<span class="number">201</span>][<span class="number">201</span>],f[<span class="number">201</span>][<span class="number">201</span>]=&#123;<span class="number">0</span>&#125;,x,y;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    y=m/<span class="number">2</span>+<span class="number">1</span>;x=n;                           <span class="comment">//求出李大水牛最开始的位置</span></span><br><span class="line">    <span class="built_in">memset</span>(a,<span class="number">-9999</span>,<span class="keyword">sizeof</span>(a));               <span class="comment">//设置边界，为了避免李大水牛吃到餐桌外面去。。</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">cin</span>&gt;&gt;a[i][j];               <span class="comment">//输入</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            f[i][j]=max(max(f[i<span class="number">-1</span>][j],f[i<span class="number">-1</span>][j<span class="number">-1</span>]),f[i<span class="number">-1</span>][j+<span class="number">1</span>])+a[i][j];         <span class="comment">//动态方程</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;max(max(f[x][y],f[x][y<span class="number">-1</span>]),f[x][y+<span class="number">1</span>])&lt;&lt;<span class="built_in">endl</span>;       <span class="comment">//因为最大值只可能在李大水牛的前方、左前方、右前方，所以只要找这三个的最大就行了</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0047-P1387-最大正方形"><a href="#T0047-P1387-最大正方形" class="headerlink" title="(T0047)P1387 最大正方形"></a>(T0047)P1387 最大正方形</h4><p>题目描述<br>在一个n*m的只包含0和1的矩阵里找出一个不包含0的最大正方形，输出边长。</p>
+<p>输入格式<br>输入文件第一行为两个整数n,m（1&lt;=n,m&lt;=100），接下来n行，每行m个数字，用空格隔开，0或1.</p>
+<p>输出格式<br>一个整数，最大正方形的边长</p>
+<p>输入输出样例<br>输入 #1<br>4 4<br>0 1 1 1<br>1 1 1 0<br>0 1 1 0<br>1 1 0 1<br>输出 #1<br>2</p>
+<p>解：</p>
+<p><img src="https://s1.ax1x.com/2018/10/25/is46XT.png" style="zoom:67%;"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> <span class="keyword">const</span> maxn=<span class="number">111</span>;</span><br><span class="line"><span class="keyword">int</span> f[maxn][maxn],n,m,ans;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::min(<span class="built_in">std</span>::min(x,y),z);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;m);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> a,j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;a),f[i][j]=a?min(f[i<span class="number">-1</span>][j],f[i][j<span class="number">-1</span>],f[i<span class="number">-1</span>][j<span class="number">-1</span>])+a:<span class="number">0</span>,ans=<span class="built_in">std</span>::max(ans,f[i][j]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0048-P1164-小A点菜"><a href="#T0048-P1164-小A点菜" class="headerlink" title="(T0048)P1164 小A点菜"></a>(T0048)P1164 小A点菜</h4><p>题目描述<br>不过uim口袋里只剩M元(M≤10000)。</p>
+<p>餐馆虽低端，但是菜品种类不少，有N种(N≤100)，第i种卖$a_i$元$(a_i \le 1000)$。由于是很低端的餐馆，所以每种菜只有一份。</p>
+<p>小A奉行“不把钱吃光不罢休”，所以他点单一定刚好吧uim身上所有钱花完。他想知道有多少种点菜方法。</p>
+<p>由于小A肚子太饿，所以最多只能等待1秒。</p>
+<p>输入格式<br>第一行是两个数字，表示N和M。</p>
+<p>第二行起N个正数$a_i$（可以有相同的数字，每个数字均在10001000以内）。</p>
+<p>输出格式<br>一个正整数，表示点菜方案数，保证答案的范围在int之内。</p>
+<p>输入输出样例<br>输入 #1<br>4 4<br>1 1 2 2<br>输出 #1<br>3</p>
+<p>这是一道简单的动规题，定义f[i][j]为用前i道菜用光j元钱的办法总数，其状态转移方程如下：</p>
+<p>（1）if(j==第i道菜的价格)$f[i][j]=f[i-1][j]+1$;</p>
+<p>（2）if(j&gt;第i道菜的价格) $f[i][j]=f[i-1][j]+f[i-1][j-   第i道菜的价格  ]$;</p>
+<p>（3）if(j&lt;第i道菜的价格)$ f[i][j]=f[i-1][j]$;</p>
+<p>说的简单一些，这三个方程，每一个都是在吃与不吃之间抉择。若钱充足，办法总数就等于吃这道菜的办法数与不吃这道菜的办法数之和；若不充足，办法总数就只能承袭吃前i-1道菜的办法总数。依次递推，在最后，我们只要输出f[n][m]的值即可。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">101</span>],f[<span class="number">101</span>][<span class="number">10001</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,m;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)<span class="built_in">cin</span>&gt;&gt;a[i];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=m;++j)</span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span>(j==a[i])f[i][j]=f[i<span class="number">-1</span>][j]+<span class="number">1</span>;</span><br><span class="line">          <span class="keyword">if</span>(j&gt;a[i]) f[i][j]=f[i<span class="number">-1</span>][j]+f[i<span class="number">-1</span>][j-a[i]];</span><br><span class="line">          <span class="keyword">if</span>(j&lt;a[i]) f[i][j]=f[i<span class="number">-1</span>][j];</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;f[n][m];</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0049-P1114-“非常男女”计划"><a href="#T0049-P1114-“非常男女”计划" class="headerlink" title="(T0049)P1114 “非常男女”计划"></a>(T0049)P1114 “非常男女”计划</h4><p>题目描述<br>近来，初一年的XXX小朋友致力于研究班上同学的配对问题（别想太多，仅是舞伴），通过各种推理和实验，他掌握了大量的实战经验。例如，据他观察，身高相近的人似乎比较合得来。</p>
+<p>万圣节来临之际，XXX准备在学校策划一次大型的“非常男女”配对活动。对于这次活动的参与者，XXX有自己独特的选择方式。他希望能选择男女人数相等且身高都很接近的一些人。这种选择方式实现起来很简单。他让学校的所有人按照身高排成一排，然后从中选出连续的若干个人，使得这些人中男女人数相等。为了使活动更热闹，XXX当然希望他能选出的人越多越好。请编写程序告诉他，他最多可以选出多少人来。</p>
+<p>输入格式<br>第一行有一个正整数n，代表学校的人数。n≤100000</p>
+<p>第二行有n个用空格隔开的数，这些数只能是0或1，其中，0代表一个女生，1代表一个男生</p>
+<p>输出格式<br>输出一个非负整数。这个数表示在输入数据中最长的一段男女人数相等的子序列长度。</p>
+<p>如果不存在男女人数相等的子序列，请输出0。</p>
+<p>输入输出样例<br>输入 #1<br>9<br>0 1 0 0 0 1 1 0 0<br>输出 #1<br>6</p>
+<p>拿到这道题的思路第一个就是前缀和</p>
+<p>在这里呢，为了给比我强很多的巨佬们看一看本蒟蒻的思路，所以我讲一讲前缀和吧首先，我们先看一个题目：</p>
+<p>$\texttt{A:}$ 给定一个n 个元素的序列，对于 m 组询问，要求出第l 项到第r 项的和对1000000007 取模的值 。。 </p>
+<p>想法1:直接暴力枚举 。。。</p>
+<p>但是如果加上一个限制条件：n≤100000 。。。</p>
+<p>暴力显得是那么渺小 。。。 <del>（要是数据毒瘤一点的话5pts 都困难 qwq）</del></p>
+<p>所以，我们想到了一种方法：</p>
+<p>是否能够通过数组的存储，将时间复杂度转化为O(n+m) ？</p>
+<p>显然是可以的 。</p>
+<p>“ 聪明的你一秒钟就想到了这样做一一 ”</p>
+<blockquote>
+<p> 求第l项到第r项的和，就输出sum[r]-sum[l-1]。（其中sum为前缀和数组，操作方法请参考上方代码不谢） </p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> maxn 100010</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> mod 1000000007</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ri register int</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span><span class="comment">//快读</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> r=<span class="number">0</span>, f=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">char</span> c=getchar();</span><br><span class="line">    <span class="keyword">while</span>(!<span class="built_in">isdigit</span>(c)&amp;&amp;c^<span class="string">'-'</span>)</span><br><span class="line">        c=getchar();</span><br><span class="line">    <span class="keyword">if</span>(c==<span class="string">'-'</span>)</span><br><span class="line">        f=<span class="number">-1</span>, c=getchar();</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">isdigit</span>(c))</span><br><span class="line">        r=(r&lt;&lt;<span class="number">1</span>)+(r&lt;&lt;<span class="number">3</span>)+c-<span class="string">'0'</span>, c=getchar();</span><br><span class="line">    <span class="keyword">return</span> r*f;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> n, m, a[maxn];</span><br><span class="line">ll sum[maxn];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    n=read(); m=read();<span class="comment">//read()的用法</span></span><br><span class="line">    <span class="keyword">for</span>(ri i=<span class="number">1</span>; i&lt;=n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        a[i]=read();</span><br><span class="line">        sum[i]=sum[i<span class="number">-1</span>]+a[i];</span><br><span class="line">        sum[i]%=mod;<span class="comment">//前缀和操作666</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(ri i=<span class="number">1</span>; i&lt;=m; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> l=read(), r=read();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>, (sum[r]-sum[l<span class="number">-1</span>])%mod);<span class="comment">//前缀和的公式在此体现</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> maxn 100010</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ri register int</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> x[maxn], n, m, a[maxn];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;n);</span><br><span class="line">    m=n;</span><br><span class="line">    <span class="keyword">for</span>(ri i=<span class="number">1</span>; i&lt;=n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;a[i]);</span><br><span class="line">        x[i]=x[i<span class="number">-1</span>]+a[i];<span class="comment">//前缀和启动233</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(n%<span class="number">2</span>^<span class="number">0</span>)<span class="comment">//如果n是奇数，也就是说n个人时无法配对</span></span><br><span class="line">        n--;</span><br><span class="line">    <span class="keyword">for</span>(ri i=n; i&gt;=<span class="number">2</span>; i-=<span class="number">2</span>)<span class="comment">//几个人必须为偶数</span></span><br><span class="line">        <span class="keyword">for</span>(ri j=<span class="number">1</span>; j&lt;=m-i+<span class="number">1</span>; j++)<span class="comment">//这里易错，请细心推导QAQ</span></span><br><span class="line">            <span class="keyword">if</span>((x[i+j<span class="number">-1</span>]-x[j<span class="number">-1</span>])==i/<span class="number">2</span><span class="comment">/*男孩占一半*/</span>&amp;&amp;(x[i+j<span class="number">-1</span>]-x[j<span class="number">-1</span>])^<span class="number">0</span><span class="comment">/*人数非零*/</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"%d"</span>, i);<span class="comment">//直接拜拜程序</span></span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"0"</span>);<span class="comment">//否则一定不能配对</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="T0050-P1233-木棍加工"><a href="#T0050-P1233-木棍加工" class="headerlink" title="(T0050)P1233 木棍加工"></a>(T0050)P1233 木棍加工</h4><p>题目描述<br>一堆木头棍子共有n根，每根棍子的长度和宽度都是已知的。棍子可以被一台机器一个接一个地加工。机器处理一根棍子之前需要准备时间。准备时间是这样定义的：</p>
+<p>第一根棍子的准备时间为1分钟；</p>
+<p>如果刚处理完长度为L，宽度为W的棍子，那么如果下一个棍子长度为Li，宽度为Wi，并且满足L&gt;＝Li，W&gt;＝Wi，这个棍子就不需要准备时间，否则需要1分钟的准备时间；</p>
+<p>计算处理完n根棍子所需要的最短准备时间。比如，你有5根棍子，长度和宽度分别为(4, 9)，(5, 2)，(2, 1)，(3, 5)，(1, 4)，最短准备时间为2（按(4, 9)、(3, 5)、(1, 4)、(5, 2)、(2, 1)的次序进行加工）。</p>
+<p>输入格式<br>第一行是一个整数n(n&lt;＝5000)，第2行是2n个整数，分别是L1，W1，L2，w2，…，Ln，Wn。L和W的值均不超过10000，相邻两数之间用空格分开。</p>
+<p>输出格式<br>仅一行，一个整数，所需要的最短准备时间。</p>
+<p>输入输出样例<br>输入 #1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">4 9 5 2 2 1 3 5 1 4</span><br></pre></td></tr></table></figure>
+<p>输出 #1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<p>解：</p>
+<p>首先这道题需要木棍的两个属性（暂且称为属性）都是不下降的一个序列，换句话说，就是两个属性都具有一定的<strong>单调性</strong></p>
+<p>那么这样一个问题可以理解成一个矩形的覆盖问题，木棍的长与宽就是矩形的长与宽，如果一个矩形能够完全覆盖另一矩形（即一个木棍的长和宽都大于等于另一木棍）则处理下一木棍就不需要准备时间，这样就实现了本题的目标，即让加工木棍的准备时间最短。</p>
+<p>那么，怎样同时保证木棍的两个属性都具有单调性呢？ 显然要先对一个属性<strong>排序</strong><del>sort大法好</del></p>
+<p>接下来另一组属性的单调递减只需要求出不下降子序列的个数即可，因为从一个子序列转换到另一子序列只需一分钟的准备时间，所以不下降子序列的个数就是总共的准备时间。</p>
+<p>从dilworth定理中，我们可知，下降子序列的最小划分等于最长不下降子序列的长度</p>
+<p>于是题目转换为一道基本的dp求最长不下降子序列的题目</p>
+<p>接下来的思路就类似于导弹拦截的思路了</p>
+<p><strong>一个nlogn的最长不下降子序列的算法</strong></p>
+<p>前面有</p>
+<p><del>时间复杂度应该是O（nlogn）</del></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">gun</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> l,w;</span><br><span class="line">&#125;a[<span class="number">5010</span>];</span><br><span class="line"><span class="keyword">int</span> n,f[<span class="number">5010</span>]=&#123;<span class="number">0</span>&#125;,ans=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(gun a,gun b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a.l&gt;b.l;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>,&amp;a[i].l,&amp;a[i].w);</span><br><span class="line">    sort(a+<span class="number">1</span>,a+n+<span class="number">1</span>,cmp);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(a[i].w&gt;f[ans])&#123;</span><br><span class="line">            f[ans+<span class="number">1</span>]=a[i].w;</span><br><span class="line">            ++ans;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">int</span> l=<span class="number">1</span>,r=ans;</span><br><span class="line">            <span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line">                <span class="keyword">int</span> mid=(l+r)/<span class="number">2</span>;</span><br><span class="line">                <span class="keyword">if</span>(f[mid]&gt;=a[i].w)&#123;</span><br><span class="line">                    r=mid;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    l=mid+<span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            f[l]=a[i].w;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"> <i class="fa fa-tag"></i> 算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/21/#### (T0001)/" rel="next" title="算法之路（1）">
+                <i class="fa fa-chevron-left"></i> 算法之路（1）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/21/(T1020)P1115 最大子段和/" rel="prev" title="算法之路（2）">
+                算法之路（2） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="AN">
+            
+              <p class="site-author-name" itemprop="name">AN</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#T0038-【模板】素数筛"><span class="nav-number">1.</span> <span class="nav-text">(T0038)【模板】素数筛</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0039-A-B-Problem"><span class="nav-number">2.</span> <span class="nav-text">(T0039)A % B Problem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0040-P1372-又是毕业季I"><span class="nav-number">3.</span> <span class="nav-text">(T0040)P1372 又是毕业季I</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0041-P1045-麦森数"><span class="nav-number">4.</span> <span class="nav-text">(T0041)P1045 麦森数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0042-P1029-最大公约数和最小公倍数问题"><span class="nav-number">5.</span> <span class="nav-text">(T0042)P1029 最大公约数和最小公倍数问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0043-P3367-【模板】并查集"><span class="nav-number">6.</span> <span class="nav-text">(T0043)P3367 【模板】并查集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0044-P1182-数列分段-Section-II"><span class="nav-number">7.</span> <span class="nav-text">(T0044)P1182 数列分段 Section II</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0045-P1316-丢瓶盖"><span class="nav-number">8.</span> <span class="nav-text">(T0045)P1316 丢瓶盖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0046-P1508-Likecloud-吃、吃、吃"><span class="nav-number">9.</span> <span class="nav-text">(T0046)P1508 Likecloud-吃、吃、吃</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0047-P1387-最大正方形"><span class="nav-number">10.</span> <span class="nav-text">(T0047)P1387 最大正方形</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0048-P1164-小A点菜"><span class="nav-number">11.</span> <span class="nav-text">(T0048)P1164 小A点菜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0049-P1114-“非常男女”计划"><span class="nav-number">12.</span> <span class="nav-text">(T0049)P1114 “非常男女”计划</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#T0050-P1233-木棍加工"><span class="nav-number">13.</span> <span class="nav-text">(T0050)P1233 木棍加工</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love-click.js"></script>
+
+
