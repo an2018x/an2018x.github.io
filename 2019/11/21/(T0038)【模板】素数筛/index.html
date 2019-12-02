@@ -91,7 +91,7 @@
 <meta property="og:description" content="(T0038)【模板】素数筛12345678910111213141516171819202122232425262728#include&amp;lt;bits/stdc++.h&amp;gt;using namespace std;int n,m,x;bool f[10000000];int main()&amp;#123;    cin&amp;gt;&amp;gt;n&amp;gt;&amp;gt;m;    f[1]=true;    /*">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://s1.ax1x.com/2018/10/25/is46XT.png">
-<meta property="og:updated_time" content="2019-11-21T13:00:44.041Z">
+<meta property="og:updated_time" content="2019-12-02T02:40:22.324Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法之路（3）">
 <meta name="twitter:description" content="(T0038)【模板】素数筛12345678910111213141516171819202122232425262728#include&amp;lt;bits/stdc++.h&amp;gt;using namespace std;int n,m,x;bool f[10000000];int main()&amp;#123;    cin&amp;gt;&amp;gt;n&amp;gt;&amp;gt;m;    f[1]=true;    /*">
@@ -370,7 +370,7 @@
 <p>对于边界问题，要加一些特判。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,k;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">p</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;=n&amp;&amp;i*x&lt;=n;i++)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(i<span class="number">-1</span>&gt;=k)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;k;</span><br><span class="line">  <span class="keyword">if</span>(n==k)</span><br><span class="line">  &#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="number">1</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span> l=<span class="number">1</span>,r=n,mid;</span><br><span class="line">  <span class="keyword">while</span>(l&lt;r)</span><br><span class="line">  &#123;</span><br><span class="line">    mid=(l+r)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(p(mid))</span><br><span class="line">    l=mid+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    r=mid;    </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;n;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;max(l<span class="number">-1</span>,<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>首先，若可能的最大公约数为a，取出的k个数为X1，X2，……，Xk且满足X1<x2<……<xk，那么有x1>=a，X2&gt;=2a，……，Xk&gt;=ka。又∵Xk&lt;=n，∴n&gt;=ka，∴a&lt;=n/k，又∵a为整数，∴a&lt;=[n/k]（[]为取整符号）。</x2<……<xk，那么有x1></p>
-<p>另一方面，我们取[n/k]，2<em>[n/k]，……，k</em>[n/k]，它们的最大公约数a=[n/k]，且它们都小于等于n大于等于1，且互不相等，满足条件。</p>
+<p>另一方面，我们取[n/k]，2[n/k]，……，k[n/k]，它们的最大公约数a=[n/k]，且它们都小于等于n大于等于1，且互不相等，满足条件。</p>
 <p>∴答案即为[n/k]。</p>
 <p>算法复杂度o(1)</p>
 <h4 id="T0041-P1045-麦森数"><a href="#T0041-P1045-麦森数" class="headerlink" title="(T0041)P1045 麦森数"></a>(T0041)P1045 麦森数</h4><p>题目描述<br>形如$2^{P}-1$的素数称为麦森数，这时PP一定也是个素数。但反过来不一定，即如果P是个素数，$2^{P}-1$不一定也是素数。到1998年底，人们已找到了37个麦森数。最大的一个是P=3021377，它有909526位。麦森数有许多重要应用，它与完全数密切相关。</p>
@@ -532,7 +532,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/21/#### (T0001)/" rel="next" title="算法之路（1）">
+              <a href="/2019/11/21/算法之路(1)/" rel="next" title="算法之路（1）">
                 <i class="fa fa-chevron-left"></i> 算法之路（1）
               </a>
             
@@ -542,7 +542,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/11/21/(T1020)P1115 最大子段和/" rel="prev" title="算法之路（2）">
+              <a href="/2019/11/21/算法之路(2)/" rel="prev" title="算法之路（2）">
                 算法之路（2） <i class="fa fa-chevron-right"></i>
               </a>
             
