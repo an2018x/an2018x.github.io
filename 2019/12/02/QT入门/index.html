@@ -82,25 +82,29 @@
 
 
 
-<meta name="description" content="QT入门简介 Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。 12345678910111213141516171819202122232425">
+<meta name="description" content="QT入门简介 Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的&amp;lt;string&amp;gt;，不再需要到处去找解析 XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。  关于GUI 参考 关于学习建">
 <meta name="keywords" content="C++授课">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++第五次授课(QT入门)">
 <meta property="og:url" content="http://yoursite.com/2019/12/02/QT入门/index.html">
 <meta property="og:site_name" content="An&#39;s personal blog">
-<meta property="og:description" content="QT入门简介 Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。 12345678910111213141516171819202122232425">
+<meta property="og:description" content="QT入门简介 Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的&amp;lt;string&amp;gt;，不再需要到处去找解析 XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。  关于GUI 参考 关于学习建">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202140919.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/ex1.gif">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202142617.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202142716.png">
 <meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202151546.png">
 <meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/ex2.gif">
 <meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202153103.png">
 <meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202154425.png">
 <meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202155632.png">
 <meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/ex3.gif">
-<meta property="og:updated_time" content="2019-12-02T08:26:31.732Z">
+<meta property="og:updated_time" content="2019-12-02T08:40:01.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++第五次授课(QT入门)">
-<meta name="twitter:description" content="QT入门简介 Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。 12345678910111213141516171819202122232425">
-<meta name="twitter:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202151546.png">
+<meta name="twitter:description" content="QT入门简介 Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的&amp;lt;string&amp;gt;，不再需要到处去找解析 XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。  关于GUI 参考 关于学习建">
+<meta name="twitter:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191202140919.png">
 
 
 
@@ -351,7 +355,63 @@
       
 
       
-        <h3 id="QT入门"><a href="#QT入门" class="headerlink" title="QT入门"></a>QT入门</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p> Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的<figure class="highlight plain"><figcaption><span>XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。 </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">关于GUI</span><br><span class="line"></span><br><span class="line">[参考](https://zhuanlan.zhihu.com/p/67279058)</span><br><span class="line"></span><br><span class="line">#### 关于学习建议</span><br><span class="line"></span><br><span class="line">建议在b站或者youtube上找一些视频教程看看，然后再看我这个博客，另外QT自身的帮助文档很有用。</span><br><span class="line"></span><br><span class="line">#### Qt Creator简介</span><br><span class="line"></span><br><span class="line">下载：略。</span><br><span class="line"></span><br><span class="line">下载程序中的mingw492表明该版本Qt使用了MinGW作为编译提示器。MinGW即Minimalist GNU For Windows，是将GNU开发工具移植到Win32平台下的产物，是一套Windows上的GNU工具集，用其开发的程序不需要额外的第三方DLL支持就可以直接在Windows下运行。。在Windows系统中还可以使用MSVC版本Qt，需要使用Visual C++作为编译器，</span><br><span class="line"></span><br><span class="line">界面：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">![](https://animg.oss-cn-shanghai.aliyuncs.com/20191202140919.png)</span><br><span class="line"></span><br><span class="line">点击示例，下载一个示例程序，点击左下角绿色三角形或ctrl+R运行。</span><br><span class="line"></span><br><span class="line">#### 第一个项目（你的第一个GUI程序）</span><br><span class="line"></span><br><span class="line">1、打开QT，构建项目</span><br><span class="line"></span><br><span class="line">![](https://animg.oss-cn-shanghai.aliyuncs.com/ex1.gif)</span><br><span class="line"></span><br><span class="line">相关文件说明</span><br><span class="line"></span><br><span class="line">| 文件           | 说明                                     |</span><br><span class="line">| -------------- | ---------------------------------------- |</span><br><span class="line">| .pro           | 该文件是项目文件，其中包含了项目相关信息 |</span><br><span class="line">| .pro.user      | 该文件中包含了与用户有关的项目信息       |</span><br><span class="line">| .h             | 该文件是新建的HelloDialog类的头文件      |</span><br><span class="line">| .cpp           |                                          |</span><br><span class="line">| main.cpp       | 该文件中包含了main（）主函数             |</span><br><span class="line">| hellodialog.ui | 该文件是设计师设计的界面对应的界面文件   |</span><br><span class="line"></span><br><span class="line">2、查看构建项目生成的文件</span><br><span class="line">再看一下项目目录中的文件可以发现，E:\app\src\02\2-1目录下又多了一个build-heloworld-Desktop_Qt_5_6_1_MinGW_32bit-Debug文件夹，这是默认的构建目录。也就是说，Qt Creator将项目源文件和编译生成的文件进行了分类存放，helloworld文件夹中是项目源文件，这个文件夹存放的是编译后生成的文件。进入该文件夹可以看到，这里有3个Makefile文件和一个ui_hellodialog.h文件，还有两个目录debug和release，如图2-8所示。release文件夹是空的，进入debug文件夹，有3个.o文件和一个.cpp文件，它们是编译时生成的中间文件，可以不必管它，而剩下的一个helloworld.exe文件便是生成的可执行文件。</span><br><span class="line"></span><br><span class="line">3、双击exe发现弹出丢失dll的警告框，此时需将对应bin文件夹添加到环境变量中</span><br><span class="line"></span><br><span class="line">4、打包发布（在所有人的电脑上都能运行）</span><br><span class="line"></span><br><span class="line">先用release模式构建程序</span><br><span class="line"></span><br><span class="line">![](https://animg.oss-cn-shanghai.aliyuncs.com/20191202142617.png)</span><br><span class="line"></span><br><span class="line">找到对应打包程序。</span><br><span class="line"></span><br><span class="line">![](https://animg.oss-cn-shanghai.aliyuncs.com/20191202142716.png)</span><br><span class="line"></span><br><span class="line">输入</span><br><span class="line"></span><br><span class="line">```cmd</span><br><span class="line">windeployqt +项目文件夹</span><br></pre></td></tr></table></figure></p>
+        <h3 id="QT入门"><a href="#QT入门" class="headerlink" title="QT入门"></a>QT入门</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p> Qt 是一个著名的 C++ 应用程序框架。你并不能说它只是一个 GUI 库，因为 Qt 十分庞大，并不仅仅是 GUI 组件。使用 Qt，在一定程度上你获得的是一个“一站式”的解决方案：不再需要研究 STL，不再需要 C++ 的<code>&lt;string&gt;</code>，不再需要到处去找解析 XML、连接数据库、访问网络的各种第三方库，因为 Qt 自己内置了这些技术。 </p>
+<p>关于GUI</p>
+<p><a href="https://zhuanlan.zhihu.com/p/67279058" target="_blank" rel="noopener">参考</a></p>
+<h4 id="关于学习建议"><a href="#关于学习建议" class="headerlink" title="关于学习建议"></a>关于学习建议</h4><p>建议在b站或者youtube上找一些视频教程看看，然后再看我这个博客，另外QT自身的帮助文档很有用。</p>
+<h4 id="Qt-Creator简介"><a href="#Qt-Creator简介" class="headerlink" title="Qt Creator简介"></a>Qt Creator简介</h4><p>下载：略。</p>
+<p>下载程序中的mingw492表明该版本Qt使用了MinGW作为编译提示器。MinGW即Minimalist GNU For Windows，是将GNU开发工具移植到Win32平台下的产物，是一套Windows上的GNU工具集，用其开发的程序不需要额外的第三方DLL支持就可以直接在Windows下运行。。在Windows系统中还可以使用MSVC版本Qt，需要使用Visual C++作为编译器，</p>
+<p>界面：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191202140919.png" alt></p>
+<p>点击示例，下载一个示例程序，点击左下角绿色三角形或ctrl+R运行。</p>
+<h4 id="第一个项目（你的第一个GUI程序）"><a href="#第一个项目（你的第一个GUI程序）" class="headerlink" title="第一个项目（你的第一个GUI程序）"></a>第一个项目（你的第一个GUI程序）</h4><p>1、打开QT，构建项目</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/ex1.gif" alt></p>
+<p>相关文件说明</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.pro</td>
+<td>该文件是项目文件，其中包含了项目相关信息</td>
+</tr>
+<tr>
+<td>.pro.user</td>
+<td>该文件中包含了与用户有关的项目信息</td>
+</tr>
+<tr>
+<td>.h</td>
+<td>该文件是新建的HelloDialog类的头文件</td>
+</tr>
+<tr>
+<td>.cpp</td>
+<td></td>
+</tr>
+<tr>
+<td>main.cpp</td>
+<td>该文件中包含了main（）主函数</td>
+</tr>
+<tr>
+<td>hellodialog.ui</td>
+<td>该文件是设计师设计的界面对应的界面文件</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>2、查看构建项目生成的文件<br>再看一下项目目录中的文件可以发现，E:\app\src\02\2-1目录下又多了一个build-heloworld-Desktop_Qt_5_6_1_MinGW_32bit-Debug文件夹，这是默认的构建目录。也就是说，Qt Creator将项目源文件和编译生成的文件进行了分类存放，helloworld文件夹中是项目源文件，这个文件夹存放的是编译后生成的文件。进入该文件夹可以看到，这里有3个Makefile文件和一个ui_hellodialog.h文件，还有两个目录debug和release，如图2-8所示。release文件夹是空的，进入debug文件夹，有3个.o文件和一个.cpp文件，它们是编译时生成的中间文件，可以不必管它，而剩下的一个helloworld.exe文件便是生成的可执行文件。</p>
+<p>3、双击exe发现弹出丢失dll的警告框，此时需将对应bin文件夹添加到环境变量中</p>
+<p>4、打包发布（在所有人的电脑上都能运行）</p>
+<p>先用release模式构建程序</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191202142617.png" alt></p>
+<p>找到对应打包程序。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191202142716.png" alt></p>
+<p>输入</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windeployqt +项目文件夹</span><br></pre></td></tr></table></figure>
 <p>到这里就已经完成了开发一个应用程序的最基本流程。下面再来看一个经常被提到的概念：静态编译。静态编译是相对于前面讲到的动态编译而言的。就像前面看到的一样，在Qt Creator默认的情况下，编译的程序要想发布就需要包含dll文件，这种编译方式被称为动态编译。而静态编译就是将Qt的库进行重新编译，用静态编译的Qt库来链接程序，这样生成的目标文件就可以直接运行，而不再需要dll文件的支持。不过这样生成的exe文件也就很大了，有好几MB，而且静态编译缺乏灵活性，也不能部署插件。从前面的介绍可以看到，其实发布程序时带几个dll文件并不是很复杂的事情，而且如果要同时发布多个应用程序，还可以共用dll文件，所以使用默认的方式就可以了。想了解更多Qt发布的知识和静态编译的方法，可以在Qt Creator帮助的索引方式下通过Deploying Qt Applications关键字查看，Windows平台发布程序对应的关键字是Qt for Windows-Deployment。</p>
 <p>5、设置程序运行图标</p>
 <p>第一步，创建.ico文件。将ico图标文件复制到工程文件夹的helloworld目录中，重命名为“myico.ico”。完成后helloworld文件夹中的内容。</p>
@@ -491,8 +551,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/21/算法之路(2)/" rel="next" title="算法之路（2）">
-                <i class="fa fa-chevron-left"></i> 算法之路（2）
+              <a href="/2019/11/21/算法之路(1)/" rel="next" title="算法之路（1）">
+                <i class="fa fa-chevron-left"></i> 算法之路（1）
               </a>
             
           </div>
@@ -629,7 +689,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#QT入门"><span class="nav-number">1.</span> <span class="nav-text">QT入门</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#脱离QTDesigner的一个程序（HelloWorld详解）"><span class="nav-number">1.2.</span> <span class="nav-text">脱离QTDesigner的一个程序（HelloWorld详解）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在文本编辑器-命令行编译程序"><span class="nav-number">1.3.</span> <span class="nav-text">在文本编辑器+命令行编译程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-ui文件-就是拖控件，小孩子都会，前面看不懂直接跳到这里吧"><span class="nav-number">1.4.</span> <span class="nav-text">使用.ui文件(就是拖控件，小孩子都会，前面看不懂直接跳到这里吧)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口部件（进入正题）"><span class="nav-number">1.5.</span> <span class="nav-text">窗口部件（进入正题）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#QWidget类"><span class="nav-number">1.6.</span> <span class="nav-text">QWidget类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗囗、子部件以及窗囗类型"><span class="nav-number">1.7.</span> <span class="nav-text">窗囗、子部件以及窗囗类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口类型"><span class="nav-number">1.8.</span> <span class="nav-text">窗口类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#几何布局"><span class="nav-number">1.9.</span> <span class="nav-text">几何布局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用QDebug调试"><span class="nav-number">1.10.</span> <span class="nav-text">使用QDebug调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对话框QDialog"><span class="nav-number">1.11.</span> <span class="nav-text">对话框QDialog</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模态和非模态对话框"><span class="nav-number">1.12.</span> <span class="nav-text">模态和非模态对话框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他窗口部件"><span class="nav-number">1.13.</span> <span class="nav-text">其他窗口部件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#QFrame类族"><span class="nav-number">1.13.1.</span> <span class="nav-text">QFrame类族</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#按钮"><span class="nav-number">1.13.2.</span> <span class="nav-text">按钮</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#QLineEdit"><span class="nav-number">1.13.3.</span> <span class="nav-text">QLineEdit</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#信号与槽（重点）"><span class="nav-number">1.14.</span> <span class="nav-text">信号与槽（重点）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义信号槽"><span class="nav-number">1.15.</span> <span class="nav-text">自定义信号槽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在QTDesigner中实现信号和槽"><span class="nav-number">1.16.</span> <span class="nav-text">在QTDesigner中实现信号和槽</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#QT入门"><span class="nav-number">1.</span> <span class="nav-text">QT入门</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于学习建议"><span class="nav-number">1.2.</span> <span class="nav-text">关于学习建议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Qt-Creator简介"><span class="nav-number">1.3.</span> <span class="nav-text">Qt Creator简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第一个项目（你的第一个GUI程序）"><span class="nav-number">1.4.</span> <span class="nav-text">第一个项目（你的第一个GUI程序）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#脱离QTDesigner的一个程序（HelloWorld详解）"><span class="nav-number">1.5.</span> <span class="nav-text">脱离QTDesigner的一个程序（HelloWorld详解）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在文本编辑器-命令行编译程序"><span class="nav-number">1.6.</span> <span class="nav-text">在文本编辑器+命令行编译程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-ui文件-就是拖控件，小孩子都会，前面看不懂直接跳到这里吧"><span class="nav-number">1.7.</span> <span class="nav-text">使用.ui文件(就是拖控件，小孩子都会，前面看不懂直接跳到这里吧)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口部件（进入正题）"><span class="nav-number">1.8.</span> <span class="nav-text">窗口部件（进入正题）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#QWidget类"><span class="nav-number">1.9.</span> <span class="nav-text">QWidget类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗囗、子部件以及窗囗类型"><span class="nav-number">1.10.</span> <span class="nav-text">窗囗、子部件以及窗囗类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口类型"><span class="nav-number">1.11.</span> <span class="nav-text">窗口类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#几何布局"><span class="nav-number">1.12.</span> <span class="nav-text">几何布局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用QDebug调试"><span class="nav-number">1.13.</span> <span class="nav-text">使用QDebug调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对话框QDialog"><span class="nav-number">1.14.</span> <span class="nav-text">对话框QDialog</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模态和非模态对话框"><span class="nav-number">1.15.</span> <span class="nav-text">模态和非模态对话框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他窗口部件"><span class="nav-number">1.16.</span> <span class="nav-text">其他窗口部件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#QFrame类族"><span class="nav-number">1.16.1.</span> <span class="nav-text">QFrame类族</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#按钮"><span class="nav-number">1.16.2.</span> <span class="nav-text">按钮</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#QLineEdit"><span class="nav-number">1.16.3.</span> <span class="nav-text">QLineEdit</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#信号与槽（重点）"><span class="nav-number">1.17.</span> <span class="nav-text">信号与槽（重点）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义信号槽"><span class="nav-number">1.18.</span> <span class="nav-text">自定义信号槽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在QTDesigner中实现信号和槽"><span class="nav-number">1.19.</span> <span class="nav-text">在QTDesigner中实现信号和槽</span></a></li></ol></li></ol></div>
             
 
           </div>
