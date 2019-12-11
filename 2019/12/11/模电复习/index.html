@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/an.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="其他,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="模电复习双极型晶体管及其放大电路双极型晶体管结构 一般，管型是NPN还是PNP应从管壳上标注的型号来辨别。依照标准，三极管型号的第二位(字母)，A、C表示PNP管，B、D表示NPN管。三个电极可以万用表确定。 晶体管处于放大状态的工作条件内部条件 发射区的掺杂浓度最高，以有效地发射载流子。 使基区掺杂浓度最小且区最薄，以有效地传输载流子。 使集电结最大，且掺杂浓度小于发射区，以有效地收集载流子。">
+<meta name="keywords" content="其他">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模电复习（1）">
+<meta property="og:url" content="http://yoursite.com/2019/12/11/模电复习/index.html">
+<meta property="og:site_name" content="An&#39;s personal blog">
+<meta property="og:description" content="模电复习双极型晶体管及其放大电路双极型晶体管结构 一般，管型是NPN还是PNP应从管壳上标注的型号来辨别。依照标准，三极管型号的第二位(字母)，A、C表示PNP管，B、D表示NPN管。三个电极可以万用表确定。 晶体管处于放大状态的工作条件内部条件 发射区的掺杂浓度最高，以有效地发射载流子。 使基区掺杂浓度最小且区最薄，以有效地传输载流子。 使集电结最大，且掺杂浓度小于发射区，以有效地收集载流子。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191206092323.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191206095211.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207094933.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207095212.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207095434.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207100917.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207101443.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207102859.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207110009.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207113710.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207113815.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207113832.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207114537.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207134803.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207134936.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207140731.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207141334.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207143216.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207143731.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207144740.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207145934.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207150542.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191207150940.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191211142116.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191211143000.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191211144140.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191211145042.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191211145348.png">
+<meta property="og:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191211145454.png">
+<meta property="og:updated_time" content="2019-12-11T07:00:12.454Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="模电复习（1）">
+<meta name="twitter:description" content="模电复习双极型晶体管及其放大电路双极型晶体管结构 一般，管型是NPN还是PNP应从管壳上标注的型号来辨别。依照标准，三极管型号的第二位(字母)，A、C表示PNP管，B、D表示NPN管。三个电极可以万用表确定。 晶体管处于放大状态的工作条件内部条件 发射区的掺杂浓度最高，以有效地发射载流子。 使基区掺杂浓度最小且区最薄，以有效地传输载流子。 使集电结最大，且掺杂浓度小于发射区，以有效地收集载流子。">
+<meta name="twitter:image" content="https://animg.oss-cn-shanghai.aliyuncs.com/20191206092323.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/11/模电复习/">
+
+
+
+
+
+  <title>模电复习（1） | An's personal blog</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">An's personal blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/模电复习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AN">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="An's personal blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">模电复习（1）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-11T00:00:00+08:00">
+                2019-12-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="模电复习"><a href="#模电复习" class="headerlink" title="模电复习"></a>模电复习</h2><h3 id="双极型晶体管及其放大电路"><a href="#双极型晶体管及其放大电路" class="headerlink" title="双极型晶体管及其放大电路"></a>双极型晶体管及其放大电路</h3><h4 id="双极型晶体管结构"><a href="#双极型晶体管结构" class="headerlink" title="双极型晶体管结构"></a>双极型晶体管结构</h4><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191206092323.png" alt></p>
+<p>一般，管型是NPN还是PNP应从管壳上标注的型号来辨别。依照标准，三极管型号的第二位(字母)，A、C表示PNP管，B、D表示NPN管。三个电极可以万用表确定。</p>
+<h4 id="晶体管处于放大状态的工作条件"><a href="#晶体管处于放大状态的工作条件" class="headerlink" title="晶体管处于放大状态的工作条件"></a>晶体管处于放大状态的工作条件</h4><h5 id="内部条件"><a href="#内部条件" class="headerlink" title="内部条件"></a>内部条件</h5><ul>
+<li>发射区的掺杂浓度最高，以有效地发射载流子。</li>
+<li>使基区掺杂浓度最小且区最薄，以有效地传输载流子。</li>
+<li>使集电结最大，且掺杂浓度小于发射区，以有效地收集载流子。</li>
+</ul>
+<h5 id="外部条件"><a href="#外部条件" class="headerlink" title="外部条件"></a>外部条件</h5><p>发射极(eb结)正偏</p>
+<p>集电结(cb结)反偏</p>
+<h4 id="双极型晶体管工作原理"><a href="#双极型晶体管工作原理" class="headerlink" title="双极型晶体管工作原理"></a>双极型晶体管工作原理</h4><h5 id="放大状态下晶体管中载流子的运动-以NPN为例"><a href="#放大状态下晶体管中载流子的运动-以NPN为例" class="headerlink" title="放大状态下晶体管中载流子的运动(以NPN为例)"></a>放大状态下晶体管中载流子的运动(以NPN为例)</h5><p>①发射结正偏，所以扩散运动﹥漂移运动。故发射区和基区多子(电子和空穴)的相互注入。但发射区(e区)高掺杂，故相互注入是不对称的，由P区向N区的多子(空穴)扩散(IEP)可忽略，所以发射极电流$I_E= I_{EN}+I_{EP}\approx I_{EN} $。</p>
+<p>②进入P区的电子因为浓度梯度不断地向集电结方向扩散，多数电子到达集电结边缘，少数电子与基区的空穴复合形成复合电流，复合掉的空穴由$U_{BB}$补充。</p>
+<p>③集电结反偏，故结内电场很强，从基区中扩散到集电结边缘的电子受强电场的作用，迅速漂移越过集电结而进入集电区，形成电流$I_{CN}$。另外有基区和集电区本身的少子漂移（电子和空穴），形成反向饱和漏电流$I_{CBO}$。</p>
+<h4 id="非平衡载流子传输三部曲"><a href="#非平衡载流子传输三部曲" class="headerlink" title="非平衡载流子传输三部曲"></a>非平衡载流子传输三部曲</h4><p>①发射区向基区注入多子形成$I_{EN},I_{EP}$；</p>
+<p>②基区内复合($I_{BN}$)和继续扩散；                                </p>
+<p>③集电结的收集作用($I_{CN}$)和少子的漂移$I_{CBO}$。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191206095211.png" style="zoom:67%;"></p>
+<h4 id="电流分配关系"><a href="#电流分配关系" class="headerlink" title="电流分配关系"></a>电流分配关系</h4><p>扩散运动形成发射极电流$I_E$，复合运动形成基极电流$I_B$，漂移运动形成集电极电流$I_C$</p>
+<script type="math/tex; mode=display">
+I_{B}=I_{E P}+I_{B N}-I_{C B O} \approx I_{B N}-I_{C B O}</script><script type="math/tex; mode=display">
+\boldsymbol{I}_{C}=\boldsymbol{I}_{C N}+\boldsymbol{I}_{C B O}</script><script type="math/tex; mode=display">
+I_{E} \approx I_{E N}=I_{B N}+I_{C N}=I_{B}+I_{C}</script><p>扩散与复合的比例决定了晶体管的电流放大能力</p>
+<p>共射极</p>
+<script type="math/tex; mode=display">
+\bar{\beta}=\frac{I_{C N}}{I_{B N}}=\frac{I_{C}-I_{C B O}}{I_{B}+I_{C B O}} \approx \frac{I_{C}}{I_{B}}</script><p>物理意义，基区每复合一个电子，就有$\beta$个电子扩散到集电区中去。$\bar{\beta}=20 \sim 200$</p>
+<p>三极管的电流分配关系还可以用 由发射区传输到集电区的电子流$I_{CN}$/发射极总发射的电子流$I_E$  </p>
+<p>这个比值称为共基直流电流放大系数$\alpha$</p>
+<script type="math/tex; mode=display">
+\bar{\alpha}=\frac{I_{C N}}{I_{E N}}=\frac{I_{C}-I_{C B O}}{I_{E}}<1</script><p>物理意义：发射区每向基区注入一个电子，就有$\alpha$个电子扩散到集电区去。</p>
+<script type="math/tex; mode=display">
+\bar{\beta}=\frac{\bar{\alpha}}{1-\bar{\alpha}} \quad \bar{\alpha}=\frac{\bar{\beta}}{1+\bar{\beta}}</script><p>1、形式与结构 $\left\{\begin{array}{l}{\mathbf{N P N}} \\ {\mathbf{P N P}}\end{array}\right\}$三区、三极、两结</p>
+<p>2、特点：基集电流控制集电极电流并实现放大</p>
+<p>内因：发射区载流子浓度高，基区薄，集电区面积大</p>
+<p>外因：发射结正偏、集电结反偏</p>
+<p>3、电流关系</p>
+<script type="math/tex; mode=display">
+\left\{\begin{array}{l}{I_{\mathrm{E}}=I_{\mathrm{C}}+I_{\mathrm{B}}} \\ {I_{\mathrm{C}}=\beta I_{\mathrm{B}}} \\ {I_{\mathrm{E}}=(1+\beta) I_{\mathrm{B}}}\end{array}\right.</script><h4 id="晶体管的三种基本接法（组态）"><a href="#晶体管的三种基本接法（组态）" class="headerlink" title="晶体管的三种基本接法（组态）"></a>晶体管的三种基本接法（组态）</h4><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207094933.png" alt></p>
+<p>无论哪种组态，为了使晶体管具有正常的电流放大作用，都必须给：</p>
+<p>①发射结加正向偏压</p>
+<p>②集电结加反向偏压</p>
+<h4 id="晶体管的特性曲线（以NPN为例）"><a href="#晶体管的特性曲线（以NPN为例）" class="headerlink" title="晶体管的特性曲线（以NPN为例）"></a>晶体管的特性曲线（以NPN为例）</h4><h5 id="共射极输出特性曲线"><a href="#共射极输出特性曲线" class="headerlink" title="共射极输出特性曲线"></a>共射极输出特性曲线</h5><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207095212.png" alt></p>
+<p>输出特性曲线：以$i_B$为参变量，输出电流$i_C$与输入电压$u_{CE}$的关系曲线。</p>
+<p>共射输出特性曲线可分为4个区域（饱和区、放大区、截止区、击穿区）</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207095434.png" alt></p>
+<p>1、<strong>放大区</strong>（要求发射结正偏，集电结反偏（$U_{CE}&gt;U_{BE}$））</p>
+<p>(1)$i_C$基本上只受$i_B$控制，$u_{CE}$对其影响很小</p>
+<p>$i_C$的大小取决于发射结的发射能力和集电结的吸收能力。</p>
+<p>$i_B$固定($U_{BE}$不变)$\rightarrow$发射结的发射能力不变(单位时间内扩散到集电结边缘的电子数量不变)【反偏状态下的集电结对电极的收集能力较强:凡是能扩散到集电结边缘的电子，都能被集电结收集，形成集电极电流 $i_C$】$\rightarrow$即使$U_{CE}$再增加，吸收力再增强，也没有更多的电子可供收集的了$\rightarrow$ $i_C$增加不明显</p>
+<p>(2)当$i_B$不变时，随着$u_{CE}$的增加，特性曲线略有上翘—基区宽度调制效应或厄尔利效应。</p>
+<p>$u_{CE}\uparrow<script type="math/tex">\rarr$c结反向电压$\uarr</script>\rarr$c结宽度$\uarr\rarr$基区宽度$\darr\rarr$基区中电子与空穴复合的机会$\darr\rarr  i_C\uarr$</p>
+<p>厄尔利电压$U_A$：反映了厄尔利效应的大小</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207100917.png" alt></p>
+<p>此效应意味着晶体管在放大区的交流输出电阻是个有限值</p>
+<script type="math/tex; mode=display">
+r_{c e}=\frac{\left|U_{A}\right|+U_{C E Q}}{I_{C Q}} \approx \frac{\left|U_{A}\right|}{I_{C Q}}</script><p>2、<strong>饱和区</strong>（要求发射结、集电结均正偏（$U_{CE}&lt;U_{BE}$））</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207101443.png" alt></p>
+<p>(1)$i_B$一定时，饱和区的$i_C$比放大区的小，即$\beta i_B&gt;i_C$</p>
+<p>（集电结正偏，反向饱和电流$I_{CBO}$不复存在，取而代之的是方向相反的多子扩散电流，所以总$i_C$下降。</p>
+<p>(2)$u_{CE}$较小($u_{CE}&lt;u_{BE}$)，$i_C$不受$i_B$控制（<script type="math/tex">i_{\mathrm{C}} \propto u_{\mathrm{CE}}</script>）</p>
+<p>当$u_{CE}$减小到一定程度，集电结电场削弱，收集电子的能力降低，即使$i_B$增加， $i_C$基本不增加。<br>即发射有余但收集不足, $ i_B$对$i_C$失去控制，晶体管丧失放大能力</p>
+<p>饱和区的应用</p>
+<p>饱和时，两个结均是正偏，正向电阻都很小，晶体管呈现低阻态，三个电极之间近似短路，此时晶体管可做开关用。</p>
+<p>3、截止区（要求发射结、集电结均反偏）</p>
+<p>三个电极均为反向电流，数值很小，三个电极之间，近似开路。此时的晶体管也可作为开关用。</p>
+<p>在开关电路中，饱和就是导通，截止就是断开。</p>
+<h5 id="共射极输入特性曲线-类似于PN结的伏安特性曲线"><a href="#共射极输入特性曲线-类似于PN结的伏安特性曲线" class="headerlink" title="共射极输入特性曲线(类似于PN结的伏安特性曲线)"></a>共射极输入特性曲线(类似于PN结的伏安特性曲线)</h5><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207102859.png" alt></p>
+<p>(1)当$U_{CE}$=0时，晶体管相当于两个二极管并联，输入特性曲线与二极管相似。</p>
+<p>(2)当$U_{CE}\ge 1V$时，==集电结反偏==，使得从发射区进入基区的电子更多地流向集电区，故流向基区的电流逐渐减小，所以曲线右移。实际上，对于一般的NPN型硅管，$U_{CE}\geq 1V$时，只要$U_{BE}$固定，则从发射区发射到基区的电子数目就一定，而此时集电结上的反偏电压已能把这些电子中的绝大部分吸引到集电极,所以即使UCE再增如,iC也只稍有增加(厄尔利效应),故$i_B$也只稍稍减小,即$U_{CE}≥1V$以后的特性曲线稍有右移,基本重合。</p>
+<h4 id="晶体管的主要参数"><a href="#晶体管的主要参数" class="headerlink" title="晶体管的主要参数"></a>晶体管的主要参数</h4><p>一、电流放大系数</p>
+<p>1、共射直流放大系数</p>
+<p>反映静态时集电极电流与基极电流之比。$\bar{\beta}=\frac{I_{C}}{I_{B}}$</p>
+<p>2、共射交流放大系数</p>
+<p>反映动态时的电流放大特性。$\beta=\frac{\Delta i_{C}}{\Delta i_{B}}$</p>
+<p>一般$\bar{\beta}=\beta$，在以后的计算中，不必区分。</p>
+<p>二、反向饱和电流（是指管子各电极之间的反向电流）</p>
+<p>①$I_{CBO}$表示发射极E开路(Open)时(iE=0)，集电极C—基极B间的反向电流，称为集电结的反向饱和电流。</p>
+<p>②$I_{CEO}$表示基极B开路(Open)时(iB=0) ，集电极C—发射极E间的反向电流，称为集电极穿透电流。</p>
+<p>③$I_{EBO}$表示集电极C开路(Open)时(iC=0) ，基极—发射极间的反向电流。</p>
+<p>三、极限参数</p>
+<p>1、反向击穿电压$U_{(BR)CBO}&gt;U_{(BR)CEO}&gt;U_{(BR)EBO}$</p>
+<p>2、最大允许集电结电流$I_{CM}$</p>
+<h3 id="晶体管放大电路的放大原理"><a href="#晶体管放大电路的放大原理" class="headerlink" title="晶体管放大电路的放大原理"></a>晶体管放大电路的放大原理</h3><h4 id="放大电路的组成元件-NPN型"><a href="#放大电路的组成元件-NPN型" class="headerlink" title="放大电路的组成元件(NPN型)"></a>放大电路的组成元件(NPN型)</h4><p>需要被放大的信号为输入电压$u_i$，通常为交流小信号。</p>
+<p>(1)静态：$u_i=0$，各点电压、电流恒定，只存在直流量。</p>
+<p>(2)动态：$u_i\neq 0$，各点电压、电流在静态值的基础上叠加一个动态值。</p>
+<h4 id="静态工作点作用"><a href="#静态工作点作用" class="headerlink" title="静态工作点作用"></a>静态工作点作用</h4><p>电路处于静态时，三极管各电极的电压、电流在特性曲线上确定为一点，称为静态工作点，常称为Q点。一般用$I_{BQ},I_{CQ},U_{BEQ},U_{CEQ}$表示。设置静态工作点是保证放大电路正常工作的基础（输出电压会出现失真）</p>
+<h4 id="基本放大器的组成原则"><a href="#基本放大器的组成原则" class="headerlink" title="基本放大器的组成原则"></a>基本放大器的组成原则</h4><p>1）提供合适的直流电源，设置合适的工作点。</p>
+<p>2）输入信号作用在b-e回路</p>
+<p>3）设置合理的信号回路</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207110009.png" alt></p>
+<p>$U_{CC}$直流电源，$R_B$基极偏置电阻，$R_C$几点就偏置电阻，$R_L$负载电阻，$u_i$正弦信号源电压及内阻</p>
+<p>选择合适的电容$C_1,C_2$使其电容阻抗对交流信号近似短路，这样交流信号可以毫无损耗的送入输入端。而电容对直流信号而言，又近似开路，因此交流信号的加入不会影响直流工作点。</p>
+<p>在分析放大电路时，应遵循”先静态，后动态”的原则，求解静态工作点时应利用直流通路，求解动态参数时应利用交流通路，两种通路不可混淆。</p>
+<h4 id="直流通路和交流通路"><a href="#直流通路和交流通路" class="headerlink" title="直流通路和交流通路"></a>直流通路和交流通路</h4><p>画直流通路的原则：</p>
+<p>①视电容C开路，电感L短路</p>
+<p>②交流输入信号源视为短路，但保留其内阻</p>
+<p>画交流通路的原则：</p>
+<p>①视电容C短路，电感L开路</p>
+<p>②无内阻的直流电源（如$U_{CC}$）视为短路</p>
+<p>示例：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207113710.png" style="zoom:50%;"></p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207113815.png" style="zoom: 67%;"><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207113832.png" alt></p>
+<h4 id="分析放大电路工作点方法"><a href="#分析放大电路工作点方法" class="headerlink" title="分析放大电路工作点方法"></a>分析放大电路工作点方法</h4><p><strong>模型等效电路（近似估算）法</strong>：利用器件模型进行电路分析的方法。</p>
+<p>特点：运算简便，结果误差小。（主要方法）</p>
+<p><strong>图解分析法</strong>：在晶体管特性曲线上通过作图确定工作点及其在信号作用下的相对变化量</p>
+<p>特点：形象、直观，对理解放大原理、波形关系及非<br>线性失真有帮助，但对于小信号放大器，用图解法难以准确地进行定量分析。 （辅助方法） </p>
+<h3 id="放大电路的静态分析和设计"><a href="#放大电路的静态分析和设计" class="headerlink" title="放大电路的静态分析和设计"></a>放大电路的静态分析和设计</h3><h4 id="直流模型及静态工作点的估算"><a href="#直流模型及静态工作点的估算" class="headerlink" title="直流模型及静态工作点的估算"></a>直流模型及静态工作点的估算</h4><p>晶体管在放大状态下的直流模型：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207114537.png" alt></p>
+<p>输入回路等效为恒压源，输出回路等效为受$I_B$控制的受控电流源$I_C=\beta I_B$</p>
+<p>例题1：硅晶体管电路如图所示。若已知晶体管工作在放大状态，$\beta=100$，试计算晶体管的$I_{BQ}$，$I_{CQ}$和</p>
+<p>$U_{CEQ}$。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207134803.png" alt></p>
+<p>解：晶体管工作在放大状态，故可用直流模型代替晶体管，使得到如下图所示的直流等效电路。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207134936.png" alt></p>
+<p>由图可得：</p>
+<script type="math/tex; mode=display">
+U_{BB}=I_{BQ}R_B+U_{BE(ON)}\\
+I_{BQ}=\frac{U_{BB}-U_{BE(ON)}}{R_B}=\frac{6-0.7}{270}\approx 0.02mA\\
+I_{CQ}=\beta I_{BQ}=100 \times 0.02=2mA\\
+U_{CEQ}=U_{CC}-I_{CQ}R_C=12-2\times 3 =6V</script><p>例题2：若$U_{BB}$从0增加，说明晶体管的工作区间以及$I_{BQ}、I_{CQ}、U_{CEQ}$的变化情况。</p>
+<p>解：</p>
+<p>a、当$U_{BB}$在0~0.7V之间时，两个结都反偏，管子进入截止区。$I_{BQ}=I_{CQ}\approx 0，U_{CEQ}\approx U_{CC}$。</p>
+<p>b、当$U_{BB}$继续增大，发射结正偏，集电结反偏，管子进入放大区。随着$I_{BQ}$的增大，$I_{CQ}=\beta I_{BQ}$也增大，$U_{CEQ}=U_{CC}-I_{CQ}\times R_C$不断下降。</p>
+<p>c、当$U_{BB}$增加到$U_{CEQ}&lt;U_{BEQ}$时，集电结正偏，管子进入饱和区。此时，$I_{BQ}$的增加，不能引起$I_{CQ}$的增加。$U_{CEQ}\approx U_{CE(sat)}$。</p>
+<h4 id="静态工作点的图解分析法"><a href="#静态工作点的图解分析法" class="headerlink" title="静态工作点的图解分析法"></a>静态工作点的图解分析法</h4><p>直流图解分析时在晶体管特性曲线上，用作图的方法确定出直流工作点，并求出$I_{BQ}、U_{BEQ}、I_{CQ}、U_{CEQ}$。</p>
+<p>例题：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207140731.png" alt></p>
+<p>1）先确定输入回路的参数$I_{BQ}，U_{BEQ}$（可用图解法或近似估算法）</p>
+<p>2）再确定输出回路参数（图解法）</p>
+<p>a、用图解法求输入回路的静态工作点$I_{BQ},U_{BEQ}$</p>
+<p>由于，$I_B$在较大范围内变化时，$U_{BE}$基本不变。因此，实际对输入回路中静态工作点的确定，多采用近似估算法。</p>
+<p>b、利用近似估算法求输入回路的静态工作点$I_{BQ}，U_{BEQ}$的步骤：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207141334.png" style="zoom:67%;"></p>
+<script type="math/tex; mode=display">
+U_{BB}=I_{BQ}R_{B}+U_{BE(on)}\\
+I_{BQ}=\frac {U_{BB}-U_{BE(on)}}{R_B}</script><p>输出回路的静态工作点的图解分析法：</p>
+<p>①写出晶体管的输出回路方程$u_{CE}=U_{CC}-I_CR_C$</p>
+<p>②在坐标中画出输出回路方程所确定的直线-直流负载线</p>
+<p>③输出特性曲线与直流负载线的交点为静态工作点Q</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207143216.png" alt></p>
+<p>例题：在下图电路中，$R_B=560k\Omega，R_C=3k\Omega,U_{CC}=12V$，晶体硅管的输出特性曲线如下图所示，试用图解法确定直流工作点。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207143731.png" alt></p>
+<p>解：</p>
+<p>（1）取$U_{BE(on)}=0.7V$，由估算法可得：</p>
+<script type="math/tex; mode=display">
+I_{BQ}=\frac {U_{CC}-U_{BE(on)}}{R_B}=\frac {12-0.7}{560}=0.02mA=20uA</script><p>（2）输出回路满足（直流负载线）：</p>
+<script type="math/tex; mode=display">
+u_{CE}=U_{CC}-i_CR_{C}\\
+u_{CE}=12-3i_C\\
+i_C=0,u_{CE}=12V\\
+u_{CE}=0,i_C=4mA</script><p>（3）</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207144740.png" alt></p>
+<p>由图中Q点坐标可得：$I_{CQ}=2mA，u_{CEQ}=6V$</p>
+<h4 id="用图解分析电路参数对静态工作点的影响"><a href="#用图解分析电路参数对静态工作点的影响" class="headerlink" title="用图解分析电路参数对静态工作点的影响"></a>用图解分析电路参数对静态工作点的影响</h4><p>1、改变$R_B$，保持$U_{CC}，R_C，\beta$不变</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207145934.png" alt></p>
+<script type="math/tex; mode=display">
+I_{BQ}=\frac {U_CC-U_{BE(on)}}{R_B}\\
+u_{CE}=U_{CC}-i_CR_C</script><p>$R_B$增大，Q点沿着直流负载线下移</p>
+<p>$R_B$减小，Q点沿着直流负载线上移</p>
+<p>2、改变$R_C$，保持$R_B,U_{CC},\beta$不变</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207150542.png" alt></p>
+<p>增大$R_C$，直流负载线斜率改变，则Q点向饱和区移近。</p>
+<p>3、改变$\beta$，保持$R_B，R_C，U_{CC}$不变：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191207150940.png" alt></p>
+<p>增大$\beta,I_{CQ}$增大，输出特性曲线上移，$U_{CEQ}$减小，故Q点移近饱和区。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>先输入，后输出</p>
+<p>1、估算法（等效模型法）需已知$\beta$值</p>
+<p>2、图解法：</p>
+<p>先用估算法求输入回路的静态工作点</p>
+<p>再用图解法求输出回路的静态工作点</p>
+<h4 id="晶体管工作状态分析方法"><a href="#晶体管工作状态分析方法" class="headerlink" title="晶体管工作状态分析方法"></a>晶体管工作状态分析方法</h4><p>1、先判断晶体管是否截止：</p>
+<p>若$U_{BB}\leq U_{BE(on)}$且$U_{BB}&lt;U_{CC}$，晶体管截止，对应的</p>
+<script type="math/tex; mode=display">
+I_B=I_C=I_E=0\\{U_{BE}=U_{BB}}\\U_{CE}=U_{CC}</script><p>若$U_{BB}&gt;U_{BE(on)}$，则发射结正偏，下面判断集电结正偏还是反偏：</p>
+<p>2、利用假设法判断晶体管是处于放大还是饱和状态：</p>
+<p>首先假设晶体管处于放大状态，然后画出放大状态下的等效电路：</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191211142116.png" alt></p>
+<p>由图（b）：</p>
+<script type="math/tex; mode=display">
+U_{BB}=I_{BQ}R_B+U_{BE(on)}+(1+\beta)I_{BQ}R_E\\
+I_{BQ}=\frac{U_{BB}-U_{BE(on)}}{R_B+(1+\beta)R_E}\\
+I_{CQ}=\beta I_{BQ}\approx I_{EQ}\\
+U_{CEQ}=U_{CC}-I_{CQ}(R_C+R_E)</script><p>由$U_{CEQ}$判断</p>
+<h4 id="放大状态下的直流偏置电路"><a href="#放大状态下的直流偏置电路" class="headerlink" title="放大状态下的直流偏置电路"></a>放大状态下的直流偏置电路</h4><p>一、固定偏流电路</p>
+<p>二、分压式直流负反馈偏置电路（稳压+负反馈）</p>
+<p>① 为稳定基极电位$U_{BQ}$，引入电阻$R_{B2}$</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191211143000.png" alt></p>
+<p>即基极电位近似等于分压回路中$R_{B2}$上的压降，即可稳定基极电压。</p>
+<h3 id="共射放大电路的动态分析和设计"><a href="#共射放大电路的动态分析和设计" class="headerlink" title="共射放大电路的动态分析和设计"></a>共射放大电路的动态分析和设计</h3><p>分析指标：放大倍数、输入电阻、输出电阻</p>
+<p>分析方法：图解法、小信号等效电路法</p>
+<p>1、交流图解分析法</p>
+<p>在输入信号作用下，通过作图来确定放大管各级电流和极间电压的变化量。由于交流信号是叠加在静态工作点上的，因此交流图解法必须在直流状态的基础上分析。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191211144140.png" alt></p>
+<p>动态特性是由交流通路决定的</p>
+<p>由图：</p>
+<script type="math/tex; mode=display">
+i_c=-\frac {u_{ce}}{R_L'} -交流负载方程\\
+i_C=I_{CQ}+i_c,u_{CE}=U_{CEQ}+u_{ce}\\
+i_c-I_{CQ}=-\frac 1{R_L'}(u_{CE}-U_{CEQ})\\
+其中R_L'=R_C//R_L</script><p>交流负载线：$i_c-I_{CQ}=-\frac 1{R_L’}(u_{CE}-U_{CEQ})$</p>
+<p>特点，通过静态工作点+斜率为$\frac 1{R_L’}$</p>
+<p>交流负载线比直流负载线陡峭。</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191211145042.png" alt></p>
+<p>画出交流负载线后，就可以根据电流$i_B$的变化规律画出对应的$i_C$和$u_{CE}$的波形。</p>
+<p>(a)输入波形</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191211145348.png" alt></p>
+<p>(b)输出波形</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20191211145454.png" alt></p>
+<p>交流图解法：</p>
+<p>1、画直流通路和直流负载线</p>
+<p>2、确定静态工作点</p>
+<p>3、画交流通路和交流负载线</p>
+<p>4、根据输入交流信号$u_{BE}$的变化求输入电流$i_B$</p>
+<p>5、根据$i_B$的变化范围和交流负载线确定输出参数$i_C$和$u_{CE}$</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/其他/" rel="tag"> <i class="fa fa-tag"></i> 其他</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/02/QT入门/" rel="next" title="C++第五次授课(QT入门)">
+                <i class="fa fa-chevron-left"></i> C++第五次授课(QT入门)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="AN">
+            
+              <p class="site-author-name" itemprop="name">AN</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#模电复习"><span class="nav-number">1.</span> <span class="nav-text">模电复习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#双极型晶体管及其放大电路"><span class="nav-number">1.1.</span> <span class="nav-text">双极型晶体管及其放大电路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#双极型晶体管结构"><span class="nav-number">1.1.1.</span> <span class="nav-text">双极型晶体管结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晶体管处于放大状态的工作条件"><span class="nav-number">1.1.2.</span> <span class="nav-text">晶体管处于放大状态的工作条件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#内部条件"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">内部条件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#外部条件"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">外部条件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双极型晶体管工作原理"><span class="nav-number">1.1.3.</span> <span class="nav-text">双极型晶体管工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#放大状态下晶体管中载流子的运动-以NPN为例"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">放大状态下晶体管中载流子的运动(以NPN为例)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非平衡载流子传输三部曲"><span class="nav-number">1.1.4.</span> <span class="nav-text">非平衡载流子传输三部曲</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#电流分配关系"><span class="nav-number">1.1.5.</span> <span class="nav-text">电流分配关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晶体管的三种基本接法（组态）"><span class="nav-number">1.1.6.</span> <span class="nav-text">晶体管的三种基本接法（组态）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晶体管的特性曲线（以NPN为例）"><span class="nav-number">1.1.7.</span> <span class="nav-text">晶体管的特性曲线（以NPN为例）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#共射极输出特性曲线"><span class="nav-number">1.1.7.1.</span> <span class="nav-text">共射极输出特性曲线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#共射极输入特性曲线-类似于PN结的伏安特性曲线"><span class="nav-number">1.1.7.2.</span> <span class="nav-text">共射极输入特性曲线(类似于PN结的伏安特性曲线)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晶体管的主要参数"><span class="nav-number">1.1.8.</span> <span class="nav-text">晶体管的主要参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#晶体管放大电路的放大原理"><span class="nav-number">1.2.</span> <span class="nav-text">晶体管放大电路的放大原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#放大电路的组成元件-NPN型"><span class="nav-number">1.2.1.</span> <span class="nav-text">放大电路的组成元件(NPN型)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态工作点作用"><span class="nav-number">1.2.2.</span> <span class="nav-text">静态工作点作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本放大器的组成原则"><span class="nav-number">1.2.3.</span> <span class="nav-text">基本放大器的组成原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直流通路和交流通路"><span class="nav-number">1.2.4.</span> <span class="nav-text">直流通路和交流通路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析放大电路工作点方法"><span class="nav-number">1.2.5.</span> <span class="nav-text">分析放大电路工作点方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#放大电路的静态分析和设计"><span class="nav-number">1.3.</span> <span class="nav-text">放大电路的静态分析和设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#直流模型及静态工作点的估算"><span class="nav-number">1.3.1.</span> <span class="nav-text">直流模型及静态工作点的估算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态工作点的图解分析法"><span class="nav-number">1.3.2.</span> <span class="nav-text">静态工作点的图解分析法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用图解分析电路参数对静态工作点的影响"><span class="nav-number">1.3.3.</span> <span class="nav-text">用图解分析电路参数对静态工作点的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.3.4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晶体管工作状态分析方法"><span class="nav-number">1.3.5.</span> <span class="nav-text">晶体管工作状态分析方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#放大状态下的直流偏置电路"><span class="nav-number">1.3.6.</span> <span class="nav-text">放大状态下的直流偏置电路</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共射放大电路的动态分析和设计"><span class="nav-number">1.4.</span> <span class="nav-text">共射放大电路的动态分析和设计</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
+
+
+
