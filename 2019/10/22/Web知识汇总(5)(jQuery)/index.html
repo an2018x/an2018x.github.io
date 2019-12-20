@@ -1,366 +1,151 @@
 <!DOCTYPE html>
+<html lang="zh-Hans">
 
 
 
 
 
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>Web知识汇总(5)(jQuery) ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
 
 
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/an.ico?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/an.ico?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/an.ico?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Web前端,">
-
-
-
-
-
-
-
-
-
-
-<meta name="description" content="Web知识汇总(5)(jQuery)简介jQuery是一个JavaScript函数库。 jQuery是一个轻量级的”写的少，做的多”的JavaScript库。 jQuery库包含以下功能：  HTML 元素选取 HTML 元素操作 CSS 操作 HTML 事件函数 JavaScript 特效和动画 HTML DOM 遍历和修改 AJAX Utilities   除此之外，Jquery还提供了大量的">
-<meta name="keywords" content="Web前端">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Web知识汇总(5)(jQuery)">
-<meta property="og:url" content="http://yoursite.com/2019/10/22/Web知识汇总(5)(jQuery)/index.html">
-<meta property="og:site_name" content="An&#39;s personal blog">
-<meta property="og:description" content="Web知识汇总(5)(jQuery)简介jQuery是一个JavaScript函数库。 jQuery是一个轻量级的”写的少，做的多”的JavaScript库。 jQuery库包含以下功能：  HTML 元素选取 HTML 元素操作 CSS 操作 HTML 事件函数 JavaScript 特效和动画 HTML DOM 遍历和修改 AJAX Utilities   除此之外，Jquery还提供了大量的">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2019/05/20171231003829544.jpeg">
-<meta property="og:image" content="https://www.runoob.com/images/img_jquerydim.gif">
-<meta property="og:updated_time" content="2019-10-22T14:24:04.635Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Web知识汇总(5)(jQuery)">
-<meta name="twitter:description" content="Web知识汇总(5)(jQuery)简介jQuery是一个JavaScript函数库。 jQuery是一个轻量级的”写的少，做的多”的JavaScript库。 jQuery库包含以下功能：  HTML 元素选取 HTML 元素操作 CSS 操作 HTML 事件函数 JavaScript 特效和动画 HTML DOM 遍历和修改 AJAX Utilities   除此之外，Jquery还提供了大量的">
-<meta name="twitter:image" content="https://www.runoob.com/wp-content/uploads/2019/05/20171231003829544.jpeg">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '5.1.4',
-    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://yoursite.com/2019/10/22/Web知识汇总(5)(jQuery)/">
-
-
-
-
-
-  <title>Web知识汇总(5)(jQuery) | An's personal blog</title>
-  
-
-
-
-
-
-
-
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
 
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  
-  
-    
-  
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
 
-  <div class="container sidebar-position-right page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">An's personal blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-      
-        <p class="site-subtitle"></p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
     </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">ホーム</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">アーカイブ</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">カテゴリー</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">タグ</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">本ブログ情報　</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
   </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
 </nav>
 
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/22/Web知识汇总(5)(jQuery)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="AN">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="An's personal blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">Web知识汇总(5)(jQuery)</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-22T00:00:00+08:00">
-                2019-10-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Web前端/" itemprop="url" rel="index">
-                    <span itemprop="name">Web前端</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Web前端/jQuery/" itemprop="url" rel="index">
-                    <span itemprop="name">jQuery</span>
-                  </a>
-                </span>
-
-                
-                
+    <div class="view intro-2" id="background"
+         style="background: url('https://cdn.jsdelivr.net/gh/0x2e/static/blog/index.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: scroll;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
               
             </span>
-          
 
-          
             
-          
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Tuesday, October 22nd 2019, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
 
           
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      </div>
+    </div>
+  </header>
 
+  <main>
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
-      
-        <h2 id="Web知识汇总-5-jQuery"><a href="#Web知识汇总-5-jQuery" class="headerlink" title="Web知识汇总(5)(jQuery)"></a>Web知识汇总(5)(jQuery)</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>jQuery是一个JavaScript函数库。</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h2 id="Web知识汇总-5-jQuery"><a href="#Web知识汇总-5-jQuery" class="headerlink" title="Web知识汇总(5)(jQuery)"></a>Web知识汇总(5)(jQuery)</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>jQuery是一个JavaScript函数库。</p>
 <p>jQuery是一个轻量级的”写的少，做的多”的JavaScript库。</p>
 <p>jQuery库包含以下功能：</p>
 <ul>
@@ -383,7 +168,10 @@
 </ul>
 <p>以上两个版本都可以从 <a href="http://jquery.com/download/" target="_blank" rel="noopener">jquery.com</a> 中下载。</p>
 <p>jQuery 库是一个 JavaScript 文件，您可以使用 HTML 的 <code>&lt;script&gt;</code>标签引用它：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.10.2.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="lang-html">&lt;head&gt;
+&lt;script src=&quot;jquery-1.10.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+</code></pre>
 <blockquote>
 <p>将下载的文件放在网页的同一目录下，就可以使用jQuery。</p>
 </blockquote>
@@ -392,7 +180,22 @@
 <p>如果你的站点用户是国内的，建议使用百度、又拍云、新浪等国内CDN地址，如果你站点用户是国外的可以使用谷歌和微软。</p>
 <p><strong>注：</strong>本站实例均采用菜鸟教程 CDN 库。</p>
 <p>如需从 Staticfile CDN、又拍云、新浪、谷歌或微软引用 jQuery，请使用以下代码之一：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--百度--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--新浪--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--Staticfile CDN--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="lang-html">&lt;!--百度--&gt;
+&lt;head&gt;
+&lt;script src=&quot;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&quot;&gt;
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;!--新浪--&gt;
+&lt;head&gt;
+&lt;script src=&quot;https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js&quot;&gt;
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;!--Staticfile CDN--&gt;
+&lt;head&gt;
+&lt;script src=&quot;https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js&quot;&gt;
+&lt;/script&gt;
+&lt;/head&gt;
+</code></pre>
 <blockquote>
 <p> <strong>使用 Staticfile CDN、百度、又拍云、新浪、谷歌或微软的 jQuery，有一个很大的优势：</strong></p>
 <p>许多用户在访问其他站点时，已经从百度、又拍云、新浪、谷歌或微软加载过 jQuery。所以结果是，当他们访问您的站点时，会从缓存中加载 jQuery，这样可以减少加载时间。同时，大多数 CDN 都可以确保当用户向其请求文件时，会从离用户最近的服务器上返回响应，这样也可以提高加载速度。 </p>
@@ -417,7 +220,12 @@
 <p> jQuery 使用的语法是 XPath 与 CSS 选择器语法的组合。 </p>
 </blockquote>
 <h4 id="文档就绪事件"><a href="#文档就绪事件" class="headerlink" title="文档就绪事件"></a>文档就绪事件</h4><p> 您也许已经注意到在我们的实例中的所有 jQuery 函数位于一个 document ready 函数中： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"> </span><br><span class="line">   <span class="comment">// 开始写 jQuery 代码...</span></span><br><span class="line"> </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(document).ready(function(){
+
+   // 开始写 jQuery 代码...
+
+});
+</code></pre>
 <p>这是为了防止文档在完全加载（就绪）之前运行 jQuery 代码，即在 DOM 加载完成后才可以对 DOM 进行操作。</p>
 <p>如果在文档没有完全加载之前就运行函数，操作可能失败。下面是两个具体的例子：</p>
 <ul>
@@ -425,18 +233,38 @@
 <li>获得未完全加载的图像的大小</li>
 </ul>
 <p><strong>提示：</strong>简洁写法（与以上写法效果相同）:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"> </span><br><span class="line">   <span class="comment">// 开始写 jQuery 代码...</span></span><br><span class="line"> </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p><img src="https://www.runoob.com/wp-content/uploads/2019/05/20171231003829544.jpeg" alt></p>
+<pre><code class="lang-javascript">$(function(){
+
+   // 开始写 jQuery 代码...
+
+});
+</code></pre>
+<p><img src="https://www.runoob.com/wp-content/uploads/2019/05/20171231003829544.jpeg" srcset="/img/loading.gif" alt></p>
 <h3 id="jQuery选择器"><a href="#jQuery选择器" class="headerlink" title="jQuery选择器"></a>jQuery选择器</h3><p>jQuery 选择器允许您对 HTML 元素组或单个元素进行操作。</p>
 <p>jQuery 选择器基于元素的 id、类、类型、属性、属性值等”查找”（或选择）HTML 元素。 它基于已经存在的 <a href="https://www.runoob.com/cssref/css-selectors.html" target="_blank" rel="noopener">CSS 选择器</a>，除此之外，它还有一些自定义的选择器。</p>
 <p>jQuery 中所有选择器都以美元符号开头：$()。</p>
 <h4 id="元素选择器"><a href="#元素选择器" class="headerlink" title="元素选择器"></a>元素选择器</h4><p>jQuery 元素选择器基于元素名选取元素。</p>
 <p>在页面中选取所有 <code>&lt;p&gt;</code> 元素:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"p"</span>).hide();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(document).ready(function(){
+  $(&quot;button&quot;).click(function(){
+    $(&quot;p&quot;).hide();
+  });
+});
+</code></pre>
 <h4 id="id-选择器"><a href="#id-选择器" class="headerlink" title="# id 选择器"></a># id 选择器</h4><p>jQuery #id 选择器通过 HTML 元素的 id 属性选取指定的元素。</p>
 <p>页面中元素的 id 应该是唯一的，所以您要在页面中选取唯一的元素需要通过 #id 选择器。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test"</span>).hide();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h4 id="class-选择器"><a href="#class-选择器" class="headerlink" title=".class 选择器"></a>.class 选择器</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">".test"</span>).hide();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(document).ready(function(){
+  $(&quot;button&quot;).click(function(){
+    $(&quot;#test&quot;).hide();
+  });
+});
+</code></pre>
+<h4 id="class-选择器"><a href="#class-选择器" class="headerlink" title=".class 选择器"></a>.class 选择器</h4><pre><code class="lang-javascript">$(document).ready(function(){
+  $(&quot;button&quot;).click(function(){
+    $(&quot;.test&quot;).hide();
+  });
+});
+</code></pre>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><div class="table-container">
 <table>
 <thead>
@@ -552,9 +380,13 @@
 </div>
 <h4 id="jQuery-事件方法语法"><a href="#jQuery-事件方法语法" class="headerlink" title="jQuery 事件方法语法"></a>jQuery 事件方法语法</h4><p>在 jQuery 中，大多数 DOM 事件都有一个等效的 jQuery 方法。</p>
 <p>页面中指定一个点击事件：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).click();</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;p&quot;).click();
+</code></pre>
 <p> 下一步是定义什么时间触发事件。您可以通过一个事件函数实现： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//动作触发后代码</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;p&quot;).click(function(){
+    //动作触发后代码
+})
+</code></pre>
 <h3 id="常用的-jQuery-事件方法"><a href="#常用的-jQuery-事件方法" class="headerlink" title="常用的 jQuery 事件方法"></a>常用的 jQuery 事件方法</h3><h4 id="document-ready"><a href="#document-ready" class="headerlink" title="$(document).ready()"></a>$(document).ready()</h4><p>$(document).ready() 方法允许我们在文档完全加载完后执行函数。该事件方法在 <a href="https://www.runoob.com/jquery/jquery-syntax.html" target="_blank" rel="noopener">jQuery 语法</a> 章节中已经提到过。</p>
 <h4 id="click"><a href="#click" class="headerlink" title="click()"></a>click()</h4><p>click() 方法是当按钮点击事件被触发时会调用一个函数。</p>
 <h4 id="dblclick"><a href="#dblclick" class="headerlink" title="dblclick()"></a>dblclick()</h4><p>当双击元素时，会发生 dblclick 事件。</p>
@@ -566,51 +398,97 @@
 <h4 id="focus"><a href="#focus" class="headerlink" title="focus()"></a>focus()</h4><p>当元素获得焦点时，发生 focus 事件。</p>
 <p>当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点。</p>
 <h4 id="blur"><a href="#blur" class="headerlink" title="blur()"></a>blur()</h4><p>当元素失去焦点时，发生 blur 事件。</p>
-<h3 id="jQuery效果-隐藏和显示"><a href="#jQuery效果-隐藏和显示" class="headerlink" title="jQuery效果-隐藏和显示"></a>jQuery效果-隐藏和显示</h3><h4 id="jQuery-hide-和-show"><a href="#jQuery-hide-和-show" class="headerlink" title="jQuery hide() 和 show()"></a>jQuery hide() 和 show()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#hide"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"p"</span>).hide();</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">$(<span class="string">"#show"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"p"</span>).show();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="jQuery效果-隐藏和显示"><a href="#jQuery效果-隐藏和显示" class="headerlink" title="jQuery效果-隐藏和显示"></a>jQuery效果-隐藏和显示</h3><h4 id="jQuery-hide-和-show"><a href="#jQuery-hide-和-show" class="headerlink" title="jQuery hide() 和 show()"></a>jQuery hide() 和 show()</h4><pre><code class="lang-javascript">$(&quot;#hide&quot;).click(function(){
+  $(&quot;p&quot;).hide();
+});
+
+$(&quot;#show&quot;).click(function(){
+  $(&quot;p&quot;).show();
+});
+</code></pre>
 <p>语法</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$(selector).hide(speed,callback);</span><br><span class="line">$(selector).show(speed,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).hide(speed,callback);
+$(selector).show(speed,callback);
+</code></pre>
 <p>可选的 speed 参数规定隐藏/显示的速度，可以取以下值：”slow”、”fast” 或毫秒。</p>
 <p>可选的 callback 参数是隐藏或显示完成后所执行的函数名称。</p>
 <p>下面的例子演示了带有 speed 参数的 hide() 方法：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"p"</span>).hide(<span class="number">1000</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">".hidebtn"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"div"</span>).hide(<span class="number">1000</span>,<span class="string">"linear"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      alert(<span class="string">"Hide() 方法已完成!"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;p&quot;).hide(1000);
+});
+</code></pre>
+<pre><code class="lang-javascript">$(document).ready(function(){
+  $(&quot;.hidebtn&quot;).click(function(){
+    $(&quot;div&quot;).hide(1000,&quot;linear&quot;,function(){
+      alert(&quot;Hide() 方法已完成!&quot;);
+    });
+  });
+});
+</code></pre>
 <p> 第二个参数是一个字符串，表示过渡使用哪种缓动函数。（译者注：jQuery自身提供”linear” 和 “swing”，其他可以使用相关的插件）。 </p>
 <h4 id="jQuery-toggle"><a href="#jQuery-toggle" class="headerlink" title="jQuery toggle()"></a>jQuery toggle()</h4><p>通过 jQuery，您可以使用 toggle() 方法来切换 hide() 和 show() 方法。</p>
 <p>显示被隐藏的元素，并隐藏已显示的元素：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"p"</span>).toggle();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).toggle(speed,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;p&quot;).toggle();
+});
+</code></pre>
+<pre><code class="lang-javascript">$(selector).toggle(speed,callback);
+</code></pre>
 <p>可选的 speed 参数规定隐藏/显示的速度，可以取以下值：”slow”、”fast” 或毫秒。</p>
 <p>可选的 callback 参数是隐藏或显示完成后所执行的函数名称。</p>
 <h3 id="jQuery-效果-淡入淡出"><a href="#jQuery-效果-淡入淡出" class="headerlink" title="jQuery 效果 - 淡入淡出"></a>jQuery 效果 - 淡入淡出</h3><h4 id="jQuery-fadeIn-方法"><a href="#jQuery-fadeIn-方法" class="headerlink" title="jQuery fadeIn() 方法"></a>jQuery fadeIn() 方法</h4><p> jQuery fadeIn() 用于淡入已隐藏的元素。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).fadeIn(speed,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).fadeIn(speed,callback);
+</code></pre>
 <p>可选的 speed 参数规定效果的时长。它可以取以下值：”slow”、”fast” 或毫秒。.</p>
 <p>可选的 callback 参数是 fading 完成后所执行的函数名称。</p>
 <p>下面的例子演示了带有不同参数的 fadeIn() 方法：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"#div1"</span>).fadeIn();</span><br><span class="line">  $(<span class="string">"#div2"</span>).fadeIn(<span class="string">"slow"</span>);</span><br><span class="line">  $(<span class="string">"#div3"</span>).fadeIn(<span class="number">3000</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;#div1&quot;).fadeIn();
+  $(&quot;#div2&quot;).fadeIn(&quot;slow&quot;);
+  $(&quot;#div3&quot;).fadeIn(3000);
+});
+</code></pre>
 <h4 id="jQuery-fadeOut-方法"><a href="#jQuery-fadeOut-方法" class="headerlink" title="jQuery fadeOut() 方法"></a>jQuery fadeOut() 方法</h4><p> jQuery fadeOut() 方法用于淡出可见元素。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).fadeOut(speed,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).fadeOut(speed,callback);
+</code></pre>
 <h4 id="jQuery-fadeToggle-方法"><a href="#jQuery-fadeToggle-方法" class="headerlink" title="jQuery fadeToggle() 方法"></a>jQuery fadeToggle() 方法</h4><p>jQuery fadeToggle() 方法可以在 fadeIn() 与 fadeOut() 方法之间进行切换。</p>
 <p>如果元素已淡出，则 fadeToggle() 会向元素添加淡入效果。</p>
 <p>如果元素已淡入，则 fadeToggle() 会向元素添加淡出效果。</p>
 <p><strong>语法:</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).fadeToggle(speed,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).fadeToggle(speed,callback);
+</code></pre>
 <h4 id="jQuery-fadeTo-方法"><a href="#jQuery-fadeTo-方法" class="headerlink" title="jQuery fadeTo() 方法"></a>jQuery fadeTo() 方法</h4><p> jQuery fadeTo() 方法允许渐变为给定的不透明度（值介于 0 与 1 之间）。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).fadeTo(speed,opacity,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).fadeTo(speed,opacity,callback);
+</code></pre>
 <h3 id="jQuery-效果-滑动"><a href="#jQuery-效果-滑动" class="headerlink" title="jQuery 效果 - 滑动"></a>jQuery 效果 - 滑动</h3><h4 id="jQuery-slideDown-方法"><a href="#jQuery-slideDown-方法" class="headerlink" title="jQuery slideDown() 方法"></a>jQuery slideDown() 方法</h4><p> jQuery slideDown() 方法用于向下滑动元素。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).slideDown(speed,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).slideDown(speed,callback);
+</code></pre>
 <h4 id="jQuery-slideUp-方法"><a href="#jQuery-slideUp-方法" class="headerlink" title="jQuery slideUp() 方法"></a>jQuery slideUp() 方法</h4><p> jQuery slideUp() 方法用于向上滑动元素。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).slideUp(speed,callback);</span><br></pre></td></tr></table></figure>
-<h4 id="jQuery-slideToggle-方法"><a href="#jQuery-slideToggle-方法" class="headerlink" title="jQuery slideToggle() 方法"></a>jQuery slideToggle() 方法</h4><h3 id="jQuery-效果-动画"><a href="#jQuery-效果-动画" class="headerlink" title="jQuery 效果- 动画"></a>jQuery 效果- 动画</h3><h4 id="jQuery-动画-animate-方法"><a href="#jQuery-动画-animate-方法" class="headerlink" title="jQuery 动画 - animate() 方法"></a>jQuery 动画 - animate() 方法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).animate(&#123;params&#125;,speed,callback);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).slideUp(speed,callback);
+</code></pre>
+<h4 id="jQuery-slideToggle-方法"><a href="#jQuery-slideToggle-方法" class="headerlink" title="jQuery slideToggle() 方法"></a>jQuery slideToggle() 方法</h4><h3 id="jQuery-效果-动画"><a href="#jQuery-效果-动画" class="headerlink" title="jQuery 效果- 动画"></a>jQuery 效果- 动画</h3><h4 id="jQuery-动画-animate-方法"><a href="#jQuery-动画-animate-方法" class="headerlink" title="jQuery 动画 - animate() 方法"></a>jQuery 动画 - animate() 方法</h4><pre><code class="lang-javascript">$(selector).animate({params},speed,callback);
+</code></pre>
 <p>必需的 params 参数定义形成动画的 CSS 属性。</p>
 <p>可选的 speed 参数规定效果的时长。它可以取以下值：”slow”、”fast” 或毫秒。</p>
 <p>可选的 callback 参数是动画完成后所执行的函数名称。</p>
 <p>下面的例子演示 animate() 方法的简单应用。它把 <div> 元素往右边移动了 250 像素：</div></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"div"</span>).animate(&#123;<span class="attr">left</span>:<span class="string">'250px'</span>&#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;div&quot;).animate({left:&#39;250px&#39;});
+});
+</code></pre>
 <blockquote>
 <p> 默认情况下，所有 HTML 元素都有一个静态位置，且无法移动。 如需对位置进行操作，要记得首先把元素的 CSS position 属性设置为 relative、fixed 或 absolute！</p>
 </blockquote>
 <h4 id="jQuery-animate-操作多个属性"><a href="#jQuery-animate-操作多个属性" class="headerlink" title="jQuery animate() - 操作多个属性"></a>jQuery animate() - 操作多个属性</h4><p> 请注意，生成动画的过程中可同时使用多个属性： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"div"</span>).animate(&#123;</span><br><span class="line">    left:<span class="string">'250px'</span>,</span><br><span class="line">    opacity:<span class="string">'0.5'</span>,</span><br><span class="line">    height:<span class="string">'150px'</span>,</span><br><span class="line">    width:<span class="string">'150px'</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;div&quot;).animate({
+    left:&#39;250px&#39;,
+    opacity:&#39;0.5&#39;,
+    height:&#39;150px&#39;,
+    width:&#39;150px&#39;
+  });
+});
+</code></pre>
 <blockquote>
 <p><strong>可以用 animate() 方法来操作所有 CSS 属性吗？</strong></p>
 <p>是的，几乎可以！不过，需要记住一件重要的事情：当使用 animate() 时，必须使用 Camel 标记法书写所有的属性名，比如，必须使用 paddingLeft 而不是 padding-left，使用 marginRight 而不是 margin-right，等等。</p>
@@ -618,21 +496,44 @@
 <p>如果需要生成颜色动画，您需要从 <a href="http://jquery.com/download/" target="_blank" rel="noopener">jquery.com</a> 下载 <a href="http://plugins.jquery.com/color/" target="_blank" rel="noopener">颜色动画</a> 插件。</p>
 </blockquote>
 <h4 id="jQuery-animate-使用相对值"><a href="#jQuery-animate-使用相对值" class="headerlink" title="jQuery animate() - 使用相对值"></a>jQuery animate() - 使用相对值</h4><p> 也可以定义相对值（该值相对于元素的当前值）。需要在值的前面加上 += 或 -=： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"div"</span>).animate(&#123;</span><br><span class="line">    left:<span class="string">'250px'</span>,</span><br><span class="line">    height:<span class="string">'+=150px'</span>,</span><br><span class="line">    width:<span class="string">'+=150px'</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;div&quot;).animate({
+    left:&#39;250px&#39;,
+    height:&#39;+=150px&#39;,
+    width:&#39;+=150px&#39;
+  });
+});
+</code></pre>
 <h4 id="jQuery-animate-使用预定义的值"><a href="#jQuery-animate-使用预定义的值" class="headerlink" title="jQuery animate() - 使用预定义的值"></a>jQuery animate() - 使用预定义的值</h4><p> 您甚至可以把属性的动画值设置为 “show”、”hide” 或 “toggle”： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"div"</span>).animate(&#123;</span><br><span class="line">    height:<span class="string">'toggle'</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;div&quot;).animate({
+    height:&#39;toggle&#39;
+  });
+});
+</code></pre>
 <h4 id="jQuery-animate-使用队列功能"><a href="#jQuery-animate-使用队列功能" class="headerlink" title="jQuery animate() - 使用队列功能"></a>jQuery animate() - 使用队列功能</h4><p>默认地，jQuery 提供针对动画的队列功能。</p>
 <p>这意味着如果您在彼此之后编写多个 animate() 调用，jQuery 会创建包含这些方法调用的”内部”队列。然后逐一运行这些 animate 调用。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> div=$(<span class="string">"div"</span>);</span><br><span class="line">  div.animate(&#123;<span class="attr">height</span>:<span class="string">'300px'</span>,<span class="attr">opacity</span>:<span class="string">'0.4'</span>&#125;,<span class="string">"slow"</span>);</span><br><span class="line">  div.animate(&#123;<span class="attr">width</span>:<span class="string">'300px'</span>,<span class="attr">opacity</span>:<span class="string">'0.8'</span>&#125;,<span class="string">"slow"</span>);</span><br><span class="line">  div.animate(&#123;<span class="attr">height</span>:<span class="string">'100px'</span>,<span class="attr">opacity</span>:<span class="string">'0.4'</span>&#125;,<span class="string">"slow"</span>);</span><br><span class="line">  div.animate(&#123;<span class="attr">width</span>:<span class="string">'100px'</span>,<span class="attr">opacity</span>:<span class="string">'0.8'</span>&#125;,<span class="string">"slow"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  var div=$(&quot;div&quot;);
+  div.animate({height:&#39;300px&#39;,opacity:&#39;0.4&#39;},&quot;slow&quot;);
+  div.animate({width:&#39;300px&#39;,opacity:&#39;0.8&#39;},&quot;slow&quot;);
+  div.animate({height:&#39;100px&#39;,opacity:&#39;0.4&#39;},&quot;slow&quot;);
+  div.animate({width:&#39;100px&#39;,opacity:&#39;0.8&#39;},&quot;slow&quot;);
+});
+</code></pre>
 <h3 id="jQuery-停止动画"><a href="#jQuery-停止动画" class="headerlink" title="jQuery 停止动画"></a>jQuery 停止动画</h3><h4 id="jQuery-stop-方法"><a href="#jQuery-stop-方法" class="headerlink" title="jQuery stop() 方法"></a>jQuery stop() 方法</h4><p>jQuery stop() 方法用于停止动画或效果，在它们完成之前。</p>
 <p>stop() 方法适用于所有 jQuery 效果函数，包括滑动、淡入淡出和自定义动画。</p>
 <p><strong>语法:</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(selector).stop(stopAll,goToEnd);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(selector).stop(stopAll,goToEnd);
+</code></pre>
 <p>可选的 stopAll 参数规定是否应该清除动画队列。默认是 false，即仅停止活动的动画，允许任何排入队列的动画向后执行。</p>
 <p>可选的 goToEnd 参数规定是否立即完成当前动画。默认是 false。</p>
 <p>因此，默认地，stop() 会清除在被选元素上指定的当前动画。</p>
 <p>下面的例子演示 stop() 方法，不带参数：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#stop"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"#panel"</span>).stop();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#stop&quot;).click(function(){
+  $(&quot;#panel&quot;).stop();
+});
+</code></pre>
 <h3 id="jQuery-链-Chaining"><a href="#jQuery-链-Chaining" class="headerlink" title="jQuery - 链(Chaining)"></a>jQuery - 链(Chaining)</h3><p>通过 jQuery，可以把动作/方法链接在一起。</p>
 <p>Chaining 允许我们在一条语句中运行多个 jQuery 方法（在相同的元素上）。</p>
 <h4 id="jQuery-方法链接"><a href="#jQuery-方法链接" class="headerlink" title="jQuery 方法链接"></a>jQuery 方法链接</h4><p>直到现在，我们都是一次写一条 jQuery 语句（一条接着另一条）。</p>
@@ -640,11 +541,15 @@
 <p><strong>提示：</strong> 这样的话，浏览器就不必多次查找相同的元素。</p>
 <p>如需链接一个动作，您只需简单地把该动作追加到之前的动作上。</p>
 <p>下面的例子把 css()、slideUp() 和 slideDown() 链接在一起。”p1” 元素首先会变为红色，然后向上滑动，再然后向下滑动：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#p1"</span>).css(<span class="string">"color"</span>,<span class="string">"red"</span>).slideUp(<span class="number">2000</span>).slideDown(<span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#p1&quot;).css(&quot;color&quot;,&quot;red&quot;).slideUp(2000).slideDown(2000);
+</code></pre>
 <p>如果需要，我们也可以添加多个方法调用。</p>
 <p><strong>提示：</strong>当进行链接时，代码行会变得很长。不过，jQuery 语法不是很严格；您可以按照希望的格式来写，包含换行和缩进。</p>
 <p>如下书写也可以很好地运行：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#p1"</span>).css(<span class="string">"color"</span>,<span class="string">"red"</span>)</span><br><span class="line">  .slideUp(<span class="number">2000</span>)</span><br><span class="line">  .slideDown(<span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#p1&quot;).css(&quot;color&quot;,&quot;red&quot;)
+  .slideUp(2000)
+  .slideDown(2000);
+</code></pre>
 <h3 id="jQuery-获取内容和属性"><a href="#jQuery-获取内容和属性" class="headerlink" title="jQuery - 获取内容和属性"></a>jQuery - 获取内容和属性</h3><h4 id="jQuery-DOM-操作"><a href="#jQuery-DOM-操作" class="headerlink" title="jQuery DOM 操作"></a>jQuery DOM 操作</h4><p>jQuery 中非常重要的部分，就是操作 DOM 的能力。</p>
 <p>jQuery 提供一系列与 DOM 相关的方法，这使访问和操作元素和属性变得很容易。</p>
 <blockquote>
@@ -657,10 +562,19 @@
 <li>val() - 设置或返回表单字段的值</li>
 </ul>
 <p>下面的例子演示如何通过 jQuery text() 和 html() 方法来获得内容：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#btn1"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  alert(<span class="string">"Text: "</span> + $(<span class="string">"#test"</span>).text());</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">"#btn2"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  alert(<span class="string">"HTML: "</span> + $(<span class="string">"#test"</span>).html());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#btn1&quot;).click(function(){
+  alert(&quot;Text: &quot; + $(&quot;#test&quot;).text());
+});
+$(&quot;#btn2&quot;).click(function(){
+  alert(&quot;HTML: &quot; + $(&quot;#test&quot;).html());
+});
+</code></pre>
 <h4 id="获取属性-attr"><a href="#获取属性-attr" class="headerlink" title="获取属性 - attr()"></a>获取属性 - attr()</h4><p>jQuery attr() 方法用于获取属性值。</p>
 <p>下面的例子演示如何获得链接中 href 属性的值：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  alert($(<span class="string">"#runoob"</span>).attr(<span class="string">"href"</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  alert($(&quot;#runoob&quot;).attr(&quot;href&quot;));
+});
+</code></pre>
 <h3 id="jQuery-设置内容和属性"><a href="#jQuery-设置内容和属性" class="headerlink" title="jQuery - 设置内容和属性"></a>jQuery - 设置内容和属性</h3><h4 id="设置内容-text-、html-以及-val"><a href="#设置内容-text-、html-以及-val" class="headerlink" title="设置内容 - text()、html() 以及 val()"></a>设置内容 - text()、html() 以及 val()</h4><p>我们将使用前一章中的三个相同的方法来设置内容：</p>
 <ul>
 <li>text() - 设置或返回所选元素的文本内容</li>
@@ -668,405 +582,247 @@
 <li>val() - 设置或返回表单字段的值</li>
 </ul>
 <p>下面的例子演示如何通过 text()、html() 以及 val() 方法来设置内容：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#btn1"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test1"</span>).text(<span class="string">"Hello world!"</span>);</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">"#btn2"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test2"</span>).html(<span class="string">"&lt;b&gt;Hello world!&lt;/b&gt;"</span>);</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">"#btn3"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test3"</span>).val(<span class="string">"RUNOOB"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#btn1&quot;).click(function(){
+    $(&quot;#test1&quot;).text(&quot;Hello world!&quot;);
+});
+$(&quot;#btn2&quot;).click(function(){
+    $(&quot;#test2&quot;).html(&quot;&lt;b&gt;Hello world!&lt;/b&gt;&quot;);
+});
+$(&quot;#btn3&quot;).click(function(){
+    $(&quot;#test3&quot;).val(&quot;RUNOOB&quot;);
+});
+</code></pre>
 <h4 id="text-、html-以及-val-的回调函数"><a href="#text-、html-以及-val-的回调函数" class="headerlink" title="text()、html() 以及 val() 的回调函数"></a>text()、html() 以及 val() 的回调函数</h4><p>上面的三个 jQuery 方法：text()、html() 以及 val()，同样拥有回调函数。回调函数有两个参数：被选元素列表中当前元素的下标，以及原始（旧的）值。然后以函数新值返回您希望使用的字符串。</p>
 <p>下面的例子演示带有回调函数的 text() 和 html()：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#btn1"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test1"</span>).text(<span class="function"><span class="keyword">function</span>(<span class="params">i,origText</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"旧文本: "</span> + origText + <span class="string">" 新文本: Hello world! (index: "</span> + i + <span class="string">")"</span>; </span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">$(<span class="string">"#btn2"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test2"</span>).html(<span class="function"><span class="keyword">function</span>(<span class="params">i,origText</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"旧 html: "</span> + origText + <span class="string">" 新 html: Hello &lt;b&gt;world!&lt;/b&gt; (index: "</span> + i + <span class="string">")"</span>; </span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#btn1&quot;).click(function(){
+    $(&quot;#test1&quot;).text(function(i,origText){
+        return &quot;旧文本: &quot; + origText + &quot; 新文本: Hello world! (index: &quot; + i + &quot;)&quot;; 
+    });
+});
+
+$(&quot;#btn2&quot;).click(function(){
+    $(&quot;#test2&quot;).html(function(i,origText){
+        return &quot;旧 html: &quot; + origText + &quot; 新 html: Hello &lt;b&gt;world!&lt;/b&gt; (index: &quot; + i + &quot;)&quot;; 
+    });
+</code></pre>
 <h4 id="设置属性-attr"><a href="#设置属性-attr" class="headerlink" title="设置属性 - attr()"></a>设置属性 - attr()</h4><p>Query attr() 方法也用于设置/改变属性值。</p>
 <p>下面的例子演示如何改变（设置）链接中 href 属性的值：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"#runoob"</span>).attr(<span class="string">"href"</span>,<span class="string">"http://www.runoob.com/jquery"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;#runoob&quot;).attr(&quot;href&quot;,&quot;http://www.runoob.com/jquery&quot;);
+});
+</code></pre>
 <p>attr() 方法也允许您同时设置多个属性。</p>
 <p>下面的例子演示如何同时设置 href 和 title 属性：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#runoob"</span>).attr(&#123;</span><br><span class="line">        <span class="string">"href"</span> : <span class="string">"http://www.runoob.com/jquery"</span>,</span><br><span class="line">        <span class="string">"title"</span> : <span class="string">"jQuery 教程"</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+    $(&quot;#runoob&quot;).attr({
+        &quot;href&quot; : &quot;http://www.runoob.com/jquery&quot;,
+        &quot;title&quot; : &quot;jQuery 教程&quot;
+    });
+});
+</code></pre>
 <h4 id="attr-的回调函数"><a href="#attr-的回调函数" class="headerlink" title="attr() 的回调函数"></a>attr() 的回调函数</h4><p>jQuery 方法 attr()，也提供回调函数。回调函数有两个参数：被选元素列表中当前元素的下标，以及原始（旧的）值。然后以函数新值返回您希望使用的字符串。</p>
 <p>下面的例子演示带有回调函数的 attr() 方法：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"#runoob"</span>).attr(<span class="string">"href"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">i,origValue</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> origValue + <span class="string">"/jquery"</span>; </span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;#runoob&quot;).attr(&quot;href&quot;, function(i,origValue){
+    return origValue + &quot;/jquery&quot;; 
+  });
+});
+</code></pre>
 <h3 id="jQuery-添加元素"><a href="#jQuery-添加元素" class="headerlink" title="jQuery - 添加元素"></a>jQuery - 添加元素</h3><h4 id="jQuery-append-方法"><a href="#jQuery-append-方法" class="headerlink" title="jQuery append() 方法"></a>jQuery append() 方法</h4><p> jQuery append() 方法在被选元素的结尾插入内容（仍然该元素的内部）。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).append(<span class="string">"追加文本"</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;p&quot;).append(&quot;追加文本&quot;);
+</code></pre>
 <h4 id="jQuery-prepend-方法"><a href="#jQuery-prepend-方法" class="headerlink" title="jQuery prepend() 方法"></a>jQuery prepend() 方法</h4><p> jQuery prepend() 方法在被选元素的开头插入内容。 </p>
 <h4 id="jQuery-after-和-before-方法"><a href="#jQuery-after-和-before-方法" class="headerlink" title="jQuery after() 和 before() 方法"></a>jQuery after() 和 before() 方法</h4><p>jQuery after() 方法在被选元素之后插入内容。</p>
 <p>jQuery before() 方法在被选元素之前插入内容。（元素外）</p>
 <h3 id="jQuery-删除元素"><a href="#jQuery-删除元素" class="headerlink" title="jQuery - 删除元素"></a>jQuery - 删除元素</h3><h4 id="jQuery-remove-方法"><a href="#jQuery-remove-方法" class="headerlink" title="jQuery remove() 方法"></a>jQuery remove() 方法</h4><p> jQuery remove() 方法删除被选元素及其子元素。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#div1"</span>).remove();</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#div1&quot;).remove();
+</code></pre>
 <h4 id="jQuery-empty-方法"><a href="#jQuery-empty-方法" class="headerlink" title="jQuery empty() 方法"></a>jQuery empty() 方法</h4><p> jQuery empty() 方法删除被选元素的子元素。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#div1"</span>).empty();</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;#div1&quot;).empty();
+</code></pre>
 <h4 id="过滤被删除的元素"><a href="#过滤被删除的元素" class="headerlink" title="过滤被删除的元素"></a>过滤被删除的元素</h4><p>jQuery remove() 方法也可接受一个参数，允许您对被删元素进行过滤。</p>
 <p>该参数可以是任何 jQuery 选择器的语法。</p>
 <p>下面的例子删除 class=”italic” 的所有 <code>&lt;p&gt;</code> 元素：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).remove(<span class="string">".italic"</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;p&quot;).remove(&quot;.italic&quot;);
+</code></pre>
 <h3 id="jQuery-获取并设置-CSS-类"><a href="#jQuery-获取并设置-CSS-类" class="headerlink" title="jQuery - 获取并设置 CSS 类"></a>jQuery - 获取并设置 CSS 类</h3><h4 id="jQuery-addClass-方法"><a href="#jQuery-addClass-方法" class="headerlink" title="jQuery addClass() 方法"></a>jQuery addClass() 方法</h4><p> 下面的例子展示如何向不同的元素添加 class 属性。当然，在添加类时，您也可以选取多个元素： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"h1,h2,p"</span>).addClass(<span class="string">"blue"</span>);</span><br><span class="line">  $(<span class="string">"div"</span>).addClass(<span class="string">"important"</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"body div:first"</span>).addClass(<span class="string">"important blue"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;h1,h2,p&quot;).addClass(&quot;blue&quot;);
+  $(&quot;div&quot;).addClass(&quot;important&quot;);
+});
+
+$(&quot;button&quot;).click(function(){
+  $(&quot;body div:first&quot;).addClass(&quot;important blue&quot;);
+});
+</code></pre>
 <h4 id="jQuery-removeClass-方法"><a href="#jQuery-removeClass-方法" class="headerlink" title="jQuery removeClass() 方法"></a>jQuery removeClass() 方法</h4><p> 下面的例子演示如何在不同的元素中删除指定的 class 属性： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"h1,h2,p"</span>).removeClass(<span class="string">"blue"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;h1,h2,p&quot;).removeClass(&quot;blue&quot;);
+});
+</code></pre>
 <h4 id="jQuery-toggleClass-方法"><a href="#jQuery-toggleClass-方法" class="headerlink" title="jQuery toggleClass() 方法"></a>jQuery toggleClass() 方法</h4><p> 下面的例子将展示如何使用 jQuery toggleClass() 方法。该方法对被选元素进行添加/删除类的切换操作： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"h1,h2,p"</span>).toggleClass(<span class="string">"blue"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  $(&quot;h1,h2,p&quot;).toggleClass(&quot;blue&quot;);
+});
+</code></pre>
 <h3 id="jQuery-css-方法"><a href="#jQuery-css-方法" class="headerlink" title="jQuery css() 方法"></a>jQuery css() 方法</h3><h4 id="返回-CSS-属性"><a href="#返回-CSS-属性" class="headerlink" title="返回 CSS 属性"></a>返回 CSS 属性</h4><p> 如需返回指定的 CSS 属性的值，请使用如下语法： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">css(<span class="string">"propertyname"</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">css(&quot;propertyname&quot;);
+</code></pre>
 <p> 下面的例子将返回首个匹配元素的 background-color 值： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).css(<span class="string">"background-color"</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="设置-CSS-属性"><a href="#设置-CSS-属性" class="headerlink" title="设置 CSS 属性"></a>设置 CSS 属性</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">css(<span class="string">"propertyname"</span>,<span class="string">"value"</span>);</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).css(<span class="string">"background-color"</span>,<span class="string">"yellow"</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;p&quot;).css(&quot;background-color&quot;);
+</code></pre>
+<h4 id="设置-CSS-属性"><a href="#设置-CSS-属性" class="headerlink" title="设置 CSS 属性"></a>设置 CSS 属性</h4><pre><code class="lang-javascript">css(&quot;propertyname&quot;,&quot;value&quot;);
+</code></pre>
+<pre><code class="lang-javascript">$(&quot;p&quot;).css(&quot;background-color&quot;,&quot;yellow&quot;);
+</code></pre>
 <h4 id="设置多个-CSS-属性"><a href="#设置多个-CSS-属性" class="headerlink" title="设置多个 CSS 属性"></a>设置多个 CSS 属性</h4><p> 如需设置多个 CSS 属性，请使用如下语法： </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">css(&#123;<span class="string">"propertyname"</span>:<span class="string">"value"</span>,<span class="string">"propertyname"</span>:<span class="string">"value"</span>,...&#125;);</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).css(&#123;<span class="string">"background-color"</span>:<span class="string">"yellow"</span>,<span class="string">"font-size"</span>:<span class="string">"200%"</span>&#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="jQuery-尺寸"><a href="#jQuery-尺寸" class="headerlink" title="jQuery 尺寸"></a>jQuery 尺寸</h3><p><img src="https://www.runoob.com/images/img_jquerydim.gif" alt></p>
+<pre><code class="lang-javascript">css({&quot;propertyname&quot;:&quot;value&quot;,&quot;propertyname&quot;:&quot;value&quot;,...});
+</code></pre>
+<pre><code class="lang-javascript">$(&quot;p&quot;).css({&quot;background-color&quot;:&quot;yellow&quot;,&quot;font-size&quot;:&quot;200%&quot;});
+</code></pre>
+<h3 id="jQuery-尺寸"><a href="#jQuery-尺寸" class="headerlink" title="jQuery 尺寸"></a>jQuery 尺寸</h3><p><img src="https://www.runoob.com/images/img_jquerydim.gif" srcset="/img/loading.gif" alt></p>
 <h4 id="jQuery-width-和-height-方法"><a href="#jQuery-width-和-height-方法" class="headerlink" title="jQuery width() 和 height() 方法"></a>jQuery width() 和 height() 方法</h4><p>width() 方法设置或返回元素的宽度（不包括内边距、边框或外边距）。</p>
 <p>height() 方法设置或返回元素的高度（不包括内边距、边框或外边距）。</p>
 <p>下面的例子返回指定的 <code>&lt;div&gt;</code> 元素的宽度和高度：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> txt=<span class="string">""</span>;</span><br><span class="line">  txt+=<span class="string">"div 的宽度是: "</span> + $(<span class="string">"#div1"</span>).width() + <span class="string">"&lt;/br&gt;"</span>;</span><br><span class="line">  txt+=<span class="string">"div 的高度是: "</span> + $(<span class="string">"#div1"</span>).height();</span><br><span class="line">  $(<span class="string">"#div1"</span>).html(txt);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="lang-javascript">$(&quot;button&quot;).click(function(){
+  var txt=&quot;&quot;;
+  txt+=&quot;div 的宽度是: &quot; + $(&quot;#div1&quot;).width() + &quot;&lt;/br&gt;&quot;;
+  txt+=&quot;div 的高度是: &quot; + $(&quot;#div1&quot;).height();
+  $(&quot;#div1&quot;).html(txt);
+});
+</code></pre>
 <h4 id="jQuery-innerWidth-和-innerHeight-方法"><a href="#jQuery-innerWidth-和-innerHeight-方法" class="headerlink" title="jQuery innerWidth() 和 innerHeight() 方法"></a>jQuery innerWidth() 和 innerHeight() 方法</h4><p>innerWidth() 方法返回元素的宽度（包括内边距）。</p>
 <p>innerHeight() 方法返回元素的高度（包括内边距）。</p>
 <h4 id="jQuery-outerWidth-和-outerHeight-方法"><a href="#jQuery-outerWidth-和-outerHeight-方法" class="headerlink" title="jQuery outerWidth() 和 outerHeight() 方法"></a>jQuery outerWidth() 和 outerHeight() 方法</h4><p>outerWidth() 方法返回元素的宽度（包括内边距和边框）。</p>
 <p>outerHeight() 方法返回元素的高度（包括内边距和边框）。</p>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Web前端/" rel="tag"> <i class="fa fa-tag"></i> Web前端</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/10/22/攻克二分/" rel="next" title="攻克二分">
-                <i class="fa fa-chevron-left"></i> 攻克二分
-              </a>
-            
+            <hr>
           </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
+          <br>
+          <div>
+            <p>
             
-              <a href="/2019/10/22/SQL/" rel="prev" title="Node.js学习">
-                Node.js学习 <i class="fa fa-chevron-right"></i>
-              </a>
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/Web%E5%89%8D%E7%AB%AF">Web前端</a>
+                  &nbsp;
+                
+                  <a class="hover-with-bg" href="/categories/jQuery">jQuery</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/Web%E5%89%8D%E7%AB%AF">Web前端</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
             
           </div>
         </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="AN">
-            
-              <p class="site-author-name" itemprop="name">AN</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/">
-              
-                  <span class="site-state-item-count">32</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">30</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">21</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-
-          
-
-          
-          
-
-          
-          
-
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web知识汇总-5-jQuery"><span class="nav-number">1.</span> <span class="nav-text">Web知识汇总(5)(jQuery)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery安装"><span class="nav-number">1.2.</span> <span class="nav-text">jQuery安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载-jQuery"><span class="nav-number">1.2.1.</span> <span class="nav-text">下载 jQuery</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#替代方案"><span class="nav-number">1.2.2.</span> <span class="nav-text">替代方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-使用版本"><span class="nav-number">1.2.3.</span> <span class="nav-text">jQuery 使用版本</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单语法"><span class="nav-number">1.3.</span> <span class="nav-text">简单语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文档就绪事件"><span class="nav-number">1.3.1.</span> <span class="nav-text">文档就绪事件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery选择器"><span class="nav-number">1.4.</span> <span class="nav-text">jQuery选择器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#元素选择器"><span class="nav-number">1.4.1.</span> <span class="nav-text">元素选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#id-选择器"><span class="nav-number">1.4.2.</span> <span class="nav-text"># id 选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#class-选择器"><span class="nav-number">1.4.3.</span> <span class="nav-text">.class 选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他"><span class="nav-number">1.4.4.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery事件"><span class="nav-number">1.5.</span> <span class="nav-text">jQuery事件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-事件方法语法"><span class="nav-number">1.5.1.</span> <span class="nav-text">jQuery 事件方法语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用的-jQuery-事件方法"><span class="nav-number">1.6.</span> <span class="nav-text">常用的 jQuery 事件方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#document-ready"><span class="nav-number">1.6.1.</span> <span class="nav-text">$(document).ready()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#click"><span class="nav-number">1.6.2.</span> <span class="nav-text">click()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dblclick"><span class="nav-number">1.6.3.</span> <span class="nav-text">dblclick()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mouseenter"><span class="nav-number">1.6.4.</span> <span class="nav-text">mouseenter()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mouseleave"><span class="nav-number">1.6.5.</span> <span class="nav-text">mouseleave()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mousedown"><span class="nav-number">1.6.6.</span> <span class="nav-text">mousedown()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mouseup"><span class="nav-number">1.6.7.</span> <span class="nav-text">mouseup()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hover"><span class="nav-number">1.6.8.</span> <span class="nav-text">hover()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#focus"><span class="nav-number">1.6.9.</span> <span class="nav-text">focus()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#blur"><span class="nav-number">1.6.10.</span> <span class="nav-text">blur()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery效果-隐藏和显示"><span class="nav-number">1.7.</span> <span class="nav-text">jQuery效果-隐藏和显示</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-hide-和-show"><span class="nav-number">1.7.1.</span> <span class="nav-text">jQuery hide() 和 show()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-toggle"><span class="nav-number">1.7.2.</span> <span class="nav-text">jQuery toggle()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-效果-淡入淡出"><span class="nav-number">1.8.</span> <span class="nav-text">jQuery 效果 - 淡入淡出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-fadeIn-方法"><span class="nav-number">1.8.1.</span> <span class="nav-text">jQuery fadeIn() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-fadeOut-方法"><span class="nav-number">1.8.2.</span> <span class="nav-text">jQuery fadeOut() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-fadeToggle-方法"><span class="nav-number">1.8.3.</span> <span class="nav-text">jQuery fadeToggle() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-fadeTo-方法"><span class="nav-number">1.8.4.</span> <span class="nav-text">jQuery fadeTo() 方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-效果-滑动"><span class="nav-number">1.9.</span> <span class="nav-text">jQuery 效果 - 滑动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-slideDown-方法"><span class="nav-number">1.9.1.</span> <span class="nav-text">jQuery slideDown() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-slideUp-方法"><span class="nav-number">1.9.2.</span> <span class="nav-text">jQuery slideUp() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-slideToggle-方法"><span class="nav-number">1.9.3.</span> <span class="nav-text">jQuery slideToggle() 方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-效果-动画"><span class="nav-number">1.10.</span> <span class="nav-text">jQuery 效果- 动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-动画-animate-方法"><span class="nav-number">1.10.1.</span> <span class="nav-text">jQuery 动画 - animate() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-animate-操作多个属性"><span class="nav-number">1.10.2.</span> <span class="nav-text">jQuery animate() - 操作多个属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-animate-使用相对值"><span class="nav-number">1.10.3.</span> <span class="nav-text">jQuery animate() - 使用相对值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-animate-使用预定义的值"><span class="nav-number">1.10.4.</span> <span class="nav-text">jQuery animate() - 使用预定义的值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-animate-使用队列功能"><span class="nav-number">1.10.5.</span> <span class="nav-text">jQuery animate() - 使用队列功能</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-停止动画"><span class="nav-number">1.11.</span> <span class="nav-text">jQuery 停止动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-stop-方法"><span class="nav-number">1.11.1.</span> <span class="nav-text">jQuery stop() 方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-链-Chaining"><span class="nav-number">1.12.</span> <span class="nav-text">jQuery - 链(Chaining)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-方法链接"><span class="nav-number">1.12.1.</span> <span class="nav-text">jQuery 方法链接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-获取内容和属性"><span class="nav-number">1.13.</span> <span class="nav-text">jQuery - 获取内容和属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-DOM-操作"><span class="nav-number">1.13.1.</span> <span class="nav-text">jQuery DOM 操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获得内容-text-、html-以及-val"><span class="nav-number">1.13.2.</span> <span class="nav-text">获得内容 - text()、html() 以及 val()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取属性-attr"><span class="nav-number">1.13.3.</span> <span class="nav-text">获取属性 - attr()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-设置内容和属性"><span class="nav-number">1.14.</span> <span class="nav-text">jQuery - 设置内容和属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置内容-text-、html-以及-val"><span class="nav-number">1.14.1.</span> <span class="nav-text">设置内容 - text()、html() 以及 val()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#text-、html-以及-val-的回调函数"><span class="nav-number">1.14.2.</span> <span class="nav-text">text()、html() 以及 val() 的回调函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置属性-attr"><span class="nav-number">1.14.3.</span> <span class="nav-text">设置属性 - attr()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#attr-的回调函数"><span class="nav-number">1.14.4.</span> <span class="nav-text">attr() 的回调函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-添加元素"><span class="nav-number">1.15.</span> <span class="nav-text">jQuery - 添加元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-append-方法"><span class="nav-number">1.15.1.</span> <span class="nav-text">jQuery append() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-prepend-方法"><span class="nav-number">1.15.2.</span> <span class="nav-text">jQuery prepend() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-after-和-before-方法"><span class="nav-number">1.15.3.</span> <span class="nav-text">jQuery after() 和 before() 方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-删除元素"><span class="nav-number">1.16.</span> <span class="nav-text">jQuery - 删除元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-remove-方法"><span class="nav-number">1.16.1.</span> <span class="nav-text">jQuery remove() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-empty-方法"><span class="nav-number">1.16.2.</span> <span class="nav-text">jQuery empty() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#过滤被删除的元素"><span class="nav-number">1.16.3.</span> <span class="nav-text">过滤被删除的元素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-获取并设置-CSS-类"><span class="nav-number">1.17.</span> <span class="nav-text">jQuery - 获取并设置 CSS 类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-addClass-方法"><span class="nav-number">1.17.1.</span> <span class="nav-text">jQuery addClass() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-removeClass-方法"><span class="nav-number">1.17.2.</span> <span class="nav-text">jQuery removeClass() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-toggleClass-方法"><span class="nav-number">1.17.3.</span> <span class="nav-text">jQuery toggleClass() 方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-css-方法"><span class="nav-number">1.18.</span> <span class="nav-text">jQuery css() 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#返回-CSS-属性"><span class="nav-number">1.18.1.</span> <span class="nav-text">返回 CSS 属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置-CSS-属性"><span class="nav-number">1.18.2.</span> <span class="nav-text">设置 CSS 属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置多个-CSS-属性"><span class="nav-number">1.18.3.</span> <span class="nav-text">设置多个 CSS 属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-尺寸"><span class="nav-number">1.19.</span> <span class="nav-text">jQuery 尺寸</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-width-和-height-方法"><span class="nav-number">1.19.1.</span> <span class="nav-text">jQuery width() 和 height() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-innerWidth-和-innerHeight-方法"><span class="nav-number">1.19.2.</span> <span class="nav-text">jQuery innerWidth() 和 innerHeight() 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-outerWidth-和-outerHeight-方法"><span class="nav-number">1.19.3.</span> <span class="nav-text">jQuery outerWidth() 和 outerHeight() 方法</span></a></li></ol></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
       </div>
-    </main>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;ディレクトリ</p>
+    <div id="tocbot"></div>
+  </div>
 
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        
-        
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
 
 
-
-
-
-
-
-        
-      </div>
-    </footer>
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
 
     
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">キーワード</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
     
+
 
     
 
   </div>
+</footer>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
 
 
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
+  <script src="/js/lazyload.js" ></script>
 
 
 
   
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
   
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+  <script src="/js/post.js" ></script>
 
 
 
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
 
 
 
 
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
+<!-- Plugins -->
 
 
   
@@ -1076,18 +832,92 @@
   
 
   
-  
-
-  
-  
-
 
   
 
-  
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Web知识汇总(5)(jQuery)&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>
-
-
-
