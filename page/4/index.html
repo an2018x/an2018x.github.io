@@ -56,35 +56,35 @@
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/">首页</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/archives/">Archives</a>
+            <a class="nav-link" href="/archives/">归档</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/categories/">Categories</a>
+            <a class="nav-link" href="/categories/">分类</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/tags/">Tags</a>
+            <a class="nav-link" href="/tags/">标签</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/about/">About</a>
+            <a class="nav-link" href="/about/">关于</a>
           </li>
         
         
@@ -99,7 +99,7 @@
 </nav>
 
     <div class="view intro-2" id="background"
-         style="background: url('https://cdn.jsdelivr.net/gh/0x2e/static/blog/index.jpg')no-repeat center center;
+         style="background: url('https://pic1.zhimg.com/v2-fa4c89003c3963781901e9b29c41da70_r.jpg')no-repeat center center;
            background-size: cover;
            background-attachment: scroll;">
       <div class="full-bg-img">
@@ -137,30 +137,17 @@
     
     
     <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/09/21/day3/">
-        <p class="h4 index-header">day3</p>
+      <a href="/2019/09/21/第一篇博客/">
+        <p class="h4 index-header">第一篇博客</p>
         
         
           
         
         <div class="index-excerpt" >
-          <div class="index-text mb-1">day3P1031 均分纸牌 （模拟、贪心、概率论、统计）题目：
-有N堆纸牌，编号分别为1，2，…，N。每堆上有若干张，但纸牌总数必为N的倍数。可以在任一堆上取若干张纸牌，然后移动。
-移牌规则为：在编号为1堆上取的纸牌，只能移到编号为2的堆上；在编号为N的堆上取的纸牌，只能一到编号为N-1的堆上；其他堆上取的纸牌，可以移到相邻左边或者右边的堆上。
-现在要求找出一种移动方法，用最少的移动次数使每堆上纸牌数都一样多。
-例如N=4，4堆纸牌数分别为：
-9 8 17 6
-移动3次可以达到目的：
-A  (3) 4-&gt;(4)   B (3) 3-&gt;(2)    C    (2) 1-&gt;(1)
-输入格式：
-第一行：N(N堆纸牌，1&lt;=N&lt;=100)
-第二行：$A_1,A_2,…,A_n$(N堆纸牌，每堆纸牌初始数，($1\leq A_i \leq 10000$)
-输出格式：
-一行：最少移动次数。
+          <div class="index-text mb-1">2019-9-21
+我的第一个个人博客诞生了
 
-解 1：1、算平均数
-2、求每堆纸牌与平均数的关系（多记为正，少记为负）
-3、当$q[y]$（第y堆纸牌与平均数的关系）不等于0时，$q[y+1]=q[y+1]+q[y]$，</div>
+</div>
         </div>
       </a>
 
@@ -169,82 +156,6 @@ A  (3) 4-&gt;(4)   B (3) 3-&gt;(2)    C    (2) 1-&gt;(1)
           <i class="iconfont icon-riqi2"></i>&nbsp;2019-09-21&nbsp;&nbsp;
         
         
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-            <a href="/categories/%E6%A8%A1%E6%8B%9F">模拟</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E6%90%9C%E7%B4%A2">搜索</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/09/21/Day5/">
-        <p class="h4 index-header">day5</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Day5P1149 火柴棒等式(搜索)题目：
-给你n根火柴棍，你可以拼出多少个形如”A+B=C”的等式？等式种的A,B,C是用火柴棍拼出的整数（若该数非零，则最高位不能是0）。用火柴棍拼数字0~9的拼法：
-
-注意：
-1、加号与等号各自需要两根火柴棍
-2、如果$A\neq B$，则$A+B=C$与$B+A=C$视为不同的等式（$A,B,C \geq 0$）
-3、n根火柴棍必须全部用上
-输入：
-一个整数n($n\leq 24$)。
-输出：
-能拼成的不同等式的数目。
-输入：
-14
-输出：
-2
-解：
-#include&lt;bits/stdc++.h&gt;
-using namespace std;
-int cnt[10]={6,2,5,5,4,5,6,3,7,6};
-int n;
-int main(){
-    cin&gt;&gt;n;
-    int j;
-    int a[2001];
-    int _cnt=0;
-    a[0]=6;
-    for(int i=1;i&lt;=2000;i++){
-        j=i;
-        while(j&gt;=1){
-  </div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2019-09-21&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
         
       </div>
     </div>
@@ -286,7 +197,7 @@ int main(){
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -295,7 +206,7 @@ int main(){
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

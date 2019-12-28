@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>Git总结 ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://pic1.zhimg.com/v2-fa4c89003c3963781901e9b29c41da70_r.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: scroll;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Saturday, December 28th 2019, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>参考其他人的博客，自己作了总结。<br><a id="more"></a></p>
+<h2 id="Git复习"><a href="#Git复习" class="headerlink" title="Git复习"></a>Git复习</h2><h3 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h3><p>Git是世界上最先进的分布式版本控制系统。</p>
+<p><mark>集中式版本控制系统</mark>：版本库集中存放在中央服务器，每次编写代码都要从中央服务器取得最新的版本，然后再把自己的工作推送给中央服务器。</p>
+<p>缺点：必须联网才能工作。</p>
+<p><mark>分布式版本控制系统</mark>：没有中央服务器，每个人电脑都是一个完整的版本库，工作时不需要联网。如果想要互相同步工作进度，只需要把各自的修改推送给对方。</p>
+<p>有更高的安全性，由于每个人的电脑都有完整的版本库，不用担心文件丢失。</p>
+<p>分布式管理系统也会有一台充当中央服务器的电脑，但仅仅用来方便交换修改。</p>
+<h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><h4 id="Linux系统"><a href="#Linux系统" class="headerlink" title="Linux系统"></a>Linux系统</h4><p>对于Debian或Ubuntu Linux</p>
+<pre><code class="lang-shell">sudo apt-get install git
+</code></pre>
+<p>对于其他Linux版本，从官网下载源码，解压，输入</p>
+<pre><code class="lang-shell">./config
+make
+sudo make install
+</code></pre>
+<h4 id="Windows系统"><a href="#Windows系统" class="headerlink" title="Windows系统"></a>Windows系统</h4><p>官网下载对应版本。</p>
+<p>设置/修改用户名、密码：</p>
+<pre><code>git config --global user.name &quot;an2018x&quot;
+git config --global user.email &quot;2781988166@qq.com&quot;
+</code></pre><p>你可以通过下面的命名查看你设置的用户名、密码</p>
+<pre><code>git config user.name
+git config user.email
+</code></pre><h3 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h3><p><mark>版本库</mark>，又名仓库，英文名<mark>repository</mark>，可以简单理解为可以被git管理的一个目录，每个文件的修改都能被git追踪，方便版本回退。</p>
+<p>①选择一个目录：</p>
+<pre><code class="lang-shell">mkdir learn 
+cd learn
+pwd
+</code></pre>
+<p>②将这个目录变为可管理的git仓库：</p>
+<pre><code class="lang-shell">git init
+</code></pre>
+<p>此时，该目录下多了一个<code>.git</code>的目录，这个目录被用来跟踪管理版本库。</p>
+<p>查看隐藏目录：</p>
+<pre><code class="lang-shell">ls -ah
+</code></pre>
+<h5 id="添加文件到版本库"><a href="#添加文件到版本库" class="headerlink" title="添加文件到版本库"></a>添加文件到版本库</h5><p>版本控制系统只能跟踪文本文件的改动，但每办法知道例如二进制文件的改变。如使用版本控制系统，只能以纯文本的方式来编写文件。</p>
+<p>建议统一采用UTF-8编码，并采用vscode作为文本编辑器。</p>
+<p>我们先编写一个<code>readme.txt</code>文件。</p>
+<pre><code>git is a version control system
+git is a free software
+</code></pre><p>放在learn目录或者子目录下，不然git无法找到你的文件。</p>
+<p>接下来的两步用来将文件添加到仓库：</p>
+<p>①<code>git add</code>把文件添加到暂存区：</p>
+<pre><code>git add readme.txt
+</code></pre><p>②<code>git commit</code>把文件提交到本地仓库：</p>
+<pre><code>git commit -m &quot;wrote a readme file&quot;
+</code></pre><p><code>git commit</code>命令，-m后面是提交的说明，方便从历史记录中找到改动记录。</p>
+<p>输入后我们会看到这样的提示：</p>
+<pre><code>[master (root-commit) 40dc3b1] wrote a readme file
+ 1 file changed, 2 insertions(+)
+ create mode 100644 readme.txt
+</code></pre><p><code>2 insertions</code>插入了两行内容。</p>
+<p>一些问题：</p>
+<p>1、文件名乱码</p>
+<p>使用git 查看文件修改详细等操作时，如果文件名是中文，会显示形如 <strong>123\456\789.txt</strong> 的形式，需将 <code>core.quotepath</code>设为 <strong>false</strong>，此时就不会对0×80以上的字符进行quote，中文显示恢复正常。<br>直接在bash提示符下输入相关命令即可：</p>
+<pre><code>git config --global core.quotepath false
+</code></pre><p>2、忽略大小写</p>
+<p>git默认对文件名大小写不敏感，这样容易造成错误，因此重新配置为大小写敏感:</p>
+<pre><code>git config --global core.ignorecase false
+</code></pre><h3 id="文件修改"><a href="#文件修改" class="headerlink" title="文件修改"></a>文件修改</h3><p>我们修改之前的<code>readme.txt</code>：</p>
+<pre><code>git is a version control system
+git is free software
+</code></pre><p>运行<code>git status</code>查看输出：</p>
+<pre><code>$ git status
+On branch master
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)
+        modified:   readme.txt
+
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+</code></pre><p><code>git status</code>可以查看仓库的状态，上面的输出信息为：这个文件被修改过，但没有被提交。</p>
+<p>我们还可以用<code>git diff</code>来查看我们修改了什么内容：</p>
+<pre><code>$ git diff readme.txt
+warning: LF will be replaced by CRLF in readme.txt.
+The file will have its original line endings in your working directory
+diff --git a/readme.txt b/readme.txt
+index 933385a..3226a48 100644
+--- a/readme.txt
++++ b/readme.txt
+@@ -1,2 +1,2 @@
+ git is a version control system
+-git is a free software
++git is free software
+</code></pre><p><code>git diff</code>是查看difference。</p>
+<p>我们继续提交修改：</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git add readme.txt
+warning: LF will be replaced by CRLF in readme.txt.
+The file will have its original line endings in your working directory
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git status
+On branch master
+Changes to be committed:
+  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)
+        modified:   readme.txt
+
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git commit -m &quot;delete a&quot;
+[master 9e70c06] delete a
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+</code></pre><h5 id="相关问题："><a href="#相关问题：" class="headerlink" title="相关问题："></a>相关问题：</h5><p>Git提示“warning: LF will be replaced by CRLF”最详细解释+解决方案</p>
+<p>1、问题描述：windows平台下使用<code>git add，git deploy</code> 文件时经常出现“warning: LF will be replaced by CRLF” 的提示</p>
+<p>2、解释：</p>
+<p>①换行符’\n’与回车符’\r’</p>
+<p>在计算机还没有出现之前，有一种叫做电传打字机（Teletype Model 33）的玩意，每秒钟可以打10个字符。但是它有一个问题，就是打完一行换行的时候，要用去0.2秒，正好可以打两个字符。要是在这0.2秒里面，又有新的字符传过来，那么这个字符将丢失。</p>
+<p>于是，研制人员想了个办法解决这个问题，就是在每行后面加两个表示结束的字符。一个叫做“回车”，告诉打字机把打印头定位在左边界；另一个叫做“换行”，告诉打字机把纸向下移一行。</p>
+<p>(A)回车符就是回到一行的开头，用符号r表示，十进制ASCII代码是13，十六进制代码为0x0D，回车（return）；</p>
+<p>(B)换行符就是另起一行，用n符号表示，ASCII代码是10，十六制为0x0A， 换行（newline）。</p>
+<p> ②LF和CRLF的区别</p>
+<p>LF: Line Feed换行</p>
+<p>feed v.喂养,供给;将(信息)输入     line feed直译是”将行输入”,再意译”换行”</p>
+<p>CRLF: Carriage Return Line Feed 回车换行</p>
+<p>Carriage n.马车,火车车厢;运输费用    在carriage return中,carriage译为“车”,return译为“回”</p>
+<p>在过去的机械打字机上有个部件叫「字车」（Typewriter carriage），每打一个字符，字车前进一格，打完一行后，我们需要让字车回到起始位置，而“Carriage Return”键最早就是这个作用，因此被直接翻译为「回车」。尽管后来回车键的作用已经不止” 倒回字车”那么简单，但这个译名一直被保留下来。</p>
+<p>3.分析问题</p>
+<p>这句警告出现的原因：我们在Windows平台下git add任意Windows平台编辑过的代码文本的换行默认都是CRLF，所以一般git add不会出错。但是如果如下的(i)或者(ii)发生了，那我们再进行git add这个LF换行的文件时，会出现这个警告” LF will be replaced by CRLF in …”。</p>
+<p>(i)我们的团队成员是Linux/Mac平台并参与了项目的git提交</p>
+<p>(ii)我们Windows平台的某些软件会生成换行是LF的代码文本(如李俊德git add的是<code>Webstorm</code>生成的HTML项目中隐藏文件夹.idea中的workspace.xml,这个xml文件换行是LF)</p>
+<p>(1)不同操作系统下，处理行尾结束符的方法是不同的：</p>
+<p>(A)Windows和Dos下：使用回车（CR）和换行（LF）两个字符来结束一行，回车+换行(CR+LF)，即“\r\n”；</p>
+<p>(B)Unix和mac下：只使用换行（LF）一个字符来结束一行，即“\n”；</p>
+<p>(最早Mac每行结尾是回车CR 即’\r’，后mac os x 也投奔了 unix)</p>
+<p>(2)Git下处理“换行”（line ending）</p>
+<p><code>core.autocrlf</code>是git中负责处理line ending的变量，可以设置3个值：true，false，input。</p>
+<p>(A)设置为true【<code>config --global core.autocrlf true</code>】</p>
+<p>当设置成true时，这意味着你在任何时候添加(add)文件到git仓库时，git都会视为它是一个文本文件(text file)。</p>
+<p>它将把<code>crlf</code>变成LF。</p>
+<p>(B)设置为false【<code>config --global core.autocrlf false</code>】</p>
+<p>当设置成false时，line endings将不做转换操作。文本文件保持原来的样子。</p>
+<p>(C)设置为input时，添加文件git仓库时，git把<code>crlf</code>变成<code>lf</code>。当有人Check代码时还是<code>lf</code>方式。因此在window操作系统下，不要使用这个设置。</p>
+<p>4.此问题的负面影响</p>
+<p>格式化与多余的空白字符，特别是在跨平台情况下，有时候是一个令人发指的问题。由于编辑器的不同或者文件行尾的换行符在 Windows 下被替换了，一些细微的空格变化会不经意地混入提交，造成麻烦。虽然这是小问题，但会极大地扰乱跨平台协作。</p>
+<p>假如你正在Windows上写程序;又或者你正在和其他人合作，他们在Windows上编程，而你却在其他系统上，在这些情况下，你可能会遇到行尾结束符问题。此问题的全部负面影响如下：</p>
+<p>(1)一个直接后果是，Unix/Mac系统下的一个“多行文本”文件在Windows里打开的话，“多行文本”会变成“一行”。（原因：Unix/Mac换行只用了换行符‘\n’，而Windows的换行要求是回车换行符’\r\n’，因此Unix/Mac中的“多行文本”的换行不符合Windows的规则，所以Windows对这些不符合换行规则的“多行文本”全部按照“没有换行”处理，所以导致“多行文本”会变成“一行”）</p>
+<p>(2)而Windows里的文件在Unix/Mac下打开的话，在每行的结尾可能会多出一个^M符号。</p>
+<p>(3)Linux保存的文件在windows上用记事本看的话会出现黑点。</p>
+<p>5.解决此问题的方案</p>
+<p>(1)如果我们目前是Window平台并出现该警告，啥也别做就行，虽然这个警告难看，但这个警告能保证我们项目团队正常跨系统git操作代码</p>
+<p>因为git的Windows 客户端基本都会默认设置 <code>core.autocrlf=true</code>（我们可通过<code>git config core.autocrlf</code>命令查询我们的Windows上该属性是否默认true。如不是true,通过<code>config --global core.autocrlf true</code>命令设置该属性为true），而“<code>core.autocrlf=true</code>”有以下3个功能来避免我们出错：</p>
+<p>(A)在“把 modified修改过的文件git add到暂存区stage”时，Git自动把LF转换成CRLF,并给出那条警告”LF will be replaced by CRLF”</p>
+<p>(B)在“把modified修改过的文件由暂存区(stage) 提交(commit)到版本库/仓库(repository)”时，Git自动把CRLF转换成LF</p>
+<p>(C)在“用 检出/git checkout切换到指定分支 或 git clone克隆远程版本库”来加载代码时，Git自动把LF转换成CRLF</p>
+<p>提到的那句警告：“<code>IF will be replaced by CRLF in &lt;file-name&gt;</code>”</p>
+<p>这句警告的下面其实还有一句很重要的话：The file will have its original line endings in your working directory.</p>
+<p>(翻译：”在工作区里，这个文件会保留它原本的换行符”)</p>
+<p>(2)如果我们是Linux 或 Mac平台,我们不需要5(1)(C)的功能“在检出或克隆远程版本库时，Git自动把LF转换成CRLF”。然而当一个CRLF作为行结束符的文件在我们的Linux 或 Mac平台不小心被引入时，你肯定想让 Git 修正。 所以，你可以通过<code>config --global core.autocrlf input</code>命令把<code>core.autocrlf</code> 设置成 input 来告诉 Git 在提交(commit)时把CRLF转换成LF，检出(git checkout)时不转换</p>
+<p>(1)+(2):这样在 Windows 上的检出(checkout)文件中会保留CRLF，而在 Mac 和 Linux 上，以及版本库中会保留LF，从而保证我们项目团队正常跨系统git操作代码</p>
+<h5 id="关于git-diff的一些问题"><a href="#关于git-diff的一些问题" class="headerlink" title="关于git diff的一些问题"></a>关于git diff的一些问题</h5><p><strong>linux diff 格式</strong></p>
+<p>详解： diff —git a/test.txt b/test.txt </p>
+<p>——对比两个文件，其中a改动前，b是改动后，以git的diff格式显示；</p>
+<p>index 629d9c8..3d98a7f 100644 ——两个版本的git哈希值，index区域（add之后）的 629d9c8 对象和工作区域的 3d98a7f 对象， 100表示普通文件，644表示权限控制； </p>
+<p>—- a/test.txt +++ b/test.txt ——减号表示变动前，加号表示变动后； </p>
+<p>@@ -4,8 +4,9 @@ test line3. ——@@表示文件变动描述合并显示的开始和结束，一般在变动前后多显示3行，其中-+表示变动前后，逗号前是起始行位置，逗号后为从起始行往后几行。</p>
+<p>合起来就是变动前后都是从第4行开始，变动前文件往后数8行对应变动后文件往后数9行。 变动内容 ——+表示增加了这一行，-表示删除了这一行，没符号表示此行没有变动。</p>
+<h3 id="回退版本"><a href="#回退版本" class="headerlink" title="回退版本"></a>回退版本</h3><p>我们修改文件再提交一次：</p>
+<pre><code>git is a version control system
+git is free software distributed under the GPL
+</code></pre><p>当我们修改文件到一定程度后，我们就可以保存一个快照——<code>commit</code>，一旦改乱了文件，就可以从之前的<code>commit</code>中恢复。</p>
+<p>我们总共提交了三个版本：</p>
+<pre><code>git is a version control system
+git is a free software
+</code></pre><pre><code>git is a version control system
+git is free software
+</code></pre><pre><code>git is a version control system
+git is free software distributed under the GPL
+</code></pre><p>我们也可以用<code>git log</code>命令来查看版本控制系统的历史记录。</p>
+<pre><code class="lang-shell">陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git log
+commit 8a959598c94d4add89687ca18175086dd6a52920 (HEAD -&gt; master)
+Author: an20xx &lt;2781988166@qq.com&gt;
+Date:   Tue Dec 17 20:27:34 2019 +0800
+
+    append GPL
+
+commit 9e70c0605e2216c7b49435f68352bd13d740e801
+Author: an20xx &lt;2781988166@qq.com&gt;
+Date:   Tue Dec 17 20:02:14 2019 +0800
+
+    delete a
+
+commit 40dc3b1021cba528345daf2d1c5cfddc1830d251
+Author: an20xx &lt;2781988166@qq.com&gt;
+Date:   Tue Dec 17 19:35:58 2019 +0800
+</code></pre>
+<p><code>git log</code>命令显示从最近到最远的提交日志，我们可以看到三次提交。</p>
+<p>我们还可以加上<code>–-pretty=oneline</code>参数来简化输出信息</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git log --pretty=oneline
+8a959598c94d4add89687ca18175086dd6a52920 (HEAD -&gt; master) append GPL
+9e70c0605e2216c7b49435f68352bd13d740e801 delete a
+40dc3b1021cba528345daf2d1c5cfddc1830d251 wrote a readme file
+</code></pre><p>其中<code>8a959598c94d4add89687ca18175086dd6a52920</code>是版本号，是一个非常大的数字，防止和其他人冲突。</p>
+<p>如果我们想把<code>readme.txt</code>回退到上一个版本，可以像接下来这样做：</p>
+<p>首先，我们要知道git是通过<code>HEAD</code>来表示当前版本，也就是最新的提交，上一个版本是<code>HEAD^</code>，上上个版本<code>HEAD^^</code>，我们也可简化为<code>HEAD~2</code>。</p>
+<p>现在我想回退到<code>delete a</code>版本，我们可以使用<code>git reset</code>命令。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git reset --hard HEAD^
+HEAD is now at 9e70c06 delete a
+</code></pre><p>此时，工作区的文件变成了前一个版本。</p>
+<p>现在，我们有一个问题，我们该如何回到刚才的版本。</p>
+<p>①通过版本号回退</p>
+<pre><code>git reset --hard 8a9595
+</code></pre><p>版本号只需给出前面几位。</p>
+<p>②git reflog查看历史命令</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git reflog
+9e70c06 (HEAD -&gt; master) HEAD@{0}: reset: moving to HEAD^
+8a95959 HEAD@{1}: commit: append GPL
+9e70c06 (HEAD -&gt; master) HEAD@{2}: commit: delete a
+40dc3b1 HEAD@{3}: commit (initial): wrote a readme file
+</code></pre><p>相关问题：</p>
+<p>这个git reset —hard 1094a的分支上可能有很多的文件，比如文件1 2 3 4… 而我只想恢复文件1在1094a上的内容，应该怎么操作呀？</p>
+<p>从最新版恢复到1094a，把文件1复制出来，再恢复回最新版，把文件1覆盖进去，提交文件1的改动</p>
+<p>请问我执行git reset —hard HEAD命令之后本地文件全都没了，还能恢复吗，之前没有add 没有commit过</p>
+<p>如果你从来没有add过，那你的文件没有被git管理。然后通过git reset之后，你整个工作区的所有文件都会回到暂存区的那个状态，那些没有add的文件，其实相当于rm -rf了，永远找不回来。</p>
+<p><mark>reset三种模式</mark></p>
+<p>区别</p>
+<p><strong>1、—hard</strong>：重置位置的同时，直接将 <strong>working Tree工作目录</strong>、 <strong>index 暂存区</strong>及 <strong>repository</strong> 都重置成目标<strong>Reset</strong>节点的內容,所以效果看起来等同于清空暂存区和工作区。</p>
+<p><strong>2、—soft</strong>：重置位置的同时，保留<strong>working Tree工作目录</strong>和<strong>index暂存区</strong>的内容，只让<strong>repository</strong>中的内容和 <strong>reset</strong> 目标节点保持一致，因此原节点和<strong>reset</strong>节点之间的【差异变更集】会放入<strong>index暂存区</strong>中(<strong>Staged files</strong>)。所以效果看起来就是工作目录的内容不变，暂存区原有的内容也不变，只是原节点和<strong>Reset</strong>节点之间的所有差异都会放到暂存区中。</p>
+<p><strong>3、—mixed（默认）</strong>：重置位置的同时，只保留<strong>Working Tree工作目录</strong>的內容，但会将 <strong>Index暂存区</strong> 和 <strong>Repository</strong> 中的內容更改和reset目标节点一致，因此原节点和<strong>Reset</strong>节点之间的【差异变更集】会放入<strong>Working Tree工作目录</strong>中。所以效果看起来就是原节点和<strong>Reset</strong>节点之间的所有差异都会放到工作目录中。</p>
+<p>使用场景:</p>
+<ol>
+<li><strong>—hard</strong>：(1) <strong>要放弃目前本地的所有改变時</strong>，即去掉所有add到暂存区的文件和工作区的文件，可以执行 <strong>git reset -hard HEAD</strong> 来强制恢复git管理的文件夹的內容及状态；(2) <strong>真的想抛弃目标节点后的所有commit</strong>（可能觉得目标节点到原节点之间的commit提交都是错了，之前所有的commit有问题）。</li>
+<li><strong>—soft</strong>：原节点和<strong>reset</strong>节点之间的【差异变更集】会放入<strong>index暂存区</strong>中(<strong>Staged files</strong>)，所以假如我们之前工作目录没有改过任何文件，也没add到暂存区，那么使用<strong>reset  —soft</strong>后，我们可以直接执行 <strong>git commit</strong> 將 index暂存区中的內容提交至 <strong>repository</strong> 中。为什么要这样呢？这样做的使用场景是：假如我们想合并「当前节点」与「<strong>reset</strong>目标节点」之间不具太大意义的 <strong>commit</strong> 记录(可能是阶段性地频繁提交,就是开发一个功能的时候，改或者增加一个文件的时候就<strong>commit</strong>，这样做导致一个完整的功能可能会好多个<strong>commit</strong>点，这时假如你需要把这些<strong>commit</strong>整合成一个<strong>commit</strong>的时候)時，可以考虑使用<strong>reset  —soft</strong>来让 <strong>commit</strong> 演进线图较为清晰。总而言之，<strong>可以使用—soft合并commit节点</strong>。</li>
+<li><strong>—mixed（默认）</strong>：(1)使用完<strong>reset —mixed</strong>后，我們可以直接执行 <strong>git add</strong> 将這些改变果的文件內容加入 <strong>index 暂存区</strong>中，再执行 <strong>git commit</strong> 将 <strong>Index暂存区</strong> 中的內容提交至<strong>Repository</strong>中，这样一样可以达到合并<strong>commit</strong>节点的效果（与上面—soft合并commit节点差不多，只是多了git add添加到暂存区的操作）；(2)移除所有Index暂存区中准备要提交的文件(Staged files)，我们可以执行 <strong>git reset HEAD</strong> 来 <strong>Unstage</strong> 所有已列入 <strong>Index暂存区</strong> 的待提交的文件。(有时候发现add错文件到暂存区，就可以使用命令)。(3)<strong>commit</strong>提交某些错误代码，或者没有必要的文件也被<strong>commit</strong>上去，不想再修改错误再<strong>commit</strong>（因为会留下一个错误<strong>commit</strong>点），可以回退到正确的<strong>commit</strong>点上，然后所有原节点和<strong>reset</strong>节点之间差异会返回工作目录，假如有个没必要的文件的话就可以直接删除了，再<strong>commit</strong>上去就OK了。</li>
+</ol>
+<h3 id="工作区、暂存区"><a href="#工作区、暂存区" class="headerlink" title="工作区、暂存区"></a>工作区、暂存区</h3><p><mark>工作区</mark>(Working Directory)</p>
+<p>在电脑里能看到的目录</p>
+<p><mark>版本库</mark>(Repository)</p>
+<p>工作区里有一个隐藏目录<code>.git</code>，被称为版本库。</p>
+<p>Git的版本库里存放了很多东西，最重要的是被称为stage(index)的暂存区，还有Git为我们自动创建的第一个分支<code>master</code>，以及指向<code>master</code>的第一个指针。</p>
+<p>我们在创建Git版本库时，Git自动为我们创建了唯一一个<code>master</code>分支，所以，<code>git commit</code>就是往<code>master</code>分支上提交修改。</p>
+<p><code>git add</code>命令实际上是把要提交的所有修改放到暂存区，然后，执行<code>git commit</code>就可以一次性把暂存区的所有修改提交到分支。</p>
+<p>这里再次提一下<code>git diff</code></p>
+<p><code>git diff</code>比较的是工作目录中当前文件和暂存区域快照之间的差异，也就是修改之后还没有暂存起来的变化内容。若要查看已暂存的将要添加到下次提交里的内容，可以用<code>git diff --cached</code>命令。<code>git diff HEAD --readme.txt</code>可以查看工作区和版本库里最新版本的区别。</p>
+<h3 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h3><p>在<code>readme.txt</code>中增加一行:</p>
+<pre><code>git is a version control system
+git is free software distributed under the GPL
+git has a mutable index called stage
+git tracks stage of files
+my stupid boss still prefers svn
+</code></pre><p>使用<code>git checkout -- file</code>可以丢弃工作区的修改</p>
+<p>这里有两种情况：</p>
+<p>1、readme.txt修改后没有放到暂存区，撤销修改就回到和版本库一样的状态</p>
+<p>2、添加到暂存区又作了修改，撤销修改就回到添加到暂存区后的状态</p>
+<p>假如我们已经<code>git add</code>到暂存区了</p>
+<p>我们用<code>git reset HEAD &lt;file&gt;</code>可以撤销暂存区的修改</p>
+<p>相关问题：</p>
+<p>1、Unix/Linux 命令中，<code>-</code>后一般跟短命令选项（通常是单字母），<code>--</code>后一般跟长命令选项，如果只有一个单独的<code>--</code>，后面不紧跟任何选项，则表示命令选项解释，后续的都作为命令的参数而不是选项。例如，<code>git checkout -- filename</code> <code>filename</code>作为<code>git checkout</code>的参数而不是选项。</p>
+<p>2、图片理解：</p>
+<p><img src="https://marklodato.github.io/visual-git-guide/basic-usage.svg" srcset="/img/loading.gif" alt></p>
+<ul>
+<li>git add files 把当前文件放入暂存区域。</li>
+<li>git commit 给暂存区域生成快照并提交。</li>
+<li>git reset — files 用来撤销最后一次git add files，你也可以用git reset 撤销所有暂存区域文件。</li>
+<li>git checkout — files 把文件从暂存区域复制到工作目录，用来丢弃本地修改。</li>
+</ul>
+<p>checkout命令用于从<strong>历史提交（或者暂存区域）</strong>中拷贝文件到工作目录，也可用于<strong>切换分支</strong>。当给定某个文件名时，git会从指定的提交中拷贝文件到暂存区域和工作目录。比如，<code>git checkout HEAD~ foo.c</code>会将提交节点HEAD~(即当前提交节点的父节点)中的<code>foo.c</code>复制到工作目录并且加到暂存区域中。（如果命令中没有指定提交节点，则会从暂存区域中拷贝内容。）<strong>注意当前分支不会发生变化。</strong></p>
+<p>当不指定文件名，而是给出一个（本地）分支时，那么HEAD标识会移动到那个分支（也就是说，我们“切换”到那个分支了），然后暂存区域和工作目录中的内容会和HEAD对应的提交节点一致。新提交节点（下图中的a47c3）中的所有文件都会被复制（到暂存区域和工作目录中）；只存在于老的提交节点（ed489）中的文件会被删除；不属于上述两者的文件会被忽略，不受影响。</p>
+<p>reset命令把当前分支指向另一个位置，并且有选择的变动工作目录和索引。也用来在从历史仓库中复制文件到索引，而不动工作目录。</p>
+<p>如果不给选项，那么当前分支指向到那个提交。如果用—hard选项，那么工作目录也更新，如果用—soft选项，那么都不变。</p>
+<h3 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h3><p>一般情况下，直接在文件管理器中删除，或者用<code>rm</code>命令删除。</p>
+<p>我们先用<code>git rm</code>命令删掉，并且<code>git commit</code></p>
+<p>另一种情况是删除错了，我们可以用<code>git checkout -- text.txt</code>恢复，用版本库里的版本替换工作区的版本。</p>
+<p>1.如果你用的<code>rm</code>删除文件，那就相当于只删除了工作区的文件，如果想要恢复，直接用<code>git checkout -- &lt;file&gt;</code>就可以 </p>
+<p>2.如果你用的是<code>git rm</code>删除文件，那就相当于不仅删除了文件，而且还添加到了暂存区，需要先<code>git reset HEAD &lt;file&gt;</code>，然后再<code>git checkout -- &lt;file&gt;</code></p>
+<p> 3.如果你想彻底把版本库的删除掉，先<code>git rm</code>，再<code>git commit</code> 就ok了</p>
+<h3 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h3><p>现实生活中，我们需要找一台电脑充当服务器的角色，其他人都从这个服务器仓库克隆一份到自己的电脑上，并且各自把各自的提交推送到服务器仓库里，也可以从服务器仓库中拉取别人的提交。</p>
+<p>我们注册一个GitHub账号，就可以免费获得Git远程仓库，这个是用来提供git仓库托管服务的。</p>
+<p>由于本地仓库和github远程仓库之间的传输是通过SSH加密的，所以，要预先进行设置：</p>
+<p>①创建SSH Key。先用<code>cd ~/.ssh</code>查看你的用户主目录下有没有<code>.ssh</code>目录，如果由，再看看有没有<code>id_rsa</code>和<code>id_rsa.pub</code>两个文件，如果没有创建SSH Key：</p>
+<pre><code>ssh-keygen -t rsa -C &quot;email@.com&quot;
+</code></pre><p>接下来一直回车，我们这个不需要密码。</p>
+<p>之后，我们会在用户主目录的<code>.ssh</code>目录下，找到<code>id_rsa</code>和<code>id_rsa.pub</code>两个文件，<code>id_rsa</code>是私钥，不能泄漏，<code>id_rsa.pub</code>是公钥，可以公开。</p>
+<p>②登陆GitHub，依次打开Accout settings-&gt;SSH Keys</p>
+<p>然后，点击<code>Add SSH Key</code>，在文本框里粘贴<code>id_rsa.pub</code>文件的内容</p>
+<h3 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h3><p>①在github上创建一个远程库</p>
+<p>②运行以下命令</p>
+<pre><code>git remote add origin git@github.com:an2018x/learn.git
+git push -u origin master
+</code></pre><p>远程库默认名为<code>origin</code></p>
+<p><code>git push</code>实际上是把当前分支master推送到远程。</p>
+<p>由于远程库是空的，我们第一次推送<code>master</code>分支时，要加上<code>-u</code>参数，这样可以建立本地<code>master</code>分支和远程<code>master</code>分支的关联。</p>
+<p>③</p>
+<p>推送</p>
+<pre><code>git push origin master
+</code></pre><p>将本地git 仓库推送至远程</p>
+<p>相关问题</p>
+<p>如果在第一步中创建时已经初始化过项目，则这时会提醒 <code>error: failed to push some refs to &#39;https://github.com/daoke0818/testGit2.git&#39; hint: Updates were rejected because the remote contains work that you do hint: not have locally. This is usually caused by another repository pushing hint: to the same ref. You may want to first integrate the remote changes hint: (e.g., &#39;git pull ...&#39;) before pushing again. hint: See the &#39;Note about fast-forwards&#39; in &#39;git push --help&#39; for details.</code></p>
+<p>因为远程库中已经存在readme文件了，所以需要先pull下来。命令如下：</p>
+<pre><code>$ git pull origin master
+</code></pre><p>这时又会报错：</p>
+<pre><code>From https://github.com/daoke0818/testGit
+
+- branch master -&gt; FETCH_HEAD fatal: refusing to merge unrelated histories
+</code></pre><p>说这两个库有不相干的历史记录而无法合并，这时我们可以加上一个参数 —allow-unrelated-histories 即可成功pull： $ git pull origin master —allow-unrelated-histories</p>
+<p>但是这时会可能会提示必须输入提交的信息，默认会打开vim编辑器，先按 i 切换到插入模式，写完后 Esc→：→wq 即可保存退出编辑器。如果不进入vim编辑器，则会自动生成一个合并代码的commit。然后再使用前面的命令push将本地提交推送到远程仓库。后面如果本地还有commit，就可以直接用 git push origin master 推送。</p>
+<h3 id="从远程库克隆"><a href="#从远程库克隆" class="headerlink" title="从远程库克隆"></a>从远程库克隆</h3><p>假设有一个空的本地库，而远程库不是空的，就需要从远程库克隆。</p>
+<h3 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h3><p>分支在实际中有什么用呢？假设你准备开发一个新功能，但是需要两周才能完成，第一周你写了50%的代码，如果立刻提交，由于代码还没写完，不完整的代码库会导致别人不能干活了。如果等代码全部写完再一次提交，又存在丢失每天进度的巨大风险。</p>
+<p>现在有了分支，就不用怕了。你创建了一个属于你自己的分支，别人看不到，还继续在原来的分支上正常工作，而你在自己的分支上干活，想提交就提交，直到开发完毕后，再一次性合并到原来的分支上，这样，既安全，又不影响别人工作。</p>
+<h3 id="创建、合并分支"><a href="#创建、合并分支" class="headerlink" title="创建、合并分支"></a>创建、合并分支</h3><p>你已经知道，每次提交，Git都把它们串成一条时间线，这条时间线就是一个分支。截止到目前，只有一条时间线，在Git里，这个分支叫主分支，即<code>master</code>分支。<code>HEAD</code>严格来说不是指向提交，而是指向<code>master</code>，<code>master</code>才是指向提交的，所以，<code>HEAD</code>指向的就是当前分支。</p>
+<p>一开始的时候，<code>master</code>分支是一条线，Git用<code>master</code>指向最新的提交，再用<code>HEAD</code>指向<code>master</code>，就能确定当前分支，以及当前分支的提交点：</p>
+<p>每次提交，<code>master</code>分支都会向前移动一步，这样，随着你不断提交，<code>master</code>分支的线也越来越长。</p>
+<p>当我们创建新的分支，例如<code>dev</code>时，Git新建了一个指针叫<code>dev</code>，指向<code>master</code>相同的提交，再把<code>HEAD</code>指向<code>dev</code>，就表示当前分支在<code>dev</code>上：</p>
+<p><img src="https://www.liaoxuefeng.com/files/attachments/919022363210080/0" srcset="/img/loading.gif" alt></p>
+<p>Git创建一个分支很快，因为除了增加一个<code>dev</code>指针，改改<code>HEAD</code>的指向，工作区的文件都没有任何变化！</p>
+<p>不过，从现在开始，对工作区的修改和提交就是针对<code>dev</code>分支了，比如新提交一次后，<code>dev</code>指针往前移动一步，而<code>master</code>指针不变</p>
+<p>假如我们在<code>dev</code>上的工作完成了，就可以把<code>dev</code>合并到<code>master</code>上。Git怎么合并呢？最简单的方法，就是直接把<code>master</code>指向<code>dev</code>的当前提交，就完成了合并</p>
+<p><img src="https://www.liaoxuefeng.com/files/attachments/919022412005504/0" srcset="/img/loading.gif" alt></p>
+<p>所以Git合并分支也很快！就改改指针，工作区内容也不变！</p>
+<p>合并完分支后，甚至可以删除<code>dev</code>分支。删除<code>dev</code>分支就是把<code>dev</code>指针给删掉，删掉后，我们就剩下了一条<code>master</code>分支</p>
+<p>①创建一个<code>dev</code>分支，然后切换到<code>dev</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git checkout -b dev
+Switched to a new branch &#39;dev&#39;
+</code></pre><p>相当于以下两条命令</p>
+<pre><code>$ git branch dev
+$ git checkout dev
+Switched to branch &#39;dev&#39;
+</code></pre><p>②用<code>git branch</code>命令查看当前分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git branch
+* dev
+  master
+</code></pre><p>③在<code>dev</code>上提交</p>
+<p>在<code>readme.txt</code>添加一行</p>
+<pre><code>creating a new branch is quick.
+</code></pre><p>然后提交</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git add readme.txt
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git commit -m &quot;branch text&quot;
+[dev 13f3a9c] branch text
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+</code></pre><p>④切换回<code>master</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git checkout master
+Switched to branch &#39;master&#39;
+</code></pre><p>查看readme.txt文件</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ cat readme.txt
+git is a version control system
+git is free software distributed under the GPL
+git has a mutable index called stage
+git tracks stage
+</code></pre><p>刚才添加的内容消失了</p>
+<p><img src="https://www.liaoxuefeng.com/files/attachments/919022533080576/0" srcset="/img/loading.gif" alt></p>
+<p>④接下来，我们合并dev分支到master分支上</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git merge dev
+Updating 5ffc4e0..13f3a9c
+Fast-forward
+ readme.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+</code></pre><p><code>git merge</code>命令用来合并指定分支到当前分支。</p>
+<p><code>Fast-forward</code>快进模式，直接把master指向当前提交。</p>
+<p>⑤接下来删除dev分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git branch -d dev
+Deleted branch dev (was 13f3a9c).
+</code></pre><p>switch 模式创建和更改分支</p>
+<p>创建并切换分支</p>
+<pre><code>git switch -c dev
+</code></pre><p>切换到已有的分支</p>
+<pre><code>git switch master
+</code></pre><h3 id="冲突解决"><a href="#冲突解决" class="headerlink" title="冲突解决"></a>冲突解决</h3><p>创建<code>feature1</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git switch -c feature1
+Switched to a new branch &#39;feature1&#39;
+</code></pre><p>修改文件最后一行为</p>
+<pre><code>creating a new branch is quick AND simple.
+</code></pre><p>提交分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature1)
+$ git add readme.txt
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature1)
+$ git commit -m &quot;AND simple&quot;
+[feature1 0382f6e] AND simple
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</code></pre><p>切换到<code>master</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature1)
+$ git switch master
+Switched to branch &#39;master&#39;
+</code></pre><p>修改最后一行为</p>
+<pre><code>creating a new branch is quick &amp; simple.
+</code></pre><p>提交：</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git add readme.txt
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git commit -m &quot;&amp; simple&quot;
+[master 420189b] &amp; simple
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</code></pre><p>我们尝试合并</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git merge feature1
+Auto-merging readme.txt
+CONFLICT (content): Merge conflict in readme.txt
+Automatic merge failed; fix conflicts and then commit the result.
+</code></pre><p>提示：readme.txt存在冲突，必须手动解决冲突后再提交。<code>git status</code>查看冲突的文件。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master|MERGING)
+$ git status
+On branch master
+You have unmerged paths.
+  (fix conflicts and run &quot;git commit&quot;)
+  (use &quot;git merge --abort&quot; to abort the merge)
+
+Unmerged paths:
+  (use &quot;git add &lt;file&gt;...&quot; to mark resolution)
+        both modified:   readme.txt
+
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+</code></pre><p>我们查看readme.txt内容</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master|MERGING)
+$ cat readme.txt
+git is a version control system
+git is free software distributed under the GPL
+git has a mutable index called stage
+git tracks stage of files
+my stupid boss still prefers svn
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+creating a new branch is quick &amp; simple
+=======
+creating a new branch is quick AND simple
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature1
+</code></pre><p>Git用<code>&lt;&lt;&lt;&lt;&lt;&lt;</code>,<code>=====</code>,<code>&gt;&gt;&gt;&gt;&gt;</code>标记不同分支的内容，修改如下并保存。</p>
+<pre><code>creating a new branch is quick and simple
+</code></pre><p>再提交</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master|MERGING)
+$ git add readme.txt
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master|MERGING)
+$ git commit -m &quot;conflict fixed&quot;
+[master 51f49f9] conflict fixed
+</code></pre><p>我们用git log查看分支的合并情况</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git log --graph --pretty=oneline --abbrev-commit
+*   51f49f9 (HEAD -&gt; master) conflict fixed
+|\
+| * 0382f6e (feature1) AND simple
+* | 420189b &amp; simple
+|/
+* 13f3a9c branch text
+* 5ffc4e0 git tracks changes
+* 8a95959 append GPL
+* 9e70c06 delete a
+* 40dc3b1 wrote a readme file
+</code></pre><h3 id="分支管理策略"><a href="#分支管理策略" class="headerlink" title="分支管理策略"></a>分支管理策略</h3><p>我们之前合并分支时，Git采用的是<code>Fast forward</code>模式，但在这种模式下，删除分支后回丢失分支信息。</p>
+<p>如果禁用<code>Fast forward</code>模式，Git会生成一个新的commit，这样就可以查看分支信息。</p>
+<p>我们使用<code>--no-ff</code>方式的<code>git merge</code></p>
+<p>①创建、切换<code>dev</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git switch -c dev
+Switched to a new branch &#39;dev&#39;
+</code></pre><p>②修改readme.txt，提交</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git add readme.txt
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git commit -m &quot;add merge&quot;
+[dev 0e30f12] add merge
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</code></pre><p>③合并<code>dev</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git merge --no-ff -m &quot;merge with no-ff&quot; dev
+Merge made by the &#39;recursive&#39; strategy.
+ readme.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</code></pre><p>④使用<code>git log</code>查看分支历史</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git log --graph --pretty=oneline
+*   a0ffa83316abd253ea55e3bcf6f5965a24648106 (HEAD -&gt; master) merge with no-ff
+|\
+| * 0e30f1211cef091289242723f9ecbfb729046055 (dev) add merge
+|/
+*   51f49f9a35cd754071d1da7ff74365af2130ed0b conflict fixed
+|\
+| * 0382f6ee20f96118ee45af8fd39a4d8a3da0411d (feature1) AND simple
+* | 420189b3114f129684e9242767f3b01f24c06ee4 &amp; simple
+|/
+* 13f3a9c1c2dd5ee656b4395f72ed420b867414b0 branch text
+* 5ffc4e045796ca4587526f1db10be73c98f2fc09 git tracks changes
+* 8a959598c94d4add89687ca18175086dd6a52920 append GPL
+* 9e70c0605e2216c7b49435f68352bd13d740e801 delete a
+* 40dc3b1021cba528345daf2d1c5cfddc1830d251 wrote a readme file
+</code></pre><p>分支策略</p>
+<p><code>master</code>分支用来发布新版本，应该是稳定的，不能直接在上面修改。</p>
+<p>在<code>dev</code>分支上进行修改，等到修改到一定程度后，再合并到<code>master</code>上。</p>
+<p>多人开发时，每个人都在各自的<code>dev</code>分支干活</p>
+<p><img src="https://www.liaoxuefeng.com/files/attachments/919023260793600/0" srcset="/img/loading.gif" alt></p>
+<h3 id="bug分支"><a href="#bug分支" class="headerlink" title="bug分支"></a>bug分支</h3><p>在git中，每个bug都可以通过一个新的临时分支来修复，修复后，然后将临时分支删除。</p>
+<p>当要修复一个为101的bug时，会想到创建一个分支<code>issue-101</code>来修复它，但是，当前在<code>dev</code>上进行的工作还没有提交：</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git status
+On branch dev
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+        hello.py
+
+nothing added to commit but untracked files present (use &quot;git add&quot; to track)
+</code></pre><p>但由于种种原因，现在并不能提交，但我们又需要紧急修复bug。</p>
+<p>Git提供了一个<code>stash</code>功能，可以存储当前工作区，等以后恢复继续工作。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git stash
+Saved working directory and index state WIP on dev: 0e30f12 add merge
+</code></pre><p>此时，用<code>git status</code>查看工作区：</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git status
+On branch dev
+nothing to commit, working tree clean
+</code></pre><p>然后确定要在哪个分支上修复bug，如要在<code>master</code>上修复bug，就从master创建临时分支。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git switch master
+Switched to branch &#39;master&#39;
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git switch -c issue-101
+Switched to a new branch &#39;issue-101&#39;
+</code></pre><p>现在修复bug，把<code>Git is free software</code>改成<code>Git is a free software</code>然后提交</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (issue-101)
+$ git add readme.txt
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (issue-101)
+$ git commit -m &quot;fix bug 101&quot;
+[issue-101 fe45113] fix bug 101
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</code></pre><p>切换回<code>master</code>分支，完成合并，删除<code>issue-101</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (issue-101)
+$ git switch master
+Switched to branch &#39;master&#39;
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git merge --no-ff -m &quot;merged bug fix 101&quot; issue-101
+Merge made by the &#39;recursive&#39; strategy.
+ readme.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+ 陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git branch -d issue-101
+Deleted branch issue-101 (was fe45113).
+</code></pre><p>接下来返回<code>dev</code>分支干活:</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git switch dev
+Switched to branch &#39;dev&#39;
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git status
+On branch dev
+nothing to commit, working tree clean
+</code></pre><p>我们用<code>git stach list</code>查看工作现场</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git stash list
+stash@{0}: WIP on dev: 0e30f12 add merge
+</code></pre><p>有两个方法可以恢复工作现场</p>
+<p>①<code>git stash apply</code>恢复，但恢复后，stash内容不删除，还需用<code>git stash drop</code>来删除。</p>
+<p>②<code>git stash pop</code>恢复的同时删除。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git stash pop
+On branch dev
+Changes to be committed:
+  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)
+        new file:   hello.py
+
+Dropped refs/stash@{0} (cd99b6223a0333d875afba0e6423ce193d2bc28a)
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git stash list
+</code></pre><p>你可以多次stash，然后用<code>git stash list</code>查看，然后恢复指定的stash：</p>
+<pre><code>git stash apply stash@{0}
+</code></pre><p>然后，我们想到，之前在<code>master</code>分支上存在的bug在dev分支上同样存在，那么如何在<code>dev</code>分支上修复bug?</p>
+<p>我们可以把<code>fix bug 101</code>这个提交所做的修改复制到dev分支。</p>
+<p>我们可以采用<code>cherry-pick</code>命令，来复制一个特定的提交到当前分支:</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git cherry-pick fe4511
+[dev 77978b9] fix bug 101
+ Date: Thu Dec 19 08:54:05 2019 +0800
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git stash pop
+On branch dev
+Changes to be committed:
+  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)
+        new file:   hello.py
+
+Dropped refs/stash@{0} (084dd2e55d06ced1cc07cbf63799024327517c59)
+</code></pre><h3 id="Feature分支"><a href="#Feature分支" class="headerlink" title="Feature分支"></a>Feature分支</h3><p>每添加一个新功能，我们最好新建一个feature分支，在该分支上开发，完成后合并，最好删除分支。</p>
+<p>现在我们开发一个新功能，创建一个<code>feature-vulcan</code>的分支。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git switch -c feature-vulcan
+Switched to a new branch &#39;feature-vulcan&#39;
+</code></pre><p>新建一个vulcan.py的文件</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature-vulcan)
+$ vi vulcan.py
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature-vulcan)
+$ git add vulcan.py
+warning: LF will be replaced by CRLF in vulcan.py.
+The file will have its original line endings in your working directory
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature-vulcan)
+$ git status
+On branch feature-vulcan
+Changes to be committed:
+  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)
+        new file:   vulcan.py
+
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature-vulcan)
+$ git commit -m &quot;add feature vulcan&quot;
+[feature-vulcan ac5b174] add feature vulcan
+ 1 file changed, 1 insertion(+)
+ create mode 100644 vulcan.py
+</code></pre><p>切换回dev，准备合并</p>
+<pre><code>git switch dev
+</code></pre><p>然而，这是如果想要取消新功能</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (feature-vulcan)
+$ git switch dev
+Switched to branch &#39;dev&#39;
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git branch -D feature-vulcan
+Deleted branch feature-vulcan (was ac5b174).
+</code></pre><p><code>-D</code>参数强制删除</p>
+<h3 id="多人合作"><a href="#多人合作" class="headerlink" title="多人合作"></a>多人合作</h3><pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git remote add origin git@github.com:an2018x/test1x.git
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git push -u origin master
+Enumerating objects: 30, done.
+Counting objects: 100% (30/30), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (21/21), done.
+Writing objects: 100% (30/30), 2.38 KiB | 406.00 KiB/s, done.
+Total 30 (delta 10), reused 0 (delta 0)
+remote: Resolving deltas: 100% (10/10), done.
+To github.com:an2018x/test1x.git
+ * [new branch]      master -&gt; master
+Branch &#39;master&#39; set up to track remote branch &#39;master&#39; from &#39;origin&#39;.
+</code></pre><p>查看远程库信息</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git remote
+origin
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git remote -v
+origin  git@github.com:an2018x/test1x.git (fetch)
+origin  git@github.com:an2018x/test1x.git (push)
+</code></pre><p>上面显示了可以抓取和推送的<code>origin</code>地址</p>
+<h4 id="推送分支"><a href="#推送分支" class="headerlink" title="推送分支"></a>推送分支</h4><p>把该分支的所有本地提交推送到远程库。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ git push origin dev
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (6/6), 534 bytes | 534.00 KiB/s, done.
+Total 6 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+remote:
+remote: Create a pull request for &#39;dev&#39; on GitHub by visiting:
+remote:      https://github.com/an2018x/test1x/pull/new/dev
+remote:
+To github.com:an2018x/test1x.git
+ * [new branch]      dev -&gt; dev
+</code></pre><p>下面讲解那些分支需要推送</p>
+<ul>
+<li>master要时刻与远程同步</li>
+<li>dev是开发分支，所有成员都在上面工作，也需要同步</li>
+<li>bug分支不需要</li>
+<li>feature取决于是否合作开发</li>
+</ul>
+<h4 id="抓取分支"><a href="#抓取分支" class="headerlink" title="抓取分支"></a>抓取分支</h4><p>多人合作时，大家都会往<code>master</code>和<code>dev</code>分支上推送各自修改。</p>
+<p>下面，假设你是另一位开发者，尝试在另一个目录克隆远程项目:</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (master)
+$ cd ..
+
+陈安@DESKTOP-C37Q13B MINGW64 /d
+$ ls
+&#39;$RECYCLE.BIN&#39;/          learn/                  Screenshots/
+ an/                     linux/                 &#39;System Volume Information&#39;/
+ Git/                   &#39;Saved Pictures&#39;/
+
+陈安@DESKTOP-C37Q13B MINGW64 /d
+$ mkdir learn2
+
+陈安@DESKTOP-C37Q13B MINGW64 /d
+$ cd learn2
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn2
+$ git clone git@github.com:an2018x/test1x.git
+Cloning into &#39;test1x&#39;...
+remote: Enumerating objects: 34, done.
+remote: Counting objects: 100% (34/34), done.
+remote: Compressing objects: 100% (14/14), done.
+remote: Total 34 (delta 11), reused 32 (delta 10), pack-reused 0
+Receiving objects: 100% (34/34), done.
+Resolving deltas: 100% (11/11), done.
+</code></pre><p>默认情况下，只能看到本地的<code>master</code>分支</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn2/test1x (master)
+$ git branch
+* master
+</code></pre><p>如果要在<code>dev</code>分支开发，就必须创建远程<code>origin</code>的<code>dev</code>分支到本地，我们创建本地<code>dev</code>分支。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn2/test1x (master)
+$ git switch -c dev origin/dev
+Switched to a new branch &#39;dev&#39;
+Branch &#39;dev&#39; set up to track remote branch &#39;dev&#39; from &#39;origin&#39;.
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn2/test1x (dev)
+$ ls
+hello.py  readme.txt
+</code></pre><p>现在我们对<code>dev</code>分支上进行修改，并把<code>dev</code>分支push到远程:</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn2/test1x (dev)
+$ cat hello.py
+print(&quot;hello world&quot;)
+print(&quot;hello?&quot;)
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn2/test1x (dev)
+$ git add *
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn2/test1x (dev)
+$ git commit -m &quot;add hello&quot;
+[dev 7b2d73a] add hello
+ 1 file changed, 1 insertion(+)
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn2/test1x (dev)
+$ git push origin dev
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 296 bytes | 296.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To github.com:an2018x/test1x.git
+   9b778cc..7b2d73a  dev -&gt; dev
+</code></pre><p>然后我们回到自己的视角，来对同样的文件进行修改并推送</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git add *
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git commit -m &quot;niceto&quot;
+[dev 87cd581] niceto
+ 1 file changed, 1 insertion(+)
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git push origin dev
+To github.com:an2018x/test1x.git
+ ! [rejected]        dev -&gt; dev (fetch first)
+error: failed to push some refs to &#39;git@github.com:an2018x/test1x.git&#39;
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., &#39;git pull ...&#39;) before pushing again.
+hint: See the &#39;Note about fast-forwards&#39; in &#39;git push --help&#39; for details.
+</code></pre><p>这里提示我们推送失败，解决方式是，先用<code>git pull</code>把最新的提交抓取下来，然后在本地合并，解决冲突，推送。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git branch --set-upstream-to=origin/dev dev
+Branch &#39;dev&#39; set up to track remote branch &#39;dev&#39; from &#39;origin&#39;.
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git pull
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:an2018x/test1x
+   9b778cc..7b2d73a  dev        -&gt; origin/dev
+Auto-merging hello.py
+CONFLICT (content): Merge conflict in hello.py
+Automatic merge failed; fix conflicts and then commit the result.
+</code></pre><p>解决冲突，方法和之前merge的一样。</p>
+<pre><code>陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev|MERGING)
+$ git add *
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev|MERGING)
+$ git commit -m &quot;fix conflict&quot;
+[dev db6af99] fix conflict
+
+陈安@DESKTOP-C37Q13B MINGW64 /d/learn (dev)
+$ git push origin dev
+Enumerating objects: 10, done.
+Counting objects: 100% (10/10), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (6/6), 598 bytes | 299.00 KiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0)
+To github.com:an2018x/test1x.git
+   7b2d73a..db6af99  dev -&gt; dev
+</code></pre><p>如果远程仓库存在dev分支，而你的本地不存在dev，那么最好是先git pull一下，然后再执行：</p>
+<pre><code>$ git checkout -b dev origin/dev
+</code></pre><p>就可以自动关联分支，而不需要：</p>
+<pre><code>$ git branch --set-upstream-to dev origin/dev
+</code></pre><p>上面这条命令是在你本地已经建立了dev分支，但是还没有和远程dev分支关联的时候采用</p>
+<p>因此，多人协作的工作模式通常是这样：</p>
+<ol>
+<li>首先，可以试图用<code>git push origin</code>推送自己的修改；</li>
+<li>如果推送失败，则因为远程分支比你的本地更新，需要先用<code>git pull</code>试图合并；</li>
+<li>如果合并有冲突，则解决冲突，并在本地提交；</li>
+<li>没有冲突或者解决掉冲突后，再用<code>git push origin</code>推送就能成功！</li>
+</ol>
+<p>如果<code>git pull</code>提示<code>no tracking information</code>，则说明本地分支和远程分支的链接关系没有创建，用命令<code>git branch --set-upstream-to  origin/</code>。</p>
+<p>这就是多人协作的工作模式，一旦熟悉了，就非常简单。</p>
+<h3 id="Rebase"><a href="#Rebase" class="headerlink" title="Rebase"></a>Rebase</h3><p>暂时用不到，先缓缓。。。。</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/Git">Git</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/Git">Git</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Git总结&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+              processEscapes: true,
+              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+      });
+
+      MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+
+    </script>
+
+    <script src="https://cdn.staticfile.org/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

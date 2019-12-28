@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>数据结构总结 ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://pic1.zhimg.com/v2-fa4c89003c3963781901e9b29c41da70_r.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: scroll;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Saturday, December 28th 2019, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>主要是用来复习数据结构的，结果复习了不少东西考到的却贼简单。。。不知道考的咋样<br><a id="more"></a></p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><h3 id="Chapter-1-绪论"><a href="#Chapter-1-绪论" class="headerlink" title="Chapter 1 绪论"></a>Chapter 1 绪论</h3><p><mark>数据项</mark>是组成数据元素的、不可分割的最小单位。</p>
+<p><mark>逻辑结构</mark>：线性结构、树形结构、图结构、集合结构。</p>
+<p><mark>存储结构</mark>：顺序存储结构、链式存储结构。</p>
+<p>程序步越小的算法执行效率越高。 :x:</p>
+<p>执行次数、时间复杂度：</p>
+<p>1、</p>
+<pre><code class="lang-c++">i=1; x=0; 
+do { 
+      x++; 
+      i=3*i; //执行次数
+} while( i&lt;n);
+</code></pre>
+<p>解：执行次数$t=\lceil log_3n\rceil$</p>
+<p>解析：设执行次数为t，则有$i=3^t$，不等式$i=3^t\geq n$成立时为最后一次划线语句执行次。得到答案。</p>
+<h3 id="Chapter-2-线性表"><a href="#Chapter-2-线性表" class="headerlink" title="Chapter 2 线性表"></a>Chapter 2 线性表</h3><p>顺序存储结构的运算及实现：</p>
+<pre><code class="lang-c++">typedef struct seqList
+{
+    int n;
+    int maxLength;
+    ElemType *element;
+}SeqList;
+
+Status Init(SeqList *L,int mSize)
+{
+    L-&gt;maxLength=mSize;
+    L-&gt;n=0;
+    L-&gt;element=(ElemType *)malloc(sizeof(ElemType)*mSize);
+    if(!L-&gt;element) return ERROR;
+    return OK;
+}
+
+Status Find(SeqList L,int i,ElemType *x)
+{
+    if(i&lt;0||i&gt;L.n-1) return ERROR;
+    *x=L.element[i];
+    return OK;
+}
+//i表示在位置i之后插入元素
+Status Insert(SeqList *L,int i,ElemType x)
+{
+    int j;
+    if(i&lt;-1||i&gt;L-&gt;n-1) return ERROR;
+    if(L-&gt;n==L-&gt;maxLength) return ERROR;
+    for(j=L-&gt;n-1;j&gt;i;j--) L-&gt;element[j+1]=L-&gt;element[j];
+    L-&gt;element[i+1]=x;
+    return OK;
+}
+Status Delete(SeqList *L,int i)
+{
+    int j;
+    if(i&lt;0||i&gt;L-&gt;n-1) return ERROR;
+    if(!L-&gt;n) return ERROR;
+    for(j=i+1;j&lt;L-&gt;n;j++) L-&gt;element[j-1]=L-&gt;element[j];
+    L-&gt;n--;
+    return OK;
+}
+</code></pre>
+<p>带表头结点单链表运算及实现：</p>
+<pre><code class="lang-c++">typedef struct node
+{
+    ElemType element;
+    struct node *link;
+}Node;
+typedef struct headerList
+{
+    Node *head;
+    int n;
+}HeaderList;
+Status Init(HeaderList *h)
+{
+    h-&gt;head=(Node*)malloc(sizeof(Node));
+    if(!h-&gt;head) return ERROR;
+    h-&gt;head-&gt;link=NULL;
+    h-&gt;n=0;
+    return OK;
+}
+Status Insert(HeaderList *h,int i,ElemType x)
+{
+    Node *p,*q;
+    int j;
+    if(i&lt;-1||i&gt;h-&gt;n-1) return ERROR;
+    p=h-&gt;head;
+    for(j=0;j&lt;=i;j++) p=p-&gt;link;
+    q=(Node *)malloc(sizeof(Node));
+    q-&gt;element=x;
+    q-&gt;link=p-&gt;link;
+    p-&gt;link=q;
+    h-&gt;n++;
+    return OK;
+}
+Status Delete(HeaderList *h,int i)
+{
+    int j;
+    Node *p,*q;
+    if(!h-&gt;n) return ERROR;
+    if(i&lt;0||i&gt;h-&gt;n-1) return ERROR;
+    q=h-&gt;head;
+    for(j=0;j&lt;i;j++) q=q-&gt;link;
+    p=q-&gt;link;
+    q-&gt;link=p-&gt;link;
+    free(p);
+    h-&gt;n--;
+    return OK;
+}
+Status Inverse(HeaderList *h)
+{
+    Node *p,*q;
+    p=h-&gt;head-&gt;link;
+    h-&gt;head-&gt;link=NULL;
+    while(p)
+    {
+        q=p-&gt;link;
+        p-&gt;link=h-&gt;head-&gt;link;
+        h-&gt;head-&gt;link=p;
+        p=q;
+    }
+}
+</code></pre>
+<h3 id="Chapter-3-堆栈和队列"><a href="#Chapter-3-堆栈和队列" class="headerlink" title="Chapter 3 堆栈和队列"></a>Chapter 3 堆栈和队列</h3><pre><code class="lang-c++">typedef struct queue
+{
+    int front;
+    int rear;
+    int maxSize;
+    ElemType *element;
+}Queue;
+void createQueue(Queue *Q,int mSize)
+{
+    Q-&gt;maxSize=mSize;
+    Q-&gt;element=(ElemType *)malloc(sizeof(ElemType)*mSize);
+    Q-&gt;front=Q-&gt;rear=0;
+}
+void Destroy(Queue *Q)
+{
+    Q-&gt;maxSize=0;
+    free(Q-&gt;element);
+    Q-&gt;front=Q-&gt;rear=-1;
+}
+BOOL IsEmpty(Queue *Q)
+{
+    return Q-&gt;front==Q-&gt;rear;
+}
+BOOL IsFull(Queue *Q)
+{
+    return (Q-&gt;rear+1)%Q-&gt;maxSize==Q-&gt;front;
+}
+BOOL Front(Queue *Q,ElemType *x)
+{
+    if(IsEmpty(Q)) return FALSE;
+    *x=Q-&gt;element[(Q-&gt;front+1)%Q-&gt;maxSize];
+    return TURE;
+}
+BOOL EnQueue(Queue *Q,ElemType x)
+{
+    if(IsFull(Q)) return FALSE;
+    Q-&gt;rear=(Q-&gt;rear+1)%Q-&gt;maxSize;
+    Q-&gt;element[Q-&gt;rear]=x;
+    return TRUE;
+}
+BOOL DeQueue(Queue *Q)
+{
+    if(!IsEmpty(Q)) return FALSE;
+    Q-&gt;front=(Q-&gt;front+1)%Q-&gt;maxSize;
+    return TRUE;
+}
+</code></pre>
+<p>队列：</p>
+<pre><code class="lang-c++">typedef struct queue
+{
+    int front;
+    int rear;
+    int maxSize;
+}
+</code></pre>
+<p><code>front</code>指向队头元素前一个单元的下标位置，<code>rear</code>指向队尾元素的下标位置。</p>
+<p><code>front==rear</code>空队列</p>
+<p><code>front=(front+1)%maxSize</code> front前进一个单元</p>
+<p><code>rear=(rear+1)%maxSize</code> rear前进一个单元</p>
+<p><code>(rear+1)%maxSize==front</code> 满队列</p>
+<p>假设以数组A[m] 存放循环队列的元素，front为队头标识，rear为队尾标识，则当前队列中的元素个数为 <code>(rear-front)%m</code>。</p>
+<p>堆栈：</p>
+<p>1、设有一顺序栈，元素3,2,1依次进栈，进栈后可立即出栈，共可得到 5 种不同的出栈序列。</p>
+<p>n个元素的栈，经过栈运算后，可得到的输出序列个数为：$\frac 1{n+1} C_{2n}^n$（卡特兰数）</p>
+<p>2、设栈S初始状态为空，元素e1, e2，e3，e4,e5和e6依次进入栈S，若6个元素出队的序列是e2,e4,e3,e6,e5,e1，则栈S的容量至少应该是 3 。</p>
+<p>表达式计算：</p>
+<p>1、9 3 1 - 3 * + 10 2 / +（表达式中相邻数字以空格相隔）的计算结果是 20 。</p>
+<p>2、<code>a/(b-c)+d*e</code>后缀表达式<code>abc-/de*+</code>。</p>
+<h3 id="Chapter-4-数组和字符串"><a href="#Chapter-4-数组和字符串" class="headerlink" title="Chapter 4 数组和字符串"></a>Chapter 4 数组和字符串</h3><p>数组：</p>
+<p>以行优先存储:</p>
+<script type="math/tex; mode=display">
+loc(arrName[i][j])=loc(arrName[0][0])+(i\times n+j)\times sizeof(ElemType)\space (0\leq i < m,0\le j<n)</script><p>以列优先存储:</p>
+<script type="math/tex; mode=display">
+loc(arrName[i][j])=loc(arrName[0][0])+(j\times m+i)\times sizeof(ElemType)\space (0\leq i < m,0\le j<n)</script><p>1、设有10×5的数组A，其每个元素占2个字节，已知$A[7][3]$在内存中的地址是176，按行优先顺序存储，$A[6][0]$的地址是 160。</p>
+<script type="math/tex; mode=display">
+loc(a[6][0])=loc(a[7][3])+(-1\times 5+(-3))\times 2\\
+=176+(-8)\times 2\\
+=160</script><p>2、设有5×8的数组A，其每个元素占4个字节，已知$A[2][5]$在内存中的地址是124，按行优先顺序存储，$A[1][3]$的地址是 84 。</p>
+<script type="math/tex; mode=display">
+loc(A[1][3])=loc(A[2][5])+(-1\times 8+(-2))\times 4\\
+=124+(-10)\times 4\\
+=84</script><p>3、将4×6的二维数组A按照行优先顺序存储到一维数组B中，则B[3]中存储的二维数组元素是$A[0][3]$。</p>
+<p>4、设有5×8的数组A，其每个元素占2个字节，已知$A[3][6]$在内存中的地址是146，按列优先顺序存储，$A[1][4]$的地址是 122 。</p>
+<script type="math/tex; mode=display">
+loc(A[1][4])=loc(A[3][6])+(-2\times 5+(-2))\times 2\\
+=146+(-12)\times 2\\
+=122</script><p>特殊矩阵：</p>
+<p>对称矩阵：</p>
+<p>行优先存储下三角元素：$a_{ij}下标k$</p>
+<script type="math/tex; mode=display">
+k=\frac {i\times (i+1)}{2}+j\space\space, i\geq j\\
+k=\frac {j\times (j+1)}{2}+i\space\space, i< j</script><p>上三角元素</p>
+<script type="math/tex; mode=display">
+k=\frac {j\times (2n-j-1)}{2}+i\space\space, i> j\\
+k=\frac {i\times (2n-i-1)}{2}+j\space\space, i\leq j</script><p>1、设有6阶对称矩阵A，其中矩阵元素用$a(i,j)$表示，$i$为行下标，$i=0,1,…,5$，j为列下标，$j=0,1,…,5$，将A按照行优先顺序存储下三角元素的方式存储至一维数组B，设每个矩阵元素占2个字节，已知数组B的首地址为100，则，$a(5,5)$的地址是 140 。</p>
+<p>解：</p>
+<script type="math/tex; mode=display">
+a(5,5)=(\frac {5\times 6}{2}+5)\times 2+100=140</script><p>稀疏矩阵：</p>
+<p>需要两个辅助数组<code>num[n],k[n]</code>，n为矩阵列数。</p>
+<ul>
+<li><p><code>num[j]</code>数组统计列号为<code>j</code>的非零元素个数。</p>
+</li>
+<li><p><code>k[j]</code>数组统计列号从<code>0</code>到<code>j-1</code>列的非零元素个数总和，该值也表示<code>j</code>列第一个非零元素在转置稀疏矩阵B的行三元组表中的位置</p>
+</li>
+<li><p>借助两个数组即可统计：</p>
+<pre><code class="lang-c++">for(int i=0;i&lt;t;i++)
+{
+    int index=k[A.table[i].col]++;
+    B.table[index].col=A.table[index].row;
+    B.table[index].row=A.table[index].col;
+    B.table[index].value=A.table[index].value;
+}
+</code></pre>
+<p>稀疏矩阵如下图所示，请给出</p>
+<p>(1) 行三元组表;</p>
+<p>(2) 快速转置算法所需的<code>num</code>数组;</p>
+<p>(3) 快速转置算法所需的k数组。</p>
+<p><img src="https://edu-image.nosdn.127.net/7B277A7A6ADD830D752F192B74023E2F.png?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" alt></p>
+<p><img src="https://edu-image.nosdn.127.net/E9E92055C6057C735AD1E321ED2E5F7B.png?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" alt></p>
+<p><img src="https://edu-image.nosdn.127.net/F06E1A1F0BDD9300F8BC8DD1D865996D.png?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" alt></p>
+</li>
+</ul>
+<h3 id="Chapter-5-树和二叉树"><a href="#Chapter-5-树和二叉树" class="headerlink" title="Chapter 5 树和二叉树"></a>Chapter 5 树和二叉树</h3><pre><code class="lang-c++">typedef struct btnode
+{
+    ElemType element;
+    struct btnode *lChild;
+    struct btnode *rChild;
+}BTNode;
+typedef struct binarytree
+{
+    BTNode *root;
+}BinaryTree;
+BTNode *PreCreateBt(BTNode *t)
+{
+    char ch;
+    ch=getchar();
+    if(ch==&#39;#&#39;)
+        t=NULL;
+    else
+    {
+        t=(BTNode *)malloc(sizeof(BTNode));
+        t-&gt;element=ch;
+        t-&gt;lChild=PreCreateBt(t-&gt;lChild);
+        t-&gt;rChild=PreCreateBt(t-&gt;rChild);
+    }
+    return t;
+}
+void PreOrder(BTNode *t)
+{
+    if(!t) return;
+    printf(&quot;%c &quot;,t-&gt;element);
+    PreOrder(t-&gt;lChild);
+    PreOrder(t-&gt;rChild);
+}
+void PreOrderTree(BinaryTree *bt)
+{
+    PreOrder(bt-&gt;root);
+}
+void LevelOrderTree(BinaryTree *bt)
+{
+    if(!bt-&gt;root)
+    {
+        return;
+    }
+    Queue Q;
+    Create(&amp;Q,QUEUESIZE);
+    BTNode *p=bt-&gt;root;
+    EnQueue(&amp;Q,p);
+    while(!IsEmpty(&amp;Q))
+    {
+        Front(&amp;Q,&amp;p);
+        DeQueue(&amp;Q);
+        printf(&quot;%c&quot;,p-&gt;element);
+        if(p-&gt;lChild) EnQueue(&amp;Q,p-&gt;lChild);
+        if(p-&gt;rChild) EnQueue(&amp;Q,p-&gt;rChild);
+
+    }
+    DesTroy(&amp;Q);
+}
+int TreeSize(BinaryTree *bt)
+{
+    return Size(bt-&gt;root);
+}
+int Size(BTNode *t)
+{
+    if(!t) return 0;
+    else return Size(t-&gt;lChild)+Size(t-&gt;rChild)+1;
+}
+void TreeClear(BinaryTree *bt)
+{
+    Clear(bt-&gt;root);
+}
+void Clear(BTNode *bt)
+{
+    if(!t) return ;
+    Clear(t-&gt;lChild);
+    Clear(t-&gt;rChild);
+    free(t);
+}
+int SizeOfLeaf(BTNode *t)
+{
+    if(t==NULL) return 0;
+    if((t-&gt;lChild==NULL)&amp;&amp;(t-&gt;rChild==NULL)) return 1;
+    return SizeOfLeaf(t-&gt;lChild)+SizeOfLeaf(t-&gt;rChild);
+}
+int HeightOfBt(BTNode *t)
+{
+    if(!t) return 0;
+    else return 1+(HeightOfBt(t-&gt;lChild)&gt;HeightOfBt(t-&gt;rChild)?HeightofBt
+                   (t-&gt;lChild):HeightOfBt(t-&gt;rChild));
+}
+void ExchangeBt(BTNode *t)
+{
+    if(t)
+    {
+        BTNode *q=t-&gt;lChild;
+        t-&gt;lChild=t-&gt;rChild;
+        t-&gt;rChild=q;
+        ExchangeBt(t-&gt;lChild);
+        ExchangeBt(t-&gt;rChild);
+    }
+}
+</code></pre>
+<p>1、在一棵度为3的树中，度为3的结点个数为2，度为2的结点个数为1，则度为0的结点个数为 6 。</p>
+<p>2、高为6的二叉树上至多有 63 个节点</p>
+<p>$2^6-1=63$</p>
+<p>3、一棵二叉树中，若度为1的结点个数为19，度为2的结点的个数为15，则叶结点的个数为 16 。</p>
+<p>任意一颗二叉树中，若叶结点的数量为$n_0$，度为2的结点的数量为$n_2$，则有$n_0=n_2+1$成立。</p>
+<h4 id="森林和树的转换"><a href="#森林和树的转换" class="headerlink" title="森林和树的转换"></a>森林和树的转换</h4><p>1、森林-&gt;二叉树</p>
+<p>将森林中各树的根用线连起来，将树中具有兄弟关系的结点用线连起来；然后去除从双亲到除了第一个孩子以外的孩子的连线，只保留双亲到第一个孩子的连线。最后，使之稍微倾斜成习惯的二叉树。</p>
+<p>2、二叉树-&gt;森林</p>
+<p>与之前相反</p>
+<h4 id="树和森林的遍历"><a href="#树和森林的遍历" class="headerlink" title="树和森林的遍历"></a>树和森林的遍历</h4><h5 id="带右链的先序表示法"><a href="#带右链的先序表示法" class="headerlink" title="带右链的先序表示法"></a>带右链的先序表示法</h5><p>将树或森林对应的二叉树中的结点，按先序遍历的访问顺序，依次存储在一个连续区域，每个结点对应该连续区域的一个单元，每个结点包含三个域：sibling、element、lTag.</p>
+<p>sibling:当前结点的第一个右兄弟结点的位置</p>
+<p>element:当前结点的数据</p>
+<p>lTag:当前结点是否有孩子结点，lTag=1，当前结点没有孩子结点，lTag=0，当前结点有孩子结点，且第一个孩子结点存储在当前结点的下一个单元。</p>
+<h4 id="堆和优先权队列"><a href="#堆和优先权队列" class="headerlink" title="堆和优先权队列"></a>堆和优先权队列</h4><p>最小堆：每个结点都小于等于其孩子结点。</p>
+<p>最大堆：。。。</p>
+<p>这里采用顺序存储</p>
+<h5 id="建堆运算"><a href="#建堆运算" class="headerlink" title="建堆运算"></a>建堆运算</h5><p>从位置为$\lfloor (n-1)/2 \rfloor$的元素重复执行调整操作，知道下标为0的元素完成调整。</p>
+<p>对完全二叉树的非叶节点，需要执行面向建堆的向下调整。</p>
+<pre><code class="lang-c++">void AdjustDown(ElemType heap[],int current,int border)
+{
+    int p=current;
+    int minChild;
+    ElemType temp;
+    while(2*p+1&lt;=border)
+    {
+        if((2*p+2&lt;=border)&amp;&amp;(heap[2*p+1]&gt;heap[2*p+2]))
+            minChild=2*p+2;
+        else
+            minChild=2*p+1;
+        if(heap[p]&lt;=heap[minChild])
+            break;
+        else
+        {
+            temp=heap[p];
+            heap[p]=heap[minChild];
+            heap[minChild]=temp;
+            p=minChild;
+        }
+    }
+}
+void CreateHeap(ElemType heap[],int n)
+{
+    int i;
+    for(i=(n-2)/2;i&gt;-1;i--)
+        AdjustDown(heap,i,n-1);
+}
+</code></pre>
+<h5 id="向上调整操作"><a href="#向上调整操作" class="headerlink" title="向上调整操作"></a>向上调整操作</h5><pre><code class="lang-c++">void AdjustUp(ElemType heap[],int current)
+{
+    int p=current;
+    ElemType temp;
+    while(p&gt;0)
+    {
+        if(heap[p]&lt;heap[(p-1)/2])
+        {
+            temp=heap[p];
+            heap[p]=heap[(p-1)/2];
+            heap[(p-1)/2]=temp;
+            p=(p-1)/2;
+        }
+        else
+            break;
+    }
+}
+</code></pre>
+<p>1、序列11,42,58,80,46,67不是最小堆 :x:</p>
+<p>2、序列58,40,72,99,9,10是最大堆 :x:</p>
+<p>3、向最大堆99,72,76,7,30,41依次插入元素86,91,91,94,97，最终得到的最大堆是：<u>99,97,86,91,94,41,76,7,72,30,91</u></p>
+<p>4、对最大堆序列59,55,57,50,45,22执行3次删除操作（提示：对优先级队列执行删除操作默认删除堆顶元素）后得到最大堆序列50,45,22</p>
+<h5 id="哈夫曼树和哈夫曼编码"><a href="#哈夫曼树和哈夫曼编码" class="headerlink" title="哈夫曼树和哈夫曼编码"></a>哈夫曼树和哈夫曼编码</h5><p>内路径长度：除叶子结点外，从树根到树中其他所有结点的路径长度之和。</p>
+<p>外路径长度：从树根到树中所有叶子结点的路径长度之和。</p>
+<p>l:内路径长度，E:外路径长度，n:扩充二叉树非叶结点数量。$E=I+2n$</p>
+<p>树的加权路径长度：树中所有叶结点的加权路径长度之和，记为WPL。</p>
+<script type="math/tex; mode=display">
+WPL=\sum_{k=1}^mw_kI_k</script><p>1、已知英文字母集合 {A,B,C,D,E,F,G,H}及其权值集合{24,19,29,9,6,13,17,21}，英文字母G的哈夫曼编码为100</p>
+<h3 id="Chapter-6-集合与搜索"><a href="#Chapter-6-集合与搜索" class="headerlink" title="Chapter 6 集合与搜索"></a>Chapter 6 集合与搜索</h3><p>1、在有序表10,19,37,39,48,64,66,71,73,75上查找元素64，若执行对半搜索算法，需要依次与<u>48,71,64</u>进行比较，最终搜索成功。</p>
+<p>2、在有序表0,14,24,34,40,43,45,56,89,96上查找元素25，若执行对半搜索算法，需要依次与<u>40,14,24,34</u>进行比较，最终搜索失败。</p>
+<p>3、对有5个元素的有序表进行对半搜索，搜索失败的平均搜索长度为<u>8/3</u></p>
+<p>4、对有7个元素的有序表进行对半搜索，搜索成功的平均搜索长度为<u>17/7</u></p>
+<p>5、在有序表0,8,16,22,24,34,46,48,67,76上查找元素19，若执行顺序搜索需要至少比较<u>4</u>次查找失败；若执行对半搜索，需要比较<u>4</u>次查找失败</p>
+<p>6、在有序表2,18,48,49,56,71,72,79,82,95上查找元素71，若执行顺序搜索需要至少比较6次查找成功；若执行对半搜索，需要比较3次查找成功</p>
+<h3 id="Chapter-7-搜索树"><a href="#Chapter-7-搜索树" class="headerlink" title="Chapter 7 搜索树"></a>Chapter 7 搜索树</h3><h4 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h4><p>二叉搜索树的删除</p>
+<h4 id="二叉平衡树-AVL树"><a href="#二叉平衡树-AVL树" class="headerlink" title="二叉平衡树(AVL树)"></a>二叉平衡树(AVL树)</h4><p>（1）根的左右子树高度之差的绝对值不超过1，</p>
+<p>（2）根的左右子树都是二叉平衡树。</p>
+<p><mark>平衡因子</mark>该结点左子树减去右子树的高度。</p>
+<h5 id="二叉平衡树的平衡调整方法"><a href="#二叉平衡树的平衡调整方法" class="headerlink" title="二叉平衡树的平衡调整方法"></a>二叉平衡树的平衡调整方法</h5><h4 id="m叉搜索树"><a href="#m叉搜索树" class="headerlink" title="m叉搜索树"></a>m叉搜索树</h4><p>1、高度为h的m叉搜索树中最多有$m^h-1$个元素。</p>
+<p>2、最多存放m-1个元素和m个指向子树的指针。</p>
+<h4 id="B-树"><a href="#B-树" class="headerlink" title="B-树"></a>B-树</h4><p>是一种多叉平衡树</p>
+<p>一颗m阶B-树是一颗m叉搜索树，它或者为空，或者满足以下性质：</p>
+<p>(1)根节点至少有两个孩子</p>
+<p>(2)除根节点和失败结点至少有$\lceil m/2 \rceil$个孩子</p>
+<p>(3)所有失败结点均在同一层上</p>
+<p>设B-树失败结点的总数是s，一棵B-树的元素总数N是B-树失败结点的总数减1，N=s-1。</p>
+<h5 id="B-树的插入"><a href="#B-树的插入" class="headerlink" title="B-树的插入"></a>B-树的插入</h5><h5 id="B-树的删除"><a href="#B-树的删除" class="headerlink" title="B-树的删除"></a>B-树的删除</h5><ol>
+<li><p>对空树的二叉平衡树，依次输入A，Z，B，T，C，P 所构造的二叉平衡树的根结点为 <u>C</u>。</p>
+</li>
+<li><p>给定二叉搜索树如下图所示，从二叉搜索树中依次删除33,9,11，最后得到的二叉搜索树中17的双亲是<u>41</u>。</p>
+<p><img src="https://edu-image.nosdn.127.net/A0759927B5C9EDF975BF96ABF9B46B02.png?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" style="zoom:67%;"></p>
+</li>
+<li><p>向空的3阶B树依次插入关键字为76,58,0,99,7的元素，则最后得到的B树中，根结点包含元素的关键字为<u>58</u>。</p>
+</li>
+<li><p>依次向空二叉搜索树插入关键字为37,45,91,25,14,76,56,65的元素：</p>
+<p>(1) 请画出插入完成后的二叉搜索树<strong>树形</strong>(a)；</p>
+<p>(2) 在刚才生成的二叉搜索树上删除76，画出<strong>树形</strong>(b)；</p>
+<p>(3) 继续删除37，画出<strong>树形</strong>(c)</p>
+<p><img src="https://nos.netease.com/edu-image/E82A0F8E581B4518E58F7FF7E73CC0C5.png?imageView&amp;thumbnail=520x520&amp;quality=100" srcset="/img/loading.gif" style="zoom:50%;"><br><img src="https://edu-image.nosdn.127.net/983BDF0DA06FF9B3612D606C1F07FA8C.png?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" style="zoom:50%;"><br><img src="https://edu-image.nosdn.127.net/D0CD5072E54E869582A419EB66A74D5E.png?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" style="zoom:50%;"></p>
+</li>
+</ol>
+<h3 id="Chapter-8-散列表"><a href="#Chapter-8-散列表" class="headerlink" title="Chapter 8 散列表"></a>Chapter 8 散列表</h3><p>1、有长度为11的空散列表<code>ht</code>，依次插入23, 89, 55, 46, 12, 7, 48, 66，请采用双散列法解决冲突，散列函数为h1(key)=key%11, h2(key)=key%9+1，89在散列表中存储位置是 <u>10</u></p>
+<p>2、给定一个长度为7的空散列表<code>ht</code>，采用双散列法解决冲突，两个散列函数分别为：</p>
+<p>h1(key)=key%7</p>
+<p>h2(key)=key%5+1</p>
+<p>请向散列表依次插入关键字为30,58,65的集合元素，插入完成后65在散列表中存储地址为 <u>3</u></p>
+<p>3、散列表采用二次探查法解决冲突，基地址相同的集合元素拥有相同的探查序列，也会造成搜索效率的下降，这种现象称为<u>二次聚集</u></p>
+<p>4、给定一个长度为7的空散列表ht，采用二次探查法解决冲突，散列函数为h(key)=key%7，请向散列表依次插入关键字为35,21,7的集合元素，插入完成后7在散列表中存储地址为<u>6</u></p>
+<h3 id="Chapter-9-图"><a href="#Chapter-9-图" class="headerlink" title="Chapter 9 图"></a>Chapter 9 图</h3><p>1、给定一个有向图的边集合为：</p>
+<p><img src="http://edu-image.nosdn.127.net/_PhotoUploadUtils_f6cc69da-c9c9-4dc9-b30e-b1735db806e6.png" srcset="/img/loading.gif" alt="img"></p>
+<p>则下列序列不是该图拓扑序列的是。</p>
+<ul>
+<li><p>A.0,1,2,3,4,5,6  :ballot_box_with_check:</p>
+</li>
+<li><p>B.0,2,4,1,6,5,3</p>
+</li>
+<li><p>C.0,2,4,1,6,3,5</p>
+</li>
+<li><p>D.0,1,2,3,4,6,5</p>
+</li>
+</ul>
+<p>2、给定一个有n个顶点的有向图，如果其边的条数达到$n\times (n-1)$，则该图一定是强连通图。:ballot_box_with_check:</p>
+<p>3、给定带权无向图，用普里姆和克鲁斯卡尔算法得到的最小代价生成树不一定是同一棵。:ballot_box_with_check:</p>
+<p>4、在AOE网络中，完成工程所需最<u>短</u>时间是从开始顶点到完成顶点的最长路径的长度，这条路径被称作<u>关键路径</u>。</p>
+<p>5、已知图的边集合$E(G)={<0,1>,<1,2>,<4,1>,<4,5>,<5,3>,<2,3>}$若采用邻接表存储，则邻接到4的顶点共有<u>0</u>个。</2,3></5,3></4,5></4,1></1,2></0,1></p>
+<p>6、设无向图G中有n个顶点和e条边，则其对应的邻接表中的顶点结点和边结点的个数分别为<u>n,2e</u>。</p>
+<p>7、已知图G的邻接表表示如图所示</p>
+<ol>
+<li><p>在此邻接表上进行深度优先搜索遍历，给出遍历序列；</p>
+</li>
+<li><p>请画出来该遍历过程得到的深度优先搜索生成森林；</p>
+</li>
+<li><p>在此邻接表上进行宽度优先搜索遍历，给出遍历序列；</p>
+</li>
+<li><p>请画出来该遍历过程得到的宽度优先搜索生成森林。</p>
+<p><img src="https://edu-image.nosdn.127.net/E267532EEB8B144D029DF3D997D45F3B.jpg?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" alt></p>
+<p>\1. 深度优先搜索遍历序列为：0,1,3,4,5,2（5分）</p>
+<p>\2. 得到深度优先搜索生成森林（2分），如下图所示（3分）：</p>
+<p><img src="https://edu-image.nosdn.127.net/D3FFC216C9C744E2BFDBB5FA50E4E30F.jpg?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" alt></p>
+<p>\3. 宽度优先搜索遍历序列为：0,1,3,4,2,5 (5分）</p>
+</li>
+<li><p>如图所示有向图，请给出该有向图的拓扑排序序列。</p>
+<p><img src="https://edu-image.nosdn.127.net/EB52C3B4794281D210248D20F34143F9.png?imageView&amp;thumbnail=890x0&amp;quality=100" srcset="/img/loading.gif" alt></p>
+</li>
+</ol>
+<p><strong>B,A,C,E,D</strong></p>
+<pre><code class="lang-c++">typedef struct mGraph{
+    ElemType **a;
+    int n;
+    int e;
+    ElemType noEdge;
+}MGraph;
+Status Init(mGraph *mg,int nSize,ElemType noEdgeValue){
+    int i,j;
+    mg-&gt;n=nSize;
+    mg-&gt;e=0;
+    mg-&gt;noEdge=noEdgeValue;
+    mg-&gt;a=(ElemType **)malloc(nSize*sizeof(ElemType*));
+    if(!mg-&gt;a) return ERROR;
+    for(i=0;i&lt;mg-&gt;n;i++){
+        mg-&gt;a[i]=(ElemType *)malloc(nSize*sizeof(ElemType*));
+        for(j=0;j&lt;mg-&gt;n;j++) mg-&gt;a[i][j]=mg-&gt;noEdge;
+        mg-&gt;a[i][i]=0;
+    }
+    return OK;
+}
+Status Destroy(mGraph *mg){
+    int i;
+    for(i=0;i&lt;mg-&gt;n;i++) free(mg-&gt;a[i]);
+    free(mg-&gt;a);
+}
+Status Exist(mGraph *mg,int u,int v){
+    if(u&lt;0||v&lt;0||u&gt;mg-&gt;n-1||u==v||mg-&gt;a[u][v]==mg-&gt;noEdge) return ERROR;
+    return OK;
+}
+Status Insert(mGraph *mg,int u,int v,ElemType w){
+    if(Exist(mg,u,v)) return ERROR;
+    mg-&gt;a[u][v]=w;
+    mg-&gt;e++;
+    return OK;
+}
+Status Remove(mGraph *mg,int u,int v){
+    if(!Exist(mg,u,v)) return ERROR;
+    mg-&gt;a[u][v]=noEdge;
+    mg-&gt;e--;
+}
+
+typedef struct eNode{
+    int adjVex;
+    ElemType w;
+    struct eNode *nextArc;
+}ENode;
+typedef struct lGraph{
+    int n;
+    int e;
+    ENode **a;
+}LGraph;
+Status Init(LGraph *lg,int nSize){
+    int i;
+    lg-&gt;n=nSize;
+    lg-&gt;e=0;
+    lg-&gt;a=(ENode **)malloc(nSize*sizeof(ENode*));
+    if(!lg-&gt;a) return ERROR;
+    else{
+        for(i=0;i&lt;lg-&gt;n;i++) lg-&gt;a[i]=NULL;
+        return OK;
+    }
+}
+Status Exist(LGraph *lg,int u,int v){
+    ENode *p;
+    if(u&lt;0||v&lt;0||u&gt;lg-&gt;n-1||v&gt;lg-&gt;n-1||u==v) return ERROR;
+    p=lg-&gt;a[u];
+    while(p&amp;&amp;p-&gt;adjVex!=v) p=p-&gt;nextArc;
+    if(!p) return ERROR;
+    else return OK;
+}
+Status Insert(LGraph *lg,int u,int v,ElemType w){
+    ENode *p;
+    if(Exist(lg,v,w)) return ERROR;
+    p=(ENode *)malloc(sizeof(ENode));
+    p-&gt;adjVex=v;
+    p-&gt;w=w;
+    p-&gt;nextArc=lg-&gt;a[u];
+    lg-&gt;a[u]=p;
+    lg-&gt;e++;
+    return OK;
+}
+void DFS(int v,int visited[],LGraph g){
+    ENode *w;
+    printf(&quot;%d&quot;,v);
+    visited[v]=1;
+    for(w=g.a[v];w;w=w-&gt;nextArc)
+        if(!visited[w-&gt;adjVex]) DFS(w-&gt;adjVex,visited,g);
+
+}
+void DFSGraph(LGraph g){
+    int i;
+    int *visited=(int *)malloc(g.n*sizeof(int ));
+    for(i=0;i&lt;g.n;i++)
+        visited[i]=0;
+    for(i=0;i&lt;g.n;i++)
+        if(!visited[i]) DFS(i,visited,g);
+    free(visited);
+}
+void BFS(int v,int visited[],LGraph g){
+    ENode *w;
+    Queue q;
+    create(&amp;q,g.n);
+    visited[v]=1;
+    printf(&quot;%d&quot;,v);
+    EnQueue(&amp;q,v);
+    while(!IsEmpty(&amp;q)){
+        Front(&amp;q,&amp;v);
+        DeQueue(&amp;q);
+        for(w=g.a[v];w;w=w-&gt;nextArc)
+            if(!visited[w-&gt;adjVex]){
+                visited[w-&gt;adjVex]=1;
+                printf(&quot;%d&quot;,w-&gt;adjVex);
+                EnQueue(&amp;q,w-&gt;adjVex);
+            }
+
+    }
+}
+void BFSGraph(LGraph g){
+    int i;
+    int *visited=(int *)malloc(g.n*sizeof(int ));
+    for(i=0;i&lt;g.n;i++)
+        visited[i]=0;
+    for(i=0;i&lt;g.n;i++)
+        if(!visited[i]) BFS(i,visited,g);
+    free(visited);
+}
+</code></pre>
+<h3 id="Chapter-10-排序"><a href="#Chapter-10-排序" class="headerlink" title="Chapter 10 排序"></a>Chapter 10 排序</h3><pre><code class="lang-c++">typedef struct entry{
+    KeyType key;
+    DataType data;
+}Entry;
+typedef struct list{
+    int n;
+    Entry D[MaxSize];
+}List;
+int Partition(List *list,int low,int high){
+    int i=low,j=high+1;
+    Entry pivot=list-&gt;D[low];
+    do{
+        do i++; while(i&lt;=high&amp;&amp;list-&gt;D[i].key&lt;pivot.key);
+        do j--; while(list-&gt;D[j].key&gt;pivot.key);
+        if(i&lt;j) Swap(list-&gt;D,i,j);
+    }while(i&lt;j);
+    Swap(list-&gt;D,low,j);
+    return j;
+}
+void QuickSort(List *list,int low,int high){
+    int k;
+    if(low&lt;high){
+        k=Partition(list,low,high);
+        QuickSort(list,low,k-1);
+        QuickSort(list,k+1,high);
+    }
+}
+void QuickSort(List *list){
+    QuickSort(list,0,list-&gt;n-1);
+}
+</code></pre>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "数据结构总结&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+              processEscapes: true,
+              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+      });
+
+      MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+
+    </script>
+
+    <script src="https://cdn.staticfile.org/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>
