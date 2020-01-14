@@ -56,35 +56,35 @@
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/">首页</a>
+            <a class="nav-link" href="/">Home</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/archives/">归档</a>
+            <a class="nav-link" href="/archives/">Archives</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/categories/">分类</a>
+            <a class="nav-link" href="/categories/">Categories</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/tags/">标签</a>
+            <a class="nav-link" href="/tags/">Tags</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/about/">关于</a>
+            <a class="nav-link" href="/about/">About</a>
           </li>
         
         
@@ -101,7 +101,7 @@
     <div class="view intro-2" id="background"
          style="background: url('https://pic1.zhimg.com/v2-fa4c89003c3963781901e9b29c41da70_r.jpg')no-repeat center center;
            background-size: cover;
-           background-attachment: scroll;">
+           background-attachment: fixed;">
       <div class="full-bg-img">
         <div class="mask rgba-black-light flex-center">
           <div class="container text-center white-text fadeInUp">
@@ -132,6 +132,63 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/09/22/线性表/">
+        <p class="h4 index-header">线性表</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">线性表线性表的定义线性表是零个或多个数据元素构成的线性序列，记为$(a_0,a_1,…,a_{n-1})$。
+线性表的数据元素个数n称为线性表的长度。
+当n=0时，此线性表为空表。
+线性表之间的关系
+
+设线性表$(a_0,a_1,…,a_{i-1},a_i,a_{i+1},…,a_{n-1})$，其中：
+$a_{i-1}$是$a_{i}$的直接前驱
+$a_{i+1}$是$a_{i}$的直接后继
+$a_{0}$没有直接前驱
+$a_{n-1}$没有直接后继
+除$a_{0}$和$a_{n-1}$外，其他元素有且仅有一个直接前驱和一个直接后继。
+线性表的抽象数据类型（描述规范）
+
+ADT List{
+    数据:
+    零个或多个数据元素构成的线性序列
+    数据元素之间的关系是一对一关系
+    Init(L):初始化运算
+    构造一个新的线性表，若初始化成功，则返回OK，否则返回ERROR
+    Destroy(L):撤销运算
+    判断线性表L是否存在，若已存在，则撤销线性表L，否则返回ERROR
+    IsEmpty(L):判空运算
+    判断线性表L是否为空，若为空</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-09-22&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
 
   <div class="row mb-4 mx-auto">
     
@@ -197,7 +254,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -206,7 +263,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

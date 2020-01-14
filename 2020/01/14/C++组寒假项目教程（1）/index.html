@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>C++组寒假项目教程（1） ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://pic1.zhimg.com/v2-fa4c89003c3963781901e9b29c41da70_r.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Tuesday, January 14th 2020, 4:22 pm
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>简单写了下界面。<br><a id="more"></a></p>
+<h3 id="C-组寒假项目教程（1）"><a href="#C-组寒假项目教程（1）" class="headerlink" title="C++组寒假项目教程（1）"></a>C++组寒假项目教程（1）</h3><p>我们组寒假的项目是做一个Qt版的vscode，然后我会尽量写一些基本的功能，写写教程帮助上手。</p>
+<h4 id="观察vscode界面"><a href="#观察vscode界面" class="headerlink" title="观察vscode界面"></a>观察vscode界面</h4><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20200114155258.png" srcset="/img/loading.gif" alt></p>
+<p>可以看到，vscode主要由标题、侧边栏，编辑区域、菜单栏和底部的状态栏构成。</p>
+<h4 id="项目构成"><a href="#项目构成" class="headerlink" title="项目构成"></a>项目构成</h4><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20200114161512.png" srcset="/img/loading.gif" alt></p>
+<h4 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h4><p>目前只有mainwindow类包含我们之前说的这些内容，但是我们还是要自己重新写，一方面自己重写的控件更自由，功能更丰富，另一方面也更美观。</p>
+<p>既然我们要重写，那我们先在qt creator偏右的区域里把它自带的菜单栏等去掉。<br><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20200114160023.png" srcset="/img/loading.gif" alt></p>
+<p>就在这个区域里点右键会有个选项可以删除控件，我们只保留<code>centerwidget</code>。</p>
+<p>注意：在接下来的项目里我都尽量避免使用qt designer来设计界面，虽然这样很方便，但不利于培养编程的能力，而且有时候这样会导致莫名其妙的错误。</p>
+<h4 id="编写菜单栏"><a href="#编写菜单栏" class="headerlink" title="编写菜单栏"></a>编写菜单栏</h4><p>什么是菜单栏？文件、编辑等在的区域就是菜单栏，也叫<code>menubar</code>。<br>看这部分前，建议先看看我发的书的第86页，大概是5.1的内容。</p>
+<p>接下来的代码就是如何用代码添加菜单栏，结合书籍自己看看就能领会了，这里不多讲</p>
+<pre><code class="lang-c++">    myMenuBar=new QMenuBar(this);
+    //增加菜单栏
+    file=myMenuBar-&gt;addMenu(tr(&quot;文件(&amp;F)&quot;));//这里&amp;F的作用，自己查找
+    edit=myMenuBar-&gt;addMenu(tr(&quot;编辑(&amp;E)&quot;));
+    select=myMenuBar-&gt;addMenu(tr(&quot;选择(&amp;S)&quot;));
+    view=myMenuBar-&gt;addMenu(tr(&quot;查看(&amp;V)&quot;));
+    go=myMenuBar-&gt;addMenu(tr(&quot;转到(&amp;G)&quot;));
+    debug=myMenuBar-&gt;addMenu(tr(&quot;调试(&amp;D)&quot;));
+    terminal=myMenuBar-&gt;addMenu(tr(&quot;终端(&amp;T)&quot;));
+    help=myMenuBar-&gt;addMenu(tr(&quot;帮助(&amp;H)&quot;));
+    //细分菜单栏
+    QAction *actionNew=file-&gt;addAction(tr(&quot;新建文件&quot;));
+    QAction *actionNewWindow=file-&gt;addAction(tr(&quot;新建窗口&quot;));
+    actionNew-&gt;setShortcut(QKeySequence(&quot;Ctrl+N&quot;));
+    actionNewWindow-&gt;setShortcut(QKeySequence(&quot;Ctrl+Shift+N&quot;));
+    file-&gt;addSeparator();
+    QAction *actionOpen=file-&gt;addAction(tr(&quot;打开文件&quot;));
+    QAction *actionOpenDir=file-&gt;addAction(tr(&quot;打开文件夹&quot;));
+    actionOpen-&gt;setShortcut(QKeySequence(&quot;Ctrl+O&quot;)); //快捷键
+    actionOpenDir-&gt;setShortcut(QKeySequence(&quot;Ctrl+Shift+O&quot;));
+    file-&gt;addSeparator();
+</code></pre>
+<h3 id="侧边栏"><a href="#侧边栏" class="headerlink" title="侧边栏"></a>侧边栏</h3><p>Qt好像自带了一个侧边栏的控件，但在这里我没有使用。<br>1、重写绘图事件，在程序左侧画出一个黑色的矩形</p>
+<pre><code class="lang-c++">void MainWindow::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    QBrush brush(QColor(33,33,33));
+    painter.setBrush(brush);
+    painter.fillRect(QRect(0,35,60,1500),QBrush(QColor(33,33,33)));
+}
+</code></pre>
+<p>2、添加按钮，这里的素材图片全是在iconfont上找的</p>
+<pre><code class="lang-c++"> //侧边栏
+    btn_1=new QPushButton(this);
+    btn_1-&gt;setStyleSheet(&quot;QPushButton{border-image:url(:/img/file_1.png);}QPushButton:hover{border-image:url(:/img/file.png);}&quot;);
+    btn_1-&gt;resize(33,33);
+    btn_1-&gt;move(14,45);
+    btn_2=new QPushButton(this);
+    btn_2-&gt;setStyleSheet(&quot;QPushButton{border-image:url(:/img/search_1.png);}QPushButton:hover{border-image:url(:/img/search.png);}&quot;);
+    btn_2-&gt;resize(33,33);
+    btn_2-&gt;move(14,95);
+    btn_3=new QPushButton(this);
+    btn_3-&gt;setStyleSheet(&quot;QPushButton{border-image:url(:/img/git_1.png);}QPushButton:hover{border-image:url(:/img/git.png);}&quot;);
+    btn_3-&gt;resize(33,33);
+    btn_3-&gt;move(14,155);
+    btn_4=new QPushButton(this);
+    btn_4-&gt;setStyleSheet(&quot;QPushButton{border-image:url(:/img/bug_1.png);}QPushButton:hover{border-image:url(:/img/bug.png);}&quot;);
+    btn_4-&gt;resize(33,33);
+    btn_4-&gt;move(14,215);
+    btn_5=new QPushButton(this);
+    btn_5-&gt;setStyleSheet(&quot;QPushButton{border-image:url(:/img/app_1.png);}QPushButton:hover{border-image:url(:/img/app.png);}&quot;);
+    btn_5-&gt;resize(33,33);
+    btn_5-&gt;move(14,275);
+</code></pre>
+<h3 id="qss样式设计及资源文件"><a href="#qss样式设计及资源文件" class="headerlink" title="qss样式设计及资源文件"></a>qss样式设计及资源文件</h3><p>资源文件如何添加？这个自己看书查找。我们在这里放一些素材图片和样式文件。</p>
+<pre><code class="lang-css">QMenuBar{
+background-color:rgb(33,33,33);
+
+}
+QMenuBar:item{
+font:bold;
+font-size:14px;
+font-family:&quot;等线&quot;;
+color:rgb(255,255,255);
+border:0px;
+padding:9px;
+}
+QMenuBar:item:pressed{
+color:rgb(35,168,242);
+
+}
+QMenu{
+background-color:rgb(33,33,33);
+font-size:14px;
+font-family:&quot;等线&quot;;
+color:rgb(255,255,255);
+}
+QMenu:pressed{
+color:rgb(35,168,242);
+}
+</code></pre>
+<p>qss模仿了一部分css语法，但功能没有它强大，主要用于界面的设计。通过<code>setstylesheet()</code>函数来应用样式。</p>
+<pre><code class="lang-c++">    qssFile = new QFile(&quot;:/stylesheet.qss&quot;, this);
+    // 只读方式打开该文件
+    qssFile-&gt;open(QFile::ReadOnly);
+    // 读取文件全部内容，使用tr()函数将其转换为QString类型
+    QString styleSheet = tr(qssFile-&gt;readAll());
+    // 为QApplication设置样式表
+    qApp-&gt;setStyleSheet(styleSheet);
+    qssFile-&gt;close();
+</code></pre>
+<h3 id="重写QPlainTextEdit"><a href="#重写QPlainTextEdit" class="headerlink" title="重写QPlainTextEdit"></a>重写QPlainTextEdit</h3><p><code>QPlainTextEdit</code>是qt自带的多行文本编辑器，由于我们这个要支持高亮等功能，所以我们需要重写这个类，也就是用一个新类来继承它。不了解的先看看C++继承方面的知识。</p>
+<pre><code class="lang-c++">#ifndef CODEEDIT_H
+#define CODEEDIT_H
+#include &lt;QPlainTextEdit&gt;
+
+
+class CodeEdit : public QPlainTextEdit
+{
+    Q_OBJECT
+public:
+    CodeEdit(QWidget *parent = 0);
+};
+
+#endif // CODEEDIT_H
+#include &quot;codeedit.h&quot;
+
+
+CodeEdit::CodeEdit(QWidget *parent): QPlainTextEdit(parent)
+{
+    this-&gt;setFont(QFont(tr(&quot;Consolas&quot;), 14));
+    this-&gt;setStyleSheet(&quot;background-color:rgb(33,33,33);color:white;&quot;);
+}
+</code></pre>
+<p>实例化我们的新类：</p>
+<pre><code class="lang-c++">    codeArea=new CodeEdit(this);
+    codeArea-&gt;resize(1000,1000);
+    codeArea-&gt;move(60,35);
+</code></pre>
+<p>由于写的有点仓促，其他的功能暂时没有实现，仅简单写了大致的界面，有兴趣的可以自己写下试试。有问题欢迎指出。后面教程也会持续更新。</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/C++">C++</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/C++">C++</a>
+                
+                  <a class="hover-with-bg" href="/tags/QT">QT</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "C++组寒假项目教程（1）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
