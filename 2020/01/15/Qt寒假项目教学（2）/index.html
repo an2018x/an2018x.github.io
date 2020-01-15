@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>C++组寒假项目教程（2） ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://pic1.zhimg.com/v2-fa4c89003c3963781901e9b29c41da70_r.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Wednesday, January 15th 2020, 1:33 pm
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>更多功能<br><a id="more"></a></p>
+<h2 id="Qt寒假项目教学（2）"><a href="#Qt寒假项目教学（2）" class="headerlink" title="Qt寒假项目教学（2）"></a>Qt寒假项目教学（2）</h2><p>我们昨天已经设计了大致的界面，现在我们给它增加一些功能。</p>
+<h3 id="继续改写CodeEdit类"><a href="#继续改写CodeEdit类" class="headerlink" title="继续改写CodeEdit类"></a>继续改写CodeEdit类</h3><p>昨天我们让<code>CodeEdit</code>类继承<code>QPlainEdit</code>类，仅仅简单定义了一下它的外观，下面让我们深入改写。</p>
+<h3 id="增加行号"><a href="#增加行号" class="headerlink" title="增加行号"></a>增加行号</h3><p>一个代码编辑器行号是必不可少的，那么如何增加行号，请往下看。看下面的内容前，请看一看我之前发的电子书的富文本部分，了解基本的文档框架结构，否则有些内容你将难以理解。</p>
+<p>1、腾出一部分空间用来显示行号</p>
+<p>我们设置行号宽度为40px，这已经足以显示很大的数字了。</p>
+<p>我们在<code>codeEdit</code>构造函数里加入这行代码，在左边留白40px；</p>
+<pre><code class="lang-c++"> setViewportMargins(40, 0, 0, 0);
+</code></pre>
+<p>2、绘制行号区域</p>
+<p>还记得我们昨天是怎么绘制侧边栏框的吗？重写绘图事件！我们现在依然采取这样的方式。</p>
+<p>为了方便，我们再新建一个类用来表示行号的区域，体会一下面向对象编程的好处。</p>
+<pre><code class="lang-c++">class LineNumberArea:public QWidget
+{
+    Q_OBJECT
+public:
+
+    LineNumberArea(CodeEdit *editor):QWidget(editor){
+        this-&gt;resize(40,1500);        //设置大小
+        this-&gt;move(0,0);         //这里是相对父类的位置，也就是代码编辑区的左上角
+        codeEdit=editor;
+    }
+    void paintEvent(QPaintEvent *event){
+        //qDebug()&lt;&lt;&quot;no&quot;;
+        codeEdit-&gt;lineNumberAreaPaintEvent(event); //调用codeEdit类里的一个函数来绘图
+    }
+private:
+    CodeEdit *codeEdit;
+
+
+};
+</code></pre>
+<p>这个类继承自<code>QWidget</code>，还记得<code>QWidget</code>吗，通常我们想要写一个控件，往往要继承<code>QWidget</code>类。</p>
+<p>这里有个<code>Q_OBJECT</code>宏，查查资料，它有什么用？</p>
+<p>由于我们这个行号显示区域是建立在代码编辑区的，所以在构造函数里面传一个<code>CodeEdit *</code>指针用来和代码编辑区的内容交换信息。</p>
+<p>下面看具体绘图代码，务必弄懂</p>
+<pre><code class="lang-c++">void CodeEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
+{
+    //qDebug()&lt;&lt;&quot;yes&quot;;
+    QPainter painter(lineNumberArea);
+    painter.fillRect(QRect(0,0,40,1560),QColor(34,39,49));     //画一个灰色的矩形底色
+    QTextBlock block=firstVisibleBlock();                      //获取第一个可见文本块     
+    int num=block.blockNumber();                                //获取第一个行号      
+    int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();   
+    //这个过程可能难以理解，实际上就是对于某一行代码块建立逻辑坐标系，第一行代码块左上角是(0,0)，建议回顾Qt坐标系统
+    //qDebug()&lt;&lt;blockBoundingGeometry(block).translated(contentOffset());不理解的画建议用QDebug输出一下它的返回值，看看它代表什么含义
+    int bottom = top + (int) blockBoundingRect(block).height(); //就是代码块矩形底下的线，这里换算为逻辑纵坐标，也就是加上一行代码块的高度
+    //qDebug()&lt;&lt;(int) blockBoundingRect(block).height();
+    while (block.isValid() &amp;&amp; top &lt;= event-&gt;rect().bottom()) { //当这个代码块合法且代码块矩形上面线坐标小于等于下面线坐标，当文档结束时，则不符合这两个条件，想想为什么
+        if (block.isVisible() &amp;&amp; bottom &gt;= event-&gt;rect().top()) {   
+            QString number = QString::number(num + 1);      //画出行号
+            painter.setPen(Qt::lightGray);
+            painter.drawText(0, top, 40, fontMetrics().height(),
+                             Qt::AlignCenter, number);
+        }
+
+        block = block.next();           //代码块向后移一行
+        top = bottom;                       //同样当前坐标更新
+        //qDebug()&lt;&lt;top;
+        bottom = top + (int) blockBoundingRect(block).height();
+        ++num;
+    }
+}
+</code></pre>
+<p>3、行号变化</p>
+<p>然而上面的代码是远远不够的，我们还需要鼠标滚轮移动时行号跟着变，这就需要信号与槽的知识。</p>
+<p>先看代码</p>
+<pre><code class="lang-c++">connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
+</code></pre>
+<p>绑定信号和槽，这是Qt4的写法，想想我在Qt5里该怎么写。</p>
+<p>这里我们将鼠标滚动的信号也就是文本区更新的信号和行号区更新的信号绑定起来。</p>
+<p>我们实现一下槽函数</p>
+<pre><code class="lang-c++">void CodeEdit::updateLineNumberArea(QRect rect, int dy)
+{
+    if (dy)
+        lineNumberArea-&gt;scroll(0, dy);
+    else
+        lineNumberArea-&gt;update(0, rect.y(), 40, rect.height());
+}
+</code></pre>
+<p>这个函数很简单，就是一旦监测到文本区变动，代码行数区就重新执行一次绘图，就是我们第二步写的代码。</p>
+<h3 id="定制滑块"><a href="#定制滑块" class="headerlink" title="定制滑块"></a>定制滑块</h3><p>如果我们用系统自带的滚动栏就太丑了，所以我们要重新设计，就是改一下qss文件</p>
+<pre><code class="lang-c++">QScrollBar:vertical
+{
+margin:0px 0px 0px 0px;
+background-color:rgb(33,33,33);
+border: 0px;
+width:12px;
+}
+QScrollBar::handle:vertical
+{
+background-color:rgb(55,55,55);
+width:12px;
+border-radius:0px;
+}
+QScrollBar::add-page:vertical
+{
+background-color:rgb(33,33,33);
+}
+
+QScrollBar::sub-page:vertical
+{
+background-color:rgb(33,33,33);
+}
+QScrollBar::handle:vertical:pressed
+{
+background-color:rgb(125,198,241);
+}
+</code></pre>
+<p>自己理解，不多说了。</p>
+<h3 id="控件跟随窗口改变"><a href="#控件跟随窗口改变" class="headerlink" title="控件跟随窗口改变"></a>控件跟随窗口改变</h3><p>如果你运行了昨天的程序，你会发现当把程序全屏时，文本编辑区域还是不变，这显然是不合实际的。</p>
+<p>通常，我们有两种解决方案：</p>
+<ul>
+<li>采用栅格布局等布局方式</li>
+<li>重写窗口改变事件</li>
+</ul>
+<p>我们采用第二种，就是我们的<code>MainWindow</code>窗口改变时，我们的文本编辑区域也跟着改变。</p>
+<p>上代码：</p>
+<pre><code class="lang-c++">void MainWindow::resizeEvent(QResizeEvent *){
+    this-&gt;codeArea-&gt;resize(this-&gt;geometry().width()-60,this-&gt;geometry().height()-65);
+}
+</code></pre>
+<p>相信你们也发现了，当我们重写事件时，函数名会变成斜的，这可以帮助我们了解函数名有没有写错。</p>
+<h3 id="文件的打开、保存"><a href="#文件的打开、保存" class="headerlink" title="文件的打开、保存"></a>文件的打开、保存</h3><p>我发的电子书里讲的很详细了，看看电子书吧</p>
+<pre><code class="lang-c++">  //按钮点击
+    connect(this-&gt;actionOpen,&amp;QAction::triggered,this,&amp;MainWindow::openFile);
+    connect(this-&gt;actionSave,&amp;QAction::triggered,this,&amp;MainWindow::saveFile);
+void MainWindow::openFile(){
+    QString filename=QFileDialog::getOpenFileName(this,&quot;打开文件&quot;,&quot;.&quot;,&quot;Text(*.cpp *.h *.txt)&quot;);
+    this-&gt;codeArea-&gt;fileName=filename;
+    if(filename.isEmpty())
+        return;
+    QStringList list=filename.split(&quot;/&quot;);
+    QString title=list.at(list.length()-1);
+    this-&gt;file_1-&gt;setText(title);
+    //   QFileInfo info(filename);
+    //   QString title=info.fileName();
+    this-&gt;codeArea-&gt;myFile-&gt;setFileName(filename);
+    bool ret=this-&gt;codeArea-&gt;myFile-&gt;open(QIODevice::ReadOnly);
+    if(!ret)
+    {
+        QMessageBox::warning(this,&quot;文件失败&quot;,&quot;打开失败&quot;);
+    }
+    QTextStream stream(this-&gt;codeArea-&gt;myFile);
+    this-&gt;codeArea-&gt;codeName=&quot;UTF-8&quot;;
+    stream.setCodec(this-&gt;codeArea-&gt;codeName.toLocal8Bit().data());
+    this-&gt;codeArea-&gt;setPlainText(stream.readAll());
+    this-&gt;codeArea-&gt;myFile-&gt;close();
+}
+void MainWindow::saveFile(){
+    if(this-&gt;codeArea-&gt;fileName.isEmpty())
+    {
+        QString filename=QFileDialog::getSaveFileName(this,&quot;保存&quot;,&quot;.&quot;,&quot;*.txt *.cpp *.h&quot;);
+        this-&gt;codeArea-&gt;fileName=filename;
+    }
+
+    this-&gt;codeArea-&gt;myFile-&gt;setFileName(this-&gt;codeArea-&gt;fileName);
+    this-&gt;codeArea-&gt;myFile-&gt;open(QIODevice::WriteOnly|QIODevice::Text);
+    QTextStream stream(this-&gt;codeArea-&gt;myFile);
+    stream.setCodec(this-&gt;codeArea-&gt;codeName.toLocal8Bit().data());
+    stream&lt;&lt;this-&gt;codeArea-&gt;toPlainText();
+    stream.flush();
+    this-&gt;codeArea-&gt;myFile-&gt;close();
+    if(!this-&gt;codeArea-&gt;fileName.isEmpty())
+        QMessageBox::information(this,&quot;成功&quot;,&quot;保存成功！&quot;);
+}
+</code></pre>
+<p>模仿书里的写法，绑定信号和槽就行了。</p>
+<h3 id="当前行高亮"><a href="#当前行高亮" class="headerlink" title="当前行高亮"></a>当前行高亮</h3><p>在用<code>vscode</code>等优秀的文本编辑器时，我们会发现光标所在的行是高亮的，下面让我们实现这个功能。</p>
+<p>首先为了知道我们光标的变动，绑定信号和槽。</p>
+<pre><code class="lang-c++">
+connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highLightCurrentLine()));
+</code></pre>
+<p>之后写槽函数</p>
+<pre><code class="lang-c++">void CodeEdit::highLightCurrentLine()
+{
+    QList&lt;QTextEdit::ExtraSelection&gt; extraSelections; //list容器保存选中的区域
+
+    if (!isReadOnly()) {
+        QTextEdit::ExtraSelection selection;
+
+        //画图，不了解的去看富文本那块的内容
+        QColor lineColor = QColor(66,66,66);
+
+        selection.format.setBackground(lineColor);
+        selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+        selection.cursor = textCursor();
+        selection.cursor.clearSelection();
+        extraSelections.append(selection);
+    }
+
+    setExtraSelections(extraSelections);
+}
+</code></pre>
+<p>到这里，相信你也了解到了，当我们要实现某项功能是，信号和槽机制是很重要的，要十分熟悉</p>
+<h3 id="其他（自己试试做）"><a href="#其他（自己试试做）" class="headerlink" title="其他（自己试试做）"></a>其他（自己试试做）</h3><p>1、</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20200115134804.png" srcset="/img/loading.gif" alt></p>
+<p>vscode有这样的选项卡，用来在多文件间切换，我也简单写了一下这样的选项卡，但没有实现文件切换。想想这该如何实现？试一试。</p>
+<p>2、</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20200115135039.png" srcset="/img/loading.gif" alt></p>
+<p>我们还没写状态栏啊（忘了），就交给你们写吧</p>
+<p>3、</p>
+<p>在vscode中，按ctrl+g，可以实现切换到。。。行去，试试加入这个功能吧！</p>
+<p>4、</p>
+<p>我们的样式设计都放在qss文件里，那如果我写很多qss文件，是不是就可以实现主题的选择呢？试试看吧</p>
+<p>5、更多功能</p>
+<p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/20200115135422.png" srcset="/img/loading.gif" alt></p>
+<p>vscode还有这么多功能，努力实现，加进去吧！</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/C++">C++</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/C++">C++</a>
+                
+                  <a class="hover-with-bg" href="/tags/QT">QT</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "C++组寒假项目教程（2）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
