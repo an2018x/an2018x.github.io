@@ -56,35 +56,35 @@
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/">首页</a>
+            <a class="nav-link" href="/">Home</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/archives/">归档</a>
+            <a class="nav-link" href="/archives/">Archives</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/categories/">分类</a>
+            <a class="nav-link" href="/categories/">Categories</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/tags/">标签</a>
+            <a class="nav-link" href="/tags/">Tags</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/about/">关于</a>
+            <a class="nav-link" href="/about/">About</a>
           </li>
         
         
@@ -137,50 +137,97 @@
     
     
     <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/09/22/数组/">
-        <p class="h4 index-header">数组</p>
+      <a href="/2019/09/22/博客个性/">
+        <p class="h4 index-header">博客个性化</p>
         
         
           
         
         <div class="index-excerpt" >
-          <div class="index-text mb-1">数组由数量固定且类型相同的数据元素组成的有序集合。
-是实现数据顺序存储表示的基本数据结构。
-线性表、树、图、集合等借助数组实现顺序存储。
-数组的基本概念数组与结构体
-线性表是通过结构体来定义线性表类型的。
-顺序表实现时，在结构体内部定义了一个数组。
-相同点：类型变量一旦定义，一次性申请连续存储空间用于存放指定数量的数据元素。
-不同点：
+          <div class="index-text mb-1">博客个性化浏览数量将next的_config.yml文件设置如下：
+#Show PV/UV of the website/page with busuanzi.
 
+#Get more information on http://ibruce.info/2015/04/04/busuanzi/
 
+busuanzi_count:
 
+count values only if the other configs are false
 
-数组元素
-结构体成员
+  enable: true
 
+# custom uv span for the whole site
 
+  site_uv: true
+  site_uv_header: 本站访客数
+  site_uv_footer: 人次
 
+# custom pv span for the whole site
 
-相同类型
-多重类型
+  site_pv: true
+  site_pv_header: 本站总访问量
+  site_pv_footer: 次
 
+# custom pv span for one page only
 
-用下标(index)标识
-由域名(field name)引用
+  page_pv: true
+  page_pv_header: 本</div>
+        </div>
+      </a>
 
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-09-22&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E5%8D%9A%E5%AE%A2">博客</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E5%8D%9A%E5%AE%A2">博客</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
 
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/09/22/线性表/">
+        <p class="h4 index-header">线性表</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">线性表线性表的定义线性表是零个或多个数据元素构成的线性序列，记为$(a_0,a_1,…,a_{n-1})$。
+线性表的数据元素个数n称为线性表的长度。
+当n=0时，此线性表为空表。
+线性表之间的关系
 
+设线性表$(a_0,a_1,…,a_{i-1},a_i,a_{i+1},…,a_{n-1})$，其中：
+$a_{i-1}$是$a_{i}$的直接前驱
+$a_{i+1}$是$a_{i}$的直接后继
+$a_{0}$没有直接前驱
+$a_{n-1}$没有直接后继
+除$a_{0}$和$a_{n-1}$外，其他元素有且仅有一个直接前驱和一个直接后继。
+线性表的抽象数据类型（描述规范）
 
-数组与指针
-数组名本身存储了指针值，其保存数组的首地址。
-借助指针可以实现动态数组
-C语言提供的数组实现方式都是静态数组，必须在创建时就指定数组长度为一个确定值。
-动态数组通过malloc来获取所需空间
-数组的顺序存储一维数组可直接映射到存储空间中。
-设给长度为n的一维数组a所分配的存储块的起始地址是$Loc(a[0])$，若已知a的每个元素占k个存储单元，则下标为i的数组元素$a[i]$的存放地址是：
-
-Loc(a[i])=Loc(a[0])+i*k \space \space 0\leq i</div>
+ADT List{
+    数据:
+    零个或多个数据元素构成的线性序列
+    数据元素之间的关系是一对一关系
+    Init(L):初始化运算
+    构造一个新的线性表，若初始化成功，则返回OK，否则返回ERROR
+    Destroy(L):撤销运算
+    判断线性表L是否存在，若已存在，则撤销线性表L，否则返回ERROR
+    IsEmpty(L):判空运算
+    判断线性表L是否为空，若为空</div>
         </div>
       </a>
 
@@ -344,7 +391,7 @@ A:算法必须是有穷的，而程序不一定要满足有穷性。
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -353,7 +400,7 @@ A:算法必须是有穷的，而程序不一定要满足有穷性。
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

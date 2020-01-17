@@ -56,35 +56,35 @@
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/">首页</a>
+            <a class="nav-link" href="/">Home</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/archives/">归档</a>
+            <a class="nav-link" href="/archives/">Archives</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/categories/">分类</a>
+            <a class="nav-link" href="/categories/">Categories</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/tags/">标签</a>
+            <a class="nav-link" href="/tags/">Tags</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/about/">关于</a>
+            <a class="nav-link" href="/about/">About</a>
           </li>
         
         
@@ -132,6 +132,62 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/11/16/C++组第三次授课/">
+        <p class="h4 index-header">C++组第三次授课</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">C++组第三次授课 对于本视频中的视频，限于篇幅只给出一部分，其余部分请自行去bilibili相关链接，GitHub部分务必自学    
+
+
+
+友元函数类的友元函数是定义在类外部，但有权访问类的所有私有（private）成员和保护（protected）成员。尽管友元函数的原型有在类的定义中出现过，但是友元函数并不是成员函数。
+友元可以是一个函数，该函数被称为友元函数；友元也可以是一个类，该类被称为友元类，在这种情况下，整个类及其所有成员都是友元。
+如果要声明函数为一个类的友元，需要在类定义中该函数原型前使用关键字 friend，如下所示：
+class Box
+{
+   double width;
+public:
+   double length;
+   friend void printWidth( Box box );
+   void setWidth( double wid );
+};
+
+ 声明类 ClassTwo 的所有成员函数作为类 ClassOne 的友元，需要在类 ClassOne 的定义中放置如下声明： 
+friend class ClassTwo;
+
+ 请看下面的程序：</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-11-16&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/cpp%E6%95%99%E5%AD%A6">cpp教学</a>&nbsp;
+          
+            <a href="/categories/lesson3">lesson3</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/cpp%E6%95%99%E5%AD%A6">cpp教学</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
 
   <div class="row mb-4 mx-auto">
     
@@ -224,6 +280,168 @@ double balance[] = {1000.0, 2.0, 3</div>
             <a href="/tags/%E5%89%8D%E7%AB%AF">前端</a>&nbsp;
           
             <a href="/tags/%E6%AD%A3%E5%88%99">正则</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/10/22/Pygame 使用/">
+        <p class="h4 index-header">Pygame 使用</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Pygame 使用最小开发框架example:
+#管理员模式命令行
+python -m pygame.examples.aliens
+
+基本框架import pygame,sys
+#sys提供python运行时环境变量的操控
+pygame.init()                    #初始化，对pygame内部各功能模块进行初始化创建及变量设置，默认调用
+screen=pygame.display.set_mode((600,400))#设置显示窗口宽度高度，二值元组
+pygame.display.set_caption(&quot;标题名&quot;) #设置标题名
+
+while True:
+    for event in pygame.event.get():   #从pygame的事件队列中不断获取事件并逐类响应
+        if event.type==pygame.QUIT:
+            sys.exit()
+    pygame.display.update()             #屏幕刷新
+
+笛卡尔坐标系：原点在左上角
+图片引入及完善(小球</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-22&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Python">Python</a>&nbsp;
+          
+            <a href="/categories/pygame">pygame</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Python">Python</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/10/22/攻克二分/">
+        <p class="h4 index-header">攻克二分</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">攻克二分简单的二分bool bsearch(int a[],int left,int right,int tag){
+    while(left&lt;=right){
+        int mid=(left+right)&gt;&gt;1;
+        if(a[mid]==tag)
+            return true;
+        else
+            a[mid]&lt;tag?l=mid+1:r=mid-1;
+    }
+    return false;
+}
+
+这只是最普通的二分，实际上，二分还可以实现非等值查找，例如平时所说的二分求上界，二分求下界。
+所以有一下几种写法：
+
+区间的开闭-开区间还是闭区间
+
+左右端点-这个端点是和上面区间开闭联系的，具体表现为左开还是左闭，右开还是右闭
+
+中点取整还是进一-在计算中点时到底是(left+right)&gt;&gt;1还是(left+right+1)&gt;&gt;1
+
+大于还是小于-对应上下界问题
+
+取不取等于-是大于等于还是小于等于
+
+第一个还是最后一个-找第一个大于目标的位置还是最后一</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-22&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
+          
+            <a href="/categories/%E4%BA%8C%E5%88%86">二分</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/10/22/Node.js学习/">
+        <p class="h4 index-header">Node.js学习</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Node.js学习简介简单的说 Node.js 就是运行在服务端的 JavaScript。
+Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。
+Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。
+如果你是一个前端程序员，你不懂得像PHP、Python或Ruby等动态编程语言，然后你想创建自己的服务，那么Node.js是一个非常好的选择。
+Node.js 是运行在服务端的 JavaScript，如果你熟悉Javascript，那么你将会很容易的学会Node.js。
+当然，如果你是后端程序员，想部署一些高性能的服务，那么学习Node.js也是一个非常好的选择。
+第一个Node.js程序：Hello World！console.log(&quot;Hello World&quot;);
+
+
+安装node.js Node.js 安装包及源码下载地址为：https://nodejs.org/en/download/。 
+创建第一个应用如果我们使用PHP来编写后端</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-22&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E5%90%8E%E7%AB%AF">后端</a>&nbsp;
+          
+            <a href="/categories/node-js">node.js</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E5%90%8E%E7%AB%AF">后端</a>&nbsp;
           
         
       </div>
@@ -368,168 +586,6 @@ WHERE state=&#39</div>
     
     
     <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/10/22/Node.js学习/">
-        <p class="h4 index-header">Node.js学习</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Node.js学习简介简单的说 Node.js 就是运行在服务端的 JavaScript。
-Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。
-Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。
-如果你是一个前端程序员，你不懂得像PHP、Python或Ruby等动态编程语言，然后你想创建自己的服务，那么Node.js是一个非常好的选择。
-Node.js 是运行在服务端的 JavaScript，如果你熟悉Javascript，那么你将会很容易的学会Node.js。
-当然，如果你是后端程序员，想部署一些高性能的服务，那么学习Node.js也是一个非常好的选择。
-第一个Node.js程序：Hello World！console.log(&quot;Hello World&quot;);
-
-
-安装node.js Node.js 安装包及源码下载地址为：https://nodejs.org/en/download/。 
-创建第一个应用如果我们使用PHP来编写后端</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-22&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E5%90%8E%E7%AB%AF">后端</a>&nbsp;
-          
-            <a href="/categories/node-js">node.js</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E5%90%8E%E7%AB%AF">后端</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/10/22/Pygame 使用/">
-        <p class="h4 index-header">Pygame 使用</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Pygame 使用最小开发框架example:
-#管理员模式命令行
-python -m pygame.examples.aliens
-
-基本框架import pygame,sys
-#sys提供python运行时环境变量的操控
-pygame.init()                    #初始化，对pygame内部各功能模块进行初始化创建及变量设置，默认调用
-screen=pygame.display.set_mode((600,400))#设置显示窗口宽度高度，二值元组
-pygame.display.set_caption(&quot;标题名&quot;) #设置标题名
-
-while True:
-    for event in pygame.event.get():   #从pygame的事件队列中不断获取事件并逐类响应
-        if event.type==pygame.QUIT:
-            sys.exit()
-    pygame.display.update()             #屏幕刷新
-
-笛卡尔坐标系：原点在左上角
-图片引入及完善(小球</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-22&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Python">Python</a>&nbsp;
-          
-            <a href="/categories/pygame">pygame</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Python">Python</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/10/22/攻克二分/">
-        <p class="h4 index-header">攻克二分</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">攻克二分简单的二分bool bsearch(int a[],int left,int right,int tag){
-    while(left&lt;=right){
-        int mid=(left+right)&gt;&gt;1;
-        if(a[mid]==tag)
-            return true;
-        else
-            a[mid]&lt;tag?l=mid+1:r=mid-1;
-    }
-    return false;
-}
-
-这只是最普通的二分，实际上，二分还可以实现非等值查找，例如平时所说的二分求上界，二分求下界。
-所以有一下几种写法：
-
-区间的开闭-开区间还是闭区间
-
-左右端点-这个端点是和上面区间开闭联系的，具体表现为左开还是左闭，右开还是右闭
-
-中点取整还是进一-在计算中点时到底是(left+right)&gt;&gt;1还是(left+right+1)&gt;&gt;1
-
-大于还是小于-对应上下界问题
-
-取不取等于-是大于等于还是小于等于
-
-第一个还是最后一个-找第一个大于目标的位置还是最后一</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-22&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-            <a href="/categories/%E4%BA%8C%E5%88%86">二分</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
       <a href="/2019/10/12/Web前端知识汇总 (4)/">
         <p class="h4 index-header">Web 前端知识汇总（4）</p>
         
@@ -633,46 +689,6 @@ Q-Learning我先回顾一下Q-Learning算法。
     </div>
   </div>
 
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/10/01/TensorFlow/">
-        <p class="h4 index-header"></p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">TensorFlow基本概念
-使用图（graphs）来表示计算任务
-在被称之为会话（Session）的上下文（context）中执行图
-使用tensor表示数据
-通过变量（Variable）维护状态
-使用feed和fetch可以为任意的操作赋值或者从其中获取数据
-
-Tensorflow是一个编程系统，使用图（graphs）来表示计算任务，图（graphs）中的节点称之为op（operation），一个op获得0个或多个Tensor，执行计算，产生0个或多个Tensor。Tensor看作是一个n维的数组或列表。图必须在会话（Session）里被启动。
-
-常用模块NumPyNumPy(Numerical Python) 是 Python 语言的一个扩展程序库，支持大量的维度数组与矩阵运算，此外也针对数组运算提供大量的数学函数库。
-random.normal高斯分布的概率密度函数
-loc:float
-概率分布的均值，对应着整个分布的中心center
-scale:float
-概率分布的标准差，对应于分布的宽度，scale越大越矮胖，scale越小，越瘦高
-size:int or tuple o</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-01&nbsp;&nbsp;
-        
-        
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="index posts navigation">
@@ -709,7 +725,7 @@ size:int or tuple o</div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -718,7 +734,7 @@ size:int or tuple o</div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
