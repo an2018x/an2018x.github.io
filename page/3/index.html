@@ -137,6 +137,55 @@
     
     
     <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/10/09/从Q-Learning 到 DQN/">
+        <p class="h4 index-header">DQN</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">从Q-Learning 到 DQN国庆时一直在搞DQN，但感觉对于其基本原理还没有了解的很透彻，今天把物理作业写完了，正好可以总结一下。
+Q-Learning我先回顾一下Q-Learning算法。
+为了得到最优策略Policy，我们考虑估算每一个状态下每一种选择的价值有多大。然后我们通过分析发现，每一个时间片的Q(s,a)和当前得到的Reward以及下一个时间片的Q(s,a)有关。那么首先一个疑点就是如何得到下一个时间的Q值，这个也困扰了我很长的时间。其实，Q-Learing是建立在多次训练的基础上的，这意味着我们可以把之前的计算过的Q值拿来使用。这样，就可以根据当前的Reward以及上次实验中的数据来更新Q值，下面详细阐述一下相关算法：
+
+对于Q-Learning，关键就在于如何存储Q值，最简单的方法是使用表格或者是矩阵来维护Q值，我们创建一个表格，行为s，纵为a，里面的数字代表Q值（一般称为Q值表）：
+
+接下来就是更新的事了，主要有四个步骤：
+
+初始化Q值表，比如可以初始化为0
+
+开始训练，根据当前的Q矩阵以及$\epsilon-greedy$方法获取动作。比如当前处在状态s1，那</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-09&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0">深度强化学习</a>&nbsp;
+          
+            <a href="/categories/%E8%B4%AA%E5%90%83%E8%9B%87AI">贪吃蛇AI</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E8%B4%AA%E5%90%83%E8%9B%87AI">贪吃蛇AI</a>&nbsp;
+          
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0">深度学习</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
       <a href="/2019/10/01/TensorFlow/">
         <p class="h4 index-header"></p>
         
@@ -168,56 +217,6 @@ size:int or tuple o</div>
           <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-01&nbsp;&nbsp;
         
         
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/09/30/Python知识汇总/">
-        <p class="h4 index-header">Python知识汇总</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Python知识汇总Hello Worldprint(&quot;hello world!&quot;);
-
-基础语法交互式编程不通过脚本文件作为参数使用 Python 解释器的交互模式，提示窗口如下：
-$ python
-Python 2.7.6 (default, Mar 22 2014, 22:59:56)
-[GCC 4.8.2] on linux2
-Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
-&gt;&gt;&gt;
-
-在 python 提示符中输入以下文本信息，然后按 Enter 键查看运行效果：
-&gt;&gt;&gt; print &quot;Hello, Python!&quot;;
-
-如果您运行的是新版本的Python，那么你就需要在print语句中使用括号如：
-&gt;&gt;  print (&quot;Hello, Python!&quot;);
-
-脚本式编程通过脚本参数调用解释器开始执行</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2019-09-30&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Python">Python</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Python">Python</a>&nbsp;
-          
         
       </div>
     </div>
@@ -591,40 +590,50 @@ Status Init(SeqList *L,int mSize){
     
     
     <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/09/22/博客个性/">
-        <p class="h4 index-header">博客个性化</p>
+      <a href="/2019/09/22/数组/">
+        <p class="h4 index-header">数组</p>
         
         
           
         
         <div class="index-excerpt" >
-          <div class="index-text mb-1">博客个性化浏览数量将next的_config.yml文件设置如下：
-#Show PV/UV of the website/page with busuanzi.
+          <div class="index-text mb-1">数组由数量固定且类型相同的数据元素组成的有序集合。
+是实现数据顺序存储表示的基本数据结构。
+线性表、树、图、集合等借助数组实现顺序存储。
+数组的基本概念数组与结构体
+线性表是通过结构体来定义线性表类型的。
+顺序表实现时，在结构体内部定义了一个数组。
+相同点：类型变量一旦定义，一次性申请连续存储空间用于存放指定数量的数据元素。
+不同点：
 
-#Get more information on http://ibruce.info/2015/04/04/busuanzi/
 
-busuanzi_count:
 
-count values only if the other configs are false
 
-  enable: true
+数组元素
+结构体成员
 
-# custom uv span for the whole site
 
-  site_uv: true
-  site_uv_header: 本站访客数
-  site_uv_footer: 人次
 
-# custom pv span for the whole site
 
-  site_pv: true
-  site_pv_header: 本站总访问量
-  site_pv_footer: 次
+相同类型
+多重类型
 
-# custom pv span for one page only
 
-  page_pv: true
-  page_pv_header: 本</div>
+用下标(index)标识
+由域名(field name)引用
+
+
+
+
+数组与指针
+数组名本身存储了指针值，其保存数组的首地址。
+借助指针可以实现动态数组
+C语言提供的数组实现方式都是静态数组，必须在创建时就指定数组长度为一个确定值。
+动态数组通过malloc来获取所需空间
+数组的顺序存储一维数组可直接映射到存储空间中。
+设给长度为n的一维数组a所分配的存储块的起始地址是$Loc(a[0])$，若已知a的每个元素占k个存储单元，则下标为i的数组元素$a[i]$的存放地址是：
+
+Loc(a[i])=Loc(a[0])+i*k \space \space 0\leq i</div>
         </div>
       </a>
 
@@ -635,13 +644,13 @@ count values only if the other configs are false
         
           <i class="iconfont icon-inbox"></i>
           
-            <a href="/categories/%E5%8D%9A%E5%AE%A2">博客</a>&nbsp;
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>&nbsp;
           &nbsp;
         
         
           <i class="iconfont icon-tag"></i>
           
-            <a href="/tags/%E5%8D%9A%E5%AE%A2">博客</a>&nbsp;
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>&nbsp;
           
         
       </div>
@@ -755,7 +764,7 @@ count values only if the other configs are false
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "备战期末考试中。。。&nbsp;",
+        "学习中。。。。&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
