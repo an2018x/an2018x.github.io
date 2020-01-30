@@ -137,6 +137,60 @@
     
     
     <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/10/22/Pygame 使用/">
+        <p class="h4 index-header">Pygame 使用</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Pygame 使用最小开发框架example:
+#管理员模式命令行
+python -m pygame.examples.aliens
+
+基本框架import pygame,sys
+#sys提供python运行时环境变量的操控
+pygame.init()                    #初始化，对pygame内部各功能模块进行初始化创建及变量设置，默认调用
+screen=pygame.display.set_mode((600,400))#设置显示窗口宽度高度，二值元组
+pygame.display.set_caption(&quot;标题名&quot;) #设置标题名
+
+while True:
+    for event in pygame.event.get():   #从pygame的事件队列中不断获取事件并逐类响应
+        if event.type==pygame.QUIT:
+            sys.exit()
+    pygame.display.update()             #屏幕刷新
+
+笛卡尔坐标系：原点在左上角
+图片引入及完善(小球</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-22&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Python">Python</a>&nbsp;
+          
+            <a href="/categories/pygame">pygame</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Python">Python</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
       <a href="/2019/10/12/Web前端知识汇总 (4)/">
         <p class="h4 index-header">Web 前端知识汇总（4）</p>
         
@@ -584,60 +638,6 @@ Agent与环境的交互过程在每个时间步长，Agent 观察环境得到状
             <a href="/tags/%E5%89%8D%E7%AB%AF">前端</a>&nbsp;
           
             <a href="/tags/HTML">HTML</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2019/09/23/数据结构实验一/">
-        <p class="h4 index-header">数据结构实验一</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">实验1    线性表及多项式的运算1、顺序表的基本操作
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#define Elemtype int
-#define ERROR 0
-#define OK 1
-#define Overflow 2               //上溢
-#define Underflow 3                //下溢
-#define NotPresent 4            //元素不存在
-#define Duplicate 5             //有重复元素
-typedef struct seqList{
-    int n;
-    int maxLength;
-    Elemtype *element;
-}SeqList;
-typedef int Status;
-Status Init(SeqList *L,int mSize){
-    L-&gt;maxLength=mSize;
-    L-&gt;n=0;
-    L-&gt;element=(Elemtype *</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2019-09-23&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>&nbsp;
           
         
       </div>

@@ -15,7 +15,7 @@
   <meta name="description" content>
   <meta name="author" content="AN">
   <meta name="keywords" content>
-  <title>Archives ~ An&#39;s personal blog</title>
+  <title>LeetCode专题（字符串） ~ An&#39;s personal blog</title>
 
   <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
@@ -36,7 +36,7 @@
 
 
 <body>
-  <header style="height: 80vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -99,7 +99,7 @@
 </nav>
 
     <div class="view intro-2" id="background"
-         style="background: url('/img/default.png')no-repeat center center;
+         style="background: url('https://animg.oss-cn-shanghai.aliyuncs.com/wallhaven-ymwmek.jpg')no-repeat center center;
            background-size: cover;
            background-attachment: fixed;">
       <div class="full-bg-img">
@@ -109,6 +109,22 @@
               
             </span>
 
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Wednesday, January 30th 2019, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
             
           </div>
 
@@ -120,83 +136,134 @@
 
   <main>
     
-      <div class="container nopadding-md">
-        <div class="py-5 z-depth-3" id="board">
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">37 posts in total.</p>
-  <hr>
-  
-    
       
-      <p class="h5">2019</p>
-    
-    <a href="/2019/09/23/数据结构实验一/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">数据结构实验一</span>
-      <span style="float: right;">09-23</span>
-    </a>
-  
-    
-    <a href="/2019/09/22/线性表/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">线性表</span>
-      <span style="float: right;">09-22</span>
-    </a>
-  
-    
-    <a href="/2019/09/22/数组/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">数组</span>
-      <span style="float: right;">09-22</span>
-    </a>
-  
-    
-    <a href="/2019/09/22/数据结构绪论/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">绪论</span>
-      <span style="float: right;">09-22</span>
-    </a>
-  
-    
-    <a href="/2019/09/22/博客个性/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">博客个性化</span>
-      <span style="float: right;">09-22</span>
-    </a>
-  
-    
-    <a href="/2019/09/21/第一篇博客/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">第一篇博客</span>
-      <span style="float: right;">09-21</span>
-    </a>
-  
-    
-    <a href="/2019/01/30/LeetCode专题（字符串）/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">LeetCode专题（字符串）</span>
-      <span style="float: right;">01-30</span>
-    </a>
-  
-</div>
 
-  <nav aria-label="index posts navigation">
-    <span class="pagination pg-blue justify-content-center mt-5" id="pagination">
-      <a class="extend prev" rel="prev" href="/archives/page/3/"><i class="fas fa-angle-double-left"></i></a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span>
-    </span>
-  </nav>
-  
-  <script>
-    for (ele of document.getElementById("pagination").getElementsByClassName("page-number")) {
-      ele.href += '#board';
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>整理做过的LeetCode上的题目。</p>
+<a id="more"></a>
+<h2 id="LeetCode专题（字符串）"><a href="#LeetCode专题（字符串）" class="headerlink" title="LeetCode专题（字符串）"></a>LeetCode专题（字符串）</h2><p>主要整理了一些字符串类算法题的做法，由于相对简单一点，先整理这个专题。</p>
+<p>我还是比较喜欢LeetCode这个平台的，对于传统的OJ平台输入输出数据占据大量时间，LeetCode能让我把大部分精力放在算法本身上。</p>
+<h3 id="38-外观数列"><a href="#38-外观数列" class="headerlink" title="38.外观数列"></a>38.外观数列</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/count-and-say/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/count-and-say/</a></p>
+<p>比较经典的一道题目了，南邮以前有个比赛好像出到过这样类似的题。</p>
+<p>大概意思就是根据前一个数字串来生成一个新的数字串。</p>
+<p>例如:</p>
+<p>21: 一个2，一个1，故生成为 1211</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    string countAndSay(int n) {
+        string st=&quot;1&quot;;
+        for(int i=0;i&lt;n-1;i++){
+            string ans;
+            for(int j=0;j&lt;st.size();j++){
+                int k=j;
+                while(st[k]==st[j]&amp;&amp;k!=st.size()) k++;
+                ans+=to_string(k-j);
+                ans+=st[j];
+                j=k-1;
+            }
+            st=ans;
+        }
+        return st;
     }
-  </script>
+};
+</code></pre>
+<p>先说一下LeetCode是怎么用的，这个跟我们以往的OJ不同，它不需要你手动输入数据，然后从头到尾把程序完整地写下来。它只提供给你一个类和一个函数，输入文件通过参数传入，你的结果通过<code>return</code>语句返回。结合这个程序应该很好理解。</p>
+<p>然后说一下这题的思路，主要难点就在于对重复字符的判断，这里我们通过一个循环，用<code>j</code>和<code>k</code>分别表示重复字符串的头尾，就好处理了。</p>
+<h3 id="49-字母异位词分组"><a href="#49-字母异位词分组" class="headerlink" title="49.字母异位词分组"></a>49.字母异位词分组</h3><p>题目链接<a href="https://leetcode-cn.com/problems/group-anagrams/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/group-anagrams/</a></p>
+<p>典型的哈希类型的题目，将字母排序，然后将排序结果一致的放入一个哈希表里面，输出哈希表就行了。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs) {
+        unordered_map&lt;string,vector&lt;string&gt;&gt; hash;
+        for(auto s : strs){
+            string st=s;
+            sort(st.begin(),st.end());
+            hash[st].push_back(s);
+        }
+        vector&lt;vector&lt;string&gt;&gt; vec;
+        for(auto item : hash)  vec.push_back(item.second);
+        return vec;
+    }
+};
+</code></pre>
+<h3 id="151-翻转字符串里的单词"><a href="#151-翻转字符串里的单词" class="headerlink" title="151.翻转字符串里的单词"></a>151.翻转字符串里的单词</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/reverse-words-in-a-string/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/reverse-words-in-a-string/</a></p>
+<p>这个题目的话，如果有知道一个叫做 <code>stringstream</code>的类就比较好做，难点在于消除单词间的空格。</p>
+<p>当然，也可以用类似第一题的方法消除连续的空格。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    string reverseWords(string s) {
+        stringstream ss(s);
+        vector&lt;string&gt; vec;
+        string str;
+        while(ss&gt;&gt;str) vec.push_back(str);
+        string ans;
+        for(int i=vec.size()-1;i&gt;=0;i--){
+            if(i==0) ans+=vec[i];
+            else ans+=vec[i]+&#39; &#39;;
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>先写这些，慢慢写，主要整理一些做过的题目。</p>
 
-
-              </div>
-            </div>
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95">算法</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95">算法</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html" rel="nofollow noopener">CC BY-SA 4.0协议</a> 。转载请注明出处！</p>
+            
           </div>
         </div>
       </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
     
   </main>
 
@@ -257,6 +324,11 @@
 
 
 
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
 
 
   <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
@@ -283,7 +355,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Archive&nbsp;",
+        "LeetCode专题（字符串）&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

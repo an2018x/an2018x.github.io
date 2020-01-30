@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>Python高级(Django) ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://animg.oss-cn-shanghai.aliyuncs.com/wallhaven-ymwmek.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Thursday, January 30th 2020, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>之前就写过这个博客，今天翻出来看，发现之前写的博客Django版本居然是1.x版本的，现在3.0版本都有了，于是重新写一下最新版本的，主要参照Django官方文档来写。</p>
+<a id="more"></a>
+<h2 id="Django3-0-教程"><a href="#Django3-0-教程" class="headerlink" title="Django3.0 教程"></a>Django3.0 教程</h2><p>这个教程用来写一个基本的投票程序，包括两部分。</p>
+<ul>
+<li>一个让人们查看和投票的公共站点</li>
+<li>一个让你能添加、修改、删除投票的管理站点</li>
+</ul>
+<h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><p>我们先用一些自动生成的代码配置一个<code>Django Project</code>（即一个Django项目实例所需要的设置项集合，包括数据库配置、Django配置、应用程序配置。</p>
+<p>打开命令行、<code>cd</code>到一个项目目录，运行以下命令。</p>
+<p>我是在Python虚拟环境下安装Django的，推荐这么做，嫌麻烦直接忽视我这句话吧。</p>
+<pre><code class="lang-shell">(pydj) D:\&gt;cd D:\Python\vote
+(pydj) D:\Python\vote&gt;django-admin startproject mysite
+</code></pre>
+<blockquote>
+<p>Django 项目代码最好不要放在Web服务器的文档根目录（例如<code>/var/www</code>）。这样可能会让其他人看到你的代码，不利于网络的安全。</p>
+</blockquote>
+<p>看一下自动生成目录结构</p>
+<pre><code class="lang-shell">(pydj) D:\Python\vote&gt;dir /b
+mysite
+
+(pydj) D:\Python\vote&gt;cd mysite
+
+(pydj) D:\Python\vote\mysite&gt;dir /b
+manage.py
+mysite
+
+(pydj) D:\Python\vote\mysite&gt;cd mysite
+
+(pydj) D:\Python\vote\mysite\mysite&gt;dir /b
+asgi.py
+settings.py
+urls.py
+wsgi.py
+__init__.py
+</code></pre>
+<pre><code>mysite/
+    manage.py
+    mysite/
+        __init__.py
+        settings.py
+        urls.py
+        asgi.py
+        wsgi.py
+</code></pre><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/t1.gif" srcset="/img/loading.gif" alt></p>
+<p>来看看各个文件、文件夹的作用：</p>
+<ul>
+<li>最外面的<code>mysite/</code>是项目的容器（官方文档写的是container，应该就是容器的意思），可以任意改名</li>
+<li><code>manage.py</code>是一个让你用各种方式管理Django项目的命令行工具的代码</li>
+<li>最里面的<code>mysite/</code>包含项目，是一个纯Python包，我们可以用例如<code>mysite.urls</code>来引用内部的Python包</li>
+<li><code>__init__.py</code>，是一个空文件，用来告诉Python这个目录应该被认为是一个Python包，就像上面一条说的那样</li>
+<li><code>settings.py</code>，Django项目的配置文件。</li>
+<li><code>urls.py</code>，Django项目的URL声明，指出你网站的目录。</li>
+<li><code>asgi.py</code>，是一个<code>ASGI</code>兼容服务器的入口</li>
+<li><code>wsgi.py</code>，是一个<code>WSGI</code>兼容服务器的入口</li>
+</ul>
+<h3 id="用于开发的简易服务器"><a href="#用于开发的简易服务器" class="headerlink" title="用于开发的简易服务器"></a>用于开发的简易服务器</h3><p>让我们来确认一下你的 Django 项目是否真的创建成功了。如果你的当前目录不是外层的 <code>mysite</code> 目录的话，请切换到此目录，然后运行下面的命令：</p>
+<pre><code class="lang-shell">(pydj) D:\Python\vote\mysite&gt;python manage.py runserver
+</code></pre>
+<p>对应输出：</p>
+<pre><code>Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 17 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run &#39;python manage.py migrate&#39; to apply them.
+January 30, 2020 - 08:57:35
+Django version 3.0.2, using settings &#39;mysite.settings&#39;
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+</code></pre><p>你刚刚启动的是 Django 自带的用于开发的简易服务器，它是一个用纯 Python 写的轻量级的 Web 服务器。我们将这个服务器内置在 Django 中是为了让你能快速的开发出想要的东西，因为你不需要进行配置生产级别的服务器（比如 Apache）方面的工作，除非你已经准备好投入生产环境了。</p>
+<p>现在是个提醒你的好时机：<strong>千万不要</strong> 将这个服务器用于和生产环境相关的任何地方。这个服务器只是为了开发而设计的。</p>
+<p>现在，服务器正在运行，浏览器访问 <a href="https://127.0.0.1:8000/。你将会看到一个“祝贺”页面，随着一只火箭发射，服务器已经运行了。" target="_blank" rel="noopener">https://127.0.0.1:8000/。你将会看到一个“祝贺”页面，随着一只火箭发射，服务器已经运行了。</a></p>
+<blockquote>
+<p>更换端口</p>
+<p>默认情况下，<code>runserver</code>命令会将服务器设置为监听本机内部 IP 的 8000 端口。</p>
+<p>如果你想更换服务器的监听端口，请使用命令行参数。举个例子，下面的命令会使服务器监听 8080 端口：</p>
+<pre><code>...\&gt; py manage.py runserver 8080
+</code></pre><p>会自动重新加载的服务器<code>runserver</code></p>
+<p>用于开发的服务器在需要的情况下会对每一次的访问请求重新载入一遍 Python 代码。所以你不需要为了让修改的代码生效而频繁的重新启动服务器。然而，一些动作，比如添加新文件，将不会触发自动重新加载，这时你得自己手动重启服务器。</p>
+</blockquote>
+<h3 id="创建投票应用"><a href="#创建投票应用" class="headerlink" title="创建投票应用"></a>创建投票应用</h3><p>现在你的开发环境——这个“项目” ——已经配置好了，你可以开始干活了。</p>
+<p>在 Django 中，每一个应用都是一个 Python 包，并且遵循着相同的约定。Django 自带一个工具，可以帮你生成应用的基础目录结构，这样你就能专心写代码，而不是创建目录了。</p>
+<blockquote>
+<p>项目 VS 应用</p>
+<p>应用是为了实现某个特定功能的小组件，项目是应用的集合，一个项目可以有多个应用，而一个应用也可以用在多个项目中。</p>
+</blockquote>
+<p>你的应用可以存放在任何 Python path 中定义的路径。在这个教程中，我们将在你的 manage.py 同级目录下创建投票应用。这样它就可以作为顶级模块导入，而不是 mysite 的子模块。</p>
+<p>请确定你现在处于 <code>manage.py</code> 所在的目录下，然后运行这行命令来创建一个应用：</p>
+<pre><code class="lang-shell">(pydj) D:\Python\vote\mysite&gt;python manage.py startapp polls
+</code></pre>
+<p>这会生成一个<code>polls</code>目录，结构如下：</p>
+<pre><code>polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+</code></pre><p><img src="https://animg.oss-cn-shanghai.aliyuncs.com/t2.gif" srcset="/img/loading.gif" alt></p>
+<h3 id="编写第一个视图"><a href="#编写第一个视图" class="headerlink" title="编写第一个视图"></a>编写第一个视图</h3><p>让我们开始编写第一个视图吧。打开 <code>polls/views.py</code>，把下面这些 Python 代码输入进去：</p>
+<pre><code class="lang-python">from django.shortcuts import render
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse(&quot;Hello World&quot;)
+</code></pre>
+<p>这是 Django 中最简单的视图。如果想看见效果，我们需要将一个 URL 映射到它——这就是我们需要 <code>URLconf</code>的原因了。</p>
+<p>为了创建 <code>URLconf</code>，请在 polls 目录里新建一个 <code>urls.py</code> 文件。你的应用目录现在看起来应该是这样：</p>
+<pre><code>polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    urls.py
+    views.py
+</code></pre><p>在<code>polls/urls.py</code>中，输入如下代码：</p>
+<pre><code class="lang-python">from django.urls import path
+from . import views
+
+urlpatterns=[
+    path(&#39;&#39;,views.index,name=&#39;index&#39;),
+]
+</code></pre>
+<p>下一步是在根<code>URL.conf</code>文件中指定我们创建的<code>polls.urls</code>模块。在<code>mysite/urls.py</code>文件的<code>urlpatterns</code>列表里插入一个<code>include()</code>，如下：</p>
+<pre><code class="lang-python">from django.contrib import admin
+from django.urls import include,path
+
+urlpatterns = [
+    path(&#39;polls/&#39;,include(&#39;polls.urls&#39;)),
+    path(&#39;admin/&#39;, admin.site.urls),
+]
+</code></pre>
+<p>函数<code>include()</code>允许引用其他<code>URLconfs</code>。每当<code>Django</code>遇到<code>include()</code>时，它会截断与此项匹配的URL部分，并将剩余的字符串发送到<code>URLconf</code>以供进一步处理。</p>
+<p>我们设计<code>include()</code>的理念是使其即插即用。因为投票应用有它自己的<code>URLconf(polls/urls.py)</code>，它们能够被放在<code>/polls/</code>,<code>/fun_polls</code>，<code>/content/polls</code>或者其他任何路径下，这个应用都能正常工作。</p>
+<blockquote>
+<p>何时使用<code>include()</code></p>
+<p>当包括其他URL模式时，你总应该使用<code>include()</code></p>
+</blockquote>
+<p>你现在把<code>index</code>视图添加进了<code>URLconf</code>。通过以下命令验证是否正常工作：</p>
+<pre><code class="lang-shell">(pydj) D:\Python\vote\mysite&gt;python manage.py runserver
+</code></pre>
+<p>用你的浏览器访问 <a href="http://localhost:8000/polls/，你应该能够看见" target="_blank" rel="noopener">http://localhost:8000/polls/，你应该能够看见</a> “*Hello World” ，这是你在 <code>index</code> 视图中定义的。</p>
+<p>函数<code>path()</code>具有四个参数，两个必须参数：<code>route</code>，<code>view</code>，两个可选参数<code>kwargs</code>和<code>name</code>。</p>
+<p><strong><code>route</code>参数</strong></p>
+<p><code>route</code>是一个匹配URL的准则（类似正则表达式）。当Django响应一个请求时，它会从<code>urlpatterns</code>的第一项开始，按序匹配列表中的项，直到找到匹配的项。</p>
+<p>这些准则不会匹配GET和POST参数或域名。</p>
+<p>例如，<code>URLconf</code> 在处理请求 <code>https://www.example.com/myapp/</code> 时，它会尝试匹配 <code>myapp/</code> 。处理请求 <code>https://www.example.com/myapp/?page=3</code> 时，也只会尝试匹配 <code>myapp/</code></p>
+<p><strong>view参数</strong></p>
+<p>当<code>Django</code>找到了一个匹配的准则，就会调用这个特定的视图函数，并传入一个<code>HttpRequest</code>对象作为第一个参数，被捕获的参数以关键字的形式传入。</p>
+<p><strong><code>kwargs</code>参数</strong></p>
+<p>任意给关键字可以作为一个字典传递给目标视图函数。</p>
+<p><strong><code>name</code>参数</strong></p>
+<p>为你的URL取名能使你在<code>Django</code>的任意地方唯一地引用它，尤其在模板中。这个有用的特性允许只改一个文件就能全局地修改某个URL模式。</p>
+<h3 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h3><p>现在，打开 <code>mysite/settings.py</code> 。这是个包含了 Django 项目设置的 Python 模块。</p>
+<p>通常，这个配置文件使用<code>SQLite</code>作为默认数据库，如果不熟悉数据库，这是最简单的选择。Python 内置 SQLite，所以你无需安装额外东西来使用它。当你开始一个真正的项目时，你可能更倾向使用一个更具扩展性的数据库，例如 PostgreSQL，避免中途切换数据库这个令人头疼的问题。</p>
+<p>如果想要使用其他数据库，需要安装合适的<code>database bindings</code>。然后改变设置文件中<code>DATABASES &#39;default&#39;</code>中的一些键值：</p>
+<ul>
+<li><p>ENGINE-可选值有</p>
+<p><code>&#39;django.db.backends.sqlite3&#39;</code>，<code>&#39;django.db.backends.postgresql&#39;</code>，<code>&#39;django.db.backends.mysql&#39;</code>，或 <code>&#39;django.db.backends.oracle&#39;</code>。</p>
+</li>
+<li><p>NAME-数据库的名称，如果使用的是SQLite，数据库将是电脑上的一个文件，在这种情况下，NAME应该是此文件夹的绝对路径，包括文件名。默认值<code>os.path.join(BASE_DIR, &#39;db.sqlite3&#39;)</code> 将会把数据库文件储存在项目的根目录。</p>
+</li>
+</ul>
+<pre><code class="lang-python">DATABASES = {
+    &#39;default&#39;: {
+        &#39;ENGINE&#39;: &#39;django.db.backends.sqlite3&#39;,
+        &#39;NAME&#39;: os.path.join(BASE_DIR, &#39;db.sqlite3&#39;),
+    }
+}
+</code></pre>
+<p>编辑 <code>mysite/settings.py</code> 文件前，先设置 TIME_ZONE 为你自己时区。默认的是上海的<code>UTC</code>时区。</p>
+<p>此外，关注一下文件头部的<code>INSTALLED_APPS</code>设置项，这里包括了会在你项目中启用的所有 Django 应用。应用能在多个项目中使用，你也可以打包并且发布应用，让别人使用它们。</p>
+<p>通常，<code>INSTALLED_APPS</code>默认包括了以下Django的自带应用。</p>
+<pre><code class="lang-python">INSTALLED_APPS = [
+    &#39;django.contrib.admin&#39;,   # 管理员站点
+    &#39;django.contrib.auth&#39;,    # 认证授权系统
+    &#39;django.contrib.contenttypes&#39;, # 内容类型框架
+    &#39;django.contrib.sessions&#39;,   # 会话框架
+    &#39;django.contrib.messages&#39;,    # 消息框架
+    &#39;django.contrib.staticfiles&#39;,   # 管理静态文件的框架
+]
+</code></pre>
+<p>这些应用被默认启用是为了给常规项目提供方便。</p>
+<p>默认开启的某些应用需要至少一个数据表，所以，在使用他们之前需要在数据库中创建一些表。请执行以下命令：</p>
+<pre><code class="lang-shell">(pydj) D:\Python\vote\mysite&gt;python manage.py migrate
+</code></pre>
+<p><code>migrate</code>命令查看<code>INSTALLED_APPS</code>的设置并且根据<code>mysite/settings.py</code>文件的设置来创建数据表，还有由<code>app</code>迁移而来的数据库。在输出中，我们将会看到应用的每一个迁移。</p>
+<h3 id="创建模型"><a href="#创建模型" class="headerlink" title="创建模型"></a>创建模型</h3><p>在 Django 里写一个数据库驱动的 Web 应用的第一步是定义模型 - 也就是数据库结构设计和附加的其它元数据。</p>
+<blockquote>
+<p>模型是真实数据的简单明确的描述。它包含了储存的数据所必要的字段和行为。Django 遵循 <code>DRY Principle</code>。它的目标是你只需定义数据模型，然后其他的代码都会自动生成。</p>
+</blockquote>
+<p>在我们的投票应用里，我们会创建两个模型：<code>Question</code>和<code>Choice</code>。<code>Question</code>有一个问题和出版日期数据，<code>Choice</code>包括两个<code>field</code>，选择的文本和投票记录。每个<code>Choice</code>和<code>Question</code>相联系。</p>
+<p>这些概念通过Python的类来表达，我们来编辑<code>polls/models.py</code>文件。</p>
+<pre><code class="lang-python">from django.db import models
+
+class Question(models.Model):
+    question_text=models.CharField(max_length=200)
+    pub_date=models.DateField(&#39;date published&#39;)
+
+class Choice(models.Model):
+    question=models.ForeignKey(Question,on_delete=models.CASCADE)
+    choice_text=models.CharField(max_length=200)
+    votes=models.IntegerField(default=0)
+</code></pre>
+<p>每个模型由一个继承自<code>django.db.models.Model</code>的类来代表。每个模型有一系列类中的变量，每一个都代表模型中的一个数据库字段。</p>
+<p>每个字段都是<code>Field</code>类的实例，比如，字符字段表示<code>CharField</code>，日期字段表示为<code>DataTimeField</code>。这将告诉<code>Django</code>每个字段要处理的数据类型。</p>
+<p>每个<code>Field</code>类实例变量的名字也是字段名，所以最好使用对机器友好的格式。你将会在 Python 代码里使用它们，而数据库会将它们作为列名。</p>
+<p>你可以使用可选的选项为<code>Field</code>定义一个人类可读的名字。个功能在很多 Django 内部组成部分中都被使用了，而且作为文档的一部分。如果某个字段没有提供此名称，Django 将会使用对机器友好的名称，也就是变量名。在上面的例子中，我们只为 <code>Question.pub_date</code> 定义了对人类友好的名字。对于模型内的其它字段，它们的机器友好名也会被作为人类友好名使用。</p>
+<p>定义某些<code>Field</code>实例需要参数，例如<code>CharField</code>需要一个<code>max_length</code>参数。这个参数的用处不止于用来定义数据库结构，也用于验证数据，我们稍后将会看到这方面的内容。</p>
+<p><code>Field</code>也能接收多个可选参数，在上面的例子中：我们将 <code>votes</code> 的 <code>default</code>默认值设为0.</p>
+<p>最后，我们用<code>ForeignKey</code>定义了一个关系，这告诉Django，每个<code>Choice</code>对象都关联到一个<code>Question</code>对象。Django 支持所有常用的数据库关系：多对一、多对多和一对一。</p>
+<h3 id="激活模型"><a href="#激活模型" class="headerlink" title="激活模型"></a>激活模型</h3><p>上面的一小段用于创建模型的代码给了 Django 很多信息，通过这些信息，Django 可以：</p>
+<ul>
+<li>为这个应用创建数据库 schema（生成 <code>CREATE TABLE</code> 语句）。</li>
+<li>创建可以与 <code>Question</code> 和 <code>Choice</code> 对象进行交互的 Python 数据库 API。</li>
+</ul>
+<blockquote>
+<p>Django 应用是“可插拔”的。你可以在多个项目中使用同一个应用。除此之外，你还可以发布自己的应用，因为它们并不会被绑定到当前安装的 Django 上。</p>
+</blockquote>
+<p>为了在我们的工程中包含这个应用，我们需要在配置类`INSTALLED_APPS中添加设置。</p>
+<p>因为<code>PollsConfig</code>类写在文件<code>polls/apps.py</code>中，所以它的点式路径是<code>&#39;polls.apps.PollsConfig&#39;</code>。在文件<code>mysite/settings.py</code>中<code>INSTALLED_APPS</code>子项添加点式路径后：</p>
+<pre><code class="lang-python">INSTALLED_APPS = [
+    &#39;polls.apps.PollsConfig&#39;,
+    &#39;django.contrib.admin&#39;,
+    &#39;django.contrib.auth&#39;,
+    &#39;django.contrib.contenttypes&#39;,
+    &#39;django.contrib.sessions&#39;,
+    &#39;django.contrib.messages&#39;,
+    &#39;django.contrib.staticfiles&#39;,
+]
+</code></pre>
+<p>现在你的 Django 项目会包含 <code>polls</code> 应用。接着运行下面的命令:</p>
+<pre><code class="lang-shell">D:\Python\vote\mysite&gt;python manage.py makemigrations polls
+</code></pre>
+<p>输出</p>
+<pre><code class="lang-shell">Migrations for &#39;polls&#39;:
+  polls\migrations\0001_initial.py
+    - Create model Question
+    - Create model Choice
+</code></pre>
+<p>通过运行 <code>makemigrations</code> 命令，Django 会检测你对模型文件的修改（在这种情况下，你已经取得了新的），并且把修改的部分储存为一次 迁移。</p>
+<p>迁移是Django存储你模型更改信息的方式，它们都是文件。例如<code>0001_initial.py</code>。</p>
+<p>Django有一个自动执行数据库迁移并同步管理数据库结构的命令-<code>migrate</code>。我们先看看迁移命令会执行那些sql语句。<code>sqlmigrate</code>命令接收一个迁移的名称，然后返回对应的 SQL：</p>
+<pre><code class="lang-sql">(pydj) D:\Python\vote\mysite&gt;python manage.py sqlmigrate polls 0001
+BEGIN;
+--
+-- Create model Question
+--
+CREATE TABLE &quot;polls_question&quot; (&quot;id&quot; integer NOT NULL PRIMARY KEY AUTOINCREMENT, &quot;question_text&quot; varchar(200) NOT NULL, &quot;pub_date&quot; date NOT NULL);
+--
+-- Create model Choice
+--
+CREATE TABLE &quot;polls_choice&quot; (&quot;id&quot; integer NOT NULL PRIMARY KEY AUTOINCREMENT, &quot;choice_text&quot; varchar(200) NOT NULL, &quot;votes&quot; integer NOT NULL, &quot;question_id&quot; integer NOT NULL REFERENCES &quot;polls_question&quot; (&quot;id&quot;) DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX &quot;polls_choice_question_id_c5b4b260&quot; ON &quot;polls_choice&quot; (&quot;question_id&quot;);
+COMMIT;
+</code></pre>
+<p>现在，再次运行<code>migrate</code>命令，在数据库里创建新定义的模型的数据表：</p>
+<pre><code class="lang-shell">(pydj) D:\Python\vote\mysite&gt;python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Applying polls.0001_initial... OK
+</code></pre>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/Python">Python</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/Python">Python</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html" rel="nofollow noopener">CC BY-SA 4.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Python高级(Django)&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
