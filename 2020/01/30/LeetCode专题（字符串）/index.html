@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>LeetCode专题（字符串） ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://animg.oss-cn-shanghai.aliyuncs.com/wallhaven-ymwmek.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Thursday, January 30th 2020, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>整理做过的LeetCode上的题目。</p>
+<a id="more"></a>
+<h2 id="LeetCode专题（字符串）"><a href="#LeetCode专题（字符串）" class="headerlink" title="LeetCode专题（字符串）"></a>LeetCode专题（字符串）</h2><p>主要整理了一些字符串类算法题的做法，由于相对简单一点，先整理这个专题。</p>
+<p>我还是比较喜欢LeetCode这个平台的，对于传统的OJ平台输入输出数据占据大量时间，LeetCode能让我把大部分精力放在算法本身上。</p>
+<h3 id="38-外观数列"><a href="#38-外观数列" class="headerlink" title="38.外观数列"></a>38.外观数列</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/count-and-say/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/count-and-say/</a></p>
+<p>比较经典的一道题目了，南邮以前有个比赛好像出到过这样类似的题。</p>
+<p>大概意思就是根据前一个数字串来生成一个新的数字串。</p>
+<p>例如:</p>
+<p>21: 一个2，一个1，故生成为 1211</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    string countAndSay(int n) {
+        string st=&quot;1&quot;;
+        for(int i=0;i&lt;n-1;i++){
+            string ans;
+            for(int j=0;j&lt;st.size();j++){
+                int k=j;
+                while(st[k]==st[j]&amp;&amp;k!=st.size()) k++;
+                ans+=to_string(k-j);
+                ans+=st[j];
+                j=k-1;
+            }
+            st=ans;
+        }
+        return st;
+    }
+};
+</code></pre>
+<p>先说一下LeetCode是怎么用的，这个跟我们以往的OJ不同，它不需要你手动输入数据，然后从头到尾把程序完整地写下来。它只提供给你一个类和一个函数，输入文件通过参数传入，你的结果通过<code>return</code>语句返回。结合这个程序应该很好理解。</p>
+<p>然后说一下这题的思路，主要难点就在于对重复字符的判断，这里我们通过一个循环，用<code>j</code>和<code>k</code>分别表示重复字符串的头尾，就好处理了。</p>
+<h3 id="49-字母异位词分组"><a href="#49-字母异位词分组" class="headerlink" title="49.字母异位词分组"></a>49.字母异位词分组</h3><p>题目链接<a href="https://leetcode-cn.com/problems/group-anagrams/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/group-anagrams/</a></p>
+<p>典型的哈希类型的题目，将字母排序，然后将排序结果一致的放入一个哈希表里面，输出哈希表就行了。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs) {
+        unordered_map&lt;string,vector&lt;string&gt;&gt; hash;
+        for(auto s : strs){
+            string st=s;
+            sort(st.begin(),st.end());
+            hash[st].push_back(s);
+        }
+        vector&lt;vector&lt;string&gt;&gt; vec;
+        for(auto item : hash)  vec.push_back(item.second);
+        return vec;
+    }
+};
+</code></pre>
+<h3 id="151-翻转字符串里的单词"><a href="#151-翻转字符串里的单词" class="headerlink" title="151.翻转字符串里的单词"></a>151.翻转字符串里的单词</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/reverse-words-in-a-string/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/reverse-words-in-a-string/</a></p>
+<p>这个题目的话，如果有知道一个叫做 <code>stringstream</code>的类就比较好做，难点在于消除单词间的空格。</p>
+<p>当然，也可以用类似第一题的方法消除连续的空格。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    string reverseWords(string s) {
+        stringstream ss(s);
+        vector&lt;string&gt; vec;
+        string str;
+        while(ss&gt;&gt;str) vec.push_back(str);
+        string ans;
+        for(int i=vec.size()-1;i&gt;=0;i--){
+            if(i==0) ans+=vec[i];
+            else ans+=vec[i]+&#39; &#39;;
+        }
+        return ans;
+    }
+};
+</code></pre>
+<h3 id="165-比较版本号"><a href="#165-比较版本号" class="headerlink" title="165.比较版本号"></a>165.比较版本号</h3><p>题目链接<a href="https://leetcode-cn.com/problems/compare-version-numbers/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/compare-version-numbers/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int compareVersion(string v1, string v2) {
+        int i,j;
+        int a=0,b=0;
+        while(a&lt;v1.size()||b&lt;v2.size()){
+            for(i=a;i&lt;v1.size()&amp;&amp;v1[i]!=&#39;.&#39;;i++) ;
+            for(j=b;j&lt;v2.size()&amp;&amp;v2[j]!=&#39;.&#39;;j++) ;
+            int x1=i==a?0:atoi(v1.substr(a,i-a).c_str());
+            int x2=j==b?0:atoi(v2.substr(b,j-b).c_str());
+            if(x1&gt;x2) return 1;
+            if(x1&lt;x2) return -1;
+            a=i+1;
+            b=j+1;
+
+        }
+        return 0;
+    }
+};
+</code></pre>
+<p><code>atoi</code>函数可以将<code>char</code>类型字符串转换为数字，可用于去除多余的零。</p>
+<h3 id="929-独特的电子邮箱地址"><a href="#929-独特的电子邮箱地址" class="headerlink" title="929.独特的电子邮箱地址"></a>929.独特的电子邮箱地址</h3><p>题目链接<a href="https://leetcode-cn.com/problems/unique-email-addresses/submissions/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/unique-email-addresses/submissions/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int numUniqueEmails(vector&lt;string&gt;&amp; emails) {
+        unordered_set&lt;string &gt; es;
+        for(auto email:emails){
+            string temp;
+            int i=0,j=0;
+            for(i=0;email[i]!=&#39;@&#39;;i++);
+            int flag=true;
+            for(j=0;j&lt;email.size();j++){
+                if(email[j]==&#39;+&#39;){
+                    flag=false;
+                    break;
+                }
+            }
+            if(!flag)
+                temp+=email.substr(0,j);
+            else
+                temp+=email.substr(0,i);
+            temp+=email.substr(i,email.size()-i);
+            for(int i=0;i&lt;temp.size()&amp;&amp;temp[i]!=&#39;@&#39;;i++){
+                if(temp[i]==&#39;.&#39;) temp.erase(i,1);
+            }
+            es.insert(temp);
+        }
+        return es.size();
+    }
+};
+</code></pre>
+<p>主要是切割字符串，然后把’.’字符舍掉。</p>
+<h3 id="5-最长回文子串"><a href="#5-最长回文子串" class="headerlink" title="5.最长回文子串"></a>5.最长回文子串</h3><p>题目链接<a href="https://leetcode-cn.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/longest-palindromic-substring/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    string longestPalindrome(string s) {
+        string res;
+        int maxLength=0;
+        int i,j;
+        if(s.empty()) return res;
+        for(int m=0;m&lt;s.size();m++){
+            for(i=m,j=m;i&gt;=0&amp;&amp;j&lt;s.size();i--,j++){
+                if(s[i]!=s[j]) break;
+            }
+            if(j-i-1&gt;maxLength) {
+                maxLength=j-i-1;
+                //cout&lt;&lt;i&lt;&lt;&quot; &quot;&lt;&lt;j&lt;&lt;endl;
+                res=s.substr(i+ 1,j-i-1);
+            }
+        }
+        for(int n=0;n&lt;s.size()-1;n++){
+            for(i=n,j=n+1;i&gt;=0&amp;&amp;j&lt;s.size();i--,j++){
+                if(s[i]!=s[j]) break;
+            }
+            if(j-i-1&gt;maxLength) {
+                maxLength=j-i-1;
+                //cout&lt;&lt;i&lt;&lt;&quot; &quot;&lt;&lt;j&lt;&lt;endl;
+                res=s.substr(i+ 1,j-i-1);
+            }
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>一开始想用DP做的，不过估计了一下暴力做的时间复杂度最坏为$O(n^2)$，就直接暴力做了，果然过了。</p>
+<h3 id="3-无重复字符的最长子串"><a href="#3-无重复字符的最长子串" class="headerlink" title="3.无重复字符的最长子串"></a>3.无重复字符的最长子串</h3><p>题目链接<a href="https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int i=0,j=0;
+        if(s.empty()) return 0;
+        unordered_map&lt;char,int&gt; mp;
+        mp[s[0]]=1;
+        int maxLength=1;
+        for(j=1;j&lt;s.size();j++){
+            while(mp[s[j]]==1) {
+                mp[s[i]]--;
+                i++;
+            }
+            mp[s[j]]=1;
+            maxLength=max(j-i+1,maxLength);
+        }
+
+        return maxLength;
+    }
+};
+</code></pre>
+<p>哈希加双指针，这里的题目好像都是这种类型的。</p>
+<p>总结：这里的字符串题目大部分用双指针+哈希模拟就可以过，还有一部分动态规划的字符串题目，我就暂时不在这里写了。</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95">算法</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95">算法</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html" rel="nofollow noopener">CC BY-SA 4.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "LeetCode专题（字符串）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

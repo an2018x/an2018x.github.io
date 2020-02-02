@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>LeetCode专题（动态规划） ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://animg.oss-cn-shanghai.aliyuncs.com/wallhaven-ymwmek.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Sunday, February 2nd 2020, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>整理做过的LeetCode上的题目。</p>
+<a id="more"></a>
+<h2 id="LeetCode专题（动态规划）"><a href="#LeetCode专题（动态规划）" class="headerlink" title="LeetCode专题（动态规划）"></a>LeetCode专题（动态规划）</h2><h3 id="53-最大子序和"><a href="#53-最大子序和" class="headerlink" title="53.最大子序和"></a>53.最大子序和</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/maximum-subarray/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/maximum-subarray/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        vector&lt;int&gt; dp(nums.size());
+        dp[0]=nums[0];
+        int res=dp[0];
+        for(int i=1;i&lt;nums.size();i++){
+            dp[i]=max(dp[i-1],0)+nums[i];
+            res=max(dp[i],res);
+        }
+        return res;
+
+    }
+};
+</code></pre>
+<p>我对动态规划的理解是它由俩个部分组成：</p>
+<ul>
+<li>dp数组</li>
+<li>状态转移方程（递推公式）</li>
+</ul>
+<p>我们首先要建立一个dp数组，它能够表达一定的含义，其中代表的含义也可以分为以下几类：</p>
+<ul>
+<li>主语：通常是一个集合、是一类数，这里是以i为结尾的字段</li>
+<li>形容词：例如：最大值、最小值、和，这里代表和的最大值</li>
+</ul>
+<p>两者结合起来<code>dp[i]</code>的含义就是以i结尾的字段的和的最大值。</p>
+<p>根据这个含义可以写出状态转移公式：</p>
+<p><code>dp[i]</code>的值等于<code>dp[i-1]</code>和0的最大值加上<code>nums[i]</code>，因为如果<code>dp[i]</code>最大且<code>dp[i-1]</code>大于0，则<code>dp[i-1]</code>也最大，如果<code>d[i-1]</code>小于0，那么前面的数就不用加上去了，因为加起来必然比<code>nums[i]</code>要小，所以不如只取<code>nums[i]</code>，所以递推公式为：</p>
+<script type="math/tex; mode=display">
+dp[i]=max(dp[i-1],0)+nums[i]</script><p>然而提交上去，显示内存占用仅超过了$9.36\%$的用户，这怎么能忍，于是我们用滚动数组来优化内存：</p>
+<p>由于<code>dp[i]</code>的值只和前一个数有关系，我们可以用滚动数组来优化，即dp数组的长度为2就可以了，这样我们就可以写出这样的递推公式:</p>
+<script type="math/tex; mode=display">
+dp[i\&1]=max(dp[i-1\&1],0)+nums[i]</script><p>这里位运算$\&amp;1$的作用实际上就是求对2的余数，这样可以把当前状态和前一个状态区分开来了。</p>
+<p>稍作修改可以得到如下的程序：</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        vector&lt;int&gt; dp(2);
+        dp[0]=nums[0];
+        int res=dp[0];
+        for(int i=1;i&lt;nums.size();i++){
+            dp[i&amp;1]=max(dp[i-1&amp;1],0)+nums[i];
+            res=max(dp[i&amp;1],res);
+        }
+        return res;
+
+    }
+};
+</code></pre>
+<h3 id="120-三角形最小路径和"><a href="#120-三角形最小路径和" class="headerlink" title="120.三角形最小路径和"></a>120.三角形最小路径和</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/triangle/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/triangle/</a></p>
+<p>经典到爆炸的题目</p>
+<p>先来已发没有按滚动数组优化的：</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int minimumTotal(vector&lt;vector&lt;int&gt;&gt;&amp; t) {
+        vector&lt;vector&lt;int&gt;&gt; dp(t.size(),vector&lt;int&gt;(t.size()));
+        dp[0][0]=t[0][0];
+        for(int i=1;i&lt;t.size();i++){
+            for(int j=0;j&lt;=i;j++){
+                if(j==0) dp[i][j]=dp[i-1][j];
+                else if(j==i) dp[i][j]=dp[i-1][j-1];
+                else dp[i][j]+=min(dp[i-1][j],dp[i-1][j-1]);
+                dp[i][j]+=t[i][j];
+            }
+        }
+        int res=dp[t.size()-1][0];
+        for(int i=0;i&lt;=t.size()-1;i++){
+            res=min(res,dp[t.size()-1][i]);
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>滚动数组优化：</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int minimumTotal(vector&lt;vector&lt;int&gt;&gt;&amp; t) {
+        vector&lt;vector&lt;int&gt;&gt; dp(2,vector&lt;int&gt;(t.size()+1));
+        dp[0][0]=t[0][0];
+        for(int i=1;i&lt;t.size();i++){
+            for(int j=0;j&lt;=i;j++){
+                if(j==0) {dp[i&amp;1][j]=dp[i-1&amp;1][j];}
+
+                else if(j==i) dp[i&amp;1][j]=dp[i-1&amp;1][j-1];
+                else dp[i&amp;1][j]=min(dp[i-1&amp;1][j],dp[i-1&amp;1][j-1]);
+                dp[i&amp;1][j]+=t[i][j];
+                //cout&lt;&lt;dp[i&amp;1][j]&lt;&lt;&quot; &quot;;
+
+            }
+            //cout&lt;&lt;endl;
+        }
+        int res=dp[t.size()-1&amp;1][0];
+        for(int i=1;i&lt;=t.size()-1;i++){
+            res=min(res,dp[t.size()-1&amp;1][i]);
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>再优化成<code>O(n)</code>的空间复杂度。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int minimumTotal(vector&lt;vector&lt;int&gt;&gt;&amp; t) {
+        vector&lt;int&gt; dp(t.size());
+        dp[0]=t[0][0];
+        for(int i=1;i&lt;t.size();i++){
+            for(int j=i;j&gt;=0;j--){
+                if(j==0) {dp[j]=dp[j];}
+                else if(j==i) dp[j]=dp[j-1];
+                else dp[j]=min(dp[j],dp[j-1]);
+                dp[j]+=t[i][j];
+            }
+        }
+        int res=dp[0];
+        for(int i=1;i&lt;=t.size()-1;i++){
+            res=min(res,dp[i]);
+        }
+        return res;
+    }
+};
+</code></pre>
+<h3 id="63-不同路径-Ⅱ"><a href="#63-不同路径-Ⅱ" class="headerlink" title="63.不同路径 Ⅱ"></a>63.不同路径 Ⅱ</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/unique-paths-ii/submissions/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/unique-paths-ii/submissions/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; g) {
+        if(g.empty()) return 0;
+        int m=g.size(),n=g[0].size();
+        vector&lt;vector&lt;long long&gt;&gt; dp(m,vector&lt;long long &gt;(n));
+        for(int i=0;i&lt;m;i++)
+            for(int j=0;j&lt;n;j++){
+
+                if(g[i][j]) continue;
+                if(i==0&amp;&amp;j==0) {dp[0][0]=1;continue;}
+                if(i==0) dp[i][j]=dp[i][j-1];
+                else if(j==0) dp[i][j]=dp[i-1][j];
+                else dp[i][j]=dp[i][j-1]+dp[i-1][j];
+
+            }
+        return dp[m-1][n-1];
+
+    }
+};
+</code></pre>
+<p>有两个比较容易错的地方，第一个是输入数据为<code>[[1]]</code>时，输出数据为<code>0</code>，第二个是中间数据要开<code>long long</code></p>
+<p>否则会越界。</p>
+<h3 id="91-解码方法"><a href="#91-解码方法" class="headerlink" title="91.解码方法"></a>91.解码方法</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/decode-ways/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/decode-ways/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int numDecodings(string s) {
+        vector&lt;int&gt; dp(s.size()+1);
+        dp[0]=1;
+        for(int i=1;i&lt;=s.size();i++){
+            if(s[i-1]!=&#39;0&#39;) dp[i]+=dp[i-1];
+            if(i&gt;=2){
+                int t=(s[i-2]-&#39;0&#39;)*10+s[i-1]-&#39;0&#39;;
+                if(t&gt;=10&amp;&amp;t&lt;=26) dp[i]+=dp[i-2];
+            }
+        }
+        return dp[s.size()];
+    }
+};
+</code></pre>
+<p><code>dp[i]</code>为长度为<code>i</code>的字符串的解码长度，如果当前待编码数字不为零，<code>dp[i]+=dp[i-1];</code>如果前两个数字在<code>10</code>和<code>26</code>之间，<code>dp[i]+=dp[i-2];</code></p>
+<h3 id="198-打家劫舍"><a href="#198-打家劫舍" class="headerlink" title="198.打家劫舍"></a>198.打家劫舍</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/house-robber/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/house-robber/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int rob(vector&lt;int&gt;&amp; nums) {
+        int n=nums.size();
+        vector&lt;int&gt; f(n+1);
+        vector&lt;int&gt; g(n+1);
+        //g[0]=0;
+        int res=0;
+        for(int i=1;i&lt;=n;i++){
+            f[i]=g[i-1]+nums[i-1];
+            g[i]=max(f[i-1],g[i-1]);
+            //cout&lt;&lt;f[i]&lt;&lt;&quot; &quot;&lt;&lt;g[i]&lt;&lt;endl;
+
+
+        }
+        res=max(f[n],g[n]);
+        return res;
+    }
+};
+</code></pre>
+<p>我们建立两个<code>dp</code>数组，<code>f[i]</code>表示选第<code>i</code>个时候的最大值，<code>g[i]</code>表示不选第<code>i</code>个时的最大值，这样可以解决相邻物体选取的问题。</p>
+<h3 id="300-最长上升子序列"><a href="#300-最长上升子序列" class="headerlink" title="300.最长上升子序列"></a>300.最长上升子序列</h3><p>经典题目，喜闻乐见。</p>
+<p>先写一个$O(n^2)$的解法：</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int lengthOfLIS(vector&lt;int&gt;&amp; nums) {
+        if(nums.empty()) return 0;
+        int n=nums.size();
+        vector&lt;int&gt; dp(n,1);
+        int res=0;
+        for(int i=0;i&lt;n;i++){
+            for(int j=0;j&lt;i;j++){
+                if(nums[j]&lt;nums[i]){
+                    dp[i]=max(dp[i],dp[j]+1);
+                }
+            }
+            res=max(res,dp[i]);
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>嗯。。。。</p>
+<pre><code>执行用时 :
+72 ms, 在所有 C++ 提交中击败了15.81%的用户
+内存消耗 :
+8.9 MB, 在所有 C++ 提交中击败了5.16%的用户
+</code></pre><p>用贪心和二分优化成$O(nlogn)$的复杂度：</p>
+<p>这里的<code>dp[i]</code>用来表示长度为<code>i</code>的子序列的最后一个数字的大小。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int lengthOfLIS(vector&lt;int&gt;&amp; nums) {
+        if(nums.empty()) return 0;
+        int n=nums.size();
+        int INF=1000000000;
+        int dp[n];
+        fill(dp,dp+n,INF);
+        int res=0;
+        for(int i=0;i&lt;n;i++){
+            *lower_bound(dp,dp+n,nums[i])=nums[i];
+        }
+        res=lower_bound(dp,dp+n,INF)-dp;
+        return res;
+    }
+};
+</code></pre>
+<p>可以看到，运行速度增加了一个级别。</p>
+<pre><code class="lang-c++">执行用时 :
+4 ms, 在所有 C++ 提交中击败了94.73%的用户
+内存消耗 :
+8.9 MB, 在所有 C++ 提交中击败了5.16%的用户
+</code></pre>
+<h3 id="72-编辑距离"><a href="#72-编辑距离" class="headerlink" title="72.编辑距离"></a>72.编辑距离</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/edit-distance/submissions/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/edit-distance/submissions/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        int m=word1.size(),n=word2.size();
+        vector&lt;vector&lt;int&gt;&gt; dp(m+1,vector&lt;int&gt;(n+1));
+        for(int i=0;i&lt;=m;i++)
+            for(int j=0;j&lt;=n;j++)
+            {
+                if(j==0&amp;&amp;i==0) continue;
+                else if(j==0) {dp[i][j]=dp[i-1][j]+1;continue;}
+                else if(i==0) {dp[i][j]=dp[i][j-1]+1;continue;}
+                if(word1[i-1]==word2[j-1]){
+                    dp[i][j]=dp[i-1][j-1];
+                }
+                else {
+                    dp[i][j]=min(min(dp[i-1][j],dp[i][j-1]),dp[i-1][j-1])+1;
+                }
+            }
+        //cout&lt;&lt;dp[1][1]&lt;&lt;endl;
+        return dp[m][n];
+    }
+};
+</code></pre>
+<p><code>dp[i][j]</code>表示<code>word1</code>前<code>i</code>个字母和<code>word2</code>前<code>j</code>个字母的编辑距离。</p>
+<h3 id="518-零钱兑换"><a href="#518-零钱兑换" class="headerlink" title="518.零钱兑换"></a>518.零钱兑换</h3><p>题目链接：<a href="https://leetcode-cn.com/problems/coin-change-2/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/coin-change-2/</a></p>
+<p>其实是一个变形的完全背包问题。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int change(int amount, vector&lt;int&gt;&amp; coins) {
+        if(!amount) return 1;
+        if(coins.empty()) 
+            return 0;
+        int n=coins.size();
+        vector&lt;vector&lt;int&gt;&gt; dp(n,vector&lt;int&gt;(amount+1));
+        for(int i=0;i&lt;n;i++)
+            dp[i][0]=1;
+        for(int i=0;i&lt;n;i++)
+            for(int j=0;j&lt;=amount;j++){
+                if(i==0) {dp[i][j]=j%coins[i]?0:1; continue;}
+                if(j&gt;=coins[i])
+                    dp[i][j]=dp[i-1][j]+dp[i][j-coins[i]];
+                else 
+                    dp[i][j]=dp[i-1][j];
+            }
+        return dp[n-1][amount];
+    }
+};
+</code></pre>
+<p>滚动数组优化：</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int change(int amount, vector&lt;int&gt;&amp; coins) {
+        if(!amount) return 1;
+        if(coins.empty()) 
+            return 0;
+        int n=coins.size();
+        vector&lt;int&gt; dp(amount+1);
+        for(int i=0;i&lt;n;i++)
+            for(int j=0;j&lt;=amount;j++){
+                if(i==0) {dp[j]=j%coins[i]?0:1; continue;}
+                if(j&gt;=coins[i])
+                    dp[j]=dp[j]+dp[j-coins[i]];
+            }
+        return dp[amount];
+    }
+};
+</code></pre>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95">算法</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95">算法</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html" rel="nofollow noopener">CC BY-SA 4.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "LeetCode专题（动态规划）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -414,6 +414,490 @@ Operations to perform:
 Running migrations:
   Applying polls.0001_initial... OK
 </code></pre>
+<p>迁移是非常强大的功能，它能让你在开发过程中持续的改变数据库结构而不需要重新删除和创建表 - 它专注于使数据库平滑升级而不会丢失数据。我们会在后面的教程中更加深入的学习这部分内容，现在，你只需要记住，改变模型需要这三步</p>
+<ul>
+<li>编辑models.py文件，改变模型</li>
+<li>运行<code>python mange.py makemigrations</code>为模型的改变生成迁移文件</li>
+<li>运行<code>python mange.py migrate</code>来应用数据库迁移</li>
+</ul>
+<p>数据库迁移被分解成生成和应用两个命令是为了让你能够在代码控制系统上提交迁移数据并使其能在多个应用里使用；这不仅仅会让开发更加简单，也给别的开发者和生产环境中的使用带来方便。</p>
+<h3 id="初始API"><a href="#初始API" class="headerlink" title="初始API"></a>初始API</h3><p>现在让我们进入交互式 Python 命令行，尝试一下 Django 为你创建的各种 API。通过以下命令打开 Python 命令行：</p>
+<p>我们使用这个命令而不是简单的使用 “Python” 是因为 <code>manage.py</code> 会设置 <code>DJANGO_SETTINGS_MODULE</code> 环境变量，这个变量会让 Django 根据 <code>mysite/settings.py</code> 文件来设置 Python 包的导入路径。</p>
+<pre><code class="lang-python">&gt;&gt;&gt; from polls.models import Choice, Question  # Import the model classes we just wrote.
+
+# No questions are in the system yet.
+&gt;&gt;&gt; Question.objects.all()
+&lt;QuerySet []&gt;
+
+# Create a new Question.
+# Support for time zones is enabled in the default settings file, so
+# Django expects a datetime with tzinfo for pub_date. Use timezone.now()
+# instead of datetime.datetime.now() and it will do the right thing.
+&gt;&gt;&gt; from django.utils import timezone
+&gt;&gt;&gt; q = Question(question_text=&quot;What&#39;s new?&quot;, pub_date=timezone.now())
+
+# Save the object into the database. You have to call save() explicitly.
+&gt;&gt;&gt; q.save()
+
+# Now it has an ID.
+&gt;&gt;&gt; q.id
+1
+
+# Access model field values via Python attributes.
+&gt;&gt;&gt; q.question_text
+&quot;What&#39;s new?&quot;
+&gt;&gt;&gt; q.pub_date
+datetime.datetime(2012, 2, 26, 13, 0, 0, 775217, tzinfo=&lt;UTC&gt;)
+
+# Change values by changing the attributes, then calling save().
+&gt;&gt;&gt; q.question_text = &quot;What&#39;s up?&quot;
+&gt;&gt;&gt; q.save()
+
+# objects.all() displays all the questions in the database.
+&gt;&gt;&gt; Question.objects.all()
+&lt;QuerySet [&lt;Question: Question object (1)&gt;]&gt;
+</code></pre>
+<p>等等。<code>&lt;Question: Question object (1)&gt;</code> 对于我们了解这个对象的细节没什么帮助。让我们通过编辑 <code>Question</code> 模型的代码（位于 <code>polls/models.py</code> 中）来修复这个问题。给 <code>Question</code> 和 <code>Choice</code> 增加 <code>__str__()</code>方法</p>
+<pre><code class="lang-python"># polls/models.py
+from django.db import models
+
+class Question(models.Model):
+    question_text=models.CharField(max_length=200)
+    pub_date=models.DateField(&#39;date published&#39;)
+    def __str__(self):
+        return self.question_text
+
+class Choice(models.Model):
+    question=models.ForeignKey(Question,on_delete=models.CASCADE)
+    choice_text=models.CharField(max_length=200)
+    votes=models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.choice_text
+
+
+# Create your models here.
+</code></pre>
+<p>给模型增加 <code>__str__()</code>方法是很重要的，这不仅仅能给你在命令行里使用带来方便，Django 自动生成的 admin 里也使用这个方法来表示对象。</p>
+<p>让我们再为此模型添加一个自定义方法：</p>
+<pre><code class="lang-python"># polls/models.py
+import datetime
+
+from django.db import models
+from django.utils import timezone
+
+
+class Question(models.Model):
+    # ...
+    def was_published_recently(self):
+        return self.pub_date &gt;= timezone.now() - datetime.timedelta(days=1)
+</code></pre>
+<p>新加入的 <code>import datetime</code> 和 <code>from django.utils import timezone</code> 分别导入了 Python 的标准<code>datetime</code>模块和<code>Django</code>中和时区相关的<code>django.utils.timezone</code>工具模块。</p>
+<p>保存文件然后通过 <code>python manage.py shell</code> 命令再次打开 Python 交互式命令行：</p>
+<pre><code class="lang-python">&gt;&gt;&gt; from polls.models import Choice, Question
+
+# Make sure our __str__() addition worked.
+&gt;&gt;&gt; Question.objects.all()
+&lt;QuerySet [&lt;Question: What&#39;s up?&gt;]&gt;
+
+# Django provides a rich database lookup API that&#39;s entirely driven by
+# keyword arguments.
+&gt;&gt;&gt; Question.objects.filter(id=1)
+&lt;QuerySet [&lt;Question: What&#39;s up?&gt;]&gt;
+&gt;&gt;&gt; Question.objects.filter(question_text__startswith=&#39;What&#39;)
+&lt;QuerySet [&lt;Question: What&#39;s up?&gt;]&gt;
+
+# Get the question that was published this year.
+&gt;&gt;&gt; from django.utils import timezone
+&gt;&gt;&gt; current_year = timezone.now().year
+&gt;&gt;&gt; Question.objects.get(pub_date__year=current_year)
+&lt;Question: What&#39;s up?&gt;
+
+# Request an ID that doesn&#39;t exist, this will raise an exception.
+&gt;&gt;&gt; Question.objects.get(id=2)
+Traceback (most recent call last):
+    ...
+DoesNotExist: Question matching query does not exist.
+
+# Lookup by a primary key is the most common case, so Django provides a
+# shortcut for primary-key exact lookups.
+# The following is identical to Question.objects.get(id=1).
+&gt;&gt;&gt; Question.objects.get(pk=1)
+&lt;Question: What&#39;s up?&gt;
+
+# Make sure our custom method worked.
+&gt;&gt;&gt; q = Question.objects.get(pk=1)
+&gt;&gt;&gt; q.was_published_recently()
+True
+
+# Give the Question a couple of Choices. The create call constructs a new
+# Choice object, does the INSERT statement, adds the choice to the set
+# of available choices and returns the new Choice object. Django creates
+# a set to hold the &quot;other side&quot; of a ForeignKey relation
+# (e.g. a question&#39;s choice) which can be accessed via the API.
+&gt;&gt;&gt; q = Question.objects.get(pk=1)
+
+# Display any choices from the related object set -- none so far.
+&gt;&gt;&gt; q.choice_set.all()
+&lt;QuerySet []&gt;
+
+# Create three choices.
+&gt;&gt;&gt; q.choice_set.create(choice_text=&#39;Not much&#39;, votes=0)
+&lt;Choice: Not much&gt;
+&gt;&gt;&gt; q.choice_set.create(choice_text=&#39;The sky&#39;, votes=0)
+&lt;Choice: The sky&gt;
+&gt;&gt;&gt; c = q.choice_set.create(choice_text=&#39;Just hacking again&#39;, votes=0)
+
+# Choice objects have API access to their related Question objects.
+&gt;&gt;&gt; c.question
+&lt;Question: What&#39;s up?&gt;
+
+# And vice versa: Question objects get access to Choice objects.
+&gt;&gt;&gt; q.choice_set.all()
+&lt;QuerySet [&lt;Choice: Not much&gt;, &lt;Choice: The sky&gt;, &lt;Choice: Just hacking again&gt;]&gt;
+&gt;&gt;&gt; q.choice_set.count()
+3
+
+# The API automatically follows relationships as far as you need.
+# Use double underscores to separate relationships.
+# This works as many levels deep as you want; there&#39;s no limit.
+# Find all Choices for any question whose pub_date is in this year
+# (reusing the &#39;current_year&#39; variable we created above).
+&gt;&gt;&gt; Choice.objects.filter(question__pub_date__year=current_year)
+&lt;QuerySet [&lt;Choice: Not much&gt;, &lt;Choice: The sky&gt;, &lt;Choice: Just hacking again&gt;]&gt;
+
+# Let&#39;s delete one of the choices. Use delete() for that.
+&gt;&gt;&gt; c = q.choice_set.filter(choice_text__startswith=&#39;Just hacking&#39;)
+&gt;&gt;&gt; c.delete()
+</code></pre>
+<h3 id="创建一个管理员账号"><a href="#创建一个管理员账号" class="headerlink" title="创建一个管理员账号"></a>创建一个管理员账号</h3><p>首先，我们要创建一个能够登陆管理页面的用户。</p>
+<pre><code class="lang-shell"> D:\Python\vote\mysite&gt;python manage.py createsuperuser
+</code></pre>
+<h4 id="启动开发服务器"><a href="#启动开发服务器" class="headerlink" title="启动开发服务器"></a>启动开发服务器</h4><pre><code>D:\Python\vote\mysite&gt;python manage.py runserver
+</code></pre><p>现在，打开浏览器，转到你本地域名的 “/admin/“ 目录， — 比如 “<a href="http://127.0.0.1:8000/admin/" target="_blank" rel="noopener">http://127.0.0.1:8000/admin/</a>“ 。你应该会看见管理员登录界面：</p>
+<h4 id="进入管理站点"><a href="#进入管理站点" class="headerlink" title="进入管理站点"></a>进入管理站点</h4><p>现在，试着使用你在上一步中创建的超级用户来登录。然后你将会看到 Django 管理页面的索引页：</p>
+<p>你将会看到几种可编辑的内容：组和用户。它们是由 <code>django.contrib.auth</code>提供的。</p>
+<h4 id="向管理页面加入投票应用"><a href="#向管理页面加入投票应用" class="headerlink" title="向管理页面加入投票应用"></a>向管理页面加入投票应用</h4><p>默认是没有的，如果想要加上，就要在<code>polls/admin.py</code>文件里面改成这样。</p>
+<pre><code class="lang-python">from django.contrib import admin
+from .models import Question
+
+admin.site.register(Question)
+# Register your models here.
+</code></pre>
+<h4 id="管理功能体验"><a href="#管理功能体验" class="headerlink" title="管理功能体验"></a>管理功能体验</h4><p>点击<code>Questions</code>，现在看到是问题<code>Question</code>对象的列表<code>change list</code>。这个界面会显示所有数据库里的问题对象，可以任意选择一个来修改。</p>
+<p>点击<code>What&#39;s up?</code>编辑这个问题的Question对象。</p>
+<p>注意：</p>
+<ul>
+<li><p>这个表单是从问题Question模型中自动生成的</p>
+</li>
+<li><p>不同的字段类型对应不同的输入控件</p>
+</li>
+</ul>
+<h3 id="视图概况"><a href="#视图概况" class="headerlink" title="视图概况"></a>视图概况</h3><p>视图——一类具有相同功能和模板的网页的集合。</p>
+<p>在Django里面，每个页面都是通过视图来分类。每个视图都由一个Python函数来代表，Django通过检测URL来寻找响应的视图。</p>
+<p><code>URLconfs</code>将URL模式映射到视图。</p>
+<h3 id="编写视图"><a href="#编写视图" class="headerlink" title="编写视图"></a>编写视图</h3><p>向<code>polls/views.py</code>里面添加视图。</p>
+<pre><code class="lang-python">from django.shortcuts import render
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse(&quot;Hello World&quot;)
+
+
+def detail(request,question_id):
+    return HttpResponse(&quot;You are looking at question %s.&quot;% question_id)
+
+def results(request,question_id):
+    response=&quot;You are looking at the results of question %s.&quot;
+    return HttpResponse(response % question_id)
+
+def vote(request,question_id):
+    return HttpResponse(&quot;You&#39;re voting on question %s.&quot; % question_id)
+</code></pre>
+<p>然后把视图添加到<code>polls.urls</code>里面.</p>
+<pre><code class="lang-python">from django.urls import path
+from . import views
+
+urlpatterns=[
+    path(&#39;&#39;,views.index,name=&#39;index&#39;),
+    path(&#39;&lt;int:question_id&gt;/&#39;,views.detail,name=&#39;detail&#39;),
+    path(&#39;&lt;int:question_id&gt;/results/&#39;,views.results,name=&#39;results&#39;),
+    path(&#39;&lt;int:question_id&gt;/vote/&#39;,views.vote,name=&quot;vote&quot;)
+]
+</code></pre>
+<p>然后打开浏览器,如果转到地址`polls/34’,Django会运行detail()方法.</p>
+<p>当某人请求你网站的某一页面时——比如说， “/polls/34/“ ，Django 将会载入 <code>mysite.urls</code> 模块.然后 Django 寻找名为 <code>urlpatterns</code> 变量并且按序匹配正则表达式。在找到匹配项 <code>&#39;polls/&#39;</code>，它切掉了匹配的文本（<code>&quot;polls/&quot;</code>），将剩余文本——<code>&quot;34/&quot;</code>，发送至 <code>polls.urls</code> <code>URLconf</code> 做进一步处理。在这里剩余文本匹配了 <code>&#39;/&#39;</code>，使得我们 Django 以如下形式调用 <code>detail()</code>:</p>
+<pre><code>detail(request=&lt;HttpRequest object&gt;,question_id=34)
+</code></pre><p><code>question_id=34</code> 由 <code>&lt;int:question_id&gt;</code> 匹配生成。使用尖括号“捕获”这部分 URL，且以关键字参数的形式发送给视图函数。上述字符串的 <code>:question_id&gt;</code> 部分定义了将被用于区分匹配模式的变量名，而 <code>int:</code> 则是一个转换器决定了应该以什么变量类型匹配这部分的 URL 路径。</p>
+<p>为每个 URL 加上不必要的东西，例如 <code>.html</code> ，是没有必要的。不过如果你非要加的话，也是可以的,但是，别这样做，这太傻了。</p>
+<h4 id="写一个有用的视图"><a href="#写一个有用的视图" class="headerlink" title="写一个有用的视图"></a>写一个有用的视图</h4><p>每个视图必须要做的只有两件事:返回一个包含被请求页面的<code>HttpResponse</code>对象，或者抛出一个异常。</p>
+<p>你的视图可以从数据库里读取记录，可以使用一个模板引擎（比如 Django 自带的，或者其他第三方的），可以生成一个 PDF 文件，可以输出一个 XML，创建一个 ZIP 文件，你可以做任何你想做的事，使用任何你想用的 Python 库。</p>
+<p>Django 只要求返回的是一个<code>HttpResponse</code>或者抛出异常。</p>
+<p>我们尝试在视图里使用Django自带的API，例如我们可以在<code>index()</code>函数里插入一些内容，让它能够展示数据库里以发布日期排序的最近5个投票问题：</p>
+<pre><code class="lang-python">def index(request):
+    latest_question_list=Question.objects.order_by(&#39;-pub_date&#39;)[:5]
+    output=&#39;, &#39;.join([q.question_text for q in latest_question_list])
+    return HttpResponse(output)
+</code></pre>
+<p>这里存在的问题是：页面的设计写死在视图函数的代码里面。如果想要改变页面的样子，需要重新编辑<code>python</code>代码。所以我们可以使用<code>Django</code>的模板系统，只要创建一个视图，就可以将页面设计从代码中分离出来。</p>
+<p>首先，在<code>polls</code>目录下创建一个<code>templates</code>模板。Django会在这个目录里查找模板文件。</p>
+<p>项目的<code>TEMPLATES</code>配置项描述了Django如何载入和渲染模板。默认的设置文件设置了<code>DjangoTemplates</code>的后端，并将<code>APP_DIRS</code>设置成了True。这一选项会让<code>DjangoTemplates</code>在每个<code>INSTALLED_APPS</code>文件夹中寻找<code>templates</code>子目录。</p>
+<p>在刚才创建的模板文件里面，再创建另一个叫做<code>polls</code>的文件夹，在这个文件夹里面放上<code>index.html</code>。换句话说，你的模板应该放在<code>polls/templates/polls/index.html</code>下面。因为如果<code>app_directories</code>像上面说的那样运行的话，你可以通过<code>polls/index.html</code>来找到模板文件。</p>
+<blockquote>
+<p>模板命名空间</p>
+<p>Django会选择它匹配的第一个模板，如果你在不同的应用里面有相同的模板名，Django将很难区分它们。最好的方式是将不同的模板文件放在不同的命名空间下面，也就是放在不同的文件夹下面。</p>
+</blockquote>
+<p>模板文件：</p>
+<pre><code class="lang-django">{% if latest_question_list %}
+    <ul>
+    {%for question in latest_question_list%}
+        <li><a href="/polls/{{question.id}}/"></a></li>
+    {% endfor %}
+
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+</code></pre>
+<p>然后更新一下<code>polls/views.py</code>里的<code>index</code>视图来使用模板：</p>
+<pre><code class="lang-python">def index(request):
+    latest_question_list=Question.objects.order_by(&#39;-pub_date&#39;)[:5]
+    template=loader.get_template(&#39;polls/index.html&#39;)
+    context={
+        &#39;latest_question_list&#39;:latest_question_list,
+    }
+    #output=&#39;, &#39;.join([q.question_text for q in latest_question_list])
+    return HttpResponse(template.render(context,request))
+</code></pre>
+<p>上述代码的作用：载入<code>polls/index.html</code>模板文件，并且向它传递一个上下文(context)。这个上下文是一个字典，它将模板内的变量映射为<code>Python</code>对象。</p>
+<h3 id="快捷函数render"><a href="#快捷函数render" class="headerlink" title="快捷函数render()"></a>快捷函数<code>render()</code></h3><p>载入模板、填充上下文，再返回它生成的<code>HttpResponse</code>对象 是一个非常常用的操作流程。Django提供了一个快捷函数，方便我们重写<code>index()</code>视图。</p>
+<pre><code class="lang-python">def index(request):
+    latest_question_list=Question.objects.order_by(&#39;-pub_date&#39;)[:5]
+    #template=loader.get_template(&#39;polls/index.html&#39;)
+    context={
+        &#39;latest_question_list&#39;:latest_question_list,
+    }
+    #output=&#39;, &#39;.join([q.question_text for q in latest_question_list])
+    return render(request,&#39;polls/index.html&#39;,context)
+</code></pre>
+<p><code>render()</code>函数接收网站请求来作为第一个参数，模板名作为第二个参数，</p>
+<h3 id="抛出404错误"><a href="#抛出404错误" class="headerlink" title="抛出404错误"></a>抛出404错误</h3><p>现在，我们来处理投票详情视图——它会显示指定投票的问题标题。下面是这个视图的代码：</p>
+<pre><code class="lang-python">def detail(request,question_id):
+    try:
+        question=Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404(&quot;Question does not exist&quot;)
+    return render(request,&#39;polls/detail.html&#39;,{&#39;question&#39;:question})
+</code></pre>
+<p>这里有个新原则。如果指定问题 ID 所对应的问题不存在，这个视图就会抛出一个<code>Http404</code>异常。</p>
+<p>我们稍后再讨论你需要在 <code>polls/detail.html</code> 里输入什么，但是如果你想试试上面这段代码是否正常工作的话，你可以暂时把下面这段输进去：</p>
+<pre><code class="lang-html">&lt;!--detail.html--&gt;
+{{ question }}
+</code></pre>
+<h3 id="快捷函数：get-object-or-404"><a href="#快捷函数：get-object-or-404" class="headerlink" title="快捷函数：get_object_or_404()"></a>快捷函数：<code>get_object_or_404()</code></h3><p>尝试用<code>get()</code>函数获取对象，如果不存在就抛出<code>Http404</code>错误也是一个普遍的流程。<code>Django</code>也提供了一个快捷函数：</p>
+<pre><code class="lang-python">from django.shortcuts import get_object_or_404, render
+
+from .models import Question
+# ...
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, &#39;polls/detail.html&#39;, {&#39;question&#39;: question})
+</code></pre>
+<h3 id="使用模板系统"><a href="#使用模板系统" class="headerlink" title="使用模板系统"></a>使用模板系统</h3><p>回过头去看看我们的 <code>detail()</code> 视图。它向模板传递了上下文变量 <code>question</code> 。下面是 <code>polls/detail.html</code> 模板里正式的代码：</p>
+<pre><code class="lang-django">&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;
+&lt;ul&gt;
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+&lt;/ul&gt;
+</code></pre>
+<p>模板系统同一用点符号来访问变量的属性。</p>
+<p>模板系统统一使用点符号来访问变量的属性。在示例 <code></code> 中，首先 Django 尝试对 <code>question</code> 对象使用字典查找（也就是使用 <code>obj.get(str)</code> 操作），如果失败了就尝试属性查找（也就是 <code>obj.str</code> 操作），结果是成功了。如果这一操作也失败的话，将会尝试列表查找（也就是 <code>obj[int]</code> 操作）。</p>
+<p>在<code> for </code>循环中发生的函数调用：<code>question.choice_set.all</code>被解释成代码<code>question.choice_set.all()</code>，将会返回一个可迭代的Choice对象，这个对象可以在<code>for</code>标签内使用。</p>
+<h3 id="去除模板中的硬编码URL"><a href="#去除模板中的硬编码URL" class="headerlink" title="去除模板中的硬编码URL"></a>去除模板中的硬编码URL</h3><p>还记得吗，我们在 <code>polls/index.html</code> 里编写投票链接时，链接是硬编码的：</p>
+<pre><code class="lang-django">&lt;li&gt;&lt;a href=&quot;/polls/{{ question.id }}/&quot;&gt;{{ question.question_text }}&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+<p>问题在于，硬编码和强耦合的链接，对于一个包含很多应用的项目来说，修改起来是十分困难的，然而，因为在<code>polls.urls</code>的<code>url()</code>函数通过name参数为<code>url</code>定义了名字，可以使用以下方法来代替它。</p>
+<pre><code class="lang-django">&lt;li&gt;&lt;a href=&quot;{% url 'detail' question.id %}&quot;&gt;{{ question.question_text }}&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+<p>这个标签的工作方式是在 <code>polls.urls</code> 模块的 URL 定义中寻具有指定名字的条目。你可以回忆一下，具有名字 ‘detail’ 的 URL 是在如下语句中定义的：</p>
+<pre><code class="lang-python">...
+# the &#39;name&#39; value as called by the {% url %} template tag
+path(&#39;&lt;int:question_id&gt;/&#39;, views.detail, name=&#39;detail&#39;),
+...
+</code></pre>
+<p>如果你想改变投票详情视图的 URL，比如想改成 <code>polls/specifics/12/</code> ，你不用在模板里修改任何东西（包括其它模板），只要在 <code>polls/urls.py</code> 里稍微修改一下就行：</p>
+<pre><code class="lang-python">...
+# added the word &#39;specifics&#39;
+path(&#39;specifics/&lt;int:question_id&gt;/&#39;, views.detail, name=&#39;detail&#39;),
+...
+</code></pre>
+<h3 id="为URL名称添加命名空间"><a href="#为URL名称添加命名空间" class="headerlink" title="为URL名称添加命名空间"></a>为URL名称添加命名空间</h3><p>教程项目只有一个应用，<code>polls</code> 。在一个真实的 Django 项目中，可能会有五个，十个，二十个，甚至更多应用。Django 如何分辨重名的 URL 呢？举个例子，<code>polls</code> 应用有 <code>detail</code> 视图，可能另一个博客应用也有同名的视图。Django 如何知道 <code>url</code> 标签到底对应哪一个应用的 URL 呢？</p>
+<p>答案是：在根 <code>URLconf</code> 中添加命名空间。在 <code>polls/urls.py</code> 文件中稍作修改，加上 <code>app_name</code> 设置命名空间：</p>
+<pre><code class="lang-python">from django.urls import path
+
+from . import views
+
+app_name = &#39;polls&#39;
+urlpatterns = [
+    path(&#39;&#39;, views.index, name=&#39;index&#39;),
+    path(&#39;&lt;int:question_id&gt;/&#39;, views.detail, name=&#39;detail&#39;),
+    path(&#39;&lt;int:question_id&gt;/results/&#39;, views.results, name=&#39;results&#39;),
+    path(&#39;&lt;int:question_id&gt;/vote/&#39;, views.vote, name=&#39;vote&#39;),
+]
+</code></pre>
+<p>现在，编辑 <code>polls/index.html</code> 文件，从：</p>
+<pre><code class="lang-python">&lt;li&gt;&lt;a href=&quot;{% url 'detail' question.id %}&quot;&gt;{{ question.question_text }}&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+<p>修改为指向具有命名空间的详细视图：</p>
+<pre><code class="lang-django">&lt;li&gt;&lt;a href=&quot;{% url 'polls:detail' question.id %}&quot;&gt;{{ question.question_text }}&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+<h4 id="写一个小表单"><a href="#写一个小表单" class="headerlink" title="写一个小表单"></a>写一个小表单</h4><p>让我们更新一下在上一个教程中编写的投票详细页面的模板 (“polls/detail.html”) ，让它包含一个 HTML `` 元素：</p>
+<pre><code class="lang-django">&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+&lt;form action=&quot;{% url 'polls:vote' question.id %}&quot; method=&quot;post&quot;&gt;
+{% csrf_token %}
+{% for choice in question.choice_set.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+{% endfor %}
+&lt;input type=&quot;submit&quot; value=&quot;Vote&quot;&gt;
+&lt;/form&gt;
+</code></pre>
+<ul>
+<li>上面的模板在Question的每个<code>Choice</code>前添加一个单选按钮。每个单选按钮value属性对应各个Choice的ID。每个单选按钮的<code>name</code>是choice。这意味着，当有人选择一个单选按钮并提交表单时，它将发送一个<code>POST</code>数据<code>choice=#</code>,#为选择的id。</li>
+<li>我们设置表单的action到<code>url &#39;polls:vote&#39; question.id</code>，我们设置方法为<code>methed=&quot;post&quot;</code>，使用这个方法提交表单可以更改服务器端的数据。无论何时你想要创建一个表单更改服务器端的数据，都使用<code>post</code>方法</li>
+<li><code>forloop.counter</code>指示<code>for</code>标签已经循环了几次</li>
+<li>我们创建了一个POST表单，这会有<code>CSRF</code>攻击的危险，但我们不需要太过于担心，使用<code>csrf_token</code>就可以避免这种情况。</li>
+</ul>
+<p>现在，让我们来创建一个 Django 视图来处理提交的数据。</p>
+<pre><code class="lang-python">path(&#39;&lt;int:question_id&gt;/vote/&#39;, views.vote, name=&#39;vote&#39;),
+</code></pre>
+<p>我们还创建了一个 <code>vote()</code> 函数的虚拟实现。让我们来创建一个真实的版本。 将下面的代码添加到 <code>polls/views.py</code> ：</p>
+<pre><code class="lang-python">from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+
+from .models import Choice, Question
+# ...
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST[&#39;choice&#39;])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, &#39;polls/detail.html&#39;, {
+            &#39;question&#39;: question,
+            &#39;error_message&#39;: &quot;You didn&#39;t select a choice.&quot;,
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse(&#39;polls:results&#39;, args=(question.id,)))
+</code></pre>
+<ul>
+<li><p><code>request.POST</code>是一个类字典对象，让你可以通过关键字的名字获取提交的数据。这个例子中， <code>request.POST[&#39;choice&#39;]</code> 以字符串形式返回选择的 Choice 的 ID。</p>
+</li>
+<li><p>如果在 <code>request.POST[&#39;choice&#39;]</code> 数据中没有提供 <code>choice</code> ， POST 将引发一个<code>KeyError</code>。上面的代码检测<code>KeyError</code>，如果没有给出 <code>choice</code> 将重新显示 Question 表单和一个错误信息。</p>
+</li>
+<li><p>在增加Choice的得票数之后，代码返回一个<code>HttpResponseRedirect</code>而不是常用的<code>HttpResponse</code>。它只接收一个参数：用户将要被重定向的URL。</p>
+<p>在处理POST数据结束之后 ，我们应该总是返回一个<code>HttpResponseRedirect</code></p>
+</li>
+<li><p>在这个例子中，我们在 <code>HttpResponseRedirect</code>的构造函数中使用 <code>reverse()</code> 函数。这个函数避免了我们在视图函数中硬编码 URL。它需要我们给出我们想要跳转的视图的名字和该视图所对应的 URL 模式中需要给该视图提供的参数。 在本例中，使用之前设定的 <code>URLconf</code>， <code>reverse()</code> 调用将返回一个这样的字符串：</p>
+</li>
+</ul>
+<pre><code>&#39;/polls/3/results/&#39;
+</code></pre><p>其中 <code>3</code> 是 <code>question.id</code> 的值。重定向的 URL 将调用 <code>&#39;results&#39;</code> 视图来显示最终的页面。</p>
+<p>当有人对 Question 进行投票后， <code>vote()</code> 视图将请求重定向到 Question 的结果界面。让我们来编写这个视图：</p>
+<pre><code class="lang-python">from django.shortcuts import get_object_or_404, render
+
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, &#39;polls/results.html&#39;, {&#39;question&#39;: question})
+</code></pre>
+<p>创建模板</p>
+<pre><code class="lang-html">&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;
+
+&lt;ul&gt;
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+{% endfor %}
+&lt;/ul&gt;
+
+&lt;a href=&quot;{% url 'polls:detail' question.id %}&quot;&gt;Vote again?&lt;/a&gt;
+</code></pre>
+<h3 id="通用视图"><a href="#通用视图" class="headerlink" title="通用视图"></a>通用视图</h3><p>这些视图反映基本的 Web 开发中的一个常见情况：根据 URL 中的参数从数据库中获取数据、载入模板文件然后返回渲染后的模板。 由于这种情况特别常见，Django 提供一种快捷方式，叫做“通用视图”系统。</p>
+<p>通用视图将常见的模式抽象化，可以使你在编写应用时甚至不需要编写Python代码。</p>
+<p>让我们重构我们的代码：</p>
+<ul>
+<li>转换URLconf</li>
+<li>删除一些旧的、不需要的视图</li>
+<li>基于Django的通用视图引入新的视图</li>
+</ul>
+<blockquote>
+<p>为什么要重构代码？</p>
+<p>一般来说，当编写一个 Django 应用时，你应该先评估一下通用视图是否可以解决你的问题，你应该在一开始使用它，而不是进行到一半时重构代码。本教程目前为止是有意将重点放在以“艰难的方式”编写视图，这是为将重点放在核心概念上。</p>
+<p>就像在使用计算器之前你需要掌握基础数学一样。</p>
+</blockquote>
+<h4 id="改良URLconf"><a href="#改良URLconf" class="headerlink" title="改良URLconf"></a>改良URLconf</h4><p>首先，打开 <code>polls/urls.py</code> 这个 <code>URLconf</code> 并将它修改成：</p>
+<pre><code class="lang-python">from django.urls import path
+
+from . import views
+
+app_name = &#39;polls&#39;
+urlpatterns = [
+    path(&#39;&#39;, views.IndexView.as_view(), name=&#39;index&#39;),
+    path(&#39;&lt;int:pk&gt;/&#39;, views.DetailView.as_view(), name=&#39;detail&#39;),
+    path(&#39;&lt;int:pk&gt;/results/&#39;, views.ResultsView.as_view(), name=&#39;results&#39;),
+    path(&#39;&lt;int:question_id&gt;/vote/&#39;, views.vote, name=&#39;vote&#39;),
+]
+</code></pre>
+<p>注意，第二个和第三个匹配准则中，路径字符串中匹配模式的名称已经由<code>&lt;question_id&gt;</code> 改为 <code>&lt;pk&gt;</code>。</p>
+<h4 id="改良视图"><a href="#改良视图" class="headerlink" title="改良视图"></a>改良视图</h4><p>下一步，我们将删除旧的 <code>index</code>, <code>detail</code>, 和 <code>results</code> 视图，并用 Django 的通用视图代替。打开 <code>polls/views.py</code> 文件，并将它修改成：</p>
+<pre><code class="lang-python">from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+from django.views import generic
+
+from .models import Choice, Question
+
+
+class IndexView(generic.ListView):
+    template_name = &#39;polls/index.html&#39;
+    context_object_name = &#39;latest_question_list&#39;
+
+    def get_queryset(self):
+        &quot;&quot;&quot;Return the last five published questions.&quot;&quot;&quot;
+        return Question.objects.order_by(&#39;-pub_date&#39;)[:5]
+
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = &#39;polls/detail.html&#39;
+
+
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = &#39;polls/results.html&#39;
+
+
+def vote(request, question_id):
+    ... # same as above, no changes needed.
+</code></pre>
+<p>我们使用两个通用视图<code>ListView</code>和<code>DetailView</code>，分别抽象“显示一个对象列表”和“显示一个特定类型对象的详细信息页面两种概念。</p>
+<ul>
+<li>每个通用视图需要知道它将作用于那个模型，由model绝定</li>
+<li><code>DetailView</code>期望从URL中捕获名为”<code>pk</code>“的主键值，所以要把<code>question_id</code>改为<code>pk</code></li>
+</ul>
+<p>默认情况下，通用视图<code>DetailView</code>使用一个叫做<code>&lt;app name&gt;/&lt;model name&gt;_detail.html</code>的模板，我们也可以用<code>template_name</code>属性来指定模板。</p>
+<p>类似的，<code>ListView</code>使用一个叫做<code>&lt;app name&gt;/&lt;model name&gt;_list.html</code>的默认模板，我们也可以用<code>template_name</code>属性来指定模板。</p>
+<p>之前，模板被提供了包含<code>question</code>和<code>latest_question_list</code>的内容。在<code>DetailView</code>中，<code>question</code>变量是默认提供的——Django会自动识别，然而对<code>latest_question_list</code>它的默认名为<code>question_list</code>，我们可以用<code>context_object_name</code>来更改名字。</p>
 
             <hr>
           </div>
