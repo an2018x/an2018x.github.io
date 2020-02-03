@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>LeetCode专题（dfs、回溯） ~ An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://animg.oss-cn-shanghai.aliyuncs.com/wallhaven-ymwmek.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Monday, February 3rd 2020, 12:00 am
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>明天整理牛客的题目。</p>
+<a id="more"></a>
+<h2 id="LeetCode专题（dfs、回溯）"><a href="#LeetCode专题（dfs、回溯）" class="headerlink" title="LeetCode专题（dfs、回溯）"></a>LeetCode专题（dfs、回溯）</h2><h3 id="17-电话号码的字母组合"><a href="#17-电话号码的字母组合" class="headerlink" title="17.电话号码的字母组合"></a>17.电话号码的字母组合</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    string s[18]={&quot;abc&quot;,&quot;def&quot;,&quot;ghi&quot;,&quot;jkl&quot;,&quot;mno&quot;,&quot;pqrs&quot;,&quot;tuv&quot;,&quot;wxyz&quot;};
+    vector&lt;string&gt; vec;
+    string str;
+    int mSize;
+    void dfs(int cur,const string &amp;digits){
+        // if(!digits[cur]) dfs(cur+1,digits);
+        if(cur==mSize) {vec.push_back(str); return;}
+        int k=digits[cur]-&#39;2&#39;;
+        for(int i=0;i&lt;s[k].length();i++){
+            str+=s[k][i];
+            dfs(cur+1,digits);
+            str.erase(str.length()-1,1);
+        }
+    }
+    vector&lt;string&gt; letterCombinations(string digits) {
+        mSize=digits.length();
+        if(!digits.empty()) 
+            dfs(0,digits);
+        return vec;
+    }
+};
+</code></pre>
+<p>简单回溯，也可以用循环逐个枚举。</p>
+<h3 id="79-单词搜索"><a href="#79-单词搜索" class="headerlink" title="79.单词搜索"></a>79.单词搜索</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/word-search/submissions/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/word-search/submissions/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    int dx[4]={0,-1,0,1},dy[4]={1,0,-1,0};
+    bool exist(vector&lt;vector&lt;char&gt;&gt;&amp; board, string word) {
+        bool flag=false;
+        for(int i=0;i&lt;board.size();i++){
+            for(int j=0;j&lt;board[0].size();j++){
+                if(board[i][j]==word[0]){
+                    board[i][j]=&#39;.&#39;;
+                    flag=dfs(board,i,j,0,word);
+                    board[i][j]=word[0];
+                    if(flag) return flag;
+                }
+            }
+        }
+        return flag;
+
+    }
+    bool dfs(vector&lt;vector&lt;char&gt;&gt; &amp;board,int i,int j,int cur,string &amp;word){
+        bool flag=false;    
+        if(cur==word.size()-1) return true;
+        for(int x=0;x&lt;4;x++){
+            int ni=i+dx[x],nj=j+dy[x];
+            if(ni&gt;=0&amp;&amp;ni&lt;board.size()&amp;&amp;nj&gt;=0&amp;&amp;nj&lt;board[0].size()){
+                if(word[cur+1]!=board[ni][nj]) continue; 
+                board[ni][nj]=&#39;.&#39;;
+                flag=dfs(board,ni,nj,cur+1,word);
+                if(flag) return true;
+                board[ni][nj]=word[cur+1];
+
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<p>正常的回溯。</p>
+<h3 id="46-全排列"><a href="#46-全排列" class="headerlink" title="46.全排列"></a>46.全排列</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/permutations/submissions/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/permutations/submissions/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; vec;
+    vector&lt;int&gt; v;
+    vector&lt;vector&lt;int&gt;&gt; permute(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; vis(nums.size());
+        dfs(0,nums,vis);
+        return vec;
+    }
+    void dfs(int cur,vector&lt;int&gt;&amp; nums,vector&lt;bool&gt; &amp; vis){
+        if(cur==nums.size()) {vec.push_back(v); return ;}
+        for(int i=0;i&lt;nums.size();i++){
+            if(!vis[i]){
+                v.push_back(nums[i]);
+                vis[i]=true;
+                dfs(cur+1,nums,vis);
+                vis[i]=false;
+                v.pop_back();
+            }
+        }
+    }
+};
+</code></pre>
+<p>经典的回溯题目。</p>
+<h3 id="47-全排列Ⅱ"><a href="#47-全排列Ⅱ" class="headerlink" title="47.全排列Ⅱ"></a>47.全排列Ⅱ</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/permutations-ii/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/permutations-ii/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    vector&lt;int&gt; vec;
+    vector&lt;vector&lt;int&gt;&gt; permuteUnique(vector&lt;int&gt;&amp; nums) {
+        int n=nums.size();
+        vec=vector&lt;int&gt;(n);
+        vector&lt;bool&gt; vis(nums.size());
+        sort(nums.begin(),nums.end());
+        dfs(vis,nums,0,0);
+        return ans;
+    }
+    void dfs(vector&lt;bool&gt; &amp;vis,vector&lt;int&gt;&amp;nums,int cur,int st){
+        if(cur==nums.size()) {ans.push_back(vec);return;}
+        for(int i=st;i&lt;nums.size();i++){
+            if(!vis[i]){
+                vis[i]=true;
+                vec[i]=nums[cur];
+                dfs(vis,nums,cur+1,cur+1&lt;nums.size()&amp;&amp;nums[cur+1]==nums[cur]?i+1:0);
+                vis[i]=false;
+            }
+        }
+    }
+};
+</code></pre>
+<p>主要是判重问题的解决，也可以用set求解。</p>
+<p>这里的cur用来表示第几个元素存储的位置。</p>
+<p>先排序，如果有重复元素，就排在当前元素的后面，否则从零开始排列。</p>
+<h3 id="78-子集"><a href="#78-子集" class="headerlink" title="78.子集"></a>78.子集</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/subsets/submissions/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/subsets/submissions/</a></p>
+<p>可以考虑用位运算枚举。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; subsets(vector&lt;int&gt;&amp; nums) {
+        int n=nums.size(); 
+        vector&lt;vector&lt;int&gt; &gt; res;
+        vector&lt;int&gt; v;
+        for(int i=0;i&lt;1&lt;&lt;n;i++){
+            for(int k=0;k&lt;n;k++){
+                if(i&gt;&gt;k&amp;1){
+                    v.push_back(nums[k]);
+                }
+            }
+            res.push_back(v);
+            v.clear();
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>或者直接用dfs写</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; res;
+    vector&lt;int&gt; v;
+    vector&lt;vector&lt;int&gt;&gt; subsets(vector&lt;int&gt;&amp; nums) {
+        dfs(0,nums);
+        return res;
+    }
+    void dfs(int cur,vector&lt;int&gt; &amp;nums){
+        if(cur==nums.size()) {res.push_back(v);return; }
+        dfs(cur+1,nums);
+        v.push_back(nums[cur]);
+        dfs(cur+1,nums);
+        v.pop_back();
+
+    }
+};
+</code></pre>
+<p>用<code>dfs</code>写比较容易理解一点。</p>
+<h3 id="90-子集Ⅱ"><a href="#90-子集Ⅱ" class="headerlink" title="90.子集Ⅱ"></a>90.子集Ⅱ</h3><p>为啥子集Ⅱ编号是90而不是78。</p>
+<p>这次是生成具有重复元素的子集了。</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; res;
+    vector&lt;int&gt; v;
+    vector&lt;vector&lt;int&gt;&gt; subsetsWithDup(vector&lt;int&gt;&amp; nums) {
+        sort(nums.begin(),nums.end());
+        dfs(0,nums);
+        return res;
+    }
+    void dfs(int cur,vector&lt;int&gt;&amp; nums){
+        if(cur==nums.size()){
+            res.push_back(v);
+            return ;
+        }
+        int k=0;
+        while(cur+k&lt;nums.size()&amp;&amp;nums[k+cur]==nums[cur]) k++;
+        for(int i=0;i&lt;=k;i++){
+            dfs(cur+k,nums);
+            v.push_back(nums[cur]);
+        }
+        for(int i=0;i&lt;=k;i++) v.pop_back();
+
+    }
+};
+</code></pre>
+<h3 id="216-组合总数Ⅲ"><a href="#216-组合总数Ⅲ" class="headerlink" title="216.组合总数Ⅲ"></a>216.组合总数Ⅲ</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/combination-sum-iii/submissions/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/combination-sum-iii/submissions/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; res;
+    vector&lt;int&gt; v;
+    vector&lt;vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
+        if(n&gt;=k*9) return vector&lt;vector&lt;int&gt;&gt;(0);
+        if(n==0) return vector&lt;vector&lt;int&gt;&gt;(0);
+        dfs(0,0,k,n,1);
+        return res;
+    }
+    void dfs(int cur,int sum,const int &amp;k,const int &amp;n,int u){
+        if(cur&gt;k) return;
+        if(sum==n&amp;&amp;cur==k) {res.push_back(v); return ;}
+        if(sum&gt;n) return;
+        if(u&gt;9) return;
+        for(int i=u;i&lt;=9;i++){
+            v.push_back(i);
+            dfs(cur+1,sum+i,k,n,i+1);
+            v.pop_back();
+        }
+    }
+};
+</code></pre>
+<p>很经典的组合数问题，关于组合数，只要在<code>dfs</code>里面再加上一个下一次加上数字的起始位置即可。</p>
+<h3 id="52-N皇后-Ⅱ"><a href="#52-N皇后-Ⅱ" class="headerlink" title="52.N皇后 Ⅱ"></a>52.N皇后 Ⅱ</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/n-queens-ii/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/n-queens-ii/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;bool&gt; cols;
+    vector&lt;vector&lt;bool&gt;&gt; vis;
+    int cnt;
+    int totalNQueens(int n) {
+        cols=vector&lt;bool&gt;(n);
+        vis=vector&lt;vector&lt;bool&gt;&gt;(2,vector&lt;bool&gt;(2*n));
+        cnt=0;
+        dfs(0,n);
+        return cnt;
+    }
+    void dfs(int cur,const int &amp;n){
+        if(cur==n) { cnt++; return;}
+        for(int i=0;i&lt;n;i++){
+            if(!cols[i]&amp;&amp;!vis[0][cur-i+n]&amp;&amp;!vis[1][cur+i]){
+                cols[i]=vis[0][cur-i+n]=vis[1][cur+i]=true;
+                dfs(cur+1,n);
+                cols[i]=vis[0][cur-i+n]=vis[1][cur+i]=false;
+            }
+        }
+    }
+};
+</code></pre>
+<p>用两个数组分别表示当前列和当前对角线是否有其他皇后。</p>
+<h3 id="37-解数独"><a href="#37-解数独" class="headerlink" title="37.解数独"></a>37.解数独</h3><p>题目链接 <a href="https://leetcode-cn.com/problems/sudoku-solver/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/sudoku-solver/</a></p>
+<pre><code class="lang-c++">class Solution {
+public:
+    vector&lt;set&lt;int&gt;&gt; row,col,square;
+    void init(vector&lt;vector&lt;char &gt;&gt;&amp; board){
+        set&lt;int&gt; t={1,2,3,4,5,6,7,8,9};
+        for(int i=0;i&lt;9;i++) {
+            row.push_back(t);
+            col.push_back(t);
+            square.push_back(t);
+        }
+        for(int i=0;i&lt;9;i++)
+            for(int j=0;j&lt;9;j++){
+                if(board[i][j]!=&#39;.&#39;){
+                    int s=(i/3)*3+j/3;
+                    int k=board[i][j]-&#39;0&#39;;
+                    row[i].erase(k);
+                    col[j].erase(k);
+                    square[s].erase(k);
+                }
+            }
+    }
+    bool check(int i,int j,int k){
+        int s=(i/3)*3+j/3;
+        if(row[i].find(k)!=row[i].end()&amp;&amp;
+        col[j].find(k)!=col[j].end()&amp;&amp;
+        square[s].find(k)!=square[s].end()){
+            return true;
+        }
+        return false;
+    }
+    int flag=0;
+    void dfs(vector&lt;vector&lt;char&gt;&gt; &amp;board,int n){
+        if(n==81){
+            flag=1;
+            return;
+        }
+        int i=n/9,j=n%9;
+        if(board[i][j]==&#39;.&#39;){
+            for(int k=1;k&lt;=9;k++){
+                if(check(i,j,k)){
+                    int s=(i/3)*3+j/3;
+                    row[i].erase(k);
+                    col[j].erase(k);
+                    square[s].erase(k);
+                    board[i][j]=k+&#39;0&#39;;
+                    dfs(board,n+1);
+
+                    if(!flag){
+                        row[i].insert(k);
+                        col[j].insert(k);
+                        square[s].insert(k);
+                        board[i][j]=&#39;.&#39;;
+                    }
+                    else return;
+
+                }
+            }
+        }
+        else
+            dfs(board,n+1);
+    }
+    void solveSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        init(board);
+        dfs(board,0);
+
+    }
+};
+</code></pre>
+<p>和上一题有相似之处，都是用数组存储该处不能放的元素。</p>
+<h3 id="473-火柴拼正方形"><a href="#473-火柴拼正方形" class="headerlink" title="473.火柴拼正方形"></a>473.火柴拼正方形</h3><p>十分经典的剪枝问题</p>
+<p>好像有四个剪枝？</p>
+<p>1、从大到小试</p>
+<p>2、如果不符合条件跳过之后相同的</p>
+<p>3、第一个不行就剪枝</p>
+<p>4、最后一个不行就剪枝</p>
+<pre><code class="lang-c++">class Solution {
+public:
+    bool makesquare(vector&lt;int&gt;&amp; nums) {
+        int sum=0;
+        for(auto num:nums) sum+=num;
+        if(!sum||sum%4) return false;
+        sort(nums.begin(),nums.end(),[&amp;](int a,int b){return a&gt;b;});
+        //剪枝1
+        vector&lt;bool&gt; vis(nums.size());
+        return dfs(0,0,sum/4,nums,vis);
+    }
+    bool dfs(int u,int cur,int length,vector&lt;int&gt; &amp;nums,vector&lt;bool&gt; &amp;vis){   
+        if(cur==length) {u++;cur=0;}
+        if(u==4) return true;
+        //剪枝1
+        for(int i=0;i&lt;nums.size();i++){
+            if(!vis[i]&amp;&amp;nums[i]+cur&lt;=length){
+                vis[i]=true;
+                if(dfs(u,cur+nums[i],length,nums,vis)) return true;
+                vis[i]=false;
+                if(cur==0) return false; //剪枝2
+                if(cur+nums[i]==length) return false; //剪枝3
+                while(i+1&lt;nums.size()&amp;&amp;nums[i+1]==nums[i]) i++;  //剪枝4
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95">算法</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95">算法</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html" rel="nofollow noopener">CC BY-SA 4.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "LeetCode专题（dfs、回溯）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+              processEscapes: true,
+              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+      });
+
+      MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+
+    </script>
+
+    <script src="https://cdn.staticfile.org/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>
