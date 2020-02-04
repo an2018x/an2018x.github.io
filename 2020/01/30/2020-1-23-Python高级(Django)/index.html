@@ -15,7 +15,7 @@
   <meta name="description" content>
   <meta name="author" content="AN">
   <meta name="keywords" content>
-  <title>Python高级(Django) ~ An&#39;s personal blog</title>
+  <title>Django入门学习笔记 ~ An&#39;s personal blog</title>
 
   <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
@@ -56,35 +56,35 @@
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/">ホーム</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/archives/">Archives</a>
+            <a class="nav-link" href="/archives/">アーカイブ</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/categories/">Categories</a>
+            <a class="nav-link" href="/categories/">カテゴリー</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/tags/">Tags</a>
+            <a class="nav-link" href="/tags/">タグ</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/about/">About</a>
+            <a class="nav-link" href="/about/">本ブログ情報　</a>
           </li>
         
         
@@ -147,7 +147,7 @@
           <div class="markdown-body">
             <p>之前就写过这个博客，今天翻出来看，发现之前写的博客Django版本居然是1.x版本的，现在3.0版本都有了，于是重新写一下最新版本的，主要参照Django官方文档来写。</p>
 <a id="more"></a>
-<h2 id="Django3-0-教程"><a href="#Django3-0-教程" class="headerlink" title="Django3.0 教程"></a>Django3.0 教程</h2><p>这个教程用来写一个基本的投票程序，包括两部分。</p>
+<h2 id="Django3-0-学习笔记"><a href="#Django3-0-学习笔记" class="headerlink" title="Django3.0 学习笔记"></a>Django3.0 学习笔记</h2><p>这个教程用来写一个基本的投票程序，包括两部分。</p>
 <ul>
 <li>一个让人们查看和投票的公共站点</li>
 <li>一个让你能添加、修改、删除投票的管理站点</li>
@@ -422,6 +422,8 @@ Running migrations:
 </ul>
 <p>数据库迁移被分解成生成和应用两个命令是为了让你能够在代码控制系统上提交迁移数据并使其能在多个应用里使用；这不仅仅会让开发更加简单，也给别的开发者和生产环境中的使用带来方便。</p>
 <h3 id="初始API"><a href="#初始API" class="headerlink" title="初始API"></a>初始API</h3><p>现在让我们进入交互式 Python 命令行，尝试一下 Django 为你创建的各种 API。通过以下命令打开 Python 命令行：</p>
+<pre><code class="lang-shell">python manage.py shell
+</code></pre>
 <p>我们使用这个命令而不是简单的使用 “Python” 是因为 <code>manage.py</code> 会设置 <code>DJANGO_SETTINGS_MODULE</code> 环境变量，这个变量会让 Django 根据 <code>mysite/settings.py</code> 文件来设置 Python 包的导入路径。</p>
 <pre><code class="lang-python">&gt;&gt;&gt; from polls.models import Choice, Question  # Import the model classes we just wrote.
 
@@ -898,6 +900,126 @@ def vote(request, question_id):
 <p>默认情况下，通用视图<code>DetailView</code>使用一个叫做<code>&lt;app name&gt;/&lt;model name&gt;_detail.html</code>的模板，我们也可以用<code>template_name</code>属性来指定模板。</p>
 <p>类似的，<code>ListView</code>使用一个叫做<code>&lt;app name&gt;/&lt;model name&gt;_list.html</code>的默认模板，我们也可以用<code>template_name</code>属性来指定模板。</p>
 <p>之前，模板被提供了包含<code>question</code>和<code>latest_question_list</code>的内容。在<code>DetailView</code>中，<code>question</code>变量是默认提供的——Django会自动识别，然而对<code>latest_question_list</code>它的默认名为<code>question_list</code>，我们可以用<code>context_object_name</code>来更改名字。</p>
+<p>下面是一个基于类的视图渲染特定网页的例子：</p>
+<pre><code class="lang-c++">class IndexView(generic.ListView):
+    template_name = &#39;polls/index.html&#39;
+    context_object_name = &#39;latest_question_list&#39;
+
+    def get_queryset(self):
+        &quot;&quot;&quot;Return the last five published questions.&quot;&quot;&quot;
+        return Question.objects.order_by(&#39;-pub_date&#39;)[:5]
+
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = &#39;polls/detail.html&#39;
+
+
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = &#39;polls/results.html&#39;
+
+
+def vote(request, question_id):
+</code></pre>
+<h3 id="自动测试"><a href="#自动测试" class="headerlink" title="自动测试"></a>自动测试</h3><h4 id="用shell测试bug"><a href="#用shell测试bug" class="headerlink" title="用shell测试bug"></a>用shell测试bug</h4><p>我们的要求是如果 Question 是在一天之内发布的， <code>Question.was_published_recently()</code> 方法将会返回 <code>True</code> ，然而现在这个方法在 <code>Question</code> 的 <code>pub_date</code> 字段比当前时间还晚时也会返回 True（这是个 Bug）。</p>
+<pre><code class="lang-shell">&gt;&gt;&gt; import datetime
+&gt;&gt;&gt; from django.utils import timezone
+&gt;&gt;&gt; from polls.models import Question
+&gt;&gt;&gt; # create a Question instance with pub_date 30 days in the future
+&gt;&gt;&gt; future_question = Question(pub_date=timezone.now() + datetime.timedelta(days=30))
+&gt;&gt;&gt; # was it published recently?
+&gt;&gt;&gt; future_question.was_published_recently()
+True
+</code></pre>
+<h4 id="创建一个测试来暴露bug"><a href="#创建一个测试来暴露bug" class="headerlink" title="创建一个测试来暴露bug"></a>创建一个测试来暴露bug</h4><p>按照惯例，Django 应用的测试应该写在应用的 <code>tests.py</code> 文件里。测试系统会自动的在所有以 <code>tests</code> 开头的文件里寻找并执行测试代码。</p>
+<pre><code class="lang-python"># polls/tests.py
+import datetime
+
+from django.test import TestCase
+from django.utils import timezone
+
+from .models import Question
+
+
+class QuestionModelTests(TestCase):
+
+    def test_was_published_recently_with_future_question(self):
+        &quot;&quot;&quot;
+        was_published_recently() returns False for questions whose pub_date
+        is in the future.
+        &quot;&quot;&quot;
+        time = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertIs(future_question.was_published_recently(), False)
+</code></pre>
+<p>我们创建了一个<code>django.test.TextCase</code>的子类，并添加了一个方法，此方法创建一个 <code>pub_date</code> 时未来某天的 <code>Question</code> 实例。然后检查它的 <code>was_published_recently()</code> 方法的返回值——它应该是 False。</p>
+<h4 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h4><p>在终端中，我们通过输入以下代码运行测试:</p>
+<pre><code>python manage.py test polls
+</code></pre><p>你将会看到运行结果:</p>
+<pre><code class="lang-pyt">Creating test database for alias &#39;default&#39;...
+System check identified no issues (0 silenced).
+F
+======================================================================
+FAIL: test_was_published_recently_with_future_question (polls.tests.QuestionModelTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File &quot;/path/to/mysite/polls/tests.py&quot;, line 16, in test_was_published_recently_with_future_question
+    self.assertIs(future_question.was_published_recently(), False)
+AssertionError: True is not False
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
+Destroying test database for alias &#39;default&#39;...
+</code></pre>
+<ul>
+<li><code>python manage.py test polls</code> 将会寻找 <code>polls</code> 应用里的测试代码</li>
+<li>它找到了<code>django.test.TestCase</code>的一个子类</li>
+<li>它创建了一个特殊的数据库供测试用</li>
+<li>在 <code>test_was_published_recently_with_future_question</code> 方法中，它创建了一个 <code>pub_date</code> 值为 30 天后的 <code>Question</code> 实例。</li>
+<li>接着使用 <code>assertls()</code> 方法，发现 <code>was_published_recently()</code> 返回了 <code>True</code>，而我们期望它返回 <code>False</code>。</li>
+</ul>
+<h4 id="更全面的测试"><a href="#更全面的测试" class="headerlink" title="更全面的测试"></a>更全面的测试</h4><p>我们已经搞定一小部分了，现在可以考虑全面的测试 <code>was_published_recently()</code> 这个方法以确定它的安全性，然后就可以把这个方法稳定下来了。事实上，在修复一个 bug 时不小心引入另一个 bug 会是非常令人尴尬的。</p>
+<p>我们在上次写的类里再增加两个测试，来更全面的测试这个方法：</p>
+<pre><code class="lang-python">def test_was_published_recently_with_old_question(self):
+    &quot;&quot;&quot;
+    was_published_recently() returns False for questions whose pub_date
+    is older than 1 day.
+    &quot;&quot;&quot;
+    time = timezone.now() - datetime.timedelta(days=1, seconds=1)
+    old_question = Question(pub_date=time)
+    self.assertIs(old_question.was_published_recently(), False)
+
+def test_was_published_recently_with_recent_question(self):
+    &quot;&quot;&quot;
+    was_published_recently() returns True for questions whose pub_date
+    is within the last day.
+    &quot;&quot;&quot;
+    time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
+    recent_question = Question(pub_date=time)
+    self.assertIs(recent_question.was_published_recently(), True)
+</code></pre>
+<p>现在，我们有三个测试来确保 <code>Question.was_published_recently()</code> 方法对于过去，最近，和将来的三种情况都返回正确的值。</p>
+<h3 id="静态文件"><a href="#静态文件" class="headerlink" title="静态文件"></a>静态文件</h3><p>除了服务端生成的 HTML 以外，网络应用通常需要一些额外的文件——比如图片，脚本和样式表——来帮助渲染网络页面。在 Django 中，我们把这些文件统称为“静态文件”。</p>
+<p>这就是 <code>django.contrib.staticfiles</code> 存在的意义：它将各个应用的静态文件（和一些你指明的目录里的文件）统一收集起来，这样一来，在生产环境中，这些文件就会集中在一个便于分发的地方。</p>
+<h4 id="自定义应用的界面和风格"><a href="#自定义应用的界面和风格" class="headerlink" title="自定义应用的界面和风格"></a>自定义应用的界面和风格</h4><p>首先，在你的 <code>polls</code> 目录下创建一个名为 <code>static</code> 的目录。Django 将在该目录下查找静态文件，这种方式和 Diango 在 <code>polls/templates/</code> 目录下查找 template 的方式类似。</p>
+<p>Django 的 <code>STATICFILES_FINDERS</code>设置包含了一系列的查找器，它们知道去哪里找到 static 文件。<code>AppDirectoriesFinder</code> 是默认查找器中的一个，它会在每个 <code>INSTALLED_APPS</code> 中指定的应用的子文件中寻找名称为 <code>static</code> 的特定文件夹，就像我们在 <code>polls</code> 中刚创建的那个一样。管理后台采用相同的目录结构管理它的静态文件。</p>
+<p>同样，创建了static文件夹后，还需要再创建一个<code>polls</code>文件夹，里面放入<code>css</code>文件，就像模板一样，要个命名空间。</p>
+<p>下一步，在 <code>polls/templates/polls/index.html</code> 的文件头添加以下内容：</p>
+<pre><code class="lang-django">{% load static %}
+
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;{% static 'polls/style.css' %}&quot;&gt;
+</code></pre>
+<p><code>static</code> 模板标签会生成静态文件的绝对路径。</p>
+<p>这就是你开发所需要做的所有事情了。</p>
+<h4 id="添加背景图"><a href="#添加背景图" class="headerlink" title="添加背景图"></a>添加背景图</h4><p>接着，我们会创建一个用于存在图像的目录。在 <code>polls/static/polls</code> 目录下创建一个名为 <code>images</code> 的子目录。在这个目录中，放一张名为 <code>background.gif</code> 的图片。换言之，在目录 <code>polls/static/polls/images/background.gif</code> 中放一张图片。</p>
+<p>随后，在你的样式表（<code>polls/static/polls/style.css</code>）中添加：</p>
+<pre><code class="lang-css">body {
+    background: white url(&quot;images/background.gif&quot;) no-repeat;
+}
+</code></pre>
 
             <hr>
           </div>
@@ -932,7 +1054,7 @@ def vote(request, question_id):
     <div class="d-none d-lg-block col-lg-2 toc-container">
       
   <div id="toc">
-    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;ディレクトリ</p>
     <div id="tocbot"></div>
   </div>
 
@@ -965,7 +1087,7 @@ def vote(request, question_id):
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -974,7 +1096,7 @@ def vote(request, question_id):
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
@@ -1041,7 +1163,7 @@ def vote(request, question_id):
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Python高级(Django)&nbsp;",
+        "Django入门学习笔记&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
