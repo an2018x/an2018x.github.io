@@ -56,35 +56,35 @@
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/">ホーム</a>
+            <a class="nav-link" href="/">Home</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/archives/">アーカイブ</a>
+            <a class="nav-link" href="/archives/">Archives</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/categories/">カテゴリー</a>
+            <a class="nav-link" href="/categories/">Categories</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/tags/">タグ</a>
+            <a class="nav-link" href="/tags/">Tags</a>
           </li>
         
           
           
           
           <li class="nav-item">
-            <a class="nav-link" href="/about/">本ブログ情報　</a>
+            <a class="nav-link" href="/about/">About</a>
           </li>
         
         
@@ -132,6 +132,361 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/11/Pandas/">
+        <p class="h4 index-header"></p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">PandasPandas 介绍介绍panel+data+analysis
+面板+数据 - 计量经济学 三维数据
+分析
+为什么使用
+便捷的数据处理能力
+读取文件方便
+封装了Matplotlib,Numpy
+
+DataFrame属性和方法既有行索引，又有列索引的二维数组。
+让数据更有意义的显示。
+# 添加行索引
+stock=[&quot;股票{}&quot;.format(i) for i in range(10)]
+
+pd.DataFrame(stock_change,index=stock)
+
+# 添加列索引
+date=pd.date_range(start=&quot;20180101&quot;,periods=5,freq=&quot;B&quot;)
+pd.DataFrame(stock_change,index=stock,columns=date)
+
+行索引：index
+列索引：columns
+属性:(shape,index,columns,values,T)
+data.values
+data.T
+
+方法:
+head(3)  #返回前3行
+tail()
+DataFrame索</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-11&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/11/状态压缩dp是np算法的最强优化之一。/">
+        <p class="h4 index-header"></p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">状态压缩dp是np算法的最强优化之一。
+状态压缩动态规划就是将动态规划中的状态数组进行了压缩。
+压缩就是对应位运算。
+判断算法：
+拿到题目，先看数据范围，题目描述。如果支持以下三个特点的时候就可以初步判断这道题目需要使用状态压缩。
+1、题目的N,M范围很小，基本不超过30,20
+2、题目似乎要我们求方案数，或者说极值问题
+3、题目似乎是棋盘覆盖这种类型的题目
+算法处理：
+一般来说，状态压缩dp最为关键的一步就在于：
+状态如何以二进制表示。
+一般来说，状态设置，往往是一个整数，表示一个二进制决策方案集合。
+比如13就可以表示为1011,那么我们一般来说可以表示为第一个点，第二个点，第四个点已经选择的意思。
+如果我们已经确定算法为状态压缩，那么我们的主力点就在状态设置，既然我们有这个目标，显然我们就是尽量将题目的条件进行转化，这里我们以棋盘类型为例。
+对于条件而言，我们需要捕捉到关键点：
+1、如果题目中出现了这个点不可以选择，那么一定要告诉自己这是1
+这是1的意思是告诉我们这个点不可以选择，我们可以通过开一个特殊数组来保存，到了以后，对于我们枚举的每一个决策集合，那么我们可以通过&amp;</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-11&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/10/Numpy/">
+        <p class="h4 index-header"></p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">NumpyNumpy介绍Numpy(Numerical Python)是一个开源的Python科学计算器，用来快速处理任意维度的数组。
+Numpy支持常见的数组和矩阵操作，使用Numpy比使用Python要更加简洁。
+Numpy使用ndarray对象来处理多维数组，该对象是一个快速灵活的大数据容器。
+ndarry:（n - 任意个， d - dimension， array - 数组）
+ndarray介绍Numpy提供了一个n维数组容器。
+import numpy as np
+
+score=np.array([[80,89,86,67,79],
+        [78,97,89,67,81],
+        [90,94,78,67,74],
+        [91,91,90,67,69],
+        [76,87,75,67,86],
+        [70,79,84,67,84],
+        [94,92,93,67,64],
+        [86,85,83,67,80]]
+        )
+score
+
+返回
+array([[80, 89, 86, 67</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-10&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/06/机器学习/">
+        <p class="h4 index-header"></p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">机器学习监督学习：有结果标记，告诉机器应该如何识别。
+无监督学习：无结果标记。
+监督学习分类：通过已有数据集（训练集）的学习，得到目标函数f（模型），并把每个属性集x映射到目标属性y（类），且y必须是离散的（若y为连续的，则是回归算法）。通过对已知类别训练集的分析，从中发现规则，预测新数据的类别。
+回归：分类结果是一个连续值，根据输入的数据预测输出的数据。
+通常是拟合一个线性或者非线性方程。
+分类算法通过对已知类别训练集的分析，从中发现分类规则，依次预测新数据的类别。
+用途：
+
+风险评估
+客户分类
+文本检索
+
+原理：
+
+基于统计：贝叶斯分类
+基于规则：决策树算法
+基于神经网络：神经网络算法
+基于距离：KNN
+
+常用评估指标：
+
+精确率：预测结果与实际结果的比例
+召回率：预测结果中某类结果的正确覆盖率
+F1-Score：统计量，综合评估分类模型，取值0-1间
+
+KNN算法：
+如果离某一个样本最近的k个样本大多数属于某一个类别，则该样本也属于这个类别，并具有这个类别样本的特性。
+决策树：
+信息熵：信息的混乱程度
+信息增益：信息到信息的变化，增益越大，确定性贡献越大
+ID3系列算法：
+分类回</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-06&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/06/牛客第一场未做出三题/">
+        <p class="h4 index-header"></p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">牛客第一场未做出三题C.umi和弓道有点后悔，一看到计算几何题目就退缩了，这题真不咋难。
+#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+using namespace std;
+int main(){
+    vector&lt;double&gt; vx,vy;
+    double x0,y0;
+    scanf(&quot;%lf%lf&quot;,&amp;x0,&amp;y0);
+    int n,k;
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;k);
+    double x1,y1;
+    int m=n;
+    while(m--){
+        cin&gt;&gt;x1&gt;&gt;y1;
+        if(x1*x0&lt;0){
+            vy.push_back(y0-x0*(y1-y0)/(x1-x0));
+
+        }
+    </div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-06&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/05/LeetCode专题（矩阵快速幂）/">
+        <p class="h4 index-header"></p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">LeetCode专题（矩阵快速幂）70.爬楼梯题目链接 https://leetcode-cn.com/problems/climbing-stairs/submissions/
+class Solution {
+public:
+    vector&lt;vector&lt;long long &gt;&gt; mul(const vector&lt;vector&lt;long long&gt;&gt; &amp;A,const vector&lt;vector&lt;long long&gt;&gt; &amp;B){
+        vector&lt;vector&lt;long long&gt;&gt; C(A.size(),vector&lt;long long&gt;(B[0].size()));
+        for(int i=0;i&lt;A.size();i++){
+            for(int k=0;k&lt;B.size();k++){
+                for(int j=0;j&lt;B[0].size();j++){
+   </div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-05&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/05/阿里云Linux入门笔记/">
+        <p class="h4 index-header"></p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">阿里云Linux入门笔记Ubuntu 安装建议手动分区
+主要目录：
+
+/:系统根目录，建议容量为磁盘的5%，最大20GB
+/usr:包含一般不需要修改的应用程序，命令程序文件，程序库，手册，建议容量为磁盘的5%，最大20GB
+/var:存放系统产生的经常变换的文件，建议容量为硬盘的3%，最大10GB
+/home:存放用户文件的主目录，用户数据，建议容量为硬盘的3%，最大10GB
+/tmp:存放启动时产生的临时文件，建议容量为磁盘的1%，最大5GB
+swap:交换区。建议容量为内存2倍及以上
+
+进入系统后：
+第一个命令：sudo su，登陆高级管理员（sudo，全称superuser do，即超级管理员）
+关机：init 0
+
+
+
+
+参数
+意义
+
+
+
+
+0
+停机
+
+
+1
+单用户模式，只root进行维护
+
+
+2
+多用户，不能使用net file system
+
+
+3
+完全多用户
+
+
+4
+安全模式
+
+
+5
+图形化
+
+
+6
+重启
+
+
+
+
+使用最多：0和6
+如果不是在root用户下，则是sudo init 0
+基本命令组成部分：
+
+命令主体(command)
+命令选项[option]，说明对命令</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-05&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
 
   <div class="row mb-4 mx-auto">
     
@@ -217,42 +572,6 @@
     
     
     <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/02/03/LeetCode专题（dfs、回溯）/">
-        <p class="h4 index-header">LeetCode专题（dfs、回溯）</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">明天整理牛客的题目。...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-03&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
       <a href="/2020/02/03/LeetCode专题（简单数论）/">
         <p class="h4 index-header">LeetCode专题（简单数论）</p>
         
@@ -279,222 +598,6 @@
           <i class="iconfont icon-tag"></i>
           
             <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/02/02/LeetCode刷题（动态规划）/">
-        <p class="h4 index-header">LeetCode专题（动态规划）</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">整理做过的LeetCode上的题目。...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-02&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/30/LeetCode专题（字符串）/">
-        <p class="h4 index-header">LeetCode专题（字符串）</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">整理做过的LeetCode上的题目。...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-30&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/30/2020-1-23-Python高级(Django)/">
-        <p class="h4 index-header">Django入门学习笔记</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">之前就写过这个博客，今天翻出来看，发现之前写的博客Django版本居然是1.x版本的，现在3.0版本都有了，于是重新写一下最新版本的，主要参照Django官方文档来写。...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-30&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Python">Python</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Python">Python</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/22/Python中级/">
-        <p class="h4 index-header">Python中级</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">Python的进阶使用，承接上篇基础。主要关于数据分析和可视化。...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-22&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Python">Python</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Python">Python</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/21/算法复习/">
-        <p class="h4 index-header">算法复习</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">最近记忆力越来越差了，好多东西老是写错，写个博客整理下常见算法方便以后查阅。...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-21&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E7%AE%97%E6%B3%95">算法</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/20/Python知识汇总/">
-        <p class="h4 index-header">Python基础</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">在之前的博客上做了些修改，主要为python的基础语法。...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-20&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Python">Python</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Python">Python</a>&nbsp;
           
         
       </div>
@@ -537,7 +640,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -546,7 +649,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

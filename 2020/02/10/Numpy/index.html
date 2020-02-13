@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content>
+  <meta name="author" content="AN">
+  <meta name="keywords" content>
+  <title>An&#39;s personal blog</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css">
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>An's personal blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('https://animg.oss-cn-shanghai.aliyuncs.com/wallhaven-ymwmek.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Monday, February 10th 2020, 5:38 pm
+                </p>
+              
+
+              <p>
+                
+
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h2 id="Numpy"><a href="#Numpy" class="headerlink" title="Numpy"></a>Numpy</h2><h3 id="Numpy介绍"><a href="#Numpy介绍" class="headerlink" title="Numpy介绍"></a>Numpy介绍</h3><p>Numpy(Numerical Python)是一个开源的Python科学计算器，用来快速处理任意维度的数组。</p>
+<p>Numpy支持常见的数组和矩阵操作，使用Numpy比使用Python要更加简洁。</p>
+<p>Numpy使用ndarray对象来处理多维数组，该对象是一个快速灵活的大数据容器。</p>
+<p>ndarry:（n - 任意个， d - dimension， array - 数组）</p>
+<h3 id="ndarray介绍"><a href="#ndarray介绍" class="headerlink" title="ndarray介绍"></a>ndarray介绍</h3><p>Numpy提供了一个n维数组容器。</p>
+<pre><code class="lang-python">import numpy as np
+
+score=np.array([[80,89,86,67,79],
+        [78,97,89,67,81],
+        [90,94,78,67,74],
+        [91,91,90,67,69],
+        [76,87,75,67,86],
+        [70,79,84,67,84],
+        [94,92,93,67,64],
+        [86,85,83,67,80]]
+        )
+score
+</code></pre>
+<p>返回</p>
+<pre><code class="lang-pyhton">array([[80, 89, 86, 67, 79],
+       [78, 97, 89, 67, 81],
+       [90, 94, 78, 67, 74],
+       [91, 91, 90, 67, 69],
+       [76, 87, 75, 67, 86],
+       [70, 79, 84, 67, 84],
+       [94, 92, 93, 67, 64],
+       [86, 85, 83, 67, 80]])
+</code></pre>
+<pre><code class="lang-python">type(score)
+np.ndarray
+</code></pre>
+<h4 id="和python-原生-list比较"><a href="#和python-原生-list比较" class="headerlink" title="和python 原生 list比较"></a>和python 原生 list比较</h4><pre><code class="lang-python">import random
+import time
+
+# 生成一个大数组
+python_list=[]
+
+for i in range(100000000):
+    python_list.append(random.random())
+
+ndarray_list=np.array(python_list)
+
+# 原生pythonlist 求和
+t1=time.time()
+a=sum(python_list)
+t2=time.time()
+d1=t2-t1
+
+# ndarray求和
+t3=time.time()
+b=np.sum(ndarray_list)
+t4=time.time()
+d2=t4-t3
+</code></pre>
+<p>输出：</p>
+<pre><code class="lang-python">d1
+0.46898746490478516
+d2
+0.1046745777130127
+</code></pre>
+<p>ndarray节省了大量的时间，所以能在机器学习中表现出好的效果。</p>
+<p>1、存储风格</p>
+<p>​        ndarray - 相同类型 - 通用性不强 - </p>
+<p>​        list - 可以是不同类型 - 通用性很强 - 内存块不连续</p>
+<p>2、并行化运算</p>
+<p>​        ndarray - 支持向量化（并行化）运算</p>
+<p>3、底层语言</p>
+<p>​        numpy底层用C语言写的，内部解除了GIL的限制。</p>
+<h3 id="ndarray属性"><a href="#ndarray属性" class="headerlink" title="ndarray属性"></a>ndarray属性</h3><p>常用属性：</p>
+<p>shape:(ndim,size)</p>
+<p>dtype:(itemsize)</p>
+<pre><code class="lang-python">score
+array([[80, 89, 86, 67, 79],
+       [78, 97, 89, 67, 81],
+       [90, 94, 78, 67, 74],
+       [91, 91, 90, 67, 69],
+       [76, 87, 75, 67, 86],
+       [70, 79, 84, 67, 84],
+       [94, 92, 93, 67, 64],
+       [86, 85, 83, 67, 80]])
+
+score.shape   # (8,5)8行5列
+(8, 5)
+
+score.ndim
+2
+
+score.size
+40
+
+score.dtype
+dtype(&#39;int32&#39;)
+
+score.itemsize
+4
+</code></pre>
+<h4 id="numpy形状"><a href="#numpy形状" class="headerlink" title="numpy形状"></a>numpy形状</h4><pre><code class="lang-python">a = np.array([[1,2,3],[4,5,6]])
+b = np.array([1,2,3,4])
+c = np.array([[[1,2,3],[4,5,6]],[[1,2,3],[4,5,6]]])
+</code></pre>
+<pre><code class="lang-python">a.shape
+(2, 3)
+b.shape
+(4,)
+c.shape
+(2, 2, 3)
+</code></pre>
+<h4 id="创建ndarray时指定类型"><a href="#创建ndarray时指定类型" class="headerlink" title="创建ndarray时指定类型"></a>创建ndarray时指定类型</h4><pre><code class="lang-python">data = np.array([1.1,2.2,3.3],dtype=np.float32)
+data = np.array([1.1,2.2,3.3],dtype=&quot;float64&quot;)
+</code></pre>
+<h3 id="生成数组的方法"><a href="#生成数组的方法" class="headerlink" title="生成数组的方法"></a>生成数组的方法</h3><p>ndarray.方法()</p>
+<p>np.函数名()</p>
+<h4 id="生成0和1"><a href="#生成0和1" class="headerlink" title="生成0和1"></a>生成0和1</h4><pre><code class="lang-python">np.zeros([3,4]) # 生成0 
+np.zeros(shape=(3,4))
+np.ones([3,4]) #生成1
+</code></pre>
+<h4 id="从现有数组中生成"><a href="#从现有数组中生成" class="headerlink" title="从现有数组中生成"></a>从现有数组中生成</h4><pre><code class="lang-python"># 方法一
+data1=np.array(score)
+# 方法二
+data2=np.asarray(score)
+# 方法三
+data3=np.copy(score)
+
+方法2是浅拷贝，方法3是浅拷贝
+</code></pre>
+<h4 id="生成固定范围的数组"><a href="#生成固定范围的数组" class="headerlink" title="生成固定范围的数组"></a>生成固定范围的数组</h4><pre><code class="lang-python">np.linspace(0,10,100)  #生成左闭右闭区间内等距离100个数
+np.linspace(0,10,5)
+array([ 0. ,  2.5,  5. ,  7.5, 10. ])
+np.arange()  # range(a,b,c) 左闭右开+步长
+np.arange(0,10,5)
+array([0, 5])
+</code></pre>
+<h4 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h4><p>分布状况 - 直方图</p>
+<p>均匀分布（Uniform Distribution）代表每一组可能性相等，人工栽培的植物。</p>
+<pre><code class="lang-python">data1=np.random.uniform(low=-1, high=1 ,size= 1000000)
+</code></pre>
+<p>正态分布，具有$\mu$和$\sigma$的连续型随机变量的分布，第一参数是服从随机变量的均值，第二参数是随机变量的标准差。记作$N(\mu,\sigma)$。</p>
+<p>$\sigma$ 幅度、集中程度，稳定性</p>
+<pre><code class="lang-python">np.random.nomal(loc=0.0,scale=1.0,size=1000000)
+均值、标准差、形状
+</code></pre>
+<h3 id="切片索引与形状修改"><a href="#切片索引与形状修改" class="headerlink" title="切片索引与形状修改"></a>切片索引与形状修改</h3><p>案例：随机生成8只股票8天涨跌幅数据</p>
+<pre><code class="lang-python">stock_change=np.random.normal(loc=0,scale=1,size=(8, 10))
+</code></pre>
+<p>获取第一个股票的前3个交易日的涨跌幅数据：</p>
+<pre><code class="lang-python">stock_change[0, :3]
+</code></pre>
+<p>一维、二维、三维的数组索引</p>
+<pre><code class="lang-python">a1 = np.array([[ [1,2,3],[4,5,6]  ],[[12,3,4],[5,6,7]]]) #()
+a1[1,0,2] # 索引4
+</code></pre>
+<h4 id="形状修改"><a href="#形状修改" class="headerlink" title="形状修改"></a>形状修改</h4><pre><code class="lang-python">ndarray.reshape(10,8) # 仅修改了形状，没有转换行列，原始数据没有改
+ndarray.resize() # 没有返回值，对原始的ndarray进行修改 
+ndarray.T() # 数组转置，调换行列
+
+stock_change.shape
+</code></pre>
+<h3 id="类型修改与数组去重"><a href="#类型修改与数组去重" class="headerlink" title="类型修改与数组去重"></a>类型修改与数组去重</h3><p>ndarray.astype(type)</p>
+<p>ndarray 序列化到本地</p>
+<p>ndarray.tostring()</p>
+<p>数据量太多，会报错，可以修改配置文件（jupyter），但不建议，因为我们不是为了显示的。</p>
+<h4 id="数组的去重"><a href="#数组的去重" class="headerlink" title="数组的去重"></a>数组的去重</h4><p>set()二维不能去重</p>
+<pre><code class="lang-python">np.unique(temp)
+</code></pre>
+<pre><code class="lang-python">set(temp.flatten())
+</code></pre>
+<p>转换为一维数组可以去重。</p>
+<h3 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h3><pre><code class="lang-python"># 如果涨跌幅大于0.5，标记为True，否则标记为False
+stock_change&gt;0.5
+# 满足条件的数
+stock_change[stock_change&gt;0.5]
+# 作用于每个元素
+
+# 通用判断函数
+np.all(布尔值) # 只要有一个false,就返回false,只有全是true,返回true;
+np.any()  #只要有一个true就返回true
+
+# 判断stock_change[0:2,0:5]是否全是上涨的
+stock_change[0:2,0:5] &gt;0
+np.all(stock_change[0:2,0:5] &gt;0)
+
+# 判断前5只股票是否有上涨的
+np.any(stock_change[:5,:]&gt;0)
+
+# 三元运算符
+np.where(三元运算符)
+
+# 判断前四个股票前四天的涨跌幅，大于0的置为1，否则置为0
+temp=stock_change[:4,:4]
+np.where(temp&gt;0,1,0)
+
+# 复合逻辑
+# 判断前4个股票的前4天的涨跌幅 大于0.5且小于1 的，换为1，否则换为 0
+# 判断前4个股票的前4天的涨跌幅 大于0.5或者小于-0.5的，换为1，否则换为0
+# temp &gt; 0.5 and temp&lt; 1
+np.logical_and(temp&gt;0.5,temp&lt;1)
+np.logical_or(temp&gt;0.5,temp&lt;-0.5)
+</code></pre>
+<h3 id="统计运算"><a href="#统计运算" class="headerlink" title="统计运算"></a>统计运算</h3><p>统计指标函数</p>
+<p>返回最大值、最小值所在位置</p>
+<p>np.函数名，ndarray.方法名</p>
+<pre><code class="lang-python">temp.max()
+np.max(temp)
+temp.max(axis=0) # 按列，1是按行
+
+# 返回最大值、最小值位置
+np.argmax(temp,axis=1)
+# 按行返回最大值位置
+</code></pre>
+<h3 id="数组间运算"><a href="#数组间运算" class="headerlink" title="数组间运算"></a>数组间运算</h3><h4 id="数组与数的运算"><a href="#数组与数的运算" class="headerlink" title="数组与数的运算"></a>数组与数的运算</h4><pre><code class="lang-python">arr=np.array([[1,2,3,2,1,4],[5,6,1,2,3,1]])
+arr+10           #运算符能统一作用到每个数据
+#乘法不能这么写，只能通过循环写
+</code></pre>
+<h4 id="数组与数组的运算"><a href="#数组与数组的运算" class="headerlink" title="数组与数组的运算"></a>数组与数组的运算</h4><pre><code class="lang-python"># 直接运算会报错
+</code></pre>
+<h4 id="广播机制"><a href="#广播机制" class="headerlink" title="广播机制"></a>广播机制</h4><p>执行广播机制的前提在于，两个ndarray执行的是element-wise的运算，广播机制的功能是方便不同形状的数组进行运算。</p>
+<p>将两个数组的维度大小右对齐，然后比较对应维度上的数值，如果数值相等或其中有一个为1或者为空，则能进行广播运算，并且输出的维度大小为取数值大的数值。否则不能进行数组运算。</p>
+<h3 id="矩阵运算"><a href="#矩阵运算" class="headerlink" title="矩阵运算"></a>矩阵运算</h3><p>两种方法存储矩阵：</p>
+<p>1、ndarray二维数组</p>
+<p>2、matrix</p>
+<pre><code class="lang-python"># matrix存储矩阵
+data_mat=np.mat([[80,86],
+        [82,80],
+        [85,78],
+        [90,90],
+        [86,82],
+        [82,90],
+        [78,80],
+        [92,94]])
+</code></pre>
+<h4 id="矩阵乘法运算"><a href="#矩阵乘法运算" class="headerlink" title="矩阵乘法运算"></a>矩阵乘法运算</h4><p>形状：（m，s）（n，l）  </p>
+<p>运算规则</p>
+<pre><code class="lang-python">np.matmul
+np.dot
+data @ weights
+matrix直接乘就行了
+</code></pre>
+<h3 id="合并与分割"><a href="#合并与分割" class="headerlink" title="合并与分割"></a>合并与分割</h3><pre><code class="lang-python">np.hstack((a,b)) #水平拼接
+np.vstack((a,b)) #竖直拼接
+np.concatenate((a,b),axis=0)  #0竖直，1水平
+</code></pre>
+<pre><code class="lang-python">x=np.arange(0,8)
+np.split(x,3)# 等分
+# 分割
+np.split(x,[3,5,6,10]) # 索引分割
+</code></pre>
+<h3 id="IO操作和数据处理"><a href="#IO操作和数据处理" class="headerlink" title="IO操作和数据处理"></a>IO操作和数据处理</h3><p>Numpy读取数据文件</p>
+<pre><code class="lang-python"># 读取数据
+data=np.genfromtxt(&quot;./test.csv&quot;,delimiter=&quot;,&quot;)
+array([[  nan,   nan,   nan,   nan],
+       [  1. , 123. ,   1.4,  23. ],
+       [  2. , 110. ,   nan,  18. ],
+       [  3. ,   nan,   2.1,  19. ]])
+
+# 字符串解释成缺失值,numpy不支持字符串
+</code></pre>
+<h4 id="处理缺失值"><a href="#处理缺失值" class="headerlink" title="处理缺失值"></a>处理缺失值</h4><p>两种思路：</p>
+<p>直接删除数据</p>
+<p>数据量小的话，采用替换/插补法，将平均值或中位数填补到这个位置。</p>
+<p>缺失值：nan</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html" rel="nofollow noopener">CC BY-SA 4.0协议</a> 。转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    <br>
+
+    
+
+
+    
+
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
