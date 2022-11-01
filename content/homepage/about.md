@@ -1,22 +1,19 @@
 ---
-title: Example Author
+title: 安橙
 draft: false
-role: Example Role
-avatar: images/icon.png
-bio: Aenean vel bibendum quam. Aliquam at mollis quam. Proin efficitur.
+role: Java 后端开发
+avatar: AboutMe.png
+bio: 学习、奋斗！
 organization:
-  name: Example Organization
-  url: https://example.com/
+  name: Alibaba
+  url: https://https://www.dingtalk.com//
 social:
   - icon: envelope
     iconPack: fas
-    url: mailto:example@example.com
-  - icon: twitter
-    iconPack: fab
-    url: https://example.com/
+    url: mailto:ans20xx@qq.com
   - icon: github
     iconPack: fab
-    url: https://example.com/
+    url: https://github.com/an2018x
 
 weight: 1
 widget:
