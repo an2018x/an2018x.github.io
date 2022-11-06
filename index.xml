@@ -1,4 +1,75 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>安橙的博客</title><link>https://blog.ans20xx.com/</link><description>Recent content on 安橙的博客</description><generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>&amp;copy; 2022 &lt;a href="https://www.ans20xx.com/">安橙&lt;/a></copyright><lastBuildDate>Tue, 01 Nov 2022 00:05:06 +0800</lastBuildDate><atom:link href="https://blog.ans20xx.com/index.xml" rel="self" type="application/rss+xml"/><item><title>第四章 注释</title><link>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B03/</link><pubDate>Tue, 01 Nov 2022 00:05:06 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B03/</guid><description>前言 只有代码能告诉你它做的事，它是唯一准确的。尽管有时候我们也需要注释，但是还是要尽量减少它们。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>安橙的博客</title><link>https://blog.ans20xx.com/</link><description>Recent content on 安橙的博客</description><generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>&amp;copy; 2022 &lt;a href="https://www.ans20xx.com/">安橙&lt;/a></copyright><lastBuildDate>Sun, 06 Nov 2022 20:02:52 +0800</lastBuildDate><atom:link href="https://blog.ans20xx.com/index.xml" rel="self" type="application/rss+xml"/><item><title>业务开发的技术成长 4 代码生成器原理</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</link><pubDate>Sun, 06 Nov 2022 20:02:52 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</guid><description>代码生成器原理
+00:33
+SHOW TABLE STATUS FROM order_center; SHOW FULL COLUMNS FROM order_item; 第一句执行后，会将数据库下所有表都列出来，拿出指定的一行，将来转换成 Entity 第二句执行后，会将每个表中的属性详情查找出来 01:59
+最简单的实现方式：数据库 -&amp;gt; 模板引擎。
+可以通过 IDE 的 Live Template 实现。
+03:55
+DTO 代表的是前端的输入/输出，Entity 代表的是库表映射对象，简单的代码生成器只能应付 Entity 的情景（例如，is_deleted 字段显然不适合透传给前端），我们按照上面的方法生成的对象不可能直接对应到 DTO，也就是说，只能生成针对 DAO 层的东西。
+如果只是单纯的减少某些变量，还是可以通过这种方法来处理，这里我们可以生成 Request 对象。
+06:06
+有些带页面的代码生成器会针对 Field 进行一些配置，例如增加一些校验规则。
+对于面向数据库增删改查，这种操作已经足够了。但是，对于扩展性比较高的项目，这种方法有很大局限性。
+07:04
+Mybatis 最痛苦的一点是数据库的某些字段增减时，维护 Mapper 需要进行很多重复的工作。
+JPA 封装了对数据库操作的抽象，也封装了对领域对象的抽象。
+JPA 可以让我们不关心数据库，而是关心对象的建模，也就是说，根据对象的建模，把相应的 Mapper、Request 等对象都生成出来。
+09:42
+我们不把 DTO 对象命名为 DTO。
+我们把 DTO 对象划分为 Request 和 Response 对象。
+对数据库每张表的操作，我们把它们划分为 Creator 和 Updater 对象。
+为了解决 Mabatis 增减对象时每次频繁修改对象，让数据表的状态更改只能通过 Service 方法进行，这样的好处是维护点的统一，将来能跟踪到任何一次状态的跟踪。</description></item><item><title>业务开发的技术成长 3 技术架构及如何快速开发技巧</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</link><pubDate>Sun, 06 Nov 2022 17:10:31 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</guid><description>技术架构及如何快速开发技巧
+02:28
+每一个模块都是作为一个项目组进行开发。
+02:53
+部署架构描述：
+02:57
+首先有一个 GateWay，所有请求都会先打到 GateWay 上面。
+GateWay 做一些限流、基本的权限认证。
+03:30
+GateWay 下面是一个 Web 层，Web 层可以分为多种 Web：
+web 发票系统 web 支付管理平台 Web 的职责是聚合应用层，有权限控制。
+权限控制包括数据权限和操作权限。
+数据权限：类似于 SQL 加上一个 WHERE 操作权限： 04:23
+下层就是 Service 层，职责是领域服务层，处理业务逻辑。
+Service 层与 Web 层的区别是：Service 层不做权限，而 Web 层处理权限问题。
+Service 层提供的是领域服务，例如：订单服务、用户服务。
+07:13
+命名都是基于这种部署特点。
+命名规则如下，以 auth 模块为例，它被分为 3 个子模块：
+auth-web auth-center-api auth-center 目前都是以后缀作为区别。
+07:49
+最终效果是我们会写出一些通用的领域服务，可以适配于多种场景。
+08:11
+我们的项目是如何快速开发的。
+我们会抽象出几个概念：
+Service 这层会使用一个代码生成器，它的特点是不需要考虑权限问题+只考虑领域建模，目前我们会基于一套脚手架。 op-archetypes 工程下给出了所有模板，也就是说模板已经都写好了，并处理了兼容性问题。
+17:35
+使用 live template 快速生成 User 类。
+同时，编译项目，生成所有的增删改查代码。
+此时，开发一个项目速度就很快了，只需要对实体进行建模，就可以利用代码生成器生成其他通用操作代码。</description></item><item><title>业务开发的技术成长 2 如何打造高效的学习环境</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 06 Nov 2022 16:55:47 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</guid><description>如何打造高效的学习环境
+00:32
+在阿里云注册一个云效账号。
+阿里云效
+阿里云效提供代码管理和知识仓库功能，目前免费，可以用来学习。
+01:51
+支持流水线，可以自动化部署，不用自己本机搭建占资源的 Jenkins。
+05:31
+阿里提供免费的云起实验室，可以白嫖机器。
+最终的效果是有自己的代码管理仓库，有自己的私服，有流水线，一提交就能自动部署。
+09:24
+免密登录，将 SSH 公钥复制到实验室中，追加到 authorized_keys 文件中。</description></item><item><title>业务开发的技术成长 1 Maven 环境配置</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><pubDate>Sun, 06 Nov 2022 16:03:57 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</guid><description>maven环境配置
+Maven 当前仓库使用阿里免费的仓库进行发布，免去了自建 nexus 的麻烦。需要将 setting.xml 放在 ~/.m2 目录下。
+开发一个简单应用时，只需要继承 spring-boot-parent 这个 POM 文件就足够了。
+对于复杂项目，也需要有一个基础的 POM 文件。
+这个基础的 POM 文件，需要处理例如 SpringCloud、SpringBoot 等基础体系。
+02:54
+Maven 还需要一个脚手架，根据脚手架命令直接生成项目。
+03:31
+也会使用 Maven 插件的功能，这里主要使用了几个代码生成器和打包插件。
+04:42
+代码生成器的作用是可以生成关于这个领域对象所有代码，例如 Service、DAO、Mapper、Request 等。
+05:47
+IDEA Setting 文件提供了几个模板。</description></item><item><title>整洁代码之注释篇</title><link>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</link><pubDate>Tue, 01 Nov 2022 00:05:06 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</guid><description>前言 只有代码能告诉你它做的事，它是唯一准确的。尽管有时候我们也需要注释，但是还是要尽量减少它们。
 MockRequest request; private final String HTTP_DATE_REGEXP = &amp;quot;[SMTWF][a-z]{2}\\,\\s[0-9]{2}\\s[JSFMASOND][a-z]{2}\\s&amp;quot; + &amp;quot;[0-9]{4}\\s[0-9]{2}\\:[0-9]{2}\\:[0-9]{2}\\sGMT&amp;quot;; private Response response; private FitNessContext context; private FileResponder responder; private Locale saveLocale; // Example: &amp;quot;Tue, 02 Apr 2003 22:18:49 GMT&amp;quot; 上面这段代码说明了什么问题呢？仔细看最后一行注释，它本应该是放在 HTTP_DATE_REGEXP 附近的，可能是后续开发者在变更代码时没有注意到这行注释，从而在二者之间插入了其他代码，这就让注释具有了误导性。
 4.1 注释不能美化糟糕的代码 看到糟糕代码的时候，首先应想到如何把代码弄干净，而不是通过注释来美化它。
 带有少量注释的整洁而有表现力的代码，要比带有大量注释的零碎而复杂的代码好的多。
