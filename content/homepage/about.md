@@ -40,6 +40,6 @@ widget:
     attachment: 
 ---
 
-## Self Introduction
+## 关于我
 
 大家好，我是安橙。

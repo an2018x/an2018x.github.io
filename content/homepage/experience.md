@@ -1,30 +1,26 @@
 ---
-title: Experience
+title: 个人经历
 draft: false
 experiences:
-  - title: Example Role 1
+  - title: 本科
     organization:
-      name: Example Organization 1
-      url: https://example.org
-    dates: "2019 - Present"
-    location: Country
+      name: 南京邮电大学
+      url: https://www.njupt.edu.cn
+    dates: "2018.09 - 2022.06"
+    location: 江苏南京
     writeup: >
-      Donec scelerisque egestas augue at tempor. Fusce faucibus magna in.
+      - 南京邮电大学计算机科学与技术专业
 
-      - Suspendisse lacinia mauris a laoreet vehicula.
+      - 三只单身狗队队长
 
-      - Aenean tincidunt enim vitae ante blandit tempor.
-
-      - Nam tincidunt diam quis lorem rutrum ullamcorper.
-
-  - title: Example Role 2
+  - title: 工作
     organization:
-      name: Example Organization 2
-      url: https://example.org
-    dates: "2017 - 2019"
-    location: Country
+      name: 阿里云计算有限公司-钉钉事业部
+      url: https://www.dingtalk.com
+    dates: "2022.07 - 现在"
+    location: 浙江杭州
     writeup: >
-      **Aliquam** at **rutrum** ante. In sed quam faucibus.
+      从事钉钉商业化相关工作，职位为 Java 研发工程师
 
 weight: 3
 widget:
