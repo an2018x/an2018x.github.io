@@ -1,4 +1,31 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>&amp;copy; 2022 &lt;a href="https://www.ans20xx.com/">安橙&lt;/a></copyright><lastBuildDate>Sun, 06 Nov 2022 20:02:52 +0800</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>业务开发的技术成长 4 代码生成器原理</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</link><pubDate>Sun, 06 Nov 2022 20:02:52 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</guid><description>代码生成器原理
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>&amp;copy; 2022 &lt;a href="https://www.ans20xx.com/">安橙&lt;/a></copyright><lastBuildDate>Mon, 07 Nov 2022 22:29:24 +0800</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>业务开发的技术成长 5 中间件建设之通用文件集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</link><pubDate>Mon, 07 Nov 2022 22:29:24 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</guid><description>中间件建设之通用文件集成
+00:02
+服务目前分为两层，一层是 Service 层，提供领域服务。
+上面一层是 Web 层，即应用层，包括数据校验、权限校验、文件处理、监控等。
+00:42
+在实际的开发中，我们需要考虑如何给 Web 层附加一些能力。
+能力主要包含几个方面：权限集成、重复提交、分布式锁、审计功能。
+01:48
+对于整个通用的服务来讲，我需要考虑链路追踪。
+链路追踪从上到下都要进行检测，链路追踪从网关到 Web 到 Service 的所有行为。我们通常使用中间件来集成这种能力，例如 APM、SkyWalking。
+02:50
+第二部分主要是分布式日志收集。
+分布式日志收集的主要配置点有两个：
+Maven 依赖 在 resource/logback-spring.xml 下配置 grpc-log appender： 03:35
+分布式日志收集目前采用的是 grpc，会对性能产生一定的影响。
+如果不想业务处理的时候上报，可以先打到本地磁盘，然后通过 logstash 完成各个机器的收集和上报，好处是对应用的侵入性低。
+05:30
+Web 应用还需要考虑文件处理。
+Web 层是走 HTTP 协议的，前端访问的是一个文件地址，通过 Nginx 直接反向代理给它。
+对于 Service 层，不走 HTTP，而是直接走文件流，例如，直接通过 OSS 走文件流读，
+06:59
+在 Web 层会有一个部署操作，这个操作实际上是将文件直接上传给 OSS。
+在流程引擎 deploy 的时候，会直接拿到流进行 deploy 操作。
+07:43
+在系统中，我们会写一堆 starter。
+例如 oss-starter，为了实现通用性。
+oss 通常会选用阿里云、腾讯云，如果自己搭建的话，会选用 MINIO。
+这些 OSS 都是走的 S3 (Simple Storage Service，简单存储服务) 协议。</description></item><item><title>业务开发的技术成长 4 代码生成器原理</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</link><pubDate>Sun, 06 Nov 2022 20:02:52 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</guid><description>代码生成器原理
 00:33
 SHOW TABLE STATUS FROM order_center; SHOW FULL COLUMNS FROM order_item; 第一句执行后，会将数据库下所有表都列出来，拿出指定的一行，将来转换成 Entity 第二句执行后，会将每个表中的属性详情查找出来 01:59
 最简单的实现方式：数据库 -&amp;gt; 模板引擎。
