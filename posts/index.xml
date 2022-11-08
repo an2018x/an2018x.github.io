@@ -1,4 +1,35 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>&amp;copy; 2022 &lt;a href="https://www.ans20xx.com/">安橙&lt;/a></copyright><lastBuildDate>Mon, 07 Nov 2022 22:29:24 +0800</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>业务开发的技术成长 5 中间件建设之通用文件集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</link><pubDate>Mon, 07 Nov 2022 22:29:24 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</guid><description>中间件建设之通用文件集成
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>&amp;copy; 2022 &lt;a href="https://www.ans20xx.com/">安橙&lt;/a></copyright><lastBuildDate>Tue, 08 Nov 2022 22:09:53 +0800</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>业务开发的技术成长 6 中间件建设之统一权限集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</link><pubDate>Tue, 08 Nov 2022 22:09:53 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</guid><description>中间件建设之统一权限集成
+01:27
+老系统会存在越权问题、权限管理混乱，没有同一的权限管理中心。
+老系统如何迁移到新系统上？
+如果所有应用都使用 SpringSecurity，发现套不上老系统。
+02:14
+需要从底层考虑权限这个东西，思考权限究竟是什么？处理的是什么？
+以生活为例，假如说我要进入一个体育场。
+这个体育场会根据你有没有门票、是不是公司的职员来判断让不让你进。
+同时，体育场可能有后门，管理人员可以刷脸、刷指纹进入。
+指纹、刷脸、门票、职员工作证。
+在框架中，我们把这些概念抽象成两部分：Principle （代表唯一的个体/主题，确认唯一性）和 Credential（凭证）。
+06:58
+如果一个系统需要一个通用权限管理框架，我们需要思考这个框架要做什么。
+Web 系统的需求是针对 url 给它们起一个唯一性的编码，在某些系统中被成为安全对象。
+以体育场为例，观众拿着标号为 13 号的票就能在 13 号座位上坐下，代表座位的号码就是唯一性编码。
+如果能访问这个 url，需要一个授权码。系统期望访问 url 时，能把用户和权限码的对应关系传递给它。
+如果有了这种关系，就能控制对资源的访问。
+这种关系我们可以存储到上下文中。
+上下文应该存储的内容有：用户和权限的对应关系以及关于用户的额外信息。
+只要这些通用功能集成的像插件一样，我们就可以把它们放在一些 starter 二方包中，从 starter 中获取上下文，并把额外信息放入上下文中。
+14:08
+权限从需求上来讲，就是那些 url 做控制、哪些不做，还有用户与权限的对应关系、用户的额外信息。
+后面两点可以从任意地方去查，并放入上下文中，这也被叫做授权。
+16:39
+实现这些功能就是在应用之上构建一层 filter。
+对于所有用户，开放了一个用户上下文接口，用来在登录认证时触发回调，并获取用户的相关信息：
+17:56
+对于登录，我们会有一个 SSO。
+我们任何一个系统都会有一个认证中心，用户通过认证中心登录，并返回 token。
+在访问其他系统时，都会携带这个 token，其他应用解析 token 时首先会查询认证中心，认证中心会返回用户和权限信息。
+可以在接口上加上权限注解，那么只有上下文中包含该权限编码才能访问该接口。</description></item><item><title>业务开发的技术成长 5 中间件建设之通用文件集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</link><pubDate>Mon, 07 Nov 2022 22:29:24 +0800</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</guid><description>中间件建设之通用文件集成
 00:02
 服务目前分为两层，一层是 Service 层，提供领域服务。
 上面一层是 Web 层，即应用层，包括数据校验、权限校验、文件处理、监控等。
