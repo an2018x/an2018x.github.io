@@ -13,6 +13,9 @@ social:
   - icon: github
     iconPack: fab
     url: https://github.com/an2018x
+  - icon: weixin
+    iconPack: fa-brands
+    url: https://github.com/an2018x
 ---
 
 ## Self Introduction
