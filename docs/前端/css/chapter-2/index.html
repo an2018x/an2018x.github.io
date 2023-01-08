@@ -1,0 +1,100 @@
+<!doctype html><html lang=zh dir=ltr><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>2-CSS 颜色 | 前端 | 安橙的博客</title><meta name=generator content="Hugo Eureka 0.9.3"><link rel=stylesheet href=https://blog.ans20xx.com/css/eureka.min.9cec6350e37e534b0338fa9a085bf06855de3b0f2dcf857e792e5e97b07ea905d4d5513db554cbc26a9c3da622bae92d.css><script defer src=https://blog.ans20xx.com/js/eureka.min.fa9a6bf6d7a50bb635b4cca7d2ba5cf3dfb095ae3798773f1328f7950028b48c17d06276594e1b5f244a25a6c969a705.js></script>
+<link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" as=style onload='this.onload=null,this.rel="stylesheet"'><link rel=stylesheet href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/base16/solarized-light.min.css media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js crossorigin></script>
+<link rel=stylesheet href=https://blog.ans20xx.com/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css media=print onload='this.media="all",this.onload=null'><script defer type=text/javascript src=https://blog.ans20xx.com/js/fontawesome.min.a975d08212c5439f29e6074e7ad58e159ae1ef5efb6a31962fa3b6885557e794dd9315f4a8a16d705066d023f4eaaf07.js></script>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css integrity=sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js integrity=sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js integrity=sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR crossorigin></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}]})})</script><script defer src=https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js integrity=sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0 crossorigin></script>
+<link rel=icon type=image/png sizes=32x32 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png><link rel=apple-touch-icon sizes=180x180 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png><meta name=description content="描述CSS中如何指定颜色以及颜色的分类"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Docs","item":"https://blog.ans20xx.com/docs/"},{"@type":"ListItem","position":2,"name":"前端","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/"},{"@type":"ListItem","position":3,"name":"CSS","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/"},{"@type":"ListItem","position":4,"name":"2-CSS 颜色","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/"},"headline":"2-CSS 颜色 | 前端 | 安橙的博客","datePublished":"2022-12-02T22:15:46+08:00","dateModified":"2022-12-02T22:15:46+08:00","wordCount":1364,"publisher":{"@type":"Person","name":"WANG Chucheng","logo":{"@type":"ImageObject","url":"https://blog.ans20xx.com/images/icon.png"}},"description":"描述CSS中如何指定颜色以及颜色的分类"}</script><meta property="og:title" content="2-CSS 颜色 | 前端 | 安橙的博客"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.ans20xx.com/images/icon.png"><meta property="og:url" content="https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/"><meta property="og:description" content="描述CSS中如何指定颜色以及颜色的分类"><meta property="og:locale" content="zh"><meta property="og:site_name" content="安橙的博客"><meta property="article:published_time" content="2022-12-02T22:15:46+08:00"><meta property="article:modified_time" content="2022-12-02T22:15:46+08:00"><meta property="article:section" content="docs"><body class="flex min-h-screen flex-col"><header class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"><div class="mx-auto w-full max-w-screen-xl"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");((storageColorScheme=="Auto"||storageColorScheme==null)&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName("html")[0].classList.add("dark")</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="me-6 text-primary-text text-xl font-bold">安橙的博客</a>
+<button id=navbar-btn class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+<i class="fas fa-bars"></i></button><div id=target class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20"><div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0"><a href=/#about class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">关于我</a>
+<a href=/posts/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">博文</a>
+<a href=/docs/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 selected-menu-item me-4">文档</a>
+<a href=/tags/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">标签</a>
+<a href=/categories/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">归档</a></div><div class=flex><div class="relative pt-4 md:pt-0"><div class="cursor-pointer hover:text-eureka" id=lightDarkMode><i class="fas fa-adjust"></i></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id=is-open></div><div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40" id=lightDarkOptions><span class="px-4 py-1 hover:text-eureka" name=Light>浅色</span>
+<span class="px-4 py-1 hover:text-eureka" name=Dark>深色</span>
+<span class="px-4 py-1 hover:text-eureka" name=Auto>自动</span></div></div></div></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id=is-open-mobile></div></nav><script>let element=document.getElementById("lightDarkMode");storageColorScheme==null||storageColorScheme=="Auto"?document.addEventListener("DOMContentLoaded",()=>{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",switchDarkMode)}):storageColorScheme=="Light"?(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","sun"),element.firstElementChild.classList.add("fa-sun")):storageColorScheme=="Dark"&&(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","moon"),element.firstElementChild.classList.add("fa-moon")),document.addEventListener("DOMContentLoaded",()=>{getcolorscheme(),switchBurger()})</script></div></header><main class="grow pt-16"><div class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8"><div class=lg:pt-12><div class="flex flex-col md:flex-row bg-secondary-bg rounded"><div class="md:w-1/4 lg:w-1/5 border-e"><div class="sticky top-16 pt-6"><div id=sidebar-title class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text"><span class=font-semibold>目录</span>
+<i class='fas fa-caret-right ms-1'></i></div><div id=sidebar-toc class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent"><div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded"><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/>前端</a></div><ul class=ps-6><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/>CSS</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/>2-CSS 文本</a></div></li><li class=py-2><div><a class="text-eureka hover:text-eureka" href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/>2-CSS 颜色</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/>1-CSS 简介</a></div></li></ul></li><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/>HTML</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-8/>8-其他标记</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-9/>9-视频和音频</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/>7-HTML 表单</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-6/>6-HTML 表格</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-5/>5-HTML 图像</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-4/>4-HTML 链接</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-3/>3-HTML 列表</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-2/>2-HTML 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-1/>1-HTML 结构</a></div></li></ul></li></ul></div></div></div><div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8"><div class=flex><div class="w-full lg:w-3/4 px-6"><article class=prose><h1 class=mb-4>2-CSS 颜色</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
+<span>2022-12-02</span></div><div class="me-6 my-2"><i class="fas fa-clock me-1"></i>
+<span>3分钟阅读时长</span></div></div><h2 id=1-前景色>1. 前景色</h2><ol><li><p><code>color</code> 属性允许指定元素中文本的颜色，可以在 CSS 中使用以下方法来指定任何颜色：</p><ul><li>RGB 值：从组成一种元素需要多少红色、绿色、蓝色的角度来表示颜色。例如：rgb(100,100,100)。</li><li>十六进制编码：通过十六进制编码来表示颜色，其中的六位编码（每两位构成一个值，共三个值）分别代表一种颜色中红、绿、蓝的数量，并在前面加一个 # 号，例如 #ee3e80。</li><li>颜色名称：浏览器可以识别 147 种预定义的颜色名称。例如：blue。</li></ul></li><li><p>也可以使用 HSLA 来指定颜色。</p></li><li><p>CSS 中，可以使用 <code>/* */</code> 来添加注释。</p></li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;前景色&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+
+    &lt;/head&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;你好&lt;/h1&gt;
+        &lt;h2&gt;我是 An&lt;/h2&gt;
+        &lt;p&gt;很高兴见到你&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>/* 颜色名 */
+h1 {
+    color: red;
+}
+/* hex 编码 */
+h2 {
+    color: #006600;
+}
+/* rgb 值 */
+p {
+    color: rgb(0,0,250);
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202221659.png alt></p><h2 id=2-背景色>2. 背景色</h2><ol><li>CSS 在处理每个 HTML 元素是都假设它们处于一个无形的盒子中，<code>background-color</code> 属性可以设置这个盒子的背景色。</li><li>同样可以采用上述三种方式来指定颜色。</li><li>如果未指定背景色，那么默认背景是透明的。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;背景色&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;你好&lt;/h1&gt;
+        &lt;h2&gt;我是 An&lt;/h2&gt;
+        &lt;p&gt;很高兴见到你&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>body {
+    color: white;
+}
+
+/* 颜色名 */
+h1 {
+    background-color: red;
+}
+/* hex 编码 */
+h2 {
+    background-color: #006600;
+}
+/* rgb 值 */
+p {
+    background-color: rgb(0,0,250);
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202222025.png alt></p><h2 id=3-颜色解析>3. 颜色解析</h2><ol><li>计算机屏幕上的每种颜色都由一定数量的红色、绿色、蓝色混合而成，可以使用拾色器来选取需要的颜色，参考 <a href=https://paletton.com/>https://paletton.com/</a></li><li>RGB 值：用 0~255 之间的数字来表示红、绿、蓝三种颜色的值。</li><li>十六进制编码：用十六进制码来表示红绿蓝三种颜色的值。</li><li>颜色名称：用预定义名称来表示颜色，但是表示的颜色非常有限。</li><li>色调：色调很接近通俗意义上的颜色，但是一个颜色往往由色调、饱和度和亮度三者组成。</li><li>饱和度：指颜色中灰色的含量，饱和度最大时，灰色含量为0。</li><li>亮度：指颜色中黑色的含量，亮度最大时，黑色含量为0。</li></ol><h2 id=4-对比度>4. 对比度</h2><ol><li>为了使得文本清晰，在选取前景色和背景色时，一定要保证两者之间有足够的对比度。</li><li>如果对比度较低，文本就不易阅读。</li><li>但是对于长文本，过高的对比度也不利于阅读。</li></ol><h2 id=5-透明度>5. 透明度</h2><ol><li>CSS3 中的 <code>opacity</code> 属性允许指定透明度，它介于 0.0 和 1.0 之间。</li><li>rgba 允许像 RGB 值那样指定颜色，不过它增加了一个用来表示透明度的值，这个值介于 0.0 和 1.0 之间。</li></ol><h2 id=6-hsl-颜色>6. HSL 颜色</h2><ol><li>CSS3 中引入了 HSL 颜色，它通过色调、饱和度和明度来指定颜色。</li><li>在 HSL 中使用一个色环来表示色调，色环上的一个角度对应一种色调，介于 0-360 之间。</li><li>饱和度指一种颜色中灰色的含量，100% 代表最高饱和度。</li><li>注意，明度和亮度不同。明度是指一个颜色中白色或者黑色的含量，0% 时为黑色，100% 时为白色，50% 时为标准色。</li></ol><h2 id=7-hsl-和-hsla>7. HSL 和 HSLA</h2><ol><li>HSLA 允许利用色调、饱和度、明度来指定颜色，并增加了一个表示透明度的值，像 RGBA 一样。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;HSL 和 HSLA&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;你好&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>body {
+    background-color: hsl(200, 80%, 50%);
+}
+
+/* 颜色名 */
+h1 {
+    background-color: hsla(100, 80%, 70%, 0.8);
+}
+
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202230848.png alt></p><h2 id=8-总结>8. 总结</h2><ol><li>在 CSS 中可以采用三种方式来指定颜色：RGB 值、十六进制编码和颜色名称。</li><li>拾色器可以帮助找到想要的颜色。</li><li>保证在文本和背景色之间存在足够的对比度十分重要。</li><li>CSS3 为指定的 RGB 颜色的不透明度而引入了一个额外的值 RGBA。</li><li>CSS3 还允许使用 HSL 值来指定颜色，增加一个透明度后，变为 HSLA。</li></ol></article><div class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"><div><span class="text-primary-text block font-bold">上一页</span>
+<a href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/ class=block>2-CSS 文本</a></div><div class="mt-4 md:mt-0 md:text-right"><span class="text-primary-text block font-bold">下一页</span>
+<a href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/ class=block>1-CSS 简介</a></div></div></div><div class="hidden lg:block lg:w-1/4"><div class="bg-secondary-bg
+prose sticky top-16 z-10 hidden px-6 py-4 lg:block"><h3>本页内容</h3></div><div class="sticky-toc
+border-s
+hidden px-6 pb-6 lg:block"><nav id=TableOfContents><ul><li><a href=#1-前景色>1. 前景色</a></li><li><a href=#2-背景色>2. 背景色</a></li><li><a href=#3-颜色解析>3. 颜色解析</a></li><li><a href=#4-对比度>4. 对比度</a></li><li><a href=#5-透明度>5. 透明度</a></li><li><a href=#6-hsl-颜色>6. HSL 颜色</a></li><li><a href=#7-hsl-和-hsla>7. HSL 和 HSLA</a></li><li><a href=#8-总结>8. 总结</a></li></ul></nav></div><script>window.addEventListener("DOMContentLoaded",()=>{enableStickyToc()})</script></div></div></div></div></div><script>document.addEventListener("DOMContentLoaded",()=>{hljs.highlightAll(),changeSidebarHeight(),switchDocToc()})</script></div></div></main><footer class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b"><p class="text-sm text-tertiary-text">&copy; 2022 <a href=https://www.ans20xx.com/>安橙</a>
+&#183; Powered by the <a href=https://github.com/wangchucheng/hugo-eureka class=hover:text-eureka>Eureka</a> theme for <a href=https://gohugo.io class=hover:text-eureka>Hugo</a></p></div></div></footer></body></html>
