@@ -1,11 +1,11 @@
 <!doctype html><html lang=zh dir=ltr><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>7-HTML 表单 | 前端 | 安橙的博客</title><meta name=generator content="Hugo Eureka 0.9.3"><link rel=stylesheet href=https://blog.ans20xx.com/css/eureka.min.9cec6350e37e534b0338fa9a085bf06855de3b0f2dcf857e792e5e97b07ea905d4d5513db554cbc26a9c3da622bae92d.css><script defer src=https://blog.ans20xx.com/js/eureka.min.fa9a6bf6d7a50bb635b4cca7d2ba5cf3dfb095ae3798773f1328f7950028b48c17d06276594e1b5f244a25a6c969a705.js></script>
 <link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" as=style onload='this.onload=null,this.rel="stylesheet"'><link rel=stylesheet href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/base16/solarized-light.min.css media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js crossorigin></script>
 <script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js crossorigin></script>
-<link rel=stylesheet href=https://blog.ans20xx.com/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css media=print onload='this.media="all",this.onload=null'><script defer type=text/javascript src=https://blog.ans20xx.com/js/fontawesome.min.a975d08212c5439f29e6074e7ad58e159ae1ef5efb6a31962fa3b6885557e794dd9315f4a8a16d705066d023f4eaaf07.js></script>
+<link rel=stylesheet href=https://blog.ans20xx.com/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css media=print onload='this.media="all",this.onload=null'><script defer type=text/javascript src=https://blog.ans20xx.com/js/fontawesome.min.8c77c7521b1f95ec2031c2a79f5c6a698aa4a0dba5ba649dfbc7f73994cddf3f494be6aac7e5724f35cbf72cfde09703.js></script>
 <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css integrity=sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js integrity=sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY crossorigin></script>
 <script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js integrity=sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR crossorigin></script>
 <script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}]})})</script><script defer src=https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js integrity=sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0 crossorigin></script>
-<link rel=icon type=image/png sizes=32x32 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png><link rel=apple-touch-icon sizes=180x180 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png><meta name=description content="介绍 HTML 中表单工作流程以及如何创建各种表单控件"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Docs","item":"https://blog.ans20xx.com/docs/"},{"@type":"ListItem","position":2,"name":"前端","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/"},{"@type":"ListItem","position":3,"name":"HTML","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/"},{"@type":"ListItem","position":4,"name":"7-HTML 表单","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/"},"headline":"7-HTML 表单 | 前端 | 安橙的博客","datePublished":"2022-11-26T23:16:46+08:00","dateModified":"2022-11-26T23:16:46+08:00","wordCount":3701,"publisher":{"@type":"Person","name":"WANG Chucheng","logo":{"@type":"ImageObject","url":"https://blog.ans20xx.com/images/icon.png"}},"description":"介绍 HTML 中表单工作流程以及如何创建各种表单控件"}</script><meta property="og:title" content="7-HTML 表单 | 前端 | 安橙的博客"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.ans20xx.com/images/icon.png"><meta property="og:url" content="https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/"><meta property="og:description" content="介绍 HTML 中表单工作流程以及如何创建各种表单控件"><meta property="og:locale" content="zh"><meta property="og:site_name" content="安橙的博客"><meta property="article:published_time" content="2022-11-26T23:16:46+08:00"><meta property="article:modified_time" content="2022-11-26T23:16:46+08:00"><meta property="article:section" content="docs"><body class="flex min-h-screen flex-col"><header class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"><div class="mx-auto w-full max-w-screen-xl"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");((storageColorScheme=="Auto"||storageColorScheme==null)&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName("html")[0].classList.add("dark")</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="me-6 text-primary-text text-xl font-bold">安橙的博客</a>
+<link rel=icon type=image/png sizes=32x32 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png><link rel=apple-touch-icon sizes=180x180 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png><meta name=description content="介绍 HTML 中表单工作流程以及如何创建各种表单控件"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Docs","item":"https://blog.ans20xx.com/docs/"},{"@type":"ListItem","position":2,"name":"前端","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/"},{"@type":"ListItem","position":3,"name":"HTML","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/"},{"@type":"ListItem","position":4,"name":"7-HTML 表单","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/"},"headline":"7-HTML 表单 | 前端 | 安橙的博客","datePublished":"2022-11-26T23:16:46+08:00","dateModified":"2022-11-26T23:16:46+08:00","wordCount":3684,"publisher":{"@type":"Person","name":"WANG Chucheng","logo":{"@type":"ImageObject","url":"https://blog.ans20xx.com/images/icon.png"}},"description":"介绍 HTML 中表单工作流程以及如何创建各种表单控件"}</script><meta property="og:title" content="7-HTML 表单 | 前端 | 安橙的博客"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.ans20xx.com/images/icon.png"><meta property="og:url" content="https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/"><meta property="og:description" content="介绍 HTML 中表单工作流程以及如何创建各种表单控件"><meta property="og:locale" content="zh"><meta property="og:site_name" content="安橙的博客"><meta property="article:published_time" content="2022-11-26T23:16:46+08:00"><meta property="article:modified_time" content="2022-11-26T23:16:46+08:00"><meta property="article:section" content="docs"><body class="flex min-h-screen flex-col"><header class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"><div class="mx-auto w-full max-w-screen-xl"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");((storageColorScheme=="Auto"||storageColorScheme==null)&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName("html")[0].classList.add("dark")</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="me-6 text-primary-text text-xl font-bold">安橙的博客</a>
 <button id=navbar-btn class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
 <i class="fas fa-bars"></i></button><div id=target class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20"><div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0"><a href=/#about class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">关于我</a>
 <a href=/posts/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">博文</a>
@@ -14,12 +14,11 @@
 <a href=/categories/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">归档</a></div><div class=flex><div class="relative pt-4 md:pt-0"><div class="cursor-pointer hover:text-eureka" id=lightDarkMode><i class="fas fa-adjust"></i></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id=is-open></div><div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40" id=lightDarkOptions><span class="px-4 py-1 hover:text-eureka" name=Light>浅色</span>
 <span class="px-4 py-1 hover:text-eureka" name=Dark>深色</span>
 <span class="px-4 py-1 hover:text-eureka" name=Auto>自动</span></div></div></div></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id=is-open-mobile></div></nav><script>let element=document.getElementById("lightDarkMode");storageColorScheme==null||storageColorScheme=="Auto"?document.addEventListener("DOMContentLoaded",()=>{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",switchDarkMode)}):storageColorScheme=="Light"?(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","sun"),element.firstElementChild.classList.add("fa-sun")):storageColorScheme=="Dark"&&(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","moon"),element.firstElementChild.classList.add("fa-moon")),document.addEventListener("DOMContentLoaded",()=>{getcolorscheme(),switchBurger()})</script></div></header><main class="grow pt-16"><div class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8"><div class=lg:pt-12><div class="flex flex-col md:flex-row bg-secondary-bg rounded"><div class="md:w-1/4 lg:w-1/5 border-e"><div class="sticky top-16 pt-6"><div id=sidebar-title class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text"><span class=font-semibold>目录</span>
-<i class='fas fa-caret-right ms-1'></i></div><div id=sidebar-toc class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent"><div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded"><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/>前端</a></div><ul class=ps-6><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/>CSS</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/>2-CSS 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/>2-CSS 颜色</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/>1-CSS 简介</a></div></li></ul></li><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/>HTML</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-8/>8-其他标记</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-9/>9-视频和音频</a></div></li><li class=py-2><div><a class="text-eureka hover:text-eureka" href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/>7-HTML 表单</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-6/>6-HTML 表格</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-5/>5-HTML 图像</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-4/>4-HTML 链接</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-3/>3-HTML 列表</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-2/>2-HTML 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-1/>1-HTML 结构</a></div></li></ul></li></ul></div></div></div><div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8"><div class=flex><div class="w-full lg:w-3/4 px-6"><article class=prose><h1 class=mb-4>7-HTML 表单</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
+<i class='fas fa-caret-right ms-1'></i></div><div id=sidebar-toc class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent"><div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded"><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/>前端</a></div><ul class=ps-6><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/>CSS</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/>4-CSS 盒子</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/>3-CSS 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/>2-CSS 颜色</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/>1-CSS 简介</a></div></li></ul></li><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/>HTML</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-8/>8-其他标记</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-9/>9-视频和音频</a></div></li><li class=py-2><div><a class="text-eureka hover:text-eureka" href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/>7-HTML 表单</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-6/>6-HTML 表格</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-5/>5-HTML 图像</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-4/>4-HTML 链接</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-3/>3-HTML 列表</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-2/>2-HTML 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-1/>1-HTML 结构</a></div></li></ul></li></ul></div></div></div><div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8"><div class=flex><div class="w-full lg:w-3/4 px-6"><article class=prose><h1 class=mb-4>7-HTML 表单</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
 <span>2022-11-26</span></div><div class="me-6 my-2"><i class="fas fa-clock me-1"></i>
 <span>8分钟阅读时长</span></div></div><h2 id=1-表单概述>1. 表单概述</h2><p>生活中，表单指的是一个打印的文档，这个文档中包含一些空白区域来填写信息。</p><p>在网页中，表单通常用来让网站收集来自访问者的信息。</p><h2 id=2-表单如何工作>2. 表单如何工作</h2><ol><li><p>用户填写表单，然后单击一个按钮将所填信息提交给服务器。</p></li><li><p>每个表单控件的名称与用户输入或选择的值一同发送到服务器。</p></li><li><p>服务器利用某种编程语言（例如 Java）对这些信息进行处理，还可能将这些信息存储在一个数据库中。</p></li><li><p>服务器基于收到的信息创建一个新页面并将其返回到浏览器。</p></li></ol><h2 id=3-表单控件与输入数据>3. 表单控件与输入数据</h2><ol><li><p>表单中包含多个表单控件，每种控件收集不同的信息。</p></li><li><p>服务器需要知道用户输入的每一条数据输入了哪个表单元素。</p></li><li><p>为了区分各类输入数据，从浏览器发送到服务器的信息采用“名称-值”这样成对的格式，例如（username=an, password=123456）。</p></li></ol><h2 id=4-表单结构>4. 表单结构</h2><ol><li><p>表单控件位于 <code>&lt;form></code> 元素中。每个 <code>&lt;form></code> 元素通常要包含 <code>action</code> 、<code>method</code> 和 <code>id</code> 属性。</p></li><li><p><code>action</code> 属性值对应服务器上一个页面的 URL，这个页面用来在用户提交表单时接收表单信息。</p></li><li><p><code>method</code> 对应提交表单的方法，通常有 <code>get</code> 和 <code>post</code> 两种方法，如果没有指定，默认以 get 方法来发送。</p><ol><li><p>使用 get 方法，表单中的值会被附加到由 action 指定的 URL 末尾，通常适用于短表单（搜索框）和从 Web 服务器检索数据的表单的情形。</p></li><li><p>使用 post 方法，表单中的值会被放在 HTTP 头信息中，通常，当上传文件、长表单、包含敏感信息和向数据库添加信息时，应该使用 post 方法。</p></li></ol></li><li><p><code>id</code> 属性用来对表单进行唯一标识。</p></li></ol><h2 id=5-单行文本框>5. 单行文本框</h2><ol><li><p><code>&lt;input></code> 元素用来创建多种不同的表单控件。</p></li><li><p><code>type</code> 属性值决定要创建哪种控件，当属性值为 <code>text</code> 时，会创建一个单行文本框。</p></li><li><p>当用户向表单中输入信息时，服务器需要知道每条数据被输入到了哪个表单控件中。因此，每个表单控件都要指定一个 <code>name</code> 属性，这个属性的值用来对表单控件进行标识，并和输入的信息一起传递给服务器，后续的表单控件都支持 <code>name</code> 属性。</p></li><li><p><code>maxlength</code> 属性可以限制用户在文本区域输入字符的数量，它的值为用户可以输入字符的最大数量。</p></li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;单行文本框测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
@@ -33,7 +32,6 @@
     &lt;head&gt;
         &lt;title&gt;密码框测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;p&gt; Password:
@@ -46,7 +44,6 @@
     &lt;head&gt;
         &lt;title&gt;多行文本框测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;p&gt; 更多建议:
@@ -58,7 +55,6 @@
 </code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127113943.png alt></p><h2 id=8-单选按钮>8. 单选按钮</h2><ol><li><p><code>type="radio"</code> 可以让用户创建一个单选按钮，从而在一系列选项中只选择一个。</p></li><li><p><code>name</code> 属性指定控件名称，一系列只能选择一个的单选按钮应该共用一个 <code>name</code>。</p></li><li><p><code>value</code> 属性指定该项被选中后发送给服务器的数据值。</p></li><li><p><code>checked</code> 属性可以指定当页面加载后该项是否默认被选中。</p></li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;单选框测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
@@ -73,7 +69,6 @@
     &lt;head&gt;
         &lt;title&gt;复选框测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;p&gt; 爱好: &lt;br /&gt;
@@ -87,7 +82,6 @@
 </code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127115243.png alt></p><h2 id=10-下拉列表框>10. 下拉列表框</h2><ol><li><p>下拉列表框让用户在一个下拉列表中选择其中的一个选项。</p></li><li><p><code>&lt;select></code> 元素用来创建下拉列表框，包含两个以上的 <code>&lt;option></code> 元素。</p></li><li><p><code>&lt;option></code> 元素用来指定用户可以选择的选项，在 <code>&lt;option>&lt;/option></code> 标签中的内容将会展示为选项。</p></li><li><p><code>value</code> 属性用来指定选项的值。</p></li><li><p><code>selected</code> 属性可以指定当前页面加载时被选中的选项。如果未指定，则展示第一个选项。</p></li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;下拉列表框测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
@@ -104,7 +98,6 @@
     &lt;head&gt;
         &lt;title&gt;多选框测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;p&gt; 你的爱好是什么: &lt;/p&gt;
@@ -120,7 +113,6 @@
     &lt;head&gt;
         &lt;title&gt;文件上传域测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot; method=&quot;post&quot;&gt;
             &lt;p&gt; 请上传文件： &lt;/p&gt;
@@ -131,7 +123,6 @@
 </code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127221602.png alt></p><h2 id=13-提交按钮>13. 提交按钮</h2><ol><li><p>提交按钮用来将表单发送给服务器。</p></li><li><p>通过指定 <code>type="submit"</code> 可以定义一个提交按钮。</p></li><li><p><code>value</code> 属性用于控制在按钮上显示的文字。</p></li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;提交按钮测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
@@ -144,7 +135,6 @@
     &lt;head&gt;
         &lt;title&gt;图像按钮测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;p&gt;请点击如下按钮：&lt;/p&gt;
@@ -156,7 +146,6 @@
     &lt;head&gt;
         &lt;title&gt;按钮测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;button&gt;&lt;img src=&quot;add.png&quot; /&gt;添加&lt;/button&gt;
@@ -166,7 +155,6 @@
 </code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127224450.png alt></p><h2 id=16-标签表单控件>16. 标签表单控件</h2><ol><li><p>可以使用 <code>&lt;label></code> 元素来作为标签，从而说明控件的作用。</p></li><li><p>相比与直接使用文本而言，<code>&lt;label></code> 元素对视力障碍人士更友好。</p></li><li><p>可以用 <code>&lt;label></code> 标签将控件包围起来使用。</p></li><li><p>也可以使用 <code>for</code> 属性来指明 <code>&lt;label></code> 元素关联的表单控件，其中属性值为表单控件的 id 属性值。</p></li><li><p>可以通过点击 <code>&lt;label></code> 元素来跳转到对应的控件。</p></li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;标签表单控件测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
@@ -179,7 +167,6 @@
 </code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127225145.png alt></p><h2 id=17-组合表单元素>17. 组合表单元素</h2><ol><li><p>可以将相关的表单控件置于 <code>&lt;fieldset></code> 元素中分成一组。</p></li><li><p><code>&lt;lengend></code> 元素可以直接跟在 <code>&lt;fieldset></code> 元素后并包含一个标题，这个标题用来说明控件组的用途。</p></li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;组合表单元素测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
@@ -196,7 +183,6 @@
     &lt;head&gt;
         &lt;title&gt;表单验证测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;p&gt;用户名：&lt;input type=&quot;text&quot; name=&quot;uname&quot; required /&gt;&lt;/p&gt;
@@ -207,7 +193,6 @@
 </code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127230501.png alt></p><h2 id=19-日期控件>19. 日期控件</h2><ol><li>通过指定 <code>type="date"</code> 可以创建一个日期输入控件。</li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;日期控件测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
@@ -220,7 +205,6 @@
     &lt;head&gt;
         &lt;title&gt;电子邮件和 URL 输入控件测试&lt;/title&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
             &lt;p&gt;电子邮件：&lt;input type=&quot;email&quot; name=&quot;email&quot; /&gt;&lt;/p&gt;
@@ -232,7 +216,6 @@
 </code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127231137.png alt></p><h2 id=21-搜索输入控件>21. 搜索输入控件</h2><ol><li><p>通过指定 <code>type="search"</code> 可以创建一个用于搜索的单行文本框。</p></li><li><p>对于所有的文本输入控件，都可以设置 <code>placeholder</code> 属性作为没有任何输入时的占位符。</p></li></ol><pre><code class=language-html>&lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;搜索输入控件测试&lt;/title&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;

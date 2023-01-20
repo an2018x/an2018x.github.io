@@ -1,11 +1,11 @@
-<!doctype html><html lang=zh dir=ltr><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>2-CSS 文本 | 前端 | 安橙的博客</title><meta name=generator content="Hugo Eureka 0.9.3"><link rel=stylesheet href=https://blog.ans20xx.com/css/eureka.min.9cec6350e37e534b0338fa9a085bf06855de3b0f2dcf857e792e5e97b07ea905d4d5513db554cbc26a9c3da622bae92d.css><script defer src=https://blog.ans20xx.com/js/eureka.min.fa9a6bf6d7a50bb635b4cca7d2ba5cf3dfb095ae3798773f1328f7950028b48c17d06276594e1b5f244a25a6c969a705.js></script>
+<!doctype html><html lang=zh dir=ltr><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>3-CSS 文本 | 前端 | 安橙的博客</title><meta name=generator content="Hugo Eureka 0.9.3"><link rel=stylesheet href=https://blog.ans20xx.com/css/eureka.min.9cec6350e37e534b0338fa9a085bf06855de3b0f2dcf857e792e5e97b07ea905d4d5513db554cbc26a9c3da622bae92d.css><script defer src=https://blog.ans20xx.com/js/eureka.min.fa9a6bf6d7a50bb635b4cca7d2ba5cf3dfb095ae3798773f1328f7950028b48c17d06276594e1b5f244a25a6c969a705.js></script>
 <link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" as=style onload='this.onload=null,this.rel="stylesheet"'><link rel=stylesheet href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/base16/solarized-light.min.css media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js crossorigin></script>
 <script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js crossorigin></script>
-<link rel=stylesheet href=https://blog.ans20xx.com/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css media=print onload='this.media="all",this.onload=null'><script defer type=text/javascript src=https://blog.ans20xx.com/js/fontawesome.min.a975d08212c5439f29e6074e7ad58e159ae1ef5efb6a31962fa3b6885557e794dd9315f4a8a16d705066d023f4eaaf07.js></script>
+<link rel=stylesheet href=https://blog.ans20xx.com/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css media=print onload='this.media="all",this.onload=null'><script defer type=text/javascript src=https://blog.ans20xx.com/js/fontawesome.min.8c77c7521b1f95ec2031c2a79f5c6a698aa4a0dba5ba649dfbc7f73994cddf3f494be6aac7e5724f35cbf72cfde09703.js></script>
 <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css integrity=sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js integrity=sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY crossorigin></script>
 <script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js integrity=sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR crossorigin></script>
 <script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}]})})</script><script defer src=https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js integrity=sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0 crossorigin></script>
-<link rel=icon type=image/png sizes=32x32 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png><link rel=apple-touch-icon sizes=180x180 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png><meta name=description content="描述CSS中如何控制文本外观"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Docs","item":"https://blog.ans20xx.com/docs/"},{"@type":"ListItem","position":2,"name":"前端","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/"},{"@type":"ListItem","position":3,"name":"CSS","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/"},{"@type":"ListItem","position":4,"name":"2-CSS 文本","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/"},"headline":"2-CSS 文本 | 前端 | 安橙的博客","datePublished":"2022-12-02T22:16:46+08:00","dateModified":"2022-11-02T22:16:46+08:00","wordCount":4966,"publisher":{"@type":"Person","name":"WANG Chucheng","logo":{"@type":"ImageObject","url":"https://blog.ans20xx.com/images/icon.png"}},"description":"描述CSS中如何控制文本外观"}</script><meta property="og:title" content="2-CSS 文本 | 前端 | 安橙的博客"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.ans20xx.com/images/icon.png"><meta property="og:url" content="https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/"><meta property="og:description" content="描述CSS中如何控制文本外观"><meta property="og:locale" content="zh"><meta property="og:site_name" content="安橙的博客"><meta property="article:published_time" content="2022-12-02T22:16:46+08:00"><meta property="article:modified_time" content="2022-11-02T22:16:46+08:00"><meta property="article:section" content="docs"><body class="flex min-h-screen flex-col"><header class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"><div class="mx-auto w-full max-w-screen-xl"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");((storageColorScheme=="Auto"||storageColorScheme==null)&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName("html")[0].classList.add("dark")</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="me-6 text-primary-text text-xl font-bold">安橙的博客</a>
+<link rel=icon type=image/png sizes=32x32 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png><link rel=apple-touch-icon sizes=180x180 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png><meta name=description content="描述CSS中如何控制文本外观"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Docs","item":"https://blog.ans20xx.com/docs/"},{"@type":"ListItem","position":2,"name":"前端","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/"},{"@type":"ListItem","position":3,"name":"CSS","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/"},{"@type":"ListItem","position":4,"name":"3-CSS 文本","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/"},"headline":"3-CSS 文本 | 前端 | 安橙的博客","datePublished":"2022-12-02T22:16:46+08:00","dateModified":"2022-11-02T22:16:46+08:00","wordCount":4950,"publisher":{"@type":"Person","name":"WANG Chucheng","logo":{"@type":"ImageObject","url":"https://blog.ans20xx.com/images/icon.png"}},"description":"描述CSS中如何控制文本外观"}</script><meta property="og:title" content="3-CSS 文本 | 前端 | 安橙的博客"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.ans20xx.com/images/icon.png"><meta property="og:url" content="https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/"><meta property="og:description" content="描述CSS中如何控制文本外观"><meta property="og:locale" content="zh"><meta property="og:site_name" content="安橙的博客"><meta property="article:published_time" content="2022-12-02T22:16:46+08:00"><meta property="article:modified_time" content="2022-11-02T22:16:46+08:00"><meta property="article:section" content="docs"><body class="flex min-h-screen flex-col"><header class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"><div class="mx-auto w-full max-w-screen-xl"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");((storageColorScheme=="Auto"||storageColorScheme==null)&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName("html")[0].classList.add("dark")</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="me-6 text-primary-text text-xl font-bold">安橙的博客</a>
 <button id=navbar-btn class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
 <i class="fas fa-bars"></i></button><div id=target class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20"><div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0"><a href=/#about class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">关于我</a>
 <a href=/posts/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">博文</a>
@@ -14,7 +14,7 @@
 <a href=/categories/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">归档</a></div><div class=flex><div class="relative pt-4 md:pt-0"><div class="cursor-pointer hover:text-eureka" id=lightDarkMode><i class="fas fa-adjust"></i></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id=is-open></div><div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40" id=lightDarkOptions><span class="px-4 py-1 hover:text-eureka" name=Light>浅色</span>
 <span class="px-4 py-1 hover:text-eureka" name=Dark>深色</span>
 <span class="px-4 py-1 hover:text-eureka" name=Auto>自动</span></div></div></div></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id=is-open-mobile></div></nav><script>let element=document.getElementById("lightDarkMode");storageColorScheme==null||storageColorScheme=="Auto"?document.addEventListener("DOMContentLoaded",()=>{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",switchDarkMode)}):storageColorScheme=="Light"?(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","sun"),element.firstElementChild.classList.add("fa-sun")):storageColorScheme=="Dark"&&(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","moon"),element.firstElementChild.classList.add("fa-moon")),document.addEventListener("DOMContentLoaded",()=>{getcolorscheme(),switchBurger()})</script></div></header><main class="grow pt-16"><div class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8"><div class=lg:pt-12><div class="flex flex-col md:flex-row bg-secondary-bg rounded"><div class="md:w-1/4 lg:w-1/5 border-e"><div class="sticky top-16 pt-6"><div id=sidebar-title class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text"><span class=font-semibold>目录</span>
-<i class='fas fa-caret-right ms-1'></i></div><div id=sidebar-toc class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent"><div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded"><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/>前端</a></div><ul class=ps-6><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/>CSS</a></div><ul class=ps-6><li class=py-2><div><a class="text-eureka hover:text-eureka" href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/>2-CSS 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/>2-CSS 颜色</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/>1-CSS 简介</a></div></li></ul></li><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/>HTML</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-8/>8-其他标记</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-9/>9-视频和音频</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/>7-HTML 表单</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-6/>6-HTML 表格</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-5/>5-HTML 图像</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-4/>4-HTML 链接</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-3/>3-HTML 列表</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-2/>2-HTML 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-1/>1-HTML 结构</a></div></li></ul></li></ul></div></div></div><div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8"><div class=flex><div class="w-full lg:w-3/4 px-6"><article class=prose><h1 class=mb-4>2-CSS 文本</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
+<i class='fas fa-caret-right ms-1'></i></div><div id=sidebar-toc class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent"><div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded"><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/>前端</a></div><ul class=ps-6><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/>CSS</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/>4-CSS 盒子</a></div></li><li class=py-2><div><a class="text-eureka hover:text-eureka" href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/>3-CSS 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/>2-CSS 颜色</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/>1-CSS 简介</a></div></li></ul></li><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/>HTML</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-8/>8-其他标记</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-9/>9-视频和音频</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/>7-HTML 表单</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-6/>6-HTML 表格</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-5/>5-HTML 图像</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-4/>4-HTML 链接</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-3/>3-HTML 列表</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-2/>2-HTML 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-1/>1-HTML 结构</a></div></li></ul></li></ul></div></div></div><div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8"><div class=flex><div class="w-full lg:w-3/4 px-6"><article class=prose><h1 class=mb-4>3-CSS 文本</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
 <span>2022-12-02</span></div><div class="me-6 my-2"><i class="fas fa-clock me-1"></i>
 <span>10分钟阅读时长</span></div></div><h2 id=1-控制文本外观的属性>1. 控制文本外观的属性</h2><p>可以将用来控制文本外观的属性分为两类：</p><ol><li>直接作用于字体以及外观的属性（包括字型和文本的大小）</li><li>无论使用何种字体都会对文本产生相同效果的属性（包括文本的颜色以及单词间距和字母间距）</li></ol><h2 id=2-字体术语>2. 字体术语</h2><h3 id=21-衬线字体serif>2.1 衬线字体（SERIF）</h3><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202233021.png alt></p><p>衬线字体在字母主要笔画的末端会有一些额外的装饰，这些装饰被称为衬线。</p><p>在打印时，考虑到衬线字体容易阅读，所以通常将其应用为长篇文本。</p><h3 id=22-无衬线字体sans-serif>2.2. 无衬线字体（SANS-SERIF）</h3><p>无衬线字体中的字母有更笔直的线条，因此更加简洁。</p><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202233237.png alt></p><p>屏幕分辨率要低于打印分辨率，因此如果文本非常小，无衬线字体阅读起来会更清晰。</p><h3 id=23-等宽字体monospace>2.3. 等宽字体（MONOSPACE）</h3><p>等宽字体中的每个字母的宽度都相同，而非等宽字体中字母的宽度不同。</p><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202233447.png alt></p><p>由于等宽字体可以精确地对齐，便于文本的跟随，因此通常用于显示代码。</p><h3 id=24-字体粗细>2.4. 字体粗细</h3><p>字体粗细不仅能起到强调作用，还可以影响空白区域的大小以及页面上的对比情况。</p><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202234015.png alt></p><h3 id=25-字体样式>2.5. 字体样式</h3><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202234438.png alt></p><p>有些字体的斜体(Italic)呈现出连笔风格，倾斜字体(Oblique)的样式是将普通样式进行一定角度的倾斜。</p><h3 id=26-伸缩>2.6. 伸缩</h3><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/02/20221202234618.png alt></p><p>在压缩（或缩窄）版本的字体中，字母会更窄，间距也会更小。在伸展版本的字体中，字母会更宽，间距也更大。</p><h2 id=3-字体选用>3. 字体选用</h2><ul><li>衬线字体(SERIF)：在字母主要笔画的末端有一些额外的装饰。例如：Georgia、Times、Times New Roman。</li><li>无衬线字体(SANS-SERIF)：字母拥有笔直的线条，设计更加简洁。例如：Arial、Verdana、Helvetica。</li><li>等宽字体(MONOSPACE)：每个字母的宽度都相同。例如：Courier、Courier New。</li><li>草书字体(CURSIVE)：加入了笔划或其他草书的风格，比如手写风格。例如：Comic Sans MS、Monotype Corsiva。</li><li>虚幻字体(FANTACY)：通常作为装饰性字体使用，经常用于标题。例如：Impact、Haettenscheweiler。</li></ul><ol><li>我们可以一次指定多种字体并为其创建一个优先次序，这被称为字体堆栈。</li><li>浏览器至少要支持上述每种字体中的一种，因此，需要在指定的字体最后加上这些通用字体名。</li></ol><p>例如：如果想要使用衬线字体：</p><pre><code class=language-css>font-family: Georgia, Times, serif;
 </code></pre><h2 id=4-扩大字体选用范围的技术>4. 扩大字体选用范围的技术</h2><ol><li>字体系列 (FONT-FAMILY) ：要求用户的计算机上已经安装了相应的字体，字体选用范围有限。</li><li>服务器端字体 (FONT-FACE) ：如果计算机上没有安装相应字体，可以使用 CSS 来指定字体的下载地址。字体使用许可必须允许使用 <code>@font-face</code> 分发字体。</li><li>基于服务的服务器端字体 (SERVICE-BASED FONT-FACE) ：商业用户可以通过 <code>@font-face</code> 为用户提供更多的可选字体，需要向字库支付长期的费用。</li></ol><h2 id=5-字体选用-font-family>5. 字体选用 font-family</h2><ol><li><code>font-family</code> 属性允许为这些元素中的任意文本指定字体。</li><li>该属性的值为你希望使用的字体名称。</li><li>可以指定一组字体并用逗号隔开，这样如果用户没有安装指定的首选字体，浏览器将改用这个列表中的其他字体。</li><li>将一种通用的字体名作为一类字体的结尾也是常用的做法。</li><li>如果一个字体名称由多个单词组成，需要将其放在双引号或单引号中。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
@@ -22,7 +22,6 @@
     &lt;head&gt;
         &lt;title&gt;字体选用 font-family&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;h1&gt;Hello&lt;/h1&gt;
@@ -40,7 +39,6 @@ p {
     &lt;head&gt;
         &lt;title&gt;字体大小 font-size&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;h1&gt;Hello&lt;/h1&gt;
@@ -63,7 +61,6 @@ p {
         &lt;title&gt;选用更多字体&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;h1&gt;Hello&lt;/h1&gt;
     &lt;/body&gt;
@@ -81,7 +78,6 @@ h1 {
         &lt;title&gt;粗体&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;p&gt;Hello&lt;/p&gt;
     &lt;/body&gt;
@@ -94,7 +90,6 @@ h1 {
     &lt;head&gt;
         &lt;title&gt;斜体&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;p id=&quot;italic&quot;&gt;italic&lt;/p&gt;
@@ -116,7 +111,6 @@ h1 {
         &lt;title&gt;大写和小写&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;p id=&quot;uppercase&quot;&gt;hello&lt;/p&gt;
         &lt;p id=&quot;capitalize&quot;&gt;welcome to our website&lt;/p&gt;
@@ -133,7 +127,6 @@ h1 {
     &lt;head&gt;
         &lt;title&gt;下划线和删除线&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;p id=&quot;underline&quot;&gt;hello&lt;/p&gt;
@@ -152,7 +145,6 @@ h1 {
         &lt;title&gt;行间距&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;p&gt;hello&lt;/p&gt;
         &lt;p&gt;welcome to our website&lt;/p&gt;
@@ -166,7 +158,6 @@ h1 {
     &lt;head&gt;
         &lt;title&gt;字母间距和单词间距&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;p&gt;hello&lt;/p&gt;
@@ -182,7 +173,6 @@ h1 {
     &lt;head&gt;
         &lt;title&gt;对齐方式&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;p id=&quot;cneter&quot;&gt;hello&lt;/p&gt;
@@ -201,7 +191,6 @@ h1 {
         &lt;title&gt;对齐方式&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;img src=&quot;cat.jpg&quot; width=&quot;200&quot; height=&quot;100&quot; /&gt;
         可爱的小猫
@@ -216,7 +205,6 @@ h1 {
         &lt;title&gt;文本缩进&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;p&gt;hello&lt;/p&gt;
     &lt;/body&gt;
@@ -230,7 +218,6 @@ h1 {
         &lt;title&gt;投影&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;p&gt;hello&lt;/p&gt;
     &lt;/body&gt;
@@ -243,7 +230,6 @@ h1 {
     &lt;head&gt;
         &lt;title&gt;首字母或首行文本&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;p&gt;hello&lt;/p&gt;
@@ -260,7 +246,6 @@ h1 {
         &lt;title&gt;链接样式&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;a href=&quot;home.html&quot;&gt;主页&lt;/a&gt;
         &lt;a href=&quot;about.html&quot;&gt;关于&lt;/a&gt;
@@ -276,7 +261,6 @@ h1 {
         &lt;title&gt;响应用户&lt;/title&gt;
         &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
     &lt;/head&gt;
-    &lt;/head&gt;
     &lt;body&gt;
         &lt;ul&gt;
             &lt;li&gt;&lt;a href=&quot;home.html&quot;&gt;主页&lt;/a&gt;&lt;/li&gt;
@@ -290,7 +274,8 @@ h1 {
 a:focus {
     color: black;
 }
-</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203160328.png alt></p><h2 id=23-属性选择器>23. 属性选择器</h2><ol><li>属性选择器应用于那些属性中含有特定值的元素。</li></ol><table><thead><tr><th>选择器</th><th>含义</th><th>示例</th><th>解释</th></tr></thead><tbody><tr><td>EXISTENCE(简单选择器)</td><td><code>[]</code> 匹配一种特定的属性(与属性值无关)</td><td><code>p[class]</code></td><td>应用于所有包含 class 属性的 <code>&lt;p></code> 元素</td></tr><tr><td>EQUALITY(精确选择器)</td><td><code>[=]</code> 匹配一个特定的属性，该属性具有特定的值</td><td><code>p[class="dog"]</code></td><td>应用于所有 class 属性值为 dog 的 <code>&lt;p></code> 元素</td></tr><tr><td>SPACE(部分选择器)</td><td><code>[~=]</code> 匹配一个特定的属性，该属性值出现在以空格隔开的单词列表中</td><td><code>p[class~="dog"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的 class 属性值其中一项是 dog</td></tr><tr><td>PREFIX(开头选择器)</td><td><code>[^=]</code> 匹配一个特定的属性，该属性的值以某个特定的字符串作为开头</td><td><code>p[attr^"d"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的某个属性值以字母 d 开头</td></tr><tr><td>SUBSTRING(包含选择器)</td><td><code>[*=]</code>匹配一个特定的属性，该属性的值以某个特定的字符串作为开头</td><td><code>p[attr*"do"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的某个属性值含有 do</td></tr><tr><td>SUFFIX(结尾选择器)</td><td><code>[$=]</code>匹配一个特定的属性，该属性的值以某个特定的字符串作为结尾</td><td><code>p[attr$"g"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的某个属性值以字母 <code>g</code> 结尾</td></tr></tbody></table><h2 id=24-小结>24. 小结</h2><ol><li>有些属性可以用来控制字体的类型、大小、粗细、样式和字距。</li><li>可以假设大多数人已经安装了某些字体，但这些字体的种类是非常有限的。</li><li>如果想要扩大字型的选择范围，有几种方法可供选择，但是前提是要取得这些字体的使用许可。</li><li>文本的行距、字母间距和单词间距都是可以控制的。文本可以向左对齐、向右对齐、居中显示或者两端对齐，同时也可以缩进显示。</li><li>当用户将光标悬停在文本、单击文本或者当某个链接已经被访问过时，可以使用伪类来改变这个元素的样式。</li></ol></article><div class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"><div></div><div class="mt-4 md:mt-0 md:text-right"><span class="text-primary-text block font-bold">下一页</span>
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203160328.png alt></p><h2 id=23-属性选择器>23. 属性选择器</h2><ol><li>属性选择器应用于那些属性中含有特定值的元素。</li></ol><table><thead><tr><th>选择器</th><th>含义</th><th>示例</th><th>解释</th></tr></thead><tbody><tr><td>EXISTENCE(简单选择器)</td><td><code>[]</code> 匹配一种特定的属性(与属性值无关)</td><td><code>p[class]</code></td><td>应用于所有包含 class 属性的 <code>&lt;p></code> 元素</td></tr><tr><td>EQUALITY(精确选择器)</td><td><code>[=]</code> 匹配一个特定的属性，该属性具有特定的值</td><td><code>p[class="dog"]</code></td><td>应用于所有 class 属性值为 dog 的 <code>&lt;p></code> 元素</td></tr><tr><td>SPACE(部分选择器)</td><td><code>[~=]</code> 匹配一个特定的属性，该属性值出现在以空格隔开的单词列表中</td><td><code>p[class~="dog"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的 class 属性值其中一项是 dog</td></tr><tr><td>PREFIX(开头选择器)</td><td><code>[^=]</code> 匹配一个特定的属性，该属性的值以某个特定的字符串作为开头</td><td><code>p[attr^"d"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的某个属性值以字母 d 开头</td></tr><tr><td>SUBSTRING(包含选择器)</td><td><code>[*=]</code>匹配一个特定的属性，该属性的值以某个特定的字符串作为开头</td><td><code>p[attr*"do"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的某个属性值含有 do</td></tr><tr><td>SUFFIX(结尾选择器)</td><td><code>[$=]</code>匹配一个特定的属性，该属性的值以某个特定的字符串作为结尾</td><td><code>p[attr$"g"]</code></td><td>应用于特定的 <code>&lt;p></code> 元素，这些元素的某个属性值以字母 <code>g</code> 结尾</td></tr></tbody></table><h2 id=24-小结>24. 小结</h2><ol><li>有些属性可以用来控制字体的类型、大小、粗细、样式和字距。</li><li>可以假设大多数人已经安装了某些字体，但这些字体的种类是非常有限的。</li><li>如果想要扩大字型的选择范围，有几种方法可供选择，但是前提是要取得这些字体的使用许可。</li><li>文本的行距、字母间距和单词间距都是可以控制的。文本可以向左对齐、向右对齐、居中显示或者两端对齐，同时也可以缩进显示。</li><li>当用户将光标悬停在文本、单击文本或者当某个链接已经被访问过时，可以使用伪类来改变这个元素的样式。</li></ol></article><div class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"><div><span class="text-primary-text block font-bold">上一页</span>
+<a href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/ class=block>4-CSS 盒子</a></div><div class="mt-4 md:mt-0 md:text-right"><span class="text-primary-text block font-bold">下一页</span>
 <a href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/ class=block>2-CSS 颜色</a></div></div></div><div class="hidden lg:block lg:w-1/4"><div class="bg-secondary-bg
 prose sticky top-16 z-10 hidden px-6 py-4 lg:block"><h3>本页内容</h3></div><div class="sticky-toc
 border-s

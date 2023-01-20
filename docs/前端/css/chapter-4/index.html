@@ -1,0 +1,292 @@
+<!doctype html><html lang=zh dir=ltr><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>4-CSS 盒子 | 前端 | 安橙的博客</title><meta name=generator content="Hugo Eureka 0.9.3"><link rel=stylesheet href=https://blog.ans20xx.com/css/eureka.min.9cec6350e37e534b0338fa9a085bf06855de3b0f2dcf857e792e5e97b07ea905d4d5513db554cbc26a9c3da622bae92d.css><script defer src=https://blog.ans20xx.com/js/eureka.min.fa9a6bf6d7a50bb635b4cca7d2ba5cf3dfb095ae3798773f1328f7950028b48c17d06276594e1b5f244a25a6c969a705.js></script>
+<link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" as=style onload='this.onload=null,this.rel="stylesheet"'><link rel=stylesheet href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/base16/solarized-light.min.css media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js crossorigin></script>
+<link rel=stylesheet href=https://blog.ans20xx.com/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css media=print onload='this.media="all",this.onload=null'><script defer type=text/javascript src=https://blog.ans20xx.com/js/fontawesome.min.8c77c7521b1f95ec2031c2a79f5c6a698aa4a0dba5ba649dfbc7f73994cddf3f494be6aac7e5724f35cbf72cfde09703.js></script>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css integrity=sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js integrity=sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js integrity=sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR crossorigin></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}]})})</script><script defer src=https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js integrity=sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0 crossorigin></script>
+<link rel=icon type=image/png sizes=32x32 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png><link rel=apple-touch-icon sizes=180x180 href=https://blog.ans20xx.com/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png><meta name=description content="描述CSS中的盒子模型"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Docs","item":"https://blog.ans20xx.com/docs/"},{"@type":"ListItem","position":2,"name":"前端","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/"},{"@type":"ListItem","position":3,"name":"CSS","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/"},{"@type":"ListItem","position":4,"name":"4-CSS 盒子","item":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/"},"headline":"4-CSS 盒子 | 前端 | 安橙的博客","datePublished":"2023-01-19T22:16:46+08:00","dateModified":"2023-01-19T22:16:46+08:00","wordCount":3608,"publisher":{"@type":"Person","name":"WANG Chucheng","logo":{"@type":"ImageObject","url":"https://blog.ans20xx.com/images/icon.png"}},"description":"描述CSS中的盒子模型"}</script><meta property="og:title" content="4-CSS 盒子 | 前端 | 安橙的博客"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.ans20xx.com/images/icon.png"><meta property="og:url" content="https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/"><meta property="og:description" content="描述CSS中的盒子模型"><meta property="og:locale" content="zh"><meta property="og:site_name" content="安橙的博客"><meta property="article:published_time" content="2023-01-19T22:16:46+08:00"><meta property="article:modified_time" content="2023-01-19T22:16:46+08:00"><meta property="article:section" content="docs"><body class="flex min-h-screen flex-col"><header class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"><div class="mx-auto w-full max-w-screen-xl"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");((storageColorScheme=="Auto"||storageColorScheme==null)&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName("html")[0].classList.add("dark")</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="me-6 text-primary-text text-xl font-bold">安橙的博客</a>
+<button id=navbar-btn class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+<i class="fas fa-bars"></i></button><div id=target class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20"><div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0"><a href=/#about class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">关于我</a>
+<a href=/posts/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">博文</a>
+<a href=/docs/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 selected-menu-item me-4">文档</a>
+<a href=/tags/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">标签</a>
+<a href=/categories/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">归档</a></div><div class=flex><div class="relative pt-4 md:pt-0"><div class="cursor-pointer hover:text-eureka" id=lightDarkMode><i class="fas fa-adjust"></i></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id=is-open></div><div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40" id=lightDarkOptions><span class="px-4 py-1 hover:text-eureka" name=Light>浅色</span>
+<span class="px-4 py-1 hover:text-eureka" name=Dark>深色</span>
+<span class="px-4 py-1 hover:text-eureka" name=Auto>自动</span></div></div></div></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id=is-open-mobile></div></nav><script>let element=document.getElementById("lightDarkMode");storageColorScheme==null||storageColorScheme=="Auto"?document.addEventListener("DOMContentLoaded",()=>{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",switchDarkMode)}):storageColorScheme=="Light"?(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","sun"),element.firstElementChild.classList.add("fa-sun")):storageColorScheme=="Dark"&&(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","moon"),element.firstElementChild.classList.add("fa-moon")),document.addEventListener("DOMContentLoaded",()=>{getcolorscheme(),switchBurger()})</script></div></header><main class="grow pt-16"><div class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8"><div class=lg:pt-12><div class="flex flex-col md:flex-row bg-secondary-bg rounded"><div class="md:w-1/4 lg:w-1/5 border-e"><div class="sticky top-16 pt-6"><div id=sidebar-title class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text"><span class=font-semibold>目录</span>
+<i class='fas fa-caret-right ms-1'></i></div><div id=sidebar-toc class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent"><div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded"><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/>前端</a></div><ul class=ps-6><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/>CSS</a></div><ul class=ps-6><li class=py-2><div><a class="text-eureka hover:text-eureka" href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/>4-CSS 盒子</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/>3-CSS 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-2/>2-CSS 颜色</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/>1-CSS 简介</a></div></li></ul></li><li class=py-2><div class=pb-2><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/>HTML</a></div><ul class=ps-6><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-8/>8-其他标记</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-9/>9-视频和音频</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/>7-HTML 表单</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-6/>6-HTML 表格</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-5/>5-HTML 图像</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-4/>4-HTML 链接</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-3/>3-HTML 列表</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-2/>2-HTML 文本</a></div></li><li class=py-2><div><a class=hover:text-eureka href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/html/chapter-1/>1-HTML 结构</a></div></li></ul></li></ul></div></div></div><div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8"><div class=flex><div class="w-full lg:w-3/4 px-6"><article class=prose><h1 class=mb-4>4-CSS 盒子</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
+<span>2023-01-19</span></div><div class="me-6 my-2"><i class="fas fa-clock me-1"></i>
+<span>8分钟阅读时长</span></div></div><h2 id=1-导言>1. 导言</h2><p>可以通过 CSS 来设置盒子的外观，包括：</p><ul><li>控制盒子的大小</li><li>创建盒子周围的边框</li><li>设置盒子的外边距和内边距</li><li>显示和隐藏盒子</li></ul><h2 id=2-盒子的大小>2. 盒子的大小</h2><ol><li>默认情况下，一个盒子的大小刚好容纳其中的内容。如果需要自定义盒子的大小，就需要用到 <code>width</code> 和 <code>height</code> 属性。</li><li>指定盒子大小的常用方式有像素、百分数或者 em 值。</li><li>使用百分数时，盒子的大小与浏览器窗口的大小相关，如果这个盒子被装入另外一个盒子，那么百分数的大小就是相对外部盒子而言。</li><li>使用 em 时，盒子的大小将以盒子中文本的大小相关。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;盒子的大小&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+            外部的盒子
+            &lt;p&gt;内部的盒子&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>div {
+    height: 300px;
+    width: 60%;
+    background-color: cadetblue;
+}
+p {
+    height: 4em;
+    width: 80%;
+    background-color: darkorange;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119191517.png alt></p><h2 id=3-宽度限制>3. 宽度限制</h2><ol><li>为了适应用户屏幕大小，有些设计会适时展开或收缩页面。</li><li><code>min-width</code> 属性指定一个盒子在浏览器窗口较窄时可以显示的最小宽度，<code>max-width</code> 属性指定一个盒子在浏览器较宽时能伸展的最大宽度。</li><li>宽度限制可以保证内容在所设备上清晰可读。利用 <code>max-width</code> 属性可以保证文本行在较大的浏览器窗口中不至于太宽，利用 <code>min-width</code> 可以保证不会太窄。</li></ol><h2 id=4-高度限制>4. 高度限制</h2><ol><li>可以利用 <code>min-height</code> 和 <code>max-height</code> 属性来对某个盒子进行高度限制。</li></ol><h2 id=5-内容溢出>5. 内容溢出</h2><ol><li><code>overflow</code> 属性告诉浏览器当盒子的内容超过盒子本身时如何显示，有两个属性值可选。</li><li><code>hidden</code> 直接把溢出盒子空间的内容进行隐藏。</li><li><code>scroll</code> 会在盒子上添加一个滚动条。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;内容溢出&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+            这个例子用来说明内容溢出。
+            这个例子用来说明内容溢出。
+            这个例子用来说明内容溢出。
+            这个例子用来说明内容溢出。
+            这个例子用来说明内容溢出。
+            这个例子用来说明内容溢出。
+            这个例子用来说明内容溢出。
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>div {
+    max-height: 100px;
+    width: 60%;
+    background-color: cadetblue;
+    overflow: scroll;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119193401.png alt></p><h2 id=5-边框外边距和内边距>5. 边框、外边距和内边距</h2><ol><li>有三种属性(边框、外边距和内边距)可以应用在所有盒子上，可以通过调节这些属性来控制盒子的外观。</li><li>边框(border)：每个盒子都有边框，即使这些边框不可见或者宽度被设置为 0 像素。边框将一个盒子的边缘与另一个盒子隔开。</li><li>外边距(margin)：外边距位于边框的边缘之外。可以通过设置外边距的宽度在两个相邻盒子的边框之间创建空隙。</li><li>内边距(padding)：内边距是指盒子边框与盒子所包含内容之间的空隙。增加内边距可以提高内容的可读性。</li><li>如果为一个盒子指定了宽度和高度，那么盒子的边框、外边距内边距会增加到它的宽高上。</li></ol><h2 id=6-空白区和垂直外边距>6. 空白区和垂直外边距</h2><ol><li>设计人员将页面上项目之间的空隙称为空白区。</li><li>如果一个盒子下方的外边距与另一个盒子上方的外边距相接，那么浏览器只会显示这两者中较大的一个。</li></ol><h2 id=7-边框宽度>7. 边框宽度</h2><ol><li>使用 <code>border-width</code> 属性来控制边框宽度。</li><li>该属性可以是像素值，也可以是(thin、medium、thick)三个值之一。</li><li>该属性值不可以使用百分数。</li><li>可以使用以下四个属性分别对各个边框大小进行控制：<ul><li>border-top-width</li><li>border-right-width</li><li>border-bottom-width</li><li>border-left-width</li></ul></li><li>还可以使用如下方式来为四个边框指定不同的宽度：</li></ol><pre><code class=language-css>border-width: 2px 1px 1px 2px;
+</code></pre><p>上面属性的展示顺序为：上、右、下、左。</p><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;边框宽度&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>div {
+    height: 100px;
+    width: 100px;
+    border-width: 1px 5px 2px 5px;
+    border-style: solid;
+    background-color: salmon;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119201817.png alt></p><h2 id=8-边框宽度>8. 边框宽度</h2><ol><li>可以使用 <code>border-style</code> 属性来控制边框的样式，可以选用如下值：<ul><li><code>solid</code> 一条实线</li><li><code>dotted</code> 一串方形点</li><li><code>dashed</code> 一条虚线</li><li><code>double</code> 两条实线</li><li><code>groove</code> 雕入页面</li><li><code>ridge</code> 显示为在页面上凸起的效果</li><li><code>inset</code> 显示为嵌入页面的效果</li><li><code>outset</code> 看向来像要凸出屏幕</li><li><code>hidden/none</code> 不显示任何边框</li></ul></li><li>可以利用下面的属性对各个边框的样式单独进行设置：<ul><li><code>border-top-style</code></li><li><code>border-left-style</code></li><li><code>border-right-style</code></li><li><code>border-bottom-style</code></li></ul></li></ol><h2 id=9-边框颜色>9. 边框颜色</h2><ol><li>可以使用 <code>border-color</code> 属性来指定边框的颜色。</li></ol><h2 id=10-快捷方式>10. 快捷方式</h2><ol><li>border 属性允许在一个属性中同时指定边框的宽度、样式和颜色，不过要按照（边框->宽度->颜色）的顺序编写。</li></ol><h2 id=11-内边距>11. 内边距</h2><ol><li><code>padding</code> 属性用来指定元素的内容与元素边框之间保持多大的空隙。</li><li>如果已经为盒子指定了宽度，那么内边距会增加到这个盒子的宽度上。</li><li>内边距和边框一样可以指定 <code>padding-top</code>，以及使用简便写法。</li><li>padding 属性不会被子元素继承。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;内边距&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+            &lt;p&gt;
+                测试
+            &lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>div {
+    height: 100px;
+    width: 100px;
+    padding: 0 20px 0px 20px;
+    background-color: salmon;
+}
+p {
+    background-color: green;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119211452.png alt></p><h2 id=12-外边距>12. 外边距</h2><ol><li><code>margin</code> 属性用来控制盒子之间的空隙。</li><li>如果一个盒子位于另一个盒子上方，就会出现外边距折叠现象，也就是说相连的这两个外边距中，较大的一个会生效，较小的一个则会被浏览器忽略。</li><li>如果一个盒子已经指定了宽度，那么外边距就会增加到这个盒子的宽度上。</li><li>外边距和边框一样可以指定 <code>padding-top</code>，以及使用简便写法。</li><li>margin 属性不会被子元素继承。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;外边距&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id=&quot;no1&quot;&gt;
+            1号盒子
+        &lt;/div&gt;
+        &lt;div id=&quot;no2&quot;&gt;
+            2号盒子
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>#no1 {
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+    background-color: teal;
+    margin: 10px;
+}
+#no2 {
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+    background-color: teal;
+    margin: 10px;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119212156.png alt></p><h2 id=13-内容居中>13. 内容居中</h2><ol><li>如果想要一个盒子在页面上居中显示或者在某个元素内居中显示，可以将 <code>margin-left</code> 和 <code>margin-right</code> 的值设置为 auto。</li><li>为了让盒子在页面上居中，还需要为盒子设置一个宽度，否则元素会占满整个屏幕。</li><li>其原理是一旦设置了 <code>margin-left</code> 和 <code>margin-right</code> 的值为 auto，浏览器就会在盒子的两侧显示相同的空隙。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;内容居中&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id=&quot;no1&quot;&gt;
+            1号盒子
+        &lt;/div&gt;
+        &lt;div id=&quot;no2&quot;&gt;
+            2号盒子
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>#no1 {
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+    background-color: teal;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#no2 {
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+    background-color: teal;
+    margin: 10px;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119213741.png alt></p><h2 id=14-内联元素与块级元素的转换>14. 内联元素与块级元素的转换</h2><ol><li><code>display</code> 属性允许你将一个内联元素转换为块级元素，反之亦然；同时也支持从页面上隐藏元素。</li><li><code>inline</code> 值可以使一个块级元素转换为内联元素。</li><li><code>block</code> 值可以使一个内联元素转换为块级元素。</li><li><code>inline-block</code> 值可以使一个块级元素像一个内联元素一样浮动并保持其他块级元素特征。</li><li><code>none</code> 值可以将一个元素从页面上隐藏，就像元素不存在一样。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;内联元素与块级元素的转换&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;ul&gt;
+            &lt;li&gt;首页&lt;/li&gt;
+            &lt;li class=&quot;invisible&quot;&gt;
+                更多
+            &lt;/li&gt;
+            &lt;li&gt;归档&lt;/li&gt;
+            &lt;li&gt;博文&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>li {
+    display: inline;
+    margin: 10px;
+}
+li.invisible {
+    display: none;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119214259.png alt></p><h2 id=15-盒子的隐藏>15. 盒子的隐藏</h2><ol><li><code>visibility</code> 属性允许从用户的视线中隐藏盒子，但它保留了元素原来占用的空间。</li><li><code>hidden</code> 值用来隐藏元素，原来元素的位置会显示为空白。</li><li><code>visible</code> 值用来显示元素。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;盒子的隐藏&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;ul&gt;
+            &lt;li&gt;首页&lt;/li&gt;
+            &lt;li&gt;归档&lt;/li&gt;
+            &lt;li class=&quot;invisible&quot;&gt;
+                更多
+            &lt;/li&gt;
+            &lt;li&gt;博文&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>li {
+    display: inline;
+    margin: 10px;
+}
+li.invisible {
+    visibility: hidden;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/19/20230119214703.png alt></p><h2 id=16-css3边框图像>16. CSS3：边框图像</h2><ol><li><code>border-image</code> 将图像应用到盒子的边框上。它采用一张背景图片，并将图片分割成9块。</li><li>从图片切割出来的各自将被放在盒子相应的位置上，而对于盒子的边来说，需要选择它的背景是伸展显示还是重复显示。</li><li>该属性包含三种值：
+a. 图片的 URL
+b. 切割图片的位置
+c. 如何处理直边：<ul><li>stretch 伸展图片</li><li>repeat 重复图片</li><li>round 类似 repeat，但是如果重复图片遇到边界时不合适，round 值会自动根据边框的大小动态调整图片的大小直到正好可以铺满整个边框。</li></ul></li><li>一般我们会遇到类似：<code>-moz-border-image</code> 或者 <code>-webkit-border-image</code> 属性，这些属性是为了帮助 Chrome/Firefox 的早期版本正确显示。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;边框图像&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;
+            内容
+        &lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>p {
+    width: 300px;
+    border: 30px solid transparent;
+    border-image: url(&quot;border.png&quot;) 5 5 5 5 round;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120184455.png alt></p><h2 id=17-css3盒子的投影>17. CSS3：盒子的投影</h2><ol><li><code>box-shadow</code> 属性可以在盒子的周围增加投影，该属性与 <code>text-shadow</code> 属性类型。</li><li>使用该属性时，至少需要包含下面项目中的前两项以及一个颜色值：<ul><li>水平偏移：负值表示将阴影置于盒子的左侧。</li><li>垂直偏移：负值表示将阴影置于盒子的下方。</li><li>模糊距离：如果省略该值，阴影会显示为实边，和边框一样。</li><li>阴影扩展：如果使用该值，正值会使阴影向四周扩展，负值会让阴影收缩。</li></ul></li><li>可以在以上值前面使用 inset 关键字来创建内部阴影。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;盒子投影&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+        &lt;div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>div {
+    border: 1px solid seagreen;
+    height: 300px;
+    width: 300px;
+    box-shadow: 5px 5px 3px #faa;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120185355.png alt></p><h2 id=18-css3-圆角>18. CSS3: 圆角</h2><ol><li>可以使用 <code>border-radius</code> 属性来给盒子创建圆角。</li><li>该属性的值表示圆角的半径。</li><li>可以使用 <code>border-top-right-radius</code>、<code>border-top-bottom-radius</code>、<code>border-left-bottom-radius</code>、<code>border-left-top-radius</code>来分别指定四个角的圆角。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;圆角&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+        &lt;div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>div {
+    border: 1px solid seagreen;
+    height: 300px;
+    width: 300px;
+    border-radius: 10px;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120185743.png alt></p><h2 id=19-css3-椭圆形>19. CSS3: 椭圆形</h2><ol><li>可以给圆角的横向和纵向值指定不同的距离来创建椭圆形圆角。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;圆角&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+        &lt;div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><pre><code class=language-css>div {
+    border: 1px solid seagreen;
+    height: 300px;
+    width: 300px;
+    border-top-left-radius: 80px 30px;
+}
+</code></pre><p><img src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120190325.png alt></p><h2 id=20-小结>20. 小结</h2><ol><li>CSS 采用盒子模型来处理每个 HTML 元素。</li><li>可以使用 CSS 来控制盒子的大小。</li><li>可以使用 CSS 来控制盒子的边框、外边距和内边距。</li><li>可以通过 display 和 visibility 属性来隐藏元素。</li><li>块级盒子可以转换为内联盒子，内联盒子也可以转换成块级盒子。</li><li>通过控制包含文本的盒子宽度以及行距可以提高文本的可读性。</li><li>CSS3 引入了创建图像边框和圆角边框的功能。</li></ol></article><div class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"><div></div><div class="mt-4 md:mt-0 md:text-right"><span class="text-primary-text block font-bold">下一页</span>
+<a href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/ class=block>3-CSS 文本</a></div></div></div><div class="hidden lg:block lg:w-1/4"><div class="bg-secondary-bg
+prose sticky top-16 z-10 hidden px-6 py-4 lg:block"><h3>本页内容</h3></div><div class="sticky-toc
+border-s
+hidden px-6 pb-6 lg:block"><nav id=TableOfContents><ul><li><a href=#1-导言>1. 导言</a></li><li><a href=#2-盒子的大小>2. 盒子的大小</a></li><li><a href=#3-宽度限制>3. 宽度限制</a></li><li><a href=#4-高度限制>4. 高度限制</a></li><li><a href=#5-内容溢出>5. 内容溢出</a></li><li><a href=#5-边框外边距和内边距>5. 边框、外边距和内边距</a></li><li><a href=#6-空白区和垂直外边距>6. 空白区和垂直外边距</a></li><li><a href=#7-边框宽度>7. 边框宽度</a></li><li><a href=#8-边框宽度>8. 边框宽度</a></li><li><a href=#9-边框颜色>9. 边框颜色</a></li><li><a href=#10-快捷方式>10. 快捷方式</a></li><li><a href=#11-内边距>11. 内边距</a></li><li><a href=#12-外边距>12. 外边距</a></li><li><a href=#13-内容居中>13. 内容居中</a></li><li><a href=#14-内联元素与块级元素的转换>14. 内联元素与块级元素的转换</a></li><li><a href=#15-盒子的隐藏>15. 盒子的隐藏</a></li><li><a href=#16-css3边框图像>16. CSS3：边框图像</a></li><li><a href=#17-css3盒子的投影>17. CSS3：盒子的投影</a></li><li><a href=#18-css3-圆角>18. CSS3: 圆角</a></li><li><a href=#19-css3-椭圆形>19. CSS3: 椭圆形</a></li><li><a href=#20-小结>20. 小结</a></li></ul></nav></div><script>window.addEventListener("DOMContentLoaded",()=>{enableStickyToc()})</script></div></div></div></div></div><script>document.addEventListener("DOMContentLoaded",()=>{hljs.highlightAll(),changeSidebarHeight(),switchDocToc()})</script></div></div></main><footer class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b"><p class="text-sm text-tertiary-text">&copy; 2022 <a href=https://www.ans20xx.com/>安橙</a>
+&#183; Powered by the <a href=https://github.com/wangchucheng/hugo-eureka class=hover:text-eureka>Eureka</a> theme for <a href=https://gohugo.io class=hover:text-eureka>Hugo</a></p></div></div></footer></body></html>
