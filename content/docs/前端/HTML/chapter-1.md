@@ -64,7 +64,6 @@ HTML 由多种不同的元素组成，每个元素都有一个起始 + 结束标
     <head>
         <title>这是标题</title>
     </head>
-    </head>
     <body>
 
     </body>

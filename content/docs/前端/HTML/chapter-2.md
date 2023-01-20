@@ -29,7 +29,6 @@ HTML 中的标题有六个级别。
     <head>
         <title>标题测试</title>
     </head>
-    </head>
     <body>
         <h1>一号标题</h1>
         <h2>二号标题</h2>
@@ -53,7 +52,6 @@ HTML 中的标题有六个级别。
 <html>
     <head>
         <title>段落测试</title>
-    </head>
     </head>
     <body>
         <p>这是第一个段落。</p>
@@ -79,7 +77,6 @@ HTML 中的标题有六个级别。
     <head>
         <title>粗体和斜体测试</title>
     </head>
-    </head>
     <body>
         <b>这是粗体 </b>
         <i>这是斜体 </i>
@@ -99,7 +96,6 @@ HTML 中的标题有六个级别。
 <html>
     <head>
         <title>上标和下标测试</title>
-    </head>
     </head>
     <body>
         <p>
@@ -124,7 +120,6 @@ HTML 中的标题有六个级别。
 <html>
     <head>
         <title>空白测试</title>
-    </head>
     </head>
     <body>
         <p>
@@ -160,7 +155,6 @@ HTML 中的标题有六个级别。
 <html>
     <head>
         <title>换行符和水平线测试</title>
-    </head>
     </head>
     <body>
         <p>
@@ -199,7 +193,6 @@ HTML 中的标题有六个级别。
     <head>
         <title>加粗和强调测试</title>
     </head>
-    </head>
     <body>
         <strong>这段文字十分重要</strong> <br />
         <em>需要仔细阅读</em>
@@ -224,7 +217,6 @@ HTML 中的标题有六个级别。
     <head>
         <title>引用测试</title>
     </head>
-    </head>
     <body>
         <blockquote>学而时习之，不亦乐乎</blockquote>
         <p>上面这段话出自<q>论语</q></p>
@@ -242,7 +234,6 @@ HTML 中的标题有六个级别。
 <html>
     <head>
         <title>缩写词测试</title>
-    </head>
     </head>
     <body>
         <p>A 商品今年的 <abbr title="商品交易总额">GMV</abbr> 同比增长 150%。</p>
@@ -266,7 +257,6 @@ HTML 中的标题有六个级别。
 <html>
     <head>
         <title>引文和定义测试</title>
-    </head>
     </head>
     <body>
         <p><cite>《算法导论》</cite>是一本描述计算机算法与数据结构的经典书籍。</p>

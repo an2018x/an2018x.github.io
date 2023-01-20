@@ -25,8 +25,6 @@ draft: false
     <head>
         <title>前景色</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-
-    </head>
     </head>
     <body>
         <h1>你好</h1>
@@ -68,7 +66,6 @@ p {
     <head>
         <title>背景色</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <h1>你好</h1>
@@ -140,7 +137,6 @@ p {
     <head>
         <title>HSL 和 HSLA</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <h1>你好</h1>

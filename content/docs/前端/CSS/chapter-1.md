@@ -67,7 +67,6 @@ h1, h2, h3 {
         <title>使用外部 CSS</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <h1>你好</h1>
     </body>
@@ -99,7 +98,6 @@ h1 {
                 color: blue;
             }
         </style>
-    </head>
     </head>
     <body>
         <h1>你好</h1>
@@ -145,7 +143,6 @@ h1 {
     <head>
         <title>继承</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <h1>你好</h1>

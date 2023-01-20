@@ -34,7 +34,6 @@ draft: false
     <head>
         <title>基本的表格结构测试</title>
     </head>
-    </head>
     <body>
         <table>
             <tr>
@@ -66,7 +65,6 @@ draft: false
 <html>
     <head>
         <title>表格标题测试</title>
-    </head>
     </head>
     <body>
         <table>
@@ -101,7 +99,6 @@ draft: false
     <head>
         <title>表格跨列测试</title>
     </head>
-    </head>
     <body>
         <table>
             <tr>
@@ -133,7 +130,6 @@ draft: false
 <html>
     <head>
         <title>表格跨行测试</title>
-    </head>
     </head>
     <body>
         <table>
@@ -173,7 +169,6 @@ draft: false
 <html>
     <head>
         <title>长表格测试</title>
-    </head>
     </head>
     <body>
         <table>

@@ -42,7 +42,6 @@ draft: false
     <head>
         <title>指向其他网站的链接测试</title>
     </head>
-    </head>
     <body>
         <a href="https://www.taobao.com">淘宝</a>
     </body>
@@ -66,7 +65,6 @@ draft: false
     <head>
         <title>指向同一网站中其他页面的链接</title>
     </head>
-    </head>
     <body>
         <a href="about.html">第二页</a>
     </body>
@@ -79,7 +77,6 @@ about.html：
 <html>
     <head>
         <title>第二页</title>
-    </head>
     </head>
     <body>
         <h1>这是另外一个页面</h1>
@@ -102,7 +99,6 @@ about.html：
     <head>
         <title>EMAIL 链接</title>
     </head>
-    </head>
     <body>
         <a href="mailto:ans20xx@qq.com">发送邮件给 ans20xx</a>
     </body>
@@ -116,9 +112,6 @@ about.html：
 ![](https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126222226.png)
 
 
-
-
-
 ## 5. 在新窗口中打开链接
 
 1. 可以使用 `target` 属性，并将值设置为 `_blank` 来在新窗口中打开链接。
@@ -129,7 +122,6 @@ about.html：
 <html>
     <head>
         <title>在新窗口中打开链接测试</title>
-    </head>
     </head>
     <body>
         <a href="https://www.baidu.com" target="_blank">百度</a>
@@ -166,7 +158,6 @@ about.html：
     <head>
         <title>链接到当前页面的某个特定位置</title>
     </head>
-    </head>
     <body>
         <a href="#title2">跳转到标题二</a>
         <h1 id="title1">标题一</h1>
@@ -195,22 +186,12 @@ about.html：
 标题二出现在了页面下方
 
 
-
-
-
 ## 7. 链接到其他页面的某个特定位置
-
-
 
 1. 可以设置 `href` 的属性值为 "绝对 URL + # + id 属性值" 来链接到其他页面的某个特定位置。
 
 
-
-
-
 ## 8. 小结
-
-
 
 1. 链接通过 `<a>` 元素创建。
 

@@ -36,7 +36,6 @@ draft: false
     <head>
         <title>添加图像测试</title>
     </head>
-    </head>
     <body>
         <img src="cat.jpg" alt="猫" title="猫猫摄影" />
     </body>
@@ -72,7 +71,6 @@ draft: false
     <head>
         <title>图像的宽度和高度测试</title>
     </head>
-    </head>
     <body>
         <img src="cat.jpg" alt="猫" title="猫猫摄影" 
             width="200" height="120"/>
@@ -106,7 +104,6 @@ draft: false
 <html>
     <head>
         <title>在代码中插入图像的位置</title>
-    </head>
     </head>
     <body>
         <img src="cat.jpg" alt="猫" title="猫猫摄影" 
@@ -164,7 +161,6 @@ draft: false
 <html>
     <head>
         <title>图形与图形说明测试</title>
-    </head>
     </head>
     <body>
         <figure>

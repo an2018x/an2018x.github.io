@@ -54,7 +54,6 @@ draft: false
     <head>
         <title>向网页中添加视频测试</title>
     </head>
-    </head>
     <body>
         <video src="test.mp4" width="800" height="600" preload="none" controls></video>
     </body>
@@ -76,7 +75,6 @@ draft: false
 <html>
     <head>
         <title>多个视频源</title>
-    </head>
     </head>
     <body>
         <video width="800" height="600" preload="none" controls>
@@ -100,7 +98,6 @@ draft: false
 <html>
     <head>
         <title>向网页中添加音频</title>
-    </head>
     </head>
     <body>
         <audio width="800" src="test.mp3" controls>

@@ -39,7 +39,6 @@ draft: false
     <head>
         <title>注释测试</title>
     </head>
-    </head>
     <body>
         <p>你好，世界!</p>
         <!-- <p>被注释的内容不会显示</p> -->
@@ -63,7 +62,6 @@ draft: false
     <head>
         <title>id属性测试</title>
     </head>
-    </head>
     <body>
         <p id="hello">你好</p>
     </body>
@@ -82,7 +80,6 @@ draft: false
 <html>
     <head>
         <title>class属性测试</title>
-    </head>
     </head>
     <body>
         <p class="hello">你好</p>
@@ -112,7 +109,6 @@ draft: false
     <head>
         <title>div测试</title>
     </head>
-    </head>
     <body>
         <img src="cat.jpg" width="200" height="100" />
         <div>
@@ -139,7 +135,6 @@ draft: false
     <head>
         <title>span测试</title>
     </head>
-    </head>
     <body>
         <p>你好，<span class="mark">世界</span></p>
     </body>
@@ -161,7 +156,6 @@ draft: false
 <html>
     <head>
         <title>iframe测试</title>
-    </head>
     </head>
     <body>
         <iframe src="http://www.bilibili.com" width="800" height="600" seamless>
@@ -199,7 +193,6 @@ draft: false
         <meta http-equiv="author" content="an" />
         <meta http-equiv="progma" content="no-cache" />
         <meta http-equiv="expires" content="Fri, 04 Oct 2022 12:00:00 GMT" />
-    </head>
     </head>
     <body>
         <p>你好，我是An</p>

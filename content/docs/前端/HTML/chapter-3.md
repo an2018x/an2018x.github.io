@@ -24,7 +24,6 @@ draft: false
     <head>
         <title>有序列表测试</title>
     </head>
-    </head>
     <body>
         <ol>
             <li>第一条</li>
@@ -49,7 +48,6 @@ draft: false
 <html>
     <head>
         <title>无序列表测试</title>
-    </head>
     </head>
     <body>
         <ul>
@@ -78,7 +76,6 @@ draft: false
     <head>
         <title>定义列表测试</title>
     </head>
-    </head>
     <body>
         <dl>
             <dt>GDP</dt>
@@ -102,7 +99,6 @@ draft: false
 <html>
     <head>
         <title>嵌套测试</title>
-    </head>
     </head>
     <body>
         <ul>

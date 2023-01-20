@@ -1,5 +1,5 @@
 ---
-title: 2-CSS 文本
+title: 3-CSS 文本
 description: 描述CSS中如何控制文本外观
 toc: true
 authors: []
@@ -98,7 +98,6 @@ font-family: Georgia, Times, serif;
         <title>字体选用 font-family</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <h1>Hello</h1>
         <p>Have a nice day!</p>
@@ -133,7 +132,6 @@ p {
     <head>
         <title>字体大小 font-size</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <h1>Hello</h1>
@@ -184,7 +182,6 @@ p {
         <title>选用更多字体</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <h1>Hello</h1>
     </body>
@@ -223,7 +220,6 @@ h1 {
         <title>粗体</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <p>Hello</p>
     </body>
@@ -253,7 +249,6 @@ p {
     <head>
         <title>斜体</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <p id="italic">italic</p>
@@ -290,7 +285,6 @@ p {
         <title>大写和小写</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <p id="uppercase">hello</p>
         <p id="capitalize">welcome to our website</p>
@@ -325,7 +319,6 @@ p {
         <title>下划线和删除线</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <p id="underline">hello</p>
         <p id="line-through">welcome to our website</p>
@@ -359,7 +352,6 @@ p {
         <title>行间距</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <p>hello</p>
         <p>welcome to our website</p>
@@ -387,7 +379,6 @@ p {
     <head>
         <title>字母间距和单词间距</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <p>hello</p>
@@ -420,7 +411,6 @@ p {
     <head>
         <title>对齐方式</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <p id="cneter">hello</p>
@@ -456,7 +446,6 @@ p {
         <title>对齐方式</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <img src="cat.jpg" width="200" height="100" />
         可爱的小猫
@@ -483,7 +472,6 @@ img {
     <head>
         <title>文本缩进</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <p>hello</p>
@@ -516,7 +504,6 @@ p {
         <title>投影</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <p>hello</p>
     </body>
@@ -547,7 +534,6 @@ p {
         <title>首字母或首行文本</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
     </head>
-    </head>
     <body>
         <p>hello</p>
     </body>
@@ -577,7 +563,6 @@ p::first-letter {
     <head>
         <title>链接样式</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <a href="home.html">主页</a>
@@ -612,7 +597,6 @@ a:visited {
     <head>
         <title>响应用户</title>
         <link rel="stylesheet" href="hello.css" type="text/css" />
-    </head>
     </head>
     <body>
         <ul>

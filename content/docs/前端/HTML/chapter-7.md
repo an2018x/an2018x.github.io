@@ -68,7 +68,6 @@ draft: false
     <head>
         <title>单行文本框测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <p> Username:
@@ -91,7 +90,6 @@ draft: false
 <html>
     <head>
         <title>密码框测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
@@ -117,7 +115,6 @@ draft: false
 <html>
     <head>
         <title>多行文本框测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
@@ -146,7 +143,6 @@ draft: false
     <head>
         <title>单选框测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <p> 性别: <br />
@@ -174,7 +170,6 @@ draft: false
 <html>
     <head>
         <title>复选框测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
@@ -207,7 +202,6 @@ draft: false
     <head>
         <title>下拉列表框测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <p> 你来自哪里: </p>
@@ -233,7 +227,6 @@ draft: false
 <html>
     <head>
         <title>多选框测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
@@ -261,7 +254,6 @@ draft: false
     <head>
         <title>文件上传域测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com" method="post">
             <p> 请上传文件： </p>
@@ -286,7 +278,6 @@ draft: false
     <head>
         <title>提交按钮测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <p> 请上传表单 </p>
@@ -309,7 +300,6 @@ draft: false
     <head>
         <title>图像按钮测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <p>请点击如下按钮：</p>
@@ -331,7 +321,6 @@ draft: false
 <html>
     <head>
         <title>按钮测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
@@ -360,7 +349,6 @@ draft: false
     <head>
         <title>标签表单控件测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <label>年龄：<input type="text" /></label> <br />
@@ -383,7 +371,6 @@ draft: false
 <html>
     <head>
         <title>组合表单元素测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
@@ -409,7 +396,6 @@ draft: false
     <head>
         <title>表单验证测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <p>用户名：<input type="text" name="uname" required /></p>
@@ -429,7 +415,6 @@ draft: false
 <html>
     <head>
         <title>日期控件测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
@@ -455,7 +440,6 @@ draft: false
     <head>
         <title>电子邮件和 URL 输入控件测试</title>
     </head>
-    </head>
     <body>
         <form action="http://www.ans20xx.com">
             <p>电子邮件：<input type="email" name="email" /></p>
@@ -478,7 +462,6 @@ draft: false
 <html>
     <head>
         <title>搜索输入控件测试</title>
-    </head>
     </head>
     <body>
         <form action="http://www.ans20xx.com">
