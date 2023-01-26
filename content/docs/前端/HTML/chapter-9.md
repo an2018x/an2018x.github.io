@@ -1,18 +1,11 @@
 ---
 title: 9-视频和音频
-
 description: HTML5 中如何添加视频和音频
-
 toc: true
-
 authors: []
-
 date: 2022-12-03T17:16:46+08:00
-
 lastmod: 2022-12-03T17:16:46+08:00
-
 draft: false
-
 ---
 
 ## 1. 认识视频格式和播放器

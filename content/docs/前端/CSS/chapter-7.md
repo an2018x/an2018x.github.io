@@ -3,8 +3,8 @@ title: 7-图像
 description: 描述CSS中如何控制图像样式
 toc: true
 authors: []
-date: 2023-01-20T19:16:46+08:00
-lastmod: 2023-01-20T19:16:46+08:00
+date: 2023-01-20T19:18:46+08:00
+lastmod: 2023-01-20T19:18:46+08:00
 draft: false
 ---
 
@@ -51,10 +51,15 @@ draft: false
 ## 7. 简写
 
 1. 也可以使用 `background` 属性进行简写，顺序为：
+
     a. `background-color`
+
     b. `background-image`
+    
     c. `background-repeat`
+    
     d. `background-attachment`
+    
     e. `background-position`
 
 
@@ -70,4 +75,3 @@ draft: false
 3. 对于页面上由任何元素创建的盒子，可以指定背景图像。
 4. 背景图像可以只出现一次，也可以在盒子的背景中重复出现。
 5. 可以通过移动背景图像的位置来创建图像翻转效果。
-’
