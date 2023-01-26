@@ -1,5 +1,5 @@
 ---
-title: 1-JavaScript 基础指令
+title: 2-JavaScript 基础指令
 description: 描述 JavaScript 中的基础指令
 toc: true
 authors: []

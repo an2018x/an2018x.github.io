@@ -1,5 +1,5 @@
 ---
-title: 1-JavaScript 函数、方法和对象
+title: 3-JavaScript 函数、方法和对象
 description: 描述 JavaScript 中的函数、方法和对象
 toc: true
 authors: []
