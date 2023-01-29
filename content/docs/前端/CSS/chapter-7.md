@@ -1,5 +1,5 @@
 ---
-title: 7-图像
+title: 7-CSS 图像
 description: 描述CSS中如何控制图像样式
 toc: true
 authors: []

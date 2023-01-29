@@ -1,18 +1,11 @@
 ---
 title: 7-HTML 表单
-
 description: 介绍 HTML 中表单工作流程以及如何创建各种表单控件
-
 toc: true
-
 authors: []
-
 date: 2022-11-26T23:16:46+08:00
-
 lastmod: 2022-11-26T23:16:46+08:00
-
 draft: false
-
 ---
 
 ## 1. 表单概述
