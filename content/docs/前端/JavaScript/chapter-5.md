@@ -3,8 +3,8 @@ title: 5-JavaScript 文档对象模型
 description: 描述 JavaScript 中的文档对象模型
 toc: true
 authors: []
-date: 2023-01-26T20:46:46+08:00
-lastmod: 2023-01-26T20:46:46+08:00
+date: 2023-01-27T20:46:46+08:00
+lastmod: 2023-01-27T20:46:46+08:00
 draft: false
 ---
 
