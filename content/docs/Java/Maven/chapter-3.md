@@ -10,7 +10,7 @@ draft: false
 
 ## 1. 概述
 
-Maven Profile 可以被用来创建自定义的构建配置，例如指定一个测试力度，或者是指定部署环境。
+Maven Profile 可以被用来创建自定义的构建配置，例如指定一个测试粒度，或者是指定部署环境。
 
 ## 2. 简单例子
 
@@ -119,3 +119,108 @@ mvn package -P integration-tests,mutation-tests
 
 2. 然而，如果我们显式指定了 profile，那么默认的 profile 会被覆盖
 
+### 4.4. 基于属性
+
+1. 我们可以使用命令行来激活 profile。
+2. 但是我们也可以通过 -D 系统属性来激活，例如，通过如下配置，我们可以使用 -Denvironment 命令来激活 profile：
+
+```xml
+<profile>
+    <id>active-on-property-environment</id>
+    <activation>
+        <property>
+            <name>environment</name>
+        </property>
+    </activation>
+</profile>
+```
+
+3. 通过如下配置，可以在属性不存在的时候激活：
+
+```xml
+<property>
+    <name>!environment</name>
+</property>
+```
+
+4. 也可以通过如下配置，可以在属性为指定的值的时候来激活 profile，下面的就可以通过 -Denvironment=test 来激活：
+
+```xml
+<property>
+    <name>environment</name>
+    <value>test</value>
+</property>
+```
+
+5. 同理，也可以在属性不是某个指定的值的时候激活：
+
+```xml
+<property>
+    <name>environment</name>
+    <value>!test</value>
+</property>
+```
+
+### 4.5. 基于 JDK 版本
+
+1. 可以基于 JDK 的版本来激活配置项
+
+```xml
+<profile>
+    <id>active-on-jdk-11</id>
+    <activation>
+        <jdk>11</jdk>
+    </activation>
+</profile>
+```
+
+### 4.6. 基于操作系统
+
+1. 也可以基于一些操作系统信息来激活 profile>
+2. 可以通过 `mvn enforcer:display-info` 命令来获取与操作系统和 JDK 相关的信息：
+
+```shell
+[INFO]
+[INFO] --- maven-enforcer-plugin:3.2.1:display-info (default-cli) @ demo01 ---
+[INFO] Maven Version: 3.8.6
+[INFO] JDK Version: 1.8.0_341 normalized as: 1.8.0-341
+[INFO] Java Vendor: Oracle Corporation
+[INFO] OS Info - Arch: amd64, Family: windows, Name: windows 11, Version: 10.0
+```
+
+4. 所以，我们可以创建基于 windows 10.0 的配置：
+
+```xml
+<profile>
+    <id>active-on-windows-10</id>
+    <activation>
+        <os>
+            <name>windows 10</name>
+            <family>Windows</family>
+            <arch>amd64</arch>
+            <version>10.0</version>
+        </os>
+    </activation>
+</profile>
+```
+
+### 4.7. 基于文件
+
+1. 可以基于文件是否存在来运行 profile，下面的配置是在 testreport.xml 文件不存在的时候运行：
+
+```xml
+<activation>
+    <file>
+        <missing>target/testreport.html</missing>
+    </file>
+</activation>
+```
+
+
+## 5. 取消激活 profile
+
+1. 为了禁用某个 profile 可以使用 `!` 或 `-`：
+
+```shell
+mvn compile -P -active-on-jdk-11
+```
