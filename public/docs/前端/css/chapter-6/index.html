@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>6-CSS 定位 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="描述CSS中如何定位元素">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/chapter-6/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/chapter-6/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      6-CSS 定位
+    </h1>
+    <div class="post-description">
+      描述CSS中如何定位元素
+    </div>
+    <div class="post-meta"><span title='2023-01-20 19:17:46 +0800 CST'>一月 20, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="1-核心概念">1. 核心概念<a hidden class="anchor" aria-hidden="true" href="#1-核心概念">#</a></h2>
+<h3 id="11-构建块">1.1. 构建块<a hidden class="anchor" aria-hidden="true" href="#11-构建块">#</a></h3>
+<ol>
+<li>CSS 采用盒子模型来处理每个 HTML 元素，盒子可以是一个块级盒子，也可以是一个内联盒子。</li>
+<li>块级盒子另起一行显示，并且在布局中就像是主体构建块。</li>
+<li>内联盒子在其周围的文本间浮动。</li>
+<li>可以通过设置每个盒子的宽度来控制其占用的空间。</li>
+<li>可以使用边框、外边距、内边距来将盒子分开。</li>
+</ol>
+<h3 id="12-包含元素">1.2. 包含元素<a hidden class="anchor" aria-hidden="true" href="#12-包含元素">#</a></h3>
+<ol>
+<li>如果一个块级元素位于另一个块级元素内部，那么这个外部的框就被称为包含元素或父级元素。</li>
+<li>人们通常将若干个元素集中在一个 <code>&lt;div&gt;</code> 元素中。</li>
+<li>一个盒子可能被嵌套在其他多个块级元素中，但包含元素只能是它的直接父元素。</li>
+</ol>
+<h2 id="2-控制元素的位置">2. 控制元素的位置<a hidden class="anchor" aria-hidden="true" href="#2-控制元素的位置">#</a></h2>
+<ol>
+<li>CSS 中包含三种用于控制页面布局的定位机制：普通流、相对定位和绝对定位。</li>
+<li>在 CSS 中通过 <code>position</code> 属性表明定位机制，还可以使用 <code>float</code> 属性让元素浮动。</li>
+<li>普通流：每个块级元素都换行显示，以至于页面中的每个项目都显示在前一个项目的下方，即使有足够的空间能够让两个元素并排显示。</li>
+<li>相对定位：相对定位将一个元素从它在普通流中所处的位置上移动，在它原来的位置向上、向下、像左、向右移动，但是不会影响周围元素的位置。</li>
+<li>绝对定位：元素位置相对于它的包含元素。它完全脱离了普通流，不会影响周围任何元素的位置，使用绝对定位的元素随着页面的滚动而移动。</li>
+<li>为了确定一个盒子的位置，可能还要使用盒子位移属性将盒子与上、下、左、右的距离告诉浏览器。</li>
+<li>此外还有固定定位和浮动元素两种定位方式。</li>
+<li>固定定位：固定定位是绝对定位的一种形式，但是它是将元素相对于浏览器窗口进行定位，而不是相对于包含元素进行定位。固定定位的元素同样不会影响周围元素的位置。</li>
+<li>浮动元素：浮动一个元素可以让其脱离普通流，并定位到其包含盒子的最左边或最右边的位置。这个浮动的元素会成为一个周围可以浮动其他内容的块级元素。</li>
+<li>任何元素从普通流脱离时，盒子都会产生重叠。可以使用 <code>z-index</code> 属性来控制哪个盒子显示在上层。</li>
+</ol>
+<h2 id="3-普通流">3. 普通流<a hidden class="anchor" aria-hidden="true" href="#3-普通流">#</a></h2>
+<ol>
+<li>使用 <code>position:static</code> 可以指定普通流，不过这是默认设置，可以不用显示指定。</li>
+<li>使用普通流的块级元素都会换行显示。</li>
+</ol>
+<h2 id="4-相对定位">4. 相对定位<a hidden class="anchor" aria-hidden="true" href="#4-相对定位">#</a></h2>
+<ol>
+<li>使用 <code>position:relative</code> 可以指定该元素进行相对定位。</li>
+<li>相对定位的元素以其在普通流中所处的位置为起点进行移动。</li>
+<li>可以使用 <code>top</code>、<code>bottom</code>、<code>left</code>、<code>right</code> 属性进行移动。</li>
+</ol>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;相对定位&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;段落1&lt;/p&gt;
+        &lt;p class=&quot;test&quot;&gt;段落2（相对流）&lt;/p&gt;
+        &lt;p&gt;段落3&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code class="language-css">body {
+    width: 500px;
+}
+p.test {
+    position: relative;
+    left: 300px;
+    bottom: 20px;
+}
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120210437.png"></p>
+<h2 id="5-绝对定位">5. 绝对定位<a hidden class="anchor" aria-hidden="true" href="#5-绝对定位">#</a></h2>
+<ol>
+<li>如果将一个盒子的 position 属性设置为 absolute，那么他就会脱离普通流，不再影响页面中其他元素的位置（如同它不在那个位置一样）。</li>
+<li>盒子的位移属性用于指定元素相对于它的包含元素应该显示在什么位置。</li>
+</ol>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;绝对定位&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div&gt;
+            &lt;p class=&quot;one&quot;&gt;段落1&lt;/p&gt;
+            &lt;p&gt;段落2&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code class="language-css">div {
+    padding: 0px;
+    background-color: burlywood;
+}
+p {
+    margin: 0px;
+}
+p.one {
+    position: absolute;
+    left: 50px;
+}
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120232111.png"></p>
+<h2 id="6-固定定位">6. 固定定位<a hidden class="anchor" aria-hidden="true" href="#6-固定定位">#</a></h2>
+<ol>
+<li>固定定位是指元素相对于浏览器窗口进行定位。因此，当用户滚动页面时，这类元素的位置保持不变。</li>
+<li>将 position 属性设置为 fixed 就表示固定定位。</li>
+</ol>
+<h2 id="7-重叠元素">7. 重叠元素<a hidden class="anchor" aria-hidden="true" href="#7-重叠元素">#</a></h2>
+<ol>
+<li>当使用相对定位或者绝对定位时，盒子是可以重叠的。</li>
+<li>如果盒子出现重叠，那么默认后出现的元素将位于先出现的元素上方。</li>
+<li>如果要控制元素的层次，那么可以使用 z-index 属性，该属性的值是一个数字，数字越大，元素的层次就越靠前。</li>
+<li>z-index 也别称为堆叠上下文。</li>
+</ol>
+<h2 id="8-浮动元素">8. 浮动元素<a hidden class="anchor" aria-hidden="true" href="#8-浮动元素">#</a></h2>
+<ol>
+<li>float 元素允许你将普通流中的元素在它的包含元素内尽可能地向左或向右排列。</li>
+<li>位于包含元素中的其他内容会在浮动元素的周围流动。</li>
+</ol>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;浮动元素&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class=&quot;one&quot;&gt;
+            盒子1
+        &lt;/div&gt;
+        &lt;div&gt;
+            盒子2
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code class="language-css">div {
+    margin: 20px;
+    width: 200px;
+    height: 200px;
+    padding: 0px;
+    background-color: burlywood;
+}
+div.one {
+    float: right;
+}
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120233034.png"></p>
+<h2 id="9-清除浮动">9. 清除浮动<a hidden class="anchor" aria-hidden="true" href="#9-清除浮动">#</a></h2>
+<ol>
+<li><code>clear</code> 属性用来表明一个盒子的左侧或者右侧不允许浮动元素（在同一个包含元素内）。</li>
+<li><code>left</code> 值表示盒子左侧不能接触同一个包含元素内的其他任何元素。</li>
+<li><code>right</code> 值表示盒子右侧不能接触同一个包含元素内的其他任何元素。</li>
+<li><code>both</code> 值表示盒子两侧都不能接触同一个包含元素内的其他任何元素。</li>
+<li><code>none</code> 值表示盒子两侧都可以接触同一个包含元素内的其他任何元素。</li>
+</ol>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;清除浮动&lt;/title&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class=&quot;one&quot;&gt;
+            盒子1
+        &lt;/div&gt;
+        &lt;p&gt;
+            这是一个段落，用来说明元素的浮动。
+        &lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code class="language-css">div {
+    width: 200px;
+    height: 200px;
+    background-color: antiquewhite;
+}
+div.one {
+    float: left;
+}
+p {
+    clear: left;
+    height: 200px;
+    width: 400px;
+    background-color: aqua;
+}
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/24/20230124145552.png"></p>
+<h2 id="10-浮动元素的父级">10. 浮动元素的父级<a hidden class="anchor" aria-hidden="true" href="#10-浮动元素的父级">#</a></h2>
+<ol>
+<li>如果一个包含元素中只包含了一个浮动元素，有些浏览器就会将它的高度看为 0 像素。</li>
+<li>可以在包含元素中最后一个浮动盒子后面插入一个额外的元素，并为其编写 CSS 规则 <code>clear: both</code> 来解决这个问题，但不够优雅。</li>
+<li>也可以在包含元素中指定 CSS 规则：<code>overflow: auto</code> 和 <code>width: 100%</code>。</li>
+</ol>
+<h2 id="11-多个样式表">11. 多个样式表<a hidden class="anchor" aria-hidden="true" href="#11-多个样式表">#</a></h2>
+<ol>
+<li>在 HTML 中使用多个 link 标签可以链接到多个样式表。</li>
+<li>可以在 CSS 文件的规则最前面使用 <code>@import url(...)</code> 规则导入多个样式表。</li>
+</ol>
+<h2 id="12-小结">12. 小结<a hidden class="anchor" aria-hidden="true" href="#12-小结">#</a></h2>
+<ol>
+<li><code>&lt;div&gt;</code> 元素常作为包含元素，以便将页面中某些部分组合在一起。</li>
+<li>除非指定了相对定位、绝对定位或者是固定定位，否则浏览器就会按照普通流显示页面。</li>
+<li><code>float</code> 属性将内容移到页面的左侧或者右侧，还可以用于创建多列式布局。</li>
+<li>可以在一个页面中引入多个 CSS 文件。</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

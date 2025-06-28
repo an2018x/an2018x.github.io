@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>JavaScript | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="JavaScript相关知识体系构建">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/index.xml">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    JavaScript
+  </h1>
+  <div class="post-description">
+    JavaScript相关知识体系构建
+  </div>
+</header>
+<div class="post-content"><p>JavaScript相关知识体系构建</p>
+
+
+</div>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">6-JavaScript 事件
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1. 不同的事件类型 当浏览网站时，下表中的事件会发生在浏览器中，而这些事件都可以用来触发 JavaScript 代码中的函数。 当事件发生时，我们通常称之为事件发生或被触发。 对于事件的处理，我们通常会称之为事件触发了函数或脚本。 事件 说明 UI事件 当与浏览器 UI 本身(不是网页)交互时发生的事件 load Web 页面加载完成 unload Web 页面正在卸载(通常因为请求了一个新页面) error 浏览器遇到 JavaScript 错误或有不存在的资源 resize 浏览器窗口大小发生了变化 scroll 用户使用滚动条移动了页面 键盘事件 当用户操作键盘时发生(也叫输入事件) keydown 用户第一次按下一个键(按住这个键时会反复触发) keyup 用户松开了一个键 keypress 键入了一个字符（按住这个键时会反复触发） 鼠标事件 当用户操作鼠标、触控板或触摸屏时发生 click 用户在同一个元素上按下并松开一个按键 dbclick 用户在同一个元素上连续两次按下并松开一个按键 mousedown 用户在一个元素上按下鼠标按键 mouseup 用户在一个元素上松开鼠标按键 mousemove 用户移动鼠标(不会发生在触摸屏上) mouseover 用户将鼠标移到一个元素上 mouseout 用户将鼠标从一个元素上移开 焦点事件 当一个元素得到或失去焦点时发生 focus/focusin 元素得到焦点 blur/focusout 元素失去焦点 表单事件 当用户与表单元素进行交互时发生 input &lt;input&gt; 或 &lt;textarea&gt; 元素中的值发生了变化 change 复选框、单选框、单选按钮的值发生了变化 submit 用户提交表单 reset 用户单击了重置按钮 cut 用户从一个表单域中剪切了内容 copy 用户从一个表单域中复制了内容 paste 用户向一个表单域中粘贴了内容 select 用户在一个表单域中选中了一些文本 变动事件 脚本修改了 DOM 结构后发生 DOMSubtreeModified 文档发生了变化 DOMNodeInserted 一个节点被插入为另一个节点的直接子节点 DOMNodeRemoved 一个节点被从另一个子节点中移除 DOMNodeInsertedIntoDocument 一个节点被插入为另一个节点的后代 DOMNodeRemovedFromDocument 一个节点被从其祖先节点上移除 2. 事件触发 JavaScript 代码过程 事件触发 JavaScript 代码的过程分为三个步骤，这些步骤被称为&#34;事件处理&#34; 选中需要使用脚本进行事件响应的元素节点 声明需要在选中节点上响应触发的事件，该步骤也被称为将事件绑定到 DOM 节点 指定当事件发生时需要运行的代码 3. 将事件绑定到元素的三种方法 3.1. HTML 事件处理程序属性（不推荐） HTML 的一些标签中可能会带有某些属性，该属性对应着各种事件，该属性的值是事件触发时响应的 JS 程序。 &lt;a onclick=&#34;test()&#34;&gt;测试&lt;/a&gt; HTML 事件处理程序中，属性的名称是和事件的名称一致的，不过需要加上前缀 “on”。 3.2. 传统的 DOM 事件处理程序 element.onevent = functionName; 这里 element 是目标 DOM 元素节点，onevent 是绑定到该节点的事件，使用前缀 on，functionName 是需要调用的函数的名称（不需要加小括号）。 当函数被调用时，函数名后的小括号会通知 JS 解释器立即运行，然而在事件处理中，我们不希望它马上执行，因此需要去掉小括号。 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;传统的 DOM 事件处理程序&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;article&gt; &lt;div class = &#34;red&#34;&gt;test&lt;/div&gt; &lt;/article&gt; &lt;script src = &#34;./hello.js&#34;&gt;&lt;/script&gt; &lt;/body&gt; &lt;/html&gt; function test() { alert(&#34;测试&#34;); } var el = document.getElementsByClassName(&#34;red&#34;)[0]; el.onclick = test; 3.3. 事件监听器 事件监听器可以同时触发多个函数。 element.addEventListener(&#39;event&#39;, functionName [, Boolean]); 其中 element 代表目标 DOM 元素节点，’event’ 代表要监听的事件名称，functionName 代表要调用的函数的名称，[, Boolean] 代表事件流，指定是否为捕获方式的事件响应，通常被设置为 false。 4. 事件流 HTML 元素都位于另一些元素中。 如果移动鼠标到一个链接上，或者点击一个链接，同样会把鼠标移到它的父级元素上，或者点击它的父级元素。 事件冒泡：事件从最具体的节点开始向外传播到最宽泛的节点。这是事件流的默认类型。 事件捕获：事件从最宽泛的节点开始向内传播到最具体的节点。 5. 事件流的意义 只有当代码在一个元素和其祖先元素或后代元素上都有事件处理程序时，事件流才会变得非常重要。 对于传统的 DOM 事件处理程序（以及 HTML 事件属性），所有的现代浏览器默认回使用事件冒泡模型而不是事件捕获模型。 使用事件监听器时，addEventListener() 方法的最后一个参数允许选择事件触发的方向： true 表示捕获方式 false 表示冒泡方式 6. 事件对象 当事件发生时，事件对象会告诉你关于这个事件的信息，以及它发生在哪个元素上，例如： 事件发生在哪个元素上 在键盘事件中按下了哪个键 在点击事件中，用户点击了视图窗口的哪部分 事件对象会作为参数传递给任何事件处理程序或事件监听器的函数。 如果需要传递一个参数给命名函数，事件对象会作为匿名封装函数的第一个参数传递进去（自动发生——，然后需要为命名函数指定相应的参数。 当事件对象被传递给函数时，它的参数名称通常是 e，这是常用缩写。 el.addEventListener(&#39;click&#39;, function(e) { .... }, false); 当事件监听器调用函数时，事件对象的引用会自动传递给方法，不需要进行任何额外操作。 7. 事件委托 为大量的元素创建事件监听器会造成页面速度下降，不过事件流允许你在父元素上监听事件。 在事件流中，事件可以影响到容器元素，因此，可以将事件处理程序放置在一个容器元素上，然后使用事件对象的 target 属性找到它的后代中是哪一个发生了事件。 事件委托可以适用于新的元素，因为如果向 DOM 树中添加了新的元素，那么不需要再向这个新元素上添加事件处理程序，因为这个工作已经被委托给一个祖先元素。 同时，事件委托也可以解决 this 关键字的限制。 8. 改变默认行为 事件对象有一些方法可以改变一个元素的默认行为，以及它的祖先元素如何对这个事件做出响应。 有些事件，例如提交表单，会把用户导向另外一个页面。为了阻止这类元素的默认行为，可以使用事件对象的 preventDefault() 方法。 处理完某个元素上的事件后，可能需要阻止这个事件向其祖先元素继续冒泡传播，可以使用 stopPropagation() 方法。 也可以直接 return false 来同时实现上面两者，但要注意，它会打断后面程序的执行。 9. 事件发生在哪个元素上 当调用一个函数时，事件对象的 target 属性用于获得事件发生在哪个元素上的最好方法。 也可以使用 this 关键字来获取事件发生的元素，this 关键字指向函数的所有者，在下面这种情况下，this 对象指向的是事件的元素： el.addEventListener(&#39;click&#39;, test, false); function test() { .... } 如果需要向函数传递参数，那么 this 关键字将会失效，因为这个函数的所有者不再是事件监听器所绑定的元素，而是那个匿名函数，这里需要把发生了这个事件的元素作为另一个参数传递给元素： el.addEventListener(&#39;click&#39;, function() { test(2, el) }, false); </p>
+  </div>
+  <footer class="entry-footer"><span title='2023-01-28 16:30:46 +0800 CST'>一月 28, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to 6-JavaScript 事件" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-6/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">5-JavaScript 文档对象模型
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1. 简介 文档对象模型规定了浏览器应该如何创建 HTML 页面的模型，以及 JavaScript 如何访问或修改浏览器窗口中的 Web 页面的内容。 DOM 既不是 HTML 中的一部分，也不是 JavaScript 中的一部分，而是一系列独立的规则，所有主流的浏览器都实现了这些规则。 规则主要分为两个方面。 规定 HTML 页面的模型： 当浏览器加载 Web 页面时，会再内存中创建页面的模型。 DOM 规定了浏览器应该使用 DOM 树的方式来创建这个模型。 DOM 被称为 “对象模型” 是因为这个模型(DOM树)是由一些对象组成的。 每个对象都会作为页面的不同部分被加载到浏览器窗口中。 访问和修改 HTML 页面： DOM 同样定义了一些方法和属性，用来访问和修改模型中的对象，用户最终会在浏览器中看到这些修改。 人们把 DOM 称为 API，API 是程序之间的通信接口。 DOM 规定了脚本可以向浏览器询问当前页面相关的哪些内容，以及如何通知浏览器去修改用户看到的内容。 2. DOM 树是 Web 页面的模型 当浏览器加载一个 Web 页面时，它会创建这个页面的模型，这个模型被称为 DOM 树，并被保存在浏览器的内存中，该模型由四类主要节点构成。 文档节点：在 DOM 树的顶端是文档节点，它呈现为整个页面，相当于 document 对象，当需要访问任何其他节点时，都需要通过文档节点进行导航。 元素节点：HTML 元素描述了 HTML 页面的结构，需要访问 DOM 树时，需要从查找元素开始，一旦找到所需的元素，就可以根据需要来访问它的文本和属性节点。 属性节点：HTML 元素的开始标签中可以包含若干属性，这些属性在 DOM 树中形成属性节点。属性节点不是所在元素的子节点，它们是这个元素的一部分。当访问一个元素时，有特定的方法和属性用来读取或修改这个元素的属性。 文本节点：当访问元素节点时，可以访问元素内部的文本，这些文本保存在其文本节点中。文本节点没有子节点。 3. 使用 DOM 树 访问并更新 DOM 树需要两个步骤： 定位到需要操作的元素所对应的节点。 使用它的文本内容、子元素或属性。 访问元素 DOM 查询-选择单个元素节点 getElementById() 使用元素的 id 属性 querySelector() 使用 CSS 选择器，返回第一个匹配的元素 DOM 查询-选择多个元素 getElementByClassName() 使用 class 属性 getElementByTagName() 选择所有使用了指定标记的元素 querySelectorAll() 选择所有使用了指定标记的元素 DOM 遍历-在元素节点之间遍历 可以从一个元素节点移动到另一个相关的元素节点 parentNode：返回当前元素节点的父节点 previousSibling/nextSibling 选择 DOM 树中的前一个或后一个兄弟节点 fistChild/lastChild 选择当前元素的第一个或最后一个子节点 操作元素 访问/更新文本节点 任何元素内部的文本都保存在文本节点中 使用文本节点唯一属性 nodeValue 从元素中获取或修改文本 操作 HTML 内容 innerHTML 可以访问子元素和文本内容 textContent 仅访问文本内容 createElement()/createTextNode()/appendChild()/removeChild() 可以用来创建新的节点、将节点添加到树种或者从树中移除节点 访问或更新属性值 hasAttribute() 用来检查属性值是否存在。 getAttribute() 用来获取属性值。 setAttribute() 用来更新属性值。 removeAttribute() 用来移除属性。 4. 缓存 DOM 查询 用来在 DOM 树中查找元素的方法被称为 DOM 查询。 当需要多次操作同一个元素时，应该使用一个变量来保存这个查询的结果。 保存到变量中的实际上是元素在 DOM 树中的位置，这个元素节点的属性和方法可以通过这个变量来获取。 5. 访问元素 DOM 查询可能返回一个元素，也可能返回一个 NodeList，即节点的集合。 6. 选择单一节点的方法 getElementById() 和 querySelector() 方法都可以搜索整个文档，然后返回单一元素。 6.1. 使用 id 属性选择元素 getElementById() 方法运行根据指定的 id 属性来选择单一的元素节点。 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;使用id属性选择元素&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;header&gt; &lt;div id = &#34;item1&#34;&gt;&lt;/div&gt; &lt;div id = &#34;item2&#34;&gt;&lt;/div&gt; &lt;/header&gt; &lt;script src = &#34;./hello.js&#34;&gt;&lt;/script&gt; &lt;/body&gt; &lt;/html&gt; div { height: 50px; width: 100px; border: 1px solid black; background-color: yellow; } .red { background-color: red; } var el = document.getElementById(&#34;item1&#34;); el.className = &#34;red&#34;; ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-01-27 20:46:46 +0800 CST'>一月 27, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to 5-JavaScript 文档对象模型" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-5/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">4-JavaScript 判断和循环
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1. 判断条件和条件语句 判断由两部分组成 一个进行判断的表达式，它会返回一个值 一个条件语句，用于说明在某种特定情况下应该执行什么操作 为了完成判断，代码会检查脚本的当前状态。通常会使用比较操作对两个值进行比较，然后返回 true/false 作为判断条件。 条件语句基于如果(if)/那么(then)/否则(else)这样的概念来工作。如果(if)满足某个条件，那么(then)代码执行一条或多条语句，否则(else)执行其他语句(或跳过这个步骤)。 if (a &gt; 10) { alert(&#34;不是个位数&#34;); } else { alert(&#34;个位数&#34;); } 可以将两个或多个比较操作符组合起来一起形成多个条件。 2. 比较操作符：判断条件 可以在脚本中通过比较一个值和你期望的值来进行条件判断，其结果会是布尔类型：true 或 false。 程序员把测试或检查条件叫做判断条件，条件可以非常复杂，但是都会返回 true 或 false。 == 等于操作符比较两个值是否相等。 != 不等于操作符比较两个值是否不同。 === 严格等于操作符比较两个值，并检查它们的数据类型和值是否完全相同。 !== 严格不等于操作符比较两个值，并检查它们的数据类型和值是否不完全相同。 &gt; 大于操作符会检查左边的数字是否大于右边的数字。 &lt; 小于操作符会检查左边的数字是否小于右边的数字。 &lt;= 小于等于操作符会检查左边的数字是否小于等于右边的数字。 &gt;= 大于等于操作符会检查左边的数字是否大于等于右边的数字。 3. 在算术操作符中使用表达式 操作数不一定必须是数值或者变量名，也可以是表达式。 ((a&#43;b)&lt;(c&#43;d)) 4. 逻辑操作符 逻辑操作符允许将多个比较操作符的结果放在一起进行比较。 ((5&lt;3)&amp;&amp;(2&gt;3)) &amp;&amp; 逻辑与操作符检测如果两个表达式结果是 true，那么返回 true，否则返回 false。 || 逻辑或操作符检测至少一个条件为 true，那么返回 true，否则返回 false。 ! 逻辑非操作符操作单一的布尔变量，并对它的结果取反。 短路条件：逻辑表达式会从左到右进行计算，如果一个条件能确认最终的结果，那么后面的条件就不会被执行。 5. if 语句 if 语句会对一个条件进行判断，如果这个条件的结果为 true，就会执行后续代码块中的代码。 如果条件的结果是 false，后续代码块中的语句不会被执行，脚本会继续执行这个代码块后面的语句。 if (a &lt; b) { ... } ... 6. if-else 语句 if-else 语句同样用来条件判断。 如果条件的结果是 true，那么第一个代码块会被执行。 如果条件的结果是 false，那么执行第二个代码块中的内容。 if (a &gt; b) { ... } else { ... } 7. switch 语句 switch 语句的开头是一个被称为分支值的变量，每个 case 表示一个条件，当条件的值和这个变量的值相匹配时，它后面的代码就会被执行。 如果以上情况都不匹配，则会执行 default 语句块中的内容。 在每个 case 的最后由一个 break 关键字。它会告诉 JavaScript 解释器 switch 语句已经执行完毕，继续执行 switch 后面的内容。 switch (color) { case &#39;blue&#39;: res = &#39;b&#39;; break; case &#39;red&#39;: res = &#39;r&#39;; break; default: res = &#39;null&#39;; break; } 8. 强制类型转换和弱类型 如果使用的数据类型和 JavaScript 所需的类型不一致，那么他会尽量使这个操作变得有意义，而不是直接报错。 例如，在表达式 &#39;1&#39;&gt;0 中，解释器会将字符串 &#39;1&#39; 转换为数字 1。 JavaScript 也被称为弱类型语言，因为值的数据类型是可以变的。 例如 Java、C&#43;&#43; 这样的语言被称为强类型语言，因为它们需要指定每个变量的数据类型。 强制类型转换可能会导致意外错误，因此，推荐使用 === 和 !== 来执行相等判断。 9. 真值和假值 因为存在强制类型转换，JavaScript 中的每个值都可以被当作 true 或 false。 以下几种情况对应假值： 值 说明 false 布尔值 false 0 数字 0 &#39;&#39; 空字符串 10/‘xx’ NaN undefined undefined 以下经济中情况对应真值： 值 说明 true 布尔值 true 1 非 0 数字 ‘aaa’/‘false’/‘0’ 非空字符串 10-2 非 0 的表达式 10. 循环 循环会检查一个条件，如果这个条件返回 true，那么会执行一段响应的代码。 之后这个条件会再次被检查，如果依然返回 true，那么这段代码会再次被执行。 以上过程会一直重复，直到条件返回 false。 10.1. for 循环 for 循环使用计数器作为条件。 这种方式会让代码执行指定的次数。 这个条件是由三条语句组成的。 for (var i = 0; i &lt; 10; i&#43;&#43;) { sum = sum &#43; i; } 初始化：创建一个变量，然后赋值为 0，这个变量起到计数器的作用，通常只在循环第一次运行的时候被创建。 条件：循环会一直执行下去，直到第一个分号后的语句执行结果为 false。 更新：每次循环执行完成后，第三个语句会被执行，并更新计数器的值。 10.2. break 和 continue break 关键字会导致循环结束，然后通知解释器继续执行循环体之外的代码。 continue 关键字会通知解释器立即执行下一个循环迭代，然后进行条件检查。 10.3. while 循环 如果不确定代码会被执行多少次，可以使用 while 循环。 只要 while 后的括号中的条件表达式结果不为 false，花括号中的循环体就会一直被执行下去。 var sum = 0; while (sum &lt; 10) { sum &#43;= sum; sum &#43;&#43;; } 10.4. do-while 循环 do-while 循环和 while 循环类似。 区别在于，do-while 循环会先执行循环体，再执行条件判断，也就是说循环体会至少被执行一次。 var sum = 0; do { sum &#43;= sum; sum &#43;&#43;; } while (sum &lt; 10); </p>
+  </div>
+  <footer class="entry-footer"><span title='2023-01-26 20:46:46 +0800 CST'>一月 26, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to 4-JavaScript 判断和循环" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-4/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">3-JavaScript 函数、方法和对象
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1. 函数 1.1. 什么是函数 函数将一系列语句组织成一个整体，以执行某一特定任务。 如果在不同的地方有些任务要重复执行，可以重用函数。 1.2. 简单函数示例 var a = 10; var b = 20; var area = 0; function calArea() { area = a * b; } calArea(); 1.3. 声明函数 要创建函数，需要首先对函数进行命名，然后在花括号中完成任务所需的语句，这就是函数的声明。 function sayHello() { alert(&#34;hello&#34;); } 使用 function 关键字声明函数。 给函数指定名称，这里是 sayHello，然后紧跟一对括号。 执行任务的语句放在代码块（花括号内）。 1.4. 调用函数 声明了函数后，可以使用一行代码来执行函数里面的所有语句，这就是函数的调用。 sayHello(); 如果要运行函数中的代码，需要在函数名后面加上一对括号。 可以在同一个 JavaScript 文件中调用同一个函数任意次。 函数有时候可以在声明前就被调用。这是因为解释器在执行某个具体的函数前会扫描所有的代码，所以会知道此函数的定义在脚本后面位置。 1.5. 声明需要信息的函数 有时，函数需要特定的信息来执行任务。 当函数需要外部的信息时，声明函数时需要给它提供形参。 在函数的内部，形参的行为类似变量。 function getArea(width, height) { return width * height; } 函数需要的信息需要在函数名称后面的括号内指定。 括号中这些项就是函数的形参。 1.6. 调用需要提供信息的函数 调用带有形参的函数时，需要在函数名后面的括号中指定一些值，这些值就是实参，可以像变量一样被赋值。 值作为实参： getArea(3, 4); 变量作为实参 var a = 3, b = 4; getArea(a, b); 函数声明中，在括号中的变量被称为形参，在函数体中，它们的行为和变量一样。 传入的这些值就是实参。 1.7. 从函数中获得单一值 有些函数为调用它们的代码返回信息，例如返回计算结果。 使用 return 关键字将返回值返回给调用此函数的代码。 当出现 return 关键字时，解释器立刻离开函数，回到调用函数的代码。如果之后还有语句，将被跳过不执行。 function getArea(width, height) { return width * height; } 1.8. 从函数获取多个值 使用数组，函数可以返回多个值。 function getArray() { var arr = [0, 1]; return arr; } 1.9. 匿名方法和函数表达式 表达式会产生值，这些值可以被用于所期望的位置。 如果函数被置于浏览器看到表达式的地方，那么函数将被当作表达式一样对待。 函数声明创建将来代码调用的函数，之前的函数都是这种形式，也就是先声明，再使用。 function getArea(width, height) { return width * height; } getArea(a, b); 如果将函数放在本该表达式待的地方，它将会被当作表达式对待，这被称为函数表达式。 在函数表达式中，名字经常被忽略，没有名字的函数被称为匿名函数。 可以将匿名函数赋值给某一个变量，之后使用变量名即可调用这个匿名函数。 var area = function(width, height) { return width * height; } 在函数表达式中，解释器到达这条语句时函数是不会执行的，这意味着在解释器发现这条语句前，不能调用此函数，这和普通的函数声明有区别。 1.10. 立即调用函数表达式 立即调用函数表达式(IIFE)，这些函数没有名称，在解释器经过它们时执行一次。 var area = ( function() { var width = 3; var height = 4; return width * height; } ()); 上面名为 area 的变量存储了这个从函数返回的值，而不是保留在函数中以便未来调用。 右花括号后的最后一个括号告诉解释器马上调用此函数。 最外层的括号（分组操作符）确保解释器将其作为一个表达式对待。 匿名函数表达式和IIFE用于任务中只需要执行一次的代码，而不是在脚本中反复调用的代码。 IIFE 通常被用作一组代码的封装器。在此匿名函数中声明的任何变量能够保护变量，防止其他脚本中出现同名变量。 2. 变量作用域 变量的声明位置将影响它的应用范围。 如果在函数内部声明变量，它就只能用于此函数，这就是变量的作用域。 在函数中用 var 关键字创建的变量只能在此函数内部使用，这就是局部变量或函数级别变量，该作用域也被称为局部作用域或函数级别作用域。 局部变量无法在创建它的函数之外使用。 在函数运行时，解释器创建一个局部变量，当函数完成任务时立即销毁。 因此，如果一个函数运行两次，局部变量可能具有不同的值；两个不同的函数可以使用同名变量而不会引起冲突。 如果在函数的外部创建变量，则该函数可以在脚本的任何地方被使用，这就是全局变量，且具有全局作用域。 全局变量在页面载入浏览器的时刻就进入内存。 全局变量会占用更多的内存，浏览器需要在整个页面载入期间保存它们，局部变量只需要在函数执行期间被保存。 全局变量有命名冲突的风险，如果一个 HTML 页面中引入了两个 JS 文件，这两个 JS 文件都定义了一个同名的全局变量，就可能导致错误。 3. 对象 3.1. 对象简介 对象将一组变量和函数组合起来，为真实世界创建模型。 在对象中，变量被认为是属性，属性用于描述这个对象。 如果一个函数是对象的一部分，我们称它为方法，方法代表和对象相关的任务。 3.2. 创建对象：字面量语法 字面量语法是最简单最常用创建对象的方法。 var person = { name: &#39;an&#39;, age: 22, getAge: function() { return this.age; } } 对象是花括号及其中的内容，存储在变量 person 中。 每个键和值之间用冒号分隔。 每个属性和方法之间用逗号分隔（除了最后一个值）。 this 关键字表明当前正在使用的对象本身。 3.3. 访问对象及其点标记语法 访问属性或者方法时使用点符号，也可以使用方括号。 var name = person.name; var age = person.getAge(); age = person.[&#34;age&#34;]; 3.4. 创建对象：构造函数语法 new 关键字和对象的构造函数结合可以创建一个空白对象，然后可以给这个空白对象添加属性和方法。 var person = new Object(); person.age = 22; person.name = &#34;an&#34;; person.getAge = function() { return this.age; } 这里 new Object() 创建了一个空对象，然后使用点标记语法向空对象中添加属性和方法，也可以使用字面量创建一个空对象，例如： var person = {} 3.5. 修改对象 可以使用点符号或方括号来修改属性的值。 使用 delete 关键字可以删除属性。 person.name = &#34;An&#34;; delete person.name; 3.6. 创建很多对象：构造函数语法 对象构造函数可以使用函数作为模板来创建对象。 使用这种方法首先需要创建带有对象属性和方法的模板。 function Person(name, age) { this.name = name; this.age = age; this.getAge() = function() { return this.age; } } 构造函数的名称通常首字母大写。 使用构造函数创建对象的实例时，需要使用 new 关键字后紧接着调用创建新对象的函数，每个对象的属性作为实参传递给函数。 var person = new Person(&#34;An&#34;, 22); 3.7. this 关键字 this 关键字通常在函数内部或者对象内部使用。 this 执行一个对象，通常是指向当前函数所操作的对象。 当一个函数创建于脚本的最高级别，也就是说，既不在另一个对象内，也不在其他函数内，它就位于全局作用域或者全局上下文中。 在全局上下文中的默认对象是 windows 对象，所以在全局上下文中使用 this 关键字时指向的就是 windows 对象。 所有全局变量也都会称为 windows 对象的属性，当一个函数在全局上下文中，也可以通过 windows 对象来访问它。 当一个函数嵌套于另一个函数之中时，this 的值可能会有些区别。为了访问外层函数的 this，可以将 this 作为实参传递给内层函数中。 在对象内定义函数时，该函数就是一个方法。此时，this 引用的就是包含此方法的对象。 如果命名函数定义在全局作用域内，且它马上被作为对象的方法使用，那么 this 代表着包含它的对象。 var width = {width: 300}; var showWidth = function() { return this.width; } width.showWidth = showWidth; width.showWidth(); // 300 3. 数组对象 3.1. 数组也是对象 数组实际上是一种特殊类型的对象。 数组存储一组相关的键/值，只不过每个值的键都是索引编号。 3.2. 对象的数组和数组中的对象 可以将数组和对象合并在一起组成复杂的数据结构：数组可以存储一系列的对象，对象中也可以存储数组作为属性。 4. 内置对象 浏览器附带了一系列内置的对象，代表当前窗口中网页的一些内容。 内置对象可以分为如下三部分： 浏览器对象模型，包含一系列表示当前窗口或标签的对象，比如浏览器历史以及设备屏幕。 全局 JavaScript 对象，代表那些需要让 JavaScript 语言创建模型的事物。 文档对象模型，它为网页中的每个元素创建一个新对象。 4.1. 三组内置对象 浏览器提供的三组内置对象中的每一组都在不同范围内提供工具，方便编写网页脚本。 4.1.1. 浏览器对象模型 浏览器对象模型创建浏览器或窗口的模型。 最顶端的对象是 windows 对象，它代表当前浏览器窗口或者标签，它的子对象展示浏览器的其他特性。 ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-01-24 23:15:46 +0800 CST'>一月 24, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to 3-JavaScript 函数、方法和对象" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-3/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">2-JavaScript 基础指令
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1. 语句 一段脚本就是一系列计算机能够一步一步遵照执行的指令。 每一条单独的指令或步骤被称为一条语句。 语句通常以分号结尾 有些语句被花括号包围；它们被称为代码块，右花括号的后面不需要加分号。 var input = 10; // 语句 var output; // 语句 if (input &gt; 10) { output = &#34;大于10&#34;; //语句 } else { output = &#34;小于等于10&#34;; // 语句 } 2. 注释 注释用来解释代码的作用。 注释使得代码更加容易阅读和理解。 为了编写超过一行的注释，需要使用多行注释，多行注释以 /* 开头，以 */ 结尾；任何包含在这些字符中的内容，都不会被 JavaScript 解释器处理执行。 在一行中任何位于 // 后的内容，都不会被解释器处理执行，这被称为单行注释。 /* 多行注释 定义变量 a */ var a = 10; // 单行注释，定义变量 b var b = 20; 3. 变量 3.1. 什么是变量 脚本必须暂时存储一些完成工作所需的信息，可以将这些数据存储在变量中。 变量中的值随着程序的运行会不断发生变化。 3.2. 如何声明变量 在使用变量前，需要声明变量。 声明变量包括创建变量和命名变量两个部分。 var a; var 被程序员称为关键字，JavaScript 认为这个关键字的作用是创建变量。 为了使用变量需要对变量命名，这里变量被命名为 a。 变量命名最好采用 camelCase 驼峰规范，即第一个单词全部小写，后面的单词首字母大写。 3.3. 变量赋值 创建完变量，就可以告诉它，希望为它保存什么信息，该行为被称为变量赋值。 a = 10; = 是一个赋值操作符，它的意思是想要给变量赋予一个值。 = 符号也可以用来更新一个变量中的值。 在第一次给变量赋值之前，JavaScript 解释器会给变量赋一个 undefined 值。 3.4. 创建对象的快捷方式 var a = 10, b = 20; 可以在同一行中声明多个变量，并让它们存储不同类型的值。 3.5. 变量的数据类型 JavaScript 把数据划分为数字、字符串、布尔值三种类型。 数字类型处理数字，例如 3、0.75。 字符串类型包含字母和其他字符，例如 &#39;test&#39;、&#34;test&#34;。字符串数据类型的值可以被包含在单引号或者双引号内，只要起始引号和结尾引号相匹配。使用文本时经常要用到字符串。 布尔类型只能是两个值中的一个：true 和 false。 除此之外，JavaScript 还有其他的数据类型（数组、对象、undefined、null）。 在 JavaScript 中声明一个变量时，不需要显式指定它的数据类型。 // 使用变量存储数字 var a = 10; // 使用变量存储字符串 var b = &#34;test&#34;; // 在字符串中使用引号，在单引号中包含双引号 var c = &#39;&#34;test&#34;&#39;; // 在字符串中使用引号，使用 \ &#43; 单引号/双引号进行转义 var d = &#39;\&#39;test\&#39;&#39;; // 使用变量存储布尔值 var e = true; 3.6. 修改变量的值 var a = 10; a = 20; 在给变量赋值之后，可以随后用相同格式的脚本代码，修改变量中存储的值。 变量被创建后，不需要再用 var 关键字给变量赋予新值，只需要按照变量名 &#43; 等号 &#43; 新值即可。 4. 数组 4.1. 什么是数组 数组是一种特殊类型的变量，可以只存储一个值，也可以存储多个值。 4.2. 创建数组 var color = [&#39;red&#39;,&#39;write&#39;, 0] 可以直接使用 var 关键字 &#43; 数组名字来创建数组。 赋值给数组的值包含在一对中括号里面，每个值用逗号分开。 JavaScript 中数组不需要是相同类型，可以在同一个数组中存储字符串、数字、布尔值。 上面创建数组的方式被称为数组字面量。 var color = new Array(&#39;red&#39;, &#39;write&#39;, 0); 上面这种创建数组的方式被称为数组构造函数。 var item1 = color[0]; var item2 = color.item(1); 数组的值可以用 数组名[下标] 的方式访问，也可以使用 数组名.item(下标) 的方式访问。 4.3. 数组的值 要访问数组的值，需要通过下标/编号访问，数组的下标从 0 开始。 数组中元素的数量可以通过 length 属性，也就是 数组名.length 获取到。 4.4. 访问和修改数组中的值 color[2] = &#39;black&#39;; 5. 表达式 表达式可以求出一个值，求值的过程可以包含运算，有两种类型的表达式。 第一种是专门给变量赋值的表达式，这可以通过赋值操作符 = 来完成。 var a = 10; 第二种是使用一个或更多值进行计算，最后返回一个值。 var a = 10 * 2; 6. 操作符 在表达式用需要使用操作符。 操作符使得程序员可以对一个或多个值进行运算，最后得到一个值。 6.1. 赋值操作符 将一个值赋值给一个变量。 var a = 10; 6.2. 算术操作符 执行基本的数学运算 var a = 10 * 3; a = 10 - 3; a = 10 &#43; 3; a = 10 / 3; a&#43;&#43;; a--; a = 10 % 3; 6.3. 字符串操作符 字符串可以使用操作符 &#43; 将两个字符串的值连接起来，这种方式也被称为串接。 var a = &#34;test&#34; &#43; &#34;hello&#34;; 可以和数字混合，例如 var a = 10 &#43; &#34;test&#34;，这是数字将被当成对应的字符串。 如果对字符串使用非 &#43; 的算术操作符，结果会返回 NaN，也就是 Not a number。 </p>
+  </div>
+  <footer class="entry-footer"><span title='2023-01-24 22:15:46 +0800 CST'>一月 24, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to 2-JavaScript 基础指令" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-2/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">1-JavaScript 基础知识
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1. 脚本 1.1. 什么是脚本 一段脚本是一系列的指令，一台计算机可以执行这些指令来达成目标。 可以将脚本类比成现实生活中的食谱、手册、说明书。 脚本由一台计算机可以一步一步执行的指令组成。 根据用户如何与 Web 页面进行交互，浏览器可以只执行脚本的某个部分。 脚本可以运行代码中的不同部分来响应它周围的情景。 1.2. 编写一段脚本 要编写一段脚本，首先需要确定自己的目标，然后列出为了达成这个目标需要完成的任务。 从要达成的目标的大局出发，然后将它分解成更小的步骤。 1.2.1. 定义目标 首先，你需要定义你要完成的任务。 可以想象成一个需要计算机解决的拼图游戏。 1.2.2. 设计脚本 要设计一段脚本，需要将目标分解成一系列解决拼图游戏所需要的任务，这可以通过一个流程图来实现。 然后编写计算机完成每个任务所需执行的各个步骤以及执行任务时所需的其他任何信息，就像编写一个可以一步步执行的菜谱一样。 1.2.3. 写出每个步骤的代码 每个步骤都需要使用计算机能够理解的编程语言编写出来。 在 Web 开发中，JavaScript 就是要使用的编程语言。 1.3. 设计一段脚本 1.3.1. 任务 一旦了解了脚本要完成的任务，就可以开始制定需要完成的单个任务了。 可以通过一个流程图来鸟瞰所有的任务。 1.3.2. 步骤 每一个任务都可以被分解成一系列步骤。 当准备开始编写脚本时，这些步骤可以被翻译为一行行的代码。 1.3.3. 从步骤到代码 流程图中的每一个步骤，都需要使用一门计算机能够理解和执行的语言来编写。 程序语言和人类语言一样，需要掌握对应的词汇和语法。 1.3.4. 定义目标/设计脚本 1.3.5. 在流程图中画出这些任务 脚本需要在不同的情况下执行不同的任务。 可以使用流程图来表达任务是如何组合在一起的。 流程图会显示出每个步骤之间的路径。 流程图上的箭头显示了脚本是如何从一个任务执行到下一个任务的。 不同形状代表不同类型的任务。 在某些地方需要进行决策，这些决策会导致代码按照不同的路径来执行。 2. 如何用计算机描述世界 2.1. 计算机使用数据来创建世界的模型、 一台计算机对酒店或者车没有任何概念。 程序员使用数据来创建这些模型。 数据是计算机用来执行指令并完成任务所唯一需要的东西。 2.2. 对象和属性 在计算机编程中，现实世界中的每个物理物件都可以被表示为一个对象。 每个对象都有各自的属性、事件、方法，这三者组合起来，就创建了那个对象的一个可用模型。 程序员将描述事物的特征称为属性。 每个属性都有一个名称和值，这些一对一的名称-值组合会告诉你某种对象的每个实例的特征。 2.3. 事件 在真实的世界中，人们会和对象进行交互。这些交互可以更改对象的属性值。 对于每一种类型的对象，人们与之交互的方式都是通用的。 程序也被设计成当用户与计算机以不同的方式进行交互时，做不同的事情。 程序员可以在一种特定的事件发生时选择响应哪些事件，事件可以用来触发一段特定的代码。 脚本通常使用不同的事件来触发不同类型的功能。 一段脚本可以声明哪些事件是程序员想要响应的，当那些事件中的某个事件发生时，那些脚本会被运行。 2.4. 方法 方法表示人们通过对象需要做的事情，方法可以获取或更新对象的属性值。 方法表示在真实世界中人们如何与对象进行交互。 方法可以告诉你一些关于对象的事情，并更改对象的一个或多个属性值。 方法的代码可以包含许多指令，这些指令合起来完成一项任务。 2.5. 结合属性、事件、方法 计算机使用数据来为真实世界中的事物建立模型。 一个对象的事件、方法、属性是彼此相连的，事件可以触发方法，方法可以获取或更新对象的属性。 2.6. Web 浏览器是使用对象构建的程序 Web 浏览器也会为它们正在显示的 Web 页面以及页面所在的浏览器窗口建立的模型。 Web 浏览器使用 window 对象来表示窗口或选项卡，比如：window 对象的 location 属性会告诉你当前页面的 URL。 在每个窗口中载入的当前 Web 页面使用 document 对象建模。document 对象的 title 属性会告诉你 Web 页面上 &lt;title&gt; 和 &lt;/title&gt; 标签之间的标题是什么。 2.7. document 对象表示 HTML 页面 使用 document 对象，可以访问或修改用户在页面上看到的内容，并根据用户与页面的交互方式进行响应。 document 对象也有属性、方法和事件。 属性：属性描述了当前 Web 页面的特性，例如页面的标题。 方法：方法执行与浏览器中当前载入的文档有关任务，例如：从一个特定元素中获取信息，或者添加新的内容。 事件：可以响应事件，例如用户用鼠标点击。 由于所有主流的浏览器都使用相同的方式来实现 document 对象，创建浏览器的工程师已经实现了你可以访问的属性，这些属性暴露了浏览器中当前页面的一些信息；编写了完成一些常见任务的方法，这些任务都是你想要对一个 HTML 页面进行的操作。 document 对象只是浏览器支持的一组对象中的一个。当浏览器创建一个 Web 页面的模型时，它不仅仅创建一个 document 对象，还会为页面上的每一个元素都创建一个新对象。这些对象被称为 DOM (Document Object Model) 文档对象模型。 2.8 浏览器如何看待 Web 页面 2.8.1. 以 HTML 代码方式接受页面 Web 网站上的每个页面都可以被视为一个单独的文档。 整个网络中包含许多网站，每个网站都是由一个或多个文档组成。 2.8.2. 创建页面的模型，将存储在内存中 浏览器会根据接受到的 HTML 代码建立页面的对象模型。 最顶端的模型是一个 document 对象，document 下的每一个方块都被称为一个节点。每个节点都是另一个对象，例如 &lt;head&gt; 对象等。 2.8.3. 使用渲染引擎将页面显示到屏幕上 如果没有 CSS，渲染引擎会将默认的样式应用到 HTML 元素上。 当浏览器接收到 CSS 规则时，渲染引擎处理这些规则，然后将每一条规则应用到对应的元素上。 2.8.4. 执行 JavaScript 脚本 当在浏览器中使用 JavaScript 时，浏览器会有一个被称为解释器的组件。 解释器读取 JavaScript 指令，将它们翻译成浏览器能够用来完成你想要它完成的任务的指令。 3. 如何编写 JavaScript 脚本 3.1. HTML、CSS、JavaScript 是如何相互结合的 Web 开发人员会使用三种用来创建 Web 页面的语言：HTML、CSS、JavaScript。 通常将这三种语言放置到不同的文件中，然后让 HTML 页面链接 CSS 和 JavaScript 文件。 每一种语言都形成了不同的层级，每个层级都构建在之前的层级上。 html 文件代表内容层，它是页面的内容所在，HTML 定义了页面的结构和语义。 css 文件代表展现层，CSS 使用规则来指定 HTML 内容应该如何被呈现。 js 文件代表行为层，这是可以用来更改页面行为、增强交互性的地方。 3.2. 渐进式增强 仅有 HTML，会让你关注网站中最重要的部分：网站的内容。 HTML &#43; CSS，在单独的文件中添加 CSS 规则可以让规则只关注页面的外观而非页面的内容。 HTML &#43; CSS &#43; JavaScript，JavaScript 往往最后被添加，用来强化页面的可用性或提升与网站进行交互的体验。 3.3. 从 HTML 页面链接 JavaScript 文件 需要使用 &lt;script&gt; 元素告诉浏览器载入脚本。 src 属性指示了 JavaScript 文件的存储位置。 &lt;script src=&#34;./xx/xx.js&#34;&gt;&lt;/script&gt; 3.4. 在页面上放置脚本 也可以在 &lt;script&gt;&lt;/script&gt; 标签之间直接编写 JavaScript 代码，但是不建议。 3.5. 使用对象和方法 以 JS 代码 document.write(&#39;Hello&#39;) 为例，该代码的作用是像页面中追加打印 Hello。 document 对象表示整个 Web 页面。 . 号表示成员操作符，document 对象中包含的多个方法和属性被称为对象的成员。可以在对象名称和想要访问的成员之间使用 . 来访问对象的成员。 write(&#39;Hello&#39;) 代表方法，其中 &#39;Hello&#39; 是方法的参数。 当一个方法需要一些信息才能完成它的工作时，这些信息通过括号中的数据传递给方法。 圆括号中的每一项数据都被称为方法的一个参数。 3.6. JavaScipt 执行位置 浏览器会在遇到 &lt;script&gt; 元素时才会执行其中包含的 JS 脚本代码。 </p>
+  </div>
+  <footer class="entry-footer"><span title='2023-01-23 22:15:46 +0800 CST'>一月 23, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to 1-JavaScript 基础知识" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-1/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

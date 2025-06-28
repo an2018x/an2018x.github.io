@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>业务开发的技术成长 3 技术架构及如何快速开发技巧 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="技术架构及如何快速开发技巧">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      业务开发的技术成长 3 技术架构及如何快速开发技巧
+    </h1>
+    <div class="post-description">
+      技术架构及如何快速开发技巧
+    </div>
+    <div class="post-meta"><span title='2022-11-06 17:10:31 +0800 CST'>十一月 6, 2022</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf">技术架构及如何快速开发技巧</a></p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=153.2">02:28</a></p>
+<p>每一个模块都是作为一个项目组进行开发。</p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=173.4">02:53</a></p>
+<p>部署架构描述：</p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=177.9">02:57</a></p>
+<p>首先有一个 GateWay，所有请求都会先打到 GateWay 上面。</p>
+<p>GateWay 做一些限流、基本的权限认证。</p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=210.5">03:30</a></p>
+<p>GateWay 下面是一个 Web 层，Web 层可以分为多种 Web：</p>
+<ul>
+<li>web 发票系统</li>
+<li>web 支付管理平台</li>
+</ul>
+<p>Web 的职责是聚合应用层，有权限控制。</p>
+<p>权限控制包括数据权限和操作权限。</p>
+<ul>
+<li>数据权限：类似于 SQL 加上一个 WHERE</li>
+<li>操作权限：</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=263.5">04:23</a></p>
+<p>下层就是 Service 层，职责是领域服务层，处理业务逻辑。</p>
+<p>Service 层与 Web 层的区别是：Service 层不做权限，而 Web 层处理权限问题。</p>
+<p>Service 层提供的是领域服务，例如：订单服务、用户服务。</p>
+<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/06/20221106172507.png"></p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=433.7">07:13</a></p>
+<p>命名都是基于这种部署特点。</p>
+<p>命名规则如下，以 auth 模块为例，它被分为 3 个子模块：</p>
+<ul>
+<li>auth-web</li>
+<li>auth-center-api</li>
+<li>auth-center</li>
+</ul>
+<p>目前都是以后缀作为区别。</p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=469.6">07:49</a></p>
+<p>最终效果是我们会写出一些通用的领域服务，可以适配于多种场景。</p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=491.2">08:11</a></p>
+<p>我们的项目是如何快速开发的。</p>
+<p>我们会抽象出几个概念：</p>
+<ul>
+<li>Service 这层会使用一个代码生成器，它的特点是不需要考虑权限问题+只考虑领域建模，目前我们会基于一套脚手架。</li>
+</ul>
+<p><code>op-archetypes</code> 工程下给出了所有模板，也就是说模板已经都写好了，并处理了兼容性问题。</p>
+<p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=1055.8">17:35</a></p>
+<p>使用 live template 快速生成 User 类。</p>
+<p>同时，编译项目，生成所有的增删改查代码。</p>
+<p>此时，开发一个项目速度就很快了，只需要对实体进行建模，就可以利用代码生成器生成其他通用操作代码。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

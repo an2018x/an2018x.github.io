@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>4-JavaScript 判断和循环 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="描述 JavaScript 中的判断和循环语句">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-4/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-4/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      4-JavaScript 判断和循环
+    </h1>
+    <div class="post-description">
+      描述 JavaScript 中的判断和循环语句
+    </div>
+    <div class="post-meta"><span title='2023-01-26 20:46:46 +0800 CST'>一月 26, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="1-判断条件和条件语句">1. 判断条件和条件语句<a hidden class="anchor" aria-hidden="true" href="#1-判断条件和条件语句">#</a></h2>
+<ol>
+<li>判断由两部分组成
+<ol>
+<li>一个进行判断的表达式，它会返回一个值</li>
+<li>一个条件语句，用于说明在某种特定情况下应该执行什么操作</li>
+</ol>
+</li>
+<li>为了完成判断，代码会检查脚本的当前状态。通常会使用比较操作对两个值进行比较，然后返回 true/false 作为判断条件。</li>
+<li>条件语句基于如果(if)/那么(then)/否则(else)这样的概念来工作。如果(if)满足某个条件，那么(then)代码执行一条或多条语句，否则(else)执行其他语句(或跳过这个步骤)。</li>
+</ol>
+<pre><code class="language-js">if (a &gt; 10) {
+    alert(&quot;不是个位数&quot;);
+} else {
+    alert(&quot;个位数&quot;);
+}
+</code></pre>
+<ol start="4">
+<li>可以将两个或多个比较操作符组合起来一起形成多个条件。</li>
+</ol>
+<h2 id="2-比较操作符判断条件">2. 比较操作符：判断条件<a hidden class="anchor" aria-hidden="true" href="#2-比较操作符判断条件">#</a></h2>
+<ol>
+<li>可以在脚本中通过比较一个值和你期望的值来进行条件判断，其结果会是布尔类型：true 或 false。</li>
+<li>程序员把测试或检查条件叫做判断条件，条件可以非常复杂，但是都会返回 true 或 false。</li>
+<li><code>==</code> 等于操作符比较两个值是否相等。</li>
+<li><code>!=</code> 不等于操作符比较两个值是否不同。</li>
+<li><code>===</code> 严格等于操作符比较两个值，并检查它们的数据类型和值是否完全相同。</li>
+<li><code>!==</code> 严格不等于操作符比较两个值，并检查它们的数据类型和值是否不完全相同。</li>
+<li><code>&gt;</code> 大于操作符会检查左边的数字是否大于右边的数字。</li>
+<li><code>&lt;</code> 小于操作符会检查左边的数字是否小于右边的数字。</li>
+<li><code>&lt;=</code> 小于等于操作符会检查左边的数字是否小于等于右边的数字。</li>
+<li><code>&gt;=</code> 大于等于操作符会检查左边的数字是否大于等于右边的数字。</li>
+</ol>
+<h2 id="3-在算术操作符中使用表达式">3. 在算术操作符中使用表达式<a hidden class="anchor" aria-hidden="true" href="#3-在算术操作符中使用表达式">#</a></h2>
+<ol>
+<li>操作数不一定必须是数值或者变量名，也可以是表达式。</li>
+</ol>
+<pre><code class="language-js">((a+b)&lt;(c+d))
+</code></pre>
+<h2 id="4-逻辑操作符">4. 逻辑操作符<a hidden class="anchor" aria-hidden="true" href="#4-逻辑操作符">#</a></h2>
+<ol>
+<li>逻辑操作符允许将多个比较操作符的结果放在一起进行比较。</li>
+</ol>
+<pre><code class="language-js">((5&lt;3)&amp;&amp;(2&gt;3))
+</code></pre>
+<ol start="2">
+<li><code>&amp;&amp;</code> 逻辑与操作符检测如果两个表达式结果是 true，那么返回 true，否则返回 false。</li>
+<li><code>||</code> 逻辑或操作符检测至少一个条件为 true，那么返回 true，否则返回 false。</li>
+<li><code>!</code> 逻辑非操作符操作单一的布尔变量，并对它的结果取反。</li>
+<li>短路条件：逻辑表达式会从左到右进行计算，如果一个条件能确认最终的结果，那么后面的条件就不会被执行。</li>
+</ol>
+<h2 id="5-if-语句">5. if 语句<a hidden class="anchor" aria-hidden="true" href="#5-if-语句">#</a></h2>
+<ol>
+<li>if 语句会对一个条件进行判断，如果这个条件的结果为 true，就会执行后续代码块中的代码。</li>
+<li>如果条件的结果是 false，后续代码块中的语句不会被执行，脚本会继续执行这个代码块后面的语句。</li>
+</ol>
+<pre><code class="language-js">if (a &lt; b) {
+    ...
+}
+...
+</code></pre>
+<h2 id="6-if-else-语句">6. if-else 语句<a hidden class="anchor" aria-hidden="true" href="#6-if-else-语句">#</a></h2>
+<ol>
+<li>if-else 语句同样用来条件判断。</li>
+<li>如果条件的结果是 true，那么第一个代码块会被执行。</li>
+<li>如果条件的结果是 false，那么执行第二个代码块中的内容。</li>
+</ol>
+<pre><code class="language-js">if (a &gt; b) {
+    ...
+} else {
+    ...
+}
+</code></pre>
+<h2 id="7-switch-语句">7. switch 语句<a hidden class="anchor" aria-hidden="true" href="#7-switch-语句">#</a></h2>
+<ol>
+<li>switch 语句的开头是一个被称为分支值的变量，每个 case 表示一个条件，当条件的值和这个变量的值相匹配时，它后面的代码就会被执行。</li>
+<li>如果以上情况都不匹配，则会执行 default 语句块中的内容。</li>
+<li>在每个 case 的最后由一个 break 关键字。它会告诉 JavaScript 解释器 switch 语句已经执行完毕，继续执行 switch 后面的内容。</li>
+</ol>
+<pre><code class="language-js">switch (color) {
+    case 'blue':
+        res = 'b';
+        break;
+    case 'red':
+        res = 'r';
+        break;
+    default:
+        res = 'null';
+        break;
+}
+</code></pre>
+<h2 id="8-强制类型转换和弱类型">8. 强制类型转换和弱类型<a hidden class="anchor" aria-hidden="true" href="#8-强制类型转换和弱类型">#</a></h2>
+<ol>
+<li>如果使用的数据类型和 JavaScript 所需的类型不一致，那么他会尽量使这个操作变得有意义，而不是直接报错。</li>
+<li>例如，在表达式 <code>'1'&gt;0</code> 中，解释器会将字符串 <code>'1'</code> 转换为数字 <code>1</code>。</li>
+<li>JavaScript 也被称为弱类型语言，因为值的数据类型是可以变的。</li>
+<li>例如 Java、C++ 这样的语言被称为强类型语言，因为它们需要指定每个变量的数据类型。</li>
+<li>强制类型转换可能会导致意外错误，因此，推荐使用 <code>===</code> 和 <code>!==</code> 来执行相等判断。</li>
+</ol>
+<h2 id="9-真值和假值">9. 真值和假值<a hidden class="anchor" aria-hidden="true" href="#9-真值和假值">#</a></h2>
+<ol>
+<li>因为存在强制类型转换，JavaScript 中的每个值都可以被当作 true 或 false。</li>
+<li>以下几种情况对应假值：</li>
+</ol>
+<table>
+  <thead>
+      <tr>
+          <th>值</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>false</td>
+          <td>布尔值 false</td>
+      </tr>
+      <tr>
+          <td>0</td>
+          <td>数字 0</td>
+      </tr>
+      <tr>
+          <td>''</td>
+          <td>空字符串</td>
+      </tr>
+      <tr>
+          <td>10/&lsquo;xx&rsquo;</td>
+          <td>NaN</td>
+      </tr>
+      <tr>
+          <td>undefined</td>
+          <td>undefined</td>
+      </tr>
+  </tbody>
+</table>
+<ol start="3">
+<li>以下经济中情况对应真值：</li>
+</ol>
+<table>
+  <thead>
+      <tr>
+          <th>值</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>true</td>
+          <td>布尔值 true</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>非 0 数字</td>
+      </tr>
+      <tr>
+          <td>&lsquo;aaa&rsquo;/&lsquo;false&rsquo;/&lsquo;0&rsquo;</td>
+          <td>非空字符串</td>
+      </tr>
+      <tr>
+          <td>10-2</td>
+          <td>非 0 的表达式</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="10-循环">10. 循环<a hidden class="anchor" aria-hidden="true" href="#10-循环">#</a></h2>
+<ol>
+<li>循环会检查一个条件，如果这个条件返回 true，那么会执行一段响应的代码。</li>
+<li>之后这个条件会再次被检查，如果依然返回 true，那么这段代码会再次被执行。</li>
+<li>以上过程会一直重复，直到条件返回 false。</li>
+</ol>
+<h3 id="101-for-循环">10.1. for 循环<a hidden class="anchor" aria-hidden="true" href="#101-for-循环">#</a></h3>
+<ol>
+<li>for 循环使用计数器作为条件。</li>
+<li>这种方式会让代码执行指定的次数。</li>
+<li>这个条件是由三条语句组成的。</li>
+</ol>
+<pre><code class="language-java">for (var i = 0; i &lt; 10; i++) {
+    sum = sum + i;
+}
+</code></pre>
+<ol start="4">
+<li>初始化：创建一个变量，然后赋值为 0，这个变量起到计数器的作用，通常只在循环第一次运行的时候被创建。</li>
+<li>条件：循环会一直执行下去，直到第一个分号后的语句执行结果为 false。</li>
+<li>更新：每次循环执行完成后，第三个语句会被执行，并更新计数器的值。</li>
+</ol>
+<h3 id="102-break-和-continue">10.2. break 和 continue<a hidden class="anchor" aria-hidden="true" href="#102-break-和-continue">#</a></h3>
+<ol>
+<li>break 关键字会导致循环结束，然后通知解释器继续执行循环体之外的代码。</li>
+<li>continue 关键字会通知解释器立即执行下一个循环迭代，然后进行条件检查。</li>
+</ol>
+<h3 id="103-while-循环">10.3. while 循环<a hidden class="anchor" aria-hidden="true" href="#103-while-循环">#</a></h3>
+<ol>
+<li>如果不确定代码会被执行多少次，可以使用 while 循环。</li>
+<li>只要 while 后的括号中的条件表达式结果不为 false，花括号中的循环体就会一直被执行下去。</li>
+</ol>
+<pre><code class="language-js">var sum = 0;
+while (sum &lt; 10) {
+    sum += sum;
+    sum ++;
+}
+</code></pre>
+<h3 id="104-do-while-循环">10.4. do-while 循环<a hidden class="anchor" aria-hidden="true" href="#104-do-while-循环">#</a></h3>
+<ol>
+<li>do-while 循环和 while 循环类似。</li>
+<li>区别在于，do-while 循环会先执行循环体，再执行条件判断，也就是说循环体会至少被执行一次。</li>
+</ol>
+<pre><code class="language-js">var sum = 0;
+do {
+    sum += sum;
+    sum ++;
+} while (sum &lt; 10);
+</code></pre>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

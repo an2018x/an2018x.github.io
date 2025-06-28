@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>7-HTML 表单 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="介绍 HTML 中表单工作流程以及如何创建各种表单控件">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/html/chapter-7/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      7-HTML 表单
+    </h1>
+    <div class="post-description">
+      介绍 HTML 中表单工作流程以及如何创建各种表单控件
+    </div>
+    <div class="post-meta"><span title='2022-11-26 23:16:46 +0800 CST'>十一月 26, 2022</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="1-表单概述">1. 表单概述<a hidden class="anchor" aria-hidden="true" href="#1-表单概述">#</a></h2>
+<p>生活中，表单指的是一个打印的文档，这个文档中包含一些空白区域来填写信息。</p>
+<p>在网页中，表单通常用来让网站收集来自访问者的信息。</p>
+<h2 id="2-表单如何工作">2. 表单如何工作<a hidden class="anchor" aria-hidden="true" href="#2-表单如何工作">#</a></h2>
+<ol>
+<li>
+<p>用户填写表单，然后单击一个按钮将所填信息提交给服务器。</p>
+</li>
+<li>
+<p>每个表单控件的名称与用户输入或选择的值一同发送到服务器。</p>
+</li>
+<li>
+<p>服务器利用某种编程语言（例如 Java）对这些信息进行处理，还可能将这些信息存储在一个数据库中。</p>
+</li>
+<li>
+<p>服务器基于收到的信息创建一个新页面并将其返回到浏览器。</p>
+</li>
+</ol>
+<h2 id="3-表单控件与输入数据">3. 表单控件与输入数据<a hidden class="anchor" aria-hidden="true" href="#3-表单控件与输入数据">#</a></h2>
+<ol>
+<li>
+<p>表单中包含多个表单控件，每种控件收集不同的信息。</p>
+</li>
+<li>
+<p>服务器需要知道用户输入的每一条数据输入了哪个表单元素。</p>
+</li>
+<li>
+<p>为了区分各类输入数据，从浏览器发送到服务器的信息采用“名称-值”这样成对的格式，例如（username=an, password=123456）。</p>
+</li>
+</ol>
+<h2 id="4-表单结构">4. 表单结构<a hidden class="anchor" aria-hidden="true" href="#4-表单结构">#</a></h2>
+<ol>
+<li>
+<p>表单控件位于 <code>&lt;form&gt;</code> 元素中。每个 <code>&lt;form&gt;</code> 元素通常要包含 <code>action</code> 、<code>method</code> 和 <code>id</code> 属性。</p>
+</li>
+<li>
+<p><code>action</code> 属性值对应服务器上一个页面的 URL，这个页面用来在用户提交表单时接收表单信息。</p>
+</li>
+<li>
+<p><code>method</code> 对应提交表单的方法，通常有 <code>get</code> 和 <code>post</code> 两种方法，如果没有指定，默认以 get 方法来发送。</p>
+<ol>
+<li>
+<p>使用 get 方法，表单中的值会被附加到由 action 指定的 URL 末尾，通常适用于短表单（搜索框）和从 Web 服务器检索数据的表单的情形。</p>
+</li>
+<li>
+<p>使用 post 方法，表单中的值会被放在 HTTP 头信息中，通常，当上传文件、长表单、包含敏感信息和向数据库添加信息时，应该使用 post 方法。</p>
+</li>
+</ol>
+</li>
+<li>
+<p><code>id</code> 属性用来对表单进行唯一标识。</p>
+</li>
+</ol>
+<h2 id="5-单行文本框">5. 单行文本框<a hidden class="anchor" aria-hidden="true" href="#5-单行文本框">#</a></h2>
+<ol>
+<li>
+<p><code>&lt;input&gt;</code> 元素用来创建多种不同的表单控件。</p>
+</li>
+<li>
+<p><code>type</code> 属性值决定要创建哪种控件，当属性值为 <code>text</code> 时，会创建一个单行文本框。</p>
+</li>
+<li>
+<p>当用户向表单中输入信息时，服务器需要知道每条数据被输入到了哪个表单控件中。因此，每个表单控件都要指定一个 <code>name</code> 属性，这个属性的值用来对表单控件进行标识，并和输入的信息一起传递给服务器，后续的表单控件都支持 <code>name</code> 属性。</p>
+</li>
+<li>
+<p><code>maxlength</code> 属性可以限制用户在文本区域输入字符的数量，它的值为用户可以输入字符的最大数量。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;单行文本框测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; Username:
+                &lt;input type=&quot;text&quot; name=&quot;uname&quot; maxlength=&quot;30&quot;/&gt;
+            &lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127113312.png"></p>
+<h2 id="6-密码框">6. 密码框<a hidden class="anchor" aria-hidden="true" href="#6-密码框">#</a></h2>
+<ol>
+<li>
+<p>当 <code>type</code> 属性值为 <code>password</code> 时，<code>&lt;input&gt;</code> 元素会创建一个密码框，它的输入字符会被隐藏起来。</p>
+</li>
+<li>
+<p><code>name</code> 属性用来指定密码框的名称。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;密码框测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; Password:
+                &lt;input type=&quot;password&quot; name=&quot;passwd&quot; maxlength=&quot;30&quot;/&gt;
+            &lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127113619.png"></p>
+<h2 id="7-文本域多行文本框">7. 文本域/多行文本框<a hidden class="anchor" aria-hidden="true" href="#7-文本域多行文本框">#</a></h2>
+<ol>
+<li>
+<p><code>&lt;textarea&gt;</code> 元素用来创建多行文本框。</p>
+</li>
+<li>
+<p><code>&lt;textarea&gt;</code> 元素并非空元素，它包含起始和结束标签。</p>
+</li>
+<li>
+<p>页面加载完成后，<code>&lt;textarea&gt;</code> 标签内的内容会作为默认内容出现在文本框中。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;多行文本框测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; 更多建议:
+                &lt;textarea name=&quot;advice&quot;&gt;请输入你的建议&lt;/textarea&gt;
+            &lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127113943.png"></p>
+<h2 id="8-单选按钮">8. 单选按钮<a hidden class="anchor" aria-hidden="true" href="#8-单选按钮">#</a></h2>
+<ol>
+<li>
+<p><code>type=&quot;radio&quot;</code> 可以让用户创建一个单选按钮，从而在一系列选项中只选择一个。</p>
+</li>
+<li>
+<p><code>name</code> 属性指定控件名称，一系列只能选择一个的单选按钮应该共用一个 <code>name</code>。</p>
+</li>
+<li>
+<p><code>value</code> 属性指定该项被选中后发送给服务器的数据值。</p>
+</li>
+<li>
+<p><code>checked</code> 属性可以指定当页面加载后该项是否默认被选中。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;单选框测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; 性别: &lt;br /&gt;
+                &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;M&quot; checked /&gt; 男 &lt;br /&gt;
+                &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;F&quot; /&gt; 女
+            &lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127114809.png"></p>
+<h2 id="9-复选框">9. 复选框<a hidden class="anchor" aria-hidden="true" href="#9-复选框">#</a></h2>
+<ol>
+<li>
+<p><code>type=&quot;checkbox&quot;</code> 可以让用户创建一个复选按钮，从而在一系列选项中可以选择多个选项。</p>
+</li>
+<li>
+<p><code>name</code> 指定控件名称，相关的复选框应该指定一个 <code>name</code>。</p>
+</li>
+<li>
+<p><code>value</code> 指定该项被选中后发送给服务器的值。</p>
+</li>
+<li>
+<p><code>checked</code> 属性可以指定当页面加载后该项是否默认被选中。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;复选框测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; 爱好: &lt;br /&gt;
+                &lt;input type=&quot;checkbox&quot; name=&quot;hobbies&quot; value=&quot;swimming&quot; checked /&gt; 游泳
+                &lt;input type=&quot;checkbox&quot; name=&quot;hobbies&quot; value=&quot;running&quot; /&gt; 跑步
+                &lt;input type=&quot;checkbox&quot; name=&quot;hobbies&quot; value=&quot;other&quot; /&gt; 其他
+            &lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127115243.png"></p>
+<h2 id="10-下拉列表框">10. 下拉列表框<a hidden class="anchor" aria-hidden="true" href="#10-下拉列表框">#</a></h2>
+<ol>
+<li>
+<p>下拉列表框让用户在一个下拉列表中选择其中的一个选项。</p>
+</li>
+<li>
+<p><code>&lt;select&gt;</code> 元素用来创建下拉列表框，包含两个以上的 <code>&lt;option&gt;</code> 元素。</p>
+</li>
+<li>
+<p><code>&lt;option&gt;</code> 元素用来指定用户可以选择的选项，在 <code>&lt;option&gt;&lt;/option&gt;</code> 标签中的内容将会展示为选项。</p>
+</li>
+<li>
+<p><code>value</code> 属性用来指定选项的值。</p>
+</li>
+<li>
+<p><code>selected</code> 属性可以指定当前页面加载时被选中的选项。如果未指定，则展示第一个选项。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;下拉列表框测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; 你来自哪里: &lt;/p&gt;
+            &lt;select name=&quot;country&quot;&gt;
+                &lt;option value=&quot;中国&quot;&gt;中国&lt;/option&gt;
+                &lt;option value=&quot;美国&quot;&gt;美国&lt;/option&gt;
+                &lt;option value=&quot;其他&quot; selected&gt;其他国家&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127220820.png"></p>
+<h2 id="11-多选框">11. 多选框<a hidden class="anchor" aria-hidden="true" href="#11-多选框">#</a></h2>
+<ol>
+<li>
+<p>可以使用 <code>size</code> 属性让下拉列表框能显示多个选项。</p>
+</li>
+<li>
+<p>可以使用 <code>multiple</code> 属性来允许用户选择多个选项。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;多选框测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; 你的爱好是什么: &lt;/p&gt;
+            &lt;select name=&quot;hobbies&quot; size=&quot;2&quot; multiple&gt;
+                &lt;option value=&quot;爬山&quot;&gt;爬山&lt;/option&gt;
+                &lt;option value=&quot;游泳&quot;&gt;游泳&lt;/option&gt;
+                &lt;option value=&quot;钓鱼&quot;&gt;钓鱼&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127221235.png"></p>
+<h2 id="12-文件上传域">12. 文件上传域<a hidden class="anchor" aria-hidden="true" href="#12-文件上传域">#</a></h2>
+<ol>
+<li>
+<p>通过指定 <code>type=&quot;file&quot;</code> 会创建一个带上传按钮的文本框。</p>
+</li>
+<li>
+<p>如果需要用户上传文件，必须将 <code>&lt;form&gt;</code> 的 <code>method</code> 属性设置为 <code>post</code>。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;文件上传域测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot; method=&quot;post&quot;&gt;
+            &lt;p&gt; 请上传文件： &lt;/p&gt;
+            &lt;input type=&quot;file&quot; /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127221602.png"></p>
+<h2 id="13-提交按钮">13. 提交按钮<a hidden class="anchor" aria-hidden="true" href="#13-提交按钮">#</a></h2>
+<ol>
+<li>
+<p>提交按钮用来将表单发送给服务器。</p>
+</li>
+<li>
+<p>通过指定 <code>type=&quot;submit&quot;</code> 可以定义一个提交按钮。</p>
+</li>
+<li>
+<p><code>value</code> 属性用于控制在按钮上显示的文字。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;提交按钮测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt; 请上传表单 &lt;/p&gt;
+            &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127221912.png"></p>
+<h2 id="14-图像按钮">14. 图像按钮<a hidden class="anchor" aria-hidden="true" href="#14-图像按钮">#</a></h2>
+<ol>
+<li>
+<p>通过指定 <code>type=&quot;image&quot;</code> 可以使用图像作为提交按钮。</p>
+</li>
+<li>
+<p>通过 <code>src</code>、<code>alt</code> 、<code>width</code> 、<code>height</code> 属性可以指定图像的具体属性，这点与 <code>&lt;img&gt;</code> 标签相同。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;图像按钮测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt;请点击如下按钮：&lt;/p&gt;
+            &lt;input type=&quot;image&quot; src=&quot;button.png&quot; alt=&quot;按钮&quot; width=&quot;100&quot; height=&quot;50&quot; /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127223857.png"></p>
+<h2 id="15-按钮和隐藏控件">15. 按钮和隐藏控件<a hidden class="anchor" aria-hidden="true" href="#15-按钮和隐藏控件">#</a></h2>
+<ol>
+<li>
+<p><code>&lt;button&gt;</code> 元素可以让用户更好地控制按钮的显示方式，并允许其他元素出现在 <code>&lt;button&gt;</code> 元素内。</p>
+</li>
+<li>
+<p>指定 <code>type=&quot;hidden&quot;</code> 的控件不会显示在页面上，这允许开发人员向页面中添加用户看不到的值。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;按钮测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;button&gt;&lt;img src=&quot;add.png&quot; /&gt;添加&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127224450.png"></p>
+<h2 id="16-标签表单控件">16. 标签表单控件<a hidden class="anchor" aria-hidden="true" href="#16-标签表单控件">#</a></h2>
+<ol>
+<li>
+<p>可以使用 <code>&lt;label&gt;</code> 元素来作为标签，从而说明控件的作用。</p>
+</li>
+<li>
+<p>相比与直接使用文本而言，<code>&lt;label&gt;</code> 元素对视力障碍人士更友好。</p>
+</li>
+<li>
+<p>可以用 <code>&lt;label&gt;</code> 标签将控件包围起来使用。</p>
+</li>
+<li>
+<p>也可以使用 <code>for</code> 属性来指明 <code>&lt;label&gt;</code> 元素关联的表单控件，其中属性值为表单控件的 id 属性值。</p>
+</li>
+<li>
+<p>可以通过点击 <code>&lt;label&gt;</code> 元素来跳转到对应的控件。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;标签表单控件测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;label&gt;年龄：&lt;input type=&quot;text&quot; /&gt;&lt;/label&gt; &lt;br /&gt;
+            &lt;label for=&quot;job&quot;&gt;职业&lt;/label&gt;
+            &lt;input id=&quot;job&quot; type=&quot;text&quot; /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127225145.png"></p>
+<h2 id="17-组合表单元素">17. 组合表单元素<a hidden class="anchor" aria-hidden="true" href="#17-组合表单元素">#</a></h2>
+<ol>
+<li>
+<p>可以将相关的表单控件置于 <code>&lt;fieldset&gt;</code> 元素中分成一组。</p>
+</li>
+<li>
+<p><code>&lt;lengend&gt;</code> 元素可以直接跟在 <code>&lt;fieldset&gt;</code> 元素后并包含一个标题，这个标题用来说明控件组的用途。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;组合表单元素测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;职业调查&lt;/legend&gt;
+                &lt;label&gt;年龄：&lt;input type=&quot;text&quot; /&gt;&lt;/label&gt; &lt;br /&gt;
+                &lt;label for=&quot;job&quot;&gt;职业&lt;/label&gt;
+                &lt;input id=&quot;job&quot; type=&quot;text&quot; /&gt;
+            &lt;/fieldset&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127230156.png"></p>
+<h2 id="18-表单验证">18. 表单验证<a hidden class="anchor" aria-hidden="true" href="#18-表单验证">#</a></h2>
+<ol>
+<li>可以使用 <code>required</code> 属性来说明提示用户某一个控件必须填入值。</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;表单验证测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt;用户名：&lt;input type=&quot;text&quot; name=&quot;uname&quot; required /&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;input type=&quot;submit&quot; /&gt;&lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127230501.png"></p>
+<h2 id="19-日期控件">19. 日期控件<a hidden class="anchor" aria-hidden="true" href="#19-日期控件">#</a></h2>
+<ol>
+<li>通过指定 <code>type=&quot;date&quot;</code> 可以创建一个日期输入控件。</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;日期控件测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt;出生日期：&lt;input type=&quot;date&quot; name=&quot;birthday&quot; required /&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;input type=&quot;submit&quot; /&gt;&lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127230636.png"></p>
+<h2 id="20-电子邮件和-url-输入控件">20. 电子邮件和 URL 输入控件<a hidden class="anchor" aria-hidden="true" href="#20-电子邮件和-url-输入控件">#</a></h2>
+<ol>
+<li>
+<p>指定 <code>type=&quot;email&quot;</code> 可以创建一个电子邮件输入控件。</p>
+</li>
+<li>
+<p>指定 <code>type=&quot;url&quot;</code> 可以创建一个 URL 输入控件。</p>
+</li>
+<li>
+<p>浏览器会校验电子邮件或 URL 输入控件的值格式是否正确。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;电子邮件和 URL 输入控件测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;p&gt;电子邮件：&lt;input type=&quot;email&quot; name=&quot;email&quot; /&gt;&lt;/p&gt;
+            &lt;p&gt;网址：&lt;input type=&quot;url&quot; name=&quot;url&quot; /&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;input type=&quot;submit&quot; /&gt;&lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127231137.png"></p>
+<h2 id="21-搜索输入控件">21. 搜索输入控件<a hidden class="anchor" aria-hidden="true" href="#21-搜索输入控件">#</a></h2>
+<ol>
+<li>
+<p>通过指定 <code>type=&quot;search&quot;</code> 可以创建一个用于搜索的单行文本框。</p>
+</li>
+<li>
+<p>对于所有的文本输入控件，都可以设置 <code>placeholder</code> 属性作为没有任何输入时的占位符。</p>
+</li>
+</ol>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;搜索输入控件测试&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;http://www.ans20xx.com&quot;&gt;
+            &lt;input type=&quot;search&quot; placeholder=&quot;搜索一下&quot; /&gt;
+            &lt;input type=&quot;submit&quot; value=&quot;搜索&quot; /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/27/20221127231428.png"></p>
+<h2 id="22-小结">22. 小结<a hidden class="anchor" aria-hidden="true" href="#22-小结">#</a></h2>
+<ol>
+<li>
+<p>当希望从访问者那里收集表单时，需要使用表单，表单内容位于 <code>&lt;form&gt;</code> 元素中。</p>
+</li>
+<li>
+<p>表单中的内容以 &ldquo;名称/值&rdquo; 的形式进行发送。</p>
+</li>
+<li>
+<p>每个表单控件都有一个名称，用户输入的文本或所选择选项的值一同发送给服务器。</p>
+</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

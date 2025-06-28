@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>2-JavaScript 基础指令 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="描述 JavaScript 中的基础指令">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-2/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/javascript/chapter-2/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      2-JavaScript 基础指令
+    </h1>
+    <div class="post-description">
+      描述 JavaScript 中的基础指令
+    </div>
+    <div class="post-meta"><span title='2023-01-24 22:15:46 +0800 CST'>一月 24, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="1-语句">1. 语句<a hidden class="anchor" aria-hidden="true" href="#1-语句">#</a></h2>
+<ol>
+<li>一段脚本就是一系列计算机能够一步一步遵照执行的指令。</li>
+<li>每一条单独的指令或步骤被称为一条语句。</li>
+<li>语句通常以分号结尾</li>
+<li>有些语句被花括号包围；它们被称为代码块，右花括号的后面不需要加分号。</li>
+</ol>
+<pre><code class="language-js">var input = 10; // 语句
+var output; // 语句
+if (input &gt; 10) {
+    output = &quot;大于10&quot;; //语句
+} else {
+    output = &quot;小于等于10&quot;; // 语句
+}
+</code></pre>
+<h2 id="2-注释">2. 注释<a hidden class="anchor" aria-hidden="true" href="#2-注释">#</a></h2>
+<ol>
+<li>注释用来解释代码的作用。</li>
+<li>注释使得代码更加容易阅读和理解。</li>
+<li>为了编写超过一行的注释，需要使用多行注释，多行注释以 <code>/*</code> 开头，以 <code>*/</code> 结尾；任何包含在这些字符中的内容，都不会被 JavaScript 解释器处理执行。</li>
+<li>在一行中任何位于 <code>//</code> 后的内容，都不会被解释器处理执行，这被称为单行注释。</li>
+</ol>
+<pre><code class="language-js">/*
+多行注释
+定义变量 a
+*/
+var a = 10;
+// 单行注释，定义变量 b
+var b = 20;
+</code></pre>
+<h2 id="3-变量">3. 变量<a hidden class="anchor" aria-hidden="true" href="#3-变量">#</a></h2>
+<h3 id="31-什么是变量">3.1. 什么是变量<a hidden class="anchor" aria-hidden="true" href="#31-什么是变量">#</a></h3>
+<ol>
+<li>脚本必须暂时存储一些完成工作所需的信息，可以将这些数据存储在变量中。</li>
+<li>变量中的值随着程序的运行会不断发生变化。</li>
+</ol>
+<h3 id="32-如何声明变量">3.2. 如何声明变量<a hidden class="anchor" aria-hidden="true" href="#32-如何声明变量">#</a></h3>
+<ol>
+<li>在使用变量前，需要声明变量。</li>
+<li>声明变量包括创建变量和命名变量两个部分。</li>
+</ol>
+<pre><code class="language-js">var a;
+</code></pre>
+<ol start="3">
+<li><code>var</code> 被程序员称为关键字，JavaScript 认为这个关键字的作用是创建变量。</li>
+<li>为了使用变量需要对变量命名，这里变量被命名为 <code>a</code>。</li>
+<li>变量命名最好采用 <code>camelCase</code> 驼峰规范，即第一个单词全部小写，后面的单词首字母大写。</li>
+</ol>
+<h3 id="33-变量赋值">3.3. 变量赋值<a hidden class="anchor" aria-hidden="true" href="#33-变量赋值">#</a></h3>
+<ol>
+<li>创建完变量，就可以告诉它，希望为它保存什么信息，该行为被称为变量赋值。</li>
+</ol>
+<pre><code class="language-js">a = 10;
+</code></pre>
+<ol start="2">
+<li><code>=</code> 是一个赋值操作符，它的意思是想要给变量赋予一个值。</li>
+<li><code>=</code> 符号也可以用来更新一个变量中的值。</li>
+<li>在第一次给变量赋值之前，JavaScript 解释器会给变量赋一个 <code>undefined</code> 值。</li>
+</ol>
+<h3 id="34-创建对象的快捷方式">3.4. 创建对象的快捷方式<a hidden class="anchor" aria-hidden="true" href="#34-创建对象的快捷方式">#</a></h3>
+<pre><code class="language-js">var a = 10, b = 20;
+</code></pre>
+<ol>
+<li>可以在同一行中声明多个变量，并让它们存储不同类型的值。</li>
+</ol>
+<h3 id="35-变量的数据类型">3.5. 变量的数据类型<a hidden class="anchor" aria-hidden="true" href="#35-变量的数据类型">#</a></h3>
+<ol>
+<li>JavaScript 把数据划分为数字、字符串、布尔值三种类型。</li>
+<li>数字类型处理数字，例如 <code>3</code>、<code>0.75</code>。</li>
+<li>字符串类型包含字母和其他字符，例如 <code>'test'</code>、<code>&quot;test&quot;</code>。字符串数据类型的值可以被包含在单引号或者双引号内，只要起始引号和结尾引号相匹配。使用文本时经常要用到字符串。</li>
+<li>布尔类型只能是两个值中的一个：<code>true</code> 和 <code>false</code>。</li>
+<li>除此之外，JavaScript 还有其他的数据类型（数组、对象、undefined、null）。</li>
+<li>在 JavaScript 中声明一个变量时，不需要显式指定它的数据类型。</li>
+</ol>
+<pre><code class="language-js">// 使用变量存储数字
+var a = 10;
+// 使用变量存储字符串
+var b = &quot;test&quot;;
+// 在字符串中使用引号，在单引号中包含双引号
+var c = '&quot;test&quot;';
+// 在字符串中使用引号，使用 \ + 单引号/双引号进行转义
+var d = '\'test\'';
+// 使用变量存储布尔值
+var e = true;
+</code></pre>
+<h3 id="36-修改变量的值">3.6. 修改变量的值<a hidden class="anchor" aria-hidden="true" href="#36-修改变量的值">#</a></h3>
+<pre><code class="language-js">var a = 10;
+a = 20;
+</code></pre>
+<ol>
+<li>在给变量赋值之后，可以随后用相同格式的脚本代码，修改变量中存储的值。</li>
+<li>变量被创建后，不需要再用 <code>var</code> 关键字给变量赋予新值，只需要按照变量名 + 等号 + 新值即可。</li>
+</ol>
+<h2 id="4-数组">4. 数组<a hidden class="anchor" aria-hidden="true" href="#4-数组">#</a></h2>
+<h3 id="41-什么是数组">4.1. 什么是数组<a hidden class="anchor" aria-hidden="true" href="#41-什么是数组">#</a></h3>
+<ol>
+<li>数组是一种特殊类型的变量，可以只存储一个值，也可以存储多个值。</li>
+</ol>
+<h3 id="42-创建数组">4.2. 创建数组<a hidden class="anchor" aria-hidden="true" href="#42-创建数组">#</a></h3>
+<pre><code class="language-js">var color = ['red','write', 0]
+</code></pre>
+<ol>
+<li>可以直接使用 <code>var</code> 关键字 + 数组名字来创建数组。</li>
+<li>赋值给数组的值包含在一对中括号里面，每个值用逗号分开。</li>
+<li>JavaScript 中数组不需要是相同类型，可以在同一个数组中存储字符串、数字、布尔值。</li>
+<li>上面创建数组的方式被称为数组字面量。</li>
+</ol>
+<pre><code class="language-js">var color = new Array('red', 'write', 0);
+</code></pre>
+<ol start="5">
+<li>上面这种创建数组的方式被称为数组构造函数。</li>
+</ol>
+<pre><code class="language-js">var item1 = color[0];
+var item2 = color.item(1);
+</code></pre>
+<ol start="6">
+<li>数组的值可以用 <code>数组名[下标]</code> 的方式访问，也可以使用 <code>数组名.item(下标)</code> 的方式访问。</li>
+</ol>
+<h3 id="43-数组的值">4.3. 数组的值<a hidden class="anchor" aria-hidden="true" href="#43-数组的值">#</a></h3>
+<ol>
+<li>要访问数组的值，需要通过下标/编号访问，数组的下标从 0 开始。</li>
+<li>数组中元素的数量可以通过 length 属性，也就是 <code>数组名.length</code> 获取到。</li>
+</ol>
+<h3 id="44-访问和修改数组中的值">4.4. 访问和修改数组中的值<a hidden class="anchor" aria-hidden="true" href="#44-访问和修改数组中的值">#</a></h3>
+<pre><code class="language-js">color[2] = 'black';
+</code></pre>
+<h2 id="5-表达式">5. 表达式<a hidden class="anchor" aria-hidden="true" href="#5-表达式">#</a></h2>
+<ol>
+<li>表达式可以求出一个值，求值的过程可以包含运算，有两种类型的表达式。</li>
+<li>第一种是专门给变量赋值的表达式，这可以通过赋值操作符 <code>=</code> 来完成。</li>
+</ol>
+<pre><code class="language-js">var a = 10;
+</code></pre>
+<ol start="3">
+<li>第二种是使用一个或更多值进行计算，最后返回一个值。</li>
+</ol>
+<pre><code class="language-js">var a = 10 * 2;
+</code></pre>
+<h2 id="6-操作符">6. 操作符<a hidden class="anchor" aria-hidden="true" href="#6-操作符">#</a></h2>
+<ol>
+<li>在表达式用需要使用操作符。</li>
+<li>操作符使得程序员可以对一个或多个值进行运算，最后得到一个值。</li>
+</ol>
+<h3 id="61-赋值操作符">6.1. 赋值操作符<a hidden class="anchor" aria-hidden="true" href="#61-赋值操作符">#</a></h3>
+<ol>
+<li>将一个值赋值给一个变量。</li>
+</ol>
+<pre><code class="language-js">var a = 10;
+</code></pre>
+<h3 id="62-算术操作符">6.2. 算术操作符<a hidden class="anchor" aria-hidden="true" href="#62-算术操作符">#</a></h3>
+<ol>
+<li>执行基本的数学运算</li>
+</ol>
+<pre><code class="language-js">var a = 10 * 3;
+a = 10 - 3;
+a = 10 + 3;
+a = 10 / 3;
+a++;
+a--;
+a = 10 % 3;
+</code></pre>
+<h3 id="63-字符串操作符">6.3. 字符串操作符<a hidden class="anchor" aria-hidden="true" href="#63-字符串操作符">#</a></h3>
+<ol>
+<li>字符串可以使用操作符 <code>+</code> 将两个字符串的值连接起来，这种方式也被称为串接。</li>
+</ol>
+<pre><code class="language-js">var a = &quot;test&quot; + &quot;hello&quot;;
+</code></pre>
+<ol start="2">
+<li>可以和数字混合，例如 <code>var a = 10 + &quot;test&quot;</code>，这是数字将被当成对应的字符串。</li>
+<li>如果对字符串使用非 <code>+</code> 的算术操作符，结果会返回 <code>NaN</code>，也就是 Not a number。</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

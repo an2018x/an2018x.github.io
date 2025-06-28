@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>业务开发的技术成长 6 中间件建设之统一权限集成 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="中间件建设之统一权限集成">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      业务开发的技术成长 6 中间件建设之统一权限集成
+    </h1>
+    <div class="post-description">
+      中间件建设之统一权限集成
+    </div>
+    <div class="post-meta"><span title='2022-11-08 22:09:53 +0800 CST'>十一月 8, 2022</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><a href="https://www.bilibili.com/video/BV1mT411j7cY/">中间件建设之统一权限集成</a></p>
+<p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=88.0">01:27</a></p>
+<p>老系统会存在越权问题、权限管理混乱，没有同一的权限管理中心。</p>
+<p>老系统如何迁移到新系统上？</p>
+<p>如果所有应用都使用 SpringSecurity，发现套不上老系统。</p>
+<p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=134.6">02:14</a></p>
+<p>需要从底层考虑权限这个东西，思考权限究竟是什么？处理的是什么？</p>
+<p>以生活为例，假如说我要进入一个体育场。</p>
+<p>这个体育场会根据你有没有门票、是不是公司的职员来判断让不让你进。</p>
+<p>同时，体育场可能有后门，管理人员可以刷脸、刷指纹进入。</p>
+<p>指纹、刷脸、门票、职员工作证。</p>
+<p>在框架中，我们把这些概念抽象成两部分：Principle （代表唯一的个体/主题，确认唯一性）和 Credential（凭证）。</p>
+<p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=419.0">06:58</a></p>
+<p>如果一个系统需要一个通用权限管理框架，我们需要思考这个框架要做什么。</p>
+<p>Web 系统的需求是针对 url 给它们起一个唯一性的编码，在某些系统中被成为安全对象。</p>
+<p>以体育场为例，观众拿着标号为 13 号的票就能在 13 号座位上坐下，代表座位的号码就是唯一性编码。</p>
+<p>如果能访问这个 url，需要一个授权码。系统期望访问 url 时，能把用户和权限码的对应关系传递给它。</p>
+<p>如果有了这种关系，就能控制对资源的访问。</p>
+<p>这种关系我们可以存储到上下文中。</p>
+<p>上下文应该存储的内容有：用户和权限的对应关系以及关于用户的额外信息。</p>
+<p>只要这些通用功能集成的像插件一样，我们就可以把它们放在一些 starter 二方包中，从 starter 中获取上下文，并把额外信息放入上下文中。</p>
+<p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=848.2">14:08</a></p>
+<p>权限从需求上来讲，就是那些 url 做控制、哪些不做，还有用户与权限的对应关系、用户的额外信息。</p>
+<p>后面两点可以从任意地方去查，并放入上下文中，这也被叫做授权。</p>
+<p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=999.3">16:39</a></p>
+<p>实现这些功能就是在应用之上构建一层 filter。</p>
+<p>对于所有用户，开放了一个用户上下文接口，用来在登录认证时触发回调，并获取用户的相关信息：</p>
+<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224022.png"></p>
+<p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=1076.8">17:56</a></p>
+<p>对于登录，我们会有一个 SSO。</p>
+<p>我们任何一个系统都会有一个认证中心，用户通过认证中心登录，并返回 token。</p>
+<p>在访问其他系统时，都会携带这个 token，其他应用解析 token 时首先会查询认证中心，认证中心会返回用户和权限信息。</p>
+<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224609.png"></p>
+<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224727.png"></p>
+<p>可以在接口上加上权限注解，那么只有上下文中包含该权限编码才能访问该接口。</p>
+<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108225003.png"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

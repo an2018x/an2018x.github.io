@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>4-Maven 依赖作用域 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="描述 Maven 依赖作用域">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/docs/java/maven/chapter-4/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/docs/java/maven/chapter-4/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      4-Maven 依赖作用域
+    </h1>
+    <div class="post-description">
+      描述 Maven 依赖作用域
+    </div>
+    <div class="post-meta"><span title='2023-02-04 10:15:46 +0800 CST'>二月 4, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="1-概述">1. 概述<a hidden class="anchor" aria-hidden="true" href="#1-概述">#</a></h2>
+<ol>
+<li>下面的内容将描述 Maven 的依赖作用域-它能帮助 Maven 解决间接依赖。</li>
+</ol>
+<h2 id="2-间接依赖">2. 间接依赖<a hidden class="anchor" aria-hidden="true" href="#2-间接依赖">#</a></h2>
+<ol>
+<li>Maven 中有两种形式的依赖：直接依赖和间接依赖。</li>
+<li>直接依赖是我们在项目中显式声明的依赖，例如：</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;junit&lt;/groupId&gt;
+    &lt;artifactId&gt;junit&lt;/artifactId&gt;
+    &lt;version&gt;4.12&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol start="3">
+<li>间接依赖就是直接依赖的依赖。</li>
+<li>Maven 会自动导入项目中的间接依赖。</li>
+<li>可以使用 <code>mvn dependency:tree</code> 来列出项目中的所有依赖：</li>
+</ol>
+<pre><code class="language-shell">[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ demo01 ---
+[INFO] com.ans20xx:demo01:jar:1.0-SNAPSHOT
+[INFO] \- junit:junit:jar:4.11:test
+[INFO]    \- org.hamcrest:hamcrest-core:jar:1.3:test
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.566 s
+[INFO] Finished at: 2023-02-04T09:33:56+08:00
+[INFO] ------------------------------------------------------------------------
+</code></pre>
+<h2 id="3-依赖作用域">3. 依赖作用域<a hidden class="anchor" aria-hidden="true" href="#3-依赖作用域">#</a></h2>
+<ol>
+<li>依赖作用域可以被用来限制间接依赖。</li>
+<li>依赖作用域也会根据不同的构建任务来修改 classpath。</li>
+<li>Maven 有六种依赖作用域。</li>
+<li>除了 <code>import</code> 作用域之外的其他作用域都会对间接依赖产生影响。</li>
+</ol>
+<h2 id="31-compile-作用域">3.1. compile 作用域<a hidden class="anchor" aria-hidden="true" href="#31-compile-作用域">#</a></h2>
+<ol>
+<li>当没有显式指定作用域时，<code>compile</code> 是默认的作用域。</li>
+<li>在该作用域上的依赖会出现在所有的构建任务中的 classpath 内。</li>
+<li>这些依赖也会被传递给子项目。</li>
+</ol>
+<h2 id="32-provided-作用域">3.2. provided 作用域<a hidden class="anchor" aria-hidden="true" href="#32-provided-作用域">#</a></h2>
+<ol>
+<li>使用 provided 作用域表示该依赖在运行时由 JDK 或容器提供。</li>
+<li>该作用域的一个使用例子是在容器中部署 web 应用，而这些容器本身也提供了一些依赖，例如 tomcat 容器本身会提供 servlet api。</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+    &lt;version&gt;4.0.1&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol start="3">
+<li><code>provided</code> 作用域的依赖值存在与 compile 和 test 的 classpath 中，在打包时并不会打到包中。</li>
+<li>该作用域的依赖不可传递。</li>
+</ol>
+<h2 id="33-runtime-作用域">3.3. Runtime 作用域<a hidden class="anchor" aria-hidden="true" href="#33-runtime-作用域">#</a></h2>
+<ol>
+<li>该作用域下的依赖在运行时需要，但是我们在编译期不需要。</li>
+<li>所以，该作用域下的依赖会出现在运行时和测试的 classpath 中，但不会出现在编译时的 classpath 中。</li>
+<li>jdk 驱动就是运行时需要的依赖：</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;8.0.28&lt;/version&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="34-test-作用域">3.4. Test 作用域<a hidden class="anchor" aria-hidden="true" href="#34-test-作用域">#</a></h2>
+<ol>
+<li>该作用域用来说明依赖只有在测试时才需要。</li>
+<li>测试作用域下的依赖是不可传递的，只出现在 test 和 execution classpath 中。</li>
+<li>JUnit 是一个典型的例子：</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;junit&lt;/groupId&gt;
+    &lt;artifactId&gt;junit&lt;/artifactId&gt;
+    &lt;version&gt;4.12&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="35-system-作用域">3.5. System 作用域<a hidden class="anchor" aria-hidden="true" href="#35-system-作用域">#</a></h2>
+<ol>
+<li>System 作用域和 Provided 作用域非常类似。</li>
+<li>区别在于 System 作用域需要我们直接指定系统中的某个指定的 jar 包。</li>
+<li>然而，需要注意的是 System 作用域已经被废弃了，因为它会让在不同机器上指定的值都不相同。</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.baeldung&lt;/groupId&gt;
+    &lt;artifactId&gt;custom-dependency&lt;/artifactId&gt;
+    &lt;version&gt;1.3.2&lt;/version&gt;
+    &lt;scope&gt;system&lt;/scope&gt;
+    &lt;systemPath&gt;${project.basedir}/libs/custom-dependency-1.3.2.jar&lt;/systemPath&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="36-import-作用域">3.6. Import 作用域<a hidden class="anchor" aria-hidden="true" href="#36-import-作用域">#</a></h2>
+<ol>
+<li><code>import</code> 作用域仅适用于 pom 类型的依赖。</li>
+<li><code>import</code> 说明该依赖应该被替换为声明在该 pom 文件中的所有有效依赖。</li>
+<li>下面的例子中，<code>customer-project</code> 依赖会被替换为在 customer-project 的 pom 文件中 <code>&lt;dependencyManagement&gt;</code> 元素内的所有依赖：</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.baeldung&lt;/groupId&gt;
+    &lt;artifactId&gt;custom-dependency&lt;/artifactId&gt;
+    &lt;version&gt;1.3.2&lt;/version&gt;
+    &lt;scope&gt;system&lt;/scope&gt;
+    &lt;systemPath&gt;${project.basedir}/libs/custom-dependency-1.3.2.jar&lt;/systemPath&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="4-作用域和传递性">4. 作用域和传递性<a hidden class="anchor" aria-hidden="true" href="#4-作用域和传递性">#</a></h2>
+<ol>
+<li>每个依赖作用域都会影响间接依赖。</li>
+<li>也就是说，间接依赖最终会以不同的作用域出现在项目中。</li>
+<li>然而，<code>provided</code> 和 <code>test</code> 作用域的依赖并不会被包含在主项目中。</li>
+<li>对于 compile 作用域，所有 runtime 作用域的依赖将会以 runtime 作用域被添加到项目中，所有 compile 作用域的依赖将会以 compile 作用域被添加到项目中。</li>
+<li>对于 provided 作用域，所有 runtime 和 compile 作用域的依赖都会以 provided 作用域被添加到项目中。</li>
+<li>对于 test 作用域，所有 runtime 和 compile 作用域的依赖都会以 test 作用域添加到项目中。</li>
+<li>对于 runtime 作用域，所有 runtime 和 compile 作用域的依赖都会以 runtime 作用域添加到项目中。</li>
+</ol>
+<p><a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html">https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

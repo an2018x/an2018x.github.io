@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>业务开发的技术成长 12 业务开发代码如何简洁统一 | 安橙的博客</title>
+<meta name="keywords" content="">
+<meta name="description" content="业务开发代码如何简洁统一">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="http://localhost:1313/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/#about" title="关于我">
+                    <span>关于我</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="博文">
+                    <span>博文</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/docs/" title="文档">
+                    <span>文档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      业务开发的技术成长 12 业务开发代码如何简洁统一
+    </h1>
+    <div class="post-description">
+      业务开发代码如何简洁统一
+    </div>
+    <div class="post-meta"><span title='2022-11-12 22:17:59 +0800 CST'>十一月 12, 2022</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><a href="https://www.bilibili.com/video/BV1HY4y1w7MK">业务开发代码如何简洁统一</a></p>
+<p><a href="https://www.bilibili.com/video/BV1HY4y1w7MK?t=61.6">01:01</a></p>
+<p>不要重复遭轮子，引用可靠的工具包，例如 guava commons 系列、hutool 系列。</p>
+<ul>
+<li>guava 系列</li>
+<li>hutools 系列</li>
+<li>commons 系列</li>
+</ul>
+<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/12/20221112222354.png"></p>
+<p><code>MapUtils.getString</code> Map 为空则返回指定的值。</p>
+<p>函数式、流式编程、泛型</p>
+<ul>
+<li>
+<p>Vavr 系列</p>
+</li>
+<li>
+<p>Try.of</p>
+</li>
+<li>
+<p>Tuple，支持 2 -&gt; 9 的元组</p>
+</li>
+<li>
+<p>Case</p>
+</li>
+<li>
+<p>streamex 增强的流处理</p>
+</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV1HY4y1w7MK?t=691.8">11:31</a></p>
+<p>防御式编程。</p>
+<ul>
+<li>Optional</li>
+<li>Iterables</li>
+<li>Objects.isNull</li>
+<li>IterUtil</li>
+<li>MapUtils</li>
+<li>SpringUtils</li>
+<li>Assert</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV1HY4y1w7MK?t=1073.1">17:53</a></p>
+<p>设计模式的封装</p>
+<ul>
+<li>模板（抽象类实际上就是一个模板方式）</li>
+<li>门面（防腐层）</li>
+<li>builder</li>
+<li>step builder</li>
+<li>pipeline（责任链）</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV1HY4y1w7MK?t=1073.1">24:05</a></p>
+<p>隐藏细节，starter 隐藏细节</p>
+<ul>
+<li>mapstruct</li>
+<li>queryDSL</li>
+<li>lombok @SneakyThrows</li>
+<li>自定义注解 @Convert @Mapper</li>
+<li>Spi</li>
+<li>EnableXXX 注入</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV1HY4y1w7MK?t=1708.7">28:28</a></p>
+<ul>
+<li>代码借鉴</li>
+<li>bytebuddy 路由</li>
+<li>netty pipeline</li>
+<li>jooq dsl</li>
+<li>Axon Framwork 国外一个领域驱动项目</li>
+<li>Spring</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV1HY4y1w7MK?t=1796.3">29:56</a></p>
+<p>命名统一性。</p>
+<ul>
+<li>Model</li>
+<li>VO</li>
+<li>Request</li>
+<li>Response</li>
+<li>Aware</li>
+<li>Processor</li>
+<li>Holder</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© 2022 <a href="https://www.ans20xx.com/">安橙</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
