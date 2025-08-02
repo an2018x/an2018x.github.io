@@ -572,28 +572,70 @@ code{
 /*             table                   */
 /***************************************/
 
-th {
-  font-weight: 800 !important;
+table {
+  border-collapse: collapse;
+  display: table;
+  margin-bottom: 1rem;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  & thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+  }
+  & td,
+  & th {
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  & tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+  }
+
+  & tbody tr:nth-of-type(2n + 1) {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  & tr:last-of-type {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+  }
 }
 
-.markdown-preview-view th {
-    font-weight: 800;
-    background-color: var(--background-secondary) !important;
+.dark table {
+  border-collapse: collapse;
+  display: table;
+  margin-bottom: 1rem;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  & thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid var(--code-bg);
+  }
+  & td,
+  & th {
+    vertical-align: top;
+    border-top: 1px solid var(--code-bg);
+    border-bottom: 1px solid var(--code-bg);
+  }
+
+  & tbody tr:hover {
+    background-color: var(--code-bg);
+  }
+
+  & tbody tr:nth-of-type(2n + 1) {
+    background-color: var(--code-bg);
+  }
+  & tr:last-of-type {
+    vertical-align: bottom;
+    border-bottom: 2px solid var(--code-bg);
+  }
 }
 
-thead {
-  border-bottom: 3px solid var(--background-modifier-border);
-}
-
-.table {
-  padding: 4px;
-  line-height: normal;
-  display: block;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-}
 
 /***************************************/
 /*               Checkbox              */
