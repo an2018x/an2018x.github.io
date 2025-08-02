@@ -1,7 +1,6 @@
-
 ---
 title: "业务开发的技术成长 1 Maven 环境配置"
-date: 2022-11-06T16:03:57+08:00
+date: '2022-11-06'
 draft: false
 description: 关于Java项目Maven环境配置
 toc: true

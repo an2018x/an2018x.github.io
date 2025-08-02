@@ -10,8 +10,8 @@
 <meta name="description" content="描述CSS中如何控制文本外观">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/chapter-3/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.3f0fe62cdc8e71471c46ae1ecb461496427d15458319252d5413617f49af9821.css" integrity="sha256-Pw/mLNyOcUccRq4ey0YUlkJ9FUWDGSUtVBNhf0mvmCE=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/img/icon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
 <link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
@@ -56,6 +56,64 @@
 
     </style>
 </noscript>
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            },
+            "HTML-CSS": {
+                availableFonts: ["Arial", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX"
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style>
+
+
+
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/style.css" />
+    <style>
+        body {
+            font-family: "LXGW WenKai Lite", sans-serif;
+            font-family: "LXGW WenKai Screen", sans-serif;
+        }
+    </style>
+</head>
+</html>
+
 </head>
 
 <body class="" id="top">
@@ -99,11 +157,6 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/#about" title="关于我">
-                    <span>关于我</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/posts/" title="博文">
                     <span>博文</span>
                 </a>
@@ -140,7 +193,180 @@
     <div class="post-meta"><span title='2022-12-02 22:16:46 +0800 CST'>十二月 2, 2022</span>
 
 </div>
-  </header> 
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#1-%e6%8e%a7%e5%88%b6%e6%96%87%e6%9c%ac%e5%a4%96%e8%a7%82%e7%9a%84%e5%b1%9e%e6%80%a7" aria-label="1. 控制文本外观的属性">1. 控制文本外观的属性</a></li>
+                    <li>
+                        <a href="#2-%e5%ad%97%e4%bd%93%e6%9c%af%e8%af%ad" aria-label="2. 字体术语">2. 字体术语</a><ul>
+                            
+                    <li>
+                        <a href="#21-%e8%a1%ac%e7%ba%bf%e5%ad%97%e4%bd%93serif" aria-label="2.1 衬线字体（SERIF）">2.1 衬线字体（SERIF）</a></li>
+                    <li>
+                        <a href="#22-%e6%97%a0%e8%a1%ac%e7%ba%bf%e5%ad%97%e4%bd%93sans-serif" aria-label="2.2. 无衬线字体（SANS-SERIF）">2.2. 无衬线字体（SANS-SERIF）</a></li>
+                    <li>
+                        <a href="#23-%e7%ad%89%e5%ae%bd%e5%ad%97%e4%bd%93monospace" aria-label="2.3. 等宽字体（MONOSPACE）">2.3. 等宽字体（MONOSPACE）</a></li>
+                    <li>
+                        <a href="#24-%e5%ad%97%e4%bd%93%e7%b2%97%e7%bb%86" aria-label="2.4. 字体粗细">2.4. 字体粗细</a></li>
+                    <li>
+                        <a href="#25-%e5%ad%97%e4%bd%93%e6%a0%b7%e5%bc%8f" aria-label="2.5. 字体样式">2.5. 字体样式</a></li>
+                    <li>
+                        <a href="#26-%e4%bc%b8%e7%bc%a9" aria-label="2.6. 伸缩">2.6. 伸缩</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#3-%e5%ad%97%e4%bd%93%e9%80%89%e7%94%a8" aria-label="3. 字体选用">3. 字体选用</a></li>
+                    <li>
+                        <a href="#4-%e6%89%a9%e5%a4%a7%e5%ad%97%e4%bd%93%e9%80%89%e7%94%a8%e8%8c%83%e5%9b%b4%e7%9a%84%e6%8a%80%e6%9c%af" aria-label="4. 扩大字体选用范围的技术">4. 扩大字体选用范围的技术</a></li>
+                    <li>
+                        <a href="#5-%e5%ad%97%e4%bd%93%e9%80%89%e7%94%a8-font-family" aria-label="5. 字体选用 font-family">5. 字体选用 font-family</a></li>
+                    <li>
+                        <a href="#6-%e5%ad%97%e4%bd%93%e5%a4%a7%e5%b0%8f-font-size" aria-label="6. 字体大小 font-size">6. 字体大小 font-size</a></li>
+                    <li>
+                        <a href="#7-%e5%ad%97%e4%bd%93%e5%88%bb%e5%ba%a6" aria-label="7. 字体刻度">7. 字体刻度</a></li>
+                    <li>
+                        <a href="#8-%e9%80%89%e7%94%a8%e6%9b%b4%e5%a4%9a%e5%ad%97%e4%bd%93" aria-label="8. 选用更多字体">8. 选用更多字体</a></li>
+                    <li>
+                        <a href="#9-%e5%ad%97%e4%bd%93%e6%a0%bc%e5%bc%8f" aria-label="9. 字体格式">9. 字体格式</a></li>
+                    <li>
+                        <a href="#10-%e7%b2%97%e4%bd%93" aria-label="10. 粗体">10. 粗体</a></li>
+                    <li>
+                        <a href="#11-%e6%96%9c%e4%bd%93" aria-label="11. 斜体">11. 斜体</a></li>
+                    <li>
+                        <a href="#12-%e5%a4%a7%e5%86%99%e5%92%8c%e5%b0%8f%e5%86%99" aria-label="12. 大写和小写">12. 大写和小写</a></li>
+                    <li>
+                        <a href="#13-%e4%b8%8b%e5%88%92%e7%ba%bf%e5%92%8c%e5%88%a0%e9%99%a4%e7%ba%bf" aria-label="13. 下划线和删除线">13. 下划线和删除线</a></li>
+                    <li>
+                        <a href="#14-%e8%a1%8c%e9%97%b4%e8%b7%9d" aria-label="14. 行间距">14. 行间距</a></li>
+                    <li>
+                        <a href="#15-%e5%ad%97%e6%af%8d%e9%97%b4%e8%b7%9d%e5%92%8c%e5%8d%95%e8%af%8d%e9%97%b4%e8%b7%9d" aria-label="15. 字母间距和单词间距">15. 字母间距和单词间距</a></li>
+                    <li>
+                        <a href="#16-%e5%af%b9%e9%bd%90%e6%96%b9%e5%bc%8f" aria-label="16. 对齐方式">16. 对齐方式</a></li>
+                    <li>
+                        <a href="#17-%e5%9e%82%e7%9b%b4%e5%af%b9%e9%bd%90" aria-label="17. 垂直对齐">17. 垂直对齐</a></li>
+                    <li>
+                        <a href="#18-%e6%96%87%e6%9c%ac%e7%bc%a9%e8%bf%9b" aria-label="18. 文本缩进">18. 文本缩进</a></li>
+                    <li>
+                        <a href="#19-%e6%8a%95%e5%bd%b1" aria-label="19. 投影">19. 投影</a></li>
+                    <li>
+                        <a href="#20-%e9%a6%96%e5%ad%97%e6%af%8d%e6%88%96%e9%a6%96%e8%a1%8c%e6%96%87%e6%9c%ac" aria-label="20. 首字母或首行文本">20. 首字母或首行文本</a></li>
+                    <li>
+                        <a href="#21-%e9%93%be%e6%8e%a5%e6%a0%b7%e5%bc%8f" aria-label="21. 链接样式">21. 链接样式</a></li>
+                    <li>
+                        <a href="#22-%e5%93%8d%e5%ba%94%e7%94%a8%e6%88%b7" aria-label="22. 响应用户">22. 响应用户</a></li>
+                    <li>
+                        <a href="#23-%e5%b1%9e%e6%80%a7%e9%80%89%e6%8b%a9%e5%99%a8" aria-label="23. 属性选择器">23. 属性选择器</a></li>
+                    <li>
+                        <a href="#24-%e5%b0%8f%e7%bb%93" aria-label="24. 小结">24. 小结</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+
   <div class="post-content"><h2 id="1-控制文本外观的属性">1. 控制文本外观的属性<a hidden class="anchor" aria-hidden="true" href="#1-控制文本外观的属性">#</a></h2>
 <p>可以将用来控制文本外观的属性分为两类：</p>
 <ol>
@@ -182,9 +408,15 @@
 <li>浏览器至少要支持上述每种字体中的一种，因此，需要在指定的字体最后加上这些通用字体名。</li>
 </ol>
 <p>例如：如果想要使用衬线字体：</p>
-<pre><code class="language-css">font-family: Georgia, Times, serif;
-</code></pre>
-<h2 id="4-扩大字体选用范围的技术">4. 扩大字体选用范围的技术<a hidden class="anchor" aria-hidden="true" href="#4-扩大字体选用范围的技术">#</a></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">font-family</span><span class="o">:</span> <span class="nt">Georgia</span><span class="o">,</span> <span class="nt">Times</span><span class="o">,</span> <span class="nt">serif</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-扩大字体选用范围的技术">4. 扩大字体选用范围的技术<a hidden class="anchor" aria-hidden="true" href="#4-扩大字体选用范围的技术">#</a></h2>
 <ol>
 <li>字体系列 (FONT-FAMILY) ：要求用户的计算机上已经安装了相应的字体，字体选用范围有限。</li>
 <li>服务器端字体 (FONT-FACE) ：如果计算机上没有安装相应字体，可以使用 CSS 来指定字体的下载地址。字体使用许可必须允许使用 <code>@font-face</code> 分发字体。</li>
@@ -198,26 +430,53 @@
 <li>将一种通用的字体名作为一类字体的结尾也是常用的做法。</li>
 <li>如果一个字体名称由多个单词组成，需要将其放在双引号或单引号中。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;字体选用 font-family&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;Hello&lt;/h1&gt;
-        &lt;p&gt;Have a nice day!&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">h1 {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-}
-p {
-    font-family: 'Courier New', Courier, monospace;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203105123.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>字体选用 font-family<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Have a nice day!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">h1</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-family</span><span class="p">:</span> <span class="n">Georgia</span><span class="p">,</span> <span class="s1">&#39;Times New Roman&#39;</span><span class="p">,</span> <span class="n">Times</span><span class="p">,</span> <span class="kc">serif</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-family</span><span class="p">:</span> <span class="s1">&#39;Courier New&#39;</span><span class="p">,</span> <span class="n">Courier</span><span class="p">,</span> <span class="kc">monospace</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203105123.png"></p>
 <h2 id="6-字体大小-font-size">6. 字体大小 font-size<a hidden class="anchor" aria-hidden="true" href="#6-字体大小-font-size">#</a></h2>
 <ol>
 <li>
@@ -229,30 +488,61 @@ p {
 </ul>
 </li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;字体大小 font-size&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;Hello&lt;/h1&gt;
-        &lt;p id=&quot;welcome&quot;&gt;Welcome to our website!&lt;/p&gt;
-        &lt;p&gt;Have a nice day!&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">h1 {
-    font-size: 50px;
-}
-#welcome {
-    font-size: 120%;
-}
-p {
-    font-size: 2em;
-}
-</code></pre>
-<h2 id="7-字体刻度">7. 字体刻度<a hidden class="anchor" aria-hidden="true" href="#7-字体刻度">#</a></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>字体大小 font-size<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;welcome&#34;</span><span class="p">&gt;</span>Welcome to our website!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Have a nice day!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">h1</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span> <span class="mi">50</span><span class="kt">px</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">welcome</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span> <span class="mi">120</span><span class="kt">%</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span> <span class="mi">2</span><span class="kt">em</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="7-字体刻度">7. 字体刻度<a hidden class="anchor" aria-hidden="true" href="#7-字体刻度">#</a></h2>
 <ol>
 <li>Word、PS 等程序都为文本提供了同样的大小。</li>
 <li>它们都是根据 16 世纪欧洲印刷业的刻度和比例进行设置的，这样一系列成比例的文本大小被称为刻度。</li>
@@ -284,26 +574,53 @@ p {
 </ul>
 </li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;选用更多字体&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;Hello&lt;/h1&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">@font-face {
-    font-family: 'SourceSansPro';
-    src: url('SourceSansPro-Regular.otf');
-}
-h1 {
-    font-family: SourceSansPro;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203133924.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>选用更多字体<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="p">@</span><span class="k">font-face</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">font-family</span><span class="o">:</span> <span class="s1">&#39;SourceSansPro&#39;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">src</span><span class="o">:</span> <span class="nt">url</span><span class="o">(</span><span class="s1">&#39;SourceSansPro-Regular.otf&#39;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h1</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-family</span><span class="p">:</span> <span class="n">SourceSansPro</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203133924.png"></p>
 <h2 id="9-字体格式">9. 字体格式<a hidden class="anchor" aria-hidden="true" href="#9-字体格式">#</a></h2>
 <ol>
 <li>不同的浏览器支持不同的字体格式，为了兼容所有的浏览器，需要提供字体的多个变体。</li>
@@ -316,22 +633,45 @@ h1 {
 <li><code>normal</code> 属性值使文本以普通粗细显示。</li>
 <li><code>bold</code> 属性值使文本以粗体显示。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;粗体&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;Hello&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">p {
-    font-weight: bold;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203134527.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>粗体<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-weight</span><span class="p">:</span> <span class="kc">bold</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203134527.png"></p>
 <h2 id="11-斜体">11. 斜体<a hidden class="anchor" aria-hidden="true" href="#11-斜体">#</a></h2>
 <ol>
 <li>使用 <code>font-style</code> 属性可以创建斜体文本。</li>
@@ -341,29 +681,59 @@ h1 {
 <li><code>italic</code> 是基于手写体风格的字体版本，而 <code>oblique</code> 则是简单将字体倾斜。</li>
 <li>如果找不到对应的斜体字型，则会浏览器会采取一定的算法将字体倾斜。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;斜体&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p id=&quot;italic&quot;&gt;italic&lt;/p&gt;
-        &lt;p id=&quot;oblique&quot;&gt;oblique&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">p {
-    font-family: 'Times New Roman', Times, serif;
-}
-#italic {
-    font-style: italic;
-}
-#oblique {
-    font-style: oblique;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203134939.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>斜体<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;italic&#34;</span><span class="p">&gt;</span>italic<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;oblique&#34;</span><span class="p">&gt;</span>oblique<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-family</span><span class="p">:</span> <span class="s1">&#39;Times New Roman&#39;</span><span class="p">,</span> <span class="n">Times</span><span class="p">,</span> <span class="kc">serif</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">italic</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-style</span><span class="p">:</span> <span class="kc">italic</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">oblique</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-style</span><span class="p">:</span> <span class="kc">oblique</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203134939.png"></p>
 <h2 id="12-大写和小写">12. 大写和小写<a hidden class="anchor" aria-hidden="true" href="#12-大写和小写">#</a></h2>
 <ol>
 <li><code>text-transform</code> 属性可以用来改变文本的大小写。</li>
@@ -371,26 +741,53 @@ h1 {
 <li><code>lowercase</code> 使文本以小写显示。</li>
 <li><code>capitalize</code> 使每个单词的首字母以大写显示。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;大写和小写&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p id=&quot;uppercase&quot;&gt;hello&lt;/p&gt;
-        &lt;p id=&quot;capitalize&quot;&gt;welcome to our website&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">#uppercase {
-    text-transform: uppercase;
-}
-#capitalize {
-    text-transform: capitalize;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203135437.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>大写和小写<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;uppercase&#34;</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;capitalize&#34;</span><span class="p">&gt;</span>welcome to our website<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="p">#</span><span class="nn">uppercase</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-transform</span><span class="p">:</span> <span class="kc">uppercase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">capitalize</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-transform</span><span class="p">:</span> <span class="kc">capitalize</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203135437.png"></p>
 <h2 id="13-下划线和删除线">13. 下划线和删除线<a hidden class="anchor" aria-hidden="true" href="#13-下划线和删除线">#</a></h2>
 <ol>
 <li><code>text-decoration</code> 可以为文本创建装饰线。</li>
@@ -400,26 +797,53 @@ h1 {
 <li><code>overline</code> 会用一条实现穿过文字。</li>
 <li><code>blink</code> 会使文本动态闪烁，但尽量不要使用。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;下划线和删除线&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p id=&quot;underline&quot;&gt;hello&lt;/p&gt;
-        &lt;p id=&quot;line-through&quot;&gt;welcome to our website&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">#underline {
-    text-decoration: underline;
-}
-#line-through {
-    text-decoration: line-through;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203141714.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>下划线和删除线<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;underline&#34;</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;line-through&#34;</span><span class="p">&gt;</span>welcome to our website<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="p">#</span><span class="nn">underline</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">underline</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">line-through</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">line-through</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203141714.png"></p>
 <h2 id="14-行间距">14. 行间距<a hidden class="anchor" aria-hidden="true" href="#14-行间距">#</a></h2>
 <ol>
 <li>对一种字型来说，位于基准线以下的部分称为字母下缘，字母的最高点称为字母上缘。</li>
@@ -428,46 +852,95 @@ h1 {
 <li>增加 <code>line-height</code> 会使文本在垂直方向上的空隙增大。</li>
 <li>行间距的初始值应该设置在 1.4em ~ 1.5em 之间，最好将 <code>line-height</code> 属性的值以 <code>em</code> 值给出，而不要用像素值。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;行间距&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;hello&lt;/p&gt;
-        &lt;p&gt;welcome to our website&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">p {
-    line-height: 1.4em;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203142444.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>行间距<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>welcome to our website<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">line-height</span><span class="p">:</span> <span class="mf">1.4</span><span class="kt">em</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203142444.png"></p>
 <h2 id="15-字母间距和单词间距">15. 字母间距和单词间距<a hidden class="anchor" aria-hidden="true" href="#15-字母间距和单词间距">#</a></h2>
 <ol>
 <li>字距是印刷行业用来描述字母之间空隙的一个术语，可以使用 <code>letter-spacing</code> 属性来控制字母之间的间距。</li>
 <li>可以通过 <code>word-spacing</code> 来控制单词间距。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;字母间距和单词间距&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;hello&lt;/p&gt;
-        &lt;p&gt;welcome to our website&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">p {
-    letter-spacing: 0.2em;
-    word-spacing: 3em;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203142927.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>字母间距和单词间距<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>welcome to our website<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">letter-spacing</span><span class="p">:</span> <span class="mf">0.2</span><span class="kt">em</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">word-spacing</span><span class="p">:</span> <span class="mi">3</span><span class="kt">em</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203142927.png"></p>
 <h2 id="16-对齐方式">16. 对齐方式<a hidden class="anchor" aria-hidden="true" href="#16-对齐方式">#</a></h2>
 <ol>
 <li><code>text-align</code> 用于控制文本的对齐方式。</li>
@@ -476,26 +949,53 @@ h1 {
 <li><code>center</code> 表示文本居中对齐。</li>
 <li><code>justify</code> 表示文本两端对齐，即段落中除了末行，其余每行都要在宽度上占满文本所在容器。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;对齐方式&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p id=&quot;cneter&quot;&gt;hello&lt;/p&gt;
-        &lt;p id=&quot;right&quot;&gt;welcome to our website&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">#center {
-    text-align: center;
-}
-#right {
-    text-align: right;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203143250.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>对齐方式<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;cneter&#34;</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;right&#34;</span><span class="p">&gt;</span>welcome to our website<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="p">#</span><span class="nn">center</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-align</span><span class="p">:</span> <span class="kc">center</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">right</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-align</span><span class="p">:</span> <span class="kc">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203143250.png"></p>
 <h2 id="17-垂直对齐">17. 垂直对齐<a hidden class="anchor" aria-hidden="true" href="#17-垂直对齐">#</a></h2>
 <ol>
 <li>文本的垂直对齐不是让你在 <code>&lt;p&gt;</code> 或 <code>&lt;div&gt;</code> 这样的块级元素中垂直对齐文本，尽管可以在表格的单元格中实现这种效果。</li>
@@ -504,44 +1004,91 @@ h1 {
 <li><code>middle</code> 使周围文本的第一行与图像中间对齐。</li>
 <li><code>bottom</code> 使周围文本的第一行与图像底端对齐。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;对齐方式&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;img src=&quot;cat.jpg&quot; width=&quot;200&quot; height=&quot;100&quot; /&gt;
-        可爱的小猫
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">img {
-    vertical-align: middle;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203145659.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>对齐方式<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;cat.jpg&#34;</span> <span class="na">width</span><span class="o">=</span><span class="s">&#34;200&#34;</span> <span class="na">height</span><span class="o">=</span><span class="s">&#34;100&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">        可爱的小猫
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">img</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vertical-align</span><span class="p">:</span> <span class="kc">middle</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203145659.png"></p>
 <h2 id="18-文本缩进">18. 文本缩进<a hidden class="anchor" aria-hidden="true" href="#18-文本缩进">#</a></h2>
 <ol>
 <li><code>text-indent</code> 属性允许你将元素中的首行文本进行缩进。</li>
 <li>该属性值可以设置为负值，从而让一些元素隐藏，但文本依然在 HTML 页面中，这是为了方便视觉障碍的人。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;文本缩进&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;hello&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">p {
-    text-indent: 2em;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203151507.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>文本缩进<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-indent</span><span class="p">:</span> <span class="mi">2</span><span class="kt">em</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203151507.png"></p>
 <h2 id="19-投影">19. 投影<a hidden class="anchor" aria-hidden="true" href="#19-投影">#</a></h2>
 <ol>
 <li><code>text-shadow</code> 属性用来创建投影。</li>
@@ -552,22 +1099,45 @@ h1 {
 <li>第三个长度值为可选项，表示投影的模糊程度。</li>
 <li>最后一项是投影的颜色值。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;投影&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;hello&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">p {
-    text-shadow: 2px 2px 2px #006600;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203150156.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>投影<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">p</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-shadow</span><span class="p">:</span> <span class="mi">2</span><span class="kt">px</span> <span class="mi">2</span><span class="kt">px</span> <span class="mi">2</span><span class="kt">px</span> <span class="mh">#006600</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203150156.png"></p>
 <h2 id="20-首字母或首行文本">20. 首字母或首行文本<a hidden class="anchor" aria-hidden="true" href="#20-首字母或首行文本">#</a></h2>
 <ol>
 <li>可以通过 <code>:first-letter</code> 和 <code>:first-line</code> 为一个元素中的首字母或首行文本另外指定一个值。</li>
@@ -577,48 +1147,98 @@ h1 {
 <li>伪元素就像在代码中加入了额外的元素，例如 <code>:first-letter</code> 和 <code>first-line</code> 就像是为首字母或者首行文本添加了额外的元素，并且在此元素上应用专门的样式。</li>
 <li>伪类就像一个类特性的额外的值，例如下面介绍的 <code>:visited</code> ，它允许为那些已经被访问过的链接指定不同的样式。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;首字母或首行文本&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;hello&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">p::first-letter {
-    color: red;
-    font-size: 2em;
-    text-transform: uppercase;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203151122.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>首字母或首行文本<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>hello<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">p</span><span class="p">::</span><span class="nd">first-letter</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">color</span><span class="p">:</span> <span class="kc">red</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span> <span class="mi">2</span><span class="kt">em</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-transform</span><span class="p">:</span> <span class="kc">uppercase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203151122.png"></p>
 <h2 id="21-链接样式">21. 链接样式<a hidden class="anchor" aria-hidden="true" href="#21-链接样式">#</a></h2>
 <ol>
 <li>默认情况下，浏览器常以蓝色显示链接并附带下划线，此外，浏览器还会改变那些已经访问过的链接颜色。</li>
 <li><code>:link</code> 伪类允许为那些尚未被访问过的链接设置样式。</li>
 <li><code>:visited</code> 伪类允许为那些已经访问过的链接设置样式。</li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;链接样式&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;a href=&quot;home.html&quot;&gt;主页&lt;/a&gt;
-        &lt;a href=&quot;about.html&quot;&gt;关于&lt;/a&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">a:visited {
-    color: red;
-    text-decoration: none;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203152002.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>链接样式<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;home.html&#34;</span><span class="p">&gt;</span>主页<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;about.html&#34;</span><span class="p">&gt;</span>关于<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">a</span><span class="p">:</span><span class="nd">visited</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">color</span><span class="p">:</span> <span class="kc">red</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203152002.png"></p>
 <p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203152015.png"></p>
 <h2 id="22-响应用户">22. 响应用户<a hidden class="anchor" aria-hidden="true" href="#22-响应用户">#</a></h2>
 <ol>
@@ -630,28 +1250,57 @@ h1 {
 </ul>
 </li>
 </ol>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;响应用户&lt;/title&gt;
-        &lt;link rel=&quot;stylesheet&quot; href=&quot;hello.css&quot; type=&quot;text/css&quot; /&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;ul&gt;
-            &lt;li&gt;&lt;a href=&quot;home.html&quot;&gt;主页&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;a href=&quot;about.html&quot;&gt;关于&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-css">a:hover {
-    color: red;
-}
-a:focus {
-    color: black;
-}
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203160328.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>响应用户<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;hello.css&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;home.html&#34;</span><span class="p">&gt;</span>主页<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;about.html&#34;</span><span class="p">&gt;</span>关于<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">a</span><span class="p">:</span><span class="nd">hover</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">color</span><span class="p">:</span> <span class="kc">red</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nt">a</span><span class="p">:</span><span class="nd">focus</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">color</span><span class="p">:</span> <span class="kc">black</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/12/03/20221203160328.png"></p>
 <h2 id="23-属性选择器">23. 属性选择器<a hidden class="anchor" aria-hidden="true" href="#23-属性选择器">#</a></h2>
 <ol>
 <li>属性选择器应用于那些属性中含有特定值的元素。</li>

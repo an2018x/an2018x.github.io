@@ -10,8 +10,8 @@
 <meta name="description" content="Maven 是什么，有什么用">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/docs/java/maven/chapter-1/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.3f0fe62cdc8e71471c46ae1ecb461496427d15458319252d5413617f49af9821.css" integrity="sha256-Pw/mLNyOcUccRq4ey0YUlkJ9FUWDGSUtVBNhf0mvmCE=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/img/icon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
 <link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
@@ -56,6 +56,64 @@
 
     </style>
 </noscript>
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            },
+            "HTML-CSS": {
+                availableFonts: ["Arial", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX"
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style>
+
+
+
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/style.css" />
+    <style>
+        body {
+            font-family: "LXGW WenKai Lite", sans-serif;
+            font-family: "LXGW WenKai Screen", sans-serif;
+        }
+    </style>
+</head>
+</html>
+
 </head>
 
 <body class="" id="top">
@@ -99,11 +157,6 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/#about" title="关于我">
-                    <span>关于我</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/posts/" title="博文">
                     <span>博文</span>
                 </a>
@@ -140,7 +193,169 @@
     <div class="post-meta"><span title='2022-11-29 15:15:46 +0800 CST'>十一月 29, 2022</span>
 
 </div>
-  </header> 
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#1-%e6%9e%84%e5%bb%ba%e5%ba%94%e7%94%a8%e7%a8%8b%e5%ba%8f" aria-label="1. 构建应用程序">1. 构建应用程序</a></li>
+                    <li>
+                        <a href="#2-%e4%b8%ba%e4%bb%80%e4%b9%88%e7%94%a8-maven" aria-label="2. 为什么用 Maven">2. 为什么用 Maven</a></li>
+                    <li>
+                        <a href="#3-%e5%ae%89%e8%a3%85-maven" aria-label="3. 安装 Maven">3. 安装 Maven</a><ul>
+                            
+                    <li>
+                        <a href="#31-%e7%ae%80%e4%bb%8b" aria-label="3.1. 简介">3.1. 简介</a></li>
+                    <li>
+                        <a href="#32-%e5%89%8d%e7%bd%ae%e5%87%86%e5%a4%87" aria-label="3.2. 前置准备">3.2. 前置准备</a></li>
+                    <li>
+                        <a href="#33-%e5%9c%a8-windows-%e4%b8%ad%e5%ae%89%e8%a3%85" aria-label="3.3. 在 Windows 中安装">3.3. 在 Windows 中安装</a></li>
+                    <li>
+                        <a href="#34-%e5%9c%a8-linux-%e4%b8%ad%e5%ae%89%e8%a3%85" aria-label="3.4. 在 Linux 中安装">3.4. 在 Linux 中安装</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#4-%e9%a1%b9%e7%9b%ae%e5%af%b9%e8%b1%a1%e6%a8%a1%e5%9e%8bproject-object-model-pom" aria-label="4. 项目对象模型(Project Object Model, POM)">4. 项目对象模型(Project Object Model, POM)</a><ul>
+                            
+                    <li>
+                        <a href="#41-%e9%a1%b9%e7%9b%ae%e6%a0%87%e8%af%86%e7%ac%a6" aria-label="4.1. 项目标识符">4.1. 项目标识符</a></li>
+                    <li>
+                        <a href="#42-%e4%be%9d%e8%b5%96" aria-label="4.2. 依赖">4.2. 依赖</a></li>
+                    <li>
+                        <a href="#43-%e4%bb%93%e5%ba%93" aria-label="4.3. 仓库">4.3. 仓库</a></li>
+                    <li>
+                        <a href="#44-%e5%b1%9e%e6%80%a7" aria-label="4.4. 属性">4.4. 属性</a></li>
+                    <li>
+                        <a href="#45-%e6%9e%84%e5%bb%babuild" aria-label="4.5. 构建(Build)">4.5. 构建(Build)</a></li>
+                    <li>
+                        <a href="#46-%e4%bd%bf%e7%94%a8%e9%85%8d%e7%bd%ae-profiles" aria-label="4.6. 使用配置 (Profiles)">4.6. 使用配置 (Profiles)</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#5-maven-%e6%9e%84%e5%bb%ba%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f" aria-label="5. Maven 构建生命周期">5. Maven 构建生命周期</a><ul>
+                            
+                    <li>
+                        <a href="#51-%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e9%98%b6%e6%ae%b5-phases" aria-label="5.1. 生命周期阶段 (Phases)">5.1. 生命周期阶段 (Phases)</a></li>
+                    <li>
+                        <a href="#52-%e6%8f%92%e4%bb%b6%e5%92%8c%e7%9b%ae%e6%a0%87" aria-label="5.2. 插件和目标">5.2. 插件和目标</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#6-%e5%88%9b%e5%bb%ba%e7%ac%ac%e4%b8%80%e4%b8%aa-maven-%e9%a1%b9%e7%9b%ae" aria-label="6. 创建第一个 Maven 项目">6. 创建第一个 Maven 项目</a><ul>
+                            
+                    <li>
+                        <a href="#61-%e7%94%9f%e6%88%90%e4%b8%80%e4%b8%aa%e7%ae%80%e5%8d%95%e7%9a%84-maven-%e9%a1%b9%e7%9b%ae" aria-label="6.1. 生成一个简单的 Maven 项目">6.1. 生成一个简单的 Maven 项目</a></li>
+                    <li>
+                        <a href="#62-%e7%bc%96%e8%af%91%e5%92%8c%e6%89%93%e5%8c%85%e9%a1%b9%e7%9b%ae" aria-label="6.2. 编译和打包项目">6.2. 编译和打包项目</a></li>
+                    <li>
+                        <a href="#63-%e8%bf%90%e8%a1%8c%e9%a1%b9%e7%9b%ae" aria-label="6.3. 运行项目">6.3. 运行项目</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+
   <div class="post-content"><h2 id="1-构建应用程序">1. 构建应用程序<a hidden class="anchor" aria-hidden="true" href="#1-构建应用程序">#</a></h2>
 <ol>
 <li>构建一个应用程序往往由以下几个步骤组成：
@@ -192,25 +407,53 @@
 <li>下载文件 <code>apache-maven-3.8.4-bin.tar.gz</code></li>
 <li>创建并解压到 Maven 根目录：</li>
 </ol>
-<pre><code class="language-bash">$ mkdir -p /usr/local/apache-maven/apache-maven-3.8.4
-$ tar -xvf apache-maven-3.8.4-bin.tar.gz -C /usr/local/apache-maven/apache-maven-3.8.4
-</code></pre>
-<ol start="3">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ mkdir -p /usr/local/apache-maven/apache-maven-3.8.4
+</span></span><span class="line"><span class="cl">$ tar -xvf apache-maven-3.8.4-bin.tar.gz -C /usr/local/apache-maven/apache-maven-3.8.4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
 <li>将 Maven 添加到环境变量中：</li>
 </ol>
 <p>打开 ~/.bashrc</p>
-<pre><code class="language-bash">$ vim ~/.bashrc
-</code></pre>
-<p>追加如下内容：</p>
-<pre><code class="language-bash">export M2_HOME=/usr/local/apache-maven/apache-maven-3.8.4 
-export M2=$M2_HOME/bin 
-export MAVEN_OPTS=-Xms256m -Xmx512m 
-export PATH=$M2:$PATH
-</code></pre>
-<p>重新加载配置文件：</p>
-<pre><code class="language-bash">$ source ~/.bashrc
-</code></pre>
-<ol start="4">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ vim ~/.bashrc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>追加如下内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">M2_HOME</span><span class="o">=</span>/usr/local/apache-maven/apache-maven-3.8.4 
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">M2</span><span class="o">=</span><span class="nv">$M2_HOME</span>/bin 
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">MAVEN_OPTS</span><span class="o">=</span>-Xms256m -Xmx512m 
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$M2</span>:<span class="nv">$PATH</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>重新加载配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ <span class="nb">source</span> ~/.bashrc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
 <li>
 <p>运行 <code>mvn -version</code> 命令，验证是否安装成功。</p>
 </li>
@@ -218,41 +461,76 @@ export PATH=$M2:$PATH
 <p>对于 Ubuntu，也可以直接输入如下命令来安装：</p>
 </li>
 </ol>
-<pre><code class="language-bash">$ sudo apt-get install maven
-</code></pre>
-<h2 id="4-项目对象模型project-object-model-pom">4. 项目对象模型(Project Object Model, POM)<a hidden class="anchor" aria-hidden="true" href="#4-项目对象模型project-object-model-pom">#</a></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ sudo apt-get install maven
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-项目对象模型project-object-model-pom">4. 项目对象模型(Project Object Model, POM)<a hidden class="anchor" aria-hidden="true" href="#4-项目对象模型project-object-model-pom">#</a></h2>
 <ol>
 <li>Maven 通过项目对象模型（POM）来配置 Maven 项目，通常该模型以 xml 文件的方式保存为 <code>pom.xml</code>。</li>
 <li>POM 描述了整个项目的结构，管理依赖，并且配置项目运行的插件。</li>
 <li>POM 文件也描述了包含多个模块的 Java 项目中模块的关系。</li>
 <li>POM 文件的典型结构如下：</li>
 </ol>
-<pre><code class="language-xml">&lt;project&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;groupId&gt;com.test&lt;/groupId&gt;
-    &lt;artifactId&gt;test&lt;/artifactId&gt;
-    &lt;packaging&gt;jar&lt;/packaging&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-    &lt;name&gt;com.test&lt;/name&gt;
-    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
-            &lt;artifactId&gt;junit-jupiter-api&lt;/artifactId&gt;
-            &lt;version&gt;5.8.2&lt;/version&gt;
-            &lt;scope&gt;test&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-    &lt;build&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                //...
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-&lt;/project&gt;
-</code></pre>
-<h3 id="41-项目标识符">4.1. 项目标识符<a hidden class="anchor" aria-hidden="true" href="#41-项目标识符">#</a></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;project&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>com.test<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>test<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;packaging&gt;</span>jar<span class="nt">&lt;/packaging&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;name&gt;</span>com.test<span class="nt">&lt;/name&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;url&gt;</span>http://maven.apache.org<span class="nt">&lt;/url&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;dependencies&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;artifactId&gt;</span>junit-jupiter-api<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;version&gt;</span>5.8.2<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/dependencies&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;build&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;plugins&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;plugin&gt;</span>
+</span></span><span class="line"><span class="cl">                //...
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/plugin&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/plugins&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/build&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/project&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="41-项目标识符">4.1. 项目标识符<a hidden class="anchor" aria-hidden="true" href="#41-项目标识符">#</a></h3>
 <ol>
 <li>Maven 使用项目标识符，也被称为坐标，来唯一定位一个项目，并且指定项目应该如何被打包。</li>
 <li>项目标识符由如下几个部分组成：
@@ -271,62 +549,116 @@ export PATH=$M2:$PATH
 <li>Maven 提供的依赖管理能力允许我们自动从中央仓库下载库，因此我们不需要事先在本地存放这些外部依赖。</li>
 <li>下面是声明一个外部依赖的常见格式：</li>
 </ol>
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
-    &lt;version&gt;5.3.16&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<h3 id="43-仓库">4.3. 仓库<a hidden class="anchor" aria-hidden="true" href="#43-仓库">#</a></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>spring-core<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>5.3.16<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="43-仓库">4.3. 仓库<a hidden class="anchor" aria-hidden="true" href="#43-仓库">#</a></h3>
 <ol>
 <li>Maven 中的仓库被用来保存构建结果和项目的依赖。</li>
 <li>Maven 中的本地仓库默认被存放在 <code>~/.m2/repository</code> 目录下。</li>
 <li>如果依赖工程或插件可以在本地仓库中被找到，Maven 就直接使用，否在它就会从默认的中央仓库中下载到本地仓库中。</li>
 <li>有些库，例如 JBoss Server，无法从中央仓库中下载，但是可以从另外一个仓库下载。对于这些库，我们可以在 pom 文件的 respositories 标签中新增一个仓库：</li>
 </ol>
-<pre><code class="language-xml">&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;JBoss repository&lt;/id&gt;
-        &lt;url&gt;http://repository.jboss.org/nexus/content/groups/public/&lt;/url&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;
-</code></pre>
-<h3 id="44-属性">4.4. 属性<a hidden class="anchor" aria-hidden="true" href="#44-属性">#</a></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;repositories&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;repository&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;id&gt;</span>JBoss repository<span class="nt">&lt;/id&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;url&gt;</span>http://repository.jboss.org/nexus/content/groups/public/<span class="nt">&lt;/url&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/repository&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/repositories&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="44-属性">4.4. 属性<a hidden class="anchor" aria-hidden="true" href="#44-属性">#</a></h3>
 <ol>
 <li>自定义属性可以让 pom 文件更易于阅读和维护。</li>
 <li>通常我们用自定义属性来保存版本号信息。</li>
 <li>可以在 <code>properties</code> 标签下指定自定义的属性，定义完成后，我们可以在 pom 文件的任何地方使用 <code>${属性名}</code> 来引用这个属性：</li>
 </ol>
-<pre><code class="language-xml">&lt;properties&gt;
-    &lt;spring.version&gt;5.3.16&lt;/spring.version&gt;
-&lt;/properties&gt;
-&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
-        &lt;version&gt;${spring.version}&lt;/version&gt;
-    &lt;/dependency&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
-        &lt;version&gt;${spring.version}&lt;/version&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;
-</code></pre>
-<ol start="4">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;properties&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;spring.version&gt;</span>5.3.16<span class="nt">&lt;/spring.version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/properties&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;dependencies&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;artifactId&gt;</span>spring-core<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;version&gt;</span>${spring.version}<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;artifactId&gt;</span>spring-context<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;version&gt;</span>${spring.version}<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/dependency&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependencies&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
 <li>如果我们后续想要升级 Spring 的版本，那我们就直接修改 <code>spring.version</code> 标签中的内容即可。</li>
 <li>属性也常用来指定构建目录的位置：</li>
 </ol>
-<pre><code class="language-xml">&lt;properties&gt;
-    &lt;project.build.folder&gt;${project.build.directory}/tmp/&lt;/project.build.folder&gt;
-&lt;/properties&gt;
-&lt;plugin&gt; 
-    //... 
-    &lt;outputDirectory&gt;${project.resources.build.folder}&lt;/outputDirectory&gt;
-    //... 
-&lt;/plugin&gt;
-</code></pre>
-<h3 id="45-构建build">4.5. 构建(Build)<a hidden class="anchor" aria-hidden="true" href="#45-构建build">#</a></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;properties&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;project.build.folder&gt;</span>${project.build.directory}/tmp/<span class="nt">&lt;/project.build.folder&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/properties&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;plugin&gt;</span> 
+</span></span><span class="line"><span class="cl">    //... 
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;outputDirectory&gt;</span>${project.resources.build.folder}<span class="nt">&lt;/outputDirectory&gt;</span>
+</span></span><span class="line"><span class="cl">    //... 
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/plugin&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="45-构建build">4.5. 构建(Build)<a hidden class="anchor" aria-hidden="true" href="#45-构建build">#</a></h3>
 <ol>
 <li><code>&lt;build&gt;</code> 标签中为默认 Maven 目标提供了一些额外信息：
 <ul>
@@ -336,19 +668,35 @@ export PATH=$M2:$PATH
 </li>
 <li>默认情况下， <code>&lt;build&gt;</code> 标签中的内容如下：</li>
 </ol>
-<pre><code class="language-xml">&lt;build&gt;
-    &lt;defaultGoal&gt;install&lt;/defaultGoal&gt;
-    &lt;directory&gt;${basedir}/target&lt;/directory&gt;
-    &lt;finalName&gt;
-        ${artifactId}-${version}
-    &lt;/finalName&gt;
-    &lt;filters&gt;
-        &lt;filter&gt;filters/filter1.properties&lt;/filter&gt;
-    &lt;/filters&gt;
-    //... 
-&lt;/build&gt;
-</code></pre>
-<ol start="3">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;build&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;defaultGoal&gt;</span>install<span class="nt">&lt;/defaultGoal&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;directory&gt;</span>${basedir}/target<span class="nt">&lt;/directory&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;finalName&gt;</span>
+</span></span><span class="line"><span class="cl">        ${artifactId}-${version}
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/finalName&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;filters&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;filter&gt;</span>filters/filter1.properties<span class="nt">&lt;/filter&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/filters&gt;</span>
+</span></span><span class="line"><span class="cl">    //... 
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/build&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
 <li>默认的输出目录名称为 target，构建名称为 <code>artifactId-version</code>。</li>
 </ol>
 <h3 id="46-使用配置-profiles">4.6. 使用配置 (Profiles)<a hidden class="anchor" aria-hidden="true" href="#46-使用配置-profiles">#</a></h3>
@@ -356,38 +704,74 @@ export PATH=$M2:$PATH
 <li>Profile 是一组配置值。</li>
 <li>通过 profile，我们可以自定义不同环境下的构建流程，例如 <code>Production/Test/Development</code>。</li>
 </ol>
-<pre><code class="language-xml">&lt;profiles&gt;
-    &lt;profile&gt;
-        &lt;id&gt;production&lt;/id&gt;
-        &lt;build&gt;
-            &lt;plugins&gt;
-                &lt;plugin&gt;
-                    //...
-                &lt;/plugin&gt;
-            &lt;/plugins&gt;
-        &lt;/build&gt;
-    &lt;/profile&gt;
-    &lt;profile&gt;
-        &lt;id&gt;development&lt;/id&gt;
-        &lt;activation&gt;
-            &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
-        &lt;/activation&gt;
-        &lt;build&gt;
-            &lt;plugins&gt;
-                &lt;plugin&gt;
-                    //...
-                &lt;/plugin&gt;
-            &lt;/plugins&gt;
-        &lt;/build&gt;
-    &lt;/profile&gt;
-&lt;/profiles&gt;
-</code></pre>
-<ol start="3">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;profiles&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;profile&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;id&gt;</span>production<span class="nt">&lt;/id&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;build&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;plugins&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;plugin&gt;</span>
+</span></span><span class="line"><span class="cl">                    //...
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;/plugin&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/plugins&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/build&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/profile&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;profile&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;id&gt;</span>development<span class="nt">&lt;/id&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;activation&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;activeByDefault&gt;</span>true<span class="nt">&lt;/activeByDefault&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/activation&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;build&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;plugins&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;plugin&gt;</span>
+</span></span><span class="line"><span class="cl">                    //...
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;/plugin&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/plugins&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/build&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/profile&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/profiles&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
 <li>运行示例如下：</li>
 </ol>
-<pre><code class="language-bash">mvn clean install -Pproduction
-</code></pre>
-<h2 id="5-maven-构建生命周期">5. Maven 构建生命周期<a hidden class="anchor" aria-hidden="true" href="#5-maven-构建生命周期">#</a></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mvn clean install -Pproduction
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-maven-构建生命周期">5. Maven 构建生命周期<a hidden class="anchor" aria-hidden="true" href="#5-maven-构建生命周期">#</a></h2>
 <ol>
 <li>每次 Maven 构建都遵循一个指定的生命周期</li>
 <li>我们可以执行数个构建生命周期目标，包括：
@@ -424,14 +808,25 @@ export PATH=$M2:$PATH
 <ol>
 <li>运行如下命令：</li>
 </ol>
-<pre><code class="language-bash">mvn archetype:generate \
-    -DgroupId=com.ans20xx \
-    -DartifactId=demo01 \
-    -DarchetypeArtifactId=maven-archetype-quickstart \
-    -DarchetypeVersion=1.4 \
-    -DinteractiveMode=false
-</code></pre>
-<ol start="2">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mvn archetype:generate <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    -DgroupId<span class="o">=</span>com.ans20xx <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    -DartifactId<span class="o">=</span>demo01 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    -DarchetypeArtifactId<span class="o">=</span>maven-archetype-quickstart <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    -DarchetypeVersion<span class="o">=</span>1.4 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    -DinteractiveMode<span class="o">=</span><span class="nb">false</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
 <li>groupId 指定了创建项目的组织或个人，通常是公司域名的倒序</li>
 <li>artifactId 是项目的根包名</li>
 <li>因为我们没有设置版本和打包类型，因此这些值将会被设置为默认值，版本号将会被设置为 1.0-SNAPSHOT，打包方式将会被设置为 jar 包方式</li>
@@ -439,75 +834,146 @@ export PATH=$M2:$PATH
 <li>命令执行结束后，会获得一个包含 App.java 文件的 Java 项目，它被放在 <code>src/main/java</code> 目录下，还有一个测试文件 <code>AppTest.java</code>，它被放在 <code>src/test/java</code> 下面。</li>
 <li>生成的 pom 文件如下：</li>
 </ol>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-  &lt;groupId&gt;com.ans20xx&lt;/groupId&gt;
-  &lt;artifactId&gt;demo01&lt;/artifactId&gt;
-  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-  &lt;name&gt;demo01&lt;/name&gt;
-  &lt;!-- FIXME change it to the project's website --&gt;
-  &lt;url&gt;http://www.example.com&lt;/url&gt;
-
-  &lt;dependencies&gt;
-    &lt;dependency&gt;
-      &lt;groupId&gt;junit&lt;/groupId&gt;
-      &lt;artifactId&gt;junit&lt;/artifactId&gt;
-      &lt;version&gt;4.11&lt;/version&gt;
-      &lt;scope&gt;test&lt;/scope&gt;
-    &lt;/dependency&gt;
-  &lt;/dependencies&gt;
-</code></pre>
-<p>可以看到，JUnit 依赖被默认提供。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">&#34;http://maven.apache.org/POM/4.0.0&#34;</span> <span class="na">xmlns:xsi=</span><span class="s">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="na">xsi:schemaLocation=</span><span class="s">&#34;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;groupId&gt;</span>com.ans20xx<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;artifactId&gt;</span>demo01<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;name&gt;</span>demo01<span class="nt">&lt;/name&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- FIXME change it to the project&#39;s website --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;url&gt;</span>http://www.example.com<span class="nt">&lt;/url&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;dependencies&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;version&gt;</span>4.11<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/dependency&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/dependencies&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到，JUnit 依赖被默认提供。</p>
 <h3 id="62-编译和打包项目">6.2. 编译和打包项目<a hidden class="anchor" aria-hidden="true" href="#62-编译和打包项目">#</a></h3>
 <ol>
 <li>编译项目：</li>
 </ol>
-<pre><code class="language-bash">mvn compile
-</code></pre>
-<p>该命令会执行默认生命周期下直到 compile 的所有阶段。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mvn compile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>该命令会执行默认生命周期下直到 compile 的所有阶段。</p>
 <ol start="2">
 <li>运行项目测试：</li>
 </ol>
-<pre><code class="language-bash">mvn test
-</code></pre>
-<ol start="3">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mvn <span class="nb">test</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
 <li>打包：</li>
 </ol>
-<pre><code class="language-bash">mvn package
-</code></pre>
-<h3 id="63-运行项目">6.3. 运行项目<a hidden class="anchor" aria-hidden="true" href="#63-运行项目">#</a></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mvn package
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="63-运行项目">6.3. 运行项目<a hidden class="anchor" aria-hidden="true" href="#63-运行项目">#</a></h3>
 <ol>
 <li>最后，我们要使用 <code>exec-maven-plugin</code> 来运行 Java 项目。</li>
 <li><code>pom.xml</code> 中相关插件配置如下（如果爆红，运行 mvn clean 即可）：</li>
 </ol>
-<pre><code class="language-xml">&lt;build&gt;
-    &lt;sourceDirectory&gt;src&lt;/sourceDirectory&gt;
-    &lt;plugins&gt;
-        &lt;plugin&gt;
-            &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-            &lt;version&gt;3.6.1&lt;/version&gt;
-            &lt;configuration&gt;
-                &lt;source&gt;1.8&lt;/source&gt;
-                &lt;target&gt;1.8&lt;/target&gt;
-            &lt;/configuration&gt;
-        &lt;/plugin&gt;
-        &lt;plugin&gt;
-            &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
-            &lt;artifactId&gt;exec-maven-plugin&lt;/artifactId&gt;
-            &lt;version&gt;3.0.0&lt;/version&gt;
-            &lt;configuration&gt;
-                &lt;mainClass&gt;com.ans20xx.App&lt;/mainClass&gt;
-            &lt;/configuration&gt;
-        &lt;/plugin&gt;
-    &lt;/plugins&gt;
-&lt;/build&gt;
-</code></pre>
-<ol start="3">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;build&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;sourceDirectory&gt;</span>src<span class="nt">&lt;/sourceDirectory&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;plugins&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;plugin&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;version&gt;</span>3.6.1<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;configuration&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;source&gt;</span>1.8<span class="nt">&lt;/source&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;target&gt;</span>1.8<span class="nt">&lt;/target&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/configuration&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/plugin&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;plugin&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;artifactId&gt;</span>exec-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;version&gt;</span>3.0.0<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;configuration&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;mainClass&gt;</span>com.ans20xx.App<span class="nt">&lt;/mainClass&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/configuration&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/plugin&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/plugins&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/build&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
 <li>第一个插件 <code>maven-compiler-plugin</code>，负责使用 Java 1.8 来编译源代码。</li>
 <li><code>exec-maven-plugin</code> 用来在项目中搜索主类。</li>
 <li>运行 <code>mvn exec:java</code> 来运行项目。</li>

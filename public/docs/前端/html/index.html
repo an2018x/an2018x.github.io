@@ -10,8 +10,8 @@
 <meta name="description" content="HTML相关知识体系构建">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/html/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.3f0fe62cdc8e71471c46ae1ecb461496427d15458319252d5413617f49af9821.css" integrity="sha256-Pw/mLNyOcUccRq4ey0YUlkJ9FUWDGSUtVBNhf0mvmCE=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/img/icon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
 <link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
@@ -57,6 +57,64 @@
 
     </style>
 </noscript>
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            },
+            "HTML-CSS": {
+                availableFonts: ["Arial", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX"
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style>
+
+
+
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/style.css" />
+    <style>
+        body {
+            font-family: "LXGW WenKai Lite", sans-serif;
+            font-family: "LXGW WenKai Screen", sans-serif;
+        }
+    </style>
+</head>
+</html>
+
 </head>
 
 <body class="list" id="top">
@@ -100,11 +158,6 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/#about" title="关于我">
-                    <span>关于我</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/posts/" title="博文">
                     <span>博文</span>
                 </a>
@@ -147,7 +200,7 @@
     </h2>
   </header>
   <div class="entry-content">
-    <p>1. 传统的 HTML 布局 一直以来，网页设计人员都利用 &lt;div&gt; 元素将页面中的相关元素集中在一起，并使用 class 或 id 特性来指定 &lt;div&gt; 元素在页面结构中的作用。 2. 新的 HTML5 布局元素 HTML5 中引入了一组新的元素，这些元素允许你对页面的各个部分进行分割。它们的名称直接表明了其中包含的内容。 3. 页眉和页脚 &lt;header&gt; 元素可以用作网页中出现在每个页面顶部的主页眉，或单独 &lt;article&gt; 或 &lt;section&gt; 的页眉。 &lt;footer&gt; 元素可以用作网页中出现在每个页面底部的主页脚，或单独 &lt;article&gt; 或 &lt;section&gt; 的页脚。 4. 导航 &lt;nav&gt; 元素专门用来包含网站的主导航块。 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;页眉、页脚与导航&lt;/title&gt; &lt;/head&gt; &lt;body&gt; &lt;header&gt; &lt;h1&gt;主标题&lt;/h1&gt; &lt;nav&gt; &lt;ul&gt; &lt;li&gt;主页&lt;/li&gt; &lt;li&gt;文章&lt;/li&gt; &lt;li&gt;更多&lt;/li&gt; &lt;/ul&gt; &lt;/nav&gt; &lt;/header&gt; &lt;footer&gt; &amp;copy;2023 ans20xx &lt;/footer&gt; &lt;/body&gt; &lt;/html&gt; ...</p>
+    <p>1. 传统的 HTML 布局 一直以来，网页设计人员都利用 &lt;div&gt; 元素将页面中的相关元素集中在一起，并使用 class 或 id 特性来指定 &lt;div&gt; 元素在页面结构中的作用。 2. 新的 HTML5 布局元素 HTML5 中引入了一组新的元素，这些元素允许你对页面的各个部分进行分割。它们的名称直接表明了其中包含的内容。 3. 页眉和页脚 &lt;header&gt; 元素可以用作网页中出现在每个页面顶部的主页眉，或单独 &lt;article&gt; 或 &lt;section&gt; 的页眉。 &lt;footer&gt; 元素可以用作网页中出现在每个页面底部的主页脚，或单独 &lt;article&gt; 或 &lt;section&gt; 的页脚。 4. 导航 &lt;nav&gt; 元素专门用来包含网站的主导航块。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;页眉、页脚与导航&lt;/title&gt; &lt;/head&gt; &lt;body&gt; &lt;header&gt; &lt;h1&gt;主标题&lt;/h1&gt; &lt;nav&gt; &lt;ul&gt; &lt;li&gt;主页&lt;/li&gt; &lt;li&gt;文章&lt;/li&gt; &lt;li&gt;更多&lt;/li&gt; &lt;/ul&gt; &lt;/nav&gt; &lt;/header&gt; &lt;footer&gt; &amp;copy;2023 ans20xx &lt;/footer&gt; &lt;/body&gt; &lt;/html&gt; ...</p>
   </div>
   <footer class="entry-footer"><span title='2023-01-20 19:16:46 +0800 CST'>一月 20, 2023</span></footer>
   <a class="entry-link" aria-label="post link to 10-HTML5 布局" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/html/chapter-10/"></a>
@@ -159,7 +212,7 @@
     </h2>
   </header>
   <div class="entry-content">
-    <p>1. 认识视频格式和播放器 1.1. 格式 可以在线播放的视频格式有多种，例如 AVI、H264、MPEG、Ogg、WebM 等。 为了使用户能够在线观看视频，需要对视频格式进行转换，这被称为视频编码。参考 www.mirogvideoconverter.com。 1.2. 播放器/插件 2010 年前的浏览器只能支持显示文本和图像，要想播放视频必须安装播放器插件。 HTML5 出来后，可以使用 &lt;video&gt; 标签来播放视频。 1.3. 方法 托管到 Bilibili 等视频网站。 使用 HTML5 中的 &lt;video&gt; 元素。 2. 向网页中添加视频 可以使用 &lt;video&gt; 元素向网页中添加视频。 src 属性可以指定视频的路径。 poster 属性用来指定播放前显示的封面图片。 width 和 height 属性用来指定播放器的大小。 controls 表示浏览器提供默认的播放组件。 autoplay 表示视频文件应该自动播放。 loop 表示在视频结束后重新播放。 preload 告诉浏览器在页面加载时需要做什么，可以选用下面三个值： none 表示用户按下播放按钮前，浏览器不必加载视频。 auto 表示浏览器应该在用户在页面加载时载入视频。 metadata 表示浏览器只需要收集少量视频信息，例如大小、首帧时间、播放列表和持续时间等。 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;向网页中添加视频测试&lt;/title&gt; &lt;/head&gt; &lt;body&gt; &lt;video src=&#34;test.mp4&#34; width=&#34;800&#34; height=&#34;600&#34; preload=&#34;none&#34; controls&gt;&lt;/video&gt; &lt;/body&gt; &lt;/html&gt; ...</p>
+    <p>1. 认识视频格式和播放器 1.1. 格式 可以在线播放的视频格式有多种，例如 AVI、H264、MPEG、Ogg、WebM 等。 为了使用户能够在线观看视频，需要对视频格式进行转换，这被称为视频编码。参考 www.mirogvideoconverter.com。 1.2. 播放器/插件 2010 年前的浏览器只能支持显示文本和图像，要想播放视频必须安装播放器插件。 HTML5 出来后，可以使用 &lt;video&gt; 标签来播放视频。 1.3. 方法 托管到 Bilibili 等视频网站。 使用 HTML5 中的 &lt;video&gt; 元素。 2. 向网页中添加视频 可以使用 &lt;video&gt; 元素向网页中添加视频。 src 属性可以指定视频的路径。 poster 属性用来指定播放前显示的封面图片。 width 和 height 属性用来指定播放器的大小。 controls 表示浏览器提供默认的播放组件。 autoplay 表示视频文件应该自动播放。 loop 表示在视频结束后重新播放。 preload 告诉浏览器在页面加载时需要做什么，可以选用下面三个值： none 表示用户按下播放按钮前，浏览器不必加载视频。 auto 表示浏览器应该在用户在页面加载时载入视频。 metadata 表示浏览器只需要收集少量视频信息，例如大小、首帧时间、播放列表和持续时间等。 1 2 3 4 5 6 7 8 9 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;向网页中添加视频测试&lt;/title&gt; &lt;/head&gt; &lt;body&gt; &lt;video src=&#34;test.mp4&#34; width=&#34;800&#34; height=&#34;600&#34; preload=&#34;none&#34; controls&gt;&lt;/video&gt; &lt;/body&gt; &lt;/html&gt; ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-12-03 17:16:46 +0800 CST'>十二月 3, 2022</span></footer>
   <a class="entry-link" aria-label="post link to 9-HTML5 视频和音频" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/html/chapter-9/"></a>
@@ -171,7 +224,7 @@
     </h2>
   </header>
   <div class="entry-content">
-    <p>1. DOCTYPE 文档类型 HTML 存在多个版本，因此每个网页的开头都应该用 DOCTYPE 声明来表示使用了 HTML 哪个版本。 即使没有 DOCTYPE 类型，浏览器通常也会显示页面，但是使用 DOCTYPE 有助于浏览器正确渲染。 HTML 5 的 DOCTYPE 声明如下，它应该被放在文件的开头位置： &lt;!DOCTYPE html&gt; 2. 注释 注释后的内容不会被浏览器显示。 可以在被注释的内容左右添加 &lt;!-- 和 --&gt; 来表示表示注释。 开发者通常使用注释来对某段代码进行说明。 例如：
+    <p>1. DOCTYPE 文档类型 HTML 存在多个版本，因此每个网页的开头都应该用 DOCTYPE 声明来表示使用了 HTML 哪个版本。 即使没有 DOCTYPE 类型，浏览器通常也会显示页面，但是使用 DOCTYPE 有助于浏览器正确渲染。 HTML 5 的 DOCTYPE 声明如下，它应该被放在文件的开头位置： 1 &lt;!DOCTYPE html&gt; 2. 注释 注释后的内容不会被浏览器显示。 可以在被注释的内容左右添加 &lt;!-- 和 --&gt; 来表示表示注释。 开发者通常使用注释来对某段代码进行说明。 例如：
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-12-02 17:16:46 +0800 CST'>十二月 2, 2022</span></footer>
@@ -249,7 +302,7 @@ href 属性指定要跳转到的页面。
 使用 &lt;ol&gt; 元素来构建有序列表。
 列表中的每一个项目都被放在 &lt;li&gt;&lt;/li&gt; 标签中。
 浏览器默认对列表进行缩进。
-&lt;html&gt; &lt;head&gt; &lt;title&gt;有序列表测试&lt;/title&gt; &lt;/head&gt; &lt;body&gt; &lt;ol&gt; &lt;li&gt;第一条&lt;/li&gt; &lt;li&gt;第二条&lt;/li&gt; &lt;li&gt;第三条&lt;/li&gt; &lt;/ol&gt; &lt;/body&gt; &lt;/html&gt; ...</p>
+1 2 3 4 5 6 7 8 9 10 11 12 &lt;html&gt; &lt;head&gt; &lt;title&gt;有序列表测试&lt;/title&gt; &lt;/head&gt; &lt;body&gt; &lt;ol&gt; &lt;li&gt;第一条&lt;/li&gt; &lt;li&gt;第二条&lt;/li&gt; &lt;li&gt;第三条&lt;/li&gt; &lt;/ol&gt; &lt;/body&gt; &lt;/html&gt; ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-26 19:15:46 +0800 CST'>十一月 26, 2022</span></footer>
   <a class="entry-link" aria-label="post link to 3-HTML 列表" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/html/chapter-3/"></a>

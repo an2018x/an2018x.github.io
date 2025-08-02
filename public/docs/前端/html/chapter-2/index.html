@@ -10,8 +10,8 @@
 <meta name="description" content="如何向显示在网页上的文本添加标记">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/html/chapter-2/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.3f0fe62cdc8e71471c46ae1ecb461496427d15458319252d5413617f49af9821.css" integrity="sha256-Pw/mLNyOcUccRq4ey0YUlkJ9FUWDGSUtVBNhf0mvmCE=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/img/icon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
 <link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
@@ -56,6 +56,64 @@
 
     </style>
 </noscript>
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            },
+            "HTML-CSS": {
+                availableFonts: ["Arial", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX"
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style>
+
+
+
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/style.css" />
+    <style>
+        body {
+            font-family: "LXGW WenKai Lite", sans-serif;
+            font-family: "LXGW WenKai Screen", sans-serif;
+        }
+    </style>
+</head>
+</html>
+
 </head>
 
 <body class="" id="top">
@@ -99,11 +157,6 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/#about" title="关于我">
-                    <span>关于我</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/posts/" title="博文">
                     <span>博文</span>
                 </a>
@@ -140,7 +193,144 @@
     <div class="post-meta"><span title='2022-11-25 22:15:46 +0800 CST'>十一月 25, 2022</span>
 
 </div>
-  </header> 
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#1-%e7%bb%93%e6%9e%84%e5%8c%96%e6%a0%87%e8%ae%b0" aria-label="1. 结构化标记">1. 结构化标记</a></li>
+                    <li>
+                        <a href="#2-%e6%a0%87%e9%a2%98" aria-label="2. 标题">2. 标题</a></li>
+                    <li>
+                        <a href="#3-%e6%ae%b5%e8%90%bd" aria-label="3. 段落">3. 段落</a></li>
+                    <li>
+                        <a href="#4-%e7%b2%97%e4%bd%93%e5%92%8c%e6%96%9c%e4%bd%93" aria-label="4. 粗体和斜体">4. 粗体和斜体</a></li>
+                    <li>
+                        <a href="#5-%e4%b8%8a%e6%a0%87%e5%92%8c%e4%b8%8b%e6%a0%87" aria-label="5. 上标和下标">5. 上标和下标</a></li>
+                    <li>
+                        <a href="#6-%e7%a9%ba%e7%99%bd" aria-label="6. 空白">6. 空白</a></li>
+                    <li>
+                        <a href="#7-%e6%8d%a2%e8%a1%8c%e7%ac%a6%e5%92%8c%e6%b0%b4%e5%b9%b3%e7%ba%bf" aria-label="7. 换行符和水平线">7. 换行符和水平线</a></li>
+                    <li>
+                        <a href="#8-%e8%af%ad%e4%b9%89%e5%8c%96%e6%a0%87%e8%ae%b0" aria-label="8. 语义化标记">8. 语义化标记</a></li>
+                    <li>
+                        <a href="#9-%e5%8a%a0%e7%b2%97%e5%92%8c%e5%bc%ba%e8%b0%83" aria-label="9. 加粗和强调">9. 加粗和强调</a></li>
+                    <li>
+                        <a href="#10-%e5%bc%95%e7%94%a8" aria-label="10. 引用">10. 引用</a></li>
+                    <li>
+                        <a href="#11-%e7%bc%a9%e5%86%99%e8%af%8d%e5%92%8c%e9%a6%96%e5%ad%97%e6%af%8d%e7%bc%a9%e5%86%99%e8%af%8d" aria-label="11. 缩写词和首字母缩写词">11. 缩写词和首字母缩写词</a></li>
+                    <li>
+                        <a href="#12-%e5%bc%95%e6%96%87%e5%92%8c%e5%ae%9a%e4%b9%89" aria-label="12. 引文和定义">12. 引文和定义</a></li>
+                    <li>
+                        <a href="#13-%e5%b0%8f%e7%bb%93" aria-label="13. 小结">13. 小结</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+
   <div class="post-content"><h2 id="1-结构化标记">1. 结构化标记<a hidden class="anchor" aria-hidden="true" href="#1-结构化标记">#</a></h2>
 <ol>
 <li>结构化标记：可以用来描述标题或段落的元素。</li>
@@ -155,21 +345,39 @@
 <li><code>&lt;h6&gt;</code></li>
 </ol>
 <p>通常，浏览器通过字号来标识各种标题，从 <code>&lt;h1&gt;</code> 到 <code>&lt;h6&gt;</code> 字号依次递减。</p>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;标题测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;一号标题&lt;/h1&gt;
-        &lt;h2&gt;二号标题&lt;/h2&gt;
-        &lt;h3&gt;三号标题&lt;/h3&gt;
-        &lt;h4&gt;四号标题&lt;/h4&gt;
-        &lt;h5&gt;五号标题&lt;/h5&gt;
-        &lt;h6&gt;六号标题&lt;/h6&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126001449.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>标题测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>一号标题<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>二号标题<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>三号标题<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h4</span><span class="p">&gt;</span>四号标题<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h5</span><span class="p">&gt;</span>五号标题<span class="p">&lt;/</span><span class="nt">h5</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">h6</span><span class="p">&gt;</span>六号标题<span class="p">&lt;/</span><span class="nt">h6</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126001449.png"></p>
 <h2 id="3-段落">3. 段落<a hidden class="anchor" aria-hidden="true" href="#3-段落">#</a></h2>
 <ol>
 <li>
@@ -179,17 +387,31 @@
 <p>默认情况下，显示段落会另起一行，且与后续的段落保持一定的距离。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;段落测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;这是第一个段落。&lt;/p&gt;
-        &lt;p&gt;这是第二个段落。&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126172706.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>段落测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>这是第一个段落。<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>这是第二个段落。<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126172706.png"></p>
 <h2 id="4-粗体和斜体">4. 粗体和斜体<a hidden class="anchor" aria-hidden="true" href="#4-粗体和斜体">#</a></h2>
 <ol>
 <li>
@@ -205,17 +427,31 @@
 <p>使用 <code>&lt;i&gt;</code> 同样没有任何特殊语义，只是在视觉上将文字倾斜，这一点可以对照后续的 <code>&lt;em&gt;</code> 标签。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;粗体和斜体测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;b&gt;这是粗体 &lt;/b&gt;
-        &lt;i&gt;这是斜体 &lt;/i&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126174542.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>粗体和斜体测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">b</span><span class="p">&gt;</span>这是粗体 <span class="p">&lt;/</span><span class="nt">b</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">i</span><span class="p">&gt;</span>这是斜体 <span class="p">&lt;/</span><span class="nt">i</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126174542.png"></p>
 <h2 id="5-上标和下标">5. 上标和下标<a hidden class="anchor" aria-hidden="true" href="#5-上标和下标">#</a></h2>
 <ol>
 <li>
@@ -225,21 +461,39 @@
 <p><code>&lt;sub&gt;</code> 元素用来标记作为下标的字符。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;上标和下标测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;
-            E=mc&lt;sup&gt;2&lt;/sup&gt;
-        &lt;/p&gt;
-        &lt;p&gt;
-            H&lt;sub&gt;2&lt;/sub&gt;O
-        &lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126174846.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>上标和下标测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            E=mc<span class="p">&lt;</span><span class="nt">sup</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="nt">sup</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            H<span class="p">&lt;</span><span class="nt">sub</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="nt">sub</span><span class="p">&gt;</span>O
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126174846.png"></p>
 <h2 id="6-空白">6. 空白<a hidden class="anchor" aria-hidden="true" href="#6-空白">#</a></h2>
 <ol>
 <li>
@@ -249,28 +503,53 @@
 <p>浏览器会将两个以上连续空格处理为一个空格，这被称为白色空间折叠。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;空白测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;
-            今天天气不错
-        &lt;/p&gt;
-        &lt;p&gt;
-            今天天气 不错
-        &lt;/p&gt;
-        &lt;p&gt;
-            今天天气      不错
-        &lt;/p&gt;
-        &lt;p&gt;
-            今天天气
-            不错
-        &lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126175152.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>空白测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            今天天气不错
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            今天天气 不错
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            今天天气      不错
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            今天天气
+</span></span><span class="line"><span class="cl">            不错
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126175152.png"></p>
 <h2 id="7-换行符和水平线">7. 换行符和水平线<a hidden class="anchor" aria-hidden="true" href="#7-换行符和水平线">#</a></h2>
 <ol>
 <li>
@@ -286,22 +565,41 @@
 <p>空元素只包含一个标签，通常由 &ldquo;&lt; + 标签名 + 空格 + / + &gt;&rdquo; 构成。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;换行符和水平线测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;
-            今天天气&lt;br /&gt;不错
-        &lt;/p&gt;
-        &lt;hr /&gt;
-        &lt;p&gt;
-            今天天气晴朗
-        &lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126175815.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>换行符和水平线测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            今天天气<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>不错
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">hr</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            今天天气晴朗
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126175815.png"></p>
 <h2 id="8-语义化标记">8. 语义化标记<a hidden class="anchor" aria-hidden="true" href="#8-语义化标记">#</a></h2>
 <ol>
 <li>
@@ -329,17 +627,31 @@
 <p>默认情况下，<code>&lt;strong&gt;</code> 元素中的内容会被显示为斜体。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;加粗和强调测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;strong&gt;这段文字十分重要&lt;/strong&gt; &lt;br /&gt;
-        &lt;em&gt;需要仔细阅读&lt;/em&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126183424.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>加粗和强调测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>这段文字十分重要<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">em</span><span class="p">&gt;</span>需要仔细阅读<span class="p">&lt;/</span><span class="nt">em</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126183424.png"></p>
 <h2 id="10-引用">10. 引用<a hidden class="anchor" aria-hidden="true" href="#10-引用">#</a></h2>
 <ol>
 <li>
@@ -355,31 +667,58 @@
 <p>浏览器会对 <code>&lt;blockquote&gt;</code> 中的内容两侧添加引号。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;引用测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;blockquote&gt;学而时习之，不亦乐乎&lt;/blockquote&gt;
-        &lt;p&gt;上面这段话出自&lt;q&gt;论语&lt;/q&gt;&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126183849.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>引用测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">blockquote</span><span class="p">&gt;</span>学而时习之，不亦乐乎<span class="p">&lt;/</span><span class="nt">blockquote</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>上面这段话出自<span class="p">&lt;</span><span class="nt">q</span><span class="p">&gt;</span>论语<span class="p">&lt;/</span><span class="nt">q</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126183849.png"></p>
 <h2 id="11-缩写词和首字母缩写词">11. 缩写词和首字母缩写词<a hidden class="anchor" aria-hidden="true" href="#11-缩写词和首字母缩写词">#</a></h2>
 <ol>
 <li><code>&lt;abbr&gt;</code> 可以用来描述缩写词，其中 <code>title</code> 属性可以提供关于指定缩写词的完整定义。</li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;缩写词测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;A 商品今年的 &lt;abbr title=&quot;商品交易总额&quot;&gt;GMV&lt;/abbr&gt; 同比增长 150%。&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126191312.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>缩写词测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>A 商品今年的 <span class="p">&lt;</span><span class="nt">abbr</span> <span class="na">title</span><span class="o">=</span><span class="s">&#34;商品交易总额&#34;</span><span class="p">&gt;</span>GMV<span class="p">&lt;/</span><span class="nt">abbr</span><span class="p">&gt;</span> 同比增长 150%。<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126191312.png"></p>
 <h2 id="12-引文和定义">12. 引文和定义<a hidden class="anchor" aria-hidden="true" href="#12-引文和定义">#</a></h2>
 <ol>
 <li>
@@ -395,17 +734,31 @@
 <p><code>&lt;dfn&gt;</code> 元素也会被显示为斜体。</p>
 </li>
 </ol>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;引文和定义测试&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;&lt;cite&gt;《算法导论》&lt;/cite&gt;是一本描述计算机算法与数据结构的经典书籍。&lt;/p&gt;
-        &lt;p&gt;&lt;dfn&gt;Dijkstra&lt;/dfn&gt;算法是书中描述的一种经典的最短路算法。&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126191800.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>引文和定义测试<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;&lt;</span><span class="nt">cite</span><span class="p">&gt;</span>《算法导论》<span class="p">&lt;/</span><span class="nt">cite</span><span class="p">&gt;</span>是一本描述计算机算法与数据结构的经典书籍。<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;&lt;</span><span class="nt">dfn</span><span class="p">&gt;</span>Dijkstra<span class="p">&lt;/</span><span class="nt">dfn</span><span class="p">&gt;</span>算法是书中描述的一种经典的最短路算法。<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://animg.oss-cn-shanghai.aliyuncs.com/2022/11/26/20221126191800.png"></p>
 <h2 id="13-小结">13. 小结<a hidden class="anchor" aria-hidden="true" href="#13-小结">#</a></h2>
 <ol>
 <li>

@@ -19,8 +19,11 @@ defaultContentLanguageInSubdir: false
 markup:
   # Do not modify markup.highlight
   highlight:
-    codeFences: false
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
     noClasses: false
+    style: monokai
   tableOfContents:
     startLevel: 2
     endLevel: 6
@@ -37,3 +40,13 @@ taxonomies:
 
 build:
   useResourceCacheWhen: always
+
+params:
+  assets:
+    favicon: /img/icon.png
+  homeInfoParams:
+    Title: "安橙的博客"
+    Content: >
+      👋 欢迎来到我的博客
+  ShowToc: true # 显示目录
+  TocOpen: true # 自动展开目录

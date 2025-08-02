@@ -10,8 +10,8 @@
 <meta name="description" content="CSS相关知识体系构建">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.3f0fe62cdc8e71471c46ae1ecb461496427d15458319252d5413617f49af9821.css" integrity="sha256-Pw/mLNyOcUccRq4ey0YUlkJ9FUWDGSUtVBNhf0mvmCE=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/img/icon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
 <link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
@@ -57,6 +57,64 @@
 
     </style>
 </noscript>
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            },
+            "HTML-CSS": {
+                availableFonts: ["Arial", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX"
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style>
+
+
+
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/style.css" />
+    <style>
+        body {
+            font-family: "LXGW WenKai Lite", sans-serif;
+            font-family: "LXGW WenKai Screen", sans-serif;
+        }
+    </style>
+</head>
+</html>
+
 </head>
 
 <body class="list" id="top">
@@ -99,11 +157,6 @@
             </div>
         </div>
         <ul id="menu">
-            <li>
-                <a href="http://localhost:1313/#about" title="关于我">
-                    <span>关于我</span>
-                </a>
-            </li>
             <li>
                 <a href="http://localhost:1313/posts/" title="博文">
                     <span>博文</span>
@@ -160,7 +213,7 @@
     </h2>
   </header>
   <div class="entry-content">
-    <p>1. 核心概念 1.1. 构建块 CSS 采用盒子模型来处理每个 HTML 元素，盒子可以是一个块级盒子，也可以是一个内联盒子。 块级盒子另起一行显示，并且在布局中就像是主体构建块。 内联盒子在其周围的文本间浮动。 可以通过设置每个盒子的宽度来控制其占用的空间。 可以使用边框、外边距、内边距来将盒子分开。 1.2. 包含元素 如果一个块级元素位于另一个块级元素内部，那么这个外部的框就被称为包含元素或父级元素。 人们通常将若干个元素集中在一个 &lt;div&gt; 元素中。 一个盒子可能被嵌套在其他多个块级元素中，但包含元素只能是它的直接父元素。 2. 控制元素的位置 CSS 中包含三种用于控制页面布局的定位机制：普通流、相对定位和绝对定位。 在 CSS 中通过 position 属性表明定位机制，还可以使用 float 属性让元素浮动。 普通流：每个块级元素都换行显示，以至于页面中的每个项目都显示在前一个项目的下方，即使有足够的空间能够让两个元素并排显示。 相对定位：相对定位将一个元素从它在普通流中所处的位置上移动，在它原来的位置向上、向下、像左、向右移动，但是不会影响周围元素的位置。 绝对定位：元素位置相对于它的包含元素。它完全脱离了普通流，不会影响周围任何元素的位置，使用绝对定位的元素随着页面的滚动而移动。 为了确定一个盒子的位置，可能还要使用盒子位移属性将盒子与上、下、左、右的距离告诉浏览器。 此外还有固定定位和浮动元素两种定位方式。 固定定位：固定定位是绝对定位的一种形式，但是它是将元素相对于浏览器窗口进行定位，而不是相对于包含元素进行定位。固定定位的元素同样不会影响周围元素的位置。 浮动元素：浮动一个元素可以让其脱离普通流，并定位到其包含盒子的最左边或最右边的位置。这个浮动的元素会成为一个周围可以浮动其他内容的块级元素。 任何元素从普通流脱离时，盒子都会产生重叠。可以使用 z-index 属性来控制哪个盒子显示在上层。 3. 普通流 使用 position:static 可以指定普通流，不过这是默认设置，可以不用显示指定。 使用普通流的块级元素都会换行显示。 4. 相对定位 使用 position:relative 可以指定该元素进行相对定位。 相对定位的元素以其在普通流中所处的位置为起点进行移动。 可以使用 top、bottom、left、right 属性进行移动。 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;相对定位&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt;段落1&lt;/p&gt; &lt;p class=&#34;test&#34;&gt;段落2（相对流）&lt;/p&gt; &lt;p&gt;段落3&lt;/p&gt; &lt;/body&gt; &lt;/html&gt; body { width: 500px; } p.test { position: relative; left: 300px; bottom: 20px; } ...</p>
+    <p>1. 核心概念 1.1. 构建块 CSS 采用盒子模型来处理每个 HTML 元素，盒子可以是一个块级盒子，也可以是一个内联盒子。 块级盒子另起一行显示，并且在布局中就像是主体构建块。 内联盒子在其周围的文本间浮动。 可以通过设置每个盒子的宽度来控制其占用的空间。 可以使用边框、外边距、内边距来将盒子分开。 1.2. 包含元素 如果一个块级元素位于另一个块级元素内部，那么这个外部的框就被称为包含元素或父级元素。 人们通常将若干个元素集中在一个 &lt;div&gt; 元素中。 一个盒子可能被嵌套在其他多个块级元素中，但包含元素只能是它的直接父元素。 2. 控制元素的位置 CSS 中包含三种用于控制页面布局的定位机制：普通流、相对定位和绝对定位。 在 CSS 中通过 position 属性表明定位机制，还可以使用 float 属性让元素浮动。 普通流：每个块级元素都换行显示，以至于页面中的每个项目都显示在前一个项目的下方，即使有足够的空间能够让两个元素并排显示。 相对定位：相对定位将一个元素从它在普通流中所处的位置上移动，在它原来的位置向上、向下、像左、向右移动，但是不会影响周围元素的位置。 绝对定位：元素位置相对于它的包含元素。它完全脱离了普通流，不会影响周围任何元素的位置，使用绝对定位的元素随着页面的滚动而移动。 为了确定一个盒子的位置，可能还要使用盒子位移属性将盒子与上、下、左、右的距离告诉浏览器。 此外还有固定定位和浮动元素两种定位方式。 固定定位：固定定位是绝对定位的一种形式，但是它是将元素相对于浏览器窗口进行定位，而不是相对于包含元素进行定位。固定定位的元素同样不会影响周围元素的位置。 浮动元素：浮动一个元素可以让其脱离普通流，并定位到其包含盒子的最左边或最右边的位置。这个浮动的元素会成为一个周围可以浮动其他内容的块级元素。 任何元素从普通流脱离时，盒子都会产生重叠。可以使用 z-index 属性来控制哪个盒子显示在上层。 3. 普通流 使用 position:static 可以指定普通流，不过这是默认设置，可以不用显示指定。 使用普通流的块级元素都会换行显示。 4. 相对定位 使用 position:relative 可以指定该元素进行相对定位。 相对定位的元素以其在普通流中所处的位置为起点进行移动。 可以使用 top、bottom、left、right 属性进行移动。 1 2 3 4 5 6 7 8 9 10 11 12 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;相对定位&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt;段落1&lt;/p&gt; &lt;p class=&#34;test&#34;&gt;段落2（相对流）&lt;/p&gt; &lt;p&gt;段落3&lt;/p&gt; &lt;/body&gt; &lt;/html&gt; 1 2 3 4 5 6 7 8 body { width: 500px; } p.test { position: relative; left: 300px; bottom: 20px; } ...</p>
   </div>
   <footer class="entry-footer"><span title='2023-01-20 19:17:46 +0800 CST'>一月 20, 2023</span></footer>
   <a class="entry-link" aria-label="post link to 6-CSS 定位" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/chapter-6/"></a>
@@ -172,7 +225,7 @@
     </h2>
   </header>
   <div class="entry-content">
-    <p>1. 项目符号样式 list-style-type 属性允许你控制项目符号的形状或样式。 该属性可以应用到 &lt;ol&gt;、&lt;ul&gt; 和 &lt;li&gt; 元素的规则中。 对于无序列表的 list-style-type 属性，可以使用如下值： none disc circle square 对于有序列表的 list-style-type 属性，可以使用如下值： decimal decimal-leading-zero lower-alpha upper-alpha lower-roman upper-roman &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;项目符号样式&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;ul&gt; &lt;li&gt;项目1&lt;/li&gt; &lt;li&gt;项目2&lt;/li&gt; &lt;/ul&gt; &lt;/body&gt; &lt;/html&gt; ul { list-style-type: circle; } ...</p>
+    <p>1. 项目符号样式 list-style-type 属性允许你控制项目符号的形状或样式。 该属性可以应用到 &lt;ol&gt;、&lt;ul&gt; 和 &lt;li&gt; 元素的规则中。 对于无序列表的 list-style-type 属性，可以使用如下值： none disc circle square 对于有序列表的 list-style-type 属性，可以使用如下值： decimal decimal-leading-zero lower-alpha upper-alpha lower-roman upper-roman 1 2 3 4 5 6 7 8 9 10 11 12 13 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;项目符号样式&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;ul&gt; &lt;li&gt;项目1&lt;/li&gt; &lt;li&gt;项目2&lt;/li&gt; &lt;/ul&gt; &lt;/body&gt; &lt;/html&gt; 1 2 3 ul { list-style-type: circle; } ...</p>
   </div>
   <footer class="entry-footer"><span title='2023-01-20 19:16:46 +0800 CST'>一月 20, 2023</span></footer>
   <a class="entry-link" aria-label="post link to 5-CSS 列表、表格和表单" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/chapter-5/"></a>
@@ -185,7 +238,7 @@
   </header>
   <div class="entry-content">
     <p>1. 导言 可以通过 CSS 来设置盒子的外观，包括：
-控制盒子的大小 创建盒子周围的边框 设置盒子的外边距和内边距 显示和隐藏盒子 2. 盒子的大小 默认情况下，一个盒子的大小刚好容纳其中的内容。如果需要自定义盒子的大小，就需要用到 width 和 height 属性。 指定盒子大小的常用方式有像素、百分数或者 em 值。 使用百分数时，盒子的大小与浏览器窗口的大小相关，如果这个盒子被装入另外一个盒子，那么百分数的大小就是相对外部盒子而言。 使用 em 时，盒子的大小将以盒子中文本的大小相关。 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;盒子的大小&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;div&gt; 外部的盒子 &lt;p&gt;内部的盒子&lt;/p&gt; &lt;/div&gt; &lt;/body&gt; &lt;/html&gt; div { height: 300px; width: 60%; background-color: cadetblue; } p { height: 4em; width: 80%; background-color: darkorange; } ...</p>
+控制盒子的大小 创建盒子周围的边框 设置盒子的外边距和内边距 显示和隐藏盒子 2. 盒子的大小 默认情况下，一个盒子的大小刚好容纳其中的内容。如果需要自定义盒子的大小，就需要用到 width 和 height 属性。 指定盒子大小的常用方式有像素、百分数或者 em 值。 使用百分数时，盒子的大小与浏览器窗口的大小相关，如果这个盒子被装入另外一个盒子，那么百分数的大小就是相对外部盒子而言。 使用 em 时，盒子的大小将以盒子中文本的大小相关。 1 2 3 4 5 6 7 8 9 10 11 12 13 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;盒子的大小&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;div&gt; 外部的盒子 &lt;p&gt;内部的盒子&lt;/p&gt; &lt;/div&gt; &lt;/body&gt; &lt;/html&gt; 1 2 3 4 5 6 7 8 9 10 div { height: 300px; width: 60%; background-color: cadetblue; } p { height: 4em; width: 80%; background-color: darkorange; } ...</p>
   </div>
   <footer class="entry-footer"><span title='2023-01-19 22:16:46 +0800 CST'>一月 19, 2023</span></footer>
   <a class="entry-link" aria-label="post link to 4-CSS 盒子" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/chapter-4/"></a>
@@ -224,7 +277,7 @@ RGB 值：从组成一种元素需要多少红色、绿色、蓝色的角度来�
     </h2>
   </header>
   <div class="entry-content">
-    <p>1. CSS 概述 CSS 允许你创建一系列规则。 CSS 创建的规则可以指定元素中的内容该如何显示。（例如，指定页面背景色为蓝色、字体为 Arial 字体等） 2. 设想每个元素周围都有一个盒子 在 HTML 中，每个元素的周围都有一个看不见的盒子。 CSS 允许你创建规则，来控制每个盒子，以及盒子中的内容的呈现方式。 可以利用 CSS 在任何盒子周围添加边框，指定它的宽度和高度以及设定背景颜色，也可以控制盒子内的文本样式。 3. CSS 将样式规则和 HTML 元素相关联 CSS 通过规则与 HTML 元素相关联的方式来工作。 CSS 规则用来控制指定元素中的内容如何显示。 一条 CSS 规则包含两部分：一个选择器和一条声明。 选择器表明要应用规则的元素。同一条规则可以应用在多个元素上，前提是你需要将这些元素名用逗号隔开。 声明用来表明应该如何显示选择器指明的元素。声明可以分为两个部分（属性和值），并以冒号作为分隔符。 p { font-family: Arial; } 上述 CSS 规则中，p 是声明，表示该规则应用于所有的 p 标签上，大括号内的 font-family: Arial; 是声明，表示应该用 Arial 字体来显示。 4. CSS 属性会影响元素的显示方式 CSS 声明位于大括号中，而且每条声明都由两部分组成：属性和值，两者由冒号隔开。 可以在一条声明内指定多个属性，各属性之间用分号隔开。 h1, h2, h3 { font-family: Arial; color: yellow; } 属性表明想要改变元素的那些方面，例如字体、宽度、高度等。 值用来指定想要在所选元素上应用的属性，例如指定字体颜色为蓝色。 5. 使用外部 CSS &lt;link&gt; 元素位于 &lt;head&gt; 元素中，用来告诉浏览器在何处寻找用于定义页面样式的 CSS 文件，它是一个空元素。 href 表明 CSS 元素的路径。 type 表示该页面链接到的文档类型，对于 CSS 而言，则值为 text/css。 rel 表示 HTML 页面与被链接文件的关系，当链接到一个 CSS 文件时，该特性的值为 stylesheet。 一个页面可以使用多个 CSS 样式表，这时需要多个 &lt;link&gt; 元素。 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;使用外部 CSS&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;h1&gt;你好&lt;/h1&gt; &lt;/body&gt; &lt;/html&gt; h1 { color: red; } ...</p>
+    <p>1. CSS 概述 CSS 允许你创建一系列规则。 CSS 创建的规则可以指定元素中的内容该如何显示。（例如，指定页面背景色为蓝色、字体为 Arial 字体等） 2. 设想每个元素周围都有一个盒子 在 HTML 中，每个元素的周围都有一个看不见的盒子。 CSS 允许你创建规则，来控制每个盒子，以及盒子中的内容的呈现方式。 可以利用 CSS 在任何盒子周围添加边框，指定它的宽度和高度以及设定背景颜色，也可以控制盒子内的文本样式。 3. CSS 将样式规则和 HTML 元素相关联 CSS 通过规则与 HTML 元素相关联的方式来工作。 CSS 规则用来控制指定元素中的内容如何显示。 一条 CSS 规则包含两部分：一个选择器和一条声明。 选择器表明要应用规则的元素。同一条规则可以应用在多个元素上，前提是你需要将这些元素名用逗号隔开。 声明用来表明应该如何显示选择器指明的元素。声明可以分为两个部分（属性和值），并以冒号作为分隔符。 1 2 3 p { font-family: Arial; } 上述 CSS 规则中，p 是声明，表示该规则应用于所有的 p 标签上，大括号内的 font-family: Arial; 是声明，表示应该用 Arial 字体来显示。 4. CSS 属性会影响元素的显示方式 CSS 声明位于大括号中，而且每条声明都由两部分组成：属性和值，两者由冒号隔开。 可以在一条声明内指定多个属性，各属性之间用分号隔开。 1 2 3 4 h1, h2, h3 { font-family: Arial; color: yellow; } 属性表明想要改变元素的那些方面，例如字体、宽度、高度等。 值用来指定想要在所选元素上应用的属性，例如指定字体颜色为蓝色。 5. 使用外部 CSS &lt;link&gt; 元素位于 &lt;head&gt; 元素中，用来告诉浏览器在何处寻找用于定义页面样式的 CSS 文件，它是一个空元素。 href 表明 CSS 元素的路径。 type 表示该页面链接到的文档类型，对于 CSS 而言，则值为 text/css。 rel 表示 HTML 页面与被链接文件的关系，当链接到一个 CSS 文件时，该特性的值为 stylesheet。 一个页面可以使用多个 CSS 样式表，这时需要多个 &lt;link&gt; 元素。 1 2 3 4 5 6 7 8 9 10 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;使用外部 CSS&lt;/title&gt; &lt;link rel=&#34;stylesheet&#34; href=&#34;hello.css&#34; type=&#34;text/css&#34; /&gt; &lt;/head&gt; &lt;body&gt; &lt;h1&gt;你好&lt;/h1&gt; &lt;/body&gt; &lt;/html&gt; 1 2 3 h1 { color: red; } ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-24 22:15:46 +0800 CST'>十一月 24, 2022</span></footer>
   <a class="entry-link" aria-label="post link to 1-CSS 简介" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF/css/chapter-1/"></a>
