@@ -54,3 +54,18 @@ params:
   ShowCodeCopyButtons: true # 代码块复制按钮
   ShowCodeLang: true # 语言显示
   ShowMacDots: true # Mac色块
+  fuseOpts:
+    isCaseSensitive: false
+    includeMatches: true
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    keys: ["title", "permalink", "summary", "content"]
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON # necessary for search
