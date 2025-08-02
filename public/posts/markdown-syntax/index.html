@@ -541,7 +541,101 @@
 <p>Press <kbd><kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>Delete</kbd></kbd> to end the session.</p>
 <p>Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.</p>
 <h2 id="gitmind">Gitmind<a hidden class="anchor" aria-hidden="true" href="#gitmind">#</a></h2>
-<iframe src="https://gitmind.cn/app/docs/mdmsl9d2"/>
+<div class="iframe-container">
+    
+    <div class="iframe-toolbar">
+        
+        
+        
+        <button class="open-new-tab" data-src="https://gitmind.cn/app/docs/mdmsl9d2">
+            在新页面打开
+        </button>
+    </div>
+    
+    
+    <iframe 
+        src="https://gitmind.cn/app/docs/mdmsl9d2" 
+         
+         
+         
+        frameborder="0" 
+        allowfullscreen 
+        loading="lazy"
+    ></iframe>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.open-new-tab').forEach(button => {
+        button.addEventListener('click', function() {
+            const url = this.getAttribute('data-src');
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+    });
+});
+</script>
+
+
+<style>
+.iframe-container {
+    position: relative;
+    margin: 1rem 0;
+    border: 1px solid #eaeaea;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.iframe-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;  
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eaeaea;
+}
+
+ 
+.iframe-toolbar:only-child .open-new-tab {
+    margin-left: auto;
+}
+
+.iframe-toolbar .open-new-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+    margin-left: auto;  
+}
+
+.iframe-toolbar .open-new-tab:hover {
+    background-color: #0b5ed7;
+}
+
+.iframe-title {
+    font-size: 0.875rem;
+    color: #6c757d;
+     
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+}
+
+.iframe-container iframe {
+    width: 100%;
+    min-height: 400px;
+}
+</style>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -647,6 +741,53 @@
         }
     })
 
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
 </script>
 </body>
 

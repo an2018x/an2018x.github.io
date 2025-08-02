@@ -1,0 +1,97 @@
+<div class="iframe-container">
+    <!-- 操作条 -->
+    <div class="iframe-toolbar">
+        {{ if .Get "title" }}
+        <span class="iframe-title">{{ .Get "title" }}</span>
+        {{ end }}
+        
+        <!-- 按钮移到标题后面，通过CSS实现右对齐 -->
+        <button class="open-new-tab" data-src="{{ .Get "src" }}">
+            在新页面打开
+        </button>
+    </div>
+    
+    <!-- iframe 内容 -->
+    <iframe 
+        src="{{ .Get "src" }}" 
+        {{ with .Get "width" }}width="{{ . }}"{{ end }} 
+        {{ with .Get "height" }}height="{{ . }}"{{ end }} 
+        {{ with .Get "class" }}class="{{ . }}"{{ end }} 
+        frameborder="0" 
+        allowfullscreen 
+        loading="lazy"
+    ></iframe>
+</div>
+
+<!-- 操作脚本 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.open-new-tab').forEach(button => {
+        button.addEventListener('click', function() {
+            const url = this.getAttribute('data-src');
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+    });
+});
+</script>
+
+<!-- 样式定义 - 重点修改了.toolbar的布局 -->
+<style>
+.iframe-container {
+    position: relative;
+    margin: 1rem 0;
+    border: 1px solid #eaeaea;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.iframe-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 这会将子元素推到两端 */
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eaeaea;
+}
+
+/* 当没有标题时，按钮依然右对齐 */
+.iframe-toolbar:only-child .open-new-tab {
+    margin-left: auto;
+}
+
+.iframe-toolbar .open-new-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+    margin-left: auto; /* 关键：自动填充左侧空间，实现右对齐 */
+}
+
+.iframe-toolbar .open-new-tab:hover {
+    background-color: #0b5ed7;
+}
+
+.iframe-title {
+    font-size: 0.875rem;
+    color: #6c757d;
+    /* 确保标题不会被按钮挤压 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+}
+
+.iframe-container iframe {
+    width: 100%;
+    min-height: 400px;
+}
+</style>
