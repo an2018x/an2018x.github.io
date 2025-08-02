@@ -89,7 +89,7 @@ sInput.onkeyup = function (e) {
 
             for (let item in results) {
                 resultSet += `<li class="post-entry"><header class="entry-header">${results[item].item.title}&nbsp;»</header>` +
-                    `<a href="${results[item].item.permalink}" aria-label="${results[item].item.title}"></a></li>`
+                    `<a href="${processPermalink(results[item].item.permalink)}" aria-label="${results[item].item.title}"></a></li>`
             }
 
             resList.innerHTML = resultSet;
@@ -101,6 +101,10 @@ sInput.onkeyup = function (e) {
             resList.innerHTML = '';
         }
     }
+}
+
+function processPermalink(url) {
+    return new URL(url).pathname
 }
 
 sInput.addEventListener('search', function (e) {
