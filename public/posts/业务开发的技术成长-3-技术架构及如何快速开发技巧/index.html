@@ -56,8 +56,12 @@
 
     </style>
 </noscript>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
 <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         MathJax.Hub.Config({
             tex2jax: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -113,6 +117,8 @@
     </style>
 </head>
 </html>
+
+
 
 </head>
 
@@ -224,7 +230,14 @@
 <p>下层就是 Service 层，职责是领域服务层，处理业务逻辑。</p>
 <p>Service 层与 Web 层的区别是：Service 层不做权限，而 Web 层处理权限问题。</p>
 <p>Service 层提供的是领域服务，例如：订单服务、用户服务。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/06/20221106172507.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/06/20221106172507.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/06/20221106172507.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV1pB4y1k7Zf?t=433.7">07:13</a></p>
 <p>命名都是基于这种部署特点。</p>
 <p>命名规则如下，以 auth 模块为例，它被分为 3 个子模块：</p>
@@ -388,7 +401,6 @@
             codeblock.parentNode.appendChild(copybutton);
         }
     });
-</script>
-</body>
+</script></body>
 
 </html>

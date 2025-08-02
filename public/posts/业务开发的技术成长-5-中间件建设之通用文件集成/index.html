@@ -56,8 +56,12 @@
 
     </style>
 </noscript>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
 <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         MathJax.Hub.Config({
             tex2jax: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -113,6 +117,8 @@
     </style>
 </head>
 </html>
+
+
 
 </head>
 
@@ -216,11 +222,25 @@
 <ol>
 <li>Maven 依赖</li>
 </ol>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107224003.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107224003.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107224003.png" alt=""  />
+</a>
+</div>
+</p>
 <ol start="2">
 <li>在 resource/logback-spring.xml 下配置 grpc-log appender：</li>
 </ol>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107224046.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107224046.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107224046.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV1Ne4y1X7gj?t=215.2">03:35</a></p>
 <p>分布式日志收集目前采用的是 grpc，会对性能产生一定的影响。</p>
 <p>如果不想业务处理的时候上报，可以先打到本地磁盘，然后通过 logstash 完成各个机器的收集和上报，好处是对应用的侵入性低。</p>
@@ -238,14 +258,35 @@
 <p>这些 OSS 都是走的 S3 (Simple Storage Service，简单存储服务) 协议。</p>
 <p>为了避免在多个云平台之间切换导致频繁切换代码，我们需要考虑通过 S3 协议实现一个通用的 OSS 客户端。</p>
 <p>这里可以选用如下 POM 工具包：</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225436.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225436.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225436.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV1Ne4y1X7gj?t=602.9">10:02</a></p>
 <p>抽象操作如果不涉及太多的权限管理等操作，会抽象出来一个 OssClient 类。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225618.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225618.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225618.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV1Ne4y1X7gj?t=743.0">12:23</a></p>
 <p>最终的架构变成下图：</p>
 <p>有一套 API，通过这套 API，后面的对接细节完全屏蔽。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225943.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225943.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/07/20221107225943.png" alt=""  />
+</a>
+</div>
+</p>
 <p>包括后面接入 MQ 时，我们可以通过一个 Binder API，后面可以集成 Kafka、RocketMQ。</p>
 <p>这种类似设计模式中的门面模式。</p>
 
@@ -389,7 +430,6 @@
             codeblock.parentNode.appendChild(copybutton);
         }
     });
-</script>
-</body>
+</script></body>
 
 </html>

@@ -56,8 +56,12 @@
 
     </style>
 </noscript>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
 <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         MathJax.Hub.Config({
             tex2jax: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -113,6 +117,8 @@
     </style>
 </head>
 </html>
+
+
 
 </head>
 
@@ -227,15 +233,43 @@
 <p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=999.3">16:39</a></p>
 <p>实现这些功能就是在应用之上构建一层 filter。</p>
 <p>对于所有用户，开放了一个用户上下文接口，用来在登录认证时触发回调，并获取用户的相关信息：</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224022.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224022.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224022.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV1mT411j7cY?t=1076.8">17:56</a></p>
 <p>对于登录，我们会有一个 SSO。</p>
 <p>我们任何一个系统都会有一个认证中心，用户通过认证中心登录，并返回 token。</p>
 <p>在访问其他系统时，都会携带这个 token，其他应用解析 token 时首先会查询认证中心，认证中心会返回用户和权限信息。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224609.png"></p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224727.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224609.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224609.png" alt=""  />
+</a>
+</div>
+</p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224727.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108224727.png" alt=""  />
+</a>
+</div>
+</p>
 <p>可以在接口上加上权限注解，那么只有上下文中包含该权限编码才能访问该接口。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108225003.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108225003.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/08/20221108225003.png" alt=""  />
+</a>
+</div>
+</p>
 
 
   </div>
@@ -377,7 +411,6 @@
             codeblock.parentNode.appendChild(copybutton);
         }
     });
-</script>
-</body>
+</script></body>
 
 </html>

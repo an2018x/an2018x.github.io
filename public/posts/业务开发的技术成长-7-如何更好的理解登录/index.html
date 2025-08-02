@@ -56,8 +56,12 @@
 
     </style>
 </noscript>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
 <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         MathJax.Hub.Config({
             tex2jax: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -113,6 +117,8 @@
     </style>
 </head>
 </html>
+
+
 
 </head>
 
@@ -205,17 +211,38 @@
 <p>框架问题实际上解决的是生活中的问题。</p>
 <p>登录有两个很重要的概念：Principle(人) 和 Credential(密码、刷脸)。</p>
 <p>权限领域主要是解决两大问题：Authentication（认证问题） 和 Authorization（授权问题）。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211137.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211137.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211137.png" alt=""  />
+</a>
+</div>
+</p>
 <p>门票、刷脸等都可以被称为一个认证对象。</p>
 <p><a href="https://www.bilibili.com/video/BV15Y4y1w7Bm?t=331.0">05:31</a></p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211515.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211515.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211515.png" alt=""  />
+</a>
+</div>
+</p>
 <p>Authentication 是一个接口，接口对应一个抽象的令牌。</p>
 <p>对一个门口，存在一个门卫，只处理工作证。</p>
 <p>对另外一个门，可能存在一个门卫，只处理门票。</p>
 <p>在 SpringSecurity 中，用 filter 来代表每一个入口。</p>
 <p>Filter1 专门用来处理门票，Filter2 专门用来处理工作证，Filter3 专门用来处理指纹。</p>
 <p>那假如一个人由一张票，那么应由谁来处理呢？由 Provider 来处理，即 Provider 对应认证处理 token。具体表现为每个 filter 找到对应处理的 provider 来处理。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211841.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211841.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111211841.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV15Y4y1w7Bm?t=748.9">12:28</a></p>
 <p>每个 filter 都要去找 provider 会非常麻烦，有一个设计模式称为门面模式。</p>
 <p>在程序中，通常使用 ProviderManager 来管理和协调。</p>
@@ -374,7 +401,6 @@
             codeblock.parentNode.appendChild(copybutton);
         }
     });
-</script>
-</body>
+</script></body>
 
 </html>

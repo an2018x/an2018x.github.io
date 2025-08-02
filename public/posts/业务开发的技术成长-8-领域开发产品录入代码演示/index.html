@@ -56,8 +56,12 @@
 
     </style>
 </noscript>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
 <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         MathJax.Hub.Config({
             tex2jax: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -113,6 +117,8 @@
     </style>
 </head>
 </html>
+
+
 
 </head>
 
@@ -203,16 +209,51 @@
   <div class="post-content"><p><a href="https://www.bilibili.com/video/BV14t4y1379v?t=121.5">02:01</a></p>
 <p>使用脚手架生成项目 -&gt; 配置 Datasource -&gt; 修改主类名 -&gt; 启动项目。</p>
 <p><a href="https://www.bilibili.com/video/BV14t4y1379v?t=472.7">07:52</a></p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111220505.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111220505.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111220505.png" alt=""  />
+</a>
+</div>
+</p>
 <p>先建立一个包 template，演示模板模块。</p>
 <p>这个模块可以理解为一个动态的表单。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111220856.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111220856.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111220856.png" alt=""  />
+</a>
+</div>
+</p>
 <p>创建对象，这里 UP 使用了快捷键来一键生成模板。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111223524.png"></p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111223934.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111223524.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111223524.png" alt=""  />
+</a>
+</div>
+</p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111223934.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111223934.png" alt=""  />
+</a>
+</div>
+</p>
 <p>CodeValue 属于一个通用模型，通常放在 infrastructure 包下面。</p>
 <p>前端最好不要直接传枚举值，而是应该传整型。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111224648.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111224648.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111224648.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV14t4y1379v?t=1322.4">22:02</a></p>
 <p>好多项目里面都是用 JSON 存规则的。</p>
 <p>如果数据量不到千万规则，都可以直接用 JSON 来维护。</p>
@@ -230,10 +271,24 @@
 <p>commons-validator 用来校验。</p>
 <p><a href="https://www.bilibili.com/video/BV14t4y1379v?t=1741.4">29:01</a></p>
 <p>不要再写 Setter 和 Getter 了，要用 default 方法来进行转换：</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111230538.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111230538.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111230538.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV14t4y1379v?t=2245.4">37:25</a></p>
 <p>使用 Validator 对字段进行校验。</p>
-<p><img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111231438.png"></p>
+<p>
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111231438.png">
+<img src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2022/11/11/20221111231438.png" alt=""  />
+</a>
+</div>
+</p>
 <p><a href="https://www.bilibili.com/video/BV14t4y1379v?t=2827.9">47:07</a></p>
 <p>离生产代码的距离：</p>
 <ul>
@@ -384,7 +439,6 @@
             codeblock.parentNode.appendChild(copybutton);
         }
     });
-</script>
-</body>
+</script></body>
 
 </html>
