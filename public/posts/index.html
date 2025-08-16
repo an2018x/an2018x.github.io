@@ -57,9 +57,9 @@
 
     </style>
 </noscript>
-<script async src="https://cdn.jsdmirror.com/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdmirror.com/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" async/>
-<script async src="https://cdn.jsdmirror.com/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script defer src="https://cdn.jsdmirror.com/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link defer rel="stylesheet" href="https://cdn.jsdmirror.com/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"/>
+<script defer src="https://cdn.jsdmirror.com/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
 <script type="text/javascript" async
     src="https://cdn.jsdmirror.com/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -105,17 +105,16 @@
 
 
 
-<html>
-<head>
-    <link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" async/>
-    <style>
-        body {
-            font-family: "LXGW WenKai Lite", sans-serif;
-        }
-    </style>
-</head>
-</html>
+<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css" async/>
+
+<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/lxgw-wenkai-lite-webfont@1.1.0/lxgwwenkailite-regular.css" async/>
+<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/lxgw-wenkai-lite-webfont@1.1.0/lxgwwenkailite-bold.css" async/>
+<style>
+    body {
+        font-family: "LXGW WenKai", sans-serif;
+    }
+</style>
+
 
 
 
@@ -233,9 +232,6 @@
 00:17
 代码以代码组的形式划分。
 这是为了模拟一个公司的项目组。
-一个项目组里面可能有很多工程。
-这个项目我们主要都要依赖 Base。
-IdeaSetting 里面统一设置文档，同步到远程中去。
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-13 00:00:00 +0000 UTC'>十一月 13, 2022</span></footer>
@@ -251,8 +247,6 @@ IdeaSetting 里面统一设置文档，同步到远程中去。
     <p>出入库领域分析与代码实战
 01:09
 如何抽象资产，现实中可以对应一个商品。
-商品可能最开始在一个京东仓库，京东还会有二仓，或者临时快递点，这时候就会设计出库和入库的过程。
-如果用传统方式来写，会发现有个方法用来表示从总部到二仓，购买的时候又会调用一次。
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-12 00:00:00 +0000 UTC'>十一月 12, 2022</span></footer>
@@ -269,10 +263,6 @@ IdeaSetting 里面统一设置文档，同步到远程中去。
 00:33
 比较复杂的点：SKU 可能是动态的。
 可以卖实体商品，也可以卖虚拟商品，也可以卖租赁系统。
-02:12
-阿里订单系统：
-04:19
-在考虑订单领域之前，先考虑用户领域，因为订单是和用户关联的。
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-12 00:00:00 +0000 UTC'>十一月 12, 2022</span></footer>
@@ -288,11 +278,6 @@ IdeaSetting 里面统一设置文档，同步到远程中去。
     <p>业务开发代码如何简洁统一
 01:01
 不要重复遭轮子，引用可靠的工具包，例如 guava commons 系列、hutool 系列。
-guava 系列 hutools 系列 commons 系列 MapUtils.getString Map 为空则返回指定的值。
-函数式、流式编程、泛型
-Vavr 系列
-Try.of
-Tuple，支持 2 -&gt; 9 的元组
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-12 00:00:00 +0000 UTC'>十一月 12, 2022</span></footer>
@@ -308,11 +293,6 @@ Tuple，支持 2 -&gt; 9 的元组
     <p>发票系统需求分析及领域设计
 00:34
 订单中心中的 PayItem 与发票中心息息相关。
-因为很多商品是不支持开发票的。
-02:58
-现实中发票如何开出来。
-去超市买东西，会有小票，小票具有以下内容：
-实际支付 优惠 可以开票的钱 开票主体 小票可以开，也可以不开，也可以批量开。
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-12 00:00:00 +0000 UTC'>十一月 12, 2022</span></footer>
@@ -328,9 +308,6 @@ Tuple，支持 2 -&gt; 9 的元组
     <p>数据校验深入学习及如何高效进行学习
 00:29
 Spring 的校验有两种方式，一种是在 Controller 上加 @Validated 注解，另一种是在方法参数上加 @Valid 注解。
-@Validated 和 @Valid 的区别。
-用 @Valid 和 @RequestBody 有很大的关系。
-@Valid 会处理 @RequestBody，支持入参，也支持返参。
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-12 00:00:00 +0000 UTC'>十一月 12, 2022</span></footer>
@@ -345,10 +322,6 @@ Spring 的校验有两种方式，一种是在 Controller 上加 @Validated 注�
   <div class="entry-content">
     <p>02:01
 使用脚手架生成项目 -&gt; 配置 Datasource -&gt; 修改主类名 -&gt; 启动项目。
-07:52
-先建立一个包 template，演示模板模块。
-这个模块可以理解为一个动态的表单。
-创建对象，这里 UP 使用了快捷键来一键生成模板。
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-11 00:00:00 +0000 UTC'>十一月 11, 2022</span></footer>
@@ -365,7 +338,6 @@ Spring 的校验有两种方式，一种是在 Controller 上加 @Validated 注�
 01:06
 框架问题实际上解决的是生活中的问题。
 登录有两个很重要的概念：Principle(人) 和 Credential(密码、刷脸)。
-权限领域主要是解决两大问题：Authentication（认证问题） 和 Authorization（授权问题）。
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2022-11-10 00:00:00 +0000 UTC'>十一月 10, 2022</span></footer>
