@@ -195,9 +195,11 @@ document.addEventListener('DOMContentLoaded', function() {
     transition: background-color 0.2s;
 }
 
-.toolbar-buttons {
-    margin-left: auto; /* 关键：自动填充左侧空间，实现右对齐 */
+.iframe-toolbar {
+    display: flex;
+    justify-content: flex-end;
 }
+
 
 .iframe-toolbar .open-new-tab:hover {
     background-color: #0b5ed7;
