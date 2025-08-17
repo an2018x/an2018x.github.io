@@ -1,15 +1,12 @@
 <div class="iframe-container">
     <!-- 操作条 -->
     <div class="iframe-toolbar">
-        <div class="toolbar-buttons"><!-- 按钮移到标题后面，通过CSS实现右对齐 -->
-            <button class="open-new-tab" data-src="{{ .Get "src" }}">
-                新页面打开
-            </button>
-            <button class="fullscreen-btn" data-src="{{ .Get "src" }}">
-                全屏
-            </button>
-        </div>
-        
+        <button class="open-new-tab" data-src="{{ .Get "src" }}">
+            新页面打开
+        </button>
+        <button class="fullscreen-btn" data-src="{{ .Get "src" }}">
+            全屏
+        </button>
     </div>
     
     <!-- iframe 内容 -->
@@ -150,6 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .iframe-toolbar {
+    width: 100%;
+    flex-wrap: nowrap;
     display: flex;
     justify-content: flex-end;
     background-color: #f8f9fa;
@@ -157,8 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
     border-bottom: 1px solid #eaeaea;
 }
 
-
 .open-new-tab,.fullscreen-btn {
+    margin: 0.25rem;
+    display: inline;
     padding: 0.375rem 0.75rem;
     background-color: rgb(30, 30, 30);
     color: white;
