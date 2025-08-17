@@ -76,11 +76,12 @@ document.addEventListener('DOMContentLoaded', function() {
             iframe.style.height = '100%';
             
             // 更改图标
-            icon.classList.remove('fa-expand');
-            icon.classList.add('fa-compress');
+            // icon.classList.remove('fa-expand');
+            // icon.classList.add('fa-compress');
             
             // 阻止页面滚动
             document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflowY = 'hidden';
         }
         
         // 恢复原始样式
@@ -101,12 +102,12 @@ document.addEventListener('DOMContentLoaded', function() {
             iframe.style.height = originalStyles.iframeHeight;
             
             // 恢复图标
-            icon.classList.remove('fa-compress');
-            icon.classList.add('fa-expand');
+            // icon.classList.remove('fa-compress');
+            // icon.classList.add('fa-expand');
             
             // 恢复页面滚动
             document.body.style.overflow = '';
-            
+            document.documentElement.style.overflowY = '';
             originalStyles = null;
         }
         
@@ -153,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
     display: flex;
     justify-content: flex-end;
     background-color: #f8f9fa;
-    padding: 0.2rem 1rem;
+    padding: 0.3rem 0.25rem;
     border-bottom: 1px solid #eaeaea;
 }
 
