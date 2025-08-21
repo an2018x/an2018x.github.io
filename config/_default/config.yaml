@@ -7,7 +7,7 @@ copyright: >
   &copy; 2022 <a href="https://www.ans20xx.com/">安橙</a>
 enableEmoji: true
 enableGitInfo: false
-summaryLength: 75
+summaryLength: 20
 
 defaultContentLanguage: zh
 hasCJKLanguage: true # Set `true` for Chinese/Japanese/Korean.
@@ -49,6 +49,8 @@ params:
     Title: "安橙的博客"
     Content: >
       👋 欢迎来到我的博客
+  mainSections:
+    - posts
   ShowToc: true # 显示目录
   TocOpen: true # 自动展开目录
   ShowCodeCopyButtons: true # 代码块复制按钮
@@ -65,8 +67,8 @@ params:
     minMatchCharLength: 0
     keys: ["title", "permalink", "summary", "content"]
 
-# outputs:
-#   home:
-#     - HTML
-#     - RSS
-#     - JSON # necessary for search
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON # necessary for search

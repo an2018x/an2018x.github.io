@@ -1,18 +1,12 @@
 <div class="iframe-container">
     <!-- 操作条 -->
     <div class="iframe-toolbar">
-        {{ if .Get "title" }}
-        <span class="iframe-title">{{ .Get "title" }}</span>
-        {{ end }}
-        <div class="toolbar-buttons"><!-- 按钮移到标题后面，通过CSS实现右对齐 -->
-            <button class="open-new-tab" data-src="{{ .Get "src" }}">
-                在新页面打开
-            </button>
-            <button class="fullscreen-btn" data-src="{{ .Get "src" }}">
-                全屏
-            </button>
-        </div>
-        
+        <button class="open-new-tab" data-src="{{ .Get "src" }}">
+            新页面打开
+        </button>
+        <button class="fullscreen-btn" data-src="{{ .Get "src" }}">
+            全屏
+        </button>
     </div>
     
     <!-- iframe 内容 -->
@@ -82,11 +76,12 @@ document.addEventListener('DOMContentLoaded', function() {
             iframe.style.height = '100%';
             
             // 更改图标
-            icon.classList.remove('fa-expand');
-            icon.classList.add('fa-compress');
+            // icon.classList.remove('fa-expand');
+            // icon.classList.add('fa-compress');
             
             // 阻止页面滚动
             document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflowY = 'hidden';
         }
         
         // 恢复原始样式
@@ -107,12 +102,12 @@ document.addEventListener('DOMContentLoaded', function() {
             iframe.style.height = originalStyles.iframeHeight;
             
             // 恢复图标
-            icon.classList.remove('fa-compress');
-            icon.classList.add('fa-expand');
+            // icon.classList.remove('fa-compress');
+            // icon.classList.add('fa-expand');
             
             // 恢复页面滚动
             document.body.style.overflow = '';
-            
+            document.documentElement.style.overflowY = '';
             originalStyles = null;
         }
         
@@ -150,43 +145,24 @@ document.addEventListener('DOMContentLoaded', function() {
     border: 1px solid #eaeaea;
     border-radius: 4px;
     overflow: hidden;
+    transition: height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .iframe-toolbar {
+    width: 100%;
+    flex-wrap: nowrap;
     display: flex;
-    align-items: center;
-    justify-content: space-between; /* 这会将子元素推到两端 */
+    justify-content: flex-end;
     background-color: #f8f9fa;
-    padding: 0.75rem 1rem;
+    padding: 0.3rem 0.25rem;
     border-bottom: 1px solid #eaeaea;
 }
 
-/* 当没有标题时，按钮依然右对齐 */
-.iframe-toolbar:only-child .open-new-tab {
-    margin-left: auto;
-}
-
-.iframe-toolbar .open-new-tab {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+.open-new-tab,.fullscreen-btn {
+    margin: 0.25rem;
+    display: inline;
     padding: 0.375rem 0.75rem;
-    background-color: #0d6efd;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
-    margin-left: auto; /* 关键：自动填充左侧空间，实现右对齐 */
-}
-
-.iframe-toolbar .fullscreen-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.375rem 0.75rem;
-    background-color: #0d6efd;
+    background-color: rgb(30, 30, 30);
     color: white;
     border: none;
     border-radius: 4px;
@@ -195,23 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
     transition: background-color 0.2s;
 }
 
-.toolbar-buttons {
-    margin-left: auto; /* 关键：自动填充左侧空间，实现右对齐 */
-}
-
-.iframe-toolbar .open-new-tab:hover {
-    background-color: #0b5ed7;
-}
-
-.iframe-title {
-    font-size: 0.875rem;
-    color: #6c757d;
-    /* 确保标题不会被按钮挤压 */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 70%;
-}
 
 .iframe-container iframe {
     width: 100%;
