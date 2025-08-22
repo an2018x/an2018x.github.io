@@ -1,5 +1,5 @@
 <div class="post-img-view">
-<a data-fancybox="gallery" href="{{ .Destination | safeURL }}">
+<a data-fancybox="gallery" data-src="{{ .Destination | safeURL }}">
 <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}"{{ end }} />
 </a>
 </div>

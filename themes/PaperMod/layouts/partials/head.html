@@ -58,9 +58,11 @@
 {{- /* markup.highlight.noClasses should be set to `false` */}}
 {{- $chroma_styles := (resources.Get "css/includes/chroma-styles.css") }}
 {{- $chroma_mod := (resources.Get "css/includes/chroma-mod.css") }}
+{{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}
+
 
 {{- /* order is important */}}
-{{- $core := (slice $theme_vars $reset $common $chroma_styles $chroma_mod $includes_all $media) | resources.Concat "assets/css/core.css" | resources.Minify }}
+{{- $core := (slice $theme_vars $reset $common $fancybox_css $chroma_styles $chroma_mod $includes_all $media) | resources.Concat "assets/css/core.css" | resources.Minify }}
 {{- $extended := (resources.Match "css/extended/*.css") | resources.Concat "assets/css/extended.css" | resources.Minify }}
 
 {{- /* bundle all required css */}}
@@ -81,13 +83,22 @@
 {{- $fusejs := resources.Get "js/fuse.basic.min.js" }}
 {{- $license_js := resources.Get "js/license.js" }}
 {{- if not site.Params.assets.disableFingerprinting }}
-{{- $search := (slice $fusejs $license_js $fastsearch ) | resources.Concat "assets/js/search.js" | fingerprint }}
+{{- $search := (slice $fusejs $license_js $fastsearch) | resources.Concat "assets/js/search.js" | fingerprint }}
 <script defer crossorigin="anonymous" src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}"></script>
 {{- else }}
 {{- $search := (slice $fusejs $fastsearch ) | resources.Concat "assets/js/search.js" }}
 <script defer crossorigin="anonymous" src="{{ $search.RelPermalink }}"></script>
 {{- end }}
 {{- end -}}
+
+{{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}
+{{- $fancyboxcss := (slice $fancybox_css) | resources.Concat "assets/css/fancyboxcss.css" | resources.Minify }}
+<link crossorigin="anonymous" href="{{ $fancyboxcss.RelPermalink }}" integrity="{{ $fancyboxcss.Data.Integrity }}" rel="preload stylesheet" as="style">
+
+{{- $fancyboxjs := resources.Get "js/fancybox.umd.js" }}
+{{- $fancybox := (slice $fancyboxjs ) | resources.Concat "assets/js/fancybox.js" }}
+<script crossorigin="anonymous" src="{{ $fancybox.RelPermalink }}" integrity="{{ $fancybox.Data.Integrity }}"></script>
+
 
 {{- /* Favicons */}}
 <link rel="icon" href="{{ site.Params.assets.favicon | default "favicon.ico" | absURL }}">
@@ -148,10 +159,10 @@
 
 {{- partial "extend_head.html" . -}}
 
-{{- /* Misc */}}
+<!-- {{- /* Misc */}}
 {{- if hugo.IsProduction | or (eq site.Params.env "production") }}
 {{- partial "google_analytics.html" . }}
 {{- partial "templates/opengraph.html" . }}
 {{- partial "templates/twitter_cards.html" . }}
 {{- partial "templates/schema_json.html" . }}
-{{- end -}}
+{{- end -}} -->
