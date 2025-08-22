@@ -95,3 +95,48 @@ var (
 ```
 
 使用显式类型转型，是 Go 官方推荐的包变量声明形式。
+
+```Go
+// $GOROOT/src/net/net.go
+var (
+    netGo  bool 
+    netCgo bool 
+)
+
+var (
+    aLongTimeAgo = time.Unix(1, 0)
+    noDeadline = time.Time{}
+    noCancel   = (chan struct{})(nil)
+)
+```
+
+声明聚类：
+1. 将同一类的变量声明放在一个 var 块中。
+2. 将延迟初始化的变量声明放在一个 var 块中。
+
+### 局部变量
+
+```Go
+a := 17
+f := 3.14
+s := "hello, gopher!"
+
+a := int32(17)
+f := float32(3.14)
+s := []byte("hello, gopher!")
+```
+
+对于声明且显式初始化的变量，建议采用短变量声明。
+
+```Go
+if as, isASCII := makeASCIISet(chars); isASCII { 
+    for i := len(s) - 1; i >= 0; i-- {
+        if as.contains(s[i]) {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+尽量在分支控制时，使用短变量声明。
