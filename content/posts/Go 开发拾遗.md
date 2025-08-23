@@ -392,6 +392,94 @@ func main() {
 
 可以在 if 后的布尔表达式前，进行变量的声明，在 if 布尔表达式前声明的变量，被叫做 if 语句的的自用变量。
 
+# Switch 语句
+
+## 基础结构
+
+```go
+switch initStmt; expr {
+    case expr1:
+        // 执行分支1
+    case expr2:
+        // 执行分支2
+    case expr3_1, expr3_2, expr3_3:
+        // 执行分支3
+    case expr4:
+        // 执行分支4
+    ... ...
+    case exprN:
+        // 执行分支N
+    default: 
+        // 执行默认分支
+}
+```
+
+```go
+func readByExtBySwitch(ext string) {
+    switch ext {
+    case "json":
+        println("read json file")
+    case "jpg", "jpeg", "png", "gif":
+        println("read image file")
+    case "txt", "md":
+        println("read text file")
+    case "yml", "yaml":
+        println("read yaml file")
+    case "ini":
+        println("read ini file")
+    default:
+        println("unsupported file extension:", ext)
+    }
+}
+```
+
+## type switch
+
+
+```Go
+func main() {
+    var x interface{} = 13
+    switch x.(type) {
+    case nil:
+        println("x is nil")
+    case int:
+        println("the type of x is int")
+    case string:
+        println("the type of x is string")
+    case bool:
+        println("the type of x is string")
+    default:
+        println("don't support the type")
+    }
+}
+```
+
+switch 关键字后跟着的表达式为 x.(type) ，这种表达式类型是 switch 语句特有的，只能在 switch 语句中使用。
+
+表达式中的 x 必须是一个接口类型变量，表达式的求值结果是这个接口类型变量对应的动态类型。
+
+```Go
+func main() {
+    var x interface{} = 13
+    switch v := x.(type) {
+    case nil:
+        println("v is nil")
+    case int:
+        println("the type of v is int, v =", v)
+    case string:
+        println("the type of v is string, v =", v)
+    case bool:
+        println("the type of v is bool, v =", v)
+    default:
+        println("don't support the type")
+    }
+}
+```
+
+可以通过 v:=x.(type) 获取类型对应的值信息，注意 v 存储的不是类型信息，而是变量 x 的动态类型对应的值信息。
+
+
+
 
 # for 循环
 
@@ -608,6 +696,590 @@ for _, v := range m {
 
 > 注意，Go 语言中对于 map 类型的顺序是随机的，不能依赖遍历 map 得到的元素次序。
 
+# 函数
+
+## 函数组成
+
+```Go
+//关键字 函数名  参数列表                                      返回值列表
+func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
+    // 函数体
+    p := newPrinter()
+    p.doPrintf(format, a)
+    n, err = w.Write(p.buf)
+    p.free()
+    return
+}
+```
+
+## 函数变量声明
+
+```Go
+// 变量名 = 函数类型
+var Fprintf = func(w io.Writer, format string, a ...interface{}) (n int, err error) {
+}
+```
+
+声明一个类型为函数类型的变量。
+
+函数声明中的函数名就是变量名，函数声明中的 func 关键字、参数列表和返回值列表共同构成了函数类型。
+
+参数列表和返回值列表的组合被称为函数签名，函数类型也可以看作是 func 关键字 + 函数签名组成。
+
+```Go
+func(io.Writer, string, ...interface{}) (int, error)
+```
+
+在表述函数类型时，也会省略函数签名参数列表中的参数名，以及返回值列表中的返回值变量名。
+
+每个函数声明所定义的函数，仅仅是对于函数类型的一个实例。
+
+```Go
+f := func(){}
+```
+
+func(){} 被称为函数字面值，函数字面值由函数类型与函数体组成，也叫做匿名函数。
+
+## 函数参数
+
+参数列表中的参数叫做形式参数，函数调用实际传入的参数叫做实际参数。
+
+Go 中，函数参数传递采用的是值传递，就是将实际参数在内存中的表示逐位拷贝到形式参数中。
+
+```Go
+func myAppend(sl []int, elems ...int) []int {
+    fmt.Printf("%T\n", elems) // []int
+    if len(elems) == 0 {
+        println("no elems to append")
+        return sl
+    }
+
+    sl = append(sl, elems...)
+    return sl
+}
+
+func main() {
+    sl := []int{1, 2, 3}
+    sl = myAppend(sl) // no elems to append
+    fmt.Println(sl) // [1 2 3]
+    sl = myAppend(sl, 4, 5, 6)
+    fmt.Println(sl) // [1 2 3 4 5 6]
+}
+```
+
+变长参数通过切片来实现，可以使用切片支持的所有操作来操作变长参数。
+
+## 多返回值
+
+```Go
+func foo()                       // 无返回值
+func foo() error                 // 仅有一个返回值
+func foo() (int, string, error)  // 有2或2个以上返回值
+```
+
+如果一个函数仅有一个返回值，那么不需要用括号括起来，否则需要。
+
+```Go
+// $GOROOT/src/time/format.go
+func parseNanoseconds(value string, nbytes int) (ns int, rangeErrString string, err error) {
+    if !commaOrPeriod(value[0]) {
+        err = errBad
+        return
+    }
+    if ns, err = atoi(value[1:nbytes]); err != nil {
+        return
+    }
+    if ns < 0 || 1e9 <= ns {
+        rangeErrString = "fractional second"
+        return
+    }
+
+    scaleDigits := 10 - nbytes
+    for i := 0; i < scaleDigits; i++ {
+        ns *= 10
+    }
+    return
+}
+```
+
+在返回值个数较多时，可以使用具名返回值让函数可读性更好。
+
+## 函数是一等公民
+
+如果一门编程语言对某种语言元素的创建和使用没有限制，我们可以像对待值一样对待这种元素，那么就称之为一等公民。
+
+拥有一等公民待遇的语法元素可以存储在变量中，可以作为参数传递给函数，可以在函数内部创建并可以作为返回值从函数返回。
+
+## 函数转型
+
+```Go
+func greeting(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Welcome, Gopher!\n")
+}                    
+
+func main() {
+    http.ListenAndServe(":8080", http.HandlerFunc(greeting))
+}
+```
+
+```Go
+// $GOROOT/src/net/http/server.go
+func ListenAndServe(addr string, handler Handler) error {
+    server := &Server{Addr: addr, Handler: handler}
+    return server.ListenAndServe()
+}
+```
+
+```Go
+// $GOROOT/src/net/http/server.go
+type Handler interface {
+    ServeHTTP(ResponseWriter, *Request)
+}
+```
+
+```Go
+// $GOROOT/src/net/http/server.go
+
+type HandlerFunc func(ResponseWriter, *Request)
+
+// ServeHTTP calls f(w, r).
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
+    f(w, r)
+}
+```
+
+HandlerFunc 是一个基于函数类型定义的新类型，它的底层类型为函数类型 `func(ResponseWriter, *Request)`。这个类型有一个方法 ServeHTTP，实现了 Handler 接口。
+
+`http.HandlerFunc(greeting)` 可以将函数 greeting 显式转换为 HandlerFunc 类型，后者实现了 Handler 接口。
+
+
+## 闭包
+
+Go 闭包是在函数内部创建的匿名函数，匿名函数可以访问创建它的函数的参数与局部变量。
+
+```Go
+func partialTimes(x int) func(int) int {
+  return func(y int) int {
+    return times(x, y)
+  }
+}
+```
+
+```Go
+timesTwo = func(y int) int {
+    return times(2, y)
+}
+```
+
+```Go
+func main() {
+  timesTwo := partialTimes(2)   // 以高频乘数2为固定乘数的乘法函数
+  timesThree := partialTimes(3) // 以高频乘数3为固定乘数的乘法函数
+  timesFour := partialTimes(4)  // 以高频乘数4为固定乘数的乘法函数
+  fmt.Println(timesTwo(5))   // 10，等价于times(2, 5)
+  fmt.Println(timesTwo(6))   // 12，等价于times(2, 6)
+  fmt.Println(timesThree(5)) // 15，等价于times(3, 5)
+  fmt.Println(timesThree(6)) // 18，等价于times(3, 6)
+  fmt.Println(timesFour(5))  // 20，等价于times(4, 5)
+  fmt.Println(timesFour(6))  // 24，等价于times(4, 6)
+}
+```
+
+# 错误处理
+
+## error 类型
+
+```Go
+// $GOROOT/src/builtin/builtin.go
+type error interface {
+    Error() string
+}
+```
+
+error 接口是 Go 元素内置的类型，任何实现了 error 的 Error 方法的类型的实例，都可以作为错误值赋值给 error 接口变量。
+
+```Go
+err := errors.New("your first demo error")
+errWithCtx = fmt.Errorf("index %d is out of bounds", i)
+```
+
+可以通过 `errors.New` 和 `fmt.Errorof` 来方便构造错误值。
+
+```Go
+// $GOROOT/src/errors/errors.go
+
+type errorString struct {
+    s string
+}
+
+func (e *errorString) Error() string {
+    return e.s
+}
+```
+
+```Go
+// $GOROOT/src/net/net.go
+type OpError struct {
+    Op string
+    Net string
+    Source Addr
+    Addr Addr
+    Err error
+}
+// $GOROOT/src/net/http/server.go
+func isCommonNetReadError(err error) bool {
+    if err == io.EOF {
+        return true
+    }
+    if neterr, ok := err.(net.Error); ok && neterr.Timeout() {
+        return true
+    }
+    if oe, ok := err.(*net.OpError); ok && oe.Op == "read" {
+        return true
+    }
+    return false
+}
+```
+
+可以通过自定义错误类型来从错误值中取出更多信息。
+
+## 透明错误处理
+
+错误处理策略，就是根据函数/方法返回的 error 类型变量中携带的错误值信息做决策，并选择后续代码执行路径。
+
+透明错误处理，就是不关心返回错误值携带的具体上下文信息，只要发生错误就进入唯一的错误处理执行路径。
+
+```Go
+err := doSomething()
+if err != nil {
+    // 不关心err变量底层错误值所携带的具体上下文信息
+    // 执行简单错误处理逻辑并返回
+    ... ...
+    return err
+}
+```
+
+## 哨兵错误处理
+
+```Go
+// $GOROOT/src/bufio/bufio.go
+var (
+    ErrInvalidUnreadByte = errors.New("bufio: invalid use of UnreadByte")
+    ErrInvalidUnreadRune = errors.New("bufio: invalid use of UnreadRune")
+    ErrBufferFull        = errors.New("bufio: buffer full")
+    ErrNegativeCount     = errors.New("bufio: negative count")
+)
+
+data, err := b.Peek(1)
+if err != nil {
+    switch err {
+    case bufio.ErrNegativeCount:
+        // ... ...
+        return
+    case bufio.ErrBufferFull:
+        // ... ...
+        return
+    case bufio.ErrInvalidUnreadByte:
+        // ... ...
+        return
+    default:
+        // ... ...
+        return
+    }
+}
+```
+
+可以通过 errors.Is 方法沿着包装错误所在的错误链，与链上所有被包装的错误进行比较，直到找到一个匹配的错误。
+
+```Go
+var ErrSentinel = errors.New("the underlying sentinel error")
+
+func main() {
+  err1 := fmt.Errorf("wrap sentinel: %w", ErrSentinel)
+  err2 := fmt.Errorf("wrap err1: %w", err1)
+    println(err2 == ErrSentinel) //false
+  if errors.Is(err2, ErrSentinel) {
+    println("err2 is ErrSentinel")
+    return
+  }
+
+  println("err2 is not ErrSentinel")
+}
+```
+
+## 错误值类型检视
+
+```Go
+// $GOROOT/src/encoding/json/decode.go
+func (d *decodeState) addErrorContext(err error) error {
+    if d.errorContext.Struct != nil || len(d.errorContext.FieldStack) > 0 {
+        switch err := err.(type) {
+        case *UnmarshalTypeError:
+            err.Struct = d.errorContext.Struct.Name()
+            err.Field = strings.Join(d.errorContext.FieldStack, ".")
+            return err
+        }
+    }
+    return err
+}
+```
+
+## panic 处理
+
+```Go
+func foo() {
+    println("call foo")
+    bar()
+    println("exit foo")
+}
+
+func bar() {
+    println("call bar")
+    panic("panic occurs in bar")
+    zoo()
+    println("exit bar")
+}
+
+func zoo() {
+    println("call zoo")
+    println("exit zoo")
+}
+
+func main() {
+    println("call main")
+    foo()
+    println("exit main")
+}
+```
+
+```shell
+call main
+call foo
+call bar
+panic: panic occurs in bar
+```
+
+```Go
+func bar() {
+    defer func() {
+        if e := recover(); e != nil {
+            fmt.Println("recover the panic:", e)
+        }
+    }()
+
+    println("call bar")
+    panic("panic occurs in bar")
+    zoo()
+    println("exit bar")
+}
+```
+
+可以通过 recover 函数来捕捉 panic 并恢复程序正常执行，recover 函数只能放在 defer 函数中才能生效。
+
+注意：无论哪个 Goroutine 中发生未被捕获的 panic，整个程序都会退出。
+
+# 方法
+
+## Go 方法声明
+
+```Go
+// 关键字 receiver  方法名             参数列表                   返回值列表
+func (srv *Server) ListenAndServeTLS(certFile, keyFile string) error {
+    // 方法体
+    if srv.shuttingDown() {
+        return ErrServerClosed
+    }
+    // ...
+}
+```
+
+Go 中的方法必须归属于一个类型，receiver 参数的类型就是这个方法归属的类型，这个方法就是这个类型的一个方法。
+
+上面的 ListenAndServeTLS 就是 *Server 类型的方法，而不是 Server 类型的方法。
+
+```Go
+type MyInt *int
+func (r MyInt) String() string { // r的基类型为MyInt，编译器报错：invalid receiver type MyInt (MyInt is a pointer type)
+    return fmt.Sprintf("%d", *(*int)(r))
+}
+
+type MyReader io.Reader
+func (r MyReader) Read(p []byte) (int, error) { // r的基类型为MyReader，编译器报错：invalid receiver type MyReader (MyReader is an interface type)
+    return r.Read(p)
+}
+```
+
+Receiver 参数的基类型不能为指针类型或者接口类型。
+
+方法声明要和 receiver 参数的基类型声明放在同一个包中，因此：
+* 不能为原生类型添加方法
+```Go
+func (i int) Foo() string { // 编译器报错：cannot define new methods on non-local type int
+    return fmt.Sprintf("%d", i) 
+}
+```
+* 不能跨越包为其他包的类型声明新方法
+```Go
+import "net/http"
+
+func (s http.Server) Foo() { // 编译器报错：cannot define new methods on non-local type http.Server
+}
+```
+
+## 调用方法
+
+```Go
+type T struct{}
+
+func (t T) M(n int) {
+}
+
+func main() {
+    var t T
+    t.M(1) // 通过类型T的变量实例调用方法M
+
+    p := &T{}
+    p.M(2) // 通过类型*T的变量实例调用方法M
+}
+```
+
+可以通过 *T 或者 T 的变量实例调用方法。
+
+## 方法本质
+
+Go 编译器会将 receiver 参数以第一个参数的身份并入到方法的参数列表中。
+
+```Go
+type T struct { 
+    a int
+}
+
+func (t T) Get() int {  
+    return t.a 
+}
+
+func (t *T) Set(a int) int { 
+    t.a = a 
+    return t.a 
+}
+
+// 类型T的方法Get的等价函数
+func Get(t T) int {  
+    return t.a 
+}
+
+// 类型*T的方法Set的等价函数
+func Set(t *T, a int) int { 
+    t.a = a 
+    return t.a 
+}
+```
+
+```Go
+var t T
+T.Get(t)
+(*T).Set(&t, 1)
+```
+
+直接以类型名调用方法的表达方式，被称为 Method Expression，通过 Method Express，类型 T 只能调用 T 的方法集合中的方法，类型 *T 也只能调用 *T 的方法集合中的方法。
+
+可以将方法作为右值，赋值给函数类型的变量。
+
+```Go
+func main() {
+    var t T
+    f1 := (*T).Set // f1的类型，也是*T类型Set方法的类型：func (t *T, int)int
+    f2 := T.Get    // f2的类型，也是T类型Get方法的类型：func(t T)int
+    fmt.Printf("the type of f1 is %T\n", f1) // the type of f1 is func(*main.T, int) int
+    fmt.Printf("the type of f2 is %T\n", f2) // the type of f2 is func(main.T) int
+    f1(&t, 3)
+    fmt.Println(f2(t)) // 3
+}
+```
+
+## 方法集合
+
+Go 任何一个类型都有属于自己的方法集合，方法集合是 Go 类型的一个属性。
+
+方法集合是判断一个类型是否实现了某个接口类型的唯一手段。
+
+```Go
+func dumpMethodSet(i interface{}) {
+    dynTyp := reflect.TypeOf(i)
+
+    if dynTyp == nil {
+        fmt.Printf("there is no dynamic type\n")
+        return
+    }
+
+    n := dynTyp.NumMethod()
+    if n == 0 {
+        fmt.Printf("%s's method set is empty!\n", dynTyp)
+        return
+    }
+
+    fmt.Printf("%s's method set:\n", dynTyp)
+    for j := 0; j < n; j++ {
+        fmt.Println("-", dynTyp.Method(j).Name)
+    }
+    fmt.Printf("\n")
+}
+```
+
+```Go
+type T struct{}
+
+func (T) M1() {}
+func (T) M2() {}
+
+func (*T) M3() {}
+func (*T) M4() {}
+
+func main() {
+    var n int
+    dumpMethodSet(n)
+    dumpMethodSet(&n)
+
+    var t T
+    dumpMethodSet(t)
+    dumpMethodSet(&t)
+}
+```
+
+```shell
+int's method set is empty!
+*int's method set is empty!
+main.T's method set:
+- M1
+- M2
+
+*main.T's method set:
+- M1
+- M2
+- M3
+- M4
+```
+
+*T 类型的方法集合包含所有以 *T 为 receiver 参数类型的方法，以及所有以 T 为 receiver 参数类型的方法。
+
+如果某个类型 T 的方法集合与接口类型的犯法集合相同，或者类型 T 的方法集合是接口类型 I 方法集合的超集，那么就说类型 T 实现了接口 I。
+
+# 指针
+
+## 指针类型
+
+指针类型依托于某一个类型而存在，例如 int 就是 *int 指针类型的基类型。
+
+如果拥有一个类型 T，那么以 T 作为基类型的指针类型为 *T。
+
+## 指针类型赋值
+
+```Go
+var a int = 13
+var p *int = &a  // 给整型指针变量p赋初值
+```
+
+
 # 结构体
 
 ## 定义新类型
@@ -733,6 +1405,73 @@ var t = T{
 
 推荐使用 `field:value` 形式的复合字面值，进行显式初始化。
 
+# 类型嵌入
+
+类型嵌入是指在一个类型的定义中嵌入了其他类型。
+
+## 接口类型的类型嵌入
+
+接口类型声明了由一个方法集合代表的接口。
+
+```Go
+type E interface {
+    M1()
+    M2()
+}
+```
+```Go
+type I interface {
+    E
+    M3()
+}
+```
+
+## 结构体类型的嵌入
+
+```Go
+type MyInt int
+
+func (n *MyInt) Add(m int) {
+    *n = *n + MyInt(m)
+}
+
+type t struct {
+    a int
+    b int
+}
+
+type S struct {
+    *MyInt
+    t
+    io.Reader
+    s string
+    n int
+}
+
+func main() {
+    m := MyInt(17)
+    r := strings.NewReader("hello, go")
+    s := S{
+        MyInt: &m,
+        t: t{
+            a: 1,
+            b: 2,
+        },
+        Reader: r,
+        s:      "demo",
+    }
+
+    var sl = make([]byte, len("hello, go"))
+    s.Reader.Read(sl)
+    fmt.Println(string(sl)) // hello, go
+    s.MyInt.Add(5)
+    fmt.Println(*(s.MyInt)) // 22
+}
+```
+
+
+
+
 # Context
 
 Context 用于在并发编程中传递上下文信息，用来解决 goroutine 之间的协作和控制问题。
@@ -800,3 +1539,368 @@ func handle(ctx context.Context) {
     fmt.Printf("处理用户 %d 的请求\n", userID)
 }
 ```
+
+# Goroutine
+
+
+## 基本用法
+
+```Go
+go fmt.Println("I am a goroutine")
+
+var c = make(chan int)
+go func(a, b int) {
+    c <- a + b
+}(3,4)
+ 
+// $GOROOT/src/net/http/server.go
+c := srv.newConn(rw)
+go c.serve(connCtx)
+```
+
+通过 go 关键字 + 函数/方法的方式创造一个 goroutine
+
+## Goroutine 通信
+
+CSP 并发模型：输入输出应该是基本的编程原语，数据处理逻辑 P 只需要调用原语获取数据，顺序处理数据，将结果数据通过输出原语输出即可。
+
+一个符合 CSP 模型的并发程序应该是一组通过输入输出原语连接起来的 P 的集合。
+
+在 Go 中，与 Process 对应的是 goroutine，同时引入了 channel，goroutine 可以从 channel 获取输入数据，再将处理后得到的结果数据通过 channel 输出。
+
+
+```Go
+func spawn(f func() error) <-chan error {
+    c := make(chan error)
+
+    go func() {
+        c <- f()
+    }()
+
+    return c
+}
+
+func main() {
+    c := spawn(func() error {
+        time.Sleep(2 * time.Second)
+        return errors.New("timeout")
+    })
+    fmt.Println(<-c)
+}
+```
+
+## Channel 是一等公民
+
+Channel 是一等公民，意味着可以像使用普通变量一样使用 channel。
+
+## 创建 Channel
+
+
+```Go
+var ch chan int
+```
+
+## 给 channel 赋初值
+
+```Go
+ch1 := make(chan int)   
+ch2 := make(chan int, 5) 
+```
+
+第一个创建了一个无缓冲的 channel，第二个创建了一个待缓冲的 channel
+
+## 发送和接收 Channel
+
+```Go
+ch1 <- 13    // 将整型字面值13发送到无缓冲channel类型变量ch1中
+n := <- ch1  // 从无缓冲channel类型变量ch1中接收一个整型值存储到整型变量n中
+ch2 <- 17    // 将整型字面值17发送到带缓冲channel类型变量ch2中
+m := <- ch2  // 从带缓冲channel类型变量ch2中接收一个整型值存储到整型变量m中
+```
+
+channel 是用于 Goroutine 间通信，绝大多数对 Channel 的读写都被分别放在了不同的 Goroutine 中。
+
+Goroutine 对于无缓冲 channel 的接收和发送操作是同步的，只有对它进行接收操作的 Goroutine 和对它进行发送操作的 Goroutine 都存在的情况下，通信才能得以进行。
+
+```Go
+func main() {
+    ch1 := make(chan int)
+    ch1 <- 13 // fatal error: all goroutines are asleep - deadlock!
+    n := <-ch1
+    println(n)
+}
+```
+
+对于带缓冲 channel 的发送操作在缓冲区未满，接收操作在缓冲区非空的情况下是异步的。
+
+```Go
+ch2 := make(chan int, 1)
+n := <-ch2 // 由于此时ch2的缓冲区中无数据，因此对其进行接收操作将导致goroutine挂起
+
+ch3 := make(chan int, 1)
+ch3 <- 17  // 向ch3发送一个整型数17
+ch3 <- 27  // 由于此时ch3中缓冲区已满，再向ch3发送数据也将导致goroutine挂起
+```
+
+可以通过 <- 来声明只发送 channel 类型和只接收 channel 类型。
+
+```Go
+ch1 := make(chan<- int, 1) // 只发送channel类型
+ch2 := make(<-chan int, 1) // 只接收channel类型
+
+<-ch1       // invalid operation: <-ch1 (receive from send-only type chan<- int)
+ch2 <- 13   // invalid operation: ch2 <- 13 (send to receive-only type <-chan int)
+```
+
+## 关闭 Channel
+
+调用 Go 内置的 close 函数关闭了 channel，channel 关闭后，所有等待从这个 channel 接收数据的操作都返回。
+
+
+```Go
+n := <- ch      // 当ch被关闭后，n将被赋值为ch元素类型的零值
+m, ok := <-ch   // 当ch被关闭后，m将被赋值为ch元素类型的零值, ok值为false
+for v := range ch { // 当ch被关闭后，for range循环结束
+    ... ...
+}
+```
+
+## select 原语
+
+通过 select，可以同时在多个 channel 上进行发送/接收操作：
+
+```Go
+select {
+case x := <-ch1:     // 从channel ch1接收数据
+  ... ...
+
+case y, ok := <-ch2: // 从channel ch2接收数据，并根据ok值判断ch2是否已经关闭
+  ... ...
+
+case ch3 <- z:       // 将z值发送到channel ch3中:
+  ... ...
+
+default:             // 当上面case中的channel通信均无法实施时，执行该默认分支
+}
+```
+
+# Reflect
+
+reflect 围绕两个基础类型展开，对应类型信息和值信息。
+
+`reflect.Type` 表示 Go 中静态类型的元信息，包括类型名称、种类、方法、字段等属性，通过 `reflect.TypeOf(x)` 获取。
+
+`reflect.Value` 表示变量的动态值信息，提供了读取和修改值的方法，通过 `relect.ValueOf(x)` 获取。
+
+`Kind` 类型表示类型的底层种类，例如 int、struct、slice 等，`Type` 则区分具体类型，例如自定义类型。
+
+```Go
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+type User struct {
+	Name string
+	Age  int
+}
+
+func main() {
+	u := User{"Alice", 30}
+	t := reflect.TypeOf(u)
+
+	// 类型名称与种类
+	fmt.Println("类型名:", t.Name())   // 输出: User
+	fmt.Println("底层种类:", t.Kind()) // 输出: struct
+
+	// 结构体字段信息
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		fmt.Printf("字段名: %s, 类型: %s\n", field.Name, field.Type)
+	}
+	// 输出:
+	// 字段名: Name, 类型: string
+	// 字段名: Age, 类型: int
+}
+```
+
+```Go
+func main() {
+	num := 42
+	v := reflect.ValueOf(&num).Elem() // 传入指针并解引用，确保可修改
+
+	// 读取值
+	fmt.Println("当前值:", v.Int()) // 输出: 42
+
+	// 修改值（需确保类型匹配）
+	if v.CanSet() { // 检查是否可修改
+		v.SetInt(100)
+		fmt.Println("修改后:", num) // 输出: 100
+	}
+}
+```
+
+```Go
+type Calculator struct{}
+
+func (c Calculator) Add(a, b int) int {
+	return a + b
+}
+
+func main() {
+	c := Calculator{}
+	v := reflect.ValueOf(c)
+
+	// 获取方法（注意：方法名首字母需大写，否则不可导出）
+	method := v.MethodByName("Add")
+	if !method.IsValid() {
+		fmt.Println("方法不存在")
+		return
+	}
+
+	// 准备参数（需包装为[]reflect.Value）
+	args := []reflect.Value{
+		reflect.ValueOf(10),
+		reflect.ValueOf(20),
+	}
+
+	// 调用方法并获取返回值
+	results := method.Call(args)
+	fmt.Println("结果:", results[0].Int()) // 输出: 30
+}
+```
+
+
+# 泛型
+
+## 类型参数
+
+```Go
+// max_generics.go
+type ordered interface {
+    ~int | ~int8 | ~int16 | ~int32 | ~int64 |
+        ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+        ~float32 | ~float64 |
+        ~string
+}
+
+func maxGenerics[T ordered](sl []T) T {
+    if len(sl) == 0 {
+        panic("slice is empty")
+    }
+
+    max := sl[0]
+    for _, v := range sl[1:] {
+        if v > max {
+            max = v
+        }
+    }
+    return max
+}
+
+type myString string
+
+func main() {
+    var m int = maxGenerics([]int{1, 2, -4, -6, 7, 0})
+    fmt.Println(m) // 输出：7
+    fmt.Println(maxGenerics([]string{"11", "22", "44", "66", "77", "10"})) // 输出：77
+    fmt.Println(maxGenerics([]float64{1.01, 2.02, 3.03, 5.05, 7.07, 0.01})) // 输出：7.07
+    fmt.Println(maxGenerics([]int8{1, 2, -4, -6, 7, 0})) // 输出：7
+    fmt.Println(maxGenerics([]myString{"11", "22", "44", "66", "77", "10"})) // 输出：77
+}
+```
+
+maxGenerics 函数原型多出的代码 [T ordered] 就是 Go 泛型的类型参数列表，这个列表中仅有一个类型参数 T，ordered 为类型参数的类型约束。
+
+函数的类型参数列表位于函数名与参数列表之间，由方括号括起来的固定个数的，由逗号分隔的类型参数声明组成。
+
+```Go
+func genericsFunc[T1 constraint1, T2, constraint2, ..., Tn constraintN](ordinary parameters list) (return values list)
+```
+
+类型参数通常用大写，且必须是具名的。
+
+```Go
+func print[T any]() { // 正确
+}     
+
+func print[any]() {   // 编译错误：all type parameters must be named 
+}
+```
+
+## 调用泛型函数
+
+```Go
+// 泛型函数声明：T为类型形参
+func maxGenerics[T ordered](sl []T) T
+
+// 调用泛型函数：int为类型实参
+m := maxGenerics[int]([]int{1, 2, -4, -6, 7, 0})
+```
+
+## 泛型类型
+
+```Go
+// maxable_slice.go
+
+type maxableSlice[T ordered] struct {
+    elems []T
+}
+```
+
+泛型类型是类型声明中带有类型参数的 Go 类型。
+
+## 使用泛型类型
+
+```Go
+var sl = maxableSlice[int]{
+    elems: []int{1, 2, -4, -6, 7, 0},
+} 
+```
+
+## 泛型约束
+
+any 是最宽松的约束，本质上是 interface{} 的一个类型别名。
+
+```Go
+// $GOROOT/src/builtin/buildin.go
+// any is an alias for interface{} and is equivalent to interface{} in all ways.
+type any = interface{}
+```
+
+## 自定义约束
+
+```Go
+// stringify.go
+
+func Stringify[T fmt.Stringer](s []T) (ret []string) {
+    for _, v := range s {
+        ret = append(ret, v.String())
+    }
+    return ret
+}
+
+type MyString string
+
+func (s MyString) String() string {
+    return string(s)
+}
+
+func main() {
+    sl := Stringify([]MyString{"I", "love", "golang"})
+    fmt.Println(sl) // 输出：[I love golang]
+}
+```
+
+
+```Go
+type ordered interface {
+  ~int | ~int8 | ~int16 | ~int32 | ~int64 |
+  ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+  ~float32 | ~float64 | ~string
+}
+```
+类型元素信息，代表以它们为底层类型的类型都满足 ordered 约束。
+

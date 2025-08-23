@@ -1,8 +1,8 @@
 ---
-title: "GoLand 开发环境配置"
+title: "GoLang 开发环境配置"
 date: '2025-08-23'
 draft: false
-description: 配置 Goland 开发环境
+description: 配置 Golang 开发环境
 toc: true
 ---
 
