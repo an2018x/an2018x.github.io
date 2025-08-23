@@ -122,3 +122,60 @@ iframe {
     height: 500px;
     border: none;
 }
+
+/* 自定义有序列表样式 */
+ol {
+    /* 隐藏默认的数字 */
+    list-style-type: none;
+    /* 初始化计数器 */
+    counter-reset: circle-counter;
+    /* 左侧留出空间给圆圈数字 */
+    padding-left: 2.5rem;
+}
+
+ol li {
+    position: relative;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+}
+
+ol li:before {
+    /* 计数器递增 */
+    counter-increment: circle-counter;
+    /* 显示计数器数值 */
+    content: counter(circle-counter);
+    
+    /* 样式设置 */
+    position: absolute;
+    left: -2.5rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    background-color: var(--li-bg);
+    color: var(--theme);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+
+
+/* 媒体查询：针对小屏幕设备优化 */
+@media (max-width: 720px) {
+    ol {
+        padding-left: 2.0em; /* 减小左内边距 */
+    }
+    
+    ol li:before {
+        width: 1.8em;
+        height: 1.8em;
+        font-size: 0.8rem; /* 减小字体和圆圈 */
+        left: -2.2em;
+    }
+    
+    ol {
+        line-height: 1.5; /* 略微减小行高，节省空间 */
+    }
+}
