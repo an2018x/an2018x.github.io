@@ -554,6 +554,15 @@ s = append(s, 1, 2, 3) // 无需提前分配空间
 
 nil 切片可以安全调用 append 方法动态扩展。
 
+```Go
+var a []int
+for i := range a {
+    fmt.Println(i)
+}
+```
+
+nil 切片可以安全调用 for-range 遍历。
+
 
 ```Go
 sl := make([]byte, 6, 10) // 其中10为cap值，即底层数组长度，6为切片的初始长度
