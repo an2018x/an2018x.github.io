@@ -33,6 +33,10 @@ var a int // a的初值为int类型的零值：0
 
 如果没有显式为变量赋初值，Go 会自动为变量赋予<mark>这个类型的零值</mark>。
 
+* 基础类型：int 为 0，bool 为 false，string 为空字符串 ""。
+* 复合类型：指针、slice、map、channel、interface、func 的零值为 nil。
+* 结构体：所有字段递归初始化为各自的零值。
+
 ### 变量声明块
 
 ```Go
@@ -542,6 +546,14 @@ fmt.Println(len(nums)) // 7
 ```
 
 可以通过 append 函数，向切片中动态添加元素。
+
+```Go
+var s []int // s 是 nil 切片
+s = append(s, 1, 2, 3) // 无需提前分配空间
+```
+
+nil 切片可以安全调用 append 方法动态扩展。
+
 
 ```Go
 sl := make([]byte, 6, 10) // 其中10为cap值，即底层数组长度，6为切片的初始长度
