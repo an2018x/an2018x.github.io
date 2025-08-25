@@ -464,6 +464,14 @@
 </span></span><span class=line><span class=cl><span class=nx>s</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>s</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>)</span> <span class=c1>// 无需提前分配空间</span>
 </span></span></code></pre></td></tr></table></div></div><p>nil 切片可以安全调用 append 方法动态扩展。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-Go data-lang=Go><span class=line><span class=cl><span class=kd>var</span> <span class=nx>a</span> <span class=p>[]</span><span class=kt>int</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=k>range</span> <span class=nx>a</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>i</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>nil 切片可以安全调用 for-range 遍历。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-Go data-lang=Go><span class=line><span class=cl><span class=nx>sl</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span> <span class=mi>6</span><span class=p>,</span> <span class=mi>10</span><span class=p>)</span> <span class=c1>// 其中10为cap值，即底层数组长度，6为切片的初始长度</span>
 </span></span><span class=line><span class=cl><span class=nx>sl</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span> <span class=mi>6</span><span class=p>)</span> <span class=c1>// cap = len = 6</span>
 </span></span></code></pre></td></tr></table></div></div><p>可以通过 make 函数来创建切片，并指定底层数组的长度。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
