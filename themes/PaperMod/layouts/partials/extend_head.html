@@ -7,11 +7,12 @@
 {{ if or (in .Content "img") }}
 {{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}
 {{- $fancyboxcss := (slice $fancybox_css) | resources.Concat "assets/css/fancyboxcss.css" | resources.Minify }}
-<link crossorigin="anonymous" href="{{ $fancyboxcss.RelPermalink }}" integrity="{{ $fancyboxcss.Data.Integrity }}" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="{{ $fancyboxcss.RelPermalink }}" integrity="{{ $fancyboxcss.Data.Integrity }}" rel="preload stylesheet" as="style"></link>
 
 {{- $fancyboxjs := resources.Get "js/fancybox.umd.js" }}
 {{- $fancybox := (slice $fancyboxjs ) | resources.Concat "assets/js/fancybox.js" }}
-<script crossorigin="anonymous" src="{{ $fancybox.RelPermalink }}" integrity="{{ $fancybox.Data.Integrity }}"></script>
+<script crossorigin="anonymous" src="{{ $fancybox.RelPermalink }}" integrity="{{ $fancybox.Data.Integrity }}" async></script>
+
 {{ end }}
 
 {{ if or (in .Content "$") (in .Content "$$") }}
