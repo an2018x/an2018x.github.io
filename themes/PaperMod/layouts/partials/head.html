@@ -58,11 +58,10 @@
 {{- /* markup.highlight.noClasses should be set to `false` */}}
 {{- $chroma_styles := (resources.Get "css/includes/chroma-styles.css") }}
 {{- $chroma_mod := (resources.Get "css/includes/chroma-mod.css") }}
-{{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}
 
 
 {{- /* order is important */}}
-{{- $core := (slice $theme_vars $reset $common $fancybox_css $chroma_styles $chroma_mod $includes_all $media) | resources.Concat "assets/css/core.css" | resources.Minify }}
+{{- $core := (slice $theme_vars $reset $common $chroma_styles $chroma_mod $includes_all $media) | resources.Concat "assets/css/core.css" | resources.Minify }}
 {{- $extended := (resources.Match "css/extended/*.css") | resources.Concat "assets/css/extended.css" | resources.Minify }}
 
 {{- /* bundle all required css */}}
@@ -91,13 +90,6 @@
 {{- end }}
 {{- end -}}
 
-{{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}
-{{- $fancyboxcss := (slice $fancybox_css) | resources.Concat "assets/css/fancyboxcss.css" | resources.Minify }}
-<link crossorigin="anonymous" href="{{ $fancyboxcss.RelPermalink }}" integrity="{{ $fancyboxcss.Data.Integrity }}" rel="preload stylesheet" as="style">
-
-{{- $fancyboxjs := resources.Get "js/fancybox.umd.js" }}
-{{- $fancybox := (slice $fancyboxjs ) | resources.Concat "assets/js/fancybox.js" }}
-<script crossorigin="anonymous" src="{{ $fancybox.RelPermalink }}" integrity="{{ $fancybox.Data.Integrity }}"></script>
 
 
 {{- /* Favicons */}}

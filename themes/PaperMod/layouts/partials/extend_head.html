@@ -3,7 +3,58 @@
 {{- /*     Can be overwritten by partial with the same name in the global layouts. */ -}}
 {{- /* Head custom content area end */ -}}
 <!-- MathJax Support -->
-{{ partial "mathjax.html" . }}
+
+{{ if or (in .Content "img") }}
+{{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}
+{{- $fancyboxcss := (slice $fancybox_css) | resources.Concat "assets/css/fancyboxcss.css" | resources.Minify }}
+<link crossorigin="anonymous" href="{{ $fancyboxcss.RelPermalink }}" integrity="{{ $fancyboxcss.Data.Integrity }}" rel="preload stylesheet" as="style">
+
+{{- $fancyboxjs := resources.Get "js/fancybox.umd.js" }}
+{{- $fancybox := (slice $fancyboxjs ) | resources.Concat "assets/js/fancybox.js" }}
+<script crossorigin="anonymous" src="{{ $fancybox.RelPermalink }}" integrity="{{ $fancybox.Data.Integrity }}"></script>
+{{ end }}
+
+{{ if or (in .Content "$") (in .Content "$$") }}
+<script type="text/javascript" async
+    src="https://cdn.jsdmirror.com/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            },
+            "HTML-CSS": {
+                availableFonts: ["Arial", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX"
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style>
+{{ end }}
 
 <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css" media="print" onload="this.media='all'"/>
 <!-- Screen version -->

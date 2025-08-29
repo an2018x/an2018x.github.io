@@ -113,6 +113,7 @@
 {{- end }} -->
 
 
+
 {{- if (not site.Params.disableThemeToggle) }}
 <script>
     document.getElementById("theme-toggle").addEventListener("click", () => {
@@ -178,8 +179,16 @@
 </script>
 {{- end }}
 
+
+
 <script>
 Fancybox.bind("[data-fancybox]", {
-  // Your custom options
+//   Toolbar: {
+//     display: [
+//       "zoom",
+//       "fullscreen",
+//       "close"
+//     ]
+//   },
 });
 </script>
