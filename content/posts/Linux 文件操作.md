@@ -109,5 +109,138 @@ echo "hello.txt" > hello.txt
 | usr/local | | 存放用户手动安装的软件，从源码编译的程序/手动解压的二进制包，避免与系统默认安装软件冲突 |
 
 
+# 文件搜索
+
+## find
+
+* 按文件名搜索
+
+```shell
+# 在 /home 目录下搜索名为 "file.txt" 的文件
+find /home -name "file.txt"
+```
+
+* 按文件名模糊搜索
+
+```shell
+# 在当前目录及子目录下搜索以 ".txt" 结尾的文件（忽略大小写）
+find . -iname "*.txt"
+```
+
+* 按文件大小搜索
+
+```shell
+# 搜索大于 100MB 的文件（c=字节, k=KB, M=MB, G=GB）
+find / -size +100M
+
+# 搜索小于 10KB 的文件
+find ./docs -size -10k
+```
+
+* 按修改时间搜索
+
+```shell
+# 搜索最近 7 天内修改过的文件
+find /var/log -mtime -7
+
+# 搜索超过 30 天未修改的文件
+find ~ -mtime +30
+```
+
+* 按文件类型搜索
+
+```shell
+# 搜索目录（type d）
+find /etc -type d -name "conf.d"
+
+# 搜索符号链接（type l）
+find /usr/bin -type l -name "python*"
+```
+
+* 按路径搜索
+
+```shell
+find /var -path "*/logs/*.log"
+```
+
+* 组合条件搜索
+
+-a：与（默认，可省略）
+-o：或
+!：非
+
+```shell
+find /var/log -name "*.log" -size +100M -mtime +30
+```
+
+```shell
+find . -type f \( -name "*.txt" -o -name "*.md" \) ! -name ".*"
+```
+（注意：() 用于分组，需转义 \(` `\)）
+
+* 对搜索结果进行操作
+
+```shell
+find [条件] -exec 命令 {} \;
+```
+
+    * {} 代表匹配的文件名（占位符）。
+    * \; 是命令结束标记（必须转义），为了防止 shell 解析这个分号。
+
+删除 30 天前的 .log 文件
+
+```shell
+find /var/log -name "*.log" -mtime +30 -exec rm -f {} \;
+```
+
+* 限制搜索深度
+
+```shell
+find /etc -maxdepth 2 -name "*.conf"  # 只搜索 /etc 及直接子目录
+```
+
+* 排除目录
+
+```shell
+# 搜索 /home 但排除 /home/alice/tmp 目录
+find /home -path "/home/alice/tmp" -prune -o -name "*.pdf" -print
+```
 
 
+## locate
+
+* 基本搜索
+
+```shell
+# 搜索所有包含 "nginx.conf" 的文件路径
+locate nginx.conf
+```
+
+* 精确匹配
+
+```shell
+# 只匹配完整名称完全为 "hosts" 的文件
+locate -b '^hosts$'
+```
+
+* 更新数据库
+
+```shell
+sudo updatedb  # 需要 root 权限，更新 /var/lib/mlocate/mlocate.db
+```
+
+## which
+
+搜索系统 PATH 目录下的可执行文件
+
+```shell
+which python3  # 输出 /usr/bin/python3
+```
+
+## whereis
+
+搜索命令的二进制文件、源文件和手册页
+
+```shell
+whereis gcc  # 输出 gcc 的安装路径和手册位置
+```

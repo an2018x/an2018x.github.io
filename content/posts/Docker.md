@@ -75,7 +75,7 @@ docker load -i 导入的 tar 镜像文件名
 docker run 镜像id/镜像名
 ```
 
-## 映射宿主机端口和容器端口欧
+## 映射宿主机端口和容器端口
 
 ```shell
 docker run -p 宿主机端口:容器端口
