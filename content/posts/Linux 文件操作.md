@@ -244,3 +244,43 @@ which python3  # 输出 /usr/bin/python3
 ```shell
 whereis gcc  # 输出 gcc 的安装路径和手册位置
 ```
+
+# 文件大小
+
+## du
+
+* 查看单个文件的磁盘占用
+
+```shell
+du -h filename.txt
+# 输出示例：2.5M  filename.txt
+```
+
+* 查看目录总大小 （包含子文件）
+
+```shell
+du -sh /home/user/documents  # -s 表示只显示总和（不列出子目录详情）
+# 输出示例：1.2G  /home/user/documents
+```
+
+* 查看目录内各子项的大小
+
+```shell
+du -h --max-depth=1 /var/log  # 只显示一级子目录/文件的大小
+# 输出示例：
+# 450M  /var/log/journal
+# 12K   /var/log/nginx
+# 5.2M  /var/log/syslog
+```
+
+* 按大小排序
+
+```shell
+du -h --max-depth=1 /tmp | sort -hr  # 结合 sort 从大到小排序
+```
+
+* 查看特定大小的文件并显式详情
+
+```shell
+find / -type f -size +1G -exec du -sh {} \;  # 查找 1GB 以上的文件
+```
