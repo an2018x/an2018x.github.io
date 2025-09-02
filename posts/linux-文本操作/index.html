@@ -38,7 +38,7 @@
 </span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 统计日志中包含 &#34;error&#34; 的行数</span>
 </span></span><span class=line><span class=cl>grep -c <span class=s2>&#34;error&#34;</span> app.log
-</span></span></code></pre></td></tr></table></div></div><h2 id=正则匹配>正则匹配<a hidden class=anchor aria-hidden=true href=#正则匹配>#</a></h2><p>基础正则</p><ul><li>^：匹配行首（如 ^ERROR 匹配以 ERROR 开头的行）</li><li>$：匹配行尾（如 exit$ 匹配以 exit 结尾的行）</li><li>.：匹配任意单个字符（如 err.r 匹配 error、errar 等）</li><li><code>*</code>：匹配前一个字符 0 次或多次（如 err* 匹配 er、err、errr 等）</li><li>[]：匹配括号内的任意一个字符（如 [0-9] 匹配数字）</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h2 id=正则匹配>正则匹配<a hidden class=anchor aria-hidden=true href=#正则匹配>#</a></h2><p>基础正则</p><ul><li><code>^</code>：匹配行首（如 ^ERROR 匹配以 ERROR 开头的行）</li><li><code>$</code>：匹配行尾（如 <code>exit$</code> 匹配以 exit 结尾的行）</li><li><code>.</code>：匹配任意单个字符（如 err.r 匹配 error、errar 等）</li><li><code>*</code>：匹配前一个字符 0 次或多次（如 err* 匹配 er、err、errr 等）</li><li><code>[]</code>：匹配括号内的任意一个字符（如 [0-9] 匹配数字）</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
