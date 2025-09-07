@@ -56,11 +56,11 @@ https://www.raycast.com/go
 
 1. 搜索 Snippet
 
-![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F0720250907175750.png)
+    ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F0720250907175750.png)
 
 2. 创建 Snippet
 
-![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F0720250907175910.png)
+    ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F0720250907175910.png)
 
 3. 输入 anb，自动替换
 
@@ -72,4 +72,3 @@ https://www.raycast.com/go
 直接输入 `{` 会自动提示可用的占位符。
 
 ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F0720250907180501.png)
-
