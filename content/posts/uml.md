@@ -1,6 +1,6 @@
 ---
 title: "技术文档"
-date: '2025-08-30'
+date: '2025-09-07'
 draft: false
 description: 整理常用的技术文档操作
 toc: true
@@ -11,7 +11,6 @@ toc: true
 plantUML
 
 https://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa700001
-
 
 mermaid:
 
