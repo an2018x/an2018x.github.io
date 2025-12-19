@@ -215,11 +215,11 @@
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>mvn archetype:generate <span class=se>\
-</span></span></span><span class=line><span class=cl><span class=se></span>    -DgroupId<span class=o>=</span>com.ans20xx <span class=se>\
-</span></span></span><span class=line><span class=cl><span class=se></span>    -DartifactId<span class=o>=</span>demo01 <span class=se>\
-</span></span></span><span class=line><span class=cl><span class=se></span>    -DarchetypeArtifactId<span class=o>=</span>maven-archetype-quickstart <span class=se>\
-</span></span></span><span class=line><span class=cl><span class=se></span>    -DarchetypeVersion<span class=o>=</span>1.4 <span class=se>\
-</span></span></span><span class=line><span class=cl><span class=se></span>    -DinteractiveMode<span class=o>=</span><span class=nb>false</span>
+</span></span></span><span class=line><span class=cl>    -DgroupId<span class=o>=</span>com.ans20xx <span class=se>\
+</span></span></span><span class=line><span class=cl>    -DartifactId<span class=o>=</span>demo01 <span class=se>\
+</span></span></span><span class=line><span class=cl>    -DarchetypeArtifactId<span class=o>=</span>maven-archetype-quickstart <span class=se>\
+</span></span></span><span class=line><span class=cl>    -DarchetypeVersion<span class=o>=</span>1.4 <span class=se>\
+</span></span></span><span class=line><span class=cl>    -DinteractiveMode<span class=o>=</span><span class=nb>false</span>
 </span></span></code></pre></td></tr></table></div></div><ol start=2><li>groupId 指定了创建项目的组织或个人，通常是公司域名的倒序</li><li>artifactId 是项目的根包名</li><li>因为我们没有设置版本和打包类型，因此这些值将会被设置为默认值，版本号将会被设置为 1.0-SNAPSHOT，打包方式将会被设置为 jar 包方式</li><li>如果不确定需要用哪些参数，可以指定 <code>interactiveMode=true</code>，它将会引导你完成项目设置</li><li>命令执行结束后，会获得一个包含 App.java 文件的 Java 项目，它被放在 <code>src/main/java</code> 目录下，还有一个测试文件 <code>AppTest.java</code>，它被放在 <code>src/test/java</code> 下面。</li><li>生成的 pom 文件如下：</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
