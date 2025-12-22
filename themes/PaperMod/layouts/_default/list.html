@@ -116,8 +116,7 @@
       {{ $pageNumber := .PageNumber }}
       {{ $currentPageNumber := $paginator.PageNumber }}
       <!-- 始终显示第一页、最后一页和当前页附近的页码 -->
-      {{ if or (eq $pageNumber 1) (eq $pageNumber $paginator.TotalPages) (and (ge $pageNumber (sub $currentPageNumber
-      2)) (le $pageNumber (add $currentPageNumber 1))) }}
+      {{ if or (eq $pageNumber 1) (eq $pageNumber $paginator.TotalPages) (and (ge $pageNumber (sub $currentPageNumber 2)) (le $pageNumber (add $currentPageNumber 1))) }}
       {{ $ellipsed = false }}
       {{ $shouldEllipse = false }}
       <li>
