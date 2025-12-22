@@ -109,3 +109,6 @@ https://blog.ans20xx.com/posts/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%
 
 https://www.haoyep.com/posts/zsh-config-oh-my-zsh/
 
+# 幕布
+
+https://mubu.com/apps
