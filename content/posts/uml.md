@@ -194,6 +194,8 @@ classDiagram
 
 ##### 继承
 
+> 继承是一个指向父类的空心箭头实线
+
 ```plantuml
 @startuml
 class Animal {  
@@ -243,6 +245,8 @@ Animal <|-- Cat
 ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F0720250907214336.png)
 
 ##### 实现
+
+> 实现是一个指向接口的空心箭头虚线
 
 代表类实现接口
 
@@ -299,6 +303,8 @@ IMovable <|.. Bicycle
 
 ##### 聚合
 
+> 聚合是空心菱形在整体，可以脱离的关系
+
 整体-部分的关系，部分可以脱离整体。
 
 ```plantuml
@@ -340,6 +346,8 @@ Class o-- Student : 包含
 ##### 组合
 
 部分不能脱离整体而存在，心脏不能脱离人体而存在。
+
+> 聚合是实心菱形在整体，不可以脱离的关系
 
 ```plantuml
 @startuml 组合关系
@@ -612,3 +620,34 @@ erDiagram
 ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F2720250927182729.png)
 
 ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2025%2F09%2F2720250927182909.png)
+
+## 活动图
+
+```plantuml
+@startuml
+title 登录流程（含重试）
+
+start
+:输入用户名和密码;
+:attempt = 1;
+
+while (attempt <= 3?) is (是)
+  :校验凭证;
+
+  if (校验通过?) then (是)
+    :生成会话 token;
+    :进入系统;
+    stop
+  else (否)
+    :提示账号或密码错误;
+    :attempt = attempt + 1;
+  endif
+
+endwhile (否)
+
+:锁定账号或提示稍后再试;
+stop
+@enduml
+```
+
+![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/16/20260116131405455.png)

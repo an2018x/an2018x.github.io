@@ -112,3 +112,8 @@ https://www.haoyep.com/posts/zsh-config-oh-my-zsh/
 # 幕布
 
 https://mubu.com/apps
+
+
+# 安装 nvim
+
+sudo install nvim
