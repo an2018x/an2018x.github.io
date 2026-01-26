@@ -1,10 +1,12 @@
 ---
-title: "概率统计"
-date: '2025-08-03'
+title: "mindmap 测试"
+date: '2026-01-15'
 draft: false
-description: 程序员需要知道的数学知识-概率统计篇
+description:  mindmap 测试
 toc: true
 ---
+
+# mindmap    
 
 ```markmap
 # 概率论
