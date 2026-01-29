@@ -60,3 +60,91 @@ class Solution {
 
 ## Python 解法
 
+```python
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        if n < 3:
+            return 0
+        l, r = 0, n - 1
+        left_max = right_max = 0
+        ans = 0
+        while l < r:
+            if height[l] < height[r]: 
+                if height[l] >= left_max:
+                    left_max = height[l]
+                else:
+                    ans += left_max - height[l]
+                l += 1
+            else:
+                if height[r] >= right_max:
+                    right_max = height[r]
+                else:
+                    ans += right_max - height[r]
+                r -= 1
+        return ans
+```
+
+## JS 解法
+
+```js
+var trap = function(height) {
+    const n = height.length;
+    if (n < 3) return 0;
+    let l = 0, r = n - 1;
+    let leftMax = 0, rightMax = 0;
+    let ans = 0;
+    
+    while (l < r) {
+        if (height[l] < height[r]) {
+            if (height[l] >= leftMax) {
+                leftMax = height[l];
+            } else {
+                ans += leftMax - height[l];
+            }
+            l ++;
+        } else {
+            if (height[r] >= rightMax) {
+                rightMax = height[r];
+            } else {
+                ans += rightMax - height[r];
+            }
+            r --;
+        }
+    }
+    return ans;
+};
+```
+
+## Go 解法
+
+```Go
+func trap(height []int) int {
+    n := len(height)
+    if n < 3 {
+        return 0
+    }
+
+    l, r := 0, n-1
+    leftMax, rightMax := 0, 0
+    ans := 0
+    for l < r {
+        if height[l] < height[r] {
+            if height[l] >= leftMax {
+                leftMax = height[l]
+            } else {
+                ans += leftMax - height[l]
+            }
+            l ++
+        } else {
+            if height[r] >= rightMax {
+                rightMax = height[r]
+            } else {
+                ans += rightMax - height[r]
+            }
+            r --
+        }
+    }
+    return ans
+}
+```
