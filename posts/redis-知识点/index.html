@@ -2,10 +2,1357 @@
 
 
 
-"><meta name=author content><link rel=canonical href=https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/><link crossorigin=anonymous href=/assets/css/stylesheet.a9ee558f8b674bd5305dbd2d19632301d786f32037e37091ad45c70105a64246.css integrity="sha256-qe5Vj4tnS9UwXb0tGWMjAdeG8yA343CRrUXHAQWmQkY=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link crossorigin=anonymous href=/assets/css/fancyboxcss.min.css integrity rel="preload stylesheet" as=style></link>
+
+附录
+缓存系统实战
+缓存系统实战 application.properties:"><meta name=author content><link rel=canonical href=https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/><link crossorigin=anonymous href=/assets/css/stylesheet.a9ee558f8b674bd5305dbd2d19632301d786f32037e37091ad45c70105a64246.css integrity="sha256-qe5Vj4tnS9UwXb0tGWMjAdeG8yA343CRrUXHAQWmQkY=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link crossorigin=anonymous href=/assets/css/fancyboxcss.min.css integrity rel="preload stylesheet" as=style></link>
 <script crossorigin=anonymous src=/assets/js/fancybox.js integrity async></script><script type=text/javascript async src="https://cdn.jsdmirror.com/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">MathJax.Hub.Config({tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["[[","]]"]],processEscapes:!0,processEnvironments:!0,skipTags:["script","noscript","style","textarea","pre"],TeX:{equationNumbers:{autoNumber:"AMS"},extensions:["AMSmath.js","AMSsymbols.js"]}},"HTML-CSS":{availableFonts:["Arial","TeX"],preferredFont:"TeX",webFont:"TeX"}}),MathJax.Hub.Queue(function(){var e,t=MathJax.Hub.getAllJax();for(e=0;e<t.length;e+=1)t[e].SourceElement().parentNode.className+=" has-jax"})</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style><link rel=stylesheet href=https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css media=print onload='this.media="all"'><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.css><script src=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.iife.js></script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/ accesskey=h title="安橙的博客 (Alt + H)">安橙的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
 <svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Redis 知识点</h1><div class=post-meta><span title='2026-02-06 00:00:00 +0000 UTC'>二月 6, 2026</span></div></header><div class=post-content><div id=me_0 class=mindelixir-container style=height:860px;width:100%></div><script type=application/json id=me_0_src>"\"- Redis\\n    - 环境安装\\n        - docker run -d --name redis -p 6379:6379 redis\\n        - docker exec -it redis redis-cli （进入容器安装）\\n        - 安装 redis-cli\\n            - brew install redis\\n            - redis-cli --version\\n        - 连接 redis\\n            - redis-cli -h 127.0.0.1 -p 6379\\n        - ping\\n            - PONG\\n    - 核心数据结构\\n        - 清空数据\\n            - FLUSHDB\\n        - 查看有多少 key\\n            - DBSIZE\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215227359.png,100,35)\\n        - String\\n            - 基本 GET/SET\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215323487.png,130,35)\\n            - 带过期时间 TTL\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215527894.png,130,80)\\n                - EX 是秒，PX 是毫秒\\n                - TTL 返回剩余的秒数\\n                - TTL = -1: 存在但没过期时间，-2 不存在\\n            - 原子自增(计数器)\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215723437.png,130,90)\\n        - List\\n            - 左进右出：队列 FIFO\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215909155.png,130,150)\\n            - 阻塞队列\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206220103319.png,640,54)\\n                - BRPOP key timeout\\n                    - key 要监听的队列\\n                    - timeout 最大等待时间(s) 0=无限等待，5=最多等5s\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206220135317.png,640,54)\\n        - Hash (存对象)\\n            - 写入写出\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206220545889.png,500,420)\\n        - Set (去重，关系，共同好友)\\n            - 去重集合\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207000117913.png,400,200)\\n            - 交集、并集、差集\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207000306600.png,400,200)\\n        - ZSet (排行榜：积分、热度、TopN)\\n            - ZSet = Set + Score\\n            - 添加与排序读取\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207000515210.png,400,370)\\n            - 增加分数与查询名次\""</script><script>(function(){if(typeof MindElixir=="undefined"){console.error("MindElixir not loaded. Check your CDN script tag.");return}const n="me_0";let e=JSON.parse(document.getElementById(n+"_src").textContent);function s(){return"n_"+Math.random().toString(16).slice(2)+Date.now().toString(16)}function a(e){const o=e.split(/\n/).map(e=>e.replace(/\s+$/g,"")).filter(e=>e.trim().length>0);console.log(o);const t=[];let n=null;for(const u of o){const r=u.match(/^(\s*)([-*+])\s+(.*)$/);if(!r)continue;const h=r[1].replace(/\t/g,"  ").length,d=Math.floor(h/2);let e=r[3].trim(),c=null;const l=e.match(/^(.*?)(?:\s*->\s*)(https?:\/\/\S+)\s*$/);l&&(e=l[1].trim(),c=l[2].trim());const i={id:s(),topic:e,children:[]},a=e.match(/!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);if(a){const t=a[1].trim(),n=Number(a[2]),s=Number(a[3]);e=e.replace(a[0],"").trim(),i.topic="",i.image={url:t,width:n,height:s}}if(c&&(i.hyperLink=c),!n){n=i,t.push({level:0,node:n});continue}for(;t.length&&t[t.length-1].level>=d;)t.pop();const m=t.length?t[t.length-1].node:n;m.children.push(i),t.push({level:d,node:i})}return n||{id:s(),topic:"Empty",children:[]}}e=JSON.parse(e),console.log(e);const t=a(e);console.log(t);const o={nodeData:{id:t.id,topic:t.topic,root:!0,children:t.children||[]},arrows:[],summaries:[],direction:2};console.log(o);const i=window.MindElixir?.default??window.MindElixir;if(typeof i!="function"){console.error("MindElixir loaded but not a constructor. window.MindElixir =",window.MindElixir);return}const r=new i({el:"#"+n});r.init(o)})()</script></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>© 2025 <a href=https://www.ans20xx.com/>安橙</a></span> ·
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Redis 知识点</h1><div class=post-meta><span title='2026-02-06 00:00:00 +0000 UTC'>二月 6, 2026</span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e9%99%84%e5%bd%95 aria-label=附录>附录</a><ul><li><a href=#%e7%bc%93%e5%ad%98%e7%b3%bb%e7%bb%9f%e5%ae%9e%e6%88%98 aria-label=缓存系统实战>缓存系统实战</a></li><li><a href=#%e7%a7%92%e6%9d%80%e7%b3%bb%e7%bb%9f%e5%ae%9e%e6%88%98 aria-label=秒杀系统实战>秒杀系统实战</a></li><li><a href=#%e7%a7%92%e6%9d%80%e7%b3%bb%e7%bb%9f%e6%bb%91%e5%8a%a8%e7%aa%97%e5%8f%a3%e9%99%90%e6%b5%81%e8%bf%9b%e9%98%b6 aria-label=秒杀系统滑动窗口限流进阶>秒杀系统滑动窗口限流进阶</a></li><li><a href=#%e7%a7%92%e6%9d%80%e7%b3%bb%e7%bb%9f%e8%bf%9b%e9%98%b6%e4%bb%a4%e7%89%8c%e6%a1%b6 aria-label=秒杀系统进阶令牌桶>秒杀系统进阶令牌桶</a></li><li><a href=#%e5%93%a8%e5%85%b5%e5%ae%9e%e9%aa%8c aria-label=哨兵实验>哨兵实验</a></li><li><a href=#%e5%93%a8%e5%85%b5%e6%95%85%e9%9a%9c%e6%bc%94%e7%bb%83%e5%ae%9e%e9%aa%8c aria-label=哨兵故障演练实验>哨兵故障演练实验</a></li></ul></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><div id=me_0 class=mindelixir-container style=height:860px;width:100%></div><script type=application/json id=me_0_src>"\"- Redis\\n    - 环境安装\\n        - docker run -d --name redis -p 6379:6379 redis\\n        - docker exec -it redis redis-cli （进入容器安装）\\n        - 安装 redis-cli\\n            - brew install redis\\n            - redis-cli --version\\n        - 连接 redis\\n            - redis-cli -h 127.0.0.1 -p 6379\\n        - ping\\n            - PONG\\n    - 核心数据结构\\n        - 清空数据\\n            - FLUSHDB\\n        - 查看有多少 key\\n            - DBSIZE\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215227359.png,100,35)\\n        - String\\n            - 基本 GET/SET\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215323487.png,130,35)\\n            - 带过期时间 TTL\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215527894.png,130,80)\\n                - EX 是秒，PX 是毫秒\\n                - TTL 返回剩余的秒数\\n                - TTL = -1: 存在但没过期时间，-2 不存在\\n            - 原子自增(计数器)\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215723437.png,130,90)\\n        - List\\n            - 左进右出：队列 FIFO\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206215909155.png,130,150)\\n            - 阻塞队列\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206220103319.png,640,54)\\n                - BRPOP key timeout\\n                    - key 要监听的队列\\n                    - timeout 最大等待时间(s) 0=无限等待，5=最多等5s\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206220135317.png,640,54)\\n        - Hash (存对象)\\n            - 写入写出\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206220545889.png,500,420)\\n        - Set (去重，关系，共同好友)\\n            - 去重集合\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207000117913.png,400,200)\\n            - 交集、并集、差集\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207000306600.png,400,200)\\n        - ZSet (排行榜：积分、热度、TopN)\\n            - ZSet = Set + Score\\n            - 添加与排序读取\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207000515210.png,420,370)\\n            - 增加分数与查询名次\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207142718618.png,320,110)\\n            - TOPN\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207142916620.png,200,40)\\n        - 通用排查命令\\n            - 查看 Key\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207143038160.png,100,23)\\n                - 一般生产环境中不建议用 KEYS，建议使用 SCAN\\n            - 查看类型/是否存在\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207143201412.png,100,40)\\n            - 删除 key\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207143312380.png,100,22)\\n    - 缓存系统实战\\n        - 目标\\n            - 实现用户查询接口: Get /user/{id}\\n        - 架构\\n            - Controller -\\u003e Service -\\u003e Redis -\\u003e FakeDB\\n        - 逻辑\\n            - 先查 Redis\\n            - 没命中查数据库 \\n            - 写回 Redis\\n            - 加 TTL\\n            - 防穿透 + 防击穿\\n        - Java 实现\\n            - 初始化项目 https://start.spring.io\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207144538747.png,240,290)\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207145053224.png,100,22)\\n            - 配置 RedisTemplate\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207162941344.png,420,200)\\n            - 编写 Service\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207164953341.png,620,900)\\n            - 编写 Controller\\n            - 访问 localhost:8080/user/1\\n            - 查看 redis 内容\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207163242027.png,200,30)\\n            - 压测\\n                - ab -n 10000 -c 100 http://localhost:8080/user/1\\n    - 秒杀系统实战\\n        - 项目结构\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207202201922.png,100,560)\\n        - 库存扣减\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207202254845.png,500,500)\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207202428795.png,400,190)\\n        - 消息队列\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208103843531.png,600,200)\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208103947825.png,200,400)\\n        - 分布式锁\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208104108604.png,600,660)\\n        - 限流\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208104251769.png,600,300)\\n        - service\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208104346930.png,200,300)\\n        - controller\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208104412950.png,200,250)\\n        - 压测测试\\n            - ab -n 1000 -c 200 http://localhost:8080/seckill/1\\n        - 进阶\\n            - 滑动窗口限流\\n                - lua\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208174051889.png,400,600)\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208174120075.png,400,120)\\n                - service\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208174212781.png,250,300)\\n            - 令牌桶\\n                - lua\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208183418934.png,200,600)\\n    - 持久化\\n        - RDB(快照)\\n            - 机制：周期性生成内存快照文件 dump.rdb\\n            - 优点：恢复快、文件紧凑\\n            - 缺点：可能丢失最近一次快照之后的数据\\n            - 关键点：fork 触发 COW，会带来短暂的延迟和额外内存占用\\n        - AOF(追加日志)\\n            - 机制：写命令追加到 appendonly.aof\\n            - 刷盘策略\\n                - appendfsync always：每条都写 fsync，最安全最慢\\n                - everysec：每秒 fsync，最常用，最多丢 1s\\n                - no：交给 OS，风险高\\n            - AOF 重写：压缩日志，避免无限膨胀\\n        - 混合持久化\\n            - AOF 前半段是 RDB 快照，后半段是增量 AOF\\n        - 实验一：只开 RDB，模拟宕机恢复\\n            - 只启用 RDB 快照\\n            - 编写配置文件 redis-rdb.conf\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208204018291.png,300,200)\\n            - 启动 redis 容器\\n                - mkdir -p ./redis-data\\n                - docker rm -f redis-rdb 2\\u003e/dev/null\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208212630821.png,300,100)\\n                - 验证 docker logs redis-rdb --tail 20\\n            - 进入容器\\n                - docker exec -it redis-rdb redis-cli\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208212952482.png,200,320)\\n            - 写入大量数据\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208213207221.png,200,40)\\n            - 观察 persistence\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208213348306.png,300,620)\\n            - 手动触发 BGSAVE\\n            - 制造快照后的新增数据（丢失窗口）\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208213600877.png,300,30)\\n            - 强制宕机\\n                - docker kill -s KILL redis-rdb\\n            - 重启 redis\\n                - docker start redis-rdb\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208213747156.png,320,270)\\n            - 验证 rdb 文件\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208213916814.png,200,50)\\n        - 实验 2：只开 AOF，验证刷盘策略差异\\n            - 清理旧容器和目录\\n                - docker rm -f redis-aof 2\\u003e/dev/null\\n                - rm -rf ./redis-aof-data\\n            - 准备三份配置\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208220151934.png,320,590)\\n            - 清空数据\\u0026启动 redis\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208220813971.png,550,130)\\n            - 检查 AOF 开启\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208221351700.png,570,220)\\n            - 写入负载 + 强制关闭\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208221604525.png,150,40)\\n                - docker kill -s KILL redis-aof\\n            - 重启 Redis\\n                - docker start redis-aof\\n            - 查看计数\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208221709710.png)\\n        - 实验 3：AOF rewrite 触发与观测\\n            - auto-aof-rewrite-percentage 100\\n            - auto-aof-rewrite-min-size 64mb\\n    - 主从复制\\n        - 目的：读扩展、数据冗余、高可用\\n        - 全量复制：第一次同步或者 backlog 不够时\\n        - 增量复制(PSYNC)：短线重连后从 backlog 补差异\\n        - 实验 1：搭主从并验证数据一致\\n            - 启动 Master\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208225457359.png,200,40)\\n            - 启动 Replica\\n                - 创建并加入网络\\n                    - docker network create redis-net 2\\u003e/dev/null\\n                    - docker network connect redis-net redis-master\\n                - 启动 replica 并加入网络\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208232745496.png,250,50)\\n                - 查看复制状态\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208233441611.png,400,400)\\n                - 验证数据一致性\\n                    - 主库写入 + 从库读取\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208233706250.png,330,260)\\n                - 验证从库默认只读\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208233757628.png,300,70)\\n                - 查看复制延迟\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/08/20260208233852945.png,100,20)\\n                - 排障 INFO replication\\n    - 哨兵 Sentinel (高可用)\\n        - 目的：监控、选主、故障转移、通知客户端\\n        - 核心：主观下线、客观下线、选举与 failover\\n        - 客户端连接地址：不用写死 master 地址，而是通过哨兵获取当前 master\\n        - 实验：搭建 1 主 2 从+ 3 Sentinel\\n            - 准备目录\\n                - mkdir -p redis-sentinel-lab/{conf,data}\\n            - 准备 Redis 配置\\n                - master 配置\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209102606425.png,200,90)\\n                - replica 配置\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209102646643.png,150,120)\\n                - sentinel 配置\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209201652255.png,500,400)\\n                    - quorum 2：3 个 sentinel 里至少 2 个认为 master 有问题，才会进入客观下线/转移流程\\n                    - down-after-milliseconds：5s 没有响应就 SDOWN。\\n                - docker-compose 启动\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209103212388.png,400,220)\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209103505779.png,200,150)\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209103544585.png,500,40)\\n                - 验证主从复制\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209103652649.png,350,100)\\n                    - redis-cli -h 127.0.0.1 -p 6379 -a 123456 INFO replication\\n                    - redis-cli -h 127.0.0.1 -p 6380 -a 123456 INFO replication\\n                    - redis-cli -h 127.0.0.1 -p 6381 -a 123456 INFO replication\\n                - 验证写主从一致性\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209103756350.png,350,100)\\n                - 验证 Sentinel 监控是否生效\\n                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209201810208.png,200,800)\\n                    - 查看主库信息 redis-cli -p 26379 SENTINEL master mymaster\\n                    - 查看从库信息 redis-cli -p 26379 SENTINEL slaves mymaster\\n        - 实验：故障演练\\n            - 写入测试数据，验证切主后数据仍然可写\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209202049854.png,400,150)\\n            - 观察主从拓扑\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209202140865.png,900,300)\\n            - 查看 Sentinel 实时日志\\n                - docker compose logs -f --tail 200 sentinel-1\\n            - 模拟主库宕机\\n                - docker kill -s KILL $(docker compose ps -q redis-master)\\n            - 等待故障转移完成（5-15s）\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209214118816.png,500,50)\\n            - 确定新 master\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209214241750.png,600,30)\\n            - 验证其中一个哪个变成 master\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209214340957.png,750,100)\\n            - 验证切主后仍然可写\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209214638757.png,700,140)\\n            - 启动旧 master\\n                - docker compose up -d redis-master\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209214737010.png,400,50)\\n                - 旧 master 变成 slave\\n            - 最终一致性验证\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209214827689.png,350,70)\\n        - 实验：SpringBoot 无感切主\\n            - 验证 Sentiel 当前 master\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209220539046.png,600,70)\\n            - 配置 Sentinel 连接\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209224129500.png,515,227)\\n            - 编写 Controller 验证读写\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209221005722.png,438,412)\\n            - 构建镜像\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209222203602.png,370,480)\\n                - docker build -t redis-demo . \\n            - 切主前写入\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/09/20260209224307958.png,300,80)\\n            - 模拟主库宕机\\n                - docker kill -s KILL $(docker compose ps -q redis-master)\\n                - 观察 sentinel 选主\\n                - redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster\""</script><script>(function(){if(typeof MindElixir=="undefined"){console.error("MindElixir not loaded. Check your CDN script tag.");return}const n="me_0";let e=JSON.parse(document.getElementById(n+"_src").textContent);function s(){return"n_"+Math.random().toString(16).slice(2)+Date.now().toString(16)}function a(e){const o=e.split(/\n/).map(e=>e.replace(/\s+$/g,"")).filter(e=>e.trim().length>0);console.log(o);const t=[];let n=null;for(const u of o){const r=u.match(/^(\s*)([-*+])\s+(.*)$/);if(!r)continue;const h=r[1].replace(/\t/g,"  ").length,d=Math.floor(h/2);let e=r[3].trim(),c=null;const l=e.match(/^(.*?)(?:\s*->\s*)(https?:\/\/\S+)\s*$/);l&&(e=l[1].trim(),c=l[2].trim());const i={id:s(),topic:e,children:[]},a=e.match(/!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);if(a){const t=a[1].trim(),n=Number(a[2]),s=Number(a[3]);e=e.replace(a[0],"").trim(),i.topic="",i.image={url:t,width:n,height:s}}if(c&&(i.hyperLink=c),!n){n=i,t.push({level:0,node:n});continue}for(;t.length&&t[t.length-1].level>=d;)t.pop();const m=t.length?t[t.length-1].node:n;m.children.push(i),t.push({level:d,node:i})}return n||{id:s(),topic:"Empty",children:[]}}e=JSON.parse(e),console.log(e);const t=a(e);console.log(t);const o={nodeData:{id:t.id,topic:t.topic,root:!0,children:t.children||[]},arrows:[],summaries:[],direction:2};console.log(o);const i=window.MindElixir?.default??window.MindElixir;if(typeof i!="function"){console.error("MindElixir loaded but not a constructor. window.MindElixir =",window.MindElixir);return}const r=new i({el:"#"+n});r.init(o)})()</script><h1 id=附录>附录<a hidden class=anchor aria-hidden=true href=#附录>#</a></h1><h2 id=缓存系统实战>缓存系统实战<a hidden class=anchor aria-hidden=true href=#缓存系统实战>#</a></h2><p>缓存系统实战 application.properties:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-properties data-lang=properties><span class=line><span class=cl><span class=na>spring.data.redis.host</span><span class=o>=</span><span class=s>localhost</span>
+</span></span><span class=line><span class=cl><span class=na>spring.data.redis.port</span><span class=o>=</span><span class=s>6379</span>
+</span></span><span class=line><span class=cl><span class=na>spring.data.redis.timeout</span><span class=o>=</span><span class=s>3000</span>
+</span></span></code></pre></td></tr></table></div></div><p>RedisTemplate 配置类:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Configuration</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>RedisConfig</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Bean</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=nf>redisTemplate</span><span class=p>(</span><span class=n>RedisConnectionFactory</span><span class=w> </span><span class=n>factory</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=p>(</span><span class=n>factory</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Bean</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>ObjectMapper</span><span class=w> </span><span class=nf>objectMapper</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>JsonMapper</span><span class=p>.</span><span class=na>builder</span><span class=p>().</span><span class=na>build</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Service 类：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Service</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserService</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=n>redis</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>ObjectMapper</span><span class=w> </span><span class=n>mapper</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>FakeDatabase</span><span class=w> </span><span class=n>db</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>User</span><span class=w> </span><span class=nf>getUser</span><span class=p>(</span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>)</span><span class=w> </span><span class=kd>throws</span><span class=w> </span><span class=n>Exception</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>key</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;user:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>id</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 查缓存</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>cache</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForValue</span><span class=p>().</span><span class=na>get</span><span class=p>(</span><span class=n>key</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>cache</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=s>&#34;NULL&#34;</span><span class=p>.</span><span class=na>equals</span><span class=p>(</span><span class=n>cache</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>return</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=n>mapper</span><span class=p>.</span><span class=na>readValue</span><span class=p>(</span><span class=n>cache</span><span class=p>,</span><span class=w> </span><span class=n>User</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 防缓存击穿（热点 key 失效瞬间，大量请求直接打数据库），加锁</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Boolean</span><span class=w> </span><span class=n>lock</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForValue</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>.</span><span class=na>setIfAbsent</span><span class=p>(</span><span class=s>&#34;lock:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>id</span><span class=p>,</span><span class=w> </span><span class=s>&#34;1&#34;</span><span class=p>,</span><span class=w> </span><span class=n>Duration</span><span class=p>.</span><span class=na>ofSeconds</span><span class=p>(</span><span class=n>5</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>Boolean</span><span class=p>.</span><span class=na>FALSE</span><span class=p>.</span><span class=na>equals</span><span class=p>(</span><span class=n>lock</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>Thread</span><span class=p>.</span><span class=na>sleep</span><span class=p>(</span><span class=n>50</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=n>getUser</span><span class=p>(</span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 查数据库</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>User</span><span class=w> </span><span class=n>user</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>db</span><span class=p>.</span><span class=na>queryUser</span><span class=p>(</span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>user</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=c1>// 防缓存穿透，请求的数据本身就不存在，攻击者疯狂请求，每次请求都打 DB</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForValue</span><span class=p>().</span><span class=na>set</span><span class=p>(</span><span class=n>key</span><span class=p>,</span><span class=w> </span><span class=s>&#34;NULL&#34;</span><span class=p>,</span><span class=w> </span><span class=n>Duration</span><span class=p>.</span><span class=na>ofSeconds</span><span class=p>(</span><span class=n>30</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 写缓存 + 随机 TTL，防止缓存雪崩</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>int</span><span class=w> </span><span class=n>ttl</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>60</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>Random</span><span class=p>().</span><span class=na>nextInt</span><span class=p>(</span><span class=n>20</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>json</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mapper</span><span class=p>.</span><span class=na>writeValueAsString</span><span class=p>(</span><span class=n>user</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForValue</span><span class=p>().</span><span class=na>set</span><span class=p>(</span><span class=n>key</span><span class=p>,</span><span class=w> </span><span class=n>json</span><span class=p>,</span><span class=w> </span><span class=n>Duration</span><span class=p>.</span><span class=na>ofSeconds</span><span class=p>(</span><span class=n>ttl</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>user</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Controller 类</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@RestController</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserController</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>UserService</span><span class=w> </span><span class=n>userService</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@GetMapping</span><span class=p>(</span><span class=s>&#34;/user/{id}&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>User</span><span class=w> </span><span class=nf>get</span><span class=p>(</span><span class=nd>@PathVariable</span><span class=w> </span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>)</span><span class=w> </span><span class=kd>throws</span><span class=w> </span><span class=n>Exception</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userService</span><span class=p>.</span><span class=na>getUser</span><span class=p>(</span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>FakeDB 类</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>FakeDatabase</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>User</span><span class=w> </span><span class=nf>queryUser</span><span class=p>(</span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>try</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>Thread</span><span class=p>.</span><span class=na>sleep</span><span class=p>(</span><span class=n>100</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>   </span><span class=k>catch</span><span class=w> </span><span class=p>(</span><span class=n>Exception</span><span class=w> </span><span class=n>ignored</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>id</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>999L</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>User</span><span class=p>(</span><span class=n>id</span><span class=p>,</span><span class=w> </span><span class=s>&#34;User_&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=秒杀系统实战>秒杀系统实战<a hidden class=anchor aria-hidden=true href=#秒杀系统实战>#</a></h2><p>SeckillController</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@RestController</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>SeckillController</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>SeckillService</span><span class=w> </span><span class=n>service</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@PostMapping</span><span class=p>(</span><span class=s>&#34;/seckill/{userId}&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=nf>seckill</span><span class=p>(</span><span class=nd>@PathVariable</span><span class=w> </span><span class=n>Long</span><span class=w> </span><span class=n>userId</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>int</span><span class=w> </span><span class=n>r</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>service</span><span class=p>.</span><span class=na>seckill</span><span class=p>(</span><span class=n>userId</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=k>switch</span><span class=w> </span><span class=p>(</span><span class=n>r</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>case</span><span class=w> </span><span class=n>1</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=s>&#34;成功&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>case</span><span class=w> </span><span class=n>0</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=s>&#34;库存不足&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>case</span><span class=w> </span><span class=o>-</span><span class=n>1</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=s>&#34;重复下单&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>case</span><span class=w> </span><span class=o>-</span><span class=n>2</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=s>&#34;限流&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>case</span><span class=w> </span><span class=o>-</span><span class=n>3</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=s>&#34;重复请求&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>default</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=s>&#34;失败&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>};</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>RateLimiter</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>RateLimiter</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=n>redis</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>boolean</span><span class=w> </span><span class=nf>allow</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>key</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>limit</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>redisKey</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;limit:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>key</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=s>&#34;:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>Instant</span><span class=p>.</span><span class=na>now</span><span class=p>().</span><span class=na>getEpochSecond</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Long</span><span class=w> </span><span class=n>count</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForValue</span><span class=p>().</span><span class=na>increment</span><span class=p>(</span><span class=n>redisKey</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>count</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>1</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>redis</span><span class=p>.</span><span class=na>expire</span><span class=p>(</span><span class=n>redisKey</span><span class=p>,</span><span class=w> </span><span class=n>Duration</span><span class=p>.</span><span class=na>ofSeconds</span><span class=p>(</span><span class=n>2</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>count</span><span class=w> </span><span class=o>&lt;=</span><span class=w> </span><span class=n>limit</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>RedisLock</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>RedisLock</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=n>redis</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>LOCK_PREFIX</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;lock:&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=kt>long</span><span class=w> </span><span class=n>DEFAULT_EXPIRE</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>5</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>UNLOCK_SCRIPT</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>static</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>UNLOCK_SCRIPT</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;&gt;</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>UNLOCK_SCRIPT</span><span class=p>.</span><span class=na>setScriptText</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=s>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s>                if redis.call(&#39;get&#39;, KEYS[1]) == ARGV[1] then
+</span></span></span><span class=line><span class=cl><span class=s>                    return redis.call(&#39;del&#39;, KEYS[1])
+</span></span></span><span class=line><span class=cl><span class=s>                else
+</span></span></span><span class=line><span class=cl><span class=s>                    return 0
+</span></span></span><span class=line><span class=cl><span class=s>                end
+</span></span></span><span class=line><span class=cl><span class=s>                &#34;&#34;&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>UNLOCK_SCRIPT</span><span class=p>.</span><span class=na>setResultType</span><span class=p>(</span><span class=n>Long</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=nf>tryLock</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>key</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>lockKey</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>LOCK_PREFIX</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>key</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 每个线程唯一 id</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>lockValue</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>UUID</span><span class=p>.</span><span class=na>randomUUID</span><span class=p>().</span><span class=na>toString</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Boolean</span><span class=w> </span><span class=n>success</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForValue</span><span class=p>().</span><span class=na>setIfAbsent</span><span class=p>(</span><span class=n>lockKey</span><span class=p>,</span><span class=w> </span><span class=n>lockValue</span><span class=p>,</span><span class=w> </span><span class=n>Duration</span><span class=p>.</span><span class=na>ofSeconds</span><span class=p>(</span><span class=n>DEFAULT_EXPIRE</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>Boolean</span><span class=p>.</span><span class=na>TRUE</span><span class=p>.</span><span class=na>equals</span><span class=p>(</span><span class=n>success</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=n>lockValue</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>boolean</span><span class=w> </span><span class=nf>unlock</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>key</span><span class=p>,</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>lockValue</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>lockKey</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>LOCK_PREFIX</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>key</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Long</span><span class=w> </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>execute</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>UNLOCK_SCRIPT</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>Collections</span><span class=p>.</span><span class=na>singletonList</span><span class=p>(</span><span class=n>lockKey</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>lockValue</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>Long</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>1</span><span class=p>).</span><span class=na>equals</span><span class=p>(</span><span class=n>result</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>LuaConfig</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Configuration</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>LuaConfig</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Bean</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=nf>stockScript</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>script</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;&gt;</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>script</span><span class=p>.</span><span class=na>setLocation</span><span class=p>(</span><span class=k>new</span><span class=w> </span><span class=n>ClassPathResource</span><span class=p>(</span><span class=s>&#34;lua/stock.lua&#34;</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>script</span><span class=p>.</span><span class=na>setResultType</span><span class=p>(</span><span class=n>Long</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>script</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>stock.lua</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-lua data-lang=lua><span class=line><span class=cl><span class=c1>-- KEYS[1] = 库存 key</span>
+</span></span><span class=line><span class=cl><span class=c1>-- KEYS[2] = 订单集合 key</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[1] = 用户 id</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>stock</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;get&#39;</span><span class=p>,</span> <span class=n>KEYS</span><span class=p>[</span><span class=mi>1</span><span class=p>]))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>if</span> <span class=n>stock</span> <span class=o>&lt;=</span> <span class=mi>0</span> <span class=kr>then</span>
+</span></span><span class=line><span class=cl>    <span class=c1>-- 库存不足</span>
+</span></span><span class=line><span class=cl>    <span class=kr>return</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl><span class=kr>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 防止重复下单</span>
+</span></span><span class=line><span class=cl><span class=kr>if</span> <span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;sismember&#39;</span><span class=p>,</span> <span class=n>KEYS</span><span class=p>[</span><span class=mi>2</span><span class=p>],</span> <span class=n>ARGV</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span> <span class=o>==</span> <span class=mi>1</span> <span class=kr>then</span>
+</span></span><span class=line><span class=cl>    <span class=c1>-- 重复下单</span>
+</span></span><span class=line><span class=cl>    <span class=kr>return</span> <span class=o>-</span><span class=mi>1</span>
+</span></span><span class=line><span class=cl><span class=kr>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 扣库存</span>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;decr&#39;</span><span class=p>,</span> <span class=n>KEYS</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 记录用户下单</span>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;sadd&#39;</span><span class=p>,</span> <span class=n>KEYS</span><span class=p>[</span><span class=mi>2</span><span class=p>],</span> <span class=n>ARGV</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=c1>-- 成功下单</span>
+</span></span><span class=line><span class=cl><span class=kr>return</span> <span class=mi>1</span>
+</span></span></code></pre></td></tr></table></div></div><p>OrderQueue</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>OrderQueue</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=n>redis</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>ObjectMapper</span><span class=w> </span><span class=n>objectMapper</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>QUEUE_KEY</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;queue:orders&#34;</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>push</span><span class=p>(</span><span class=n>Order</span><span class=w> </span><span class=n>order</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>try</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>String</span><span class=w> </span><span class=n>json</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>objectMapper</span><span class=p>.</span><span class=na>writeValueAsString</span><span class=p>(</span><span class=n>order</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForList</span><span class=p>().</span><span class=na>leftPush</span><span class=p>(</span><span class=n>QUEUE_KEY</span><span class=p>,</span><span class=w> </span><span class=n>json</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=k>catch</span><span class=w> </span><span class=p>(</span><span class=n>Exception</span><span class=w> </span><span class=n>e</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>throw</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>RuntimeException</span><span class=p>(</span><span class=n>e</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>Order</span><span class=w> </span><span class=nf>pop</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>opsForList</span><span class=p>().</span><span class=na>rightPop</span><span class=p>(</span><span class=n>QUEUE_KEY</span><span class=p>,</span><span class=w> </span><span class=n>Duration</span><span class=p>.</span><span class=na>ofSeconds</span><span class=p>(</span><span class=n>0</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>result</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>try</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=n>objectMapper</span><span class=p>.</span><span class=na>readValue</span><span class=p>(</span><span class=n>result</span><span class=p>,</span><span class=w> </span><span class=n>Order</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=k>catch</span><span class=w> </span><span class=p>(</span><span class=n>Exception</span><span class=w> </span><span class=n>e</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>throw</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>RuntimeException</span><span class=p>(</span><span class=n>e</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>OrderWorker</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>OrderWorker</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>OrderQueue</span><span class=w> </span><span class=n>queue</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@PostConstruct</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>start</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Thread</span><span class=w> </span><span class=n>work</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>Thread</span><span class=p>(()</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>while</span><span class=p>(</span><span class=kc>true</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>Order</span><span class=w> </span><span class=n>order</span><span class=w> </span><span class=o>=</span><span class=n>queue</span><span class=p>.</span><span class=na>pop</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>order</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=n>process</span><span class=p>(</span><span class=n>order</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>});</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>work</span><span class=p>.</span><span class=na>setDaemon</span><span class=p>(</span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>work</span><span class=p>.</span><span class=na>start</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>process</span><span class=p>(</span><span class=n>Order</span><span class=w> </span><span class=n>order</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>println</span><span class=p>(</span><span class=s>&#34;处理订单: &#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>order</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>try</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>Thread</span><span class=p>.</span><span class=na>sleep</span><span class=p>(</span><span class=n>100</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=k>catch</span><span class=w> </span><span class=p>(</span><span class=n>Exception</span><span class=w> </span><span class=n>ignored</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>SeckillService</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Service</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>SeckillService</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=n>redis</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>stockScript</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>OrderQueue</span><span class=w> </span><span class=n>queue</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>RateLimiter</span><span class=w> </span><span class=n>rateLimiter</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>RedisLock</span><span class=w> </span><span class=n>redisLock</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=nf>seckill</span><span class=p>(</span><span class=n>Long</span><span class=w> </span><span class=n>userId</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>rateLimiter</span><span class=p>.</span><span class=na>allow</span><span class=p>(</span><span class=s>&#34;seckill&#34;</span><span class=p>,</span><span class=w> </span><span class=n>100</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=o>-</span><span class=n>2</span><span class=p>;</span><span class=w> </span><span class=c1>// 系统繁忙</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 获取分布式锁</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>token</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redisLock</span><span class=p>.</span><span class=na>tryLock</span><span class=p>(</span><span class=s>&#34;user:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>userId</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>token</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=o>-</span><span class=n>3</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>try</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span><span class=w> </span><span class=n>keys</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>List</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=s>&#34;seckill:stock&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=s>&#34;seckill:orders&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>Long</span><span class=w> </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>execute</span><span class=p>(</span><span class=n>stockScript</span><span class=p>,</span><span class=w> </span><span class=n>keys</span><span class=p>,</span><span class=w> </span><span class=n>userId</span><span class=p>.</span><span class=na>toString</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>result</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>1</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>Order</span><span class=w> </span><span class=n>order</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>Order</span><span class=p>(</span><span class=n>userId</span><span class=p>,</span><span class=w> </span><span class=n>System</span><span class=p>.</span><span class=na>currentTimeMillis</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>queue</span><span class=p>.</span><span class=na>push</span><span class=p>(</span><span class=n>order</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=n>result</span><span class=p>.</span><span class=na>intValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=k>finally</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>redisLock</span><span class=p>.</span><span class=na>unlock</span><span class=p>(</span><span class=s>&#34;user:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>userId</span><span class=p>,</span><span class=w> </span><span class=n>token</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=秒杀系统滑动窗口限流进阶>秒杀系统滑动窗口限流进阶<a hidden class=anchor aria-hidden=true href=#秒杀系统滑动窗口限流进阶>#</a></h2><p>ratelimit.lua</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-lua data-lang=lua><span class=line><span class=cl><span class=c1>-- KEYS[1] = rate limit key (zset)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[1] = now(ms)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[2] = window(ms)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[3] = limit(max requests in window)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[4] = member(unique id for this requests)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[5] = expireSeconds(Key ttl)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>key</span> <span class=o>=</span> <span class=n>KEYS</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>now</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>window</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>2</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>limit</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>3</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>member</span> <span class=o>=</span> <span class=n>ARGV</span><span class=p>[</span><span class=mi>4</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>expireSeconds</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>5</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 1 remove out-of-window</span>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;zremrangebyscore&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=n>now</span> <span class=o>-</span> <span class=n>window</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 2 current call</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>cnt</span> <span class=o>=</span> <span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;zcard&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 3 if exceed, reject</span>
+</span></span><span class=line><span class=cl><span class=kr>if</span> <span class=n>cnt</span> <span class=o>&gt;=</span> <span class=n>limit</span> <span class=kr>then</span>
+</span></span><span class=line><span class=cl>    <span class=kr>return</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl><span class=kr>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 4 add current request</span>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;zadd&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=n>now</span><span class=p>,</span> <span class=n>member</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- 5 set ttl to avoid key leak</span>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;expire&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=n>expireSeconds</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kr>return</span> <span class=mi>1</span>
+</span></span></code></pre></td></tr></table></div></div><p>LuaConfig</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Bean</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=nf>rateLimitScript</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>script</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;&gt;</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>script</span><span class=p>.</span><span class=na>setLocation</span><span class=p>(</span><span class=k>new</span><span class=w> </span><span class=n>ClassPathResource</span><span class=p>(</span><span class=s>&#34;lua/ratelimit.lua&#34;</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>script</span><span class=p>.</span><span class=na>setResultType</span><span class=p>(</span><span class=n>Long</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>return</span><span class=w> </span><span class=n>script</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>SlidingWindowLimit</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>SlidingWindowRateLimiter</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=n>redis</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>rateLimitScript</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>boolean</span><span class=w> </span><span class=nf>allow</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>key</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>limit</span><span class=p>,</span><span class=w> </span><span class=kt>long</span><span class=w> </span><span class=n>windowMs</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>now</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>System</span><span class=p>.</span><span class=na>currentTimeMillis</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 每次请求唯一 member</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>member</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>now</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=s>&#34;-&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>UUID</span><span class=p>.</span><span class=na>randomUUID</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// key TTL，一般设置为 window 的 2-3 倍，保证窗口内数据可用并自动回收</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>expireSeconds</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>Math</span><span class=p>.</span><span class=na>max</span><span class=p>(</span><span class=n>2</span><span class=p>,</span><span class=w> </span><span class=p>(</span><span class=n>windowMs</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=n>3</span><span class=p>)</span><span class=w> </span><span class=o>/</span><span class=w> </span><span class=n>1000</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>redisKey</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;rl:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>key</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Long</span><span class=w> </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>execute</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>rateLimitScript</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>Collections</span><span class=p>.</span><span class=na>singletonList</span><span class=p>(</span><span class=n>redisKey</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>now</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>windowMs</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>limit</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>member</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>expireSeconds</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>println</span><span class=p>(</span><span class=s>&#34;result:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>result</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>Long</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>1</span><span class=p>).</span><span class=na>equals</span><span class=p>(</span><span class=n>result</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=秒杀系统进阶令牌桶>秒杀系统进阶令牌桶<a hidden class=anchor aria-hidden=true href=#秒杀系统进阶令牌桶>#</a></h2><p>token_bucket.lua</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-lua data-lang=lua><span class=line><span class=cl><span class=c1>-- KEYS[1] = bucket key</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[1] = now_ms</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[2] = capacity (max tokens)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[3] = refill_rate_per_sec (tokens per second)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[4] = cost (tokens per request, usually 1)</span>
+</span></span><span class=line><span class=cl><span class=c1>-- ARGV[5] = ttl_seconds (expire key to avoid leaks)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>key</span> <span class=o>=</span> <span class=n>KEYS</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>now</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>capacity</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>2</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>rate</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>3</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>cost</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>4</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>ttl</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ARGV</span><span class=p>[</span><span class=mi>5</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- Read current state</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>tokens</span> <span class=o>=</span> <span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;hget&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=s1>&#39;tokens&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>ts</span> <span class=o>=</span> <span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;hget&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=s1>&#39;ts&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>if</span> <span class=n>tokens</span> <span class=o>==</span> <span class=kc>false</span> <span class=ow>or</span> <span class=n>ts</span> <span class=o>==</span> <span class=kc>false</span> <span class=kr>then</span>
+</span></span><span class=line><span class=cl>    <span class=n>tokens</span> <span class=o>=</span> <span class=n>capacity</span>
+</span></span><span class=line><span class=cl>    <span class=n>ts</span> <span class=o>=</span> <span class=n>now</span>
+</span></span><span class=line><span class=cl><span class=kr>else</span>
+</span></span><span class=line><span class=cl>    <span class=n>tokens</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>tokens</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>ts</span> <span class=o>=</span> <span class=n>tonumber</span><span class=p>(</span><span class=n>ts</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kr>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- Refill tokens based on elapsed time</span>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>delta_ms</span> <span class=o>=</span> <span class=n>now</span> <span class=o>-</span> <span class=n>ts</span>
+</span></span><span class=line><span class=cl><span class=kr>if</span> <span class=n>delta_ms</span> <span class=o>&lt;</span> <span class=mi>0</span> <span class=kr>then</span>
+</span></span><span class=line><span class=cl>    <span class=n>delta_ms</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl><span class=kr>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>local</span> <span class=n>refill</span> <span class=o>=</span> <span class=p>(</span><span class=n>delta_ms</span> <span class=o>/</span> <span class=mf>1000.0</span><span class=p>)</span> <span class=o>*</span> <span class=n>rate</span>
+</span></span><span class=line><span class=cl><span class=n>tokens</span> <span class=o>=</span> <span class=n>math.min</span><span class=p>(</span><span class=n>capacity</span><span class=p>,</span> <span class=n>tokens</span> <span class=o>+</span> <span class=n>refill</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- Decide allow or reject</span>
+</span></span><span class=line><span class=cl><span class=kr>if</span> <span class=n>tokens</span> <span class=o>&lt;</span> <span class=n>cost</span> <span class=kr>then</span>
+</span></span><span class=line><span class=cl>    <span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;hset&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=s1>&#39;tokens&#39;</span><span class=p>,</span> <span class=n>tokens</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;hset&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=s1>&#39;ts&#39;</span><span class=p>,</span> <span class=n>now</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;expire&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=n>ttl</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=kr>return</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl><span class=kr>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>-- Consume tokens</span>
+</span></span><span class=line><span class=cl><span class=n>tokens</span> <span class=o>=</span> <span class=n>tokens</span> <span class=o>-</span> <span class=n>cost</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;hset&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=s1>&#39;tokens&#39;</span><span class=p>,</span> <span class=n>tokens</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;hset&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=s1>&#39;ts&#39;</span><span class=p>,</span> <span class=n>now</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>redis.call</span><span class=p>(</span><span class=s1>&#39;expire&#39;</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=n>ttl</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>return</span> <span class=mi>1</span>
+</span></span></code></pre></td></tr></table></div></div><p>TokenBucketRateLimiter</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nd>@RequiredArgsConstructor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>TokenBucketRateLimiter</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>StringRedisTemplate</span><span class=w> </span><span class=n>redis</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>tokenBucketScript</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm>     * 令牌桶限流
+</span></span></span><span class=line><span class=cl><span class=cm>     * @param key 限流维度
+</span></span></span><span class=line><span class=cl><span class=cm>     * @param capacity 桶容量
+</span></span></span><span class=line><span class=cl><span class=cm>     * @param ratePerSec 补充速率
+</span></span></span><span class=line><span class=cl><span class=cm>     * @param cost 每次请求消耗令牌数
+</span></span></span><span class=line><span class=cl><span class=cm>     */</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>boolean</span><span class=w> </span><span class=nf>allow</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>key</span><span class=p>,</span><span class=w> </span><span class=kt>long</span><span class=w> </span><span class=n>capacity</span><span class=p>,</span><span class=w> </span><span class=kt>double</span><span class=w> </span><span class=n>ratePerSec</span><span class=p>,</span><span class=w> </span><span class=kt>long</span><span class=w> </span><span class=n>cost</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>now</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>System</span><span class=p>.</span><span class=na>currentTimeMillis</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>String</span><span class=w> </span><span class=n>redisKey</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;tb:&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>key</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// TTL: 建议 &gt;= 桶完全补满的时间 * 2 (避免闲置 key 常驻)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// refill time ≈ capacity / ratePerSec</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>refillSeconds</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>(</span><span class=kt>long</span><span class=p>)</span><span class=w> </span><span class=n>Math</span><span class=p>.</span><span class=na>ceil</span><span class=p>(</span><span class=n>capacity</span><span class=w> </span><span class=o>/</span><span class=w> </span><span class=n>Math</span><span class=p>.</span><span class=na>max</span><span class=p>(</span><span class=n>ratePerSec</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>.</span><span class=na>0000001</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>ttlSeconds</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>Math</span><span class=p>.</span><span class=na>max</span><span class=p>(</span><span class=n>2</span><span class=p>,</span><span class=w> </span><span class=n>refillSeconds</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=n>2</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Long</span><span class=w> </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>redis</span><span class=p>.</span><span class=na>execute</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>tokenBucketScript</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>Collections</span><span class=p>.</span><span class=na>singletonList</span><span class=p>(</span><span class=n>redisKey</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>now</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>capacity</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>ratePerSec</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>cost</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>String</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>ttlSeconds</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>Long</span><span class=p>.</span><span class=na>valueOf</span><span class=p>(</span><span class=n>1</span><span class=p>).</span><span class=na>equals</span><span class=p>(</span><span class=n>result</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>LuaConfig</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Bean</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=nf>tokenBucketScript</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>DefaultRedisScript</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>script</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>DefaultRedisScript</span><span class=o>&lt;&gt;</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>script</span><span class=p>.</span><span class=na>setLocation</span><span class=p>(</span><span class=k>new</span><span class=w> </span><span class=n>ClassPathResource</span><span class=p>(</span><span class=s>&#34;lua/token_bucket.lua&#34;</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>script</span><span class=p>.</span><span class=na>setResultType</span><span class=p>(</span><span class=n>Long</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>return</span><span class=w> </span><span class=n>script</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=哨兵实验>哨兵实验<a hidden class=anchor aria-hidden=true href=#哨兵实验>#</a></h2><p>docker-compose</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redis-master</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>redis-master</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;redis-server&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;/usr/local/etc/redis/redis.conf&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/redis-master.conf:/usr/local/etc/redis/redis.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/master:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;6379:6379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redis-replica-1</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>redis-replica-1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;redis-server&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;/usr/local/etc/redis/redis.conf&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;--replicaof&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;redis-master&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;6379&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/redis-replica.conf:/usr/local/etc/redis/redis.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/replica1:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;6380:6379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redis-replica-2</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>redis-replica-2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;redis-server&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;/usr/local/etc/redis/redis.conf&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;--replicaof&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;redis-master&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;6379&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/redis-replica.conf:/usr/local/etc/redis/redis.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/replica2:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;6381:6379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>sentinel-1</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>sentinel-1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master, redis-replica-1, redis-replica-2]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>[</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;sh&#34;</span><span class=p>,</span><span class=s2>&#34;-c&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;cp /usr/local/etc/redis/sentinel.conf /data/sentinel.conf &amp;&amp; exec redis-sentinel /data/sentinel.conf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/sentinel.conf:/usr/local/etc/redis/sentinel.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/s1:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;26379:26379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>sentinel-2</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>sentinel-2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master, redis-replica-1, redis-replica-2]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>[</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;sh&#34;</span><span class=p>,</span><span class=s2>&#34;-c&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;cp /usr/local/etc/redis/sentinel.conf /data/sentinel.conf &amp;&amp; exec redis-sentinel /data/sentinel.conf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/sentinel.conf:/usr/local/etc/redis/sentinel.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/s2:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;26380:26379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>sentinel-3</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>sentinel-3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master, redis-replica-1, redis-replica-2]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>[</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;sh&#34;</span><span class=p>,</span><span class=s2>&#34;-c&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;cp /usr/local/etc/redis/sentinel.conf /data/sentinel.conf &amp;&amp; exec redis-sentinel /data/sentinel.conf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/sentinel.conf:/usr/local/etc/redis/sentinel.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/s3:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;26381:26379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redisnet</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>driver</span><span class=p>:</span><span class=w> </span><span class=l>bridge</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=哨兵故障演练实验>哨兵故障演练实验<a hidden class=anchor aria-hidden=true href=#哨兵故障演练实验>#</a></h2><p>docker-compose.yml</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yml data-lang=yml><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redis-master</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>redis-master</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;redis-server&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;/usr/local/etc/redis/redis.conf&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/redis-master.conf:/usr/local/etc/redis/redis.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/master:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;6379:6379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>redisnet</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>ipv4_address</span><span class=p>:</span><span class=w> </span><span class=m>172.28.0.10</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redis-replica-1</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>redis-replica-1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;redis-server&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;/usr/local/etc/redis/redis.conf&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;--replicaof&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;172.28.0.10&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;6379&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/redis-replica.conf:/usr/local/etc/redis/redis.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/replica1:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;6380:6379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redis-replica-2</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>redis-replica-2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;redis-server&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;/usr/local/etc/redis/redis.conf&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;--replicaof&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;172.28.0.10&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;6379&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/redis-replica.conf:/usr/local/etc/redis/redis.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/replica2:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;6381:6379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>sentinel-1</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>sentinel-1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master, redis-replica-1, redis-replica-2]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>[</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;sh&#34;</span><span class=p>,</span><span class=s2>&#34;-c&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;cp /usr/local/etc/redis/sentinel.conf /data/sentinel.conf &amp;&amp; exec redis-sentinel /data/sentinel.conf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/sentinel.conf:/usr/local/etc/redis/sentinel.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/s1:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;26379:26379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>sentinel-2</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>sentinel-2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master, redis-replica-1, redis-replica-2]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>[</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;sh&#34;</span><span class=p>,</span><span class=s2>&#34;-c&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;cp /usr/local/etc/redis/sentinel.conf /data/sentinel.conf &amp;&amp; exec redis-sentinel /data/sentinel.conf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/sentinel.conf:/usr/local/etc/redis/sentinel.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/s2:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;26380:26379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>sentinel-3</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>redis:7</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>sentinel-3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redis-master, redis-replica-1, redis-replica-2]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>command</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>[</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;sh&#34;</span><span class=p>,</span><span class=s2>&#34;-c&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=s2>&#34;cp /usr/local/etc/redis/sentinel.conf /data/sentinel.conf &amp;&amp; exec redis-sentinel /data/sentinel.conf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/sentinel.conf:/usr/local/etc/redis/sentinel.conf</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./data/s3:/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;26381:26379&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>redisnet]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>redisnet</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>driver</span><span class=p>:</span><span class=w> </span><span class=l>bridge</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ipam</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>config</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span>- <span class=nt>subnet</span><span class=p>:</span><span class=w> </span><span class=m>172.28.0.0</span><span class=l>/16</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>sentinel.conf</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>port 26379
+</span></span><span class=line><span class=cl>bind 0.0.0.0
+</span></span><span class=line><span class=cl>protected-mode no
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 监控主库：mymaster 名称、主库 host/port、quorum（法定票数）
+</span></span><span class=line><span class=cl>sentinel monitor mymaster 172.28.0.10 6379 2
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 认证（主库有 requirepass 时必须加）
+</span></span><span class=line><span class=cl>sentinel auth-pass mymaster 123456
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 多久没响应算主观下线（ms）
+</span></span><span class=line><span class=cl>sentinel down-after-milliseconds mymaster 5000
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 故障转移超时（ms）
+</span></span><span class=line><span class=cl>sentinel failover-timeout mymaster 10000
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 同时同步副本数量（不影响本实验搭建，可保留默认）
+</span></span><span class=line><span class=cl>sentinel parallel-syncs mymaster 1
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Redis 7 的 Sentinel 默认会把 monitor 的 host 当成“IP/可直接解析的实例”，
+</span></span><span class=line><span class=cl># 在某些环境下它不会走你以为的 resolver 路径（或要求显式开启 hostname 解析）
+</span></span><span class=line><span class=cl># 解决方法是——打开 Sentinel 的 hostname 解析开关
+</span></span><span class=line><span class=cl>sentinel resolve-hostnames yes
+</span></span><span class=line><span class=cl>sentinel announce-hostnames yes
+</span></span></code></pre></td></tr></table></div></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>© 2025 <a href=https://www.ans20xx.com/>安橙</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
