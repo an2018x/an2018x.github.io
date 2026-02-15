@@ -18,6 +18,17 @@ toc: false
             - redis-cli -h 127.0.0.1 -p 6379
         - ping
             - PONG
+    - Redis 定位
+        - 性能：减少 DB 压力
+        - 并发：原子操作
+        - 临时数据：状态、计数、锁
+    - 不适合场景
+        - 强一致性核心数据
+        - 超大对象
+        - 长期冷数据
+    - 基本特性
+        - 命令执行是单线程
+        - 网络 I/O 是多路复用
     - 核心数据结构
         - 清空数据
             - FLUSHDB
@@ -59,6 +70,49 @@ toc: false
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207142718618.png,320,110)
             - TOPN
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207142916620.png,200,40)
+            - 按成员删除
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210171017828.png,360,94)
+            - 按 score 范围删除
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210171755055.png,377,128)
+            - 按排名删除
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210172016602.png,466,343)
+        - Bitmap (用户签到/布尔状态)
+            - 场景：统计 2026-02 月的签到情况
+            - 思路
+                - 一个用户 = 1 个 Bitmap
+                - 一天 = 1 bit
+                - 签到 = 1
+                - 未签到 = 0
+                - key = sign:用户 ID:202602
+                - offset = 第几天 - 1
+            - 基础实验
+                - 第一天签到 + 第二天签到
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210164227735.png,353,78)
+                - 查询某天是否签到
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210164101061.png,330,37)
+                - 统计本月签到天数
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210164306694.png,342,39)
+        - HyperLogLog (UV/去重统计)
+            - 场景：统计某天网站 UV
+            - 模拟用户访问
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210164510486.png,323,117)
+            - 统计 UV
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210164530550.png,294,36)
+            - 特点
+                - 内存：固定 12KB
+                - 准确度：99%
+        - Geo (地理位置/附近的人)
+            - 场景
+                - 查找 5km 内的商家
+                - ZSet + GeoHash
+            - 添加地理位置
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210165000620.png,441,116)
+            - 查看两点距离
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210165107321.png,441,50)
+            - 查询附近 1500km 的城市
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210165141208.png,431,58)
+            - 带距离排序
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210165203816.png,431,110)
         - 通用排查命令
             - 查看 Key
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207143038160.png,100,23)
@@ -94,7 +148,7 @@ toc: false
                 - ab -n 10000 -c 100 http://localhost:8080/user/1
     - 秒杀系统实战
         - 项目结构
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207202201922.png,100,560)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207202201922.png,180,560)
         - 库存扣减
             - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207202254845.png,500,500)
             - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/07/20260207202428795.png,400,190)
@@ -275,6 +329,80 @@ toc: false
                 - docker kill -s KILL $(docker compose ps -q redis-master)
                 - 观察 sentinel 选主
                 - redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
+    - 内存管理
+        - INFO memory
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210104614321.png,438,172)
+            - used_memory: Redis 实际分配的内存
+            - used_memory_human：人类可读的内粗
+            - used_memory_rss：进程在 OS 视角占用的物理内存
+            - used_memory_peak：历史峰值
+            - mem_fragmentation：碎片比 = rss/used_memory >= 2 碎片偏高       - 上限相关
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210105023351.png,250,40)
+            - maxmemory：代表你给 Redis 的硬上限，等于 0 代表未设置内存上限，Redis 会继续申请内存知道吃光资源，不会触发淘汰侧路
+            - maxmemory-policy：代表 Redis 达到上限时怎么处理
+        - 淘汰策略
+            - allkeys-lfu （强烈推荐，缓存业务首选）
+                - 所有 key 都可能被淘汰
+                - 适合热点明显的缓存
+            - allkeys-lru
+                - 适合访问模式更均匀，有最近性的场景
+            - volatile-ttl
+                - 只淘汰带过期时间的 key
+            - noeviction
+                - 拒绝写入，适合强一致性
+        - 实验：设置 maxmemory + 不同淘汰策略对比
+            - 设置较小的 maxmemory
+                - redis-cli -a 123456 CONFIG SET maxmemory 10mb
+            - 测试策略
+                - redis-cli -a 123456 FLUSHDB
+                - redis-cli -a 123456 CONFIG SET maxmemory-policy noeviction
+            - 持续写入大 value
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210123915656.png,700,200)
+            - 观察指标
+                - redis-cli -a 123456 INFO stats | egrep "evicted_keys|keyspace_hits|keyspace_misses"
+                - redis-cli -a 123456 INFO memory | egrep "used_memory_human|maxmemory_human|mem_fragmentation_ratio"
+        - 实验：LFU vs LRU 对热点的保护效果
+            - 目标：构造一个热点 key 与大量冷 key，验证 LFU 更能保护热点
+            - 策略设置
+                - redis-cli -a 123456 CONFIG SET maxmemory-policy allkeys-lfu
+            - 写入热点 key
+                - redis-cli -a 123456 SET hot "1"
+            - 增加访问频率
+                - for i in $(seq 1 20000); do redis-cli -a 123456 GET hot > /dev/null; done
+            - 写入大量冷 key
+            - 检查 hot 是否存在
+        - 实验：内存碎片 fragmentation 观察与整理
+            - 制造碎片
+                - 反复创建/删除很多不同大小的 value
+                - Hash/List 不断增长、缩小
+            - 缓解手段
+                - 避免频繁大幅变更 value 大小
+                - 拆分 bigkey
+                - 合理设置 maxmemory，预留空间
+                - Redis 4+ 可以考虑 memory purge
+        - 实验：BigKey 检测与治理
+            - 构造 bigkey
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210125423939.png,785,132)
+            - 查看内存
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210125448129.png,425,226)
+            - 粗定位 --bigkeys (抽样/扫描)
+                - 看到按类型统计的最大 key
+                - 会扫描 keyspace，生产慎用
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/10/20260210160144500.png,700,400)
+            - 精确测量 MEMORY USAGE
+                - redis-cli -a 123456 MEMORY USAGE big:hash
+            - 观察 BigKey 对延迟的影响
+                - 打开延迟监控
+                    - redis-cli -a 123456 CONFIG SET latency-monitor-threshold 10
+                - 删除 bigkey
+                - 查看延迟事件
+                    - redis-cli -a 123456 LATENCY LATEST
+            - 危害
+                - 阻塞主线程
+                - 复制/持久化压力
+                - 网络抖动
+            - 治理方案
+                - 拆分设计
 {{< /mind >}}
 
 # 附录

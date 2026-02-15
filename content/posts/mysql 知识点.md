@@ -1,0 +1,1465 @@
+---
+title: "mysql 知识点"
+date: '2026-02-12'
+draft: false
+description:  
+toc: true
+---
+
+# 环境准备
+
+{{< mind height="560px" >}}
+- 环境配置与校验
+    - docker-compose 启动
+    - 命令行连接
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213500728.png,300,150)
+    - 自检命令
+        - 版本、用户、数据库
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213607553.png,330,510)
+        - 字符集
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213658757.png,200,200)
+        - 时区
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213740266.png,300,200)
+        - 当前 sql_mode
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213813122.png,500,100)
+    - 建库建表
+        - 建库
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213857582.png,370,88)
+        - 建表
+        - 插入数据
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214005617.png,400,300)
+        - 查/改/删
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214121561.png,500,400)
+        - 导入导出
+            - 导出（逻辑备份）
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214319634.png,300,35)
+            - 导入
+                - mysql -h 127.0.0.1 -P 3306 -u root -p demo < demo.sql
+            - 仅导出表结构
+                - mysqldump -h 127.0.0.1 -P 3306 -u root -p --no-data demo > demo_schema.sql
+    - 账号与权限
+        - 创建业务账号 (最小权限)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214524944.png,400,150)
+        - 查看权限
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214555267.png,700,161)
+{{< /mind >}}
+
+
+# 基础查询
+
+{{< mind height="560px" >}}
+- 基础查询
+    - 电商数据集
+    - 单表查询
+        - 查询最近注册的 20 个用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213142935173.png,217,87)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213142955762.png,400,90)
+        - 查询 Tokoyo 的用户列表，按注册时间排序
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143209509.png,225,89)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143228515.png,390,68)
+        - 查询 email 以 @test.com 结尾的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143322457.png,269,71)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143337869.png,380,38)
+        - 查询注册时间在某区间的用户数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143454246.png,269,71)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143510677.png,191,62)
+        - 查询 city 为空的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143615844.png,179,88)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143633144.png,788,86)
+        - 查询价格在 [100,300] 的商品，按照 price 排序
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143725282.png,272,89)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213143739524.png,410,25)
+        - 查询每个 category 下价格最高的商品，并列最高
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145405332.png,342,225)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145422430.png,805,127)
+        - 查询 paid/done 订单表，按照 created_at 倒序分页 (page=3, size=10 => offset = 1)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145716370.png,219,118)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145729260.png,896,132)
+        - 查询某用户 user_id = 1 最近 10 笔订单
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145818212.png,217,112)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145833482.png,899,80)
+        - 查询取消订单 status = 4 中 total_amount > 500 的订单
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145923736.png,400,390)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213145948655.png,897,55)
+        - 查询订单总额 top20，只统计 paid/done
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150027449.png,381,107)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150050228.png,913,202)
+        - 查询今天创建的订单
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150120558.png,392,110)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150132173.png,896,84)
+        - 查询最近 30 天内创建但未支付 status = 0 的订单
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150215201.png,368,114)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150234416.png,898,80)
+        - 查询商品名称包含 pro 的商品（不区分大小写）
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150419894.png,384,71)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150435225.png,813,110)
+        - 查询用户表中名称重复的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213150520219.png,210,193)
+    - 聚合统计与报表
+        - 用户总数、订单总数、已支付订单数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151047000.png,606,92)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151100044.png,628,54)
+        - 每个城市用户数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151129522.png,305,83)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151142263.png,347,162)
+        - 每个 category：商品数、均价、最高、最低
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151216545.png,276,180)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151250131.png,927,136)
+        - 每种订单状态的订单数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151328161.png,306,91)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151340344.png,377,168)
+        - 最近 7 天每天订单数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151501349.png,438,107)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151523622.png,321,173)
+        - 最近 7 天每天 GMV
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151553141.png,474,136)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151607049.png,262,133)
+        - 每个用户订单数 & 总消费
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151654088.png,342,162)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151718808.png,646,126)
+        - 每个用户最近 30 天订单数 & 消费
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151812574.png,370,177)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213151825407.png,711,241)
+        - 订单数 >= 2 的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213155835127.png,356,133)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213155856030.png,394,106)
+        - 累计消费 >= 2000 的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213155928891.png,416,135)
+        - 每个用户客单价 AOV (paid/done)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160054529.png,443,173)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160116877.png,778,135)
+        - 每个 category ：销量 & 销售额
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160143067.png,418,203)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160155171.png,527,108)
+        - 每个商品销售额 top20
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160406174.png,404,172)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160420979.png,400,129)
+        - 每个用户买过的不同商品数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160455682.png,463,156)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160508859.png,456,104)
+        - 每个城市 GMV
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160542065.png,344,157)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160553205.png,304,114)
+        - 本月新增注册用户数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160642028.png,611,93)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160654694.png,273,57)
+        - 复购用户数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213160744971.png,295,180)
+    - JOIN 查询
+        - 订单列表：订单 id、用户 + 订单 + 明细
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161309112.png,513,195)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161327058.png,1008,137)
+        - 每个订单：商品件数 & 商品种类数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161536475.png,560,150)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161555909.png,697,104)
+        - 每个用户最近一笔订单时间
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161746033.png,440,86)
+        - 每个用户最近一步订单：订单号 + 金额
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161834877.png,557,175)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161848412.png,847,103)
+        - 从未下单的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213161949958.png,390,110)
+        - 从未支付过订单的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213162036222.png,495,113)
+        - 订单总额与明细汇总不一样的订单
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213201928145.png,540,191)
+        - 每个用户最常购买的品类，返回按购买次数排序的 top1，并列会多行
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213202354169.png,502,491)
+        - 每个用户买过的商品清单，去重商品名
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213203446351.png,392,125)
+        - 用户画像，用户 id、城市、订单数、总消费、最近下单时间
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213204110045.png,381,331)
+        - 沉睡用户：注册 > 30 天，且最近 30 天无订单
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213204317323.png,388,175)
+    - 子查询
+        - 有订单的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213205122672.png,300,300)
+        - 订单金额 > 全站平均订单金额
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213205816927.png,300,300)
+        - 用户消费金额 > 全站平均消费金额
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213205936224.png,453,356)
+        - 每个品类价格最高的商品
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213210041076.png,452,175)
+        - 至少买过 2 个不同品类的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213210149302.png,404,159)
+        - 买过品类 A 但是没有买过品类 B 的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213210244816.png,300,300)
+        - 首单金额 >= 500 的用户
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213210423066.png,581,260)
+        - 存在异常订单的用户（金额不一致）
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213210540285.png,546,200)
+        - 用户订单间隔 > 60 天
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213210646528.png,400,300)
+        - 未支付订单占比高的：未支付/总单数 > 0.5
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213210852947.png,600,140)
+    - CASE WHEN 与常用函数
+        - 订单状态码转中文文案
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213214511165.png,247,286)
+        - 订单金额分层统计
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213214601818.png,396,411)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213214618668.png,572,107)
+        - 用户城市空值归一：NULL/空串 -> UNKNONW，统计城市分布
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213214811983.png,432,200)
+        - 本月到今天 GMV
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213214855944.png,400,200)
+        - 每个用户注册至首单的天数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213215147390.png,492,377)
+        - 提取邮箱并统计各域名用户数 (@ 后面的部分)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213215233832.png,300,100)
+        - 生成脱敏邮箱：前缀保留前 2 位，其余用 ***，再拼回域名
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213215336085.png,367,224)
+        - 最近 7 天每天新增付费用户数
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213215604404.png,444,353)
+    - 常见坑点
+        - NULL 判断不能用 =
+        - COUNT(col) 不会统计 NULL
+        - WHERE 和 HAVING 的过滤时机不同
+        - LEFT JOIN + WHERE right.col = 会变 left join 为 inner join
+        - IN 包含 NULL 导致 NOT IN 结果异常，建议用 NOT EXISTS
+        - DISTINCT 是对整行去重，不是对某列去重
+{{< /mind >}}
+
+# 约束与范式基础
+
+{{< mind height="560px" >}}
+- 约束与范式基础
+    - 约束
+        - 目的
+            - 保证数据一致性
+            - 让错误尽早暴露
+        - PRIMARY KEY (主键)
+            - 保证
+                - 唯一性：表内每行有唯一标识
+                - 非空性：主键列不能为 NULL
+                - InnoDB 聚簇索引
+        - UNIQUE (唯一约束)
+            - 保证
+                - 某列会某族列的值不能重复
+                - 本质会创建一个唯一索引
+            - 示例
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/13/20260213220205017.png,450,47)
+            - MySQL 的 UNIQUE 允许多个 NULL，因为 NULL 不等于 NULL
+        - FOREIGN KEY (外键约束，InnoDB 支持，慎用)
+            - 保证
+                - 子表引用的父键必须存在
+                - delete/update 时可以配置联动行为
+            - 优点
+                - 数据一致性强
+            - 代价
+                - 写入路径变重
+                - 锁和死锁更复杂
+                - 历史脏数据不好修复
+                - 跨库不可用
+        - NOT NULL (非空)
+    - 范式
+        - 依赖/函数依赖(functional dependency)
+            - 在一张表中，如果确定一组列 X 的值，就能唯一确定另一列 Y 的值，那么 Y 依赖于 X，记作 X -> Y
+        - 目的
+            - 用一套可检验的规则来设计表结构，使得数据依赖关系放对地方，避免“冗余、不一致、异常操作“三类问题。
+                - 更新异常
+                    - 同一事实在多处重复，更新要改多行，多处改漏就不一致
+                - 插入异常
+                    - 插入某类信息，因为表结构耦合，要插入不该填的信息
+                - 删除异常
+                    - 删除某类记录时，不小心删除本应该保留的数据
+        - 1NF (原子性)
+            - 列不可再分
+            - 反例
+                - user_phone="138,139,140" 多值
+        - 2NF (消除针对主键的部分依赖)
+            - 针对联合主键的表
+            - 如果表用 (order_id,product_id) 做联合主键，那么 product_name 不能放在这个表里
+        - 3NF (消除传递依赖)
+            - 字段不要依赖非主键字段
+            - 用户表存了 city_id，又存了 cit_name，city_name 依赖 city_id，理论应该拆到 city 表
+        - 反范式（违反 3NF）
+            - 为了性能/查询便利
+                - orders 冗余 user_name 快照
+            - 冗余的是快照字段，而不是事实字段
+            - 事实字段在主表，订单里的是下单当时的快照
+{{< /mind >}}
+
+# 索引 + EXPLAIN
+
+{{< mind height="560px" >}}
+- 索引 + EXPLAIN
+    - 准备索引
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214111724844.png,200,50)
+    - 覆盖索引 + 回表
+        - 聚簇索引
+            - 在 InnoDB 中，主键索引就是聚簇索引，表的数据行存放在 B+Tree 的叶子节点上，并且物理组织顺序按主键排序
+            - PRIMARY KEY 不仅仅是纯逻辑约束，还决定了数据的物理布局
+            - 主键越大、越随机，写入越容易导致页分裂
+        - 二级索引
+            - 二级索引 B+Tree 的叶子节点保存的不是整行数据，而是 (user_id, created_at, PRIMARY_KEY_VALUE)
+            - 二级索引带着主键，但是不带其他列
+        - 回表
+            - SQL 命中二级索引时
+                - 先在二级索引树里定位到符合条件的条目
+                - 拿到这些条目的主键 id
+                - 如果查询需要整行或者非索引列，就需要再用主键去聚簇索引里取行数据，这就是回表
+            - 时机
+                - 使用二级索引过滤/排序，但是 SELECT 的列不在索引里，就会回表
+            - 代价
+                - 结果行很多时，会变成大量随机 I/O，把一次索引扫描变成大量主键点查
+        - 覆盖索引
+            - 如果一个查询所需要的列都包含在某个二级索引里，引擎只读索引即可返回结果，无需回表
+            - EXPLAIN 查看覆盖索引
+                - Extra：Using index 表示只用索引就能满足查询列，结合 type/key/rows 判断是否想要查询的覆盖索引 
+        - 实验
+            - EXPLAIN
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214111914515.png,276,111)
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214112042284.png,412,324)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214112157981.png,200,113)
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214112214471.png,341,346)
+            - 两条都可能用 key=idx_user_cnt，第一条更容易出现 Extra: Using index (覆盖索引)
+            - 使用 EXPLAIN ANALYZE 看实际的执行效果会更直观
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214140540132.png,337,109)
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214140613332.png,1253,85)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214140700653.png,203,107)
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214140714419.png,1545,86)
+                - actual time/rows：第二条通常更慢
+                - loops：多次取行
+        - 覆盖索引升级：把查询列塞进索引
+            - idx_user_cnt 也能覆盖 id，因为二级索引叶子也包含主键 id
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214141116222.png,312,107)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214141141310.png,442,320)
+    - 单列索引 vs 联合索引
+        - 单列索引的劣势
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214141913352.png,251,114)
+            - idx_user 能够快速定位符合条件的集合
+            - 这些订单在索引里按照 user_id 分组，组内不保证按照 created_at 排序
+            - 为了排序，需要先取出数据，再做排序 (Using filesort)，最后再取前 20
+        - 联合索引的优势：变排序为索引顺序扫描
+            - CREATE INDEX idx_user_ct ON orders(user_id, created_at);
+            - 执行逻辑：先定位到 user_id=123 的区间，再在这个区间按照 create_at 顺序向后扫描，扫到 20 条就停
+        - 联合索引顺序 (a,b,c)
+            - 等值过滤列 (=/IN 选择性高)
+            - 排序列 (ORDER BY/BETWEEN/>=)
+        - 实验
+            - 清理环境
+                - SHOW INDEX FROM orders;
+                - ALTER TABLE orders DROP INDEX idx_user_ct;
+            - 只有单列索引
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214143206689.png,383,159)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214143225138.png)
+                - Extra: Using filesort
+                - row：通常偏大
+            - 加上联合索引
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214151805719.png,487,323)
+                - Extra：filesort 消失，包含 Using index，rows 通常更小
+    - 最左前缀 + 范围条件
+        - 最左前缀
+            - 对于联合索引 (a,b,c)，Mysql 可以高效使用 (a) (a,b) (a,b,c) 而不能高效使用 b、c 和 b、c
+        - 等值匹配 vs 范围匹配
+            - 等值：=、IN(...)
+            - 范围：> >= < <= BETWEEN LIKE 'prefix%'
+            - 联合索引能够向右继续使用下一列，需要前面的列是等值匹配
+            - 实验
+                - 命中最左前缀（只用 user_id）
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214152949694.png,253,89)
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214153221739.png,315,319)
+                - 等值 + 范围
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214153426060.png,368,137)
+                - 只有 created_at （最左前缀缺失）
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214154335485.png,156,89)
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214154400266.png,376,320)
+                    - key = NULL / type = ALL
+                - key_len 判断索引使用了几列
+                    - 联合索引的 key_len 会变小
+    - 排序优化 (Using filesort 的消除)
+        - Using filesort 含义
+            - MySQL 不能直接按照索引顺序输出结果，需要额外排序
+            - 排序可能在内存完成，内存不足才会落盘成临时文件
+            - 是性能风险信号，排序行数越大越危险
+        - ORDER BY 能否走索引排序的判定条件
+            - ORDER BY 的列序必须匹配索引前缀
+                - 索引是 (a,b)，ORDER BY a，ORDER BY a,b 可以满足
+            - WHERE 的过滤要让排序区间连续
+                - WHERE a = 常量，ORDER BY b
+            - 排序方向要一致
+                - ORDER BY created_at DESC
+        -  实验
+            - 观察 filesort
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214164324417.png,314,107)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214164353039.png,370,350)
+            - 建立匹配索引，消除 filesort
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214164635556.png,303,105)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214164647147.png,412,346)
+    - GroupBy 与临时表
+        - GROUP BY 策略
+            - Sorting Aggregation (排序聚合)
+                - 先把数据按 group ky 排序
+                - 再顺序扫描，连续相同 key 的行聚合
+                - 如果排序不能通过索引完成，可能出现 Using filesort
+            - Hash aggregation
+                - 用哈希表按 group key 存聚合状态
+                - 一边扫描一边更新聚合值
+                - 哈希表大/需要落盘中间结果 -> 出现 Using temporary
+        - Using temporary
+            - 在 Extra 中看到 Using temporary 表示 MySQL 需要创建临时表来保存中间结果。
+            - 临时表可能存在内存，也可能落盘
+            - 触发条件
+                - GROUP BY 的 key 无法直接利用索引顺序
+                - 同时有 GROUP BY，order by 与 group by 不一致
+                - 分组结果集很大
+                - 选择了很多列
+        - 实验
+            - 按照用户统计付费订单数与 GMV
+                - 典型报表
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214165615505.png,216,176)
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214165637834.png,598,350)
+                    - Using temporary 几乎必现
+                    - Using filesort 也很常见
+                - 函数分组
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214165738573.png,240,112)
+                    - DATE(created_at) 对列做函数，会让 idx_ct(created_at) 很难直接用于分组有序输出，通常会扫描大量行 + 临时表 + 排序/哈希
+            - 使用索引改善 GROUP BY
+                - GROUP BY 很难做到完全不 temporary
+                - 减少扫描行数 (rows)
+                - 让过滤走索引
+                - 尽量用窄表/覆盖减少回表与临时表宽度
+    - 索引失效
+        - 对索引列做函数
+            - B+Tree 的定位能力被破坏
+            - B+Tree 索引快是能对原始列值做范围定位
+            - 写成：WHERE DATE(created_at) = '2026-02-13' 索引里面存的是完整的 create_at 值，对它做了 DATE() 变化，很难精确映射到索引的连续区间
+            - 反例
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214174327987.png,306,45)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214174352322.png,249,317)
+            - 正例
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214174426808.png,351,68)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214174447994.png,323,321)
+        - 隐式类型转换
+            - EXPLAIN SELECT * FROM orders WHERE user_id = '123';
+            - EXPLAIN SELECT * FROM orders WHERE user_id = 123;
+        - LIKE
+            - B+Tree 只能做前缀有界范围
+            - 'Phone%' 等价一个范围，有连续区间
+            - '%Pro%' 无法形成连续区间
+        - OR、NOT、!=、NOT IN
+            - OR 导致优化器放弃单一路径，建议改成 UNION ALL 两段
+            - !=、NOT 选择性差，扫描大
+    - EXPLAIN
+        - type （引擎如何找数据），从好到差：
+            - const/system：通过主键或唯一索引直接定位到一行
+            - ref：用非唯一索引的等值匹配，返回一组行
+            - range：索引范围扫描，BETWEEN、>=、LIKE
+            - index：全索引扫描，把整棵索引从头扫到尾
+            - ALL：全表扫描
+        - key/possible_keys：为什么选择这个索引
+            - possible_keys：优化器认为可能有用的索引集合
+            - key：最终选择的索引
+        - rows/filtered：一眼估算工作量
+            - rows：优化器估算要读多少行，越大越危险。不是精确值，但是可以判断是否值得优化
+            - filtered：估算过滤后能留下多少百分比，越小代表过滤越强
+            - rows * filtered% = 经过 where 过滤后剩余行数
+        - Extra：性能信号灯（最重要）
+            - Using Where
+                - 表示存储引擎返回行后，SQL 层还需要再做 WHERE 过滤
+                - 很常见，不一定坏
+                - 坏的情况：Using where + rows 很大，说明扫很多再过滤
+            - Using index （覆盖索引）
+                - 表示只用索引就能拿到所有的查询列
+                - 常用于：只查索引列 + 主键
+                - 一般是好信号，要结合 Type
+                    - ref/range + Using index：常见的高效覆盖
+                    - index + Using index：可能是全索引扫描
+            - Using filesort（额外排序）
+                - 不利用索引完成 ORDER BY，需要额外排序步骤
+                - 排序量大可能落盘，速度慢
+            - Using temporary （临时表）
+                - GROUP BY/DISTINCT/复杂排序 需要临时表存中间结果
+                - 可能内存，可能落盘（数据大）
+            - Using index condition （ICP 索引条件下推）
+                - 把部分过滤下推到存储引擎层，在扫描索引时就过滤一部分
+                - 不等于覆盖索引，仍然可能回表
+                - 索引条件下推
+                    - 把原本回表后需要在 Server 层做的过滤，尽可能提前到存储引擎层，在扫描二级索引时就过滤掉一些不满足条件的记录
+    - JOIN 与驱动表选择
+        - MySQL 优化器通常选择“成本更低“的表做驱动表（先过滤更强的）
+        - 驱动表过滤越强越好，被驱动表必须有匹配索引（join key）
+        - JOIN 优化 = 选对驱动表 + 给被驱动表 join key 索引。
+    - 深分页 OFFSET 优化
+        - OFFSET 本质：先找到前 1000 行再丢弃掉，成本随着 offset 线性增长
+        - KeySet：用上次最后一条记录的排序键继续查
+        - 游标分页
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214204131923.png,522,180)
+{{< /mind >}}
+
+# 事务与并发控制
+
+{{< mind height="560px" >}}
+- 事务与并发控制
+    - ACID
+        - A 原子性：要么全成功，要么全失败，依靠 undo log + 回滚机制
+        - C 一致性：约束/规则不被破坏
+        - I 隔离性：并发事务互不干扰到你能接受的程度
+        - D 持久性：提交后不丢（redo log + 刷盘策略 + 崩溃恢复）
+    - autocommit
+        - autocommit=1 默认
+            - SELECT @@autocommit
+            - 每一条 DML 语句执行完成都会自动提交
+        - autocommit=0
+            - 会话级：需要手动 COMMIT/ROLLBACK
+            - 容易造成忘记提交的长事务
+            - SET SESSION autocommit = 0;
+    - 一致性视图
+        - 一致性读
+            - 普通 SELECT (不带锁子句) 是一致性读
+            - 不加锁（不阻塞别人写），读到的是某一个一致性快照上的数据
+            - 好处：读并发极高
+            - 代价：读到的可能不是最新提交的值
+        - 锁定读
+            - SELECT ... FOR UPDATE （排他锁）
+            - SELECT ... LOCK IN SHARE MODE （共享锁）
+            - 会对读到的记录加锁，会阻塞其他事务对这些记录的写
+    - 实验
+        - 数据准备
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214210130081.png,345,154)
+        - autocommit=1 下，一条 UPDATE 自动提交
+            - SessionA
+                - UPDATE tx_demo SET val = val + 1 WHERE id = 1;
+            - SessionB
+                - SELECT val FROM tx_demo WHERE id = 1;
+            - SessionB 立刻看到 + 1 后的值
+        - 显示事务 + ROLLBACK
+            - SessionA
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214210424078.png,524,120)
+            - SessionB
+                - SELECT val FROM tx_demo WHERE id = 1;
+            - A 在事务内能看到更新后的值
+            - B 在 A 未提交前看不到变化
+            - A rollback 后，变化消失，所有会话回到原值
+        - Commit 的可见性
+            - Session A
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214210933337.png,395,71)
+            - Session B
+                - SELECT val FROM tx_demo WHERE id = 1;
+            - Commit 后 B 才能看到新值
+        - 一致性读 + 锁定读
+            - Session A （不提交）
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214211122348.png,425,72)
+            - Session B
+                - UPDATE tx_demo SET val = val + 1 WHERE id = 1; -- 这里会阻塞等待锁
+            - Session A 把 FOR UPDATE 换成普通 SELECT
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214211244562.png,310,62)
+            - Session B 不会被 A 的普通 SELECT 阻塞
+            - 普通 SELECT 不会挡住别人的 UPDATE （MVCC）
+            - FOR UPDATE 会挡住别人的UPDATE （行锁）
+        - 隔离级别与三大现象
+            - 4 级隔离：
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214211712086.png,637,413)
+            - 实验
+                - 数据准备
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214212001812.png,386,216)
+                - 脏读
+                    - SessionA
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214212132628.png,459,70)
+                    - SessionB
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214212335242.png,338,45)
+                    - Session A 再次读到
+                    - RU：A 可能读到 999
+                    - RC/RR：A 不会读到 999
+                - 不可重复读
+                    - 同一事务中，两次读取同一行，结果不同（因为其他事务提交了更新）
+                    - SessionA
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214215345504.png,442,71)
+                    - SessionB
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214215409512.png,340,62)
+                    - SESSIONA 再次读
+                    - RC：A 第二次读到 222
+                    - RR：A 第二次读到 200
+                - 幻读
+                    - 同一事务，两次按照同一条件查询，返回的行集合不同（因为别的事务插入/删除了符合条件的行）
+                    - SessionA
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214215717143.png,450,66)
+                    - SessionB
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214215745428.png,416,69)
+                    - RR 下前后两次读到的都是 2
+                    - RC 下前第一次读到 2，第二次读到了 3
+                - 锁定读 FOR UPDATE 与 next-key lock
+                    - SessionA
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215190602025.png,448,90)
+                    - SessionB
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215190620212.png,478,83)
+                    - RR + For Update：B 的插入会被阻塞，被 A 的 next-key lock 挡住
+                    - RC 下 FOR Update 的锁范围更小，不一定锁 GAP。
+                - 结论
+                    - RU 几乎不用：会出现脏读，业务不可接受
+                    - RC 会出现可重复读/幻读，但是并发更松，锁冲突相对较少
+                    - RR 一致性读更稳定：同一事务多次读结果一致
+        - MVCC（版本链 + Read View）
+            - InnoDB 里面一条记录行在并发更新下会形成版本链
+                - 当前记录页里保存的是最新版本（Latest Committed 或未提交版本）
+                - 旧版本信息存在 undo log 里面，通过指针串起来（版本链）
+                - 每个版本都有创建它的事务标识：trx_id（以及用于回滚/版本回溯的指针）
+            - Read View：决定你对这个事务能看见哪些版本
+                - 做快照读时(普通 SELECT)，InnoDB 会用一个 Read View 来做可见性判断。
+                - 对于某条记录的某个版本（由 trx_id 标识）：
+                    - 如果这个版本是你自己事务写的 -> 可见
+                    - 如果创建该版本的事务在你创建 Read View 时已提交 -> 可见
+                    - 如果创建该版本的事务在你 Read View 时仍未提交（或之后才开始）-> 不可见 -> InnoDB 会沿着 undo 版本回溯，找到一个可见的旧版本。
+                - RC 与 RR 的关键差异：Read View 的生命周期
+                    - RR：同一事务内的快照读通常复用同一个 Read View -> 两次普通 SELECT 结果一致
+                    - RC：每条语句的快照读都可能生成新的 Read View（语句级一致性）-> 第二次 SELECT 可能看到别的事务提交的新数据
+            - 快照读 vs 当前读
+                - 快照读
+                    - 普通 SELECT
+                    - 用 Read View + undo 回溯读旧版本
+                    - 通常不加行锁 -> 读不阻塞写，写不阻塞读
+                - 当前读
+                    - SELECT ... FOR UPDATE
+                    - SELECT ... LOCK IN SHARE MODE
+                    - UPDATE/DELET
+                    - 这些需要读取当前最新且可用于修改/锁定的版本，并对记录/范围加锁
+                    - 当前读不是靠 MVCC 保证一致，是通过锁
+            - 实验
+                - 创建表
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215192012594.png,352,155)
+                - RR 下的可重复读
+                    - SessionA
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215192236554.png,449,91)
+                    - SessionB
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215192256141.png,355,68)
+                    - B 的提交产生了新版本，但是 A 的 ReadView 让它不可见，于是回溯到 v=100
+                - 当前读会阻塞 (FOR UPDATE)
+                    - SessionA
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215192428839.png,453,111)
+                    - SessionB
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215192458852.png,525,45)
+                    - FORUPDATE 是当前读 + 加锁，阻塞并发写，不走 MVCC 的无锁读
+                - MVCC 的工程代价
+                    - 长事务会让旧版本无法清理
+                    - 高频更新会制造大量版本
+        - 行锁结构（Record/Gap/Next-Key）
+            - 锁的位置：索引
+                - InnoDB 的行锁不是锁表的行号，而是锁索引记录和索引记录之间的间隙
+            - 三种锁的定义
+                - Record Lock （记录锁）
+                    - 锁住某个具体索引记录
+                    - 典型：按主键/唯一索引等值锁定一行
+                    - 影响：阻塞别人对该记录的 UPDATE/DELETE
+                - Gap Lock（间隙锁）
+                    - 锁住索引记录之间的空档范围
+                    - 作用：阻止别人往这个 Gap 里 INSERT 新记录
+                    - 常见于 RR 下的范围锁定读/范围更新
+                - Next-Key Lock（临建锁）
+                    - = Record Lock + Gap Lock
+                    - 锁住某条索引记录以及它前面的 Gap
+        - 什么时候出现哪种锁
+            - 等值命中 主键/唯一索引
+                - SELECT * FROM t WHERE id = 10 FOR UPDATE;
+                - 通常只需要 Record Lock
+                - 唯一性保证不可能插入另一个 id=10，没必要锁 Gap
+            - 等值命中 非唯一索引
+                - SELECT * FROM t WHERE k = 10 FOR UPDATE;  -- k 是普通索引
+                - 可能对 k=10 对应的一组索引记录加锁
+                - 同时可能涉及 next-key/gap 防止插入新的 k=10 造成集合变化
+            - 范围查询
+                - SELECT * FROM t WHERE k BETWEEN 10 AND 20 FOR UPDATE;
+                - RR 下通常会对索引 k 的范围加 next-key（覆盖整个区间）
+    - 锁定义语义
+        - FOR UPDATE（排他锁 X）
+            - 语义：我接下来要修改这些记录，不允许别人并发改/删/锁定
+            - 会阻塞：
+                - 别人对同一记录的 UPDATE/DELETE
+                - 别人对同一记录的 SELECT ... FOR UPDATE
+                - 在 RR 下，可能阻塞落在同一范围的 INSERT（gap/next-key）
+            - 典型场景
+                - 扣库存
+                - 余额扣减
+                - 状态机推进
+        - LOCK IN SHARE MODE
+            - 我希望别人不要修改这些记录，但是允许别人也读
+            - 会阻塞：
+                - 别人对同一记录的 UPDATE/DELETE（写需要 X 锁，与 S 冲突）
+                - 允许别人 SELECT/SELECT ... LOCK IN SHARE MODE
+            - 不建议这样写，建议直接用 FOR UPDATE
+    - 丢失更新与两种解决方案（乐观/悲观）
+        - 丢失更新：两个并发事务基于同一个旧值做读-改-写，后提交的覆盖先提交的写，导致先提交的修改丢失了
+        - 错误写法
+            - SELECT stock FROM products WHERE id = 1; 读到 10
+            - 应用层算出 new_stock = 10 - 3 = 7
+            - UPDATE products SET stock = 7 WHERE id = 1;
+            - 两个事务同时做，会把其中一个扣减覆盖掉
+        - 解决方案 1：悲观锁
+            - 不相信并发环境下别人不会动它，先把行锁住，再读再改写
+        - 乐观锁
+            - 我允许并发发生，但提交更新时必须检测数据没人改过，否则失败重试
+            - 版本号乐观锁（CAS 思路）
+            - 条件更新（无显示 version，适合库存/额度）
+    - 死锁与锁等待排查
+        - 锁等待
+            - 表现：某条语句一直卡住（直到超时）
+            - 原因：要的锁被别人持有，只能等
+            - 结果：最终等到锁释放成功，要么超时失败
+            - 参数：innodb_lock_wait_timeout，默认 50s
+        - 死锁
+            - 表现：两（或多）个事务形成循环等待，A 等 B 的锁，B 等 A 的锁
+            - InnoDB 会主动检测并选择一个事务回滚
+        - 故障排查 SOP
+            - 用 data_lock_waits 找 blocking_pid
+            - 用 data_locks 看锁类型/索引/是否 GAP
+            - 用 innodb status 还原死锁链路或等待细节
+        - 找谁挡谁
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215193614734.png,597,223)
+            - waiting_pid：卡住的那条 SQL
+            - blocking_pid：真正的持锁者
+            - blocking_sql：它在做什么
+        - 到底等什么的锁
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215193639648.png,336,113)
+            - INDEX_NAME：锁在哪个索引，PRIMARY 还是某个二级索引
+            - LOCK_MODE：是否包含 GAP
+            - LOCK_STATUS：WAITING/GRANTED
+        - InnoDB Status：死锁/等待的人话版证据
+            - SHOW ENGINE INNODB STATUS
+            - LATEST DETECTED DEADLOCK：最近一次死锁的完整链路，SQL、索引、锁类型
+            - TRANSACTIONS：当前锁等待
+        - Processlist：快速识别 MDL/DDL
+            - SHOW PROCESSLIST;
+            - Waiting for table metadata lock -> 多半是 DDL 或者是长事务 MDL
+        - 实验
+            - 准备表
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215202416263.png,440,180)
+            - 死锁类型 A：加锁顺序不一致
+                - SessionA
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215202507865.png,429,93)
+                - SessionB
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215202601314.png,411,87)
+                - 预期：其中一个会话报 deadlock 并回滚
+    - 下单事务边界设计（订单+明细+库存+支付状态）
+        - 典型下单链路与拆分原则
+            - 本地事务：创建订单 + 明细 + 预扣/冻结库存
+            - 事务外：调用支付（或下游）
+            - 本地事务：处理支付回调（幂等）+推进订单状态+扣减冻结/确认库存
+        - 订单状态机
+            - 最小状态集
+                - CREATED：订单已创建
+                - PENDING_PAYMENT：等待支付
+                - PAID：支付成功
+                - CANCELLED：取消/超时取消
+                - REFUNDED：已退款
+            - 关键约束：状态推进必须单向并且有条件
+                - PENDING_PAYMENT -> PAID
+                - PENDING_PAYMENT -> CANCELLED
+                - PAID -> REFUND
+        - 三种库存策略
+            - 直接扣减
+                - 下单时直接 stock = stock - n
+                - 风险：支付失败要补偿（回滚库存），需要可靠的取消/超时机制。
+            - 冻结库存
+                - 库存分为
+                    - available_stock 可售
+                    - frozen_stock 冻结（锁定给待支付订单）
+                - 下单 available -= n，frozen += n
+                - 支付成功 frozen -= n （确认出库）
+                - 取消/超时：available += n，frozen -= n
+            - 库存流水
+                - 用流水记录变更，按流水聚合库存
+                - 适合强一致性审计，但是实现复杂，读性能压力高（需要物化）
+        - 事务边界设计
+            - 下单：创建订单+明细+冻结库存
+                - 幂等键：idempotency_key （来自客户端/业务生成），订单表加唯一约束）
+            - 事务内步骤
+                - 插入订单
+                - 插入订单明细
+                - 冻结库存
+            - 示例
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215205804020.png,593,422)
+            - 调用支付（事务外）
+                - 事务提交后，再调用：
+                    - 支付下单 api
+                    - 生成支付链接
+                - 为什么在事务外
+                    - 支付调用可能慢/失败/重试
+                    - 事务内长期持有锁、占连接、阻塞其他订单和库存写，放大锁等待与死锁
+            - 支付回调（本地事务 2）：幂等落库+状态推进+确认库存
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215210021782.png,658,401)
+            - 订单超时取消（本地事务 3）：状态推进+释放冻结
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215210059002.png,548,307)
+        - 事务日志（redo/undo/binlog）与两阶段提交（2PC）
+            - redo/undo/binlog
+                - redo：InnoDB，物理页级，WAL
+                    - 解决：持久性 + 崩溃恢复
+                    - 记录对数据页做了什么修改，更偏物理意义，用于崩溃后重放到数据页
+                    - 采用 WAL(Write-Ahead Logging)：先写日志，再异步刷脏页
+                    - 即使数据页还没刷盘，只要 redo 持久化，崩溃后也能恢复
+                    - 简单理解：数据库修改先写在便签（redo），再慢慢抄到大账本（数据页）。
+                - undo log：InnoDB，逻辑回滚信息 + 旧版本
+                    - 解决：原子性 + MVCC
+                    - 回滚：事务失败时，按 undo 把修改撤销
+                    - MVCC：提供旧版本，让快照读能读到“过去的值“
+                    - 代价：长事务会让 undo 堆积
+                - binlog（MySQL Server 层，逻辑日志）
+                    - 解决：复制（主从）+点时间恢复（PITR）+ 审计
+                    - 记录逻辑事件：如“某表插入了哪些行/执行了什么语句“
+                    - 不属于 InnoDB，而是 MySQL Server 层统一管理
+                    - 主从复制依赖 binlog（从库拉取并重放）
+            - 为什么 redo 不等于 binlog：解决的是不同问题
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215210924663.png,607,263)
+            - 两阶段提交 (2PC)：保证 redo 与 binlog 同生共死
+                - 核心问题：提交时要同时写 redo 和 binlog，如果写到一半崩溃，会出现灾难性不一致
+                    - 只写了 redo，没写 binlog：
+                        - 主库崩溃恢复后数据存在，但从库永远看不到（复制丢事务）
+                    - 只写了 binlog，没写 redo：
+                        - 主库崩溃恢复后数据不存在，但从库重放后出现
+                - MySQL 用 2PC 把 redo 与 binlog 的提交绑定在一起
+                - 关键流程
+                    - 事务准备阶段（Prepare）
+                        - InnoDB 写 redo log prepare（表示：我已经把这个事务的 redo 记录齐了，处于可提交状态）
+                    - 写 binlog
+                        - Server 层把该事务写入 binlog（并根据配置决定是否 fsync）
+                    - 提交阶段（Commit）
+                        - InnoDB 写 redo log commit（表示事务正式提交）
+                    - 崩溃恢复判定规则
+                        - 有 prepare 无 commit：看 binlog 是否存在该事务；存在补 commit，否则回滚
+                        - 有 commit：一定提交（重放 redo）
+                - 关键可靠性参数
+                    - innodb_flush_log_at_trx_commit：控制 redo 的刷盘策略
+                        - 1（最安全）：每次提交都把 redo 刷盘（fsync）
+                        - 2：每次提交写到 OS cache，每秒 fsync（可能丢失 1s 事务）
+                        - 0：每秒写 + 刷（风险更大）
+                    - sync_binlog：控制 binlog 的刷盘策略
+                        - 1 （最安全）：每次提交都 fsync binlog。
+                        - 0：由 OS 决定何时刷（可能丢）
+            - 长事务危害与治理
+                - 长事务
+                    - 事务持续时间长
+                    - 事务持有锁很久
+                    - 事务一直没有结果
+                - 危害
+                    - undo 膨胀 + MVCC 历史版本堆积
+                    - 锁等待/吞吐下降
+                    - 死锁概率上升
+                    - MDL 阻塞 DDL/DML
+                    - 复制延迟
+                    - 自增锁/热点资源争用加剧
+                    - 备份/一致性快照变慢或变大
+                - 定位长事务
+                    - 查看当前正在跑的会话
+                        - SHOW PROCESSLIST;
+                        - Time 很大
+                        - State 出现 Locked/Waiting for ... lock/Waiting for table metadata lock
+                    - 直接找活的最久的事务
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215214600477.png,479,207)
+                        - trx_age_sec 最大的
+                        - trx_state 是否 RUNNING/LOCK WAIT
+                        - trx_query 在做什么
+                    - 精准定位谁在等谁
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/15/20260215193614734.png,597,223)
+                    - 查看锁明细
+                    - SHOW ENGINE INNODB STATUS
+                - 止血：如何让系统恢复
+                    - 让持锁事务提交/回滚
+                    - KILL 持锁连接
+                    - 缩短等待
+                    - 如果是 MDL 卡住，定位 DDL/持锁事务，结束它们，避免高峰 DDL
+                - 制度化
+                    - 应用层硬约束
+                        - 事务内禁止外部调用
+                        - 事务内只做：必要的几条 SQL
+                        - 所有事务用 try { ...; commit } catch { rollback } finally { cleanup }
+                        - 连接池必须保证
+                            - 出错时 rollback
+                            - 归还连接前清理会话状态
+                        - 设置超时
+                            - 业务接口超时
+                            - DB 侧锁等待超时策略
+                    - 批处理/大事务拆分
+                        - 错误示例：UPDATE t SET ... WHERE created_at < '...';
+                        - 按照主键或时间分片，分批提交
+                    - DDL 发布规范
+                        - 高峰期不做 DDL
+                        - 选择 online DDL 能力
+                        - 先建索引再切流，或者用灰度策略
+                        - 对 "Waiting for table metadata lock" 设置报警
+                    - 监控报警
+                        - information_schema.innodb_trx 种 trx_age 超阈值数量
+                        - 锁等待数量/时间
+                        - undo 表空间增长
+                        - 复制延迟
+{{< /mind >}}
+
+# 附录
+
+
+
+docker-componse.yml
+
+```yml
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql80
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: demo
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app123456
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+      - --sql_mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+    volumes:
+      - mysql_data:/var/lib/mysql
+volumes:
+  mysql_data:
+```
+
+建表 SQL：
+
+```sql
+USE demo;
+
+CREATE TABLE users (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(32) NOT NULL,
+  email VARCHAR(128) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_email(email)
+) ENGINE=InnoDB;
+
+CREATE TABLE orders (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_user_ct(user_id, created_at)
+) ENGINE=InnoDB;
+```
+
+电商数据集：
+
+```sql
+CREATE TABLE users (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(32) NOT NULL,
+  email VARCHAR(128) NOT NULL,
+  city VARCHAR(32),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_email(email)
+) ENGINE=InnoDB;
+
+CREATE TABLE products (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(64) NOT NULL,
+  category VARCHAR(32) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_cat_price(category, price)
+) ENGINE=InnoDB;
+
+CREATE TABLE orders (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  status TINYINT NOT NULL,        -- 0=created 1=paid 2=shipped 3=done 4=cancel
+  total_amount DECIMAL(10,2) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_user_ct(user_id, created_at),
+  KEY idx_status_ct(status, created_at)
+) ENGINE=InnoDB;
+
+CREATE TABLE order_items (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  order_id BIGINT NOT NULL,
+  product_id BIGINT NOT NULL,
+  quantity INT NOT NULL,
+  unit_price DECIMAL(10,2) NOT NULL,
+  KEY idx_order(order_id),
+  KEY idx_product(product_id)
+) ENGINE=InnoDB;
+```
+
+data seed 插入样例数据脚本：
+
+```sql
+-- =========================================================
+-- dataseed for stage-1 project queries
+-- Tables: users, products, orders, order_items
+-- MySQL 8.0+
+-- =========================================================
+
+SET NAMES utf8mb4;
+SET sql_safe_updates = 0;
+
+USE demo;
+
+-- -----------------------------
+-- 0) Clean & reset
+-- -----------------------------
+-- If you have FK in future, use TRUNCATE with FK checks disabled.
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE order_items;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE products;
+TRUNCATE TABLE users;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- -----------------------------
+-- 1) Users (12 users, some with NULL/empty city)
+-- -----------------------------
+INSERT INTO users (id, name, email, city, created_at) VALUES
+(1,  'alice',  'alice@test.com',  'Tokyo',   '2026-01-05 09:10:00'),
+(2,  'bob',    'bob@test.com',    'Tokyo',   '2026-01-20 12:00:00'),
+(3,  'cathy',  'cathy@test.com',  'Osaka',   '2026-01-25 18:30:00'),
+(4,  'david',  'david@test.com',  'Osaka',   '2026-02-01 08:00:00'),
+(5,  'eric',   'eric@test.com',   'Nagoya',  '2026-02-05 10:15:00'),
+(6,  'fiona',  'fiona@test.com',  'Nagoya',  '2026-02-07 14:20:00'),
+(7,  'gary',   'gary@test.com',   NULL,      '2026-02-08 11:11:00'), -- city NULL
+(8,  'helen',  'helen@test.com',  '',        '2026-02-09 09:09:00'), -- city empty string
+(9,  'ivan',   'ivan@test.com',   'Tokyo',   '2026-02-10 16:45:00'),
+(10, 'jane',   'jane@test.com',   'Osaka',   '2026-02-11 20:00:00'),
+(11, 'kate',   'kate@test.com',   'Tokyo',   '2026-02-12 07:30:00'),
+(12, 'leo',    'leo@test.com',    'Nagoya',  '2026-02-12 22:10:00');
+
+-- -----------------------------
+-- 2) Products (12 products, 4 categories)
+-- categories: phone, laptop, accessory, book
+-- -----------------------------
+INSERT INTO products (id, name, category, price, created_at) VALUES
+(1,  'Phone A',          'phone',     699.00, '2026-01-10 10:00:00'),
+(2,  'Phone B Pro',      'phone',     999.00, '2026-01-28 10:00:00'),
+(3,  'Laptop Air',       'laptop',   1299.00, '2026-01-15 10:00:00'),
+(4,  'Laptop Pro 14',    'laptop',   2199.00, '2026-02-01 10:00:00'),
+(5,  'USB-C Cable',      'accessory',   19.90, '2026-01-05 10:00:00'),
+(6,  'Charger 65W',      'accessory',   39.90, '2026-02-05 10:00:00'),
+(7,  'Earbuds',          'accessory',   89.00, '2026-02-08 10:00:00'),
+(8,  'Laptop Sleeve',    'accessory',   29.90, '2026-01-22 10:00:00'),
+(9,  'SQL Book Basic',   'book',        49.00, '2026-01-12 10:00:00'),
+(10, 'SQL Book Advanced','book',        79.00, '2026-02-03 10:00:00'),
+(11, 'Mouse Pro',        'accessory',   59.00, '2026-01-30 10:00:00'),
+(12, 'Keyboard Mech',    'accessory',  109.00, '2026-02-07 10:00:00');
+
+-- -----------------------------
+-- 3) Orders (18 orders)
+-- status: 0=created 1=paid 2=shipped 3=done 4=cancel
+-- We include:
+-- - users with no orders: user 7,8
+-- - created/unpaid, cancel
+-- - an order with no items (for anomaly query)
+-- - an order with mismatched total_amount vs items sum (for anomaly query)
+-- -----------------------------
+INSERT INTO orders (id, user_id, status, total_amount, created_at) VALUES
+(1001, 1,  3,  788.90, '2026-01-06 10:00:00'), -- done (old)
+(1002, 1,  4,   89.00, '2026-01-18 12:00:00'), -- cancel
+(1003, 2,  1,  129.80, '2026-01-29 09:30:00'), -- paid
+(1004, 3,  2, 1299.00, '2026-02-02 13:00:00'), -- shipped
+(1005, 4,  0,   39.90, '2026-02-09 10:05:00'), -- created (unpaid)
+(1006, 4,  1,  718.90, '2026-02-10 10:10:00'), -- paid
+(1007, 5,  3,  999.00, '2026-02-07 18:00:00'), -- done (recent 7d)
+(1008, 5,  3,   98.00, '2026-02-11 08:15:00'), -- done
+(1009, 6,  1,  149.80, '2026-02-12 09:00:00'), -- paid
+(1010, 6,  4, 2199.00, '2026-02-12 21:00:00'), -- cancel
+(1011, 9,  3,  738.90, '2026-02-08 12:00:00'), -- done
+(1012, 9,  1,  999.00, '2026-02-13 09:00:00'), -- paid (today)
+(1013, 10, 2,  118.90, '2026-02-06 20:00:00'), -- shipped
+(1014, 10, 0,  1299.00,'2026-02-13 10:30:00'), -- created (unpaid)
+(1015, 11, 1,  227.00, '2026-02-11 22:00:00'), -- paid
+(1016, 12, 3,  259.00, '2026-02-10 23:00:00'), -- done
+(1017, 2,  3,  109.00, '2026-02-05 09:00:00'), -- done
+(1018, 3,  1,   79.00, '2026-02-04 09:00:00'); -- paid
+
+-- -----------------------------
+-- 4) Order items
+-- Notes:
+-- - Order 1002 canceled but has items
+-- - Order 1005 created/unpaid has items
+-- - Order 1014 created/unpaid has NO items (anomaly)
+-- - Order 1015 total_amount mismatched intentionally (anomaly)
+-- -----------------------------
+
+-- order 1001 total 788.90 = Phone A(699) + Earbuds(89.0) + Cable(0?) => We'll do 699 + 89 + 0.90? no.
+-- Keep it simple: 699 + 89 + 0.90 doesn't exist. We'll set items sum = 788.90 using Cable 19.90 instead:
+-- 699 + 89 + 19.90 = 807.90, not 788.90.
+-- So adjust: set order 1001 total to 807.90? but already inserted 788.90.
+-- We'll create mismatch? No, mismatch is for 1015. Let's fix 1001 by updating total_amount after items inserted.
+-- We'll insert items then UPDATE order total for 1001 to match.
+
+INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
+-- 1001: 699 + 89 + 19.90 = 807.90
+(1001, 1, 1, 699.00),
+(1001, 7, 1,  89.00),
+(1001, 5, 1,  19.90),
+
+-- 1002 canceled: 89.00
+(1002, 7, 1,  89.00),
+
+-- 1003 paid: 2x Cable(19.90) + Charger(39.90) + Sleeve(29.90) = 129.60? Actually 39.80 + 39.90 + 29.90 = 109.60
+-- We'll do: 2x Cable + 1x Keyboard(109.00) = 148.80; no.
+-- Let's align to 129.80 (inserted). Use: Cable(19.90)*2=39.80 + Mouse(59) + Sleeve(29.90)=128.70; not.
+-- Use: Cable*2=39.80 + Charger(39.90)=79.70 + Earbuds(49?) no.
+-- We'll just adjust order 1003 total later to match items to reduce confusion.
+(1003, 5, 2,  19.90),
+(1003, 6, 1,  39.90),
+(1003, 8, 1,  29.90),
+
+-- 1004 shipped: Laptop Air 1299
+(1004, 3, 1, 1299.00),
+
+-- 1005 created/unpaid: Charger 39.90
+(1005, 6, 1,  39.90),
+
+-- 1006 paid: Phone A 699 + Charger 39.90 - but inserted 718.90 => need extra  -20? We'll add Cable 19.90 => 758.80
+-- We'll adjust order total later.
+(1006, 1, 1, 699.00),
+(1006, 6, 1,  39.90),
+(1006, 5, 1,  19.90),
+
+-- 1007 done: Phone B Pro 999
+(1007, 2, 1, 999.00),
+
+-- 1008 done: SQL Basic 49 + SQL Adv 79? = 128, but order total inserted 98
+-- We'll make: SQL Basic 49 *2 = 98
+(1008, 9, 2,  49.00),
+
+-- 1009 paid: Cable 19.90*1 + Charger 39.90*1 + Mouse 59*1 + Sleeve 29.90*1 = 148.70 (close to 149.80)
+-- We'll add 1 more Cable => +19.90 => 168.60. not.
+-- We'll just adjust order 1009 total later to match items.
+(1009, 5, 1,  19.90),
+(1009, 6, 1,  39.90),
+(1009, 11,1,  59.00),
+(1009, 8, 1,  29.90),
+
+-- 1010 cancel: Laptop Pro 14 2199
+(1010, 4, 1, 2199.00),
+
+-- 1011 done: Phone A 699 + Earbuds 89 + Charger 39.90 = 827.90, but total inserted 738.90
+-- We'll make it: Phone A 699 + Earbuds 39.90? not.
+-- We'll use: Phone A 699 + Mouse 39.90? not.
+-- We'll use: Phone A 699 + Cable 19.90 + Sleeve 29.90 = 748.80 (close)
+-- Let's do: Phone A 699 + Sleeve 29.90 + Mouse 59 = 787.90
+-- Still off. We'll adjust order total later.
+(1011, 1, 1, 699.00),
+(1011, 8, 1,  29.90),
+(1011, 11,1,  59.00),
+
+-- 1012 paid today: Phone B Pro 999
+(1012, 2, 1, 999.00),
+
+-- 1013 shipped: Earbuds 89 + Mouse 59 - total inserted 118.90 => make 89 + 29.90 = 118.90
+(1013, 7, 1,  89.00),
+(1013, 8, 1,  29.90),
+
+-- 1014 created/unpaid: NO ITEMS (intentional anomaly)
+
+-- 1015 paid: mismatch intentionally
+-- items sum = 49 + 79 + 59 = 187, but order total inserted 227.00 (mismatch +40)
+(1015, 9, 1,  49.00),
+(1015, 10,1,  79.00),
+(1015, 11,1,  59.00),
+
+-- 1016 done: Keyboard 109 + Mouse 59 + Cable 19.90 + Sleeve 29.90 = 217.80, but total inserted 259 (we can align later)
+(1016, 12,1, 109.00),
+(1016, 11,1,  59.00),
+(1016, 5, 1,  19.90),
+(1016, 8, 1,  29.90),
+
+-- 1017 done: Keyboard 109
+(1017, 12,1, 109.00),
+
+-- 1018 paid: SQL Adv 79
+(1018, 10,1,  79.00);
+
+-- -----------------------------
+-- 5) Fix totals (keep most orders consistent except 1015 mismatch and 1014 no-items)
+-- -----------------------------
+-- Update order totals to match item sums for these orders:
+UPDATE orders o
+JOIN (
+  SELECT order_id, ROUND(SUM(quantity * unit_price), 2) AS item_sum
+  FROM order_items
+  GROUP BY order_id
+) x ON x.order_id = o.id
+SET o.total_amount = x.item_sum
+WHERE o.id IN (1001,1003,1006,1009,1011,1016);
+
+-- Keep 1015 mismatch intentionally
+-- Keep 1014 no-items intentionally
+
+-- -----------------------------
+-- 6) Quick sanity checks (optional)
+-- -----------------------------
+-- 6.1 Users with no orders
+-- SELECT u.id, u.name FROM users u LEFT JOIN orders o ON o.user_id=u.id WHERE o.id IS NULL;
+
+-- 6.2 Orders with no items
+-- SELECT o.id FROM orders o LEFT JOIN order_items oi ON oi.order_id=o.id WHERE oi.id IS NULL;
+
+-- 6.3 Orders with total mismatch (excluding no-items)
+-- SELECT o.id, o.total_amount, x.item_sum
+-- FROM orders o
+-- JOIN (
+--   SELECT order_id, ROUND(SUM(quantity*unit_price),2) AS item_sum
+--   FROM order_items
+--   GROUP BY order_id
+-- ) x ON x.order_id=o.id
+-- WHERE o.total_amount <> x.item_sum;
+
+-- Done.
+```
+
+批量造数脚本：
+
+mysql -h 127.0.0.1 -P 3306 -u root -p demo < gen_big.sql
+
+```sql
+-- =========================================================
+-- Stable data generator for MySQL 8.0.45 (NO CTE, NO reopen)
+-- Tables: users, products, orders, order_items
+-- =========================================================
+
+USE demo;
+
+-- ----------------------------
+-- 0) Parameters (adjust here)
+-- ----------------------------
+SET @USER_CNT            := 20000;    -- users
+SET @PRODUCT_CNT         := 500;      -- products
+SET @ORDER_CNT           := 100000;   -- orders
+SET @MAX_ITEMS_PER_ORDER := 5;        -- 1..5 items per order
+SET @DAYS_RANGE          := 180;      -- orders distributed in last N days
+SET @ANOMALY_RATE        := 0.002;    -- e.g. 0.2% anomalies
+
+-- Derived max N for sequence table (only generate what we need)
+SET @MAX_N := GREATEST(@USER_CNT, @PRODUCT_CNT, @ORDER_CNT);
+
+-- For speed (dev env only)
+SET SESSION autocommit = 0;
+SET SESSION unique_checks = 0;
+SET SESSION foreign_key_checks = 0;
+
+-- ----------------------------
+-- 1) Truncate target tables
+-- ----------------------------
+TRUNCATE TABLE order_items;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE products;
+TRUNCATE TABLE users;
+
+-- ----------------------------
+-- 2) Build sequence table seq(n) = 1..@MAX_N
+--    Key point: DO NOT reference the same (temporary) table multiple times.
+--    We build seq using ONLY inline derived digits sets.
+-- ----------------------------
+DROP TABLE IF EXISTS seq;
+CREATE TABLE seq (
+  n INT NOT NULL PRIMARY KEY
+) ENGINE=InnoDB;
+
+-- Insert numbers 1..@MAX_N
+INSERT INTO seq(n)
+SELECT x.n
+FROM (
+  SELECT
+    (d0.n
+     + d1.n*10
+     + d2.n*100
+     + d3.n*1000
+     + d4.n*10000
+     + d5.n*100000) + 1 AS n
+  FROM
+    (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+     UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d0
+  CROSS JOIN
+    (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+     UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d1
+  CROSS JOIN
+    (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+     UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d2
+  CROSS JOIN
+    (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+     UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d3
+  CROSS JOIN
+    (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+     UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d4
+  CROSS JOIN
+    (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+     UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d5
+) x
+WHERE x.n <= @MAX_N;
+
+ANALYZE TABLE seq;
+
+-- ----------------------------
+-- 3) Insert users
+-- ----------------------------
+INSERT INTO users (name, email, city, created_at)
+SELECT
+  CONCAT('user_', s.n) AS name,
+  CONCAT('user_', s.n, '@example.com') AS email,
+  CASE (s.n % 8)
+    WHEN 0 THEN 'Tokyo'
+    WHEN 1 THEN 'Osaka'
+    WHEN 2 THEN 'Nagoya'
+    WHEN 3 THEN 'Fukuoka'
+    WHEN 4 THEN 'Sapporo'
+    WHEN 5 THEN 'Kyoto'
+    WHEN 6 THEN NULL
+    ELSE ''
+  END AS city,
+  NOW() - INTERVAL (s.n % 365) DAY - INTERVAL (s.n % 86400) SECOND AS created_at
+FROM seq s
+WHERE s.n <= @USER_CNT;
+
+-- ----------------------------
+-- 4) Insert products
+-- ----------------------------
+INSERT INTO products (name, category, price, created_at)
+SELECT
+  CONCAT(
+    CASE (s.n % 4)
+      WHEN 0 THEN 'Phone'
+      WHEN 1 THEN 'Laptop'
+      WHEN 2 THEN 'Accessory'
+      ELSE 'Book'
+    END,
+    ' ', s.n
+  ) AS name,
+  CASE (s.n % 4)
+    WHEN 0 THEN 'phone'
+    WHEN 1 THEN 'laptop'
+    WHEN 2 THEN 'accessory'
+    ELSE 'book'
+  END AS category,
+  CASE (s.n % 4)
+    WHEN 0 THEN 399 + (s.n % 800)          -- phone: 399~1198
+    WHEN 1 THEN 899 + (s.n % 2200)         -- laptop: 899~3098
+    WHEN 2 THEN 9.90 + (s.n % 200)         -- accessory: 9.90~209.90
+    ELSE 19 + (s.n % 120)                  -- book: 19~139
+  END AS price,
+  NOW() - INTERVAL (s.n % 180) DAY AS created_at
+FROM seq s
+WHERE s.n <= @PRODUCT_CNT;
+
+-- ----------------------------
+-- 5) Insert orders (total_amount initially 0)
+-- ----------------------------
+INSERT INTO orders (user_id, status, total_amount, created_at)
+SELECT
+  1 + (s.n % @USER_CNT) AS user_id,
+  CASE
+    WHEN (s.n % 100) < 10 THEN 0          -- 10% created
+    WHEN (s.n % 100) < 60 THEN 1          -- 50% paid
+    WHEN (s.n % 100) < 75 THEN 2          -- 15% shipped
+    WHEN (s.n % 100) < 95 THEN 3          -- 20% done
+    ELSE 4                               -- 5% cancel
+  END AS status,
+  0.00 AS total_amount,
+  NOW()
+    - INTERVAL (s.n % @DAYS_RANGE) DAY
+    - INTERVAL (s.n % 86400) SECOND AS created_at
+FROM seq s
+WHERE s.n <= @ORDER_CNT;
+
+-- Record inserted orders id range (TRUNCATE => usually starts at 1, but query it anyway)
+SELECT MIN(id), MAX(id) INTO @ORDER_ID_START, @ORDER_ID_END FROM orders;
+
+-- ----------------------------
+-- 6) Insert order_items
+--    Each order has 1..@MAX_ITEMS_PER_ORDER items (determined by order_id%MAX)
+--    product_id computed deterministically from (order_id, item_idx)
+-- ----------------------------
+-- Inline item indices 1..5 (expand if you set MAX_ITEMS_PER_ORDER > 5)
+INSERT INTO order_items (order_id, product_id, quantity, unit_price)
+SELECT
+  o.id AS order_id,
+  p.id AS product_id,
+  1 + ((o.id + i.k) % 3) AS quantity,
+  p.price AS unit_price
+FROM orders o
+JOIN (
+  SELECT 1 AS k UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+) i
+  ON i.k <= 1 + (o.id % @MAX_ITEMS_PER_ORDER)
+JOIN products p
+  ON p.id = 1 + ((o.id * 17 + i.k * 31) % @PRODUCT_CNT)
+WHERE o.id BETWEEN @ORDER_ID_START AND @ORDER_ID_END;
+
+-- ----------------------------
+-- 7) Backfill orders.total_amount = SUM(items)
+-- ----------------------------
+UPDATE orders o
+JOIN (
+  SELECT oi.order_id, ROUND(SUM(oi.quantity * oi.unit_price), 2) AS item_sum
+  FROM order_items oi
+  GROUP BY oi.order_id
+) x ON x.order_id = o.id
+SET o.total_amount = x.item_sum;
+
+-- ----------------------------
+-- 8) Inject anomalies (optional)
+--    A) no-items orders: delete items of last @ANOMALY_ORDERS orders
+--    B) amount mismatch: add +10 to another chunk of orders
+-- ----------------------------
+SET @ANOMALY_ORDERS := CEIL(@ORDER_CNT * @ANOMALY_RATE);
+SET @ANOMALY_ORDERS := IF(@ANOMALY_ORDERS < 1, 1, @ANOMALY_ORDERS);
+
+-- A) Delete items for last N orders => "orders with no items"
+DELETE FROM order_items
+WHERE order_id > (@ORDER_ID_END - @ANOMALY_ORDERS);
+
+-- B) Pick previous chunk and corrupt total_amount (+10) => "amount mismatch"
+UPDATE orders
+SET total_amount = total_amount + 10
+WHERE id BETWEEN (@ORDER_ID_END - 2*@ANOMALY_ORDERS)
+            AND (@ORDER_ID_END - @ANOMALY_ORDERS - 1);
+
+-- Re-align totals for orders that still have items (keep anomalies as anomalies)
+UPDATE orders o
+JOIN (
+  SELECT oi.order_id, ROUND(SUM(oi.quantity * oi.unit_price), 2) AS item_sum
+  FROM order_items oi
+  GROUP BY oi.order_id
+) x ON x.order_id = o.id
+SET o.total_amount = x.item_sum
+WHERE o.id <= (@ORDER_ID_END - @ANOMALY_ORDERS);
+
+-- ----------------------------
+-- 9) Analyze & commit
+-- ----------------------------
+ANALYZE TABLE users;
+ANALYZE TABLE products;
+ANALYZE TABLE orders;
+ANALYZE TABLE order_items;
+
+COMMIT;
+
+SET SESSION foreign_key_checks = 1;
+SET SESSION unique_checks = 1;
+SET SESSION autocommit = 1;
+
+-- ----------------------------
+-- 10) Sanity checks
+-- ----------------------------
+SELECT 'users' AS tbl, COUNT(*) AS cnt FROM users
+UNION ALL SELECT 'products', COUNT(*) FROM products
+UNION ALL SELECT 'orders', COUNT(*) FROM orders
+UNION ALL SELECT 'order_items', COUNT(*) FROM order_items;
+
+-- Orders with no items
+SELECT COUNT(*) AS orders_no_items
+FROM orders o
+LEFT JOIN order_items oi ON oi.order_id = o.id
+WHERE oi.id IS NULL;
+
+-- Amount mismatch orders (only those that still have items)
+SELECT COUNT(*) AS orders_amount_mismatch
+FROM orders o
+JOIN (
+  SELECT order_id, ROUND(SUM(quantity * unit_price), 2) AS item_sum
+  FROM order_items
+  GROUP BY order_id
+) x ON x.order_id = o.id
+WHERE o.total_amount <> x.item_sum;
+```
+
+
