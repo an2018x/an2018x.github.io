@@ -881,9 +881,282 @@ toc: true
                         - 复制延迟
 {{< /mind >}}
 
+# 表设计与数据治理
+
+{{< mind height="560px" >}}
+- 表设计与数据治理
+    - 建模方法与边界
+        - 建模方法
+            - 列出核心用例
+                - 查询（读）：用户订单列表、订单详情、支付结果、库存可售、待支付超时扫描。
+                - 命令（写）：创建订单、锁/冻结库存、支付回调、取消订单、发货。
+            - 抽实体与关系
+                - 订单
+                - 订单明细
+                - 库存
+                - 支付交易/回调
+                - 事件/审计
+            - 定边界
+                - 哪些字段属于状态（可覆盖可更新）
+                - 哪些属于事件/流水（只追加不更新）
+                - 哪些属于派生/统计（可重建，允许异步）
+        - 边界划分
+            - 状态表
+                - 特点：一行代表一个业务对象的当前状态，会被更新
+                - 示例 orders
+                    - status、paid_at、cancelled_at 这写会变
+                    - 读多写少，但是必须写正确（条件更新/事务）
+                - 适用于需要当前值的读
+            - 事件表
+                - 特点：只追加，不覆盖；用于审计、追溯、重放。
+                - 示例 order_events
+                    - 记录状态变迁：PENDING -> PAID，以及时间、操作者、来源
+                    - 永远不 UPDATE，只 INSERT
+                - 适用
+                    - 查发生过什么
+                    - 重建派生数据
+            - 流水表
+                - 特点：和事件表很像，更偏可对账、可汇总
+                - inventory_ledger、payment_txn
+                    - 每次扣减，冻结，释放都记录一条流水
+                    - 可做对账：库存表 = 初始 + 流水汇总
+                - 适用：资金/库存这种需要强审计的域
+            - 聚合表
+                - 特点：为查询加速而存在，可异步更新，可重建
+                - user_order_summary，daily_gmv
+                    - 允许最终一致
+                    - 目标让核心查询不扫大表
+                - 边界经验
+                    - 状态表保证在线业务
+                    - 时间流水表保证可追溯与对账
+                    - 聚合表保证性能与体验
+    - 电商“订单-库存-支付“
+        - 建议最小表集
+            - orders：订单状态表
+            - order_iterms：订单明细 1-N
+            - inventory：库存状态表
+            - payment_notify 或 paymenet_txn：支付回调/交易流水
+            - order_events：订单事件表
+        - 边界怎么定
+            - 订单当前状态只在 orders，不要在多张表复制写
+            - 所有发生过的动作进 order_events（可追溯）
+            - 支付回调必须有独立表 + 唯一约束做幂等（不要只靠 orders）
+            - 库存推荐冻结模型：inventory.available/frozen，支付成功/取消再结算
+        - 主键设计
+            - InnoDB 的数据行物理组织顺序就是主键顺序
+            - 主键越短越好：二级索引都要携带主键值
+            - 主键越递增越好：写入更顺序，减少页分裂与随机 I/O
+            - 主键一旦选错很难改
+            - 主键方案
+                - 自增 BIGING（最常用，默认推荐）
+                - 雪花/时间有序 ID（推荐的分布式主键）
+                - UUID （不推荐当主键）
+                - 业务号 （一般不建议）
+        - 字段类型与表达
+            - 字段类型选型
+                - 金额
+                    - DECIMAL(18,2)
+                    - 金额最小货币单位方案：用 BIGINT 存分/厘，但要统一单位与换算
+                    - 对账/财务更偏 DECIMAL
+                - 时间
+                    - DATETIME(3)：推荐默认(毫秒精度，语义不依赖死区转换)
+                    - TIMESTAMP(3)：会受 session 时区影响，范围更小
+                    - 业务事件时间（下单时间、支付时间）：优先 DATETIME(3)
+                    - 需要跟 UTC/时区联动的场景才考虑 TIMESTAMP
+                    - 列表分页建议 ORDER BY created_at DESC, id DESC
+                - 状态/枚举
+                    - TINYINT/SMALLINT 存 code
+                    - 代码层映射枚举
+                - 字符串与文本
+                    - VARCHAR
+                        - 适合短文本：订单号、手机号、渠道、外部交易号
+                        - 可建索引、可唯一约束
+                    - TEXT/BLOB
+                        - 适合长文本：备注、富文本、日志原文
+                        - TEXT 不能有默认值
+                        - 需要检索的长文本：用搜索引擎倒排，不能指望 MySQL 上做 LIKE 全文
+                - JSON
+                    - 适合 payload/扩展字段
+                    - 不适合高频过滤/排序字段
+                    - JSON 里需要检索的 key 提取成独立列并建索引
+                - Boolean
+                    - MySQL 没有真正 boolean，常用 TINYINT(1) 或者 BIT(1)
+                    - 工程上，推荐 TINYINT(1) NOT NULL DEFAULT 0
+            - NULL 策略
+                - 建议尽量 NOT NULL
+                    - NULL 引入三值逻辑：=，<> 的行为让过滤结果看起来怪
+                    - 统计聚合、唯一约束语义、索引选择也更复杂
+                - 三值逻辑
+                    - col = NULL 永远为 NULL（不是 true）
+                    - 判断 NULL：必须 IS NULL/IS NOT NULL
+            - 字符集与排序规则
+                - 全库统一 utf8mb4
+                - 排序规则要统一、可预测
+            - 表达层面：默认值、精度、约束、生成列
+                - 默认值
+                    - 时间戳列：created_at/updated_at 建议在应用层写入或触发器默认值策略统一
+        - 唯一约束与幂等设计
+            - 唯一约束
+                - 保证在表内某个键组合只出现一次，是数据层的硬规则，不依赖应用正确性
+                - 适用：唯一表示、去重、幂等落库的最终防线
+                - 优点：并发下天然正确
+            - 幂等
+                - 保证同一请求执行多次，结果与执行一次等价
+                - 三要素
+                    - 如何识别同一请求
+                    - 重复请求如何处理
+                    - 副作用怎么避免重复
+                - 幂等写入的 4 种标准写法
+                    - INSERT ... ON DUPLICATE KEY UPDATE
+                        - 第一次插入，第二次则更新某些字段
+                    - INSERT IGNORE
+                        - 重复就忽略，不需要更新
+                    - 条件更新（状态机幂等）
+                    - 先插流水再改状态
+        - 软删、审计与可追溯
+            - 审计字段设计
+                - created_at DATETIME(3) NOT NULL
+                - updated_at DATETIME(3) NOT NULL
+                - created_by BIGINT NULL (或 NOT NULL + 0)
+                - updated_by BIGINT NULL
+                - created_from VARCHAR(32) NULL (来源：WEB/APP/ADMIN/JOB)
+                - updated_from VARCHAR(32) NULL
+            - 软删除
+                - 典型软删字段
+                    - is_deleted TINYINT(1) NOT NULL DEFAULT 0
+                    - deleted_at DATETIME(3) NULL
+                    - deleted_by BIGINT NULL
+                    - delete_reason VARCHAR(64) NULL
+                - 为什么要软删
+                    - 合规与可追溯：能恢复、可审计
+                    - 避免误删不可逆
+                    - 支持撤销/恢复业务
+            - 状态表 + 事件表
+                - 仅靠 updated_at 不够，真正追溯需要事件表
+                - 状态表（当前态）
+                - 事件表（历史轨迹）
+                    - order_id
+                    - event_type
+                    - event_at
+                    - operator_id
+                    - source
+                    - payload
+            - 归档、冷热分离与保留策略
+                - 归档：把低频/历史数据搬离在线库
+                - 原因
+                    - 表越来越大 -> 索引越来越大 -> buffer pool 命中下降 -> 查询变慢
+                    - 索引膨胀 -> 写入/更新维护成本变高 -> TPS 下降
+                    - 备份窗口变长、DDL 变更风险大
+                    - 冷数据占用昂贵的 SSD，成本不划算
+                - 技术手段
+                    - 归档到历史表
+                        - orders(热) + orders_archive(冷)
+                    - 分区
+                        - PARTITION BY RANGE (TO_DAYS(created_at))，按月/周分区
+                    - 冷库（另一个 MySQL 实例）
+                    - 对象存储/数仓（S3/OSS + Parquet 或 Clickhouse）
+                        - 历史明细导出到对象存储，提供离线查询
+            - 变更与在线 DDL
+                - MDL：MySQL 对表加 Metadata Lock 来保证 DDL 与 DML 的一致性。
+{{< /mind >}}
+
+# 运维与排障
+
+{{< mind height="560px" >}}
+- 运维与排障
+    - 指标体系
+        - 指标分层
+            - 业务层（用户感知层）
+                - QPS：每秒 SQL 请求数
+                - TPS：每秒事务提交数（更接近写负载与提交压力）
+                - RT(P95/P99)：请求响应时间分位数：95%/99% 的请求在这个时间内完成。
+                - 错误率：SQL 执行失败的比例与类型
+                - 慢查询数量/慢查询占比：超过 long_query_time 的语句数量 (slow log)
+            - 连接与线程层指标
+                - Threads_connected（当前连接数）：当前已建立的客户端连接数量
+                - Threads_running（正在执行的线程数）：正在执行的线程连接数
+                - max_connections 使用率：Threads_connected/max_connections
+            - InnoDB 引擎层指标
+                - Buffer Pool Hit Rate（缓冲池命中率）：逻辑读有多少比例直接命中内存，而不是去磁盘读页。
+                - InnoDB 行操作速率（InnoDB 层行读写的频率）
+                - 行锁等待强度：行锁等待次数与等待总时长。
+                - redo 生成速率
+                - 脏页比例/flush 压力
+            - OS 资源层指标
+                - CPU 与 load
+                - 磁盘 IO
+                - 内存 (swap/page cache)
+                - 网络
+                    
+{{< /mind >}}
+
+# 体系架构
+
+{{< mind height="560px" >}}
+- mysql 体系架构
+    - Server 层
+        - 连接与会话管理
+            - 客户端连接管理：TCP/Unix Socket，握手认证
+            - 线程模型：一连接一线程
+            - 会话上下文：事务隔离级别，临时表，用户变量，prepared statement 等
+        - SQL 接收与解析
+            - 词法/语法分析：把 SQL 文本解析成 AST
+            - 预处理：语义检查
+        - 优化器
+            - 生成执行计划：选择访问路径、Join 顺序、Join 算法
+            - 成本估算依赖：统计信息、索引基数、直方图、代价模型
+            - 典型产物：EXPLAIN 输出
+        - 执行器 (Executor)
+            - 按执行计划逐步执行
+            - 调用存储引擎 API 取行，写行
+            - 负责把结果返回给客户端
+            - Using filesort、Using temporary 等现象大多发生在执行阶段
+        - 查询缓存-8.0移除
+        - 元数据与权限
+        - Server 日志：binlog（逻辑日志）
+            - binlog 在 Server 层：用于复制（主从）与点时间恢复
+            - 提交时与 InnoDB redo 通过 2PC 保持一致性
+    - Storage Engine 层（存储引擎层）
+        - 内存结构
+            - Buffer Pool：缓存数据页与索引页
+            - Change Buffer：对二级索引的变更做缓冲
+        - 磁盘结构
+            - 表空间：存数据页/索引页
+            - redo log：WAL，保证崩溃恢复
+            - undo log：回滚与 MVCC 版本链
+            - doublewrite buffer：防止部分写导致页损坏
+        - 索引与访问
+            - 聚簇索引：PRIMARY KEY 叶子存整行
+            - 二级索引：叶子存二级键 + 主键值
+            - 访问路径：范围扫描、点查、回表、覆盖索引
+        - 事务与 MVCC
+            - 事务隔离：RC/RR/Serializable
+            - MVCC：读视图 + undo 版本链
+            - 锁：行锁、间隙锁、next-key 锁
+        - 崩溃恢复
+            - 依赖 redo：重放已经提交事务对页的修改
+            - undo：回滚未提交事务
+    - SELECT 查询典型数据流
+        - 客户端连接进入 Server 层，会话建立
+        - Parser 解析 SQL -> AST
+        - Optimizer 基于统计信息选择计划
+        - Executor 执行计划：通过 Handler 调用 InnoDB 读取行
+        - InnoDB 在 Buffer Pool 找页
+        - 结果返回客户端
+    - 架构图
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/16/20260216200910304.png,978,521)
+    - 事务提交典型数据流
+        - Executor 调用 InnoDB 写行，更新 buffer pool 中的数据页，产生 undo
+        - 生成 redo WAL，记录页修改
+        - 提交时 2PC
+            - InnoDB 写 redo prepare
+            - Server 写 binlog
+            - InnoDB 写 redo commit
+        - 后台线程刷脏页到数据文件，不要求提交同步
+{{< /mind >}}
+
+
 # 附录
-
-
 
 docker-componse.yml
 
