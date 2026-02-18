@@ -1,4 +1,255 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.155.3</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Thu, 12 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>mysql 知识点</title><link>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h1 id="环境准备"&gt;环境准备&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.155.3</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Wed, 18 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>计算机组成原理</title><link>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</link><pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</guid><description/></item><item><title>计算机网络</title><link>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</link><pubDate>Mon, 16 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="网络分层--端到端路径"&gt;网络分层 + 端到端路径&lt;/h1&gt;
+&lt;div id="me_0" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_0_src"&gt;
+"\"- 网络分层 + 端到端路径\\n - 分层模型\\n - 链路层 (LINK)\\n - 负责：同一链路/局域网内把 IP 包送到下一跳\\n - 典型概念：以太网、WIFI、ARP、MAC、MTU\\n - 网络层 (IP)\\n - 负责：跨网络把包从源 IP 路由到目的 IP\\n - 典型概念：IP 地址、路由表、NAT、ICMP、分片\\n - 传输层 (Transport)\\n - 负责：端到端进程通信，提供端口与可靠性\\n - 应用层 (Application)\\n - 负责：定义应用语义\\n - 端到端路径（一次 HTTPS URL 发生了什么）\\n - URL 解析与策略决策（应用层前置）\\n - 浏览器先拆 URL：\\n - schema：https -\\u003e 需要 TLS\\n - host：example.com -\\u003e 需要 DNS\\n - port：默认 443\\n - path：/index.html\\n - 是否可用缓存\\n - 是否复用已有连接\\n - DNS 解析：把域名变成 IP\\n - 目标：得到服务器的 IP (A=IPv4/AAAA=IPv6)\\n - 典型流程\\n - 浏览器/OS 先查本地缓存\\n - 没命中 -\\u003e 向递归解析器发起查询\\n - 递归解析器询问：根 -\\u003e TLD -\\u003e 权威 DNS\\n - 返回 IP + TTL\\n - TTL 决定缓存时长\\n - 同一域名可能返回多个 IP：简单的负载均衡，但是不可控\\n - TCP 连接（传输层）\\n - 目标：建立一条到服务器IP:443的 TCP 连接\\n - 典型流程\\n - 客户端选一个临时端口作为源端口\\n - 形成 socket 四元组\\n - 三次握手完成后，连接进入 ESTABLISHED\\n - 连接的唯一标识符是四元组\\n - NAT 环境下：srcIP 可能是私网 IP，但是公网会被 NAT 改写\\n - RTT 大时，建连成本高：三次握手至少消耗 1 个 RTT\\n - NAT：内网 IP 也能访问公网（网络层/链路层交叉）\\n - 大多数客户端在 NAT \\n - 内网 192.168.x.x:ramdomPort\\n - 出口 NAT 把它映射成：公网 IP:另一个 Port\\n - NAT 设备维护一张映射表（内网四元组\\u003c-\\u003e公网四元组）\\n - 映射有超时：长时间无数据可能被回收\\n - 并发连接太多可能端口耗尽\\n - TLS 握手：在 TCP 上建立安全通道\\n - 目标\\n - 验证服务器身份\\n - 协商密钥\\n - 后续数据用对称加密 + 完整性保护\\n - TLS 发生在 TCP 建立之后、HTTP 之前\\n - 证书用于“证明对方是它声称的域名“\\n - 发送 HTTP 请求并接受响应\\n - HTTP 内容\\n - 请求行：GET /index.html\\n - 头：Host、User-Agent、Accept、Cookie\\n - 体：GET 通常无，POST 常见\\n - 服务器返回\\n - 状态码：200/301/404/500\\n - 头：Content-Type、Content-Length、Set-Cookie\\n - 体：HTML/JSON/图片等\\n - 连接复用与关闭：不是每次都重新握手\\n - HTTP/1.1 默认倾向长连接（Keep-Alive）\\n - 浏览器有连接池，会复用到同一个 host:port 的连接\\n - 关键概念锚点\\n - RTT：网络交互的时间单位\\n - RTT = 一个来回的延迟\\n - 建连/TLS/重传都依赖 RTT\\n - 高 RTT 下，交互次数越多越慢\\n - 吞吐与 BDP(带宽-时延积)\\n - MTU 月 MSS\\n - MTU：链路层最大承载\\n - MSS：TCP 单段可承载的应用数据最大值\\n - 包太大可能被分片或者丢弃\\n - 合理 MSS 能减少分片风险，提升稳定性\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_0";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="tcp-精讲"&gt;TCP 精讲&lt;/h1&gt;
+&lt;div id="me_1" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_1_src"&gt;
+"\"- TCP 精讲\\n - TCP 本质：在不可靠 IP 上提供可靠字节流\\n - TCP 提供内容\\n - 面向连接：双方都维护连接状态（序号、窗口、定时器等）\\n - 可靠、有序：丢包重传、乱序重排、去重\\n - 字节流：没有消息边界（粘包/拆包的根源）\\n - 流量控制：避免把对方接收缓冲打爆（rwnd），端到端\\n - 拥塞控制：避免把网络打爆，端到网络\\n - 报文段关键字段\\n - Sequence Number：本段数据在字节流里的起点序号\\n - Acknowledgment Number：我期望收到的下一个收到的序号\\n - Flags：SYN/ACK/FIN/RST/PSH/URG\\n - Window（rwnd）：接收端通告窗口\\n - Options：MSS，Window Scale\\n - 连接建立：三次握手\\n - 标准流程\\n - C-\\u003eS: SYN（seq=x）\\n - S-\\u003eC: SYN+ACK (seq=y,ack=x+1)\\n - C-\\u003eS: ACK (ack=y+1)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/17/20260217111458329.png,514,267)\\n - 为什么必须三次\\n - 双方都要确认两件事\\n - 对方能收：对方收到了我的东西\\n - 对方能发：对方能把东西发回来让我收到\\n - 两次握手只能证明客户端 -\\u003e 服务端这条路通了；但是服务端无法证明服务端-\\u003e客户端也通、且客户端确实收到了服务端的回应，第三次 ACK 就是让服务端拿到这个确认（服务端无法确认客户端能收）\\n - 如果只有两次握手\\n - 服务端回 SYN + ACK 丢失了\\n - 服务端仍为连接建立，开始分配连接资源，等待数据\\n - 客户端实际上没有收到任何回应，会重试或放弃\\n - 三次握手还能防止历史重复 SYN 造成的“幽灵连接“\\n - 历史重复 SYN 指的是：某次旧连接尝试时发出的 SYN，由于网络拥塞、路由绕行、链路重传、设备缓存/异常等原因，在很久之后才到达服务器\\n - 如果服务器把旧 SYN 当新建连：\\n - 服务器会分配资源\\n - 如果后续又出现旧 ACK 包，让服务器误以为连接已建立，交付错误的数据\\n - 幽灵连接：就是服务端自嗨式建立，客户端不认可\\n - 半连接队列与 SYN Flood\\n - 服务端收到 SYN 后进入 SYN_RECV，会占用半连接资源（backlog）\\n - SYN Flood：大量 SYN 不完成握手 —\\u003e 半连接队列被占满 -\\u003e 正常连接进不来\\n - 典型缓解：SYN cookies、增大 backlog、限速、丢弃策略、前置抗 DDoS\\n - 连接关闭：四次挥手、半关闭\\n - 主动关闭方 A-\\u003eB：FIN（不再发了）\\n - B -\\u003e A：ACK （知道了）\\n - B -\\u003e A：FIN （我也不再发了）\\n - A -\\u003e B：ACK （知道了）\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/17/20260217113908534.png,440,230)\\n - 为什么常见是四次\\n - TCP 是全双工：A 不发 != B 不发\\n - B 可能还有数据要发完，所以 ACK 和 FIN 分开\\n - 半关闭\\n - A 发 FIN 表示 A 的发送方向关闭，但仍然可以接受 B 的数据\\n - 工程上常见于“请求发送完但继续接受响应流“的场景\\n - RST：不是正常关闭，是异常打断\\n - RST（Reset）是 TCP 里面非常硬的控制信号：立刻终止连接/拒绝连接\\n - 不是正常的四次挥手关闭，告诉对方：“这条连接不存在/状态不一致，马上停“\\n - RST 常见原因\\n - 端口没监听\\n - 应用崩溃/强制关闭\\n - 中间设备丢弃状态后注入 RST\\n - TIME_WAIT、CLOSE_WAIT\\n - 主动关闭方在发送最后一个 ACK 后进入 TIME_WAIT，并等待 2MSL。\\n - 必须 TIME_WAIT\\n - 保证对方收到最后 ACK：最后 ACK 丢了，对方重发 FIN；TIME_WAIT 还能再次 ACK\\n - 让旧连接的延迟报文过期：避免旧数据混入新连接\\n - 为什么是 2MSL\\n - MSL = 报文在网络中可能存活的最大时间\\n - 等待 2MSL 是为了覆盖对方 FIN 重传 + 我 ACK 再次发送等往返的不确定性。\\n - TIME_WAIT 多了怎么办\\n - 常见场景：短连接高 QPS\\n - 治理思路\\n - 优先做连接复用：HTTP Keep-Alive/连接池\\n - 调整应用行为：减少主动 close、合并请求、复用长连接\\n - 系统参数：允许端口更快复用等\\n - 通常是我方主动关 + 短连接\\n - CLOSE_WAIT 多是什么\\n - CLOSE_WAIT 表示：对方已经 FIN 了，但是我方应用还没有 close\\n - 常见原因：应用层忘记关闭连接、连接泄露、线程阻塞导致没有走到 close\\n - 通常是我方没关\\n - 可靠传输机制：序号、ACK、重传、SACK\\n - 序号与累计 ACK\\n - TCP 把数据看成连续字节流：每个字节都有序号\\n - ACK 是累计的：ack = N 表示 0..N-1 都收到了，下一步要 N\\n - 好处：ACK 开销小\\n - 坏处：遇到乱序/丢包，单靠累计 ACK 不够精细\\n - 重传触发机制\\n - 超时重传（RTO）：等不到 ACK 就重发（RTO 动态估计，基于 RTT 抖动）\\n - TCP 发送一个数据段后，会期待收到 ACK，如果在某个时间窗口没有等到 ACK，TCP 可能认为丢了，于是触发超时重传。\\n - 等多久的时间阈值就是 RTO（Retransmission Timeout）。\\n - 触发条件：发送后，计时器到期，仍未收到能确认该段的 ACK\\n - 行为：重传未确认的数据段\\n - RTO 动态估计\\n - 网络 RTT 会变，而且会抖动，RTO 必须跟随着链路实际 RTT 变化\\n - SRTT + RTTVAR -\\u003e RTO\\n - 名词解释\\n - RTT sample：一次测得的 RTT（从发出某段到收到它对应 ACK 的时间）\\n - SRTT (Smoothed RTT)：平滑后的 RTT 均值。\\n - RTTVAR：RTT 的波动。\\n - RTO = SRTT + 4 * RTTVAR\\n - SRTT 给出正常情况下 ACK 来回要多久\\n - RTTVAR 给出不确定性有多大\\n - 乘以 4 是给一个安全幅度：抖动越大，RTO 增长越明显，避免误重传\\n - 指数退避：超时一次，RTO 翻倍\\n - RTO 重传 vs 快速重传\\n - RTO 重传\\n - 触发：计时器到期，没等到 ACK\\n - 特点：更“保底“，但通常更慢；而且代表网络更糟糕\\n - 常伴随：指数退避，cwnd 通常会大幅下降\\n - Fast Retransmit （快速重传）\\n - 触发：重复 ACK\\n - 特点：更快，更轻判拥塞\\n - 一半比 RTO 更温和\\n - 快速重传（Fast Retransmit）：收到多个重复 ACK （典型 3 个）推断某段丢失了，立即重传）\\n - RTO 重传局限性\\n - 必须等待一段时间没收到 ACK 才重传\\n - 在 RTT 较大或 RTO 比较保守时，恢复会很慢\\n - 快速重传的思路\\n - 不等超时，利用接收端反馈的 ACK 形态更早推断丢包\\n - 重复 ACK\\n - 如果接收端收到了更后面的段，但是缺了中间某段\\n - 不能把乱序段交付给应用\\n - 会继续发送同一个累计 ACK，告诉发送端还在等从 1000 开始的那段，后面来的我先缓存\\n - ACK 值没前进，但又反复出现的 ACK 就是重复 ACK\\n - 3 个重复 ACK 会触发快速重传\\n - 收到 3 个重复 ACK 代表某段大概率丢了\\n - 立即重传缺口对应的最早未确认段\\n - 快恢复\\n - 原因\\n - 收到快重传代表完了给没有完全堵死（还能持续收到 ACK）\\n - 不必像 RTO 那样极度保守把发送速率打到很低\\n - Reno 直觉\\n - 触发快速重传后，认为发生拥塞 -\\u003e 降低 cwnd\\n - 但利用重复 ACK 的到来，允许发送端在恢复期间适度继续发，避免完全停摆\\n - 当收到新的 ACK 后，退出快恢复，回到拥塞避免阶段\\n - SACK（选择确认）\\n - 痛点：累计 ACK 信息不够\\n - 当出现丢包 + 乱序到达时，累计 ACK 只能不断重复同一个 ACK=N，发送端只知道缺口在 N，不知道\\n - 后面哪些段已经到了\\n - 究竟丢失了几段，丢失了哪几段\\n - 重传时是否把已到达的也重传\\n - 目标是把接收端实际收到的乱序块显式告诉发送端\\n - SACK 是什么：在 ACK 里带已收到的区间块\\n - SACK 是 TCP 的一个 Option，启用后\\n - 接收端在 ACK 报文的 TCP Options 中携带若干个 SACK blocks\\n - 每个 block 描述一个已经收到的连续字节区间\\n - SACK block 的语义\\n - SACK block = (Left Edge, Right Edge)\\n - 表示接收端已经收到：[LeftEdge, RightEdge) 这个区间\\n - ACK 字段仍然存在，表示最左侧连续已收前缀的下一个期待序号\\n - 启用流程：SACK Permitted\\n - SACK 需要在三次握手时协商\\n - 双方在 SYN/SYN+ACK 中携带 SACK Permitted 选项\\n - 只要双方都声明支持，后续才会在 ACK 中携带 SACK blocks\\n - 乱序与重排\\n - 网络层可能乱序，TCP 负责在接收端按序交付给应用\\n - 接收端会缓存乱序段，等缺口补齐再交付\\n - 滑动窗口\\n - 痛点\\n - 如果每发一段就必须等 ACK 再发下一段，吞吐会被 RTT 严重限制：链路大部分时间在等回音。\\n - 滑动窗口允许发送端在未收到 ACK 前，先发出一批数据，让数据在路上飞，从而把链路利用起来。\\n - 窗口 = 允许在途未确认数据的上限；窗口越大，在高 RTT 链路上容易跑满带宽\\n - rwnd（receive window，接收窗口，流量控制）\\n - 由接收端通告（在 TCP 头的 Window 字段里）\\n - 表示接收端缓冲区还剩多少空间\\n - 目的：防止发送端把接收端内存撑爆\\n - cwnd（congestion window，拥塞窗口，拥塞控制）\\n - 由发送端维护\\n - 表示发送端认为网络当前能够承受的在途数据量上限\\n - 目的：防止把网络打爆\\n - swnd（send window，实际发送窗口）\\n - 发送端真正允许“在途未确认“的上限\\n - 近似于 min(rwnd,cwnd)\\n - 发送端视角：窗口如何限制发送\\n - 发送端维护两个关键指针\\n - SND.UNA：最早未确认的序号(UnACKed)\\n - SND.NXT：下一个准备发送的序号(Next to send)\\n - 窗口约束可以理解为：\\n - 允许发送的序号范围：[SND.UNA, SND.UNA + swnd)\\n - 已发送未确认的范围：[SND.UNA, SND.NXT)\\n - 还能继续发送的额度：swnd - (SND.NXT - SND.UNA)\\n - ACK 到来时发生什么\\n - 收到 ACK，把 SND.UNA 往前推进\\n - 已确认数据从窗口左边滑出\\n - 窗口右边腾出了空间，允许继续发送新的数据\\n - 接收端视角：为什么会出现 dupACK/乱序缓存\\n - 接收端维护两个关键指针\\n - RCV.NXT：下一段按序期望的序号\\n - 接收缓冲：可以暂存乱序到达的段\\n - 出现乱序\\n - 接收端会缓存后到的段，但 ACK 仍然回 RCV.NXT（累计 ACK）\\n - 发送端看到重复 ACK (dupACK)，可能触发快速重传\\n - 窗口、吞吐、RTT\\n - 吞吐上限 = 窗口大小/RTT\\n - RTT=100ms，窗口=64KB，吞吐=64KB/0.1s=640KB/s\\n - BDP（带宽-时延积），窗口需要=BDP 才能跑满带宽\\n - 表示一条网络路径在任意时刻在路上飞着的数据量大概有多少，也叫管道容量\\n - BDP = 带宽 * 往返时延 (RTT)\\n - 想要把链路跑满，发送端需要让“在途未确认数据“接近 BDP\\n - 在途未确认数据主要受窗口限制：in_flight \\u003c= min(cwnd, rwnd)\\n - 要跑满带宽，需要窗口大小 \\u003e= BDP\\n - 零窗口与窗口探测\\n - 如果接收端缓冲满了，会通告 rwnd=0\\n - 发送端此时必须停止发送新数据，但是要避免死锁\\n - TCP 有 persist timer：周期性发送 Zero Window Probe 探测包\\n - 一旦接收窗口恢复，发送端继续发\\n - 粘包/拆包\\n - 粘包：在发送端 send() 了两条业务消息，接收端一次 recv() 读到了两条合在一起的字节。\\n - 拆包：在发送端 send() 了一条业务消息，接收端需要 recv() 多次才能读完\\n - TCP 不保证 send 一次就对应端 recv 一次\\n - 原因\\n - TCP 的抽象是流\\n - 像读文件一样读一串字节\\n - send()：把字节追加到发送缓冲区\\n - recv()：从接收缓冲区取走当前可读的字节\\n - 分段由 TCP 决定，不由应用决定\\n - 接收端读取粒度由应用决定\\n - 解法\\n - 在应用层定义消息边界\\n - 长度前缀（Length-Prefixed，最通用）\\n - 格式 | 4-byte length (big-endian) | payload bytes... |\\n - length 表示 payload 长度\\n - 接收端先读满 4 字节得到 length，再继续读满 length 字节\\n - 分隔符（Delimiter-Based，适合文本协议）\\n - 行协议：以 \\\\r\\\\n 结尾\\n - 固定长度（Fixed-Size）\\n - 每条消息固定 N 字节\\n - 拥塞控制\\n - 拥塞不是对端瘦不下，那是流量控制 rwnd，拥塞是网络路径上的队列/链路承载不住\\n - 路由器/交换机队列堆积 -\\u003e RTT\\n - 队列溢出 -\\u003e 丢包\\n - 丢包/排队抖动 -\\u003e 吞吐下降、延迟暴涨\\n - 拥塞控制控制的是发送端允许在网络中飞着的未确认数量，cwnd\\n - Reno 的两个核心状态变量\\n - cwnd：拥塞窗口（发送端认为网络现在能承受的在途数据量）\\n - ssthresh：慢启动阈值，决定从指数增长到线性增长的分界点\\n - 四个阶段\\n - 慢启动\\n - 目的：刚开始不知道网络能承受多少，先快速试探\\n - 规则：\\n - 初始 cwnd 为一个较小值，历史是 1MSS\\n - 每收到一个 ACK，cwnd 增加 1MSS\\n - 因为一个 RTT 内会收到大约 cwnd/MSS 个 ACK，所以每个 RTT cwnd 近似翻倍\\n - 每 RTT 把在路上的包数翻倍，迅速逼近瓶颈带宽\\n - 太快可能把队列灌满，引发丢包\\n - 拥塞避免\\n - 当 cwnd 到达或超过 ssthresh，从慢启动切换到拥塞避免\\n - 每 RTT 让 cwnd 大约增加 1 MSS，每个 ACK 增加 MSS*MSS/cwnd\\n - 大多数时间连接处于的阶段\\n - 快重传：用 dupACK 提前判断丢包，不等 RTO\\n - 触发条件\\n - 收到 3 个重复 ACK dupACK\\n - ACK 号不前进，连续出现多次\\n - 快恢复：丢包后减速但不中断，比 RTO 温和\\n - 发生快重传后的关键动作\\n - 设定新的值\\n - ssthresh = cwnd/2\\n - cwnd 不回到很小，而是进入快恢复逻辑\\n - 当收到能够推进 ACK 的新 ACK，退出快恢复，进入拥塞避免\\n - RTO vs dupACK\\n - RTO：最严重，认为网络可能很糟\\n - ssthresh = cwnd / 2\\n - cwnd 下降到很小，经典是 1MSS\\n - 回到慢启动（重新探测）\\n - RTO 通常会指数退避，导致恢复更慢\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_1";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="http-与-web-体系"&gt;HTTP 与 Web 体系&lt;/h1&gt;
+&lt;div id="me_2" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_2_src"&gt;
+"\"- HTTP 与 Web 体系\\n - HTTP 基础语义\\n - HTTP 是无状态应用层协议：每个请求都自包含信息，状态由 Cookie/Token/Session 等机制在应用层实现\\n - HTTP 定义的语义，具体传输方式由 HTTP/1.1、HTTP/2、HTTP/3 决定\\n - 方法：语义 + 幂等 + 安全性\\n - GET：获取资源，应当安全+幂等\\n - HEAD：只要响应头，不要响应体，用作探测/缓存探测\\n - POST：提交数据，创建子资源或触发动作，通常非幂等\\n - PUT：整体替换/创建指定资源，通常幂等\\n - PATCH：部分更新，是否幂等取决于语义设计\\n - DELETE：删除资源，通常幂等\\n - OPTIONS：探测服务器能力（常用于 CORS 预检）\\n - 状态码\\n - 1xx：信息（少见）\\n - 2xx：成功\\n - 200 OK\\n - 201 Created 创建成功\\n - 204 No Content 成功但无响应体\\n - 3xx：重定向\\n - 301 永久\\n - 302 临时(历史语义混乱)\\n - 303 让客户端用 GET 拿\\n - 307/308 保持方法不变\\n - 4xx：客户端错误\\n - 400 参数/格式问题\\n - 401 需要认证\\n - 403 拒绝\\n - 404 不存在\\n - 409 冲突\\n - 429 限流\\n - 5xx：服务器错误\\n - 500、502 上游坏/网关问题\\n - 503 不可用\\n - 504 上游超时\\n - Header\\n - 通用与内容相关\\n - Content-Type：实体类型（json/html...）\\n - Content-Length：长度（HTTP/1.1 重要）\\n - Content-Encoding：gzip/br 等压缩\\n - Accept/Accept-Encoding/Accept-Language：内容协商\\n - Host：HTTP/1.1 必须（虚拟主机）\\n - Connect：连接管理（HTTP/2 中不再使用）\\n - 会话与安全\\n - Cookie/Set-Cookie\\n - Authorization (Bearer/Basic 等)\\n - Origin/Refer：CORS/CSRF 相关\\n - Strict-Transport-Security：强制 HTTPS\\n - Content-Security-Policy(CSP)：前端安全策略\\n - 缓存相关\\n - Cahce-Control\\n - Expires\\n - ETag/If-None-Match\\n - Last-Modified/If-Modified-Since\\n - Vary\\n - Age （代理缓存的年龄）\\n - Pragma：no-cache （历史兼容）\\n - HTTP 缓存\\n - 两类缓存：强缓存vs协商缓存\\n - 强缓存\\n - 命中强缓存时浏览器直接用本地缓存，不走网络\\n - 典型控制\\n - Cache-Control: max-age=\\n - Expires：老机制\\n - 协商缓存（发请求但可能不下载）\\n - 浏览器发请求带校验文件，服务器判断资源是否变化\\n - ETag 流程\\n - 响应：ETag: \\\"xxx\\\"\\n - 下次请求：If-None-Match: \\\"xxx\\\"\\n - 若未变：返回 304 Not Modified\\n - Last-Modified 流程\\n - 响应：Last-Modified: ...\\n - 下次请求：If-Modified-Since：...\\n - 未变：304\\n - Cache-Control 关键指令\\n - max-age=N：资源在 N 秒内视为新鲜（强缓存）\\n - no-store：绝对不缓存\\n - no-cache：可以缓存，但每次使用前必须去服务器验证\\n - must-revalidate：过期后必须验证，不能用陈旧副本\\n - public：允许被共享缓存（CDN/代理）缓存\\n - private：只允许浏览器私有缓存，不允许共享缓存缓存\\n - s-maxage=N：给共享缓存的 max-age\\n - Vary 存储维度的分桶键\\n - Vary 告诉缓存，同一个 URL 的响应会因为某些请求头不同而不同\\n - Vary：Accept-Encoding，gzip/br 不同版本要分开缓存\\n - Vary：Origin：CORS 常见\\n - Vary 过多会让缓存碎片化，命中率下降\\n - ETag 的强弱、代理与一致性\\n - 强 ETag：字节级一致才算命中\\n - 若 ETag (W/)：语义上等价即可\\n - HTTP/1.1：连接、报文、队头阻塞\\n - HTTP/1.1 报文与传输\\n - 文本协议：请求行 + 头 + 空行 + body\\n - 连接默认与持久化：Keep-Alive （减少握手成本）\\n - Chunked Transfer-Encoding：服务端可流式传输，不提前知道 Content-Length\\n - HTTP/1.1 的性能问题：应用层 HOL\\n - 同一连接上请求/响应按顺序进行\\n - 一个慢请求会阻塞后续的请求（队头阻塞）\\n - HTTP/2：二进制分帧与多路复用\\n - HTTP/2 为什么快\\n - 二进制分帧：把大消息拆成帧\\n - 多路复用：多个 stream 在同一 TCP 连接上并发交错传输\\n - 头部压缩：HPACK（减少重复头部开销）\\n - HTTP/2 性能问题：TCP 层 HOL(队头阻塞)\\n - TCP 一旦丢包，需要重传并按序交付\\n - 丢的那段之前的洞补不上，后续数据即使到了也不能交给上层\\n - 结果：一个丢包会让同连接上所有 stream 都受影响\\n - HTTP/3/QUIC\\n - 核心变化\\n - HTTP/3 跑在 QUIC 上，QUIC 基于 UDP\\n - QUIC 自己实现可靠传输与拥塞控制\\n - 按 stream 提供独立的有序交付，一个 stream 丢包不影响其他 stream 的交付\\n - TLS 与 HTTPS\\n - 位置与成本\\n - HTTPS = TCP 建连后再 TLS 握手，再 HTTP\\n - 首次访问慢常见原因：DNS + TCP + TLS 多次 RTT\\n - 解决的问题\\n - 身份认证：验证连接的是域名的真实服务器\\n - 机密性：传输内容加密\\n - 完整性：防篡改\\n - TLS 握手\\n - TLS 1.2\\n - ClientHello：客户端支持的版本/套件，随机数，SNI 等\\n - ServerHello：选定版本/套件、随机数，让双方对本次会话参数单程一致\\n - Certificate：服务器发送证书链，客户端据此验证：链是否可信、域名是否匹配、是否过期，用途是否正确\\n - ServerKeyExchange：服务器提供 ECDHE 参数与公钥，客户端通过验证签名，确保密钥协商参数的安全性\\n - ServerHelloDone：告诉客户端，材料已经发完\\n - ClientKeyExchange：客户端协商参数，客户端发送自己的 ECDHE 公钥，双方据此计算共享 secret\\n - ChangeCipherSpec + Finished：双方切换到加密通信并校验握手完整性\\n - Web 会话：Cookie/Session/Token\\n - Web 会话解决的问题\\n - 认证：你是谁\\n - 授权：你能做什么\\n - 会话保持：登录态怎么持续、怎么过期、怎么注销\\n - 安全边界：防窃取、防伪造、防重放、防跨站\\n - Cookie：浏览器自动携带的会话容器\\n - Cookie 是浏览器保存的一组 key=value，由服务器通过响应头 Set-Cookie 下发。\\n - 后续请求中，浏览器会按照规则自动带上 Cookie 头，无需 JS 参与\\n - Cookie 关键属性\\n - Domain/Path：决定发送范围\\n - Domain=example.con：子域也可能携带\\n - 不设置 Domain：仅当前 host\\n - Path=/api：只对当前路径生效\\n - Expires/Max-age：决定生命周期\\n - Max-Age=0：立即删除\\n - Session Cookie：不设过期时间，随浏览器进程结束而清理\\n - Secure：只在 HTTPS 发送\\n - HttpOnly：禁止 JS 读取\\n - 有 HttpOnly 的 cookie，JS 读取不到\\n - 不能防止 CSRF\\n - SameSite：控制跨站请求是否携带\\n - Strict：几乎不跨站携带\\n - Lax：默认常用\\n - None：允许跨站携带，必须同时设置 Secure\\n - Session：服务端保存状态，客户端只存门票\\n - Session 的典型模式\\n - 服务端维护 session_id -\\u003e session_data\\n - 客户端用 Cookie 存 session_id\\n - 每次请求：浏览器自动带 cookie -\\u003e 服务端查 session store -\\u003e 识别用户\\n - Token（尤其是 JWT）：把身份证明带在请求里\\n - Token 的核心模式\\n - 服务端签发 token 给客户端\\n - 客户端后续请求带 token\\n - 服务端验证 token 来识别用户\\n - JWT 结构\\n - JWT=header.payload.signature\\n - header：算法等元信息\\n - payload：claims 声明\\n - signature：服务端用密钥签名\\n - Refresh Token 与 Access Token\\n - Access Token：短有效期，每次用于请求\\n - Refresh Token：长有效期，用于换取新的 Access Token\\n - 安全边界：XSS、CSRF、会话固定、重放\\n - XSS（跨站脚本）\\n - 若 token/cookie 可以被 JS 读取，xss 可以直接窃取并盗用\\n - cookie 用 HttpOnly + Secure\\n - CSP 减少脚本注入\\n - 输入输出编码 + 模板转义\\n - CSRF 跨站请求伪造\\n - CSRF 利用浏览器自动携带 cookie\\n - 攻击者诱导用户在登录态下访问恶意页面，发起跨站请求到受害站点\\n - 防护手段\\n - SameSite Cookie （优先）\\n - CSRF Token（表单/请求头携带，服务端校验）\\n - 检查 Origin/Rerfer\\n - 同源策略与 CORS\\n - 痛点\\n - 浏览器安全模型默认假设：不同站点之间互不信任\\n - 浏览器用同源策略（Same-Origin Policy，SOP）限制一个网页脚本能读取另一个来源的资源内容\\n - 业务需要跨域调用 API，有了 CORS（CrossOrigin Resource Sharing）：在 SOP 的基础上提供一个受控的放行机制。\\n - Orgin 源是什么：同源的三元组\\n - Origin = scheme + host + port\\n - https://example.com:443\\n - 同源策略具体限制\\n - 跨源读被禁止\\n - JS 用 fetch 请求 https://xxx.com，请求可能能发出去，但是浏览器会阻止 JS 读取响应，除非响应满足 CORS 规则\\n - 跨源写/发送很多情况下是允许的\\n - \\u003cform action=\\\"xxx.com\\\" method=\\\"POST\\\"\\u003e 可以提交，因此 CSRF 能成立，请求可以发出去，但是页面读取不到 bank.com 的响应内容\\n - 部分资源加载天然跨源允许\\n - \\u003cimg\\u003e \\u003cscirpt\\u003e \\u003clink\\u003e 浏览器允许加载这些资源\\n - CORS 本质：服务器声明允许，浏览器执行拦截\\n - 浏览器在请求带上 Origin\\n - 服务器在响应返回 Access-Control-* 头\\n - 浏览器据此决定：是否把响应暴露给 JS\\n - CORS 两种请求路径：简单请求 vs 预检请求\\n - 简单请求\\n - 方法是 GET/HEAD/POST\\n - Content-Type 只能是三种之一\\n - application/x-www-form-urlencoded\\n - multipart/form-data\\n - text/plain\\n - 请求头只能是 CORS-safelistedhead，不能随意加自定义头\\n - 预检请求\\n - 不满足简单请求条件，浏览器会先发送一个 OPTIONS 请求，询问服务器是否允许\\n - 预检请求携带关键头\\n - Origin: https://a.com\\n - Access-Control-Request-Method：PUT\\n - Access-Control-Request-Headers：x-token（将要携带的自定义头列表）\\n - 服务器如果允许，需要在 OPTIONS 响应返回\\n - Access-Control-Allow-Origin\\n - Access-Control-Allow-Methods\\n - Access-Control-Allow-Headers\\n - Access-Control-Max-Age（预检缓存多久）\\n - 通过后，浏览器才会发真实请求\\n - CORS 响应头：每个头怎么用\\n - Access-Control-Allow-Origin\\n - 指定允许的 Origin\\n - 可以是精确 Origin 或者 * （允许任意源），如果要带 Cookie/凭证，不能用 *\\n - Access-Control-Allow-Methods\\n - 允许的方法列表：GET/POST\\n - 主要用于预检响应\\n - Access-Control-Allow-Headers\\n - 允许的自定义请求头列表\\n - 必须覆盖预检中 Access-Control-Request-Headers 请求到的那些头\\n - Access-Control-Allow-Credentials\\n - true 表示允许携带凭证，例如 Cookie\\n - 配合前端请求 credentials: 'include'\\n - Access-Control-Expose-Headers\\n - 默认情况下，JS 能够读取的响应头很有限，如果希望暴露，必须显式添加\\n - Vary: Origin\\n - 按 Origin 分桶缓存\\n - DNS 解析\\n - 基础对象\\n - 记录类型\\n - A(IPv4)\\n - AAAA(IPv6)\\n - CNAME(别名)\\n - NS(权威)\\n - 解析角色\\n - Stub resolver（客户端/OS）\\n - Recursive resolver（递归解析器：运营商/公司 DNS/公共 DNS）\\n - Authoritative server （权威 DNS）\\n - 正向代理、反向代理、透明代理与隧道\\n - 代理：本质上是位于客户端与服务端之间的一种中间节点，代表一侧发起连接、转发数据、并可能施加策略\\n - 承担职责\\n - 路由/转发：把请求送到正确上游\\n - 安全控制：鉴权、WAF、访问控制\\n - 性能优化：连接复用、压缩、缓存、限流\\n - 可观测性：日志、指标、追踪、采样\\n - 协议转换：HTTP \\u003c-\\u003e grpc 等\\n - 正向代理\\n - 正向代理站在客户端一侧，客户端明确知道自己在用代理，由代理代表客户端访问外部资源\\n - 反向代理\\n - 反向代理站在服务端一侧，对外它像真正的服务器入口，对内把请求转发到后端服务\\n - 反向代理常用原因\\n - 隐藏后端拓扑：外部只有一个入口\\n - 统一 TLS 终止：证书集中管理\\n - 统一流量治理：限流、熔断、灰度、路由、鉴权\\n - 连接复用：对外维持大量连接、对内复用少量连接\\n - 观测与审计：同一日志/指标/链路追踪\\n - 透明代理\\n - 隧道：Connect 到底干了什么\\n - 隧道：代理不解析上层协议，只做字节透传。\\n - HTTP Connect 隧道流程\\n - 客户端先对代理发 CONNECT\\n - 客户端 -\\u003e 代理\\n - CONNECT bank.com:443 HTTP/1.1\\n - Host: back.com:443\\n - 代理建立到目标的 TCP 连接\\n - 代理 -\\u003e bank.com:443：发起 TCP 连接\\n - 代理回客户端\\n - HTTP/1.1 200 Connect Established\\n - 隧道建立，字节透传\\n - 客户端与 bank.com 的 TLS 握手数据会被原封不动地通过代理转发，代理看不懂也不需要看懂\\n - TLS 会话在客户端\\u003c-\\u003e目标服务器之间建立\\n - 负载均衡：L4 vs L7、算法、会话保持、健康检查\\n - 目标\\n - 扩展性：把流量分散到多台实例，提高吞吐\\n - 高可用：实例故障自动摘除，流量不中断或快速恢复\\n - 性能：就近、减少重连、减少排队、提升尾延迟\\n - 治理：灰度、限流、熔断、路由、可观测\\n - 边界\\n - LB 解决的是把请求推送到谁，不解决业务正确性\\n - LB 层任何自动重试/超时，都可能改变业务语义\\n - L4 与 L7 的区别\\n - L4 LB（传输层）：基于 IP/端口/连接做转发\\n - 优点：性能高，对协议透明\\n - 缺点：无法基于 URL/Header 做路由\\n - 常见实现：内核转发、四层 VIP、DSR、NAT 模式等\\n - 适合长连接：WebSocket、MQ、数据库连接等\\n - L7 LB（应用层）：理解 HTTP，按照 Host/Path/Header/Cookie 路由\\n - 常见常见：API Gateway、Ingress、CDN 回源入口\\n - 负载均衡算法\\n - Round Robin（轮询）\\n - 依次分发到每个后端\\n - 适合：请求耗时相近、后端同质、短连接\\n - 问题\\n - 后端性能差异大时不均衡\\n - 长连接场景下连接一旦分配就会粘住，RR 也会失衡\\n - Weighted Round Robin\\n - 按权重分配（机器规格不同，冷热分层）\\n - 适合：异构机器，逐步扩容\\n - 问题：权重需要维护；负载时间随时间变化时仍然不准\\n - Least Connections（最少连接）\\n - 连接数最少的后端连接\\n - 适合：长连接、连接数与负载相关的业务\\n - 问题：\\n - 连接数不等于负载\\n - 需要 LB 维护连接计数状态\\n - Least Request/Least Load（最少请求/最小负载）\\n - 按当前活跃请求数或综合指标选择\\n - 适合：请求耗时差异大，尾延迟敏感\\n - 问题：实现复杂、依赖观测准确性；指标延迟可能导致震荡\\n - Random/Power of Two Choices（随机/二选一）\\n - 随机挑两个后端，选最优者\\n - 优点：简单且实际效果接近最优，分布更稳定，大规模下能显著降低热点概率\\n - 适合：大规模集群、需要避免中心化状态\\n - Consistent Hash（一致性 hash）\\n - 按 key 映射到固定节点\\n - 适合：\\n - 需要缓存命中（本地 cache）\\n - 会话保持（不想引入共享 session）\\n - 分片存储（按 key 分片）\\n - 关键性质：节点增减时迁移量小\\n - 问题：\\n - 热点 key 会压垮单节点（热点拆分/虚拟节点）\\n - 节点故障时 key 重映射会引发抖动。\\n - 会话保持\\n - 为什么需要 sticky\\n - 后端有状态\\n - 本地缓存必须命中\\n - WebSocket/长连接绑定到某实例\\n - 常见 sticky 手段\\n - Source IP hash\\n - 按客户端 IP 做 hash 选节点\\n - 优点：简单\\n - 缺点：\\n - NAT/代理下大量用户共享同一出口 IP -\\u003e 严重倾斜\\n - 用户换网 IP 变化导致漂移\\n - Cookie 粘性\\n - LB 注入 cookie ，后续按照 cookie 路由\\n - 优点：比 IP 稳定\\n - 缺点：跨域，隐私策略，cookie 清理，灰度/回源复杂\\n - 一致性哈希（按 userId/会话键）\\n - 工程风险\\n - 降低容错：节点挂了，该节点的用户都受影响\\n - 产生热点：某些用户/租户流量大-\\u003e单节点热\\n - 扩缩容抖动：重新分配导致缓存冷启动、延迟尖刺\\n - 推荐的替代方案\\n - 应用无状态 + 共享 session (Redis)\\n - 把状态外置(DB/Cache)，实例可以随时替换\\n - 长连接常见：连接层 sticky 不可避免，要做好限流与迁移策略\\n - 健康检查\\n - L4 健康检查\\n - 探测 TCP 能否 connect 成功\\n - 优点：便宜、通用\\n - 缺点：应用假活时仍然会通过（线程池满、依赖挂）\\n - L7 健康检查\\n - 请求 /healthz 或 /readyz\\n - 可检查\\n - 进程存活\\n - 是否可接新流量\\n - 关键依赖是否可用\\n - 设计要点\\n - liveness vs readliness 分离\\n - liveness：进程是否需要重启\\n - readliness：是否接流量\\n - 避免健康检查过重\\n - 如果每秒大量探测并且检查依赖，会把依赖也打挂\\n - 阈值与抖动控制\\n - 连续 N 次失败才摘除\\n - 连续 M 次成功才恢复\\n - 慢启动与预热\\n - 新实例启动后先不接流量，预热缓存/JIT，再标 ready\\n - 网络排障\\n - L3/L4 基础联通与路径\\n - ping\\n - 测试的是什么\\n - ping 用的是 ICMP Echo Request/Echo Reply\\n - 发 Echo Request（带序号 seq、时间戳等）\\n - 对端回 Echo Reply\\n - 测量往返时延 RTT\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/18/20260218103650584.png,492,184)\\n - 查看延迟\\n - 看 avg 和 min/max\\n - 抖动\\n - RTT 的波动程度\\n - stddev（标准差） 大，说明网络队列/无线/拥塞波动明显\\n - 丢包\\n - packet loss \\u003e 0 说明有包没有收到回包\\n - tracerout/mtr 的原理\\n - traceroute：用 TTL 把路径探测出来\\n - IP 包里有 TTL，每过一跳路由器把 TTL - 1\\n - 当 TTL 变为 0，路由器丢包并回 ICMP Time Exceeded\\n - traceroute 依次发 TTL=1,2,3 的探测包\\n - 可以看到每一跳的地址与该跳的 RTT\\n - 每一跳显式的 RTT 是你-\\u003e该跳-\\u003e你的往返，不是单程，也不是该跳-\\u003e下一跳的延迟\\n - mtr：traceroute + ping 的结合\\n - mtr 会对每一跳持续发探测包并统计\\n - 丢包率\\n - 最快/平均/最慢 RTT\\n - 抖动\\n - mtr 更适合定位抖动/偶发丢包/拥塞点\\n - 用 traceroute 看路径与绕路\\n -\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_2";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;</description></item><item><title>mysql 知识点</title><link>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h1 id="环境准备"&gt;环境准备&lt;/h1&gt;
 &lt;div id="me_0" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
 &lt;script type="application/json" id="me_0_src"&gt;
 "\"- 环境配置与校验\\n - docker-compose 启动\\n - 命令行连接\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213500728.png,300,150)\\n - 自检命令\\n - 版本、用户、数据库\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213607553.png,330,510)\\n - 字符集\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213658757.png,200,200)\\n - 时区\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213740266.png,300,200)\\n - 当前 sql_mode\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213813122.png,500,100)\\n - 建库建表\\n - 建库\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213857582.png,370,88)\\n - 建表\\n - 插入数据\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214005617.png,400,300)\\n - 查/改/删\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214121561.png,500,400)\\n - 导入导出\\n - 导出（逻辑备份）\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214319634.png,300,35)\\n - 导入\\n - mysql -h 127.0.0.1 -P 3306 -u root -p demo \\u003c demo.sql\\n - 仅导出表结构\\n - mysqldump -h 127.0.0.1 -P 3306 -u root -p --no-data demo \\u003e demo_schema.sql\\n - 账号与权限\\n - 创建业务账号 (最小权限)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214524944.png,400,150)\\n - 查看权限\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214555267.png,700,161)\""
@@ -346,6 +597,258 @@ console.error("MindElixir not loaded. Check your CDN script tag.");
 return;
 }
 const hostId = "me_4";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="表设计与数据治理"&gt;表设计与数据治理&lt;/h1&gt;
+&lt;div id="me_5" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_5_src"&gt;
+"\"- 表设计与数据治理\\n - 建模方法与边界\\n - 建模方法\\n - 列出核心用例\\n - 查询（读）：用户订单列表、订单详情、支付结果、库存可售、待支付超时扫描。\\n - 命令（写）：创建订单、锁/冻结库存、支付回调、取消订单、发货。\\n - 抽实体与关系\\n - 订单\\n - 订单明细\\n - 库存\\n - 支付交易/回调\\n - 事件/审计\\n - 定边界\\n - 哪些字段属于状态（可覆盖可更新）\\n - 哪些属于事件/流水（只追加不更新）\\n - 哪些属于派生/统计（可重建，允许异步）\\n - 边界划分\\n - 状态表\\n - 特点：一行代表一个业务对象的当前状态，会被更新\\n - 示例 orders\\n - status、paid_at、cancelled_at 这写会变\\n - 读多写少，但是必须写正确（条件更新/事务）\\n - 适用于需要当前值的读\\n - 事件表\\n - 特点：只追加，不覆盖；用于审计、追溯、重放。\\n - 示例 order_events\\n - 记录状态变迁：PENDING -\\u003e PAID，以及时间、操作者、来源\\n - 永远不 UPDATE，只 INSERT\\n - 适用\\n - 查发生过什么\\n - 重建派生数据\\n - 流水表\\n - 特点：和事件表很像，更偏可对账、可汇总\\n - inventory_ledger、payment_txn\\n - 每次扣减，冻结，释放都记录一条流水\\n - 可做对账：库存表 = 初始 + 流水汇总\\n - 适用：资金/库存这种需要强审计的域\\n - 聚合表\\n - 特点：为查询加速而存在，可异步更新，可重建\\n - user_order_summary，daily_gmv\\n - 允许最终一致\\n - 目标让核心查询不扫大表\\n - 边界经验\\n - 状态表保证在线业务\\n - 时间流水表保证可追溯与对账\\n - 聚合表保证性能与体验\\n - 电商“订单-库存-支付“\\n - 建议最小表集\\n - orders：订单状态表\\n - order_iterms：订单明细 1-N\\n - inventory：库存状态表\\n - payment_notify 或 paymenet_txn：支付回调/交易流水\\n - order_events：订单事件表\\n - 边界怎么定\\n - 订单当前状态只在 orders，不要在多张表复制写\\n - 所有发生过的动作进 order_events（可追溯）\\n - 支付回调必须有独立表 + 唯一约束做幂等（不要只靠 orders）\\n - 库存推荐冻结模型：inventory.available/frozen，支付成功/取消再结算\\n - 主键设计\\n - InnoDB 的数据行物理组织顺序就是主键顺序\\n - 主键越短越好：二级索引都要携带主键值\\n - 主键越递增越好：写入更顺序，减少页分裂与随机 I/O\\n - 主键一旦选错很难改\\n - 主键方案\\n - 自增 BIGING（最常用，默认推荐）\\n - 雪花/时间有序 ID（推荐的分布式主键）\\n - UUID （不推荐当主键）\\n - 业务号 （一般不建议）\\n - 字段类型与表达\\n - 字段类型选型\\n - 金额\\n - DECIMAL(18,2)\\n - 金额最小货币单位方案：用 BIGINT 存分/厘，但要统一单位与换算\\n - 对账/财务更偏 DECIMAL\\n - 时间\\n - DATETIME(3)：推荐默认(毫秒精度，语义不依赖死区转换)\\n - TIMESTAMP(3)：会受 session 时区影响，范围更小\\n - 业务事件时间（下单时间、支付时间）：优先 DATETIME(3)\\n - 需要跟 UTC/时区联动的场景才考虑 TIMESTAMP\\n - 列表分页建议 ORDER BY created_at DESC, id DESC\\n - 状态/枚举\\n - TINYINT/SMALLINT 存 code\\n - 代码层映射枚举\\n - 字符串与文本\\n - VARCHAR\\n - 适合短文本：订单号、手机号、渠道、外部交易号\\n - 可建索引、可唯一约束\\n - TEXT/BLOB\\n - 适合长文本：备注、富文本、日志原文\\n - TEXT 不能有默认值\\n - 需要检索的长文本：用搜索引擎倒排，不能指望 MySQL 上做 LIKE 全文\\n - JSON\\n - 适合 payload/扩展字段\\n - 不适合高频过滤/排序字段\\n - JSON 里需要检索的 key 提取成独立列并建索引\\n - Boolean\\n - MySQL 没有真正 boolean，常用 TINYINT(1) 或者 BIT(1)\\n - 工程上，推荐 TINYINT(1) NOT NULL DEFAULT 0\\n - NULL 策略\\n - 建议尽量 NOT NULL\\n - NULL 引入三值逻辑：=，\\u003c\\u003e 的行为让过滤结果看起来怪\\n - 统计聚合、唯一约束语义、索引选择也更复杂\\n - 三值逻辑\\n - col = NULL 永远为 NULL（不是 true）\\n - 判断 NULL：必须 IS NULL/IS NOT NULL\\n - 字符集与排序规则\\n - 全库统一 utf8mb4\\n - 排序规则要统一、可预测\\n - 表达层面：默认值、精度、约束、生成列\\n - 默认值\\n - 时间戳列：created_at/updated_at 建议在应用层写入或触发器默认值策略统一\\n - 唯一约束与幂等设计\\n - 唯一约束\\n - 保证在表内某个键组合只出现一次，是数据层的硬规则，不依赖应用正确性\\n - 适用：唯一表示、去重、幂等落库的最终防线\\n - 优点：并发下天然正确\\n - 幂等\\n - 保证同一请求执行多次，结果与执行一次等价\\n - 三要素\\n - 如何识别同一请求\\n - 重复请求如何处理\\n - 副作用怎么避免重复\\n - 幂等写入的 4 种标准写法\\n - INSERT ... ON DUPLICATE KEY UPDATE\\n - 第一次插入，第二次则更新某些字段\\n - INSERT IGNORE\\n - 重复就忽略，不需要更新\\n - 条件更新（状态机幂等）\\n - 先插流水再改状态\\n - 软删、审计与可追溯\\n - 审计字段设计\\n - created_at DATETIME(3) NOT NULL\\n - updated_at DATETIME(3) NOT NULL\\n - created_by BIGINT NULL (或 NOT NULL + 0)\\n - updated_by BIGINT NULL\\n - created_from VARCHAR(32) NULL (来源：WEB/APP/ADMIN/JOB)\\n - updated_from VARCHAR(32) NULL\\n - 软删除\\n - 典型软删字段\\n - is_deleted TINYINT(1) NOT NULL DEFAULT 0\\n - deleted_at DATETIME(3) NULL\\n - deleted_by BIGINT NULL\\n - delete_reason VARCHAR(64) NULL\\n - 为什么要软删\\n - 合规与可追溯：能恢复、可审计\\n - 避免误删不可逆\\n - 支持撤销/恢复业务\\n - 状态表 + 事件表\\n - 仅靠 updated_at 不够，真正追溯需要事件表\\n - 状态表（当前态）\\n - 事件表（历史轨迹）\\n - order_id\\n - event_type\\n - event_at\\n - operator_id\\n - source\\n - payload\\n - 归档、冷热分离与保留策略\\n - 归档：把低频/历史数据搬离在线库\\n - 原因\\n - 表越来越大 -\\u003e 索引越来越大 -\\u003e buffer pool 命中下降 -\\u003e 查询变慢\\n - 索引膨胀 -\\u003e 写入/更新维护成本变高 -\\u003e TPS 下降\\n - 备份窗口变长、DDL 变更风险大\\n - 冷数据占用昂贵的 SSD，成本不划算\\n - 技术手段\\n - 归档到历史表\\n - orders(热) + orders_archive(冷)\\n - 分区\\n - PARTITION BY RANGE (TO_DAYS(created_at))，按月/周分区\\n - 冷库（另一个 MySQL 实例）\\n - 对象存储/数仓（S3/OSS + Parquet 或 Clickhouse）\\n - 历史明细导出到对象存储，提供离线查询\\n - 变更与在线 DDL\\n - MDL：MySQL 对表加 Metadata Lock 来保证 DDL 与 DML 的一致性。\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_5";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="运维与排障"&gt;运维与排障&lt;/h1&gt;
+&lt;div id="me_6" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_6_src"&gt;
+"\"- 运维与排障\\n - 指标体系\\n - 指标分层\\n - 业务层（用户感知层）\\n - QPS：每秒 SQL 请求数\\n - TPS：每秒事务提交数（更接近写负载与提交压力）\\n - RT(P95/P99)：请求响应时间分位数：95%/99% 的请求在这个时间内完成。\\n - 错误率：SQL 执行失败的比例与类型\\n - 慢查询数量/慢查询占比：超过 long_query_time 的语句数量 (slow log)\\n - 连接与线程层指标\\n - Threads_connected（当前连接数）：当前已建立的客户端连接数量\\n - Threads_running（正在执行的线程数）：正在执行的线程连接数\\n - max_connections 使用率：Threads_connected/max_connections\\n - InnoDB 引擎层指标\\n - Buffer Pool Hit Rate（缓冲池命中率）：逻辑读有多少比例直接命中内存，而不是去磁盘读页。\\n - InnoDB 行操作速率（InnoDB 层行读写的频率）\\n - 行锁等待强度：行锁等待次数与等待总时长。\\n - redo 生成速率\\n - 脏页比例/flush 压力\\n - OS 资源层指标\\n - CPU 与 load\\n - 磁盘 IO\\n - 内存 (swap/page cache)\\n - 网络\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_6";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="体系架构"&gt;体系架构&lt;/h1&gt;
+&lt;div id="me_7" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_7_src"&gt;
+"\"- mysql 体系架构\\n - Server 层\\n - 连接与会话管理\\n - 客户端连接管理：TCP/Unix Socket，握手认证\\n - 线程模型：一连接一线程\\n - 会话上下文：事务隔离级别，临时表，用户变量，prepared statement 等\\n - SQL 接收与解析\\n - 词法/语法分析：把 SQL 文本解析成 AST\\n - 预处理：语义检查\\n - 优化器\\n - 生成执行计划：选择访问路径、Join 顺序、Join 算法\\n - 成本估算依赖：统计信息、索引基数、直方图、代价模型\\n - 典型产物：EXPLAIN 输出\\n - 执行器 (Executor)\\n - 按执行计划逐步执行\\n - 调用存储引擎 API 取行，写行\\n - 负责把结果返回给客户端\\n - Using filesort、Using temporary 等现象大多发生在执行阶段\\n - 查询缓存-8.0移除\\n - 元数据与权限\\n - Server 日志：binlog（逻辑日志）\\n - binlog 在 Server 层：用于复制（主从）与点时间恢复\\n - 提交时与 InnoDB redo 通过 2PC 保持一致性\\n - Storage Engine 层（存储引擎层）\\n - 内存结构\\n - Buffer Pool：缓存数据页与索引页\\n - Change Buffer：对二级索引的变更做缓冲\\n - 磁盘结构\\n - 表空间：存数据页/索引页\\n - redo log：WAL，保证崩溃恢复\\n - undo log：回滚与 MVCC 版本链\\n - doublewrite buffer：防止部分写导致页损坏\\n - 索引与访问\\n - 聚簇索引：PRIMARY KEY 叶子存整行\\n - 二级索引：叶子存二级键 + 主键值\\n - 访问路径：范围扫描、点查、回表、覆盖索引\\n - 事务与 MVCC\\n - 事务隔离：RC/RR/Serializable\\n - MVCC：读视图 + undo 版本链\\n - 锁：行锁、间隙锁、next-key 锁\\n - 崩溃恢复\\n - 依赖 redo：重放已经提交事务对页的修改\\n - undo：回滚未提交事务\\n - SELECT 查询典型数据流\\n - 客户端连接进入 Server 层，会话建立\\n - Parser 解析 SQL -\\u003e AST\\n - Optimizer 基于统计信息选择计划\\n - Executor 执行计划：通过 Handler 调用 InnoDB 读取行\\n - InnoDB 在 Buffer Pool 找页\\n - 结果返回客户端\\n - 架构图\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/16/20260216200910304.png,978,521)\\n - 事务提交典型数据流\\n - Executor 调用 InnoDB 写行，更新 buffer pool 中的数据页，产生 undo\\n - 生成 redo WAL，记录页修改\\n - 提交时 2PC\\n - InnoDB 写 redo prepare\\n - Server 写 binlog\\n - InnoDB 写 redo commit\\n - 后台线程刷脏页到数据文件，不要求提交同步\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_7";
 let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
 function genId() {
 return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
@@ -2862,4 +3365,4 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>mindmap 测试</title><link>https://blog.ans20xx.com/posts/mindmap/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mindmap/</guid><description>mindmap 测试</description></item><item><title>新加坡攻略</title><link>https://blog.ans20xx.com/posts/%E6%96%B0%E5%8A%A0%E5%9D%A1%E6%94%BB%E7%95%A5/</link><pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%96%B0%E5%8A%A0%E5%9D%A1%E6%94%BB%E7%95%A5/</guid><description>新加坡攻略</description></item><item><title>拉伸</title><link>https://blog.ans20xx.com/posts/%E6%8B%89%E4%BC%B8/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8B%89%E4%BC%B8/</guid><description>拉伸训练</description></item><item><title>新 mac 安装软件</title><link>https://blog.ans20xx.com/posts/mac%E8%BD%AF%E4%BB%B6/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mac%E8%BD%AF%E4%BB%B6/</guid><description>新 mac 安装软件</description></item><item><title>哑铃训练</title><link>https://blog.ans20xx.com/posts/%E5%93%91%E9%93%83%E8%AE%AD%E7%BB%83/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%93%91%E9%93%83%E8%AE%AD%E7%BB%83/</guid><description>哑铃训练</description></item><item><title>人生经验</title><link>https://blog.ans20xx.com/posts/%E6%83%B3%E6%B3%95%E6%9A%82%E5%AD%98/</link><pubDate>Wed, 05 Nov 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%83%B3%E6%B3%95%E6%9A%82%E5%AD%98/</guid><description>暂存一些想法</description></item><item><title>SideCar 模式</title><link>https://blog.ans20xx.com/posts/sidecar-%E6%A8%A1%E5%BC%8F/</link><pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/sidecar-%E6%A8%A1%E5%BC%8F/</guid><description>Sidecar 模式</description></item><item><title>API 分页</title><link>https://blog.ans20xx.com/posts/api%E5%88%86%E9%A1%B5/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api%E5%88%86%E9%A1%B5/</guid><description>API 分页</description></item><item><title>API 架构风格</title><link>https://blog.ans20xx.com/posts/api-%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api-%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC/</guid><description>API 架构风格</description></item><item><title>API 网关&amp;Service Mesh</title><link>https://blog.ans20xx.com/posts/api-%E7%BD%91%E5%85%B3service-mesh/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api-%E7%BD%91%E5%85%B3service-mesh/</guid><description>API 网关和 Service Mesh</description></item><item><title>Git 流程</title><link>https://blog.ans20xx.com/posts/git-%E6%B5%81%E7%A8%8B/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/git-%E6%B5%81%E7%A8%8B/</guid><description>Git 流程</description></item><item><title>Nosql 原理</title><link>https://blog.ans20xx.com/posts/nosql/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/nosql/</guid><description>Nosql 原理</description></item><item><title>OAuth2 流程</title><link>https://blog.ans20xx.com/posts/oauth2/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/oauth2/</guid><description>OAuth2 流程</description></item><item><title>短链服务</title><link>https://blog.ans20xx.com/posts/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1/</guid><description>短链服务</description></item><item><title>缓存系统</title><link>https://blog.ans20xx.com/posts/%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/</guid><description>缓存系统</description></item><item><title>技术博客</title><link>https://blog.ans20xx.com/posts/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/</guid><description>技术博客</description></item><item><title>软件设计原则</title><link>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</guid><description>软件设计原则</description></item><item><title>数据管道</title><link>https://blog.ans20xx.com/posts/%E6%95%B0%E6%8D%AE%E7%AE%A1%E9%81%93/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%95%B0%E6%8D%AE%E7%AE%A1%E9%81%93/</guid><description>数据管道</description></item><item><title>系统粗估</title><link>https://blog.ans20xx.com/posts/%E7%B3%BB%E7%BB%9F%E7%B2%97%E4%BC%B0/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%B3%BB%E7%BB%9F%E7%B2%97%E4%BC%B0/</guid><description>系统粗估</description></item><item><title>云原生</title><link>https://blog.ans20xx.com/posts/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BA%91%E5%8E%9F%E7%94%9F/</guid><description>云原生</description></item><item><title>客户端架构模式</title><link>https://blog.ans20xx.com/posts/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9E%B6%E6%9E%84/</link><pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9E%B6%E6%9E%84/</guid><description>客户端架构模式</description></item><item><title>如何进入心流</title><link>https://blog.ans20xx.com/posts/%E5%BF%83%E6%B5%81/</link><pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%BF%83%E6%B5%81/</guid><description>整理如何进入心流状态</description></item><item><title>Linux 提效</title><link>https://blog.ans20xx.com/posts/linux%E6%8F%90%E6%95%88/</link><pubDate>Mon, 08 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux%E6%8F%90%E6%95%88/</guid><description>记录 Linux 常见的提效操作</description></item><item><title>技术文档</title><link>https://blog.ans20xx.com/posts/uml/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/uml/</guid><description>整理常用的技术文档操作</description></item><item><title>软件包管理</title><link>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/</guid><description>整理常见系统软件包管理软件的用法</description></item><item><title>Docker 相关操作</title><link>https://blog.ans20xx.com/posts/docker/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/docker/</guid><description>整理常用的 Docker 操作</description></item><item><title>Linux 文本操作</title><link>https://blog.ans20xx.com/posts/linux-%E6%96%87%E6%9C%AC%E6%93%8D%E4%BD%9C/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E6%96%87%E6%9C%AC%E6%93%8D%E4%BD%9C/</guid><description>整理常用的 Linux 文本操作</description></item><item><title>Linux 文件操作</title><link>https://blog.ans20xx.com/posts/linux-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</guid><description>整理常用的 Linux 文件操作</description></item><item><title>VIM 相关操作</title><link>https://blog.ans20xx.com/posts/vim%E6%8B%BE%E9%81%97/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/vim%E6%8B%BE%E9%81%97/</guid><description>整理常用的 VIM 操作</description></item><item><title>RayCast 操作</title><link>https://blog.ans20xx.com/posts/raycast%E6%93%8D%E4%BD%9C/</link><pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/raycast%E6%93%8D%E4%BD%9C/</guid><description>常用 RayCast 操作</description></item><item><title>GoLang 开发环境配置</title><link>https://blog.ans20xx.com/posts/go-setup/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-setup/</guid><description>配置 Golang 开发环境</description></item><item><title>常用 Go 命令</title><link>https://blog.ans20xx.com/posts/%E5%B8%B8%E7%94%A8go%E5%91%BD%E4%BB%A4/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%B8%B8%E7%94%A8go%E5%91%BD%E4%BB%A4/</guid><description>常用 Go 命令</description></item><item><title>常用快捷键</title><link>https://blog.ans20xx.com/posts/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/</guid><description>整理常用命令行快捷键</description></item><item><title>Linux 虚拟机安装</title><link>https://blog.ans20xx.com/posts/linux-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/</link><pubDate>Fri, 22 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/</guid><description>整理常用在 Mac 上安装 Linux 虚拟机的过程</description></item><item><title>SSH 相关</title><link>https://blog.ans20xx.com/posts/ssh%E7%9B%B8%E5%85%B3/</link><pubDate>Fri, 22 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ssh%E7%9B%B8%E5%85%B3/</guid><description>整理常用的 SSH 操作</description></item><item><title>Go 开发拾遗</title><link>https://blog.ans20xx.com/posts/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/</link><pubDate>Thu, 21 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/</guid><description>Go 开发拾遗</description></item><item><title>概率统计</title><link>https://blog.ans20xx.com/posts/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</link><pubDate>Sun, 03 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</guid><description>程序员需要知道的数学知识-概率统计篇</description></item><item><title>接雨水</title><link>https://blog.ans20xx.com/posts/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>接雨水</description></item><item><title>三数之和</title><link>https://blog.ans20xx.com/posts/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</guid><description>三数之和</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</guid><description>移动零</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</guid><description>移动零</description></item><item><title>字母异位词分组</title><link>https://blog.ans20xx.com/posts/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description>字母异位词分组</description></item><item><title>最长连续序列</title><link>https://blog.ans20xx.com/posts/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid><description>最长连续序列</description></item><item><title>容器类</title><link>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</link><pubDate>Sat, 11 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</guid><description>关于容器的一些心得体会</description></item><item><title>业务开发的技术成长 15 业务编程如何进行通用性抽象</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</link><pubDate>Tue, 22 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</guid><description>业务开发的技术成长-15-业务编程如何进行通用性抽象</description></item><item><title>业务开发的技术成长 14 源码分享以及如何通过本项目学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</link><pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</guid><description>源码分享以及如何通过本项目学习</description></item><item><title>业务开发的技术成长 10 出入库领域分析与代码实战</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</guid><description>出入库领域分析与代码实战</description></item><item><title>业务开发的技术成长 11 订单领域设计及代码实践</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</guid><description>订单领域设计及代码实践</description></item><item><title>业务开发的技术成长 12 业务开发代码如何简洁统一</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</guid><description>业务开发代码如何简洁统一</description></item><item><title>业务开发的技术成长 13 发票系统需求分析及领域设计</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</guid><description>发票系统需求分析及领域设计</description></item><item><title>业务开发的技术成长 9 数据校验深入学习及如何高效进行学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</guid><description>数据校验深入学习及如何高效进行学习</description></item><item><title>业务开发的技术成长 8 领域开发产品录入代码演示</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</link><pubDate>Fri, 11 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</guid><description>领域开发产品录入</description></item><item><title>业务开发的技术成长 7 如何更好的理解登录</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</link><pubDate>Thu, 10 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</guid><description>如何更好的理解登录</description></item><item><title>业务开发的技术成长 6 中间件建设之统一权限集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</link><pubDate>Tue, 08 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</guid><description>中间件建设之统一权限集成</description></item><item><title>业务开发的技术成长 5 中间件建设之通用文件集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</link><pubDate>Mon, 07 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</guid><description>中间件建设之通用文件集成</description></item><item><title>业务开发的技术成长 1 Maven 环境配置</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</guid><description>关于Java项目Maven环境配置</description></item><item><title>业务开发的技术成长 2 如何打造高效的学习环境</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</guid><description>如何打造高效的学习环境</description></item><item><title>业务开发的技术成长 3 技术架构及如何快速开发技巧</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</guid><description>技术架构及如何快速开发技巧</description></item><item><title>业务开发的技术成长 4 代码生成器原理</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</guid><description>代码生成器原理</description></item><item><title>整洁代码之注释篇</title><link>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</link><pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</guid><description>关于如何写好注释</description></item><item><title>Diagram Support</title><link>https://blog.ans20xx.com/posts/diagram-support/</link><pubDate>Wed, 31 Mar 2021 13:11:22 +0800</pubDate><guid>https://blog.ans20xx.com/posts/diagram-support/</guid><description>&lt;p&gt;Eureka supports the rendering of diagrams by using Mermaid.&lt;/p&gt;</description></item><item><title>Math Support</title><link>https://blog.ans20xx.com/posts/math-support/</link><pubDate>Fri, 20 Nov 2020 22:52:56 +0800</pubDate><guid>https://blog.ans20xx.com/posts/math-support/</guid><description>&lt;p&gt;Eureka supports the rendering of mathematical formulas by using KaTeX.&lt;/p&gt;</description></item><item><title>Featured Image</title><link>https://blog.ans20xx.com/posts/featured-image/</link><pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/featured-image/</guid><description>Post with featured image.</description></item><item><title>Markdown Syntax Guide</title><link>https://blog.ans20xx.com/posts/markdown-syntax/</link><pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/markdown-syntax/</guid><description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description></item><item><title>Emoji Support</title><link>https://blog.ans20xx.com/posts/emoji-support/</link><pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/emoji-support/</guid><description>Guide to emoji usage in Hugo</description></item><item><title/><link>https://blog.ans20xx.com/posts/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description/></item><item><title/><link>https://blog.ans20xx.com/posts/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</guid><description/></item></channel></rss>
+&lt;/div&gt;</description></item><item><title>mindmap 测试</title><link>https://blog.ans20xx.com/posts/mindmap/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mindmap/</guid><description>mindmap 测试</description></item><item><title>新加坡攻略</title><link>https://blog.ans20xx.com/posts/%E6%96%B0%E5%8A%A0%E5%9D%A1%E6%94%BB%E7%95%A5/</link><pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%96%B0%E5%8A%A0%E5%9D%A1%E6%94%BB%E7%95%A5/</guid><description>新加坡攻略</description></item><item><title>拉伸</title><link>https://blog.ans20xx.com/posts/%E6%8B%89%E4%BC%B8/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8B%89%E4%BC%B8/</guid><description>拉伸训练</description></item><item><title>新 mac 安装软件</title><link>https://blog.ans20xx.com/posts/mac%E8%BD%AF%E4%BB%B6/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mac%E8%BD%AF%E4%BB%B6/</guid><description>新 mac 安装软件</description></item><item><title>哑铃训练</title><link>https://blog.ans20xx.com/posts/%E5%93%91%E9%93%83%E8%AE%AD%E7%BB%83/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%93%91%E9%93%83%E8%AE%AD%E7%BB%83/</guid><description>哑铃训练</description></item><item><title>人生经验</title><link>https://blog.ans20xx.com/posts/%E6%83%B3%E6%B3%95%E6%9A%82%E5%AD%98/</link><pubDate>Wed, 05 Nov 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%83%B3%E6%B3%95%E6%9A%82%E5%AD%98/</guid><description>暂存一些想法</description></item><item><title>SideCar 模式</title><link>https://blog.ans20xx.com/posts/sidecar-%E6%A8%A1%E5%BC%8F/</link><pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/sidecar-%E6%A8%A1%E5%BC%8F/</guid><description>Sidecar 模式</description></item><item><title>API 分页</title><link>https://blog.ans20xx.com/posts/api%E5%88%86%E9%A1%B5/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api%E5%88%86%E9%A1%B5/</guid><description>API 分页</description></item><item><title>API 架构风格</title><link>https://blog.ans20xx.com/posts/api-%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api-%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC/</guid><description>API 架构风格</description></item><item><title>API 网关&amp;Service Mesh</title><link>https://blog.ans20xx.com/posts/api-%E7%BD%91%E5%85%B3service-mesh/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api-%E7%BD%91%E5%85%B3service-mesh/</guid><description>API 网关和 Service Mesh</description></item><item><title>Git 流程</title><link>https://blog.ans20xx.com/posts/git-%E6%B5%81%E7%A8%8B/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/git-%E6%B5%81%E7%A8%8B/</guid><description>Git 流程</description></item><item><title>Nosql 原理</title><link>https://blog.ans20xx.com/posts/nosql/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/nosql/</guid><description>Nosql 原理</description></item><item><title>OAuth2 流程</title><link>https://blog.ans20xx.com/posts/oauth2/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/oauth2/</guid><description>OAuth2 流程</description></item><item><title>短链服务</title><link>https://blog.ans20xx.com/posts/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1/</guid><description>短链服务</description></item><item><title>缓存系统</title><link>https://blog.ans20xx.com/posts/%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/</guid><description>缓存系统</description></item><item><title>技术博客</title><link>https://blog.ans20xx.com/posts/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/</guid><description>技术博客</description></item><item><title>软件设计原则</title><link>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</guid><description>软件设计原则</description></item><item><title>数据管道</title><link>https://blog.ans20xx.com/posts/%E6%95%B0%E6%8D%AE%E7%AE%A1%E9%81%93/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%95%B0%E6%8D%AE%E7%AE%A1%E9%81%93/</guid><description>数据管道</description></item><item><title>系统粗估</title><link>https://blog.ans20xx.com/posts/%E7%B3%BB%E7%BB%9F%E7%B2%97%E4%BC%B0/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%B3%BB%E7%BB%9F%E7%B2%97%E4%BC%B0/</guid><description>系统粗估</description></item><item><title>云原生</title><link>https://blog.ans20xx.com/posts/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BA%91%E5%8E%9F%E7%94%9F/</guid><description>云原生</description></item><item><title>客户端架构模式</title><link>https://blog.ans20xx.com/posts/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9E%B6%E6%9E%84/</link><pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9E%B6%E6%9E%84/</guid><description>客户端架构模式</description></item><item><title>如何进入心流</title><link>https://blog.ans20xx.com/posts/%E5%BF%83%E6%B5%81/</link><pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%BF%83%E6%B5%81/</guid><description>整理如何进入心流状态</description></item><item><title>Linux 提效</title><link>https://blog.ans20xx.com/posts/linux%E6%8F%90%E6%95%88/</link><pubDate>Mon, 08 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux%E6%8F%90%E6%95%88/</guid><description>记录 Linux 常见的提效操作</description></item><item><title>技术文档</title><link>https://blog.ans20xx.com/posts/uml/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/uml/</guid><description>整理常用的技术文档操作</description></item><item><title>软件包管理</title><link>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/</guid><description>整理常见系统软件包管理软件的用法</description></item><item><title>Docker 相关操作</title><link>https://blog.ans20xx.com/posts/docker/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/docker/</guid><description>整理常用的 Docker 操作</description></item><item><title>Linux 文本操作</title><link>https://blog.ans20xx.com/posts/linux-%E6%96%87%E6%9C%AC%E6%93%8D%E4%BD%9C/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E6%96%87%E6%9C%AC%E6%93%8D%E4%BD%9C/</guid><description>整理常用的 Linux 文本操作</description></item><item><title>Linux 文件操作</title><link>https://blog.ans20xx.com/posts/linux-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</guid><description>整理常用的 Linux 文件操作</description></item><item><title>VIM 相关操作</title><link>https://blog.ans20xx.com/posts/vim%E6%8B%BE%E9%81%97/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/vim%E6%8B%BE%E9%81%97/</guid><description>整理常用的 VIM 操作</description></item><item><title>RayCast 操作</title><link>https://blog.ans20xx.com/posts/raycast%E6%93%8D%E4%BD%9C/</link><pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/raycast%E6%93%8D%E4%BD%9C/</guid><description>常用 RayCast 操作</description></item><item><title>GoLang 开发环境配置</title><link>https://blog.ans20xx.com/posts/go-setup/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-setup/</guid><description>配置 Golang 开发环境</description></item><item><title>常用 Go 命令</title><link>https://blog.ans20xx.com/posts/%E5%B8%B8%E7%94%A8go%E5%91%BD%E4%BB%A4/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%B8%B8%E7%94%A8go%E5%91%BD%E4%BB%A4/</guid><description>常用 Go 命令</description></item><item><title>常用快捷键</title><link>https://blog.ans20xx.com/posts/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/</guid><description>整理常用命令行快捷键</description></item><item><title>Linux 虚拟机安装</title><link>https://blog.ans20xx.com/posts/linux-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/</link><pubDate>Fri, 22 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/</guid><description>整理常用在 Mac 上安装 Linux 虚拟机的过程</description></item><item><title>SSH 相关</title><link>https://blog.ans20xx.com/posts/ssh%E7%9B%B8%E5%85%B3/</link><pubDate>Fri, 22 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ssh%E7%9B%B8%E5%85%B3/</guid><description>整理常用的 SSH 操作</description></item><item><title>Go 开发拾遗</title><link>https://blog.ans20xx.com/posts/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/</link><pubDate>Thu, 21 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/</guid><description>Go 开发拾遗</description></item><item><title>概率统计</title><link>https://blog.ans20xx.com/posts/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</link><pubDate>Sun, 03 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</guid><description>程序员需要知道的数学知识-概率统计篇</description></item><item><title>接雨水</title><link>https://blog.ans20xx.com/posts/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>接雨水</description></item><item><title>三数之和</title><link>https://blog.ans20xx.com/posts/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</guid><description>三数之和</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</guid><description>移动零</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</guid><description>移动零</description></item><item><title>字母异位词分组</title><link>https://blog.ans20xx.com/posts/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description>字母异位词分组</description></item><item><title>最长连续序列</title><link>https://blog.ans20xx.com/posts/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid><description>最长连续序列</description></item><item><title>容器类</title><link>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</link><pubDate>Sat, 11 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</guid><description>关于容器的一些心得体会</description></item><item><title>业务开发的技术成长 15 业务编程如何进行通用性抽象</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</link><pubDate>Tue, 22 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</guid><description>业务开发的技术成长-15-业务编程如何进行通用性抽象</description></item><item><title>业务开发的技术成长 14 源码分享以及如何通过本项目学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</link><pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</guid><description>源码分享以及如何通过本项目学习</description></item><item><title>业务开发的技术成长 10 出入库领域分析与代码实战</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</guid><description>出入库领域分析与代码实战</description></item><item><title>业务开发的技术成长 11 订单领域设计及代码实践</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</guid><description>订单领域设计及代码实践</description></item><item><title>业务开发的技术成长 12 业务开发代码如何简洁统一</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</guid><description>业务开发代码如何简洁统一</description></item><item><title>业务开发的技术成长 13 发票系统需求分析及领域设计</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</guid><description>发票系统需求分析及领域设计</description></item><item><title>业务开发的技术成长 9 数据校验深入学习及如何高效进行学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</guid><description>数据校验深入学习及如何高效进行学习</description></item><item><title>业务开发的技术成长 8 领域开发产品录入代码演示</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</link><pubDate>Fri, 11 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</guid><description>领域开发产品录入</description></item><item><title>业务开发的技术成长 7 如何更好的理解登录</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</link><pubDate>Thu, 10 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</guid><description>如何更好的理解登录</description></item><item><title>业务开发的技术成长 6 中间件建设之统一权限集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</link><pubDate>Tue, 08 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</guid><description>中间件建设之统一权限集成</description></item><item><title>业务开发的技术成长 5 中间件建设之通用文件集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</link><pubDate>Mon, 07 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</guid><description>中间件建设之通用文件集成</description></item><item><title>业务开发的技术成长 1 Maven 环境配置</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</guid><description>关于Java项目Maven环境配置</description></item><item><title>业务开发的技术成长 2 如何打造高效的学习环境</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</guid><description>如何打造高效的学习环境</description></item><item><title>业务开发的技术成长 3 技术架构及如何快速开发技巧</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</guid><description>技术架构及如何快速开发技巧</description></item><item><title>业务开发的技术成长 4 代码生成器原理</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</guid><description>代码生成器原理</description></item><item><title>整洁代码之注释篇</title><link>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</link><pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</guid><description>关于如何写好注释</description></item><item><title>Diagram Support</title><link>https://blog.ans20xx.com/posts/diagram-support/</link><pubDate>Wed, 31 Mar 2021 13:11:22 +0800</pubDate><guid>https://blog.ans20xx.com/posts/diagram-support/</guid><description>&lt;p&gt;Eureka supports the rendering of diagrams by using Mermaid.&lt;/p&gt;</description></item><item><title>Math Support</title><link>https://blog.ans20xx.com/posts/math-support/</link><pubDate>Fri, 20 Nov 2020 22:52:56 +0800</pubDate><guid>https://blog.ans20xx.com/posts/math-support/</guid><description>&lt;p&gt;Eureka supports the rendering of mathematical formulas by using KaTeX.&lt;/p&gt;</description></item><item><title>Featured Image</title><link>https://blog.ans20xx.com/posts/featured-image/</link><pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/featured-image/</guid><description>Post with featured image.</description></item><item><title>Markdown Syntax Guide</title><link>https://blog.ans20xx.com/posts/markdown-syntax/</link><pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/markdown-syntax/</guid><description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description></item><item><title>Emoji Support</title><link>https://blog.ans20xx.com/posts/emoji-support/</link><pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/emoji-support/</guid><description>Guide to emoji usage in Hugo</description></item><item><title/><link>https://blog.ans20xx.com/posts/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description/></item><item><title/><link>https://blog.ans20xx.com/posts/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</guid><description/></item><item><title/><link>https://blog.ans20xx.com/posts/%E8%82%A1%E7%A5%A8/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%82%A1%E7%A5%A8/</guid><description/></item></channel></rss>
