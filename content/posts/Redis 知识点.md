@@ -1,5 +1,5 @@
 ---
-title: "Redis 知识点"
+title: "Redis 复习"
 date: '2026-02-06'
 draft: false
 description:  
