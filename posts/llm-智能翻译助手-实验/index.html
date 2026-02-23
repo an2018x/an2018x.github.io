@@ -1,0 +1,1004 @@
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>LLM-智能翻译助手-实验 | 安橙的博客</title><meta name=keywords content><meta name=description content="实验元数据 (Meta Data)
+实验编号/标题：例如：LLM-智能翻译助手-实验"><meta name=author content="map[name:An]"><link rel=canonical href=https://blog.ans20xx.com/posts/llm-%E6%99%BA%E8%83%BD%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B-%E5%AE%9E%E9%AA%8C/><link crossorigin=anonymous href=/assets/css/stylesheet.041a3aaca750ec657173b561c2c22f46ec1e5a1b1e31d52b483410735aa46e02.css integrity="sha256-BBo6rKdQ7GVxc7VhwsIvRuweWhseMdUrSDQQc1qkbgI=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/llm-%E6%99%BA%E8%83%BD%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B-%E5%AE%9E%E9%AA%8C/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link crossorigin=anonymous href=/assets/css/fancyboxcss.min.css integrity rel="preload stylesheet" as=style></link>
+<script crossorigin=anonymous src=/assets/js/fancybox.js integrity async></script><script type=text/javascript async src="https://cdn.jsdmirror.com/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">MathJax.Hub.Config({tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["[[","]]"]],processEscapes:!0,processEnvironments:!0,skipTags:["script","noscript","style","textarea","pre"],TeX:{equationNumbers:{autoNumber:"AMS"},extensions:["AMSmath.js","AMSsymbols.js"]}},"HTML-CSS":{availableFonts:["Arial","TeX"],preferredFont:"TeX",webFont:"TeX"}}),MathJax.Hub.Queue(function(){var e,t=MathJax.Hub.getAllJax();for(e=0;e<t.length;e+=1)t[e].SourceElement().parentNode.className+=" has-jax"})</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style><link rel=stylesheet href=https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css media=print onload='this.media="all"'><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.css><script src=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.iife.js></script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/ accesskey=h title="安橙的博客 (Alt + H)">安橙的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">LLM-智能翻译助手-实验</h1><div class=post-meta><span title='2026-02-23 00:00:00 +0000 UTC'>二月 23, 2026</span>&nbsp;·&nbsp;map[name:An]</div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e5%ae%9e%e9%aa%8c%e5%85%83%e6%95%b0%e6%8d%ae-meta-data aria-label="实验元数据 (Meta Data)">实验元数据 (Meta Data)</a></li><li><a href=#-%e5%ae%9e%e9%aa%8c%e5%89%8d%e5%81%87%e8%ae%be%e4%b8%8e%e7%9b%ae%e6%a0%87-plan aria-label="🎯 实验前：假设与目标 (Plan)">🎯 实验前：假设与目标 (Plan)</a></li><li><a href=#-%e5%ae%9e%e9%aa%8c%e4%b8%ad%e6%89%a7%e8%a1%8c%e6%ad%a5%e9%aa%a4%e4%b8%8e%e5%8f%98%e9%87%8f-do aria-label="🧪 实验中：执行步骤与变量 (Do)">🧪 实验中：执行步骤与变量 (Do)</a><ul><li><a href=#%e5%87%86%e5%a4%87%e5%b7%a5%e4%bd%9c%e5%b7%a5%e5%85%b7 aria-label=准备工作/工具：>准备工作/工具：</a></li><li><a href=#%e6%89%a7%e8%a1%8c%e6%ad%a5%e9%aa%a4-log aria-label="执行步骤 (Log)：">执行步骤 (Log)：</a><ul><li><a href=#%e5%ae%9a%e4%b9%89%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b aria-label=定义数据模型>定义数据模型</a></li><li><a href=#prompt-%e8%ae%be%e8%ae%a1 aria-label="Prompt 设计">Prompt 设计</a></li><li><a href=#llm-%e5%ae%a2%e6%88%b7%e7%ab%af%e5%b0%81%e8%a3%85 aria-label="LLM 客户端封装">LLM 客户端封装</a></li><li><a href=#%e6%a0%b8%e5%bf%83%e7%bf%bb%e8%af%91%e5%99%a8 aria-label=核心翻译器>核心翻译器</a></li><li><a href=#%e5%91%bd%e4%bb%a4%e8%a1%8c%e7%95%8c%e9%9d%a2 aria-label=命令行界面>命令行界面</a></li></ul></li></ul></li><li><a href=#-%e5%ae%9e%e9%aa%8c%e5%90%8e%e7%8e%b0%e8%b1%a1%e4%b8%8e%e6%95%b0%e6%8d%ae-check aria-label="👁️ 实验后：现象与数据 (Check)">👁️ 实验后：现象与数据 (Check)</a></li><li><a href=#-%e6%b7%b1%e5%ba%a6%e5%a4%8d%e7%9b%98%e5%88%86%e6%9e%90%e4%b8%8e%e7%bb%93%e8%ae%ba-act aria-label="🧠 深度复盘：分析与结论 (Act)">🧠 深度复盘：分析与结论 (Act)</a></li><li><a href=#%e4%b8%8b%e4%b8%80%e6%ad%a5%e8%a1%8c%e5%8a%a8-next-actions aria-label="下一步行动 (Next Actions)：">下一步行动 (Next Actions)：</a></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><h1 id=实验元数据-meta-data>实验元数据 (Meta Data)<a hidden class=anchor aria-hidden=true href=#实验元数据-meta-data>#</a></h1><p>实验编号/标题：例如：LLM-智能翻译助手-实验</p><p>日期：2026-02-23</p><p>所属领域/标签：例如：#LLM</p><h1 id=-实验前假设与目标-plan>🎯 实验前：假设与目标 (Plan)<a hidden class=anchor aria-hidden=true href=#-实验前假设与目标-plan>#</a></h1><p>当前问题 (Problem)：我需要实践下基础的 LLM API 调用</p><p>实验目标 (Objective)：</p><p>构建一个命令行翻译工具，支持：</p><ol><li>自动语言检测 — 不需要用户指定源语言</li><li>高质量翻译 — 带置信度评分和替代翻译方案</li><li>上下文感知 — 可以传入语境提示（如"这是法律文本"）</li><li>流式输出 — 翻译结果逐字显示，提升用户体验</li><li>批量翻译 — 支持读取文件批量处理</li><li>多模型切换 — 支持在 Claude / OpenAI 之间切换</li></ol><p>核心假设 (Hypothesis)：</p><h1 id=-实验中执行步骤与变量-do>🧪 实验中：执行步骤与变量 (Do)<a hidden class=anchor aria-hidden=true href=#-实验中执行步骤与变量-do>#</a></h1><h2 id=准备工作工具>准备工作/工具：<a hidden class=anchor aria-hidden=true href=#准备工作工具>#</a></h2><p>项目结构：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>translator/
+</span></span><span class=line><span class=cl>├── pyproject.toml          # 项目配置
+</span></span><span class=line><span class=cl>├── .env                    # API 密钥（不要提交到 Git）
+</span></span><span class=line><span class=cl>├── src/
+</span></span><span class=line><span class=cl>│   ├── __init__.py
+</span></span><span class=line><span class=cl>│   ├── models.py           # Pydantic 数据模型
+</span></span><span class=line><span class=cl>│   ├── prompts.py          # Prompt 模板
+</span></span><span class=line><span class=cl>│   ├── client.py           # LLM 客户端封装
+</span></span><span class=line><span class=cl>│   ├── translator.py       # 核心翻译逻辑
+</span></span><span class=line><span class=cl>│   └── cli.py              # 命令行入口
+</span></span><span class=line><span class=cl>├── tests/
+</span></span><span class=line><span class=cl>│   ├── test_models.py
+</span></span><span class=line><span class=cl>│   ├── test_translator.py
+</span></span><span class=line><span class=cl>│   └── test_prompts.py
+</span></span><span class=line><span class=cl>└── examples/
+</span></span><span class=line><span class=cl>    ├── basic_usage.py
+</span></span><span class=line><span class=cl>    ├── streaming_demo.py
+</span></span><span class=line><span class=cl>    └── batch_translate.py
+</span></span></code></pre></td></tr></table></div></div><p>安装依赖</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 创建项目目录</span>
+</span></span><span class=line><span class=cl>mkdir translator <span class=o>&amp;&amp;</span> <span class=nb>cd</span> translator
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 创建虚拟环境</span>
+</span></span><span class=line><span class=cl>python -m venv venv
+</span></span><span class=line><span class=cl><span class=nb>source</span> venv/bin/activate  <span class=c1># Linux/Mac</span>
+</span></span><span class=line><span class=cl><span class=c1># venv\Scripts\activate   # Windows</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 安装依赖</span>
+</span></span><span class=line><span class=cl>pip install anthropic openai pydantic python-dotenv rich typer
+</span></span></code></pre></td></tr></table></div></div><ul><li>anthropic — Anthropic 官方 SDK，用于调用 Claude API</li><li>openai — OpenAI SDK，用于对比学习</li><li>pydantic — 数据校验，Agent 开发的标配</li><li>python-dotenv — 管理环境变量（API 密钥）</li><li>rich — 终端美化输出（进度条、彩色文字）</li><li>typer — 命令行工具框架</li></ul><p>配置 API 密钥</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># .env 文件</span>
+</span></span><span class=line><span class=cl><span class=nv>ANTHROPIC_API_KEY</span><span class=o>=</span>sk-ant-xxxxxxxxxxxxx
+</span></span><span class=line><span class=cl><span class=nv>OPENAI_API_KEY</span><span class=o>=</span>sk-xxxxxxxxxxxxx
+</span></span></code></pre></td></tr></table></div></div><h2 id=执行步骤-log>执行步骤 (Log)：<a hidden class=anchor aria-hidden=true href=#执行步骤-log>#</a></h2><h3 id=定义数据模型>定义数据模型<a hidden class=anchor aria-hidden=true href=#定义数据模型>#</a></h3><blockquote><p>为什么先写模型？ 在 Agent 开发中，定义清晰的数据结构是第一步。它决定了 LLM 需要输出什么、下游系统如何消费数据。这就是 &ldquo;Structured Output&rdquo; 的起点。</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># src/models.py</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pydantic</span> <span class=kn>import</span> <span class=n>BaseModel</span><span class=p>,</span> <span class=n>Field</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>enum</span> <span class=kn>import</span> <span class=n>Enum</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Confidence</span><span class=p>(</span><span class=nb>str</span><span class=p>,</span> <span class=n>Enum</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;翻译置信等级&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>HIGH</span> <span class=o>=</span> <span class=s2>&#34;high&#34;</span> <span class=c1># 直译即可，含义明确</span>
+</span></span><span class=line><span class=cl>    <span class=n>MEDIUM</span> <span class=o>=</span> <span class=s2>&#34;medium&#34;</span> <span class=c1># 有多重理解模式，已选择最可能的</span>
+</span></span><span class=line><span class=cl>    <span class=n>LOW</span> <span class=o>=</span> <span class=s2>&#34;low&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>TranslationResult</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;单条翻译结果 - LLM 需要严格按此格式输出&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>source_language</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>description</span><span class=o>=</span><span class=s2>&#34;检测到的源语言，如 &#39;English&#39;, &#39;中文&#39;, &#39;日本语&#39;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>target_language</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>description</span><span class=o>=</span><span class=s2>&#34;目标语言&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>translation</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>description</span><span class=o>=</span><span class=s2>&#34;主翻译结果&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>confidence</span><span class=p>:</span> <span class=n>Confidence</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>description</span><span class=o>=</span><span class=s2>&#34;翻译置信度&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>alternatives</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>default_factory</span><span class=o>=</span><span class=nb>list</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>description</span><span class=o>=</span><span class=s2>&#34;1-3个替代翻译（不同表达方式或语气）&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_length</span><span class=o>=</span><span class=mi>3</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>notes</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>default</span><span class=o>=</span><span class=s2>&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>description</span><span class=o>=</span><span class=s2>&#34;翻译说明：文化差异、语气变化、专业术语解释&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>BatchTranslationResult</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;批量翻译结果&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>results</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=n>TranslationResult</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>total_tokens</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>    <span class=n>model_used</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&#34;&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>Field(description=&mldr;) — 这些描述最终会成为 prompt 的一部分，帮助 LLM 理解每个字段的含义</li><li>Enum 约束 — 限制 confidence 只能是 high/medium/low，防止 LLM 输出随意值</li><li>default_factory=list — 确保 alternatives 字段有默认空列表</li><li>max_length=3 — 约束替代翻译数量，控制输出长度和成本</li></ul><h3 id=prompt-设计>Prompt 设计<a hidden class=anchor aria-hidden=true href=#prompt-设计>#</a></h3><blockquote><p>这是整个项目最重要的部分。 Prompt 设计的质量直接决定了翻译效果。</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># src/prompts.py</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>Optional</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>SYSTEM_PROMPT</span> <span class=o>=</span> <span class=s2>&#34;&#34;&#34;你是一个专业翻译引擎。你的任务是提供准确、自然的翻译。
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>## 核心规则
+</span></span></span><span class=line><span class=cl><span class=s2>1. 自动检测源语言，翻译为用户指定的目标语言
+</span></span></span><span class=line><span class=cl><span class=s2>2. 翻译应自然流畅，符合目标语言的表达习惯，而非逐字直译
+</span></span></span><span class=line><span class=cl><span class=s2>3. 保留原文的语气和风格（正式/非正式/幽默等）
+</span></span></span><span class=line><span class=cl><span class=s2>4. 对于专业术语，优先使用该领域的标注译法
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>## 输出格式
+</span></span></span><span class=line><span class=cl><span class=s2>你必须严格按照以下 JSON 格式输出，不要包含其他任何内容：
+</span></span></span><span class=line><span class=cl><span class=s2>\```json
+</span></span></span><span class=line><span class=cl><span class=s2>{
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;source_language&#34;:&#34;检测到的源语言名称&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;target_language&#34;:&#34;目标语言名称&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;translation&#34;: &#34;翻译结果&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;confidence&#34;: &#34;high 或 medium 或 low&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;alternatives&#34;: [&#34;替代翻译 1&#34;,&#34;替代翻译 2&#34;],
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;notes&#34;:&#34;翻译注释（比如文化差异说明、术语解释、没有则留空）&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>}
+</span></span></span><span class=line><span class=cl><span class=s2>\```
+</span></span></span><span class=line><span class=cl><span class=s2>## confidence 判定标准
+</span></span></span><span class=line><span class=cl><span class=s2>- high: 原文含义明确，翻译准确性高
+</span></span></span><span class=line><span class=cl><span class=s2>- medium: 原文有多种理解方式，已选择最可能的翻译
+</span></span></span><span class=line><span class=cl><span class=s2>- low: 原文含糊、涉及文化特定表达、或无法准确包含的双关语等
+</span></span></span><span class=line><span class=cl><span class=s2>&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>build_user_prompt</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>text</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>target_language</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=p>:</span> <span class=n>Optional</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span> <span class=o>=</span> <span class=kc>None</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>str</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;构造用户 prompt
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>    为什么把构造逻辑单独抽出来？
+</span></span></span><span class=line><span class=cl><span class=s2>    1. 便于测试 - 可以单独测试 prompt 生成逻辑
+</span></span></span><span class=line><span class=cl><span class=s2>    2. 便于迭代 - prompt 调优时只改这里
+</span></span></span><span class=line><span class=cl><span class=s2>    3. 便于追踪 - 生产环境中记录每次的完整 prompt
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>prompt</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;请将以下文本翻译为 </span><span class=si>{</span><span class=n>target_language</span><span class=si>}</span><span class=s2>: </span><span class=se>\n\n</span><span class=si>{</span><span class=n>text</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>context</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>prompt</span> <span class=o>+=</span> <span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n\n</span><span class=s2>背景说明: </span><span class=si>{</span><span class=n>context</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>prompt</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Few-shot 实例（可选，用于提升输出稳定性）</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>FEW_SHOT_EXAMPLES</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s1>&#39;请将以下文本翻译为中文：</span><span class=se>\n\n</span><span class=s1>It</span><span class=se>\&#39;</span><span class=s1>s raining cats and dogs.&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;assistant&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;&#34;{
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;source_language&#34;: &#34;English&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;target_language&#34;: &#34;中文&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;translation&#34;: &#34;外面下着倾盆大雨。&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;confidence&#34;: &#34;high&#34;,
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;alternatives&#34;: [&#34;雨下得很大。&#34;, &#34;大雨倾盆。&#34;],
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;notes&#34;: &#34;英文俚语 &#39;raining cats and dogs&#39; 意为下大雨，已意译为中文自然表达，而非直译。&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>}&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li>角色设定（System Prompt 第一句）— 告诉模型"你是什么"，建立行为框架</li><li>明确规则 — 用编号列表给出约束，减少模型的自由发挥空间</li><li>输出格式锁定 — 直接给 JSON 示例，这比"请输出 JSON"有效得多</li><li>Few-shot 示例 — 用一个具体例子展示期望的输出格式和风格（特别是如何处理俚语）</li><li>Context 注入 — 可选的上下文信息让翻译更准确（如"这是医学文献"）</li></ol><h3 id=llm-客户端封装>LLM 客户端封装<a hidden class=anchor aria-hidden=true href=#llm-客户端封装>#</a></h3><p>为什么要封装？ 直接散落在代码各处的 API 调用会导致：难以切换模型、无法统一处理错误、无法记录 token 用量。在 Agent 开发中，封装一个 LLM 客户端层是标准做法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># src/client.py</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>json</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>time</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>anthropic</span> <span class=kn>import</span> <span class=n>Anthropic</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>anthropic.types</span> <span class=kn>import</span> <span class=n>RateLimitError</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>openai</span> <span class=kn>import</span> <span class=n>max_retries</span><span class=p>,</span> <span class=n>APIError</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pydantic</span> <span class=kn>import</span> <span class=n>ValidationError</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.models</span> <span class=kn>import</span> <span class=n>TranslationResult</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>LLMClient</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>model</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&#34;claude-sonnet-4-5-20250514&#34;</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>client</span> <span class=o>=</span> <span class=n>Anthropic</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>model</span> <span class=o>=</span> <span class=n>model</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>total_input_tokens</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>total_output_tokens</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>#-------------------------------</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 核心方法 1: 标准调用（返回结构结果）</span>
+</span></span><span class=line><span class=cl>    <span class=c1>#-------------------------------</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>chat</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>             <span class=n>system</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>             <span class=n>messages</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>dict</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>             <span class=n>max_tokens</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=mi>1024</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>             <span class=n>temperature</span><span class=p>:</span> <span class=nb>float</span> <span class=o>=</span> <span class=mf>0.3</span><span class=p>,</span> <span class=c1># 翻译任务用较低温度，减少随机性</span>
+</span></span><span class=line><span class=cl>         <span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>tuple</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>dict</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>        发送请求并返回（文本内容, usage 信息）
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>        temperature 说明：
+</span></span></span><span class=line><span class=cl><span class=s2>        - 0.0 ~ 0.3: 适合翻译、数据提取等确定性任务
+</span></span></span><span class=line><span class=cl><span class=s2>        - 0.5 ~ 0.7: 适合一般对话
+</span></span></span><span class=line><span class=cl><span class=s2>        - 0.8 ~ 1.0: 适合创意写作
+</span></span></span><span class=line><span class=cl><span class=s2>        Agent 开发中，不同节点可能需要不同 temperature
+</span></span></span><span class=line><span class=cl><span class=s2>        &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c1># 重试逻辑：API 调用可能因限流、网络波动失败</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_retries</span> <span class=o>=</span> <span class=mi>3</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>attempt</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=n>max_retries</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>response</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>client</span><span class=o>.</span><span class=n>messages</span><span class=o>.</span><span class=n>create</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                    <span class=n>model</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>model</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>max_tokens</span> <span class=o>=</span> <span class=n>max_tokens</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>temperature</span> <span class=o>=</span> <span class=n>temperature</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>system</span> <span class=o>=</span> <span class=n>system</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>messages</span> <span class=o>=</span> <span class=n>messages</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                <span class=c1># 记录 token 用量</span>
+</span></span><span class=line><span class=cl>                <span class=bp>self</span><span class=o>.</span><span class=n>total_input_tokens</span> <span class=o>+=</span> <span class=n>response</span><span class=o>.</span><span class=n>usage</span><span class=o>.</span><span class=n>input_tokens</span>
+</span></span><span class=line><span class=cl>                <span class=bp>self</span><span class=o>.</span><span class=n>total_output_tokens</span> <span class=o>+=</span> <span class=n>response</span><span class=o>.</span><span class=n>usage</span><span class=o>.</span><span class=n>output_tokens</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                <span class=n>usage</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;input_tokens&#34;</span><span class=p>:</span> <span class=n>response</span><span class=o>.</span><span class=n>usage</span><span class=o>.</span><span class=n>input_tokens</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;output_tokens&#34;</span><span class=p>:</span> <span class=n>response</span><span class=o>.</span><span class=n>usage</span><span class=o>.</span><span class=n>output_tokens</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;model&#34;</span><span class=p>:</span> <span class=bp>self</span><span class=o>.</span><span class=n>model</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=n>response</span><span class=o>.</span><span class=n>content</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>text</span><span class=p>,</span> <span class=n>usage</span>
+</span></span><span class=line><span class=cl>            <span class=k>except</span> <span class=n>RateLimitError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=c1># 限流：指数退避重试</span>
+</span></span><span class=line><span class=cl>                <span class=n>wait_time</span> <span class=o>=</span> <span class=mi>2</span> <span class=o>**</span> <span class=n>attempt</span>
+</span></span><span class=line><span class=cl>                <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;限流, </span><span class=si>{</span><span class=n>wait_time</span><span class=si>}</span><span class=s2>秒后重试&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=n>time</span><span class=o>.</span><span class=n>sleep</span><span class=p>(</span><span class=n>wait_time</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>except</span> <span class=n>APIError</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=n>attempt</span> <span class=o>==</span> <span class=n>max_retries</span> <span class=o>-</span> <span class=mi>1</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                    <span class=k>raise</span>
+</span></span><span class=line><span class=cl>                <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;API 错误:</span><span class=si>{</span><span class=n>e</span><span class=si>}</span><span class=s2>, 重试中....&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>raise</span> <span class=ne>RuntimeError</span><span class=p>(</span><span class=s2>&#34;API 调用失败，已达最大重试次数&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># ----------------------</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 核心方法 2: 流式调用</span>
+</span></span><span class=line><span class=cl>    <span class=c1># ----------------------</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>chat_stream</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>system</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>messages</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>dict</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>                    <span class=n>max_tokens</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=mi>1024</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>temperature</span><span class=p>:</span> <span class=nb>float</span> <span class=o>=</span> <span class=mf>0.3</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>        流式调用 - 逐 token 返回结果
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>        为什么需要流式？
+</span></span></span><span class=line><span class=cl><span class=s2>        1. 用户体验：不用等全部生成完成才能看到结果
+</span></span></span><span class=line><span class=cl><span class=s2>        2. 长文本翻译：避免超时
+</span></span></span><span class=line><span class=cl><span class=s2>        3. Agent 场景：可以在 Agent 思考过程中实时展示
+</span></span></span><span class=line><span class=cl><span class=s2>        &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=k>with</span> <span class=bp>self</span><span class=o>.</span><span class=n>client</span><span class=o>.</span><span class=n>messages</span><span class=o>.</span><span class=n>stream</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=n>model</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>model</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>max_tokens</span> <span class=o>=</span> <span class=n>max_tokens</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>temperature</span> <span class=o>=</span> <span class=n>temperature</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>system</span> <span class=o>=</span> <span class=n>system</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>messages</span> <span class=o>=</span> <span class=n>messages</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span> <span class=k>as</span> <span class=n>stream</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>full_text</span> <span class=o>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>text</span> <span class=ow>in</span> <span class=n>stream</span><span class=o>.</span><span class=n>text_stream</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>full_text</span> <span class=o>+=</span> <span class=n>text</span>
+</span></span><span class=line><span class=cl>                <span class=k>yield</span> <span class=n>text</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=c1># 流结束后记录 usage</span>
+</span></span><span class=line><span class=cl>            <span class=n>final_message</span> <span class=o>=</span> <span class=n>stream</span><span class=o>.</span><span class=n>get_final_message</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=bp>self</span><span class=o>.</span><span class=n>total_input_tokens</span> <span class=o>+=</span> <span class=n>final_message</span><span class=o>.</span><span class=n>usage</span><span class=o>.</span><span class=n>input_tokens</span>
+</span></span><span class=line><span class=cl>            <span class=bp>self</span><span class=o>.</span><span class=n>total_output_tokens</span> <span class=o>+=</span> <span class=n>final_message</span><span class=o>.</span><span class=n>usage</span><span class=o>.</span><span class=n>output_tokens</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># -----------------------</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 核心方法 3: 结构化输出解析</span>
+</span></span><span class=line><span class=cl>    <span class=c1># -----------------------</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>parse_structured_response</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                  <span class=n>raw_text</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                  <span class=n>model_class</span><span class=p>:</span> <span class=nb>type</span><span class=p>[</span><span class=n>TranslationResult</span><span class=p>]</span> <span class=o>=</span> <span class=n>TranslationResult</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                  <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>TranslationResult</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>        将 LLM 的文本输出解析为 Pydanic 对象
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>        这是 Structured Output 的核心
+</span></span></span><span class=line><span class=cl><span class=s2>        1. 从原始文本中提取 JSON
+</span></span></span><span class=line><span class=cl><span class=s2>        2. 用 Pydantic 校验数据类型和约束
+</span></span></span><span class=line><span class=cl><span class=s2>        3. 如果解析失败，清洗后重试
+</span></span></span><span class=line><span class=cl><span class=s2>        &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c1># 尝试直接解析</span>
+</span></span><span class=line><span class=cl>        <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>model_class</span><span class=o>.</span><span class=n>model_validate_json</span><span class=p>(</span><span class=n>raw_text</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>except</span> <span class=p>(</span><span class=n>ValidationError</span><span class=p>,</span> <span class=n>json</span><span class=o>.</span><span class=n>JSONDecodeError</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=k>pass</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1># LLM 有时会在 JSON 前后加 markdown 代码块</span>
+</span></span><span class=line><span class=cl>        <span class=c1># 清洗：提取 ```json ... ``` 中的内容</span>
+</span></span><span class=line><span class=cl>        <span class=n>cleaned</span> <span class=o>=</span> <span class=n>raw_text</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=s2>&#34;```json&#34;</span> <span class=ow>in</span> <span class=n>cleaned</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>start</span> <span class=o>=</span> <span class=n>cleaned</span><span class=o>.</span><span class=n>index</span><span class=p>(</span><span class=s2>&#34;```json&#34;</span><span class=p>)</span> <span class=o>+</span> <span class=mi>7</span>
+</span></span><span class=line><span class=cl>            <span class=n>end</span> <span class=o>=</span> <span class=n>cleaned</span><span class=o>.</span><span class=n>index</span><span class=p>(</span><span class=s2>&#34;```&#34;</span><span class=p>,</span> <span class=n>start</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>cleaned</span> <span class=o>=</span> <span class=n>cleaned</span><span class=p>[</span><span class=n>start</span><span class=p>:</span><span class=n>end</span><span class=p>]</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>elif</span> <span class=s2>&#34;```&#34;</span> <span class=ow>in</span> <span class=n>cleaned</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>start</span> <span class=o>=</span> <span class=n>cleaned</span><span class=o>.</span><span class=n>index</span><span class=p>(</span><span class=s2>&#34;```&#34;</span><span class=p>)</span> <span class=o>+</span> <span class=mi>3</span>
+</span></span><span class=line><span class=cl>            <span class=n>end</span> <span class=o>=</span> <span class=n>cleaned</span><span class=o>.</span><span class=n>index</span><span class=p>(</span><span class=s2>&#34;```&#34;</span><span class=p>,</span> <span class=n>start</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>cleaned</span> <span class=o>=</span> <span class=n>cleaned</span><span class=p>[</span><span class=n>start</span><span class=p>:</span><span class=n>end</span><span class=p>]</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>model_class</span><span class=o>.</span><span class=n>model_validate_structured</span><span class=p>(</span><span class=n>cleaned</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>except</span> <span class=p>(</span><span class=n>ValidationError</span><span class=p>,</span> <span class=n>json</span><span class=o>.</span><span class=n>JSONDecodeError</span><span class=p>)</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                <span class=sa>f</span><span class=s2>&#34;无法解析 LLM 输出为结构化数据。</span><span class=se>\n</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=sa>f</span><span class=s2>&#34;原始输出：</span><span class=si>{</span><span class=n>raw_text</span><span class=p>[:</span><span class=mi>200</span><span class=p>]</span><span class=si>}</span><span class=s2>...</span><span class=se>\n</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=sa>f</span><span class=s2>&#34;错误: </span><span class=si>{</span><span class=n>e</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># ---------------------</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 工具方法：查看累计用量</span>
+</span></span><span class=line><span class=cl>    <span class=c1># --------------------</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>get_usage_summary</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>dict</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;total_input_tokens&#34;</span><span class=p>:</span> <span class=bp>self</span><span class=o>.</span><span class=n>total_input_tokens</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;total_output_tokens&#34;</span><span class=p>:</span> <span class=bp>self</span><span class=o>.</span><span class=n>total_output_tokens</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;estimated_cost_usd&#34;</span><span class=p>:</span> <span class=bp>self</span><span class=o>.</span><span class=n>_estimate_cost</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>_estimate_cost</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>float</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;粗略成本估算（以 Claude Sonnet 为例）&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>input_cost</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>total_input_tokens</span> <span class=o>*</span> <span class=mf>3.0</span> <span class=o>/</span> <span class=mi>1_000_000</span>
+</span></span><span class=line><span class=cl>        <span class=n>output_cost</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>total_output_tokens</span> <span class=o>*</span> <span class=mf>15.0</span> <span class=o>/</span> <span class=mi>1_000_000</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nb>round</span><span class=p>(</span><span class=n>input_cost</span> <span class=o>+</span> <span class=n>output_cost</span><span class=p>,</span> <span class=mi>4</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>重试 + 指数退避 — 所有 API 调用都可能失败，这是生产级代码的基础</li><li>Token 用量追踪 — Agent 的成本控制从这里开始</li><li>JSON 清洗 — LLM 经常在 JSON 外面包一层 markdown，必须处理</li><li>Temperature 策略 — 不同任务需要不同的温度参数</li></ul><h3 id=核心翻译器>核心翻译器<a hidden class=anchor aria-hidden=true href=#核心翻译器>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>asyncio</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>Optional</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.client</span> <span class=kn>import</span> <span class=n>LLMClient</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.models</span> <span class=kn>import</span> <span class=n>TranslationResult</span><span class=p>,</span> <span class=n>BatchTranslationResult</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.prompts</span> <span class=kn>import</span> <span class=n>FEW_SHOT_EXAMPLES</span><span class=p>,</span> <span class=n>build_user_prompt</span><span class=p>,</span> <span class=n>SYSTEM_PROMPT</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Translator</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;核心翻译器 - 组合所有组件&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>model</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&#34;claude-sonnet-4-5-20250514&#34;</span><span class=p>,</span> <span class=n>use_few_shot</span><span class=p>:</span> <span class=nb>bool</span> <span class=o>=</span> <span class=kc>True</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>llm</span> <span class=o>=</span> <span class=n>LLMClient</span><span class=p>(</span><span class=n>model</span> <span class=o>=</span> <span class=n>model</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>use_few_shot</span> <span class=o>=</span> <span class=n>use_few_shot</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>translate</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>text</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>target_language</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&#34;中文&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>context</span><span class=p>:</span> <span class=n>Optional</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span> <span class=o>=</span> <span class=kc>None</span><span class=p>,</span> <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>TranslationResult</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34; 标准翻译：发送请求 -&gt; 解析结构化输出 &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>messages</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1># 可选：加入 few-shot 示例</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>use_few_shot</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>messages</span><span class=o>.</span><span class=n>extend</span><span class=p>(</span><span class=n>FEW_SHOT_EXAMPLES</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1># 构造用户消息</span>
+</span></span><span class=line><span class=cl>        <span class=n>user_prompt</span> <span class=o>=</span> <span class=n>build_user_prompt</span><span class=p>(</span><span class=n>text</span><span class=p>,</span> <span class=n>target_language</span><span class=p>,</span> <span class=n>context</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>messages</span><span class=o>.</span><span class=n>append</span><span class=p>({</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=n>user_prompt</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1># 调用 LLM</span>
+</span></span><span class=line><span class=cl>        <span class=n>raw_text</span><span class=p>,</span> <span class=n>usage</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>llm</span><span class=o>.</span><span class=n>chat</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=n>system</span><span class=o>=</span><span class=n>SYSTEM_PROMPT</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>messages</span><span class=o>=</span><span class=n>messages</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1># 解析为结构化结果</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>llm</span><span class=o>.</span><span class=n>parse_structured_response</span><span class=p>(</span><span class=n>raw_text</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>result</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>translate_stream</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>text</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                         <span class=n>target_language</span><span class=p>:</span> <span class=nb>str</span><span class=o>=</span><span class=s2>&#34;中文&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                         <span class=n>context</span><span class=p>:</span> <span class=n>Optional</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span> <span class=o>=</span> <span class=kc>None</span><span class=p>,</span> <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>TranslationResult</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;流式翻译：实时输出 -&gt; 最终解析为结构化结果
+</span></span></span><span class=line><span class=cl><span class=s2>        注意：流式模式下，先逐字展示原始输出，
+</span></span></span><span class=line><span class=cl><span class=s2>        全部接收完后再做结构化解析。
+</span></span></span><span class=line><span class=cl><span class=s2>        这是因为 JSON 必须完整才能解析。
+</span></span></span><span class=line><span class=cl><span class=s2>        &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>messages</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>use_few_shot</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>messages</span><span class=o>.</span><span class=n>extend</span><span class=p>(</span><span class=n>FEW_SHOT_EXAMPLES</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            
+</span></span><span class=line><span class=cl>        <span class=n>user_prompt</span> <span class=o>=</span> <span class=n>build_user_prompt</span><span class=p>(</span><span class=n>text</span><span class=p>,</span> <span class=n>target_language</span><span class=p>,</span> <span class=n>context</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>messages</span><span class=o>.</span><span class=n>append</span><span class=p>({</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=n>user_prompt</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=n>full_text</span> <span class=o>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;翻译中：&#34;</span><span class=p>,</span> <span class=n>end</span><span class=o>=</span><span class=s2>&#34;&#34;</span><span class=p>,</span> <span class=n>flush</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>chunk</span> <span class=ow>in</span> <span class=bp>self</span><span class=o>.</span><span class=n>llm</span><span class=o>.</span><span class=n>chat_stream</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=n>system</span><span class=o>=</span><span class=n>SYSTEM_PROMPT</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>messages</span><span class=o>=</span><span class=n>messages</span>
+</span></span><span class=line><span class=cl>        <span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=nb>print</span><span class=p>(</span><span class=n>chunk</span><span class=p>,</span> <span class=n>end</span><span class=o>=</span><span class=s2>&#34;&#34;</span><span class=p>,</span> <span class=n>flush</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>full_text</span> <span class=o>+=</span> <span class=n>chunk</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=bp>self</span><span class=o>.</span><span class=n>llm</span><span class=o>.</span><span class=n>parse_structured_response</span><span class=p>(</span><span class=n>full_text</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=k>async</span> <span class=k>def</span> <span class=nf>translate_batch</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                              <span class=n>texts</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>str</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>                              <span class=n>target_language</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&#34;中文&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                              <span class=n>max_concurrent</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=mi>3</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>BatchTranslationResult</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;批量翻译：异步并发处理多条文本
+</span></span></span><span class=line><span class=cl><span class=s2>        
+</span></span></span><span class=line><span class=cl><span class=s2>        为什么要用 asyncio
+</span></span></span><span class=line><span class=cl><span class=s2>        - 10 条文本串行调用可能需要 30s
+</span></span></span><span class=line><span class=cl><span class=s2>        - 3 路并发只需要 10 s
+</span></span></span><span class=line><span class=cl><span class=s2>        - 但不能无限并发，否则会限流
+</span></span></span><span class=line><span class=cl><span class=s2>        - max_concurrent 控制并发数
+</span></span></span><span class=line><span class=cl><span class=s2>        &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>semaphore</span> <span class=o>=</span> <span class=n>asyncio</span><span class=o>.</span><span class=n>Semaphore</span><span class=p>(</span><span class=n>max_concurrent</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=k>async</span> <span class=k>def</span> <span class=nf>_translate_one</span><span class=p>(</span><span class=n>text</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>TranslationResult</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>async</span> <span class=k>with</span> <span class=n>semaphore</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=c1># 同步调用包装成异步</span>
+</span></span><span class=line><span class=cl>                <span class=n>loop</span> <span class=o>=</span> <span class=n>asyncio</span><span class=o>.</span><span class=n>get_event_loop</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=k>await</span> <span class=n>loop</span><span class=o>.</span><span class=n>run_in_executor</span><span class=p>(</span><span class=kc>None</span><span class=p>,</span> <span class=k>lambda</span><span class=p>:</span> <span class=bp>self</span><span class=o>.</span><span class=n>translate</span><span class=p>(</span><span class=n>text</span><span class=p>,</span> <span class=n>target_language</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=n>tasks</span> <span class=o>=</span> <span class=p>[</span><span class=n>_translate_one</span><span class=p>(</span><span class=n>text</span><span class=p>)</span> <span class=k>for</span> <span class=n>text</span> <span class=ow>in</span> <span class=n>texts</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=n>results</span> <span class=o>=</span> <span class=k>await</span> <span class=n>asyncio</span><span class=o>.</span><span class=n>gather</span><span class=p>(</span><span class=o>*</span><span class=n>tasks</span><span class=p>,</span> <span class=n>return_exceptions</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=c1># 过滤掉失败的结果</span>
+</span></span><span class=line><span class=cl>        <span class=n>successful</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>result</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>results</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>result</span><span class=p>,</span> <span class=ne>Exception</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>                <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;第 </span><span class=si>{</span><span class=n>i</span><span class=o>+</span><span class=mi>1</span><span class=si>}</span><span class=s2> 条翻译失败: </span><span class=si>{</span><span class=n>result</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>successful</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>result</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=n>usage</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>llm</span><span class=o>.</span><span class=n>get_usage_summary</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>BatchTranslationResult</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=n>results</span><span class=o>=</span><span class=n>successful</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>total_tokens</span><span class=o>=</span><span class=n>usage</span><span class=p>[</span><span class=s2>&#34;total_input_tokens&#34;</span><span class=p>]</span> <span class=o>+</span> <span class=n>usage</span><span class=p>[</span><span class=s2>&#34;total_output_tokens&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>            <span class=n>model_used</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>llm</span><span class=o>.</span><span class=n>model</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=命令行界面>命令行界面<a hidden class=anchor aria-hidden=true href=#命令行界面>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># src/cli.py</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>asyncio</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>typer</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>rich.console</span> <span class=kn>import</span> <span class=n>Console</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>rich.table</span> <span class=kn>import</span> <span class=n>Table</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>rich.panel</span> <span class=kn>import</span> <span class=n>Panel</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.translator</span> <span class=kn>import</span> <span class=n>Translator</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>dotenv</span> <span class=kn>import</span> <span class=n>load_dotenv</span>
+</span></span><span class=line><span class=cl><span class=c1># 加载环境变量</span>
+</span></span><span class=line><span class=cl><span class=n>load_dotenv</span><span class=p>()</span>  
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Typer</span><span class=p>(</span><span class=n>help</span><span class=o>=</span><span class=s2>&#34;智能翻译助手 — Agent 开发项目 1&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>console</span> <span class=o>=</span> <span class=n>Console</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app.command</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>translate</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>text</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Argument</span><span class=p>(</span><span class=n>help</span><span class=o>=</span><span class=s2>&#34;要翻译的文本&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>target</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Option</span><span class=p>(</span><span class=s2>&#34;中文&#34;</span><span class=p>,</span> <span class=s2>&#34;--target&#34;</span><span class=p>,</span> <span class=s2>&#34;-t&#34;</span><span class=p>,</span> <span class=n>help</span><span class=o>=</span><span class=s2>&#34;目标语言&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Option</span><span class=p>(</span><span class=kc>None</span><span class=p>,</span> <span class=s2>&#34;--context&#34;</span><span class=p>,</span> <span class=s2>&#34;-c&#34;</span><span class=p>,</span> <span class=n>help</span><span class=o>=</span><span class=s2>&#34;上下文提示&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>stream</span><span class=p>:</span> <span class=nb>bool</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Option</span><span class=p>(</span><span class=kc>False</span><span class=p>,</span> <span class=s2>&#34;--stream&#34;</span><span class=p>,</span> <span class=s2>&#34;-s&#34;</span><span class=p>,</span> <span class=n>help</span><span class=o>=</span><span class=s2>&#34;启用流式输出&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Option</span><span class=p>(</span><span class=s2>&#34;claude-sonnet-4-20250514&#34;</span><span class=p>,</span> <span class=s2>&#34;--model&#34;</span><span class=p>,</span> <span class=s2>&#34;-m&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;翻译单条文本&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>translator</span> <span class=o>=</span> <span class=n>Translator</span><span class=p>(</span><span class=n>model</span><span class=o>=</span><span class=n>model</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>stream</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>=</span> <span class=n>translator</span><span class=o>.</span><span class=n>translate_stream</span><span class=p>(</span><span class=n>text</span><span class=p>,</span> <span class=n>target</span><span class=p>,</span> <span class=n>context</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>with</span> <span class=n>console</span><span class=o>.</span><span class=n>status</span><span class=p>(</span><span class=s2>&#34;翻译中...&#34;</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=n>result</span> <span class=o>=</span> <span class=n>translator</span><span class=o>.</span><span class=n>translate</span><span class=p>(</span><span class=n>text</span><span class=p>,</span> <span class=n>target</span><span class=p>,</span> <span class=n>context</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 格式化输出</span>
+</span></span><span class=line><span class=cl>    <span class=n>_display_result</span><span class=p>(</span><span class=n>result</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 显示 token 用量</span>
+</span></span><span class=line><span class=cl>    <span class=n>usage</span> <span class=o>=</span> <span class=n>translator</span><span class=o>.</span><span class=n>llm</span><span class=o>.</span><span class=n>get_usage_summary</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>[dim]Token 用量: </span><span class=si>{</span><span class=n>usage</span><span class=p>[</span><span class=s1>&#39;total_input_tokens&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2> in / &#34;</span>
+</span></span><span class=line><span class=cl>        <span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>usage</span><span class=p>[</span><span class=s1>&#39;total_output_tokens&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2> out | &#34;</span>
+</span></span><span class=line><span class=cl>        <span class=sa>f</span><span class=s2>&#34;预估费用: $</span><span class=si>{</span><span class=n>usage</span><span class=p>[</span><span class=s1>&#39;estimated_cost_usd&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2>[/dim]&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app.command</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>batch</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>file</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Argument</span><span class=p>(</span><span class=n>help</span><span class=o>=</span><span class=s2>&#34;包含待翻译文本的文件路径（每行一条）&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>target</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Option</span><span class=p>(</span><span class=s2>&#34;中文&#34;</span><span class=p>,</span> <span class=s2>&#34;--target&#34;</span><span class=p>,</span> <span class=s2>&#34;-t&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>concurrent</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=n>typer</span><span class=o>.</span><span class=n>Option</span><span class=p>(</span><span class=mi>3</span><span class=p>,</span> <span class=s2>&#34;--concurrent&#34;</span><span class=p>,</span> <span class=s2>&#34;-n&#34;</span><span class=p>,</span> <span class=n>help</span><span class=o>=</span><span class=s2>&#34;并发数&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;批量翻译文件中的文本&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=k>with</span> <span class=nb>open</span><span class=p>(</span><span class=n>file</span><span class=p>,</span> <span class=s2>&#34;r&#34;</span><span class=p>,</span> <span class=n>encoding</span><span class=o>=</span><span class=s2>&#34;utf-8&#34;</span><span class=p>)</span> <span class=k>as</span> <span class=n>f</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>texts</span> <span class=o>=</span> <span class=p>[</span><span class=n>line</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span> <span class=k>for</span> <span class=n>line</span> <span class=ow>in</span> <span class=n>f</span> <span class=k>if</span> <span class=n>line</span><span class=o>.</span><span class=n>strip</span><span class=p>()]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;读取到 </span><span class=si>{</span><span class=nb>len</span><span class=p>(</span><span class=n>texts</span><span class=p>)</span><span class=si>}</span><span class=s2> 条待翻译文本&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>translator</span> <span class=o>=</span> <span class=n>Translator</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>results</span> <span class=o>=</span> <span class=n>asyncio</span><span class=o>.</span><span class=n>run</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>translator</span><span class=o>.</span><span class=n>translate_batch</span><span class=p>(</span><span class=n>texts</span><span class=p>,</span> <span class=n>target</span><span class=p>,</span> <span class=n>max_concurrent</span><span class=o>=</span><span class=n>concurrent</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>result</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>results</span><span class=o>.</span><span class=n>results</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>[bold]--- 第 </span><span class=si>{</span><span class=n>i</span><span class=o>+</span><span class=mi>1</span><span class=si>}</span><span class=s2> 条 ---[/bold]&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>_display_result</span><span class=p>(</span><span class=n>result</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>[green]完成！共翻译 </span><span class=si>{</span><span class=nb>len</span><span class=p>(</span><span class=n>results</span><span class=o>.</span><span class=n>results</span><span class=p>)</span><span class=si>}</span><span class=s2> 条[/green]&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;[dim]总 token: </span><span class=si>{</span><span class=n>results</span><span class=o>.</span><span class=n>total_tokens</span><span class=si>}</span><span class=s2>[/dim]&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>_display_result</span><span class=p>(</span><span class=n>result</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;格式化展示翻译结果&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 主翻译</span>
+</span></span><span class=line><span class=cl>    <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span><span class=n>Panel</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span><span class=o>.</span><span class=n>translation</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>title</span><span class=o>=</span><span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>result</span><span class=o>.</span><span class=n>source_language</span><span class=si>}</span><span class=s2> → </span><span class=si>{</span><span class=n>result</span><span class=o>.</span><span class=n>target_language</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>subtitle</span><span class=o>=</span><span class=sa>f</span><span class=s2>&#34;置信度: </span><span class=si>{</span><span class=n>result</span><span class=o>.</span><span class=n>confidence</span><span class=o>.</span><span class=n>value</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>border_style</span><span class=o>=</span><span class=s2>&#34;green&#34;</span> <span class=k>if</span> <span class=n>result</span><span class=o>.</span><span class=n>confidence</span><span class=o>.</span><span class=n>value</span> <span class=o>==</span> <span class=s2>&#34;high&#34;</span> <span class=k>else</span> <span class=s2>&#34;yellow&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 替代翻译</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>result</span><span class=o>.</span><span class=n>alternatives</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>table</span> <span class=o>=</span> <span class=n>Table</span><span class=p>(</span><span class=n>title</span><span class=o>=</span><span class=s2>&#34;替代翻译&#34;</span><span class=p>,</span> <span class=n>show_header</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>alt</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>result</span><span class=o>.</span><span class=n>alternatives</span><span class=p>,</span> <span class=mi>1</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=n>table</span><span class=o>.</span><span class=n>add_row</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;方案 </span><span class=si>{</span><span class=n>i</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>alt</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span><span class=n>table</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 翻译说明</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>result</span><span class=o>.</span><span class=n>notes</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>console</span><span class=o>.</span><span class=n>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;[italic]📝 </span><span class=si>{</span><span class=n>result</span><span class=o>.</span><span class=n>notes</span><span class=si>}</span><span class=s2>[/italic]&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s2>&#34;__main__&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=-实验后现象与数据-check>👁️ 实验后：现象与数据 (Check)<a hidden class=anchor aria-hidden=true href=#-实验后现象与数据-check>#</a></h1><p>客观记录发生了什么，不要带主观评价。</p><p>基本翻译：</p><p><div class=post-img-view><a data-fancybox href=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223192807782.png><img loading=lazy src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223192807782.png alt></a></div></p><p>带上下文的翻译：</p><p><div class=post-img-view><a data-fancybox href=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223192918224.png><img loading=lazy src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223192918224.png alt></a></div></p><p>流式输出：</p><p><div class=post-img-view><a data-fancybox href=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223192954938.png><img loading=lazy src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223192954938.png alt></a></div></p><h1 id=-深度复盘分析与结论-act>🧠 深度复盘：分析与结论 (Act)<a hidden class=anchor aria-hidden=true href=#-深度复盘分析与结论-act>#</a></h1><p>一个基本的 Agent 系统由数据模型、LLM 客户端、Prompt 组成。</p><p>同时有一个主类负责串联所有系统从而完成任务。</p><p>Q: Structured Output 有哪些实现方式？各有什么优缺点？
+A: (1) Prompt 约束（本项目方式）：灵活但不稳定，需要 JSON 清洗；(2) Function Calling / Tool Use：API 层面保证结构，最可靠；(3) JSON Mode（OpenAI 特有）：保证输出是 JSON 但不保证 schema；(4) Constrained Decoding（如 Outlines 库）：在采样阶段强制 schema，100% 可靠但只适用于自部署模型。</p><p>Q: 流式输出和非流式输出分别适合什么场景？
+A: 流式适合面向用户的交互场景（聊天、翻译预览）、长文本生成。非流式适合后台任务、需要完整 JSON 解析的场景、批量处理。Agent 的中间步骤通常用非流式（需要完整解析），最终回复用流式（用户体验）。</p><p>Q: 如何控制 LLM API 调用的成本？
+A: (1) Token 用量监控（本项目已实现）；(2) 模型路由 — 简单任务用小模型（Haiku），复杂任务用大模型（Opus）；(3) 缓存 — 相同输入直接返回缓存结果；(4) Prompt 精简 — 减少不必要的上下文；(5) 批量 API（Anthropic Message Batches）— 异步批处理享受折扣价。</p><p>Q: temperature 参数如何选择？
+A: 取决于任务的确定性需求。翻译、数据提取、分类 → 0<del>0.3；一般对话、总结 → 0.5</del>0.7；创意写作、头脑风暴 → 0.8~1.0。Agent 中不同节点的 temperature 应该不同：规划节点可以高一些（探索更多方案），执行节点应该低（减少随机性）。</p><h1 id=下一步行动-next-actions>下一步行动 (Next Actions)：<a hidden class=anchor aria-hidden=true href=#下一步行动-next-actions>#</a></h1><p>✅ 验证通过，纳入标准流程。</p><p>🔄 验证失败，修改假设，开启下一次实验（EXP-002）。</p><p>❓ 产生新问题：[记录新问题]</p></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>© 2025 <a href=https://www.ans20xx.com/>安橙</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+<span id=read_progress></span>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
