@@ -842,6 +842,8 @@ if __name__ == "__main__":
 
 # 🧠 深度复盘：分析与结论 (Act)
 
+![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223224113871.png)
+
 Q: 解释一下 Tool Use / Function Calling 的工作原理？
 A: LLM 本身不执行工具。我们在 API 请求中传入工具的 schema（名称、描述、参数定义），模型根据用户问题判断是否需要调用工具。如果需要，模型返回一个包含工具名和参数的 JSON 块（tool_use），我们的代码负责执行对应函数，然后把结果（tool_result）发回给模型。模型看到结果后决定是否需要继续调用工具或给出最终回答。整个过程是一个循环。
 
