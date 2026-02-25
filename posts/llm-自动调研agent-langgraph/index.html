@@ -1,0 +1,541 @@
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>LLM-实验-自动调研 Agent (LangGraph + Plan-And-Execute) | 安橙的博客</title><meta name=keywords content><meta name=description content="实验元数据 (Meta Data)
+用于日后检索和归档，建立知识索引。
+实验编号/标题：例如：自动调研 Agent (LangGraph + Plan-And-Execute)"><meta name=author content="map[name:An]"><link rel=canonical href=https://blog.ans20xx.com/posts/llm-%E8%87%AA%E5%8A%A8%E8%B0%83%E7%A0%94agent-langgraph/><link crossorigin=anonymous href=/assets/css/stylesheet.041a3aaca750ec657173b561c2c22f46ec1e5a1b1e31d52b483410735aa46e02.css integrity="sha256-BBo6rKdQ7GVxc7VhwsIvRuweWhseMdUrSDQQc1qkbgI=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/llm-%E8%87%AA%E5%8A%A8%E8%B0%83%E7%A0%94agent-langgraph/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link crossorigin=anonymous href=/assets/css/fancyboxcss.min.css integrity rel="preload stylesheet" as=style></link>
+<script crossorigin=anonymous src=/assets/js/fancybox.js integrity async></script><link rel=stylesheet href=https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css media=print onload='this.media="all"'><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.css><script src=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.iife.js></script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/ accesskey=h title="安橙的博客 (Alt + H)">安橙的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">LLM-实验-自动调研 Agent (LangGraph + Plan-And-Execute)</h1><div class=post-meta><span title='2026-02-24 00:00:00 +0000 UTC'>二月 24, 2026</span>&nbsp;·&nbsp;map[name:An]</div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e5%ae%9e%e9%aa%8c%e5%85%83%e6%95%b0%e6%8d%ae-meta-data aria-label="实验元数据 (Meta Data)">实验元数据 (Meta Data)</a></li><li><a href=#-%e5%ae%9e%e9%aa%8c%e5%89%8d%e5%81%87%e8%ae%be%e4%b8%8e%e7%9b%ae%e6%a0%87-plan aria-label="🎯 实验前：假设与目标 (Plan)">🎯 实验前：假设与目标 (Plan)</a></li><li><a href=#-%e5%ae%9e%e9%aa%8c%e4%b8%ad%e6%89%a7%e8%a1%8c%e6%ad%a5%e9%aa%a4%e4%b8%8e%e5%8f%98%e9%87%8f-do aria-label="🧪 实验中：执行步骤与变量 (Do)">🧪 实验中：执行步骤与变量 (Do)</a><ul><li><a href=#%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84%e5%9b%be aria-label=整体架构图>整体架构图</a></li><li><a href=#%e6%89%a7%e8%a1%8c%e6%ad%a5%e9%aa%a4-log aria-label="执行步骤 (Log)：">执行步骤 (Log)：</a><ul><li><a href=#%e5%ae%9a%e4%b9%89%e7%8a%b6%e6%80%81 aria-label=定义状态>定义状态</a></li><li><a href=#%e6%90%9c%e7%b4%a2%e5%b7%a5%e5%85%b7 aria-label=搜索工具>搜索工具</a></li><li><a href=#planner-%e8%8a%82%e7%82%b9 aria-label="Planner 节点">Planner 节点</a></li><li><a href=#researcher-%e8%8a%82%e7%82%b9 aria-label="Researcher 节点">Researcher 节点</a></li><li><a href=#reviewer-%e8%8a%82%e7%82%b9 aria-label="Reviewer 节点">Reviewer 节点</a></li></ul></li></ul></li><li><a href=#-%e5%ae%9e%e9%aa%8c%e5%90%8e%e7%8e%b0%e8%b1%a1%e4%b8%8e%e6%95%b0%e6%8d%ae-check aria-label="👁️ 实验后：现象与数据 (Check)">👁️ 实验后：现象与数据 (Check)</a></li><li><a href=#-%e6%b7%b1%e5%ba%a6%e5%a4%8d%e7%9b%98%e5%88%86%e6%9e%90%e4%b8%8e%e7%bb%93%e8%ae%ba-act aria-label="🧠 深度复盘：分析与结论 (Act)">🧠 深度复盘：分析与结论 (Act)</a><ul><li><a href=#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81-langgraph aria-label="为什么需要 LangGraph">为什么需要 LangGraph</a></li><li><a href=#planandexecute-vs-react aria-label="PlanAndExecute vs ReAct">PlanAndExecute vs ReAct</a></li></ul></li><li><a href=#%e4%b8%8b%e4%b8%80%e6%ad%a5%e8%a1%8c%e5%8a%a8-next-actions aria-label="下一步行动 (Next Actions)：">下一步行动 (Next Actions)：</a></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><h1 id=实验元数据-meta-data>实验元数据 (Meta Data)<a hidden class=anchor aria-hidden=true href=#实验元数据-meta-data>#</a></h1><p>用于日后检索和归档，建立知识索引。</p><p>实验编号/标题：例如：自动调研 Agent (LangGraph + Plan-And-Execute)</p><p>日期：2026-02-24</p><p>所属领域/标签：例如：#LLM #Plan-And-Execute</p><p>耗时：2小时</p><h1 id=-实验前假设与目标-plan>🎯 实验前：假设与目标 (Plan)<a hidden class=anchor aria-hidden=true href=#-实验前假设与目标-plan>#</a></h1><p>实验目标 (Objective)：通过构建一个能自主制定调研计划、搜索信息、审查质量并生成报告的 Agent，掌握 LangGraph 状态机、Plan-and-Execute 模式、条件路由、Reflection（自我反思）等 Agent 编排的核心能力。</p><p>核心假设 (Hypothesis)：（最关键的一步） 我认为怎么做能成功？</p><p>构建一个自动调研 Agent，输入一个主题，它能：</p><ol><li>Planner — 自动制定 3-5 步调研计划</li><li>Researcher — 逐步执行搜索，收集信息</li><li>Reviewer — 审查调研质量，决定是否需要补充</li><li>Writer — 将调研结果整理为结构化报告</li></ol><h1 id=-实验中执行步骤与变量-do>🧪 实验中：执行步骤与变量 (Do)<a hidden class=anchor aria-hidden=true href=#-实验中执行步骤与变量-do>#</a></h1><h2 id=整体架构图>整体架构图<a hidden class=anchor aria-hidden=true href=#整体架构图>#</a></h2><p><div class=post-img-view><a data-fancybox href=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224212035765.png><img loading=lazy src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224212035765.png alt></a></div></p><h2 id=执行步骤-log>执行步骤 (Log)：<a hidden class=anchor aria-hidden=true href=#执行步骤-log>#</a></h2><h3 id=定义状态>定义状态<a hidden class=anchor aria-hidden=true href=#定义状态>#</a></h3><p>是 LangGraph 的起点，状态定义了在整个图中流转的数据结构。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># src/state.py</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>TypedDict</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>ResearchState</span><span class=p>(</span><span class=n>TypedDict</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;调研 Agent 的全局状态
+</span></span></span><span class=line><span class=cl><span class=s2>    
+</span></span></span><span class=line><span class=cl><span class=s2>    LangGraph 的核心概念
+</span></span></span><span class=line><span class=cl><span class=s2>    - 状态在所有节点间共享
+</span></span></span><span class=line><span class=cl><span class=s2>    - 每个节点接收当前状态，返回需要更新的字段
+</span></span></span><span class=line><span class=cl><span class=s2>    - LangGraph 自动合并更新到全局状态
+</span></span></span><span class=line><span class=cl><span class=s2>    
+</span></span></span><span class=line><span class=cl><span class=s2>    这就像一个在流水线上传递的“工作表”：
+</span></span></span><span class=line><span class=cl><span class=s2>    每个工位（节点）读取它需要的信息，完成自己的工作后把结果写回去
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># 输入</span>
+</span></span><span class=line><span class=cl>    <span class=n>topic</span><span class=p>:</span> <span class=nb>str</span> <span class=c1># 调研主题</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># Planner 输出</span>
+</span></span><span class=line><span class=cl>    <span class=n>plan</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># Researcher 输出</span>
+</span></span><span class=line><span class=cl>    <span class=n>current_step</span><span class=p>:</span> <span class=nb>int</span> <span class=c1># 当前执行到第几个任务</span>
+</span></span><span class=line><span class=cl>    <span class=n>research_data</span><span class=p>:</span> <span class=nb>dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>str</span><span class=p>]</span> <span class=c1># 每个子任务的调研结果 {子任务:结果}</span>
+</span></span><span class=line><span class=cl>    <span class=n>search_queries_used</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span> <span class=c1># 已使用的搜索关键词（避免重复）</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># Reviewer 输出</span>
+</span></span><span class=line><span class=cl>    <span class=n>review_passed</span><span class=p>:</span> <span class=nb>bool</span> <span class=c1># 审查是否通过</span>
+</span></span><span class=line><span class=cl>    <span class=n>review_feedback</span><span class=p>:</span> <span class=nb>str</span> <span class=c1># 审查反馈（如果不通过，说明要补充什么材料）</span>
+</span></span><span class=line><span class=cl>    <span class=n>supplementary_tasks</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span> <span class=c1># 补充调研任务</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># Writer 输出</span>
+</span></span><span class=line><span class=cl>    <span class=n>final_report</span><span class=p>:</span> <span class=nb>str</span> <span class=c1># 最终报告</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># 控制流</span>
+</span></span><span class=line><span class=cl>    <span class=n>iteration</span><span class=p>:</span> <span class=nb>int</span> <span class=c1># 当前迭代次数（防止无限循环）</span>
+</span></span><span class=line><span class=cl>    <span class=n>max_iterations</span><span class=p>:</span> <span class=nb>int</span>  <span class=c1># 最大迭代次数</span>
+</span></span><span class=line><span class=cl>    <span class=n>errors</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span>  <span class=c1># 错误记录</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>create_initial_state</span><span class=p>(</span><span class=n>topic</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>max_iterations</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=mi>3</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>ResearchState</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;创建初始状态&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>ResearchState</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>topic</span><span class=o>=</span><span class=n>topic</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>plan</span><span class=o>=</span><span class=p>[],</span>
+</span></span><span class=line><span class=cl>        <span class=n>current_step</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>research_data</span><span class=o>=</span><span class=p>{},</span>
+</span></span><span class=line><span class=cl>        <span class=n>search_queries_used</span><span class=o>=</span><span class=p>[],</span>
+</span></span><span class=line><span class=cl>        <span class=n>review_passed</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>review_feedback</span><span class=o>=</span><span class=s2>&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>supplementary_tasks</span><span class=o>=</span><span class=p>[],</span>
+</span></span><span class=line><span class=cl>        <span class=n>final_report</span><span class=o>=</span><span class=s2>&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>iteration</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_iterations</span><span class=o>=</span><span class=n>max_iterations</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>errors</span><span class=o>=</span><span class=p>[],</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=搜索工具>搜索工具<a hidden class=anchor aria-hidden=true href=#搜索工具>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># src/tools.py</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>duckduckgo_search</span> <span class=kn>import</span> <span class=n>DDGS</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>web_search</span><span class=p>(</span><span class=n>query</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>max_results</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=mi>5</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>str</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;执行网络搜索 — 复用项目 2 的搜索能力
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>    这里把搜索封装为一个纯函数（而非 Tool 类），
+</span></span></span><span class=line><span class=cl><span class=s2>    因为在 LangGraph 中工具调用方式不同于项目 2 的 ReAct 循环。
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>with</span> <span class=n>DDGS</span><span class=p>()</span> <span class=k>as</span> <span class=n>ddgs</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>results</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=n>ddgs</span><span class=o>.</span><span class=n>text</span><span class=p>(</span><span class=n>query</span><span class=p>,</span> <span class=n>max_results</span><span class=o>=</span><span class=n>max_results</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=ow>not</span> <span class=n>results</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=sa>f</span><span class=s2>&#34;未找到关于 &#39;</span><span class=si>{</span><span class=n>query</span><span class=si>}</span><span class=s2>&#39; 的搜索结果。&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>formatted</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>r</span> <span class=ow>in</span> <span class=n>results</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>formatted</span><span class=o>.</span><span class=n>append</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                <span class=sa>f</span><span class=s2>&#34;标题: </span><span class=si>{</span><span class=n>r</span><span class=p>[</span><span class=s1>&#39;title&#39;</span><span class=p>]</span><span class=si>}</span><span class=se>\n</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=sa>f</span><span class=s2>&#34;内容: </span><span class=si>{</span><span class=n>r</span><span class=p>[</span><span class=s1>&#39;body&#39;</span><span class=p>]</span><span class=si>}</span><span class=se>\n</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=sa>f</span><span class=s2>&#34;来源: </span><span class=si>{</span><span class=n>r</span><span class=p>[</span><span class=s1>&#39;href&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=s2>&#34;</span><span class=se>\n\n</span><span class=s2>---</span><span class=se>\n\n</span><span class=s2>&#34;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=n>formatted</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=ne>Exception</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=sa>f</span><span class=s2>&#34;搜索出错: </span><span class=si>{</span><span class=nb>str</span><span class=p>(</span><span class=n>e</span><span class=p>)</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=planner-节点>Planner 节点<a hidden class=anchor aria-hidden=true href=#planner-节点>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># src/nodes/planner.py</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>json</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>anthropic</span> <span class=kn>import</span> <span class=n>Anthropic</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.state</span> <span class=kn>import</span> <span class=n>ResearchState</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>client</span> <span class=o>=</span> <span class=n>Anthropic</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>client</span><span class=o>.</span><span class=n>base_url</span> <span class=o>=</span> <span class=s2>&#34;http://1.95.142.151:3000&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>planner_node</span><span class=p>(</span><span class=n>state</span><span class=p>:</span> <span class=n>ResearchState</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>dict</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;规划节点 - 根据主题指定调研计划
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>    LangGraph 节点的标准签名
+</span></span></span><span class=line><span class=cl><span class=s2>    - 输入：当前完整状态
+</span></span></span><span class=line><span class=cl><span class=s2>    - 输出：需要更新的字段（dict）
+</span></span></span><span class=line><span class=cl><span class=s2>    - LangGraph 自动将输出合并到状态中
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>    注意：不需要返回整个状态，只返回变化的字段即可
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>topic</span> <span class=o>=</span> <span class=n>state</span><span class=p>[</span><span class=s2>&#34;topic&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>📋 Planner: 正在为 &#39;</span><span class=si>{</span><span class=n>topic</span><span class=si>}</span><span class=s2>&#39; 制定调研计划...&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>response</span> <span class=o>=</span> <span class=n>client</span><span class=o>.</span><span class=n>messages</span><span class=o>.</span><span class=n>create</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>model</span><span class=o>=</span><span class=s2>&#34;claude-sonnet-4-20250514&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_tokens</span><span class=o>=</span><span class=mi>1024</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>system</span><span class=o>=</span><span class=s2>&#34;&#34;&#34;你是一个调研规则专家，根据用户给定的主题，指定一个全面的调研计划。
+</span></span></span><span class=line><span class=cl><span class=s2>        
+</span></span></span><span class=line><span class=cl><span class=s2>规则：
+</span></span></span><span class=line><span class=cl><span class=s2>1. 计划应该包含 3-5 个子任务
+</span></span></span><span class=line><span class=cl><span class=s2>2. 每个子任务应该足够具体，可以通过 1-2 次网络搜索完成
+</span></span></span><span class=line><span class=cl><span class=s2>3. 子任务之间应互不重叠，共同覆盖主题的各个方面
+</span></span></span><span class=line><span class=cl><span class=s2>4. 按逻辑顺序排列（如先了解背景，再深入细节）
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>只返回 JSON 数组格式，不要其他内容
+</span></span></span><span class=line><span class=cl><span class=s2>[&#34;子任务1描述&#34;,&#34;子任务2描述&#34;,&#34;子任务3描述&#34;]&#34;&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>messages</span><span class=o>=</span><span class=p>[{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=sa>f</span><span class=s2>&#34;请为以下主题指定调研计划：</span><span class=se>\n\n</span><span class=si>{</span><span class=n>topic</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}],</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>raw</span> <span class=o>=</span> <span class=n>response</span><span class=o>.</span><span class=n>content</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>text</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 解析 JSON</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=c1># 处理可能的 markdown 包裹</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=s2>&#34;```&#34;</span> <span class=ow>in</span> <span class=n>raw</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>raw</span> <span class=o>=</span> <span class=n>raw</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;```json&#34;</span><span class=p>)[</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;```&#34;</span><span class=p>)[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=ow>not</span> <span class=n>raw</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>raw</span> <span class=o>=</span> <span class=n>response</span><span class=o>.</span><span class=n>content</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>text</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>                <span class=n>raw</span> <span class=o>=</span> <span class=n>raw</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;```&#34;</span><span class=p>)[</span><span class=o>-</span><span class=mi>2</span><span class=p>]</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=n>plan</span> <span class=o>=</span> <span class=n>json</span><span class=o>.</span><span class=n>loads</span><span class=p>(</span><span class=n>raw</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=n>json</span><span class=o>.</span><span class=n>JSONDecodeError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=c1># 解析失败时用备用方案</span>
+</span></span><span class=line><span class=cl>        <span class=n>plan</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>            <span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>topic</span><span class=si>}</span><span class=s2> 的背景和定义&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>topic</span><span class=si>}</span><span class=s2> 的最新发展&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>topic</span><span class=si>}</span><span class=s2> 的关键参与者和产品&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>topic</span><span class=si>}</span><span class=s2> 的未来趋势和影响&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;  ⚠️ 计划解析失败，使用默认计划&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;  ✅ 调研计划（</span><span class=si>{</span><span class=nb>len</span><span class=p>(</span><span class=n>plan</span><span class=p>)</span><span class=si>}</span><span class=s2> 个子任务）：&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>task</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>plan</span><span class=p>,</span> <span class=mi>1</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;     </span><span class=si>{</span><span class=n>i</span><span class=si>}</span><span class=s2>. </span><span class=si>{</span><span class=n>task</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 返回需要更新的字段</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;plan&#34;</span><span class=p>:</span> <span class=n>plan</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;current_step&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=researcher-节点>Researcher 节点<a hidden class=anchor aria-hidden=true href=#researcher-节点>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>json</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>anthropic</span> <span class=kn>import</span> <span class=n>Anthropic</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.state</span> <span class=kn>import</span> <span class=n>ResearchState</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>src.tools</span> <span class=kn>import</span> <span class=n>web_search</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>client</span> <span class=o>=</span> <span class=n>Anthropic</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>client</span><span class=o>.</span><span class=n>base_url</span> <span class=o>=</span> <span class=s2>&#34;http://1.95.142.151:3000&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>researcher_node</span><span class=p>(</span><span class=n>state</span><span class=p>:</span> <span class=n>ResearchState</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>dict</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;调研节点 - 逐个执行子任务的搜索和信息收集
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>    这个节点每次只执行一个子任务。
+</span></span></span><span class=line><span class=cl><span class=s2>    图的条件路由会决定是否还需要继续执行下一个子任务。
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>    每次只做一步的设计让：
+</span></span></span><span class=line><span class=cl><span class=s2>    1. 状态更新更细粒度
+</span></span></span><span class=line><span class=cl><span class=s2>    2. 可以在任意步骤插入人工审核
+</span></span></span><span class=line><span class=cl><span class=s2>    3. 出错时只需重试单个步骤
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>plan</span> <span class=o>=</span> <span class=n>state</span><span class=p>[</span><span class=s2>&#34;plan&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>current_step</span> <span class=o>=</span> <span class=n>state</span><span class=p>[</span><span class=s2>&#34;current_step&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>research_data</span> <span class=o>=</span> <span class=nb>dict</span><span class=p>(</span><span class=n>state</span><span class=p>[</span><span class=s2>&#34;research_data&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 判断当前执行的是正常计划还是补充任务</span>
+</span></span><span class=line><span class=cl>    <span class=n>supplementary</span> <span class=o>=</span> <span class=n>state</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&#34;supplementary_tasks&#34;</span><span class=p>,</span> <span class=p>[])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>current_step</span> <span class=o>&lt;</span> <span class=nb>len</span><span class=p>(</span><span class=n>plan</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=c1># 执行正常计划中的子任务</span>
+</span></span><span class=line><span class=cl>        <span class=n>task</span> <span class=o>=</span> <span class=n>plan</span><span class=p>[</span><span class=n>current_step</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=n>task_label</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;子任务 </span><span class=si>{</span><span class=n>current_step</span> <span class=o>+</span> <span class=mi>1</span><span class=si>}</span><span class=s2>/</span><span class=si>{</span><span class=nb>len</span><span class=p>(</span><span class=n>plan</span><span class=p>)</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=k>elif</span> <span class=n>supplementary</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=c1># 执行补充任务</span>
+</span></span><span class=line><span class=cl>        <span class=n>sup_index</span> <span class=o>=</span> <span class=n>current_step</span> <span class=o>-</span> <span class=nb>len</span><span class=p>(</span><span class=n>plan</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>sup_index</span> <span class=o>&lt;</span> <span class=nb>len</span><span class=p>(</span><span class=n>supplementary</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=n>task</span> <span class=o>=</span> <span class=n>supplementary</span><span class=p>[</span><span class=n>sup_index</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>            <span class=n>task_label</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;补充任务 </span><span class=si>{</span><span class=n>sup_index</span> <span class=o>+</span> <span class=mi>1</span><span class=si>}</span><span class=s2>/</span><span class=si>{</span><span class=nb>len</span><span class=p>(</span><span class=n>supplementary</span><span class=p>)</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=c1># 所有任务都已经完成</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=p>{</span><span class=s2>&#34;current_step&#34;</span><span class=p>:</span> <span class=n>current_step</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=p>{</span><span class=s2>&#34;current_step&#34;</span><span class=p>:</span> <span class=n>current_step</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>🔍 Researcher: 正在执行 </span><span class=si>{</span><span class=n>task_label</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;   任务: </span><span class=si>{</span><span class=n>task</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># Step 1: 让 LLM 生成搜索关键词</span>
+</span></span><span class=line><span class=cl>    <span class=n>keyword_response</span> <span class=o>=</span> <span class=n>client</span><span class=o>.</span><span class=n>messages</span><span class=o>.</span><span class=n>create</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>model</span><span class=o>=</span><span class=s2>&#34;claude-sonnet-4-20250514&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_tokens</span><span class=o>=</span><span class=mi>200</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>system</span><span class=o>=</span><span class=s2>&#34;根据调研子任务，生成 2-3 个精准的搜索关键词，返回 JSON 数组格式：[</span><span class=se>\&#34;</span><span class=s2>关键词1</span><span class=se>\&#34;</span><span class=s2>,</span><span class=se>\&#34;</span><span class=s2>关键词2</span><span class=se>\&#34;</span><span class=s2>]&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>messages</span><span class=o>=</span><span class=p>[{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=sa>f</span><span class=s2>&#34;主题: </span><span class=si>{</span><span class=n>state</span><span class=p>[</span><span class=s1>&#39;topic&#39;</span><span class=p>]</span><span class=si>}</span><span class=se>\n</span><span class=s2>子任务: </span><span class=si>{</span><span class=n>task</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}],</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>raw</span> <span class=o>=</span> <span class=n>keyword_response</span><span class=o>.</span><span class=n>content</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>text</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=s2>&#34;```&#34;</span> <span class=ow>in</span> <span class=n>raw</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>raw</span> <span class=o>=</span> <span class=n>raw</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;```json&#34;</span><span class=p>)[</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;```&#34;</span><span class=p>)[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=ow>not</span> <span class=n>raw</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>raw</span> <span class=o>=</span> <span class=n>keyword_response</span><span class=o>.</span><span class=n>content</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>text</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>                <span class=n>raw</span> <span class=o>=</span> <span class=n>raw</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;```&#34;</span><span class=p>)[</span><span class=o>-</span><span class=mi>2</span><span class=p>]</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=n>keywords</span> <span class=o>=</span> <span class=n>json</span><span class=o>.</span><span class=n>loads</span><span class=p>(</span><span class=n>raw</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=n>json</span><span class=o>.</span><span class=n>JSONDecodeError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>keywords</span> <span class=o>=</span> <span class=p>[</span><span class=n>task</span><span class=p>]</span>  <span class=c1># 解析失败时直接用任务描述搜索</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;   🔑 搜索关键词: </span><span class=si>{</span><span class=n>keywords</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># Step 2: 执行搜索</span>
+</span></span><span class=line><span class=cl>    <span class=n>all_search_results</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=n>queries_used</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=n>state</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&#34;search_queries_used&#34;</span><span class=p>,</span> <span class=p>[]))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>keyword</span> <span class=ow>in</span> <span class=n>keywords</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>keyword</span> <span class=ow>in</span> <span class=n>queries_used</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;   ⏭️ 跳过重复搜索: </span><span class=si>{</span><span class=n>keyword</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>continue</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>=</span> <span class=n>web_search</span><span class=p>(</span><span class=n>keyword</span><span class=p>,</span> <span class=n>max_results</span><span class=o>=</span><span class=mi>3</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>all_search_results</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;搜索 &#39;</span><span class=si>{</span><span class=n>keyword</span><span class=si>}</span><span class=s2>&#39; 的结果:</span><span class=se>\n</span><span class=si>{</span><span class=n>result</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>queries_used</span><span class=o>.</span><span class=n>remove</span><span class=p>(</span><span class=n>keyword</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>combined_results</span> <span class=o>=</span> <span class=s2>&#34;</span><span class=se>\n\n</span><span class=s2>===</span><span class=se>\n\n</span><span class=s2>&#34;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=n>all_search_results</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># Step 3: 让 LLM 总结搜索结果</span>
+</span></span><span class=line><span class=cl>    <span class=n>summary_response</span> <span class=o>=</span> <span class=n>client</span><span class=o>.</span><span class=n>messages</span><span class=o>.</span><span class=n>create</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>model</span><span class=o>=</span><span class=s2>&#34;claude-sonnet-4-20250514&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_tokens</span><span class=o>=</span><span class=mi>1024</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>system</span><span class=o>=</span><span class=s2>&#34;&#34;&#34;你是一个调研助手。根据搜索结果，为指定的子任务提取关键信息并总结。
+</span></span></span><span class=line><span class=cl><span class=s2>        
+</span></span></span><span class=line><span class=cl><span class=s2>规则：
+</span></span></span><span class=line><span class=cl><span class=s2>1. 只提取与子任务直接相关的信息
+</span></span></span><span class=line><span class=cl><span class=s2>2. 标注信息来源（哪个搜索结果）
+</span></span></span><span class=line><span class=cl><span class=s2>3. 如果搜索结果信息不足，说明缺少什么
+</span></span></span><span class=line><span class=cl><span class=s2>4. 用简洁的要点形式总结&#34;&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>messages</span><span class=o>=</span><span class=p>[{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=sa>f</span><span class=s2>&#34;子任务：</span><span class=si>{</span><span class=n>task</span><span class=si>}</span><span class=se>\n\n</span><span class=s2>搜索结果:</span><span class=se>\n</span><span class=si>{</span><span class=n>combined_results</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}],</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=n>summary</span> <span class=o>=</span> <span class=n>summary_response</span><span class=o>.</span><span class=n>content</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>text</span>
+</span></span><span class=line><span class=cl>    <span class=n>research_data</span><span class=p>[</span><span class=n>task</span><span class=p>]</span> <span class=o>=</span> <span class=n>summary</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;   ✅ 已完成: </span><span class=si>{</span><span class=n>task</span><span class=p>[:</span><span class=mi>50</span><span class=p>]</span><span class=si>}</span><span class=s2>...&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;research_data&#34;</span><span class=p>:</span> <span class=n>research_data</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;current_step&#34;</span><span class=p>:</span> <span class=n>current_step</span> <span class=o>+</span> <span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;search_queries_used&#34;</span><span class=p>:</span> <span class=n>queries_used</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=reviewer-节点>Reviewer 节点<a hidden class=anchor aria-hidden=true href=#reviewer-节点>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python></code></pre></td></tr></table></div></div><h1 id=-实验后现象与数据-check>👁️ 实验后：现象与数据 (Check)<a hidden class=anchor aria-hidden=true href=#-实验后现象与数据-check>#</a></h1><p>客观记录发生了什么，不要带主观评价。</p><p>观察到的现象：</p><p>成功了吗？报错了吗？报错信息是什么？</p><p>产出物的样子（附截图/照片）。</p><p>关键数据：</p><p>耗时、准确率、转化率、温度、分数等。</p><p>例：前5页成功，第6页开始报错 403 Forbidden。</p><h1 id=-深度复盘分析与结论-act>🧠 深度复盘：分析与结论 (Act)<a hidden class=anchor aria-hidden=true href=#-深度复盘分析与结论-act>#</a></h1><h2 id=为什么需要-langgraph>为什么需要 LangGraph<a hidden class=anchor aria-hidden=true href=#为什么需要-langgraph>#</a></h2><p>LangGraph 用图来建模 Agent 工作流：</p><ul><li>节点（Node）=一个处理步骤（例如“指定计划“，“执行搜索“）</li><li>边（Edge）=步骤之间的连接</li><li>条件边 = 根据运行时状态决定走向哪个节点</li><li>状态（State）=在所有节点之间共享的数据</li></ul><h2 id=planandexecute-vs-react>PlanAndExecute vs ReAct<a hidden class=anchor aria-hidden=true href=#planandexecute-vs-react>#</a></h2><p><div class=post-img-view><a data-fancybox href=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224203159754.png><img loading=lazy src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224203159754.png alt></a></div></p><h1 id=下一步行动-next-actions>下一步行动 (Next Actions)：<a hidden class=anchor aria-hidden=true href=#下一步行动-next-actions>#</a></h1><p>✅ 验证通过，纳入标准流程。</p><p>🔄 验证失败，修改假设，开启下一次实验（EXP-002）。</p><p>❓ 产生新问题：[记录新问题]</p></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>© 2025 <a href=https://www.ans20xx.com/>安橙</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+<span id=read_progress></span>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
