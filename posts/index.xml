@@ -1,6 +1,739 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.156.0</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Wed, 25 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>实验 leetcode-236.二叉树的最近公共祖先</title><link>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C-leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</link><pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C-leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.157.0</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Sat, 28 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>面试冲刺</title><link>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</link><pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</guid><description>&lt;h1 id="算法"&gt;算法&lt;/h1&gt;
+&lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_0_src"&gt;
+"\"- 算法\\n - 通用操作技巧\\n - 数组常用操作\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228105324869.png,414,460)\\n - 列表常见操作\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228111309641.png,508,732)\\n - Set 常见操作\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228111651357.png,295,241)\\n - 字符串常见操作\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228112522793.png,348,758)\\n - 哈希\\n - 基本语法\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228103647800.png,490,622)\\n - LeetCode 1. 两数之和\\n - 将每个数存入 Map，统计 target - nums[i] 是否在 Map 中\\n - LeetCode 49. 字母异位词分组\\n - 统计每个字符数量，用 char[26] 存储\\n - 将 char[26] 转换成字符串或 hashCode 放入 map\\n - map 的 value 是分组的列表\\n - LeetCode 128. 最长连续序列\\n - 以最小值为起点，当前值 - 1 不在 map 中\\n - 查看 当前值 + 1 是否在 map 中\\n - 双指针\\n - 常用模板\\n - 两边向中间移动\\n - 问题\\n - 两数之和等于第三数\\n - 每次排除掉 l/r 指针的一边\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228120355590.png,339,335)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228120240384.png,469,400)\\n - 两边向中间移动\\n - LeetCode 283 移动零\\n - slow 指针在左边，维护 0 的位置\\n - fast 指针在右边，找非零元素和 slow 交换\\n - LeetCode 11 盛最多水的容器\\n - l 指针和 r 指针每次向中间移动\\n - 比较 slow/fast 大小，将小的往中间移动\\n - LeetCode 15 三数之和\\n - 排序\\n - 固定左边界 left，剪枝 \\u003e 0\\n - l 和 r 在左边界两边往中间移动，找到目标值\\n - 滑动窗口\\n - 常用模板\\n - l,r 统一向一侧，每次增加 r\\n - 增加一次 r，如果不满足条件，则不断移动 l\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228135319330.png,418,277)\\n - LeetCode 3 无重复字符的最长子串\\n - 每次向右移动一次 r\\n - 如果增加的 r 导致出现了重复字符，不断移动 l 直到符合条件\\n - 将满足条件的长度和答案取最大值\\n - LeetCode 438 找到字符串中所有的字母异位词\\n - 维护 diff 差值\\n - 固定窗口向右移动 l 和 r\\n - 每次移动更新 diff 值，diff 值根据 cnt 统计得出\\n - in 和 out 维护进入窗口和出窗口的值\\n - LeetCode 76 最小覆盖子串\\n - 同 LeetCode 438 滑动窗口维护 diff 值\\n - 不一样的是随着 l 的更新，需要不停更新最终答案\\n - 前缀和/单调队列\\n - 常用模板\\n - 队列\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228143049720.png,328,242)\\n - 单调队列模板\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228142727925.png,500,395)\\n - LeetCode 560 和为 K 的子数组\\n - 用 Map 维护前缀和\\n - 连续序列的和基本都是前缀和问题\\n - LeetCode 239 滑动窗口最大值\\n - 维护一个单调递减的单调队列\\n - 将左边过期的弹出队列\\n - 关键操作：过期、维护单调性、入队\\n - LeetCode 53 最大子数组和\\n - 维护前缀和即可\\n - 考虑前缀是否从当前元素开始\\n - 普通数组\\n - LeetCode 56 合并区间\\n - 将数组按第一个元素从小到大排序\\n - 每次更新右边界，同时左边界与之前的右边界比较\\n - LeetCode 189 轮转数组\\n - 轮转数取模并交换\\n - 轮转数取模并完成三次反转\\n - LeetCode 283 除了自身以外数组的乘积\\n - 维护前缀乘积和后缀乘积即可\\n - LeetCode 41 缺失的第一个正数\\n - 每次将元素交换到他原本的位置上\\n - 矩阵\\n - LeetCode 73 矩阵置0\\n - 复用第一行和第一列，将要置为 0 的行列记录在这里\\n - LeetCode 54 螺旋矩阵\\n - 按圈数模拟，维护 left、right、top、bottom\\n - 原地修改已访问标签\\n - LeetCode 48 旋转图像\\n - 将旋转转换为两次折叠（纵轴 + 斜折叠）\\n - LeetCode 240 搜索二维矩阵\\n - 从右上角搜索，比值大就往下，比值小就往左\\n - 链表\\n - 常用模板\\n - 伪头节点 dummy\\n - 反转链表\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228160308314.png,308,160)\\n - LeetCode 160 相交链表\\n - 走到头时，回到另外一个链表的头结点\\n - LeetCode 206 反转链表\\n - 反转链表模板，核心是记录前一个链表节点\\n - LeetCode 234 回文链表\\n - 快慢指针中点断开\\n - 反转后面一段\\n - 进行比较\\n - LeetCode 141 环形链表\\n - 快慢指针\\n - 有交点说明有环\\n - LeetCode 142 环形链表 2\\n - 入环的这一段距离是 m\\n - 走的步数是 k\\n - 从环到交点的记录是 n\\n - 环长是 c\\n - k = m + n\\n - 2 * k = m + n + t * c\\n - 2m + 2n = m + n + t * c\\n - n = t * c - m\\n - c - n = m + (1 - t) c\\n - 从相遇点，再走 m 步就好了，也就是从把一个指针放到起点，二者同时开始跑\\n - LeetCode 21 合并两个有序链表\\n - 给出新头节点，依次拼接即可\\n - LeetCode 2 两数相加\\n - 维护进位和当前位即可\\n - LeetCode 19 删除链表的倒数第 N 个节点\\n - 快慢指针，快指针先走 k 个\\n - LeetCode 24 两两交换链表中的节点\\n - 维护 pA pB 两个指针，分别指向第一个值和第二个值\\n - 注意使用伪头节点 dummy\\n - LeetCode 25 K 个一组翻转链表\\n - 维护 pre、groupHead、tail\\n - 将 groupHead 和 tail 中间的链表反转\\n - LeetCode 138 随机链表的复制\\n - 维护原链表节点到新链表节点的映射即可\\n - LeetCode 148 排序链表\\n - 归并排序，每次排序一段\\n - 先拆中点\\n - 然后 merge\\n - LeetCode 23 合并 K 个升序链表\\n - 归并排序思路\\n - 将 K 个升序链表的排序转换为两个升序链表的排序\\n - LeetCode 146 LRU 缓存\\n - 维护一个链表，代表时间\\n - 维护一个 map，映射到链表的节点\\n - 二叉树\\n - 常用模板\\n - 层序遍历\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/28/20260228165114598.png,419,315)\\n - LeetCode 94 二叉树的中序遍历\\n - 递归，迭代都要会写\\n - LeetCode 104 二叉树的最大深度\\n - dfs 一次，更新答案\\n - LeetCode 226 翻转二叉树\\n - 递归，交换左右子树\\n - LeetCode 101 对称二叉树\\n - 递归判断左子树与右子树对称\\n - LeetCode 543 二叉树的直径\\n - 求左右子树的最大深度相加即可\\n - LeetCode 102 二叉树的层序遍历\\n - 层序遍历模板题\\n - LeetCode 108 将有序数组转换为二叉搜索树\\n - 找中点\\n - 两边递归构建二叉搜索树\\n - LeetCode 98 验证二叉搜索树\\n - 中序遍历结果有序即可\\n - 确定左右子树上线界递归\\n - LeetCode 230 二叉搜索数中第 K 小的元素\\n - 中序遍历\\n - LeetCode 199 二叉树的右视图\\n - 层序遍历\\n - dfs 后续遍历，输出每层的第一个被遍历到的节点\\n - LeetCode 114 二叉树展开为链表（hard）\\n - 不停将右子树接到左子树上\\n - LeetCode 105 从前序与中序遍历序列构造二叉树\\n - 由前序遍历找根节点\\n - 中序遍历找左右子树\\n - 可以通过 map 直接定位到中序遍历中根节点的位置\\n - LeetCode 437 路径总和 3\\n - 维护前缀和即可\\n - LeetCode 236 二叉树的最近公共祖先\\n - 递归左右子树，如果发现两课子树都包含 p/q 那么就是当前节点\\n - 如果不横跨，就是左右子树非空节点\\n - LeetCode 124 二叉树中的最大路径和\\n - dfs 左右两个子树，取最大值\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_0";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="八股"&gt;八股&lt;/h1&gt;
+&lt;h2 id="数据库"&gt;数据库&lt;/h2&gt;
+&lt;div id="me_1" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_1_src"&gt;
+"\"- 数据库\\n - 基础认识\\n - InnoDB 和 MyISAM 的区别是什么？\\n - InnoDB 支持事务，MyISAM 不支持事务，所以像转账、订单这类需要回滚和一致性保证的业务，一般只能用 InnoDB\\n - InnoDB 支持行级锁，MyISAM 主要是表级锁。因此在高并发写入场景下，InnoDB 的并发能力更强，而 MyISAM 更容易因为表锁导致阻塞\\n - InnoDB 支持崩溃恢复，MyISAM 恢复能力较弱。InnoDB 通过 redo log、undo log 等机制保证数据更安全，所以更适合线上核心业务\\n - 它们的索引组织方式也不同。InnoDB 是聚簇索引，主键索引叶子节点存整行数据；MyISAM 的索引和数据分开存储，索引叶子节点保存的是数据地址\\n - int(11) 中的 11 表示什么？\\n - int(11) 中的 11 表示显示宽度，不表示存储长度\\n - INT 在 MySQL 中固定是 4 字节，取值范围由类型本身决定，和这个 11 没关系\\n - 现在已经不重要，而且相关能力已经被官方弃用\\n - MySQL 的逻辑架构是什么\\n - 连接层：负责连接管理、认证和权限校验\\n - SQL 层/Server 层：负责解析 SQL、优化执行计划并调用执行器\\n - 一条 SQL 进来之后，通常会先经过 Parser 做词法和语法解析，生成语法树；然后由 Optimizer 选择执行计划，比如决定走哪个索引、表连接顺序是什么；最后由 Executor 调用存储引擎接口去真正读写数据\\n - 存储引擎层：通过统一接口访问不同引擎，比如 InnoDB\\n - 存储层：负责真正的数据文件、索引文件和日志落盘\\n - char 和 varchar 的区别是什么？\\n - char 是定长字符串，varchar 是变长字符串\\n - char(n) 不管实际存多少字符，都会按固定长度 n 来存；而 varchar(n) 只会按实际内容长度来存，再额外加少量长度信息\\n - drop、delete、truncate 的区别是什么？\\n - delete 是 DML 语句，用来删除表中的数据行，但不会删除表结构\\n - truncate 是 DDL 语句，用来快速清空整张表的数据，但保留表结构\\n - 不能带条件，执行速度通常比 delete 更快，并且一般会重置自增值，属于 DDL\\n - drop 也是 DDL 语句，它删除的不只是数据，还包括表结构本身\\n - 索引\\n - MySQL 为什么不用红黑树\\n - 红黑树是二叉平衡树，节点分叉少，数据量大时树会很高\\n - 数据库索引主要瓶颈是磁盘 I/O，树越高，查一次要访问的磁盘页就越多\\n - B+Tree 是多叉树，一个节点能存很多 key，可以显著降低树高，从而减少磁盘 I/O\\n - 并且 B+Tree 叶子节点有序且相连，更适合范围查询和排序\\n - 索引下推是什么？\\n - 索引下推就是在使用索引查询时，把能够利用索引字段判断的条件，下推到存储引擎层先过滤，只有满足条件的记录才回表\\n - 核心价值就是减少回表次数，提升查询性能\\n - 什么是回表\\n - 先查二级索引，再根据主键去聚簇索引查整行\\n - 因为 InnoDB 的二级索引叶子节点不存整行数据，只存主键值，所以当查询字段不全在索引里时，就必须回表\\n - 什么是覆盖索引\\n - 如果一个查询走的是二级索引，并且查询条件里的字段、返回结果里的字段，都已经包含在这个索引里\\n - 那么 MySQL 只需要扫描这个索引就能拿到结果，不需要再根据主键去聚簇索引里查整行数据，这种情况就叫覆盖索引\\n - 避免回表，提高查询性能\\n - 什么是聚簇索引和二级索引\\n - InnoDB 的聚簇索引和二级索引，核心区别就在于叶子节点存的内容不同\\n - 聚簇索引 的叶子节点存的是整行数据\\n - 二级索引 的叶子节点存的不是整行数据，而是主键值\\n - 由于数据只能按一种方式组织，所以一张表只能有一个聚簇索引\\n - 什么情况下索引会失效？\\n - 索引无法用于查找\\n - 没有遵守最左前缀原则\\n - 对索引列做函数、运算、表达式操作\\n - 发生隐式类型转换\\n - 使用前导模糊查询\\n - 使用 !=、\\u003c\\u003e、not in、not like\\n - 使用 or，且 or 两边条件不是都能走索引\\n - 优化器主动放弃使用索引\\n - 索引列区分度太低\\n - 查询结果数据量过大\\n - 联合索引遇到范围查询，范围列后面的列索引利用会受影响\\n - 为什么不建议建太多索引？\\n - 增加存储成本，每个索引都要额外占用磁盘空间\\n - 降低写性能，insert、update、delete 不仅要改数据，还要维护所有相关索引，索引越多，写入越慢\\n - 增加维护复杂度，包括页分裂、缓存占用、优化器选择成本，以及容易出现冗余索引和重复索引\\n - SQL 执行优化\\n - where、group by、having、order by、limit 的执行顺序是什么？\\n - SQL 里这几个子句的逻辑执行顺序是：where、group by、having、order by、limit\\n - where：先对原始数据做行过滤\\n - group by：对过滤后的结果进行分组\\n - having：对分组后的结果再做过滤\\n - order by：对最终结果排序\\n - limit：最后再截取指定条数的数据\\n - explain 的各字段是什么意思？\\n - EXPLAIN 的核心作用是分析 SQL 执行计划\\n - 看执行层次和表结构\\n - id 表示查询中每个 SELECT 的标识，看执行顺序\\n - select_type 表示这条 SELECT 是什么类型\\n - table 表示当前这一行执行计划正在访问哪张表\\n - 看索引使用情况\\n - possible_keys 表示优化器认为“可能可以使用”的索引\\n - key 表示最终实际使用的索引\\n - key_len 表示 MySQL 决定使用的索引长度，单位是字节\\n - ref 表示当前表和索引做匹配时，拿什么值去和索引列比较\\n - 看扫描成本\\n - type 表示访问类型，也就是这张表是怎么被访问的。这个字段非常重要\\n - rows 表示优化器预估为了找到结果，需要扫描多少行\\n - filtered 表示经过当前表条件过滤后，大概还有多少百分比的行会继续参与后续处理\\n - 额外性能风险\\n - Extra 表示额外执行信息，这一列也非常重要\\n - type 各个值是什么意思\\n - 性能从好到差可以大致理解为：system \\u003e const \\u003e eq_ref \\u003e ref \\u003e range \\u003e index \\u003e ALL\\n - system 是最优情况之一，表示表中只有一行数据\\n - const 表示通过主键或者唯一索引，并且是等值匹配，一次就能把记录确定下来\\n - eq_ref 一般出现在多表 join 中，表示对被驱动表使用主键或唯一索引进行等值匹配，并且每次匹配最多返回一条记录\\n - ref 表示使用普通索引做等值查询，返回的结果可能有多条\\n - range 表示索引范围扫描\\n - index 表示扫描了整个索引树\\n - ALL 表示全表扫描，是最差的一种常见情况\\n - 一条 SELECT 的执行过程是什么\\n - 客户端连接 MySQL\\n - SQL 发送到 MySQL Server\\n - 解析器进行词法分析和语法分析\\n - 词法分析：把 SQL 拆成一个个关键字和标记，比如 select、表名、字段名、where 条件等\\n - 语法分析：判断 SQL 是否符合 MySQL 语法规则，并生成语法树\\n - 预处理：检查表和字段是否存在，语义是否正确\\n - 优化器生成执行计划\\n - 优化器会根据 SQL 生成一个最优或较优的执行计划\\n - 执行器调用存储引擎读取数据\\n - join 的执行原理是什么？\\n - 先由优化器确定表的连接顺序、访问方式和是否使用相关优化，再由执行器按这个计划去逐层匹配数据\\n - 最经典的 join 算法是 Nested-Loop Join，也就是先从驱动表取一行或一批数据，再拿这些数据的关联字段去被驱动表中查找匹配记录\\n - 如果是多表 join，就继续向下一层嵌套\\n - join 性能的关键在于外层循环次数和内层表的访问成本，所以通常会强调小表驱动大表，以及让被驱动表的 join 字段尽量命中索引\\n - 怎么定位慢 SQL？\\n - 先发现慢 SQL\\n - 慢查询日志，MySQL 可以开启 slow query log\\n - APM / 监控系统，比如接口监控、数据库监控、链路追踪\\n - 再分析执行计划，有没有走索引，扫描的数据多不多，是否有额外排序或临时表\\n - 验证优化效果\\n - 深分页为什么慢？\\n - 深分页慢，主要是因为 MySQL 不是“直接跳到第 100000 条”开始取数据，而是通常要先找到前面的记录，再把它们跳过\\n - 怎么优化深分页？\\n - 使用基于上次游标的分页，也叫 keyset pagination\\n - 先用覆盖索引查主键，再回表\\n - 限制最大分页深度\\n - 结合搜索条件缩小数据范围\\n - 大表加字段为什么有风险？\\n - ALTER TABLE ADD COLUMN 这类操作在某些情况下并不是简单改一下表结构元数据，而可能触发表重建、数据拷贝、元数据锁竞争和大量日志写入\\n - 对于数据量很大的表，这些成本会被放大，容易导致业务抖动甚至阻塞\\n - 在线 DDL\\n - 在执行 ALTER TABLE 这类表结构变更时，尽量不阻塞业务的读写，允许 DDL 和 DML 在较大程度上并发执行的一种机制\\n - MySQL 的 ALTER TABLE 可能有三种方式：ALGORITHM=INSTANT、ALGORITHM=INPLACE、ALGORITHM=COPY\\n - INSTANT 最轻量，通常只改元数据，速度最快\\n - INPLACE 通常不需要整表拷贝，但可能仍会重建表或持有一定锁\\n - COPY 代价最大，需要复制整张表，风险也最高\\n - 如何给大表加索引？\\n - 先评估这条索引是否真的必要，确认它能解决实际慢 SQL，而不是盲目加索引；\\n - EXPLAIN 和业务 SQL 验证索引设计，尽量避免建错索引或冗余索引；\\n - 确认 MySQL 版本、表引擎、索引类型和 DDL 算法，优先选择支持在线变更的方式，比如添加普通二级索引时尽量走 InnoDB Online DDL；\\n - 在正式执行前评估主从延迟、磁盘空间、IO 峰值和 metadata lock 风险，避开业务高峰，并提前处理长事务和长查询；\\n - 执行时尽量显式指定合适的算法和锁级别，例如 ALTER TABLE ... ADD INDEX ..., ALGORITHM=INPLACE, LOCK=NONE\\n - 执行过程中持续监控 DDL 进度、主从延迟、CPU、IO 和锁等待\\n - 生产上更稳妥的方式通常是使用 gh-ost、pt-online-schema-change 这类在线变更工具，以影子表加索引、分批回放、最后切换的方式降低影响\\n - 事务\\n - 什么是事务\\n - 事务就是一组操作，这组操作要么全部成功，要么全部失败，不会只执行一部分\\n - 它的作用是保证数据从一个一致状态，变到另一个一致状态\\n - 事务的 ACID 是什么\\n - 原子性指的是事务中的操作要么全部成功，要么全部失败回滚，不能只执行一部分\\n - 一致性指的是事务执行前后，数据库都必须处于一致状态\\n - 隔离性指的是多个事务并发执行时，彼此之间应该尽量互不干扰\\n - 持久性指的是事务一旦提交，对数据的修改就应该永久保存下来，即使数据库宕机，也不能丢失\\n - 脏读、不可重复读、幻读分别是什么？\\n - 脏读指的是：一个事务读到了另一个事务“还没有提交”的数据\\n - 不可重复读指的是：在同一个事务里，多次读取同一行数据，结果不一样\\n - 幻读指的是：在同一个事务里，按照相同条件多次查询，前后查询到的“记录条数”不一样，像是突然多出来或少了一些行\\n - MySQL 的事务隔离级别有哪些\\n - 读未提交（Read Uncommitted）：一个事务可以读到另一个事务还没有提交的数据\\n - 读已提交（Read Committed）：一个事务只能读到另一个事务已经提交的数据\\n - 可重复读（Repeatable Read）：同一个事务中，多次读取同一条记录，结果会保持一致\\n - 串行化（Serializable）：它会让事务串行执行，一个一个来，避免并发冲突\\n - 当前读和快照读有什么区别？\\n - 快照读读取的是事务可见范围内的历史版本数据，本质上是基于 MVCC 的一致性读，通常不加锁，普通 select 一般就是快照读\\n - 当前读读取的是当前最新版本的数据，并且通常会对读到的记录加锁，以保证并发修改时的数据正确性，常见于 select ... for update、select ... lock in share mode，以及 update、delete 这类语句\\n - ReadView 是什么\\n - Read View 可以理解为 InnoDB 在做 MVCC 一致性读时生成的一张“可见性快照”\\n - 因为一行记录在并发事务下可能存在多个版本，所以当前事务读取数据时，并不是直接读最新版本，而是要结合 Read View 来判断哪个版本对自己可见\\n - 如果当前版本不可见，就沿着 undo log 构成的版本链继续向前找，直到找到一个可见版本\\n - MVCC 是怎么实现的？\\n - 核心思想是：一行数据在并发事务下，不是只保留一个版本，而是通过保留多个版本，让读操作尽量不加锁，也能读到对自己可见的数据，从而提升并发性能\\n - 隐藏字段：InnoDB 的聚簇索引记录里会带一些隐藏信息\\n - DB_TRX_ID：最后一次修改这行数据的事务 ID\\n - DB_ROLL_PTR：指向这行记录旧版本的回滚指针\\n - undolog：当事务修改一行数据时，InnoDB 不会简单把旧值直接覆盖掉就算了，而是会把旧版本信息写到 undo log 里\\n - 版本链：一行数据可能被多次更新，所以每次更新都会生成一份旧版本。这些旧版本不会直接丢掉，而是通过 DB_ROLL_PTR 串起来，形成一条版本链\\n - Read View：当事务做快照读时，InnoDB 会生成一个 Read View。它本质上是一套可见性规则，用来判断版本链上的哪个版本对当前事务可见\\n - 查询看到的是某个时间点的数据库快照，只能看到在那个时间点之前已提交事务的修改，以及当前事务自己之前语句的修改\\n - 长事务有什么危害\\n - 容易长时间占用锁，影响并发\\n - 会导致 undo log 积压\\n - 会影响 MVCC 和 purge 清理\\n - 回滚成本高，出问题影响更大\\n - 更容易引发锁等待和死锁问题\\n - 会影响主从复制和系统稳定性\\n - 分布式事务\\n - 一个业务操作需要跨多个服务、多个数据库，甚至多个消息系统共同完成，但这些资源不在同一个本地事务里，所以不能只靠单机数据库事务来保证一致性\\n - 2PC / XA\\n - 两阶段提交，属于强一致方案\\n - 协调者先问所有参与者能不能提交，大家都可以才真正提交\\n - TCC\\n - Try、Confirm、Cancel\\n - 优点是控制力强，缺点是业务侵入性很高，每个服务都要实现三套接口\\n - Saga\\n - 把长事务拆成多个本地事务，每一步成功后继续下一步，如果失败就反向执行补偿操作\\n - 本地消息表 / 事务消息\\n - 先保证本地事务成功，再通过消息异步驱动其他系统完成后续操作\\n - 锁机制\\n - MySQL 有哪些锁\\n - 按粒度分，有表锁和行锁\\n - 表锁锁整张表，开销小但并发差；行锁锁单条记录，并发更好，InnoDB 主要依赖行锁\\n - 按性质分，有共享锁和排他锁\\n - 共享锁允许多个事务同时读；排他锁用于写操作，持有后别人不能再读写对应数据\\n - 意向锁、记录锁、间隙锁、临键锁\\n - 意向锁是表级锁，用来协调表锁和行锁；记录锁锁单条索引记录；间隙锁锁记录之间的区间，防止插入；临键锁是记录锁和间隙锁的组合，主要用于在可重复读下避免幻读\\n - 表锁和行锁的区别是什么？\\n - 表锁是对整张表加锁，加锁开销小、实现简单，但锁冲突范围大，并发能力较差\\n - 行锁是对单条记录加锁，锁粒度更细，并发能力更强，但加锁和维护成本也更高\\n - 行锁是加在行上的吗，还是加在索引上？\\n - InnoDB 的行锁不是直接加在物理数据行上的，而是加在索引记录上的\\n - InnoDB 是通过锁住索引项来间接锁住对应的数据行\\n - 没有走索引，数据库就可能扫描并锁住大量记录，效果上看起来就像锁了很多行\\n - 什么是共享锁和排他锁？\\n - 共享锁也叫读锁，多个事务可以同时对同一份数据加共享锁，也就是说大家都可以读，但不能修改\\n - 排他锁也叫写锁，一旦某个事务对数据加了排他锁，其他事务就不能再对这份数据加共享锁或排他锁，也就是别人既不能读，也不能写\\n - 共享锁适合并发读场景，排他锁适合需要修改数据、保证独占访问的场景\\n - 意向锁的作用是什么？\\n - 让 InnoDB 在表级锁和行级锁并存的情况下，能够快速判断一张表里是否已经有某些行被加锁，而不需要每次都去逐行检查\\n - 意向锁本质上是一种“加锁声明”，表示某个事务准备在这张表的某些行上加共享锁或排他锁\\n - 比如事务如果要对某些行加行级共享锁，就会先在表上加意向共享锁（IS）；如果要对某些行加行级排他锁，就会先在表上加意向排他锁（IX）\\n - 当另一个事务想对整张表加表锁时，只需要先判断这张表上是否存在冲突的意向锁，就能快速决定能不能加锁，而不需要扫描整张表里的每一行\\n - 事务加锁\\n - 事务里并不是一开始就把所有锁一次性加好，而是 SQL 在执行过程中，随着访问到具体记录再逐步加锁。不同语句、不同隔离级别、不同索引命中情况，加的锁也不一样\\n - 如果是普通 select，在 InnoDB 里通常属于快照读，一般不加行锁\\n - 如果是 select ... for update、select ... for share 这种锁定读，就会对扫描到的索引记录加锁，锁会一直持有到事务提交或回滚\\n - 如果是 update、delete 这类写操作，InnoDB 会在执行过程中对访问到的索引记录加排他锁\\n - 死锁如何排查\\n - 先通过 SHOW ENGINE INNODB STATUS 查看最近一次死锁的详细信息，因为这里能直接看到死锁涉及的两个事务、它们各自执行的 SQL、已经持有的锁、正在等待的锁，以及 InnoDB 最后回滚了哪个事务\\n - 根据死锁日志里的事务 ID、SQL 语句、锁类型和表索引信息，去定位到底是哪两条业务 SQL 在互相等待，重点看它们是不是以不同顺序访问了相同资源\\n - 再结合执行计划和索引设计分析根因，比如是否没命中索引导致锁范围扩大、是否范围条件触发了间隙锁或临键锁、是否事务过长导致持锁时间太久\\n - 统一事务中的访问顺序、补充合适索引、缩小事务范围、尽快提交事务，并在应用层做好 deadlock 重试机制\\n - update 一定会加行锁吗？\\n - UPDATE 一定会加锁，但不一定只是精确的单行锁；如果命中了唯一索引等值条件，锁范围通常比较小，如果是范围更新或没有用到合适索引，锁范围就可能很大\\n - MVCC 与日志\\n - redo log 和 undo log 的区别是什么？\\n - redo log 主要用于保证事务的持久性，记录的是“数据页做了什么修改”，核心是为了数据库宕机后能够把已提交事务的数据恢复出来\\n - undo log 主要用于保证事务的原子性和支持 MVCC，记录的是“怎么把这次修改撤销掉”，核心是为了事务回滚和一致性读\\n - redo log 是“向前恢复”的日志，undo log 是“向后回滚”的日志\\n - 事务提交后，如果数据库突然宕机，InnoDB 可以通过 redo log 把已经提交但还没来得及刷盘的数据重新恢复出来\\n - binlog 是什么？和 redo log 有什么区别？\\n - binlog 是 MySQL Server 层的归档日志，记录的是数据库变更事件，主要用于主从复制和基于时间点恢复\\n - redo log 是 InnoDB 存储引擎层的重做日志，记录的是对数据页的物理修改意图，主要用于崩溃恢复，保证已提交事务在宕机后不丢失\\n - binlog 记录的是逻辑上的变更事件，可以是 statement、row、mixed 三种格式；redo log 记录的是更底层的数据页修改信息\\n - binlog 会持续追加写入二进制日志文件，redo log 则是固定容量、循环写的日志结构\\n - 两阶段提交是什么？为什么需要两阶段提交？\\n - MySQL 为了保证 redo log 和 binlog 的一致性 而采用的一种提交机制\\n - 提交事务时，先写 redo log 并标记 prepare，再写 binlog，最后把 redo log 标记为 commit\\n - 这样即使宕机，也能根据 redo log 状态和 binlog 是否完整，判断事务到底该提交还是回滚，避免数据恢复错误和主从不一致\\n - binlog 有哪几种格式？STATEMENT / ROW / MIXED 的区别是什么？\\n - STATEMENT 模式记录的是 原始 SQL 语句，也就是把执行过的 SQL 直接写到 binlog 里\\n - ROW 模式记录的不是 SQL，而是 每一行数据被修改前后是什么样子\\n - MIX 能兼顾日志大小和复制安全性，本质上是 MySQL 自动帮你在 STATEMENT 和 ROW 之间选择\\n - 因为主从复制最重要的是一致性，虽然 ROW 日志更大，但更稳定、更安全，所以很多公司默认都会选 ROW\\n - InnoDB 存储引擎\\n - 什么是页、区、段？\\n - 在 InnoDB 里，数据不是一行一行零散存储的，而是按 页、区、段 这样的层次来管理的\\n - 页 是最小的数据存储和读写单位，InnoDB 默认页大小一般是 16KB\\n - 数据库不可能为了查一行数据就只从磁盘读这一行，它通常是 把这一行所在的整个页一起读进内存\\n - 区 是一组连续页的集合，主要是为了提高磁盘分配效率\\n - 段 是更上层的逻辑概念，用来管理某一类数据对应的多个区\\n - 数据页内部结构了解吗？\\n - 一个页里面既要存数据，也要存管理信息，还要支持页内快速查找和页之间的链式组织\\n - File Header 让很多数据页能够串起来，形成双向链表\\n - Page Header 负责描述“这个页现在装了多少数据、还剩多少空间、内部组织状态如何”\\n - Infimum 可以理解为“页内最小记录”，Supremum 可以理解为“页内最大记录”，它们的作用是帮助 InnoDB 统一维护页内记录的链表结构\\n - InnoDB 的聚簇索引叶子节点，存放的其实就是完整的行记录，这些记录就是放在数据页里的 User Records 区域\\n - Free Space 表示当前页还能不能继续插入数据\\n - 页目录提高页内查找效率，避免单纯链表遍历太慢。先通过 页目录 做快速定位，再在局部范围内顺着记录链表查找\\n - File Trailer 主要用于页级别的校验\\n - 页分裂和页合并\\n - 页分裂：目标页空间不够了，但又必须保持记录按主键顺序存放\\n - 页合并：删除数据后，页利用率太低，空间浪费严重\\n - InnoDB Buffer Pool 是什么？\\n - InnoDB Buffer Pool 是 InnoDB 在内存里开辟的一块缓存区，主要用来缓存磁盘中的数据页和索引页\\n - 把经常访问的数据先放到内存里，减少磁盘 IO，提高数据库的查询和更新性能\\n - 把“磁盘随机读”尽量变成“内存读”\\n - 什么是脏页\\n - 内存中的页已经被修改了，但磁盘中的对应页还没来得及更新\\n - Change Buffer 是什么\\n - 当修改的是 普通二级索引，而且对应索引页 当前不在 Buffer Pool 中\\n - InnoDB 不会立刻把这个索引页从磁盘读到内存再修改，而是先把这次变更缓存到 Change Buffer 里\\n - 等以后这个页被读入内存时，再把这些变更合并进去\\n - 减少二级索引页的随机磁盘 IO，提升插入、删除、更新的性能\\n - 唯一索引需要立刻检查唯一性，所以通常 不能使用 Change Buffer\\n - Double Write\\n - Double Write 是 InnoDB 为了防止页刷盘过程中发生“部分写入”而设计的一种保护机制\\n - 如果数据库在把一个页写回磁盘时突然宕机，就可能出现 一个页只写了一半 的情况，这种问题叫 partial write，也就是页损坏\\n - InnoDB 在真正把脏页写回数据文件之前，会先把这些页顺序写到一块专门的区域，这块区域就叫 Double Write Buffer；\\n - 只有这一步写成功后，才再把这些页写到真正的数据页位置\\n - 主从复制与高可用\\n - 主从复制的原理\\n - 主库执行事务提交后，会把这次数据变更记录到 binlog 里\\n - 从库会有一个 I/O 线程，去主库读取 binlog，并把读到的内容写入本地的 relay log（中继日志）\\n - 从库再用 SQL 线程或者 worker 线程去执行 relay log 里的内容，把主库上的变更在从库再执行一遍，这样主从数据就一致了\\n - 因为 binlog 记录的是逻辑上的数据变更，适合跨机器同步；而 redo log 主要用于主库自身的崩溃恢复\\n - 主从延迟的原因有哪些？\\n - 主库的变更已经提交了，但从库还没有来得及同步并执行完成\\n - 主库写入压力太大\\n - 如果主库短时间内产生了大量 binlog，比如高并发写入、批量 update、批量 delete，这些日志从库来不及消费，就会出现延迟\\n - 从库回放能力不足\\n - 大事务\\n - 如果主库上有大事务，比如一次改很多行、删很多数据，从库执行这类事务也会很慢，容易造成明显延迟\\n - 锁冲突\\n - 从库在回放 binlog 时，如果遇到锁等待，比如查询占用了资源，或者回放语句之间有冲突，也会拖慢复制速度\\n - 单线程复制的限制\\n - 网络问题\\n - 主从复制模式\\n - 异步复制\\n - 主库事务提交时，只要自己写成功就直接返回，不需要等待从库确认\\n - 如果主库刚提交就宕机，而 binlog 还没来得及传到从库，就可能发生 数据丢失\\n - 半同步复制\\n - 主库提交事务后，不是立刻返回，而是 至少要等一个从库收到 binlog 并返回确认，主库才认为提交完成\\n - 通常只是表示 从库收到了日志，不一定表示已经真正执行完成\\n - 组复制\\n - 多个节点组成一个复制组，事务提交时需要经过组内协调和一致性校验，然后再在多个节点之间复制\\n - 读写分离实现\\n - 把写请求走主库，读请求走从库，从而分摊数据库压力\\n - 最大的问题是主从延迟，容易导致读到旧数据，同时也会增加系统路由和运维复杂度\\n - 读写分离如何读到最新数据\\n - 让“有强一致性要求的读”不要去可能延迟的从库，而是优先走主库\\n - 用户刚完成写操作后，接下来一段时间内的查询直接走主库，这样就能保证一定能读到最新数据\\n - 如果一个业务逻辑本身就在同一个事务里，那么这个事务中的读和写通常都应该放在主库执行\\n - 系统可以监控主从延迟，如果发现从库延迟过大，就临时把请求切到主库\\n - 给关键业务做读主策略\\n - 主库宕机后如何切换？\\n - 确认主库确实不可用\\n - 从多个从库里选择一个 数据最新、延迟最小、状态最健康 的从库作为新主库\\n - 把新主库提升上来\\n - 让其他从库重新挂到新主库\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_1";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h2 id="计算机网络"&gt;计算机网络&lt;/h2&gt;
+&lt;div id="me_2" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_2_src"&gt;
+"\"- 计算机网络\\n - TCP/UDP\\n - TCP/UDP 区别\\n - TCP 是面向连接、可靠传输的协议；UDP 是无连接、尽最大努力交付的协议\\n - TCP 在通信前需要先建立连接，并且通过 ACK、序号、超时重传、滑动窗口、流量控制、拥塞控制 等机制保证数据可靠到达\\n - TCP 适合 文件传输、网页访问、数据库通信 这类对可靠性要求高的场景\\n - UDP 不需要建立连接，首部开销小，传输效率高，延迟低\\n - 不保证数据一定到达，也不保证顺序，所以更适合 音视频、直播、游戏、DNS 这类对实时性要求更高的场景\\n - TCP 为什么可靠\\n - TCP 给每个字节编号，接收方收到后会回复 ACK，发送方就知道哪些数据已经成功到达\\n - 如果发送后迟迟收不到 ACK，TCP 会认为数据可能丢了，然后重新发送\\n - 如果数据乱序到达，TCP 会先缓存，等前面的数据到了再按顺序交给应用层；如果重复到达，会直接丢弃\\n - TCP 不需要每发一个包就停下来等确认，可以连续发送多个包，提高传输效率\\n - TCP 会根据接收方的处理能力调整发送速度，避免接收方来不及处理\\n - TCP 会根据网络拥塞情况动态调整发送速率，避免把网络压垮\\n - TCP 三次握手\\n - 作用，是让通信双方都确认一件事：自己能发、自己能收、对方也能发、对方也能收\\n - 客户端向服务端发送 SYN，表示客户端想建立连接，同时告诉服务端自己的初始序列号，说明：客户端有发送能力\\n - 服务端收到后，返回 SYN + ACK\\n - ACK 表示服务端收到了客户端的请求，SYN 表示服务端也想建立连接，并告诉客户端自己的初始序列号\\n - 说明：服务端有接收能力，也有发送能力\\n - 客户端收到服务端的 SYN + ACK 后，再发送一个 ACK 给服务端\\n - 客户端已经收到了服务端的响应，同时让服务端知道客户端也具备接收能力\\n - 为什么握手不是两次\\n - 两次握手只能保证客户端知道服务端能收、能发，但服务端并不能确认客户端是否收到了自己的响应\\n - 没有第三次握手，服务端就可能误以为连接已经建立，从而浪费资源\\n - TCP 四次挥手过程是什么\\n - 客户端发送 FIN，表示客户端这边已经没有数据要发了，想关闭连接\\n - 客户端进入半关闭状态，表示自己不能再发了，但还能接收\\n - 服务端收到 FIN 后，先回复一个 ACK，表示我知道你这边想关闭了\\n - 这时只是说明服务端知道客户端不发了，但服务端自己可能还有数据没发完，所以还不能立刻关闭\\n - 等服务端把剩余数据发送完后，再发送一个 FIN，表示服务端这边也没有数据要发了，也要关闭连接\\n - 客户端收到服务端的 FIN 后，回复一个 ACK，表示我知道你也发完了\\n - 为什么需要四次\\n - TCP 是全双工的，客户端关闭发送和服务端关闭发送是两件事\\n - 服务端收到客户端的 FIN 时，只能先回一个 ACK，表示“我知道你要关了”\\n - 但这时服务端可能还有数据没发完，所以不能把自己的 FIN 和这个 ACK 合并发送\\n - TIME_WAIT 是什么？为什么需要 TIME_WAIT？\\n - TCP 连接断开时，主动关闭连接的一方 在发送完最后一个 ACK 后进入的一个等待状态\\n - 保证最后一个 ACK 能被对方收到\\n - 如果主动关闭方发出的最后一个 ACK 丢失了，被动关闭方会重发 FIN\\n - 主动关闭方还保留在 TIME_WAIT 状态，就还能再次发送 ACK，保证连接正常关闭\\n - 防止旧连接中的延迟报文影响新的连接\\n - 为什么是 2MSL？\\n - MSL 是报文在网络中的最大生存时间\\n - 等待 2MSL，本质上是留出一个“报文来回”的最长时间：\\n - 所以等待 2MSL 后，可以认为这次连接里的所有报文都已经从网络中消失了，连接才算真正安全结束\\n - CLOSE_WAIT 过多说明什么问题？\\n - 对方已经把连接关闭了，但是本端应用程序没有及时调用 close 关闭连接\\n - 连接一直停留在 CLOSE_WAIT 状态\\n - 对方发送 FIN\\n - 本端内核回复 ACK\\n - 这时 TCP 连接就进入 CLOSE_WAIT\\n - 所以如果 CLOSE_WAIT 特别多，一般不是网络问题，也不是内核参数问题，而是应用代码问题。常见原因有\\n - 没有正确调用 close\\n - 异常分支没有释放连接\\n - 线程泄露\\n - 线程阻塞\\n - 业务处理太慢\\n - SYN Flood\\n - 是一种针对 TCP 三次握手的 DoS / DDoS 攻击\\n - 利用 TCP 三次握手中服务端会先分配资源的特点，大量占满半连接队列，耗尽服务端资源\\n - 防御方式\\n - 在还没完成握手前，不急着分配连接资源，而是把状态编码到序列号里，等客户端真正回 ACK 后再分配资源\\n - 增大半连接队列\\n - 缩短半连接超时时间，减少重试次数\\n - 限流和防火墙过滤\\n - 源地址校验和流量清洗\\n - TCP 粘包/拆包\\n - TCP 是面向字节流的协议，没有消息边界\\n - 发送方连续发送的多个数据包，接收方一次可能一起读出来，这叫 粘包\\n - 发送方一个完整数据包，接收方可能分多次才读完整，这叫 拆包\\n - TCP 只保证字节流可靠、有序到达，但不保证应用层消息是一条一条交付的\\n - 滑动窗口\\n - 发送方不用每发一个数据包就停下来等 ACK，而是可以在窗口范围内连续发送多个数据包\\n - 随着 ACK 不断返回，已经确认的数据会从窗口左边移出去，新的可发送数据会从右边进入\\n - 窗口左边：已经发送并且已经确认的数据\\n - 窗口中间：已经发送但还没有确认的数据\\n - 窗口右边：暂时还不能发送的数据\\n - 当 ACK 到来后，窗口右移，发送方就能继续发送新的数据\\n - 接收方能处理多少，发送方就最多发多少，这就体现了流量控制\\n - TCP 拥塞控制有哪些机制？\\n - 避免发送方一下子发太多数据，把网络压垮\\n - 慢启动\\n - 不会一上来就发很多数据，而是先从较小的拥塞窗口开始，收到 ACK 后再快速增大\\n - 拥塞避免\\n - 当拥塞窗口增长到一定阈值后，就不再指数增长，而改为线性增长\\n - 快重传\\n - 如果发送方连续收到三个重复 ACK，就认为某个报文很可能丢了，不必等超时，立刻重传对应报文\\n - 快恢复\\n - 先把窗口缩小一部分，再进入拥塞避免阶段\\n - 什么是零窗口？什么是窗口探测？\\n - 接收方的接收缓冲区已经满了，于是告诉发送方自己的接收窗口大小为 0，让发送方先不要再发数据\\n - 体现的是 TCP 的流量控制，也就是接收方处理不过来了，先把发送方“刹住”\\n - 窗口探测\\n - 当发送方发现接收方通告窗口为 0 后，会周期性发送很小的探测报文，询问接收方现在窗口是不是已经恢复了\\n - HTTP\\n - 常用状态码\\n - 1xx 表示请求已收到，继续处理\\n - 2xx 表示请求成功\\n - 200 OK：请求成功，最常见\\n - 3xx 表示需要重定向\\n - 301 Moved Permanently：永久重定向\\n - 302 Found：临时重定向\\n - 304 Not Modified：资源没修改，走缓存\\n - 4xx 表示客户端请求有问题\\n - 400 Bad Request：请求参数有问题\\n - 401 Unauthorized：未认证，通常是没登录或 token 无效\\n - 403 Forbidden：已认证，但没有权限\\n - 404 Not Found：资源不存在\\n - 405 Method Not Allowed：请求方法不允许\\n - 408 Request Timeout：请求超时\\n - 5xx 表示服务器处理有问题\\n - 500 Internal Server Error：服务器内部错误\\n - 502 Bad Gateway：网关收到上游错误响应\\n - 503 Service Unavailable：服务暂时不可用\\n - 504 Gateway Timeout：网关等待上游响应超时\\n - HTTP 长连接\\n - 一次 TCP 连接建立后，不是只收发一个请求就立刻关闭，而是可以在这个连接上继续发送多个 HTTP 请求和响应\\n - 复用同一条 TCP 连接，减少频繁建立和关闭连接的开销\\n - 在 HTTP/1.1 中，长连接默认就是开启的，通常通过 Connection: keep-alive 来体现\\n - HTTP 队头阻塞\\n - 前面的请求或数据没有处理完，后面的就只能等\\n - 虽然可以在一个 TCP 连接上发送多个请求，但响应必须按顺序返回\\n - 前一个请求如果处理很慢，后面的请求即使已经到了，也不能先返回，只能排队等待，这就是 HTTP 层的队头阻塞\\n - 如果前面的某个 TCP 报文丢了，即使后面的报文已经到了，应用层也不能先拿到，必须等前面的报文重传成功后，后面的数据才能一起交付\\n - HTTP/2 引入了 多路复用，把多个请求拆成不同的流并发传输，解决了 HTTP/1.1 中“请求和响应必须严格排队”的问题\\n - HTTP 1/1.1/2/3\\n - 不断解决 性能低、连接利用率低、队头阻塞严重\\n - HTTP/1.0 的特点是：默认短连接\\n - HTTP/1.1 的改进是：默认长连接，支持连接复用，支持 Host 字段、缓存控制等能力\\n - HTTP/2 的核心改进是：二进制分帧、多路复用、头部压缩\\n - 把原来文本格式改成二进制帧，解析效率更高；\\n - 多个请求可以在同一个连接里并发传输，不再像 HTTP/1.1 那样严格排队\\n - 通过头部压缩减少了重复头信息带来的开销\\n - HTTP/3 的核心改进是：基于 QUIC，也就是基于 UDP 来实现可靠传输\\n - 不再直接使用 TCP，而是把连接管理、重传、流控这些能力放到 QUIC 里做\\n - Cookie 属性\\n - Name 和 Value：就是 Cookie 的名字和值，用来保存会话信息或业务数据\\n - Expires 和 Max-Age：用来控制 Cookie 的过期时间\\n - Domain：指定 Cookie 对哪个域名生效\\n - Path：请求路径匹配时，浏览器才会带上这个 Cookie\\n - Secure：这个 Cookie 只能在 HTTPS 连接中传输，不能通过 HTTP 明文传输\\n - HttpOnly：这个 Cookie 不能被 JavaScript 读取，主要是为了降低 XSS 窃取 Cookie 的风险\\n - SameSite：用来限制跨站请求时是否携带 Cookie，主要是为了防 CSRF\\n - HTTP 缓存\\n - 主要分为两类：强缓存 和 协商缓存\\n - 强缓存\\n - 浏览器先看本地缓存是否还有效，如果没过期，就直接使用本地缓存，不会向服务器发请求\\n - Expires：绝对过期时间\\n - Cache-Control：相对过期时间，优先级更高，实际开发更常用\\n - 协商缓存\\n - 本地虽然有缓存，但浏览器还是会先向服务器确认一下这个资源有没有变化\\n - 如果没变，服务器返回 304\\n - Last-Modified 和 If-Modified-Since：基于资源最后修改时间判断\\n - ETag 和 If-None-Match：基于资源唯一标识判断，通常更准确\\n - HTTPS\\n - TLS 握手过程是什么\\n - 客户端发起请求\\n - 客户端先发送 ClientHello，里面会带上自己支持的 TLS 版本、加密套件、随机数 等信息，告诉服务端：我支持哪些加密方式\\n - 服务端返回协商结果\\n - 服务端收到后，返回 ServerHello，告诉客户端：我最终选用哪个 TLS 版本、加密套件，同时也会返回服务端自己的随机数\\n - 服务端发送证书\\n - 服务端会把自己的 数字证书 发给客户端，客户端会校验证书是否合法，比如是不是受信任的 CA 签发、证书是否过期、域名是否匹配\\n - 双方协商出会话密钥\\n - 客户端和服务端会通过密钥交换算法，结合前面的随机数等信息，生成本次通信使用的 会话密钥\\n - 握手完成，开始加密通信\\n - CA 和证书链\\n - CA 就是 证书颁发机构，作用是给网站签发数字证书\\n - 证书链\\n - 一个网站的证书，往往不是直接由浏览器内置信任的根 CA 签发的，而是由 中间 CA 来签发\\n - 中间 CA 又是被更上层的 CA 签发，最后一直追溯到 根 CA\\n - 根 CA 数量有限，而且非常重要，不会直接大量给网站签证书\\n - IP/路由/ARP/ICMP\\n - ARP\\n - ARP 全称是 地址解析协议，作用是：根据 IP 地址找到对应的 MAC 地址\\n - 先查 ARP 缓存\\n - 如果没有，就发送 ARP 请求，在局域网内发一个 广播包\\n - 目标主机回复 ARP 响应，返回一个 单播响应，把自己的 MAC 地址告诉发送方\\n - 发送方拿到目标 MAC 后，会把这条 IP 和 MAC 的映射 存到本地 ARP 缓存里\\n - 为什么有了 IP 还需要 MAC\\n - IP 负责跨网络定位目标主机\\n - MAC 负责在局域网内把数据交给具体网卡\\n - IP 是端到端的逻辑地址，MAC 是每一跳局域网内的物理地址\\n - IP 管“到哪里”，MAC 管“怎么到下一跳”\\n - ICMP\\n - ICMP 全称是 互联网控制报文协议，它是 网络层 的辅助协议，主要用来做 差错报告、网络诊断和连通性检测\\n - ping 的原理，本质上就是利用 ICMP 的 Echo Request 和 Echo Reply 报文来测试两台主机之间是否连通，以及大概的往返时延\\n - 发送方发送 ICMP Echo Request\\n - 目标主机收到后返回 ICMP Echo Reply\\n - 发送方收到回复后，就知道网络是通的\\n - traceroute 原理\\n - 查看数据包从源主机到目标主机，中间经过了哪些路由器\\n - TTL 表示数据包还能经过多少跳，减到0，路由器就会把这个包丢弃并返回一个 ICMP Time Exceeded\\n - 利用 IP 头里的 TTL 字段 和路由器返回的 ICMP 超时报文 来实现逐跳探测\\n - 先发一个 TTL=1 的包\\n - 再发一个 TTL=2 的包\\n - 不断把 TTL 加 1，直到到达目标主机\\n - Socket/ 服务端编程\\n - Socket 是什么\\n - 本质上就是：操作系统提供给应用程序的网络通信接口\\n - 应用程序并不是直接去操作 TCP 或 UDP，而是通过 Socket 来完成网络数据的收发\\n - Socket 是应用层和传输层之间的一层编程抽象\\n - listen/accept/connect\\n - listen：把一个 socket 变成 监听 socket，表示服务端开始监听某个端口，准备接收客户端连接\\n - accept：用于从监听队列里取出一个已经建立好的连接，返回一个新的 已连接 socket\\n - connect：用于客户端主动向服务端发起连接请求\\n - 流程\\n - 服务端先 socket，再 bind\\n - 然后 listen，表示开始监听端口\\n - 服务端调用 accept 取出这个连接\\n - 阻塞 I/O、非阻塞 I/O、I/O 多路复用\\n - 阻塞 I/O：当程序调用 read 或 recv 时，如果数据还没准备好，线程就会一直阻塞住，什么都干不了，只能等数据到了再继续执行\\n - 非阻塞 I/O：当程序调用 read 或 recv 时，如果数据还没准备好，不会阻塞线程，而是立刻返回，告诉你现在还不能读\\n - I/O 多路复用：通过 select、poll、epoll 这类机制，一次监听多个 socket，先等内核告诉我“哪些连接已经就绪了”，然后再去读写这些就绪的连接\\n - select/poll/epoll\\n - select、poll、epoll 本质上都是 I/O 多路复用机制，目的都是让一个线程同时监听多个 socket，谁就绪就处理谁\\n - select \\n - 用 位图 保存要监听的 fd，每次调用都要把 fd 集合从用户态拷贝到内核态\\n - 内核返回后，应用程序还要 遍历整个 fd 集合，找出哪些 fd 就绪了\\n - select 一般还有 最大 fd 数量限制，常见是 1024\\n - poll\\n - 把位图改成了 链表或数组结构 来保存 fd\\n - 没有 select 那种固定 1024 的数量限制\\n - 本质上还是要把 fd 集合拷贝到内核，也还是要 线性遍历所有 fd 找就绪事件，所以性能问题本质没有解决\\n - epoll \\n - 是 Linux 下更高效的实现\\n - 它会在内核里维护监听的 fd，不需要每次都把整个 fd 集合重新拷贝进去\\n - 不是每次遍历所有 fd，而是通过 就绪链表 直接返回已经就绪的 fd\\n - 连接数很大、但真正活跃的连接不多时，epoll 效率会高很多\\n - LT 和 ET 模式\\n - LT 是 水平触发\\n - 只要一个 fd 里还有数据没读完，或者还有空间可以写，epoll 每次都会继续通知你\\n - 条件只要一直满足，就会反复触发\\n - ET 是 边缘触发\\n - 当 fd 的状态发生变化的那一刻，epoll 才会通知一次\\n - 这次没有把数据一次性读完，只要状态没再变化，epoll 不一定再次提醒你\\n - Reactor 模型\\n - 事件驱动的网络编程模型\\n - 不是一个连接一个线程去阻塞处理，而是由一个或多个线程统一监听 I/O 事件，谁就绪就分发给对应的处理器\\n - 监听事件：通过 select、poll、epoll 这类 I/O 多路复用机制，统一监听很多连接上的事件，比如连接到来、可读、可写\\n - 分发事件：一旦某个连接就绪了，Reactor 就把这个事件分发给对应的 Handler 去处理，比如读取数据、业务处理、发送响应\\n - I/O 事件来了，先由 Reactor 感知，再分发给处理器执行\\n - 零拷贝\\n - 在数据传输过程中，尽量减少用户态和内核态之间的数据拷贝，以及减少 CPU 参与搬运数据的次数\\n - 传统方式\\n - 磁盘把数据读到内核缓冲区\\n - 再从内核拷贝到用户缓冲区\\n - 用户缓冲区再拷贝回内核的 socket 缓冲区\\n - 最后再发给网卡\\n - 发生多次数据拷贝和多次用户态、内核态切换，开销比较大\\n - 核心思想：数据尽量留在内核里直接转发，避免来回拷贝到用户态\\n - sendfile\\n - 应用程序不再把文件先读到用户态，再写回 socket\\n - 让内核直接把文件数据从磁盘缓冲区传到 socket，提高传输效率\\n - 最典型的零拷贝方式\\n - mmap\\n - 把文件映射到用户进程的地址空间，减少一次数据拷贝\\n - 应用层访问起来像读内存一样，但底层仍然是内核在管理\\n - 拥塞、性能、优化\\n - 带宽和吞吐量有什么区别？\\n - 带宽 指的是：链路理论上的最大传输能力\\n - 吞吐量 指的是：单位时间内实际传输了多少数据\\n - 带宽是理论值、上限值\\n - 吞吐量是实际值、结果值\\n - 什么是心跳机制？为什么需要心跳？\\n - 通信双方按照固定时间间隔，周期性发送一个很小的探测消息，用来确认对方是否还活着、连接是否还正常\\n - 作用：检测连接是否存活；及时发现异常；维持长连接\\n - 网络安全\\n - XSS\\n - XSS 是 跨站脚本攻击，本质上是：攻击者把恶意脚本注入到网页里，让受害者浏览器去执行\\n - 脚本执行成功，攻击者就可能窃取 Cookie、伪造页面、冒充用户操作，甚至获取用户信息\\n - 网站把用户输入的内容当成代码执行了，而不是当普通数据处理\\n - 防御方式\\n - 对用户输入做转义和过滤\\n - 输出到页面时做 HTML 编码\\n - 使用 CSP\\n - 给 Cookie 加 HttpOnly\\n - CSRF\\n - 跨站请求伪造，本质上是：攻击者诱导用户在已登录状态下访问恶意页面，借助浏览器自动携带 Cookie 的特性，冒充用户向目标网站发请求\\n - 防御方式\\n - 加 CSRF Token\\n - 校验 Origin / Referer\\n - 使用 SameSite Cookie\\n - 对关键操作做二次确认\\n - 场景题\\n - WebSocket 是什么？\\n - WebSocket 是一种 全双工、长连接的网络通信协议，\\n - 不只是客户端发请求、服务端被动响应，服务端也可以主动向客户端推送消息\\n - 先通过 HTTP 发起一次升级请求\\n - 服务端同意，就返回 101 Switching Protocols，表示协议切换成功\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_2";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h2 id="java"&gt;Java&lt;/h2&gt;
+&lt;div id="me_3" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_3_src"&gt;
+"\"- Java\\n - Java 集合\\n - HashMap 为什么线程不安全？\\n - put、resize、get 等操作都没有加锁，多线程并发读写时，多个线程会同时修改同一份底层数据结构，导致数据错乱\\n - 多个线程同时往同一个桶位置插入数据，都会先判断当前位置为空，或都基于旧值进行修改，其中一个线程的结果会覆盖另一个线程的结果，数据丢失\\n - 如果多个线程同时扩容，或者一个线程在扩容、另一个线程在插入，会同时修改桶数组和节点指针\\n - ConcurrentHashMap 为什么线程安全？\\n - 在并发读写时，对共享数据的访问做了专门的同步控制\\n - 插入时，如果桶位置为空，会先通过 CAS 尝试把新节点放进去，CAS 成功就直接插入，不需要加锁\\n - 如果对应桶已经有元素，说明发生哈希冲突，这时会对桶头节点加锁\\n - 在这个桶内部进行链表或红黑树的插入操作，也就是说它锁的是 单个桶，不是整张表\\n - 扩容时，也支持多线程协助扩容，降低单线程扩容带来的性能问题\\n - 为什么负载因子默认是 0.75？\\n - 负载因子表示：哈希表中元素个数达到数组长度的多少时开始扩容\\n - 如果负载因子太小，会浪费空间\\n - 如果负载因子太大，会增加哈希冲突\\n - 0.75 是时间和空间的经验平衡点\\n - 为什么数组长度总是 2 的幂？\\n - (n - 1) \\u0026 hash 的效果就等价于 对 n 取模，也就是等价于 hash % n，但是 位运算比取模运算更高效\\n - 数组长度是 2 的幂时，n - 1 的低位全是 1，做 \\u0026 运算时，可以利用 hash 的低位信息，使元素更均匀地分布到各个桶中\\n - Java 并发\\n - 线程状态\\n - NEW：新建状态，对象已经被创建出来了，但是还没有调用 start() 方法\\n - RUNNABLE：可运行状态，调用了 start() 之后，就进入 RUNNABLE 状态\\n - BLOCKED：阻塞状态，在等待获取 synchronized 锁 时，如果锁被别的线程占用，就会进入 BLOCKED 状态\\n - WAITING：无限期等待状态，等待其他线程显式唤醒 的状态，没有超时时间\\n - TIMED_WAITING：限时等待状态，带超时时间，时间到了会自动恢复\\n - TERMINATED：终止状态，线程执行完毕，或者因为异常退出，生命周期结束\\n - synchronized 原理\\n - 依赖的是 对象头里的监视器锁，也就是 Monitor\\n - Java 中每个对象都可以关联一个 Monitor，线程进入 synchronized 修饰的代码时，本质上就是在竞争这个对象的 Monitor 锁\\n - synchronized 修饰的是 代码块\\n - 编译后会生成两个字节码指令：monitorenter/monitorexit\\n - 同步代码块的底层就是通过 字节码指令 + Monitor 机制 来实现加锁和解锁的\\n - synchronized 修饰同步方法时\\n - 在方法的访问标志上加一个 ACC_SYNCHRONIZED 标记\\n - 调用这个方法时，看到有这个标记，就会自动先去获取对应对象的 Monitor 锁，执行完方法后再释放锁\\n - synchronized 锁的是谁？\\n - 基于 对象监视器 Monitor 实现的，所以它锁住的一定是某个对象\\n - AQS 是什么\\n - AQS 的全称是 AbstractQueuedSynchronizer，抽象队列同步器\\n - 用来构建锁和同步器的底层框架\\n - 如果线程竞争资源失败，就把线程封装成节点，加入一个双向队列中排队\\n - 当前面的线程释放资源后，再唤醒队列中的后继线程继续竞争\\n - 核心构成\\n - 用一个 state 变量表示同步状态\\n - AQS 内部有一个 volatile int state 变量，用来表示当前同步状态\\n - AQS 只提供这个状态字段和管理机制，具体这个状态代表什么，由子类自己定义\\n - 用一个 FIFO 双向队列管理等待线程\\n - 线程获取同步状态失败时，AQS 不会让所有线程一直自旋，而是会把获取失败的线程包装成一个 Node 节点，加入到一个 FIFO 双向链表队列里等待\\n - 工作流程\\n - 尝试获取资源\\n - 入队等待\\n - 阻塞线程：入队之后，线程会被挂起，避免一直空转浪费 CPU\\n - 释放资源并唤醒后继节点\\n - ThreadLocal 是什么\\n - 给每个线程都提供一份独立的变量副本，从而做到线程之间互不干扰\\n - 同一个 ThreadLocal 对象，在不同线程中读取到的值，实际上是各自线程单独保存的，不是共享的\\n - 每个线程 Thread 对象内部，都有一个 ThreadLocalMap，真正的数据是存放在线程自己的 ThreadLocalMap\\n - JMM\\n - 是一套关于多线程环境下共享变量如何读写、以及线程之间如何保证可见性、有序性和原子性的规范\\n - 为了规范这些问题，JMM 定义了一系列规则，并通过 volatile、synchronized、Lock、happens-before 等机制来实现\\n - happens-before\\n - 一个操作的结果，对另一个操作是否可见，以及这两个操作之间是否存在有序关系\\n - happens-before 是 JMM 中定义的一种 内存可见性和有序性规则\\n - 前一个操作对共享变量的修改，后一个操作一定能够看到\\n - 前一个操作的执行顺序，排在后一个操作之前\\n - 常见规则\\n - 程序次序规则：在同一个线程内，按照代码顺序，前面的操作 happens-before 后面的操作\\n - 监视器锁规则：对同一把锁，unlock 操作 happens-before 后续对这把锁的 lock 操作\\n - volatile 变量规则：对一个 volatile 变量的写操作 happens-before 后续对这个 volatile 变量的读操作\\n - 线程启动规则：线程对象的 start() 方法 happens-before 此线程中的每一个操作\\n - 线程终止规则：线程中的所有操作 happens-before 其他线程检测到该线程已经终止\\n - 传递性\\n - 线程池核心参数\\n - corePoolSize：核心线程数\\n - maximumPoolSize：最大线程数\\n - keepAliveTime：空闲线程存活时间\\n - unit：时间单位\\n - workQueue：任务阻塞队列，用来缓存等待执行任务的阻塞队列\\n - threadFactory：线程工厂\\n - handler：拒绝策略\\n - 拒绝策略\\n - AbortPolicy：直接抛异常\\n - CallerRunsPolicy：由提交任务的线程自己执行\\n - DiscardPolicy：直接丢弃任务\\n - DiscardOldestPolicy：丢弃队列中最老的任务，再尝试提交当前任务\\n - JVM\\n - JVM 内存区域\\n - 程序计数器\\n - Java 虚拟机栈\\n - 本地方法栈\\n - 堆\\n - 方法区\\n - 方法区存放什么\\n - 方法区主要存放的是 类的元信息，以及一些和类加载后相关的公共数据\\n - 类的元信息\\n - 运行时常量池\\n - 静态变量\\n - 即时编译后的代码缓存相关信息\\n - 类加载过程\\n - 加载\\n - 通过类的全限定名获取定义这个类的二进制字节流\\n - 将这个字节流所代表的静态存储结构，转换成方法区中的运行时数据结构\\n - 在内存中生成一个对应的 Class 对象，作为这个类的访问入口\\n - 验证\\n - 确保加载进来的类文件是合法的，不会危害 JVM 安全\\n - 文件格式是否正确\\n - 元数据是否合理\\n - 准备\\n - 为类变量，也就是 static 变量分配内存，并设置默认初始值\\n - 赋的是默认值，不是代码里写的真实值\\n - 解析\\n - 把常量池中的符号引用，替换成直接引用\\n - 符号引用：用字符串、类名、方法名这种“符号形式”来描述目标\\n - 直接引用：真正能定位到内存地址、偏移量或者句柄的引用\\n - 初始化\\n - 初始化阶段是真正开始执行类中 Java 代码的阶段\\n - 这一步主要就是执行类构造器 \\u003cclinit\\u003e() 方法\\n - 对象可回收判断\\n - 可达性分析\\n - 从一组 GC Roots 作为根节点出发，沿着对象之间的引用关系向下搜索\\n - 一个对象能够被 GC Roots 直接或间接访问到，说明这个对象仍然存活\\n - 如果一个对象从 GC Roots 出发无法到达，也就是不可达，那么这个对象就会被判定为可回收对象\\n - GC Roots\\n - 虚拟机栈中引用的对象，也就是方法中的局部变量引用的对象\\n - 方法区中类静态属性引用的对象\\n - 方法区中常量引用的对象\\n - 被同步锁持有的对象等\\n - 一组一定处于活跃状态、能够作为起点向下搜索对象引用链的根节点\\n - Minor GC/Major GC/Full GC\\n - Minor GC 指的是 发生在新生代的垃圾回收\\n - Major GC 一般指的是 针对老年代的垃圾回收\\n - Full GC 指的是 对整个 Java 堆，通常还包括方法区在内的全面垃圾回收\\n - STW\\n - 在 JVM 执行某些操作时，会让所有用户线程暂时停下来，只让 JVM 自己的后台线程工作\\n - 为了保证在垃圾回收或其他关键操作过程中，内存中的对象引用关系是相对稳定的\\n - G1/CMS\\n - CMS 和 G1 都是 面向低停顿 的垃圾回收器\\n - CMS 的核心思路是：针对老年代，尽量和用户线程并发执行，减少停顿时间\\n - G1 的核心思路是：把整个堆划分成很多 Region，按收益优先回收，尽量在可控停顿时间内完成垃圾回收\\n - G1 把整个堆划分成很多大小相等的 Region\\n - CMS 在老年代主要使用的是 标记-清除算法，回收后会产生 内存碎片\\n - G1 从整体上看采用的是 标记-整理 思想，在局部 Region 回收时，也会涉及 复制算法\\n - G1 会把存活对象整理到新的 Region 中，所以能够有效减少甚至避免碎片问题\\n - 反射/动态代理/注解\\n - 注解的本质是什么？\\n - 写在代码里的元数据\\n - 不会直接改变程序的执行逻辑，而是给编译器、JVM 或框架提供一些额外信息，让它们在编译期、类加载期或运行期决定要做什么处理\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_3";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h2 id="redis"&gt;Redis&lt;/h2&gt;
+&lt;div id="me_4" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_4_src"&gt;
+"\"- Redis\\n - 基础认知\\n - Redis 为什么快\\n - Redis 是基于内存的\\n - Redis 的数据结构设计非常高效\\n - Redis 采用单线程模型处理命令，避免了线程切换和锁竞争\\n - Redis 使用 IO 多路复用，提高了网络处理效率\\n - Redis 6.0 之后引入了多线程优化网络读写\\n - Redis 为什么常被当作缓存，而不是数据库主存储\\n - Redis 的核心优势是高性能访问，更适合做缓存\\n - Redis 的数据可靠性通常不如传统主数据库\\n - Redis 在复杂查询和事务能力上不如数据库\\n - Redis 基于内存，存储成本更高\\n - Redis 线程模型是什么样的\\n - Redis 早期采用的是单线程事件循环模型，也就是由一个主线程结合 I/O 多路复用来完成连接处理、请求读取、命令解析、命令执行和结果返回\\n - 单线程主要是指命令处理主路径单线程，而不是整个 Redis 进程只有一个线程，因为它内部还会有一些后台线程处理持久化、异步任务等工作\\n - Redis 6.0 之后，又引入了 I/O 多线程，可以把 socket 读写等网络 I/O 工作交给多个线程处理\\n - 主线程负责命令执行，配合 I/O 多路复用；在新版本中，再用多个 I/O 线程来分摊网络处理开销\\n - Redis 的事件模型 / IO 多路复用是什么？\\n - IO 多路复用，就是通过 select、poll、epoll 这类机制，让一个线程能够同时监听多个 socket 连接\\n - Redis 的事件主要分成两类，一类是文件事件，也就是 socket 的读写事件，负责客户端请求和响应\\n - 另一类是时间事件，也就是定时任务，比如过期键检查等\\n - Redis 主线程会不断在事件循环中监听事件、分发事件、处理事件，然后再进入下一轮循环\\n - 数据类型类\\n - Redis 的五种基础数据类型是什么？\\n - String 是最基础的数据类型，适合存普通字符串、数字、JSON 以及做缓存和计数器\\n - List 是有序可重复的列表，适合做消息队列和动态列表\\n - Hash 是 field-value 结构，适合存对象的多个属性，比如用户信息、商品信息\\n - Set 是无序且元素唯一的集合，适合做去重、标签、共同好友这类场景\\n - ZSet 是带分数的有序集合，元素唯一并且可以按 score 排序，所以特别适合做排行榜、热度榜这类业务\\n - String 的底层实现是什么？\\n - Redis 的 String 底层本质上是 SDS，也就是简单动态字符串\\n - Redis 没有直接使用 C 原生字符串，因为 SDS 可以 O(1) 获取长度、支持二进制安全、减少字符串修改时的扩容开销，并且更安全\\n - 如果值能表示成 64 位整数，就会用 int 编码\\n - 如果是较短的字符串，通常用 embstr 编码，也就是把对象头和 SDS 分配在同一块内存中\\n - 如果是较长的字符串，则使用 raw 编码\\n - List 的底层实现是什么？\\n - 底层实现核心是 quicklist\\n - quicklist 可以理解为一个双向链表，但它的每个链表节点里并不是只放一个元素，而是放一个紧凑存储结构 listpack\\n - 如果直接用普通双向链表，每个元素都要额外付出很多指针开销，内存利用率比较低\\n - Hash 的底层实现是什么？\\n - 小 Hash 使用 listpack，大一点的 Hash 使用 hashtable\\n - listpack 是一种紧凑型连续内存结构，适合字段数量不多、field 和 value 都比较短的小对象，这样可以明显节省内存\\n - 当 Hash 的元素数量变多，或者字段和值超过阈值时，Redis 会自动把它转换成 hashtable 编码\\n - Set 的底层实现是什么\\n - 如果一个 Set 里的元素全都是整数，而且数量比较少，Redis 会优先使用 intset，因为这种结构更紧凑、更省内存\\n - 如果是小型集合，在 Redis 7.2 及以上也可能使用 listpack 编码，本质上也是为了节省空间\\n - 当集合规模变大，或者元素类型不再适合紧凑编码时，Redis 就会自动转换成 hashtable，这样查找、插入和删除性能会更稳定\\n - ZSet 的底层实现是什么？\\n - 小型 ZSet 使用 listpack，普通 ZSet 使用 skiplist\\n - 普通 ZSet 虽然对象编码上叫 skiplist，但实际实现并不是只有一个跳表，而是“跳表 + 哈希表”的组合\\n - 是因为跳表适合维护按 score 排序、做排名和范围查询，而哈希表适合按 member 快速定位元素\\n - List 和 Stream 的区别是什么？\\n - Redis 的 List 和 Stream 都可以用来做消息队列\\n - List 本质上是一个有序列表，更适合做简单队列，通常就是一端写入、一端弹出，消息被消费后就从队列里移除了\\n - Stream 本质上是一个追加式日志，每条消息都有唯一 ID，消费者是按 ID 往后读取，而不是简单 pop 元素\\n - 支持消息回放、断点续读和多消费者读取\\n - Stream 原生支持消费组、待确认消息和 ack 机制，适合需要失败重试、消息追踪和多消费者协作的场景\\n - 底层数据结构\\n - 什么是渐进式 rehash？为什么要渐进式？\\n - 当哈希表需要扩容或缩容时，Redis 不会一次性把旧表里的所有数据全部搬到新表里，而是先申请一个新哈希表，然后把数据分多次、分批次慢慢迁移过去\\n - 如果一次性 rehash，在数据量很大时会导致主线程长时间阻塞，造成请求延迟升高\\n - 过程\\n - 保留旧哈希表\\n - 新建一个更大或更小的新哈希表\\n - 把 rehashidx 设为起始位置\\n - 之后每次在处理正常请求时，顺便搬迁一部分桶中的数据\\n - 等所有桶都迁移完后，再释放旧表\\n - 什么是跳表？为什么 Redis 的 ZSet 选择跳表而不是红黑树？\\n - 跳表本质上是一种带多层索引的有序链表\\n - 它在最底层维护一个有序链表，在上层再增加多级索引，这样查找、插入、删除的平均复杂度都可以做到 O(logN)\\n - 跳表实现更简单，不需要像红黑树那样处理复杂的旋转和染色逻辑\\n - ZSet 很强调按 score 做范围查询、顺序遍历和排名查询，而跳表在这类操作上非常自然，找到起点后顺着链表往后扫就行\\n - 跳表的平均性能已经足够好，插入、删除、查找都是 O(logN)\\n - ziplist / listpack 是什么？为什么后来更多使用 listpack？\\n - 在 ziplist 中间插入或删除元素时，可能出现 cascading effect，也就是连锁更新问题\\n - 持久化\\n - Redis 有哪几种持久化方式？\\n - RDB 是快照持久化，也就是在指定时间点把内存中的数据做成快照写到磁盘\\n - 优点是文件紧凑、恢复快、适合做备份\\n - 缺点是两次快照之间宕机可能丢数据\\n - AOF 是追加日志持久化，会把每一次写命令追加到文件里，Redis 重启时通过重放命令恢复数据\\n - 优点是数据更完整、持久化粒度更细\\n - 缺点是文件通常更大、恢复可能更慢\\n - AOF 重写机制是什么？\\n - Redis 根据当前内存中的最新数据状态，重新生成一份更精简的 AOF 文件，而不是去直接修改或压缩旧的 AOF 日志\\n - AOF 会记录每一次写操作，文件会越来越大，包含很多对恢复当前状态已经没有意义的历史命令，需要通过重写来把这些冗余命令收敛掉\\n - Redis 会 fork 一个子进程，由子进程在后台生成新的 AOF 文件，主进程则继续处理客户端请求，不会中断服务\\n - 重写期间产生的新写命令，Redis 也不会丢失\\n - 父进程会单独写增量 AOF 文件，最后通过 manifest 做原子切换\\n - RDB 快照是怎么生成的？\\n - 它可以通过 save 配置自动触发，也可以通过 SAVE 或 BGSAVE 手动触发\\n - Redis 主进程先 fork 一个子进程，子进程基于 fork 那一刻看到的内存数据，把整个数据集写入一个临时 RDB 文件\\n - 主进程则继续处理客户端请求，不会中断服务\\n - 等子进程写完后，再用新的 RDB 文件替换旧文件\\n - fork 之后还能继续处理请求，是因为 Redis 利用了操作系统的写时复制机制，也就是 Copy-On-Write\\n - 什么是写时复制（Copy-On-Write）？\\n - 父进程 fork 子进程后，操作系统不会立刻把整份内存复制一遍，而是先让父子进程共享同一批物理内存页，并把这些页标记成只读\\n - 到某个进程真的要修改某个页时，操作系统才会把这个页复制一份，让修改发生在新副本上\\n - Redis 特别依赖这个机制，因为它在做 RDB 快照和 AOF 重写时，需要 fork 子进程在后台写磁盘，而主进程还要继续处理客户端请求\\n - 子进程可以看到 fork 那一刻的数据视图，主进程也能继续工作，只是后续被修改到的页才会额外复制\\n - 过期键与淘汰策略类\\n - Redis 过期键是立即删除吗？\\n - Redis 的过期键通常不是立即删除的\\n - 通过惰性删除和定期删除两种机制配合处理\\n - 惰性删除是指客户端访问某个 key 时，Redis 发现它已经过期了，才会删除并返回不存在\\n - 定期删除是指 Redis 会周期性随机抽取一部分带过期时间的 key 进行检查，把已经过期的 key 清理掉\\n - Redis 内存淘汰策略有哪些？\\n - allkeys-* 表示所有 key 都可以参与淘汰\\n - volatile-* 表示只有设置了过期时间的 key 才参与淘汰\\n - 按最近最少使用淘汰的 LRU，有按访问频率淘汰的 LFU，有按最近最少修改淘汰的 LRM，有随机淘汰的 random，还有按剩余 TTL 最短淘汰\\n - allkeys-lru 在很多符合二八分布的缓存场景下是个不错的默认选项\\n - 缓存问题类\\n - 缓存穿透\\n - 缓存穿透，就是查询一个根本不存在的数据。因为这个数据既不会命中缓存，数据库里也查不到，所以每次请求都会穿过缓存，直接打到数据库。\\n - 缓存空值，也就是当数据库查不到数据时，也把这个空结果写入缓存，这样下次再查同一个 key 时，就可以直接从缓存返回，避免再次访问数据库\\n - 布隆过滤器，在请求进入缓存和数据库之前，先判断这个 key 是否可能存在，如果判断一定不存在，就直接拦截\\n - 缓存击穿\\n - 某一个热点 key 在某个时刻失效了，而这时候又正好有大量并发请求同时访问这个 key\\n - 给热点 key 加互斥锁或者分布式锁，在缓存失效时只让一个线程去查数据库并重建缓存，其他线程等待或快速失败\\n - 可以对热点数据做逻辑过期，也就是缓存物理上不立刻删除，而是由后台异步刷新，这样前台请求始终能拿到旧值\\n - 对特别核心的热点数据做预热和永不过期\\n - 缓存雪崩\\n - 在某一个时间段内，大量缓存 key 同时失效，或者 Redis 整体不可用\\n - 原本应该由缓存承接的请求一下子全部打到数据库，从而造成数据库压力骤增\\n - 给不同 key 的过期时间加随机值，避免大量 key 在同一时刻同时失效\\n - 对热点数据提前预热，或者对特别核心的数据设置永不过期\\n - 做好 Redis 的高可用，比如主从、哨兵或集群，避免因为单点故障导致整片缓存不可用\\n - 缓存失效时配合限流、降级、熔断等保护手段\\n - 对回源数据库的请求做互斥控制，比如只让少量线程去重建缓存\\n - 分布式锁类\\n - 如何用 Redis 实现分布式锁\\n - 加锁时使用 SET lock_key unique_value NX PX 过期时间，其中 NX 表示只有这个锁不存在时才能加锁成功，保证互斥\\n - PX 或 EX 用来给锁设置过期时间，避免持锁线程宕机后锁永远不释放\\n - 释放锁不能直接 DEL，而要用 Lua 脚本先比较 value 是否还是自己，再删除\\n - 避免自己的锁过期后被别人拿到，而自己误删了别人的锁\\n - 什么是锁续期（看门狗）？\\n - 一个线程拿到 Redis 分布式锁之后，如果业务执行时间可能超过锁的过期时间\\n - 系统会在锁快过期之前，自动把锁的 TTL 延长，避免业务还没执行完锁就提前失效\\n - 事务与原子性类\\n - MULTI、EXEC、WATCH 的作用是什么\\n - MULTI 的作用是开启一个事务块，执行它之后，后面的命令不会立刻执行，而是先进入队列\\n - EXEC 的作用是一次性按顺序执行前面在事务里排队的所有命令，并把连接状态恢复成普通模式\\n - WATCH 的作用是给一个或多个 key 加“乐观锁”，也就是在执行事务前先监视这些 key，只要它们在 EXEC 之前被其他客户端修改过，本次 EXEC 就不会真正执行事务\\n - 通常一起用来实现“先检查、再批量提交”的原子操作\\n - 高可用类\\n - 主从复制到原理\\n - 主从复制本质上是 leader-follower 模型，也就是主节点负责处理写请求，然后把数据变更以命令流的形式异步发送给从节点，让从节点尽量保持和主节点一致\\n - 主从连接稳定时，主节点会持续把客户端写入、过期删除、淘汰等导致数据集变化的操作同步给从节点\\n - 网络短暂中断，从节点重连后会优先尝试部分重同步，也就是把断线期间漏掉的那段命令流补回来，这个过程依赖 replication id + offset 来判断从节点缺了哪一段数据\\n - 如果主节点的复制积压缓冲区已经没有这段历史了，或者历史对不上，就会退化成 全量同步\\n - 全量同步时，主节点会后台生成一份 RDB 快照，同时把这期间新的写命令先缓存在内存里，等 RDB 发送给从节点并加载完成后，再把这段缓冲的增量命令继续发给从节点\\n - Redis 默认采用的是 异步复制，也就是说主节点写成功并不会等待从节点确认，所以性能高、延迟低\\n - 全量复制和增量复制的区别是什么？\\n - 全量复制一般发生在从节点第一次连接主节点，或者断线后发现没法继续部分同步的时候\\n - 主节点先后台生成一份 RDB 快照，把这份全量数据发给从节点\\n - 从节点加载完成后，主节点再把生成快照期间以及之后积累的写命令继续发给从节点，让从节点追上最新状态\\n - 增量复制更准确地说是部分重同步，一般发生在主从短暂断线后重新连上时\\n - 如果从节点保存的 replication id 和 offset 还能和主节点的复制积压缓冲区对上，那么主节点只需要把从节点断线期间漏掉的那一小段命令流补发给它\\n - Sentinel 是如何判断主节点下线的？\\n - 先判断主观下线，再判断客观下线。\\n - 每个 Sentinel 都会持续给主节点发 PING，如果在配置的时间内一直拿不到有效回复，它就会先认为这个主节点是 主观下线，也就是 SDOWN\\n - 只有当足够多的 Sentinel 也都认为这个主节点处于 SDOWN，并且相互确认，达到里配置的 quorum 数量后，这个主节点才会被认定为 客观下线\\n - SDOWN 是单个 Sentinel 的本地判断，ODOWN 是多个 Sentinel 达成法定票数后的集体判断\\n - 脑裂问题是什么？怎么解决？\\n - 网络分区，旧主节点并没有真的宕机，只是和大多数 Sentinel、从节点失联了\\n - Sentinel 在另一侧把某个从节点提升成了新主节点\\n - 和旧主节点同一侧的客户端还在继续向旧主节点写数据，于是系统短时间内同时出现两个都在接受写入的主\\n - 部署上要有足够的 Sentinel 和副本，形成法定人数，避免少数派分区误判\\n - 在主库上配置，这样旧主一旦发现自己已经无法把写同步给足够数量的副本，就会在限定时间后停止接受写入\\n - 客户端必须通过 Sentinel 做主节点发现和切换，不要把旧主地址写死\\n - Sentinel 的故障转移流程是什么？\\n - Sentinel 故障转移的本质，就是通过多数派判断主库真的挂了，再由一个领导 Sentinel 协调整个“选新主、切复制关系、通知客户端\\n - 集群类\\n - Redis Cluster 是什么？\\n - 是 Redis 官方提供的分布式集群方案，它的核心目标是同时解决 Redis 单机存在的容量瓶颈、并发瓶颈和单点故障问题\\n - 把整个 key 空间划分成 16384 个 hash slot，每个主节点负责其中一部分槽位\\n - 数据根据 key 计算后分布到不同节点上，这样就实现了数据分片\\n - 每个主节点通常还会挂从节点，用来做主从复制和故障转移\\n - Redis Cluster 为什么是 16384 个槽？\\n - 在分片粒度、元数据开销和实现复杂度之间做一个平衡\\n - Redis Cluster 不是直接把 key 映射到节点，而是先把 key 映射到固定数量的 hash slot，公式就是 CRC16(key) mod 16384\\n - 取的是 CRC16 的低 14 bit，计算简单、定位快\\n - 它本质上就是用一个 2 的幂次槽位数，在“槽位足够细、计算足够简单、集群元数据又不会太重”之间取得的工程折中\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_4";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h2 id="rocketmq"&gt;RocketMQ&lt;/h2&gt;
+&lt;div id="me_5" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_5_src"&gt;
+"\"- RocketMQ\\n - 基础认知\\n - RocketMQ 解决了哪些问题？\\n - 主要解决的是系统之间 异步通信、应用解耦、流量削峰、最终一致性 这几类问题\\n - Producer、Consumer、Broker、NameServer、Topic、MessageQueue 分别是什么？\\n - Producer 就是消息生产者，负责创建并发送消息\\n - 本身不直接把消息随便发到某台 Broker\\n - 而是先从 NameServer 获取 Topic 的路由信息\\n - 再选择一个合适的 MessageQueue\\n - 把消息发到这个 Queue 所在的 Broker 上\\n - Consumer 就是消息消费者，负责订阅 Topic 并处理消息\\n - 通过 NameServer 感知 Topic 路由，然后从对应 Broker 拉取消息进行消费\\n - 消费通常还会配合 Consumer Group 一起使用，这样同一组消费者可以共同分担一个 Topic 下多个 Queue 的消息\\n - Broker 是 RocketMQ 的核心服务节点，真正负责 存储消息、接收生产者发送的消息、向消费者提供消息读取能力\\n - Broker 启动后会把自己的信息以及它上面的 Topic 路由注册到 NameServer\\n - Producer 和 Consumer 最终都是通过 NameServer 找到 Broker，再和 Broker 交互\\n - NameServer 本质上是 RocketMQ 的路由注册与发现中心\\n - 它不负责存储业务消息，主要负责保存 Topic 和 Broker 的映射关系\\n - Producer 和 Consumer 启动后都会连接 NameServer，去查询某个 Topic 在哪些 Broker 上、有哪些 Queue\\n - Topic 可以理解为消息的逻辑分类，类似一个业务主题\\n - 生产者是把消息发到某个 Topic，消费者也是按 Topic 订阅消息\\n - MessageQueue 则是 Topic 在物理实现上的更细粒度拆分单元\\n - 一个 Topic 往往不会只对应一个队列，而是会拆成多个 Queue，分布在不同 Broker 上\\n - 提高并发能力、支撑负载均衡，以及在顺序消息场景下把同一类业务消息路由到同一个 Queue\\n - 架构原理\\n - NameServer 为什么可以无状态设计？\\n - 只负责路由发现，不负责业务消息存储，也不承担复杂的一致性协调\\n - 每个 Broker 会把自己的路由信息注册到每一个 NameServer\\n - NameServer 自己不产生核心状态，只是被动接收 Broker 上报的路由信息并提供查询服务\\n - NameServer 里的路由信息在极短时间内可能不是绝对实时一致的\\n - RocketMQ 的路由信息是如何注册和发现的？\\n - Broker 启动之后，会把自己的地址信息、自己承载了哪些 Topic、每个 Topic 下有多少个 MessageQueue、读写权限等路由元数据注册到 NameServer\\n - 注册到配置的所有 NameServer\\n - Broker 还会持续发送心跳，NameServer 通过心跳来判断这个 Broker 是否还存活\\n - 长时间收不到心跳，就会把它对应的路由信息剔除掉\\n - Producer 和 Consumer 启动时会先拿到 NameServer 地址，然后去 NameServer 查询某个 Topic 的路由信息\\n - 客户端并不是直接把 Topic 硬编码到某台 Broker，而是先查路由，再直连 Broker 通信\\n - 每个 NameServer 基本都会保存一份相对完整的路由视图，而且多个 NameServer 之间通常不互相通信\\n - 如果某个 NameServer 挂了，会有什么影响？\\n - 客户端本身已经拿到过路由信息\\n - 只要 Broker 没问题、客户端手里还有可用路由，业务通常还能继续跑\\n - 客户端正好需要刷新路由，或者刚启动时去查路由\\n - 只要客户端配置了多个 NameServer 地址，通常只是短暂影响\\n - Broker 为什么要做主从架构？\\n - 消息中间件天然要求高可用和高可靠，主从可以通过副本复制避免单点故障\\n - 在 Master 宕机时尽量保证消息不丢、服务不停，并通过同步或异步复制在性能和可靠性之间做权衡\\n - 消息发送机制\\n - RocketMQ 有哪几种消息发送方式？\\n - 同步发送：Producer 把消息发出去之后，会阻塞等待 Broker 返回发送结果，拿到成功或者失败的响应之后，才继续往下执行\\n - 异步发送：Producer 把消息发出去之后不会一直阻塞等待，而是注册一个回调函数，等 Broker 返回结果后，再通过回调通知发送成功还是失败\\n - 单向发送：只负责把请求发出去，不等待 Broker 返回结果，也没有回调确认\\n - 消费机制\\n - 同一个 Consumer Group 下多个消费者如何分摊 Queue？\\n - 集群消费：队列级负载均衡\\n - 一个 Topic 下的多个 MessageQueue 会分配给同一个 Consumer Group 里的不同消费者，每个 Queue 在同一时刻只会分配给组内一个消费者处理\\n - 默认策略一般是平均分配\\n - 如果 Queue 数量少于消费者数量，那多出来的消费者可能分不到 Queue，就会处于空闲状态\\n - 消费位点（offset）是什么？存在哪里？\\n - 消费位点，也就是 offset，本质上就是消费者的消费进度\\n - 对于某个 Consumer Group 来说，它已经消费到某个 Topic 的某个 Queue 的哪个位置了\\n - 消费位点默认保存在服务端，也就是 Broker 端\\n - 广播消费因为每个消费者都要各自消费全量消息，所以它的 offset 往往保存在客户端本地\\n - 消息可靠性\\n - RocketMQ 如何保证消息不丢失？\\n - 不能绝对保证 100% 不丢消息，但它是通过生产端、Broker 端、消费端三层机制，把消息丢失风险尽量降到很低\\n - 核心业务一般要用同步发送，拿到 Broker 的成功响应再认为发送成功\\n - 消息到了 Broker 以后，真正决定可靠性的关键是刷盘和副本复制，高可靠场景通常会配 同步刷盘\\n - 消费端，RocketMQ 的语义更接近 at least once，也就是说它更倾向于宁可重复，也尽量不要丢\\n - 延时/定时消息\\n - RocketMQ 如何实现延时消息？\\n - 消息发送到服务端后，不会立刻投递给消费者，而是要等到指定时刻才变成可消费状态\\n - Producer 先发送一条带延时属性的消息，Broker 收到后不会马上把它交给 Consumer，而是先根据这个消息的投递时间做暂存和时间管理\\n - 等到到期之后，Broker 再把这条消息重新放到正常投递链路里，消费者这时候才会像消费普通消息一样把它拉走\\n - 为什么延时消息不一定能做到绝对精确时间触发？\\n - RocketMQ 追求的是‘接近指定时间投递’，而不是操作系统级实时调度\\n - 消息发送时间是生产者本地时间，消息生效/存储时间是 Broker 本地时间\\n - 时间粒度限制、Broker 侧的调度与二次写入链路、存储异常或重启带来的延迟，以及客户端和 Broker 时钟不一致\\n - 存储与刷盘\\n - RocketMQ 的消息是如何存储到磁盘的？\\n - 消息体顺序追加写入 CommitLog，再为消费和查询额外构建索引\\n - Producer 把消息发到 Broker 后，Broker 不会按 Topic 各写各的物理文件，而是把所有 Topic 的消息统一顺序追加到 CommitLog 里\\n - CommitLog 是消息真正的物理存储文件，这种顺序写磁盘的方式吞吐高、磁盘 I/O 更友好\\n - 两类索引\\n - ConsumeQueue，它可以理解成每个 Topic 的每个 Queue 对应的一份逻辑消费索引\\n - 不存完整消息体，只记录这条消息在 CommitLog 里的物理偏移量、消息大小以及 Tag 相关信息\\n - 消费者拉消息时通常先查 ConsumeQueue，再根据里面的 offset 去 CommitLog 定位并读取真实消息\\n - IndexFile，主要用于按消息 Key 或时间范围做查询\\n - CommitLog 负责真正存消息，ConsumeQueue 负责消费定位，IndexFile 负责条件检索\\n - 零拷贝在 RocketMQ 里有没有用到？你怎么理解？\\n - RocketMQ 更核心的是利用 mmap 把文件映射到用户进程地址空间，让消息写入 CommitLog、读取消息时尽量直接走内存映射和 PageCache\\n - 减少传统 read/write 模式下用户态和内核态之间的多次数据拷贝\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_5";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h2 id="agent-开发"&gt;Agent 开发&lt;/h2&gt;
+&lt;div id="me_6" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_6_src"&gt;
+"\"- Agent 开发\\n - 基础概念\\n - 什么是 Agent？它和普通 Chatbot 的本质区别是什么？\\n - 以大模型为决策核心、能够感知状态、调用工具、分解任务并执行动作，最终完成目标闭环的智能体系统。\\n - 什么是 tool calling / function calling？为什么 Agent 离不开它？\\n - 让大模型不只是输出自然语言，而是能够按照约定好的结构，去选择并调用外部工具完成任务\\n - tool calling 做的事情，就是给模型一组可用工具，并告诉它每个工具是做什么的、参数长什么样\\n - 这个任务是否需要借助外部能力，如果需要，应该调用哪个工具，以及传什么参数。\\n - 没有 tool calling，Agent 就没有真正的行动能力\\n - 没有 tool calling，Agent 很难获得真实、最新、可验证的信息\\n - 没有 tool calling，复杂任务无法形成闭环\\n - Agent、Workflow、Chain 三者有什么区别？\\n - 流程是不是固定的、模型有没有决策权、系统的可控性和灵活性分别有多强\\n - Chain 是最简单的一种组织形式，本质上就是把多个步骤线性串起来\\n - 第一步提取关键词，第二步根据关键词检索，第三步让模型总结答案\\n - Workflow 可以理解为比 Chain 更复杂一层的编排方式\\n - 那 Workflow 更像一个流程图或者状态机\\n - 流程仍然是预先设计的，但路径可以更丰富，控制逻辑更强，工程上也更稳定\\n - 不是人把流程完全写死，而是把“下一步该做什么”的部分决策权交给模型\\n - 面对任务时，Agent 不一定按照固定路径执行，而是会根据当前目标、上下文、工具返回结果，动态决定下一步动作\\n - ReAct、Plan-and-Execute、Router-based workflow 各适合什么场景？\\n - ReAct 的特点是 Reason + Act\\n - 模型先基于当前上下文做一步推理，决定下一步行动，拿到工具返回结果之后，再继续思考下一步\\n - 本质上是一种 逐步决策、逐步执行 的方式，而不是一开始就把整条路径规划好\\n - 适合那种 信息不完整、过程不确定、需要根据中间结果动态调整方向\\n - 探索型、开放型、动态性强\\n - Plan-and-Execute 先规划，再执行\\n - 是模型先根据目标把任务拆成几个较大的步骤，形成一个 plan。\\n - 然后再按 plan 逐步执行，每一步需要时再调用工具。\\n - 任务目标明确、步骤较多、链路较长\\n - 复杂任务、长链路任务、需要任务拆解的场景\\n - 前面的 plan 可能并不完全正确\\n - 成熟的 Plan-and-Execute 系统，通常还要允许 plan revise\\n - 是执行过程中根据新信息修正原计划，而不是机械地照着旧计划跑\\n - Router-based Workflow\\n - 先做一个 路由决策：判断当前请求属于哪一类，然后把它送进对应的固定流程\\n - 适合的是 任务类型相对清晰、业务边界明确、流程可预定义 的场景\\n - 判断它是知识问答、数据查询、代码生成、工单处理，还是闲聊；\\n - 不同类型走不同分支，每个分支里的步骤通常是预先设计好的\\n - 单 Agent 和多 Agent 的优缺点分别是什么？\\n - 让一个智能体统一负责理解、规划和执行，还是把不同职责拆给多个智能体协作完成\\n - 单 Agent 的核心特点是：一个 Agent 持有主要上下文，围绕用户目标统一做决策，并根据需要调用工具完成任务\\n - 职责容易过载。\\n - 当任务越来越复杂时，一个 Agent 既要理解意图，又要规划，又要调用工具，还要整合结果，这会导致 prompt 非常臃肿，上下文也会越来越重\\n - 多 Agent 把复杂任务拆成多个相对独立的角色或能力单元，让它们分工协作\\n - 更适合复杂任务分治\\n - 任务天然包含多个不同领域、不同能力要求的子问题时，让一个 Agent 全包并不总是最佳选择\\n - 后续业务增加新能力，比如新增一个“数据分析 Agent”或者“审批 Agent”，多 Agent 架构通常更容易横向扩展\\n - 系统复杂、协作成本高、上下文传递有损耗、时延和成本更高\\n - 什么叫“agent loop”？如何判断循环该停止？\\n - agent loop，本质上就是 Agent 完成任务时的一个 闭环执行过程\\n - 不断重复下面这几个步骤：理解当前状态、决定下一步动作、执行动作、观察结果、再基于新结果继续决策\\n - 业务层面的完成条件：任务目标已经满足了，就应该停止\\n - 模型主动判断无需继续\\n - 停止条件\\n - 是否触发了工程兜底条件，比如最大步数、重复调用、无新信息、连续失败或成本超限\\n - handoff/delegation\\n - delegation 更强调‘把子任务分派给更合适的执行者’\\n - 这个问题里有一部分任务，并不是自己最擅长处理的，或者交给专门模块处理会更稳，那它就把这部分任务委派出去\\n - 把某个子任务交给更专业的执行单元处理，再把结果拿回来继续整合\\n - handoff 更强调‘把当前会话或任务控制权切换给另一个角色或模块’\\n - 责任和上下文的转交，后续由新的主体接手推进任务\\n - Prompt 与工具调用设计\\n - 你会怎么给 Agent 设计 system prompt？\\n - 定义角色和目标\\n - 明确告诉 Agent：你是谁，你的职责是什么，你服务的对象是谁，你最终要优化的目标是什么\\n - 定义决策原则\\n - Agent 和普通问答模型最大的区别在于，它需要不断判断：现在该直接回答，还是该调用工具，还是该进一步检索，还是应该拒绝\\n - 信息不足时，不要猜测，要优先检索或调用工具\\n - 涉及外部事实、实时信息、业务数据时，不要只靠参数知识回答\\n - 如果工具可以更可靠地完成任务，优先用工具\\n - 如果当前证据已经足够，就不要过度调用工具\\n - 定义工具使用规范\\n - 什么时候该用工具、什么时候不该用、如何处理工具返回结果\\n - 定义输出格式和交互风格\\n - Agent 的结果往往不是单纯给用户看，有时还要给下游系统消费，或者作为下一步流程输入\\n - 是定义边界、风险和兜底策略\\n - 权限边界、敏感操作、数据泄露风险、人工接管条件，这些都应该提前定义\\n - 模块\\n - Role：你是谁，服务谁，目标是什么\\n - Capabilities：你有哪些工具和能力\\n - Decision Policy：什么时候检索，什么时候调用工具，什么时候停止\\n - Tool Rules：工具选择、参数使用、失败处理\\n - Output Rules：回答格式、结构化输出、引用方式\\n - Safety / Boundaries：权限、安全、拒答、人工兜底\\n - 工具返回结果过长时，你怎么做压缩和摘要？\\n - 关键信息被淹没、模型注意力分散、后续决策质量下降\\n - 先做结构化裁剪，再做分层摘要，最后按任务目标回注上下文，而不是一次性全量喂给模型\\n - 当前这段长结果里，哪些内容对当前目标是高价值的，哪些只是噪声\\n - 优先做结构化提取，而不是直接写自然语言摘要\\n - 先把长结果压成一个 结构化中间表示，比如 key-value、JSON、表格化摘要或者 bullet points\\n - 分层压缩，而不是只做一层摘要\\n - 粗裁剪，也就是先把明显无关、重复、噪声大的内容去掉\\n - 关键信息摘要，也就是保留当前任务真正需要的核心事实\\n - 可追溯引用层，也就是虽然正文里不全放原文，但要保留原始片段索引、来源 ID、文档位置、URL 或 chunk 标识\\n - 区分“给模型看的摘要”和“给用户看的摘要”\\n - Agent 架构与编排\\n - LangGraph 这类图式编排相比纯 prompt agent 的优势是什么？\\n - 纯 prompt agent 更像是把任务尽量交给模型在一个循环里自由决策\\n - LangGraph 这类图式编排，是把系统拆成显式的状态、节点和边，让‘哪些地方交给模型决策，哪些地方由程序控制’变得更清楚\\n - 纯 prompt agent 很多时候本质上是“消息历史 + system prompt + tool loop”\\n - LangGraph 的核心建模方式是 State + Nodes + Edges\\n - 用共享 state 表示应用当前状态，用 nodes 执行业务逻辑，用 edges 控制固定或条件跳转\\n - workflow 和 agent：workflow 是预定义路径，agent 是动态决定流程和工具使用\\n - durable execution：也就是长时间运行、失败后可从中断点恢复。\\n - human-in-the-loop 直接作为核心能力之一，支持在执行过程中检查和修改 agent state\\n - 图式编排最大的工程收益之一，就是把“Agent 的执行过程”从黑盒，变成半透明甚至可观测的系统。\\n - 官方把短期记忆直接纳入 agent state，并通过 checkpointer 持久化，使线程可以恢复；长期记忆则通过 store 跨会话保存\\n - 如何设计 agent state？\\n - state 不是把所有信息都塞进去，而是只保留那些需要跨步骤持续存在、会影响后续决策、或者需要被恢复与追踪的信息\\n - 如果一条信息只在当前节点临时计算用一次，那它不应该进 state\\n - 任务目标与任务上下文\\n - 执行过程状态\\n - 工作记忆，也就是对后续决策有价值的中间产物\\n - 控制信息\\n - 可观测与恢复相关信息\\n - 多 Agent 之间如何共享上下文\\n - 不是让所有 Agent 都看到全部信息，而是让每个 Agent 在合适的时机拿到完成自己任务所需的最小必要上下文\\n - 是全局任务上下文\\n - 所有 Agent 都可能需要知道的基础信息，比如用户目标是什么、当前任务 ID、任务的主约束是什么、当前系统处在哪个大阶段\\n - 局部执行上下文\\n - 某个 Agent 为了完成自己职责所必需的信息\\n - 共享上下文不是共享全部历史，而是共享经过裁剪和重组后的任务视图。\\n - 是中间产物上下文\\n - Agent 之间尽量传“结构化中间结果”，而不是传“大段原始对话和原始输出“。\\n - 方式\\n - 是共享状态仓，也就是 shared state / blackboard。\\n - 共享的是状态，不是无限扩展的聊天记录\\n - handoff 时显式传递上下文包\\n - 当前要解决的子问题是什么\\n - 为什么要转给这个 Agent\\n - 已经完成了哪些步骤\\n - 当前有哪些关键事实或证据\\n - 还有哪些不确定点\\n - 通过外部记忆或工件存储共享\\n - RAG 和 Agent 结合\\n - RAG 和 Agent 的关系是什么？什么时候只用 RAG 就够了？\\n - RAG 主要解决的是‘让模型拿到更相关、更真实的外部知识再回答’\\n - Agent 主要解决的是‘让模型围绕目标动态决策、调用工具并完成任务’\\n - RAG，也就是 Retrieval-Augmented Generation，本质上是“先检索，再生成”。\\n - 检索前置（retrieve-then-read）和动态检索（decide-whether-to-retrieve）怎么选？\\n - 检索前置，也就是 retrieve-then-read：不管用户问什么，先检索，再让模型基于检索结果阅读和回答\\n - 检索是默认前置步骤，系统不需要先判断“要不要检索”，而是统一走“先找资料、再生成答案”的固定流程\\n - 动态检索，也就是 decide-whether-to-retrieve\\n - 先让系统判断当前问题到底要不要检索，如果需要，再决定检索什么、检索几轮；如果不需要，就直接基于已有上下文回答\\n - 更灵活、更节省资源\\n - 召回、重排、生成分别可能出什么问题？\\n - RAG 的问题要分层看，召回解决‘找不找得到’，重排解决‘排得准不准’\\n - 召回阶段\\n - 从大量候选知识里尽可能不要漏掉真正有用的内容\\n - 问题\\n - 召回不足，也就是该找的没找出来\\n - 召回噪声太多\\n - query 与知识表达不匹配\\n - 切块和索引策略问题\\n - 重排阶段\\n - 在召回回来的候选集里，把真正最值得给模型看的内容排到前面\\n - 问题\\n - 高相关内容没排到前面\\n - 表面相关高，但任务相关低\\n - 多片段信息没有被整体考虑\\n - 排序结果缺乏多样性\\n - 生成阶段\\n - 没有忠实使用检索证据\\n - 幻觉和过度补全\\n - 证据整合能力不足\\n - 如何让 Agent 基于检索证据回答，而不是凭空补全？\\n - 先保证 Agent 真正拿到了足够好的证据\\n - 要把“证据”和“任务”在上下文里组织清楚，而不是一股脑把文本塞进去\\n - 在 prompt 和输出协议里明确要求“答案必须可追溯到证据”\\n - 要让 Agent 在证据不足时优先补检索，而不是硬答\\n - 要通过评测专门检查它是不是在‘基于证据回答’，而不是只看答案像不像对\\n - 如何评估 RAG Agent：看 answer correctness 还是看 trajectory？\\n - answer correctness\\n - 你最后给的答案是不是对的，是不是完整，是不是有用\\n - answer correctness 决定系统有没有业务价值下限\\n - trajectory\\n - 在 Agent 场景里，证据不足时有没有继续检索而不是直接生成\\n - trajectory 评估的是过程层\\n - Memory 记忆\\n - 短期记忆（short-term memory）和长期记忆（long-term memory）分别是什么？\\n - 在 Agent 系统里，记忆的本质不是“把信息存起来”这么简单\\n - 而是让系统在合适的时间保留合适的信息，从而支持多轮交互、任务连续性和个性化决策。\\n - 短期记忆\\n - Agent 在当前会话或当前任务执行过程中使用的工作记忆\\n - 它是任务相关的\\n - 它是动态变化的\\n - 它通常生命周期较短\\n - 它更偏执行态\\n - 长期记忆\\n - 那些跨会话、跨任务仍然有价值的信息\\n - 下次再见到这个用户或类似场景时，系统能不能利用过去沉淀的信息做得更好\\n - Agent 的 长期知识沉淀 或 跨任务可复用经验层\\n - 跨会话复用的\\n - 更偏稳定信息\\n - 需要检索或选择性注入\\n - 更偏个性化和沉淀化\\n - 会话历史太长导致上下文爆炸时怎么处理？\\n - 先区分“哪些历史真的有必要继续带着”，而不是把整个聊天记录原样续上\\n - 当前任务强相关信息\\n - 阶段性中间过程信息\\n - 低价值历史噪声\\n - 做分层压缩，而不是简单截断\\n - 原始最近几轮对话：保留高保真上下文，因为最近几轮通常最直接影响当前回答\\n - 中期历史摘要：把较早但仍有价值的内容压成结构化摘要\\n - 长期稳定事实：把跨轮仍然有效的用户偏好、任务背景、关键约束单独沉淀出来\\n - 把“消息历史”和“任务状态”分开管理\\n - 很多真正重要的东西不应该只存在于对话文本里，而应该被提炼成显式 state\\n - 聊天记录负责保留交互表面，state 负责保留任务骨架\\n - 根据任务阶段动态构造上下文，而不是固定拼接\\n - 评测\\n - 你如何评估一个 Agent 是否“好用”？\\n - 先看结果层：它到底有没有把事做成\\n - task success rate，也就是任务成功率\\n - groundedness 或可验证性。\\n - 结果正确性和完整性，factual correctness\\n - 再看过程层：它是不是稳定、合理地完成任务\\n - 决策路径是否合理\\n - 有没有重复劳动和无效动作\\n - 在失败时怎么表现\\n - 再看工程层：成本、延迟、稳定性是否可接受\\n - 在线评测和离线评测有什么区别？\\n - 离线评测：在一个预先准备好的测试集、基准集或者人工构造的 case 集上，对系统进行批量评估\\n - 在线评测：在真实流量、真实用户、真实业务环境下，对系统效果进行观测和比较\\n - 什么是 task success rate？\\n - 用户交给 Agent 的任务，最后到底有没有被成功完成\\n - task success rate 就是 任务成功率\\n - 如何构造 eval dataset\\n - eval dataset 要把真实业务目标、典型任务分布、关键风险场景和失败案例系统化地沉淀成一个可持续迭代的数据集\\n - 先定义评什么，而不是先收样本\\n - 用“任务分布”来采样，而不是只收容易做的题\\n - 人工精选样本\\n - 真实历史样本\\n - 定向构造样本\\n - 做分层分桶，而不是把所有样本混成一锅\\n - 每条样本不只要有输入，还要有“判分依据”\\n -\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_6";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="项目"&gt;项目&lt;/h1&gt;
+&lt;div id="me_7" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_7_src"&gt;
+"\"- 项目\\n - 异步收银台\\n - 问题\\n - WebSocket 与长连接网关\\n - 差量协议\\n - 收益\\n - BPMN L4\\n - 事件网关\\n - 异步回调\\n - 问题挑战\\n - 视图构建并发修改 panic\\n - 机器资源\\n - 上屏率\\n - 未来要做的\\n - 上屏率提升\\n - 权益中心\\n - 痛点\\n - 接入成本高\\n - 权益存储分散，不可追溯\\n - 规则复杂\\n - 解决方案\\n - 数据模型\\n - 权益元数据-权益是什么/业务含义\\n - 权益来源/策略-权益从哪里来（免费试用/商业订单/审批补发）\\n - 权益度量/实例：度量-订单 1vs1 实例：度量的组合\\n - 流水：审计、对账\\n - 库存：消耗记录，度量、实例\\n - 权益属性：配置信息\\n - 规则表\\n - SPI 机制（平台与业务分离）\\n - 参数填充\\n - 发放\\n - 到期\\n - 回收\\n - 不同权益规则很大，平台放无法全包\\n - 历史业务前移\\n - 模型映射转换-SPI 实现\\n - 权益中心较晚出现，历史业务切流\\n - 消耗数据，同步流水，异步聚合（流水对账）\\n - 历史权益发放数据：订单级别重放 + 对账\\n - 新流入数据：权益 + 业务方双写\\n - 切流灰度\\n - 热点问题\\n - 发放没有热点问题，查询/消耗有热点问题\\n - 大组织热点/mysql 无法承载，转换成 Redis\\n - Redis 将库存记录转换为 zset 桶承载起来\\n - 每次路由到桶，写记录\\n - 跨桶扣减会加锁（桶碎片问题）\\n - 只会少买，不会超卖（扣库存成功，写流水失败，后续补偿）\\n - 富客户端，请求不直接打进来\\n - 规则引擎\\n - 发放规则复杂（商品、购买周期、企业行业、时间）\\n - 不用硬编码，直接 JEXL 规则引擎配置\\n - 其他，版本号 + 阶段控制 vibe coding 了后台\\n - 报价管理 \\n - 商机客保规则限制，跨商品线下下单困难\\n - 订单价格不统一，无法统一改价\\n - 流程繁多、改价审批、商机转交审批、时间长\\n - 新人培训成本高，企业信息了解少\\n - 报价的审批会改变订单的状态，报价审批拒绝了，订单关单\\n - 合同分散、集中合同，报价统一出\\n - AI 做什么\\n - 热点词捕捉\\n - 什么时候微调/什么时候 RAG\\n - Planning\\n - ReAct，还没有做 Planning\\n - 历史服务数据承担 SFT 微调\\n - MCP 服务开放，HSF 转 MCP，订单/小记\\n - 客户情报说明/雷达图/商品打分/服务话术推荐\\n - 合单分期\\n - 痛点：支付方式不灵活\\n - 不同店铺单支付方式冲突\\n - 搭配购、顺手买\\n - 可扩展数据结构 mixPayOption { payOption\\u003cstring\\u003e }\\n - 店铺单分期方式扩展\\n - 扩展监控面板\\n - 店铺单/拍下单支付方式路由（一个资产、多个资产）\\n - 新面板，提单信息 \\n - 冲突校验\\n - 懒加载\\n - 面板不请求（前端聚合计算）\\n -\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_7";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;</description></item><item><title>leetcode-155-最小栈</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-155-%E6%9C%80%E5%B0%8F%E6%A0%88/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-155-%E6%9C%80%E5%B0%8F%E6%A0%88/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
 &lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
-&lt;p&gt;实验编号/标题：例如：实验-二叉树的最近公共祖先&lt;/p&gt;</description></item><item><title>实验-leetcode-437-路径总和 3</title><link>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C-leetcode-437-%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-3/</link><pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C-leetcode-437-%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-3/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：例如：LeetCode-155-最小栈&lt;/p&gt;</description></item><item><title>实验-leetcode-153-寻找旋转排序数组中的最小元素</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-153-%E5%AF%BB%E6%89%BE%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9C%80%E5%B0%8F%E5%85%83%E7%B4%A0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-153-%E5%AF%BB%E6%89%BE%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9C%80%E5%B0%8F%E5%85%83%E7%B4%A0/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-153-寻找旋转排序数组中的最小元素&lt;/p&gt;</description></item><item><title>实验-leetcode-198-打家劫舍</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-198-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-198-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-198-打家劫舍&lt;/p&gt;</description></item><item><title>实验-leetcode-20-有效的括号</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-20-有效的括号&lt;/p&gt;</description></item><item><title>实验-leetcode-213-打家劫舍 2</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-213-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D2/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-213-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D2/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-213-打家劫舍 2&lt;/p&gt;</description></item><item><title>实验-leetcode-295-数据流的中位数</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-295-%E6%95%B0%E6%8D%AE%E6%B5%81%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-295-%E6%95%B0%E6%8D%AE%E6%B5%81%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-295-数据流的中位数&lt;/p&gt;</description></item><item><title>实验-leetcode-32-最长有效括号</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-32-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-32-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-32-最长有效括号&lt;/p&gt;</description></item><item><title>实验-leetcode-33-搜索旋转排序数组</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-33-搜索旋转排序数组&lt;/p&gt;</description></item><item><title>实验-leetcode-33-搜索旋转排序数组</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：EXP-001：测试不同面粉对酸面包发酵的影响 或 Code-05：尝试用 Python Requests 库爬取动态网页&lt;/p&gt;</description></item><item><title>实验-leetcode-34-在排序数组中查找元素的第一个和最后一个位置.md</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-34-在排序数组中查找元素的第一个和最后一个位置.md&lt;/p&gt;</description></item><item><title>实验-leetcode-347-前 K 个高频元素</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-347-%E5%89%8Dk%E4%B8%AA%E9%AB%98%E9%A2%91%E5%85%83%E7%B4%A0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-347-%E5%89%8Dk%E4%B8%AA%E9%AB%98%E9%A2%91%E5%85%83%E7%B4%A0/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-347-前 K 个高频元素&lt;/p&gt;</description></item><item><title>实验-LeetCode-394-字符串解码</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-394-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-394-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-LeetCode-394-字符串解码&lt;/p&gt;</description></item><item><title>实验-leetcode-4-寻找两个正序数组的中位数</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-4-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-4-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-4-寻找两个正序数组的中位数&lt;/p&gt;</description></item><item><title>实验-leetcode-45-跳跃游戏2</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-45-%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F2/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-45-%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F2/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-45-跳跃游戏2&lt;/p&gt;</description></item><item><title>实验-leetcode-55-跳跃游戏</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-55-%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-55-%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-55-跳跃游戏&lt;/p&gt;</description></item><item><title>实验-leetcode-739-每日温度</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-739-%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-739-%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-739-每日温度&lt;/p&gt;</description></item><item><title>实验-leetcode-74-搜索二维矩阵</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-74-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-74-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-74-搜索二维矩阵&lt;/p&gt;</description></item><item><title>实验-leetcode-763-划分字母区间</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-763-%E5%88%92%E5%88%86%E5%AD%97%E6%AF%8D%E5%8C%BA%E9%97%B4/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-763-%E5%88%92%E5%88%86%E5%AD%97%E6%AF%8D%E5%8C%BA%E9%97%B4/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-763-划分字母区间&lt;/p&gt;</description></item><item><title>实验-leetcode-84-数组中的第 K 个最大元素</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-215-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%AC-k-%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-215-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%AC-k-%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-84-数组中的第 K 个最大元素&lt;/p&gt;</description></item><item><title>实验-leetcode84-柱状图中最大的矩形</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-84-%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-84-%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode84-柱状图中最大的矩形&lt;/p&gt;</description></item><item><title>leetcode-124-二叉树中的最大路径和</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode124%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode124%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：例如：leetcode-124-二叉树中的最大路径和&lt;/p&gt;</description></item><item><title>leetcode-79-单词搜索</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-79-%E5%8D%95%E8%AF%8D%E6%90%9C%E7%B4%A2/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-79-%E5%8D%95%E8%AF%8D%E6%90%9C%E7%B4%A2/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：leetcode-79-单词搜索&lt;/p&gt;</description></item><item><title>LeetCode-994-腐烂的橘子</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-994-%E8%85%90%E7%83%82%E7%9A%84%E6%A9%98%E5%AD%90/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-994-%E8%85%90%E7%83%82%E7%9A%84%E6%A9%98%E5%AD%90/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：LeetCode-994-腐烂的橘子&lt;/p&gt;</description></item><item><title>实验-leetcode-131-分割回文串</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-131-%E5%88%86%E5%89%B2%E5%9B%9E%E6%96%87%E4%B8%B2/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-131-%E5%88%86%E5%89%B2%E5%9B%9E%E6%96%87%E4%B8%B2/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-131-分割回文串&lt;/p&gt;</description></item><item><title>实验-leetcode-17-电话号码的字母组合</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-17-%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E7%9A%84%E5%AD%97%E6%AF%8D%E7%BB%84%E5%90%88/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-17-%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E7%9A%84%E5%AD%97%E6%AF%8D%E7%BB%84%E5%90%88/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-17-电话号码的字母组合&lt;/p&gt;</description></item><item><title>实验-leetcode-208-实现 Trie</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-208-%E5%AE%9E%E7%8E%B0trie/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-208-%E5%AE%9E%E7%8E%B0trie/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-208-实现 Trie&lt;/p&gt;</description></item><item><title>实验-leetcode-22-括号生成</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-22-%E6%8B%AC%E5%8F%B7%E7%94%9F%E6%88%90/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-22-%E6%8B%AC%E5%8F%B7%E7%94%9F%E6%88%90/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：实验-leetcode-22-括号生成&lt;/p&gt;</description></item><item><title>实验-leetcode-35-搜索插入位置</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-35-%E6%90%9C%E7%B4%A2%E6%8F%92%E5%85%A5%E4%BD%8D%E7%BD%AE/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-35-%E6%90%9C%E7%B4%A2%E6%8F%92%E5%85%A5%E4%BD%8D%E7%BD%AE/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-35-搜索插入位置&lt;/p&gt;</description></item><item><title>实验-leetcode-51-N 皇后</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-51-n-%E7%9A%87%E5%90%8E/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-51-n-%E7%9A%87%E5%90%8E/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode-51-N 皇后&lt;/p&gt;</description></item><item><title>实验-leetcode200-岛屿数量</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode200-%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode200-%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题： 实验-leetcode200-岛屿数量&lt;/p&gt;</description></item><item><title>实验-leetcode207-课程表</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode207-%E8%AF%BE%E7%A8%8B%E8%A1%A8/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode207-%E8%AF%BE%E7%A8%8B%E8%A1%A8/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode207-课程表&lt;/p&gt;</description></item><item><title>实验-leetcode39-组合总数</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-39-%E7%BB%84%E5%90%88%E6%80%BB%E6%95%B0/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-39-%E7%BB%84%E5%90%88%E6%80%BB%E6%95%B0/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode39-组合总数&lt;/p&gt;</description></item><item><title>实验-leetcode46-全排列</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode46-%E5%85%A8%E6%8E%92%E5%88%97/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode46-%E5%85%A8%E6%8E%92%E5%88%97/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode46-全排列&lt;/p&gt;</description></item><item><title>实验-leetcode78-子集</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode78-%E5%AD%90%E9%9B%86/</link><pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode78-%E5%AD%90%E9%9B%86/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-leetcode78-子集&lt;/p&gt;</description></item><item><title>实验 leetcode-236.二叉树的最近公共祖先</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</link><pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+&lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
+&lt;p&gt;实验编号/标题：例如：实验-二叉树的最近公共祖先&lt;/p&gt;</description></item><item><title>实验-leetcode-437-路径总和 3</title><link>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-437-%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-3/</link><pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-437-%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-3/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
 &lt;p&gt;实验编号/标题：实验-leetcode-437-路径总和 3&lt;/p&gt;</description></item><item><title>LLM-实验-自动调研 Agent (LangGraph + Plan-And-Execute)</title><link>https://blog.ans20xx.com/posts/llm-%E8%87%AA%E5%8A%A8%E8%B0%83%E7%A0%94agent-langgraph/</link><pubDate>Tue, 24 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/llm-%E8%87%AA%E5%8A%A8%E8%B0%83%E7%A0%94agent-langgraph/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
 &lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
 &lt;p&gt;实验编号/标题：例如：自动调研 Agent (LangGraph + Plan-And-Execute)&lt;/p&gt;</description></item><item><title>LLM-RAG-个人知识库助手</title><link>https://blog.ans20xx.com/posts/llm-rag-%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93%E5%8A%A9%E6%89%8B/</link><pubDate>Mon, 23 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/llm-rag-%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93%E5%8A%A9%E6%89%8B/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
@@ -4499,7 +5232,7 @@ mind.init(data);
 })();
 &lt;/script&gt;
 &lt;h1 id="附录"&gt;附录&lt;/h1&gt;
-&lt;p&gt;docker-componse.yml&lt;/p&gt;</description></item><item><title>从前序与中序遍历序列构造二叉树</title><link>https://blog.ans20xx.com/posts/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description>&lt;h1 id="从前序与中序遍历序列构造二叉树"&gt;从前序与中序遍历序列构造二叉树&lt;/h1&gt;
+&lt;p&gt;docker-componse.yml&lt;/p&gt;</description></item><item><title>从前序与中序遍历序列构造二叉树</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description>&lt;h1 id="从前序与中序遍历序列构造二叉树"&gt;从前序与中序遍历序列构造二叉树&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212211445004.png"&gt;
@@ -4582,7 +5315,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>二叉树展开为链表</title><link>https://blog.ans20xx.com/posts/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="二叉树展开为链表"&gt;二叉树展开为链表&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>二叉树展开为链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-114-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="二叉树展开为链表"&gt;二叉树展开为链表&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212205750201.png"&gt;
@@ -4592,7 +5325,7 @@ mind.init(data);
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
 &lt;p&gt;思路一：&lt;/p&gt;
-&lt;p&gt;维护一个全局指针 prev，表示已经处理好的部分的头节点。&lt;/p&gt;</description></item><item><title>二叉树的右视图</title><link>https://blog.ans20xx.com/posts/leetcode-199-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE/</link><pubDate>Wed, 11 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-199-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE/</guid><description>&lt;h1 id="二叉树的右视图"&gt;二叉树的右视图&lt;/h1&gt;
+&lt;p&gt;维护一个全局指针 prev，表示已经处理好的部分的头节点。&lt;/p&gt;</description></item><item><title>二叉树的右视图</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-199-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE/</link><pubDate>Wed, 11 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-199-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE/</guid><description>&lt;h1 id="二叉树的右视图"&gt;二叉树的右视图&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -4603,7 +5336,7 @@ mind.init(data);
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
 &lt;p&gt;思路 1：&lt;/p&gt;
-&lt;p&gt;层序遍历，用队列做 BFS，最后出列的就是最右边。&lt;/p&gt;</description></item><item><title>二叉搜索树中第 K 小的元素</title><link>https://blog.ans20xx.com/posts/leetcode-230-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%AD%E7%AC%AC-k-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/</link><pubDate>Wed, 11 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-230-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%AD%E7%AC%AC-k-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;层序遍历，用队列做 BFS，最后出列的就是最右边。&lt;/p&gt;</description></item><item><title>二叉搜索树中第 K 小的元素</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-230-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%AD%E7%AC%AC-k-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/</link><pubDate>Wed, 11 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-230-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%AD%E7%AC%AC-k-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/11/20260211221635002.png"&gt;
@@ -4791,7 +5524,7 @@ mind.init(data);
 &lt;/script&gt;
 &lt;h1 id="附录"&gt;附录&lt;/h1&gt;
 &lt;h2 id="缓存系统实战"&gt;缓存系统实战&lt;/h2&gt;
-&lt;p&gt;缓存系统实战 application.properties:&lt;/p&gt;</description></item><item><title>二叉树的层序遍历</title><link>https://blog.ans20xx.com/posts/leetcode-102-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-102-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86/</guid><description>&lt;h1 id="二叉树的层序遍历"&gt;二叉树的层序遍历&lt;/h1&gt;
+&lt;p&gt;缓存系统实战 application.properties:&lt;/p&gt;</description></item><item><title>二叉树的层序遍历</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-102-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-102-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86/</guid><description>&lt;h1 id="二叉树的层序遍历"&gt;二叉树的层序遍历&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -4867,7 +5600,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>二叉树的直径</title><link>https://blog.ans20xx.com/posts/leetcode-543-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%9B%B4%E5%BE%84/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-543-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%9B%B4%E5%BE%84/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>二叉树的直径</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-543-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%9B%B4%E5%BE%84/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-543-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%9B%B4%E5%BE%84/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206105147927.png"&gt;
@@ -4878,7 +5611,7 @@ mind.init(data);
 &lt;h2 id="solution"&gt;Solution&lt;/h2&gt;
 &lt;p&gt;The longest path through that node equals:&lt;/p&gt;
 &lt;p&gt;left subtree depth + right subtree depth.&lt;/p&gt;
-&lt;p&gt;the longest path must pass through some node as a highest point.&lt;/p&gt;</description></item><item><title>将有序数组转换为二叉搜索树</title><link>https://blog.ans20xx.com/posts/leetcode-108-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-108-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</guid><description>&lt;h1 id="将有序数组转换为二叉搜索树"&gt;将有序数组转换为二叉搜索树&lt;/h1&gt;
+&lt;p&gt;the longest path must pass through some node as a highest point.&lt;/p&gt;</description></item><item><title>将有序数组转换为二叉搜索树</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-108-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-108-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</guid><description>&lt;h1 id="将有序数组转换为二叉搜索树"&gt;将有序数组转换为二叉搜索树&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -4889,7 +5622,7 @@ mind.init(data);
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
 &lt;p&gt;A height-balance BST is achieved by always picking the &lt;mark&gt;middle element&lt;/mark&gt; as the root.&lt;/p&gt;
-&lt;p&gt;The left and right subtree sizes differ by at most 1.&lt;/p&gt;</description></item><item><title>验证二叉搜索树</title><link>https://blog.ans20xx.com/posts/leetcode-98-%E9%AA%8C%E8%AF%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-98-%E9%AA%8C%E8%AF%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</guid><description>&lt;h1 id="验证二叉搜索树"&gt;验证二叉搜索树&lt;/h1&gt;
+&lt;p&gt;The left and right subtree sizes differ by at most 1.&lt;/p&gt;</description></item><item><title>验证二叉搜索树</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-98-%E9%AA%8C%E8%AF%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-98-%E9%AA%8C%E8%AF%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</guid><description>&lt;h1 id="验证二叉搜索树"&gt;验证二叉搜索树&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -4945,7 +5678,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>148-排序链表</title><link>https://blog.ans20xx.com/posts/leetcode-148-%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-148-%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>148-排序链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-148-%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-148-%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205155727452.png"&gt;
@@ -5048,7 +5781,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>LRU 缓存</title><link>https://blog.ans20xx.com/posts/leetcode-146-lru-%E7%BC%93%E5%AD%98/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-146-lru-%E7%BC%93%E5%AD%98/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>LRU 缓存</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-146-lru-%E7%BC%93%E5%AD%98/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-146-lru-%E7%BC%93%E5%AD%98/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205165056614.png"&gt;
@@ -5211,7 +5944,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>对称二叉树</title><link>https://blog.ans20xx.com/posts/leetcode-101-%E5%AF%B9%E7%A7%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-101-%E5%AF%B9%E7%A7%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>对称二叉树</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-101-%E5%AF%B9%E7%A7%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-101-%E5%AF%B9%E7%A7%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205180135832.png"&gt;
@@ -5224,7 +5957,7 @@ mind.init(data);
 &lt;ol&gt;
 &lt;li&gt;值相等，且 left.left 对 right.right，left.right 对 right.left&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;bfs&lt;/p&gt;</description></item><item><title>二叉树的中序遍历</title><link>https://blog.ans20xx.com/posts/leetcode-94-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-94-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;bfs&lt;/p&gt;</description></item><item><title>二叉树的中序遍历</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-94-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-94-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205170202397.png"&gt;
@@ -5239,7 +5972,7 @@ mind.init(data);
 &lt;li&gt;访问当前答案&lt;/li&gt;
 &lt;li&gt;递归遍历右子树&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;迭代 + 栈解法&lt;/p&gt;</description></item><item><title>二叉树的最大深度</title><link>https://blog.ans20xx.com/posts/leetcode-104-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-104-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;迭代 + 栈解法&lt;/p&gt;</description></item><item><title>二叉树的最大深度</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-104-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-104-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205171041931.png"&gt;
@@ -5248,7 +5981,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;最大深度 = max(左子树深度, 右子树深度) + 1&lt;/p&gt;</description></item><item><title>翻转二叉树</title><link>https://blog.ans20xx.com/posts/leetcode-226-%E7%BF%BB%E8%BD%AC%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-226-%E7%BF%BB%E8%BD%AC%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;最大深度 = max(左子树深度, 右子树深度) + 1&lt;/p&gt;</description></item><item><title>翻转二叉树</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-226-%E7%BF%BB%E8%BD%AC%E4%BA%8C%E5%8F%89%E6%A0%91/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-226-%E7%BF%BB%E8%BD%AC%E4%BA%8C%E5%8F%89%E6%A0%91/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205175412654.png"&gt;
@@ -5300,7 +6033,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>合并 K 个升序链表</title><link>https://blog.ans20xx.com/posts/leetcode-23-%E5%90%88%E5%B9%B6-k-%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-23-%E5%90%88%E5%B9%B6-k-%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>合并 K 个升序链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-23-%E5%90%88%E5%B9%B6-k-%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</link><pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-23-%E5%90%88%E5%B9%B6-k-%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205161727262.png"&gt;
@@ -5455,7 +6188,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title> 2-两数相加</title><link>https://blog.ans20xx.com/posts/leetcode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/</guid><description>&lt;h1 id="两数相加"&gt;两数相加&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title> 2-两数相加</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/</guid><description>&lt;h1 id="两数相加"&gt;两数相加&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -5465,7 +6198,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;同时遍历两个链表 + 维护一个进位 carry。&lt;/p&gt;</description></item><item><title>141-环形链表</title><link>https://blog.ans20xx.com/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;同时遍历两个链表 + 维护一个进位 carry。&lt;/p&gt;</description></item><item><title>141-环形链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/04/20260204175751337.png"&gt;
@@ -5474,7 +6207,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;如果链表无环，fast 会先走到 null，循环结束。&lt;/p&gt;</description></item><item><title>142-环形链表 2</title><link>https://blog.ans20xx.com/posts/leetcode-142-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-2/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-142-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-2/</guid><description>&lt;h1 id="环形链表2"&gt;环形链表2&lt;/h1&gt;
+&lt;p&gt;如果链表无环，fast 会先走到 null，循环结束。&lt;/p&gt;</description></item><item><title>142-环形链表 2</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-142-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-2/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-142-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-2/</guid><description>&lt;h1 id="环形链表2"&gt;环形链表2&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -5489,7 +6222,7 @@ mind.init(data);
 &lt;li&gt;从相遇点定位入环点&lt;/li&gt;
 &lt;li&gt;把指针放在回头点，另外一个指针放在相遇点，两者每次都走一步，第一次相遇的就是入环点。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;从头到入环点的距离为 a，入环点到相遇点沿着环走的距离为 b。&lt;/p&gt;</description></item><item><title>k 个一组翻转链表</title><link>https://blog.ans20xx.com/posts/leetcode-25-k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-25-k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="k-个一组翻转链表"&gt;K 个一组翻转链表&lt;/h1&gt;
+&lt;p&gt;从头到入环点的距离为 a，入环点到相遇点沿着环走的距离为 b。&lt;/p&gt;</description></item><item><title>k 个一组翻转链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-25-k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-25-k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="k-个一组翻转链表"&gt;K 个一组翻转链表&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -5595,7 +6328,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>两两交换链表中的节点</title><link>https://blog.ans20xx.com/posts/leetcode-24-%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-24-%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>两两交换链表中的节点</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-24-%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-24-%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/04/20260204210851773.png"&gt;
@@ -5650,7 +6383,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>删除链表的倒数第 N 个节点</title><link>https://blog.ans20xx.com/posts/leetcode-19-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-n-%E4%B8%AA%E8%8A%82%E7%82%B9/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-19-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-n-%E4%B8%AA%E8%8A%82%E7%82%B9/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>删除链表的倒数第 N 个节点</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-19-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-n-%E4%B8%AA%E8%8A%82%E7%82%B9/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-19-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-n-%E4%B8%AA%E8%8A%82%E7%82%B9/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/04/20260204205911649.png"&gt;
@@ -5659,7 +6392,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;等价于找到正数第 len - n 个节点的前一个节点。&lt;/p&gt;</description></item><item><title>随机链表的复制</title><link>https://blog.ans20xx.com/posts/leetcode-138-%E9%9A%8F%E6%9C%BA%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-138-%E9%9A%8F%E6%9C%BA%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</guid><description>&lt;h1 id="随机链表的复制"&gt;随机链表的复制&lt;/h1&gt;
+&lt;p&gt;等价于找到正数第 len - n 个节点的前一个节点。&lt;/p&gt;</description></item><item><title>随机链表的复制</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-138-%E9%9A%8F%E6%9C%BA%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-138-%E9%9A%8F%E6%9C%BA%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</guid><description>&lt;h1 id="随机链表的复制"&gt;随机链表的复制&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -5762,7 +6495,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>21-合并两个有序链表</title><link>https://blog.ans20xx.com/posts/leetcode-21-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8/</link><pubDate>Tue, 03 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-21-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="合并两个有序链表"&gt;合并两个有序链表&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>21-合并两个有序链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-21-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8/</link><pubDate>Tue, 03 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-21-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="合并两个有序链表"&gt;合并两个有序链表&lt;/h1&gt;
 &lt;h2 id="题目"&gt;题目&lt;/h2&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
@@ -5772,7 +6505,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;每次从两个链表头取出更小的节点接到新链表后面。&lt;/p&gt;</description></item><item><title>反转链表</title><link>https://blog.ans20xx.com/posts/leetcode-206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="反转链表"&gt;反转链表&lt;/h1&gt;
+&lt;p&gt;每次从两个链表头取出更小的节点接到新链表后面。&lt;/p&gt;</description></item><item><title>反转链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="反转链表"&gt;反转链表&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/01/20260201105730731.png"&gt;
@@ -5849,7 +6582,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>回文链表</title><link>https://blog.ans20xx.com/posts/leetcode-234-%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-234-%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="回文链表"&gt;回文链表&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>回文链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-234-%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-234-%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="回文链表"&gt;回文链表&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/01/20260201112937345.png"&gt;
@@ -5960,7 +6693,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>搜索二维矩阵</title><link>https://blog.ans20xx.com/posts/leetcode-240-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5-2/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-240-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5-2/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>搜索二维矩阵</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-240-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5-2/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-240-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5-2/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/01/20260201102933912.png"&gt;
@@ -5969,7 +6702,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;从右上角 (0, n - 1) 作为起点走楼梯，因为：&lt;/p&gt;</description></item><item><title>相交链表</title><link>https://blog.ans20xx.com/posts/leetcode-160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;从右上角 (0, n - 1) 作为起点走楼梯，因为：&lt;/p&gt;</description></item><item><title>相交链表</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/01/20260201103920864.png"&gt;
@@ -5985,7 +6718,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;用两个指针 pA 指向 headA，pB 指向 headB，每次都走一步，当某个指针走到 null 时，让它跳到另外一个链表的头，直到相交。&lt;/p&gt;</description></item><item><title>旋转图像</title><link>https://blog.ans20xx.com/posts/leetcode-48-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-48-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;用两个指针 pA 指向 headA，pB 指向 headB，每次都走一步，当某个指针走到 null 时，让它跳到另外一个链表的头，直到相交。&lt;/p&gt;</description></item><item><title>旋转图像</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-48-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</link><pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-48-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/01/20260201095104129.png"&gt;
@@ -5994,7 +6727,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;思路一：两步变化，先转置再每行反转&lt;/p&gt;</description></item><item><title>螺旋矩阵</title><link>https://blog.ans20xx.com/posts/leetcode-54-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/</link><pubDate>Sat, 31 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-54-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/</guid><description>&lt;h1 id="螺旋矩阵"&gt;螺旋矩阵&lt;/h1&gt;
+&lt;p&gt;思路一：两步变化，先转置再每行反转&lt;/p&gt;</description></item><item><title>螺旋矩阵</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-54-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/</link><pubDate>Sat, 31 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-54-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/</guid><description>&lt;h1 id="螺旋矩阵"&gt;螺旋矩阵&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/31/20260131161356066.png"&gt;
@@ -6003,7 +6736,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;从外到内，按层遍历，一圈圈剥洋葱。&lt;/p&gt;</description></item><item><title>除了自身以外数组的乘积</title><link>https://blog.ans20xx.com/posts/leetcode-238-%E9%99%A4%E4%BA%86%E8%87%AA%E8%BA%AB%E4%BB%A5%E5%A4%96%E6%95%B0%E7%BB%84%E7%9A%84%E4%B9%98%E7%A7%AF/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-238-%E9%99%A4%E4%BA%86%E8%87%AA%E8%BA%AB%E4%BB%A5%E5%A4%96%E6%95%B0%E7%BB%84%E7%9A%84%E4%B9%98%E7%A7%AF/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;从外到内，按层遍历，一圈圈剥洋葱。&lt;/p&gt;</description></item><item><title>除了自身以外数组的乘积</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-238-%E9%99%A4%E4%BA%86%E8%87%AA%E8%BA%AB%E4%BB%A5%E5%A4%96%E6%95%B0%E7%BB%84%E7%9A%84%E4%B9%98%E7%A7%AF/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-238-%E9%99%A4%E4%BA%86%E8%87%AA%E8%BA%AB%E4%BB%A5%E5%A4%96%E6%95%B0%E7%BB%84%E7%9A%84%E4%B9%98%E7%A7%AF/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130213507145.png"&gt;
@@ -6179,7 +6912,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>和为 k 的子数组</title><link>https://blog.ans20xx.com/posts/leetcode-560-%E5%92%8C%E4%B8%BA-k-%E7%9A%84%E6%95%B0%E7%BB%84/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-560-%E5%92%8C%E4%B8%BA-k-%E7%9A%84%E6%95%B0%E7%BB%84/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>和为 k 的子数组</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-560-%E5%92%8C%E4%B8%BA-k-%E7%9A%84%E6%95%B0%E7%BB%84/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-560-%E5%92%8C%E4%B8%BA-k-%E7%9A%84%E6%95%B0%E7%BB%84/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130115530284.png"&gt;
@@ -6188,7 +6921,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
-&lt;p&gt;把子数组求和转换为前缀和差值计数。&lt;/p&gt;</description></item><item><title>滑动窗口最大值</title><link>https://blog.ans20xx.com/posts/leetcode-239-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-239-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;把子数组求和转换为前缀和差值计数。&lt;/p&gt;</description></item><item><title>滑动窗口最大值</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-239-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-239-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130121425871.png"&gt;
@@ -6197,7 +6930,7 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/p&gt;
 &lt;h2 id="单调队列"&gt;单调队列&lt;/h2&gt;
-&lt;p&gt;维护一个双端队列，里面存下标，让对应的值 nums[下标] 从队头到队尾单调递减：&lt;/p&gt;</description></item><item><title>最大数组和</title><link>https://blog.ans20xx.com/posts/leetcode-53-%E6%9C%80%E5%A4%A7%E6%95%B0%E7%BB%84%E5%92%8C/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-53-%E6%9C%80%E5%A4%A7%E6%95%B0%E7%BB%84%E5%92%8C/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;维护一个双端队列，里面存下标，让对应的值 nums[下标] 从队头到队尾单调递减：&lt;/p&gt;</description></item><item><title>最大数组和</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-53-%E6%9C%80%E5%A4%A7%E6%95%B0%E7%BB%84%E5%92%8C/</link><pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-53-%E6%9C%80%E5%A4%A7%E6%95%B0%E7%BB%84%E5%92%8C/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130170246629.png"&gt;
@@ -6207,7 +6940,7 @@ mind.init(data);
 &lt;/p&gt;
 &lt;h2 id="思路"&gt;思路&lt;/h2&gt;
 &lt;p&gt;思路 1 ：动态规划&lt;/p&gt;
-&lt;p&gt;dp[i] = 以 i 位置结尾的最大子数组和&lt;/p&gt;</description></item><item><title>无重复字符的最长子串</title><link>https://blog.ans20xx.com/posts/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</guid><description>无重复字符的最长子串</description></item><item><title>重启人生</title><link>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</guid><description>&lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;p&gt;dp[i] = 以 i 位置结尾的最大子数组和&lt;/p&gt;</description></item><item><title>无重复字符的最长子串</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</guid><description>无重复字符的最长子串</description></item><item><title>重启人生</title><link>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</guid><description>&lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
 &lt;script type="application/json" id="me_0_src"&gt;
 "\"- 重启人生\\n - 重要\\n - 压力大时，需要运动\\n - 不需要焦虑，没有天塌下来的事\\n - 生活\\n - 早晨\\n - 早起喝一杯水，控制在 8:00 - 9:00 起床\\n - 早晨散步接触阳光，买早餐或者自己做早餐\\n - 吹头发\\n - 整理仪表\\n - 用纸随便写一些东西，一页就好\\n - 中午\\n - 中午午睡不要在床上睡，很容易睡过头\\n - 中午时间容易浪费，建议早睡，睡后散步\\n - 将焦虑写在纸上，不要带到睡眠\\n - 将明天的 3 条待办写在纸上\\n - 下午\\n - 下午是工作的黄金时间，休息的垃圾时间，不要浪费，重要的工作要在下午解决\\n - 睡眠\\n - 睡前打扫卫生\\n - 睡前喝蛋白粉 + 肌酸\\n - 睡前拉伸肌肉\\n - 中午睡眠 20 分钟\\n - 洗面奶清洁\\n - 贴口呼吸贴\\n - 卫生\\n - 东西放在固定的地方\\n - 空调遥控器，床头柜\\n - 手机，床头柜\\n - 耳机，床头柜\\n - 梳子、剃须刀，梳妆台\\n - 东西拿完后放在固定的地方\\n - 小便要抖干净\\n - 经常刷鞋\\n - 垃圾及时丢到垃圾桶\\n - 鞋子放在鞋架，第二天穿的鞋及时晾晒\\n - 床上不要放不必要的东西\\n - 身体状态\\n - 手脚冰冷要及时注意保暖\\n - 运动\\n - 保持散步，每天关闭活动圆环\\n - 经常游泳\\n - 尝试纠正脊椎侧弯，每天吊一会单杠\\n - 养成健身房健身的习惯\\n - 心理\\n - 任何时候，只要身体没有疲劳，就应该立即行动\\n - 不要焦虑内耗\\n - 焦虑的时候，戴上耳机去跑步\\n - 经常和 chatgpt 对话\\n - 社交\\n - 积极了解和整理当下热点话题\\n - 把嗯、哦换成清晰短句\\n - 1 - 3s 的眼神接触 + 微表情\\n - 需求直给，减少内心纠结\\n - 适当接话，不要逃避和宕机\\n - 避免成为透明人，也不抢戏\\n - 按照练习而不是表演的心态和别人交流，每次交流都是完成一个小目标\\n - 将重心放在自己而不是别人的感受上面\\n - 聊天万能公式 = 观察 + 具体提问/小感叹 + (可选)递话茬\\n - 观察：正在发生的事情，例如排队、电梯\\n - 具体提问：基于观察给出具体提问，不要大而空泛\\n - 放弃完美接话\\n - 表达共鸣 + 一点细节\\n - 不硬接不懂的话题\\n - 不过度解读\\n - 不要使用哦、嗯、啊、好的，试着带点内容\\n - 狭小空间\\n - 眼神接触 + 点头/微笑 + 简单问候 + 不看手机 + 不硬聊\\n - 不想参与对话\\n - 直接 + 礼貌 + 简短拒绝 + 不编复杂借口\\n - 线上沟通\\n - 收到消息，不秒回，给自己一个缓冲\\n - 回复带表单和语气词，例如 ～、哈、谢谢\\n - 收到了 @ ，不装死，简单回复“收到，在处理了“。\\n - 休息\\n - 听一听播客\\n - 休息时不要玩手机，统计一天的手机使用时长\\n - 除了睡觉时间不要躺在床上\\n - 像安排会议一样安排娱乐，5 分钟，不受外界干扰\\n - 工作\\n - 建立 SOP\\n - 目标是什么，知道具体为什么做\\n - 要有核心步骤和运行标准\\n - 包含注意事项\\n - 跨部门合作\\n - 目标：解决跨部门对接不敢问、问不清、跟进无上下文的痛点\\n - 核心步骤\\n - 对接前准备\\n - 明确三个核心信息：需求信息、截止时间、交付标准\\n - 找好对接人：直属领导、项目经理、部门同事\\n - 对接时\\n - 问候+背景+需求+标准+时间\\n - 主动问反馈时间\\n - 沟通后\\n - 发文字确认：文字留痕\\n - 对接信息记录到任务协作记录表（对接人、需求、截止时间、反馈节点）\\n - 跟进与闭环\\n - 到时间没反馈，主动询问\\n - 按照约定时间跟进进度，完成后发感谢消息，同时更新协作记录表为已完成\\n - 工作周报 SOP\\n - 目标：避免周报写的像流水账、方案漏关键信息、重复修改，让成果输出有逻辑、符合要求，避免返工\\n - 核心步骤\\n - 写前收集：每周五上午 10 点\\n - 收集 3 类素材：本周完成的任务，任务对应的数据、遇到的问题\\n - 参考公司流程框架\\n - 撰写内容\\n - 本周工作成果：重要程度排序，不说做什么，要说做成了什么\\n - 数据汇总：清晰直观\\n - 问题与改进：不只说问题，要说问题 + 改进思路\\n - 下周计划：优先级排列\\n - 自查\\n - 数据是否准确\\n - 逻辑是否清晰\\n - 任务是否有漏\\n - 提交和反馈\\n - 邮件发直属领导\\n - 领导反馈，记录需要改进的点，\\n - 进度和风险及时和领导同步\\n - 养成专注的习惯，尽量进入心流状态\\n - 拉齐会议前要有议程，会议结束后要有总结并同步到群内，会议前记得开启会议录制\\n - 不要直接答应别人的要求，学会拒绝\\n - 做事情前期给出明确的时间点\\n - 学会排期和估时\\n - 坐姿端正，不要翘二郎腿\\n - 学会拆解任务\\n - 使用番茄时钟，5 分钟进行时间审计，制定 SOP 的目标\\n - 营养\\n - 购买鱼油、复合维生素、锌补剂\\n - 记录\\n - 每日进行复盘，建一个文件夹，将每天做的事情记录下来\\n - 每天早晨进行记录想法\\n - 投资\\n - 定投纳指 + 标普 + 上证 + 沪深\\n - 学习\\n - 使用费曼学习法\\n - 使用思维导图\\n - 学习演讲能力\\n - 学习编写文档的能力\\n - 学习沟通能力\\n - 学习唱歌、简单舞蹈\\n - 学习聚会小游戏\\n - 决策\\n - 决策前要深思熟虑，重大决定不轻易下达\\n - 购物\\n - 极简主义，不买不需要的东西\""
 &lt;/script&gt;
@@ -6289,7 +7022,7 @@ return;
 const mind = new ME({ el: "#" + hostId });
 mind.init(data);
 })();
-&lt;/script&gt;</description></item><item><title>找到字符串中所有字母异位词</title><link>https://blog.ans20xx.com/posts/leetcode-483-%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/</link><pubDate>Wed, 28 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-483-%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/</guid><description>找到字符串中所有字母异位词</description></item><item><title>clash 规则配置</title><link>https://blog.ans20xx.com/posts/clash-%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/clash-%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE/</guid><description>clas 规则配置</description></item><item><title>合并区间</title><link>https://blog.ans20xx.com/posts/leetcode-56-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-56-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/</guid><description>&lt;h1 id="合并区间"&gt;合并区间&lt;/h1&gt;
+&lt;/script&gt;</description></item><item><title>找到字符串中所有字母异位词</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-483-%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/</link><pubDate>Wed, 28 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-483-%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/</guid><description>找到字符串中所有字母异位词</description></item><item><title>clash 规则配置</title><link>https://blog.ans20xx.com/posts/clash-%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/clash-%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE/</guid><description>clas 规则配置</description></item><item><title>合并区间</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-56-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-56-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/</guid><description>&lt;h1 id="合并区间"&gt;合并区间&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130174535658.png"&gt;
@@ -6535,7 +7268,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>基金</title><link>https://blog.ans20xx.com/posts/%E5%9F%BA%E9%87%91/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%9F%BA%E9%87%91/</guid><description>基金学习</description></item><item><title>矩阵置零</title><link>https://blog.ans20xx.com/posts/leetcode-73-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-73-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/</guid><description>&lt;p&gt;
+&lt;/div&gt;</description></item><item><title>基金</title><link>https://blog.ans20xx.com/posts/%E5%9F%BA%E9%87%91/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%9F%BA%E9%87%91/</guid><description>基金学习</description></item><item><title>矩阵置零</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-73-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-73-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/</guid><description>&lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130231609001.png"&gt;
 &lt;img loading="lazy" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130231609001.png" alt="" /&gt;
@@ -6653,7 +7386,7 @@ mind.init(data);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>轮转数组</title><link>https://blog.ans20xx.com/posts/leetcode-189-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-189-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/</guid><description>轮转数组</description></item><item><title>缺失的第一个正数</title><link>https://blog.ans20xx.com/posts/leetcode-41-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-41-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;/div&gt;</description></item><item><title>轮转数组</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-189-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-189-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/</guid><description>轮转数组</description></item><item><title>缺失的第一个正数</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-41-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-41-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130220510700.png"&gt;
@@ -6666,7 +7399,7 @@ mind.init(data);
 &lt;ul&gt;
 &lt;li&gt;要找的答案一定在 [1, n+1] 里面。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;把数组当做一个哈希表，值 x 放在 x - 1 的位置。&lt;/p&gt;</description></item><item><title>最小覆盖子串</title><link>https://blog.ans20xx.com/posts/leetcode-76-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-76-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
+&lt;p&gt;把数组当做一个哈希表，值 x 放在 x - 1 的位置。&lt;/p&gt;</description></item><item><title>最小覆盖子串</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-76-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/</link><pubDate>Tue, 27 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-76-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/</guid><description>&lt;h1 id="题目"&gt;题目&lt;/h1&gt;
 &lt;p&gt;
 &lt;div class="post-img-view"&gt;
 &lt;a data-fancybox="" href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130161211795.png"&gt;
@@ -7037,6 +7770,6 @@ mind.init(data);
 &lt;/div&gt;
 &lt;/div&gt;</description></item><item><title>mindmap 测试</title><link>https://blog.ans20xx.com/posts/mindmap/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mindmap/</guid><description>mindmap 测试</description></item><item><title>新加坡攻略</title><link>https://blog.ans20xx.com/posts/%E6%96%B0%E5%8A%A0%E5%9D%A1%E6%94%BB%E7%95%A5/</link><pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%96%B0%E5%8A%A0%E5%9D%A1%E6%94%BB%E7%95%A5/</guid><description>新加坡攻略</description></item><item><title>拉伸</title><link>https://blog.ans20xx.com/posts/%E6%8B%89%E4%BC%B8/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8B%89%E4%BC%B8/</guid><description>拉伸训练</description></item><item><title>新 mac 安装软件</title><link>https://blog.ans20xx.com/posts/mac%E8%BD%AF%E4%BB%B6/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mac%E8%BD%AF%E4%BB%B6/</guid><description>新 mac 安装软件</description></item><item><title>哑铃训练</title><link>https://blog.ans20xx.com/posts/%E5%93%91%E9%93%83%E8%AE%AD%E7%BB%83/</link><pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%93%91%E9%93%83%E8%AE%AD%E7%BB%83/</guid><description>哑铃训练</description></item><item><title>人生经验</title><link>https://blog.ans20xx.com/posts/%E6%83%B3%E6%B3%95%E6%9A%82%E5%AD%98/</link><pubDate>Wed, 05 Nov 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%83%B3%E6%B3%95%E6%9A%82%E5%AD%98/</guid><description>暂存一些想法</description></item><item><title>SideCar 模式</title><link>https://blog.ans20xx.com/posts/sidecar-%E6%A8%A1%E5%BC%8F/</link><pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/sidecar-%E6%A8%A1%E5%BC%8F/</guid><description>Sidecar 模式</description></item><item><title>API 分页</title><link>https://blog.ans20xx.com/posts/api%E5%88%86%E9%A1%B5/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api%E5%88%86%E9%A1%B5/</guid><description>API 分页</description></item><item><title>API 架构风格</title><link>https://blog.ans20xx.com/posts/api-%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api-%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC/</guid><description>API 架构风格</description></item><item><title>API 网关&amp;Service Mesh</title><link>https://blog.ans20xx.com/posts/api-%E7%BD%91%E5%85%B3service-mesh/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/api-%E7%BD%91%E5%85%B3service-mesh/</guid><description>API 网关和 Service Mesh</description></item><item><title>Git 流程</title><link>https://blog.ans20xx.com/posts/git-%E6%B5%81%E7%A8%8B/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/git-%E6%B5%81%E7%A8%8B/</guid><description>Git 流程</description></item><item><title>Nosql 原理</title><link>https://blog.ans20xx.com/posts/nosql/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/nosql/</guid><description>Nosql 原理</description></item><item><title>OAuth2 流程</title><link>https://blog.ans20xx.com/posts/oauth2/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/oauth2/</guid><description>OAuth2 流程</description></item><item><title>短链服务</title><link>https://blog.ans20xx.com/posts/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1/</guid><description>短链服务</description></item><item><title>缓存系统</title><link>https://blog.ans20xx.com/posts/%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/</guid><description>缓存系统</description></item><item><title>技术博客</title><link>https://blog.ans20xx.com/posts/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/</guid><description>技术博客</description></item><item><title>软件设计原则</title><link>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</guid><description>软件设计原则</description></item><item><title>数据管道</title><link>https://blog.ans20xx.com/posts/%E6%95%B0%E6%8D%AE%E7%AE%A1%E9%81%93/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%95%B0%E6%8D%AE%E7%AE%A1%E9%81%93/</guid><description>数据管道</description></item><item><title>系统粗估</title><link>https://blog.ans20xx.com/posts/%E7%B3%BB%E7%BB%9F%E7%B2%97%E4%BC%B0/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E7%B3%BB%E7%BB%9F%E7%B2%97%E4%BC%B0/</guid><description>系统粗估</description></item><item><title>云原生</title><link>https://blog.ans20xx.com/posts/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BA%91%E5%8E%9F%E7%94%9F/</guid><description>云原生</description></item><item><title>客户端架构模式</title><link>https://blog.ans20xx.com/posts/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9E%B6%E6%9E%84/</link><pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9E%B6%E6%9E%84/</guid><description>客户端架构模式</description></item><item><title>如何进入心流</title><link>https://blog.ans20xx.com/posts/%E5%BF%83%E6%B5%81/</link><pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%BF%83%E6%B5%81/</guid><description>整理如何进入心流状态</description></item><item><title>Linux 提效</title><link>https://blog.ans20xx.com/posts/linux%E6%8F%90%E6%95%88/</link><pubDate>Mon, 08 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux%E6%8F%90%E6%95%88/</guid><description>记录 Linux 常见的提效操作</description></item><item><title>技术文档</title><link>https://blog.ans20xx.com/posts/uml/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/uml/</guid><description>整理常用的技术文档操作</description></item><item><title>软件包管理</title><link>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/</guid><description>整理常见系统软件包管理软件的用法</description></item><item><title>Docker 相关操作</title><link>https://blog.ans20xx.com/posts/docker/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/docker/</guid><description>整理常用的 Docker 操作</description></item><item><title>Linux 文本操作</title><link>https://blog.ans20xx.com/posts/linux-%E6%96%87%E6%9C%AC%E6%93%8D%E4%BD%9C/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E6%96%87%E6%9C%AC%E6%93%8D%E4%BD%9C/</guid><description>整理常用的 Linux 文本操作</description></item><item><title>Linux 文件操作</title><link>https://blog.ans20xx.com/posts/linux-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</guid><description>整理常用的 Linux 文件操作</description></item><item><title>VIM 相关操作</title><link>https://blog.ans20xx.com/posts/vim%E6%8B%BE%E9%81%97/</link><pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/vim%E6%8B%BE%E9%81%97/</guid><description>整理常用的 VIM 操作</description></item><item><title>RayCast 操作</title><link>https://blog.ans20xx.com/posts/raycast%E6%93%8D%E4%BD%9C/</link><pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/raycast%E6%93%8D%E4%BD%9C/</guid><description>常用 RayCast 操作</description></item><item><title>GoLang 开发环境配置</title><link>https://blog.ans20xx.com/posts/go-setup/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-setup/</guid><description>配置 Golang 开发环境</description></item><item><title>常用 Go 命令</title><link>https://blog.ans20xx.com/posts/%E5%B8%B8%E7%94%A8go%E5%91%BD%E4%BB%A4/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%B8%B8%E7%94%A8go%E5%91%BD%E4%BB%A4/</guid><description>常用 Go 命令</description></item><item><title>常用快捷键</title><link>https://blog.ans20xx.com/posts/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/</link><pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/</guid><description>整理常用命令行快捷键</description></item><item><title>Linux 虚拟机安装</title><link>https://blog.ans20xx.com/posts/linux-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/</link><pubDate>Fri, 22 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/linux-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/</guid><description>整理常用在 Mac 上安装 Linux 虚拟机的过程</description></item><item><title>SSH 相关</title><link>https://blog.ans20xx.com/posts/ssh%E7%9B%B8%E5%85%B3/</link><pubDate>Fri, 22 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ssh%E7%9B%B8%E5%85%B3/</guid><description>整理常用的 SSH 操作</description></item><item><title>Go 开发拾遗</title><link>https://blog.ans20xx.com/posts/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/</link><pubDate>Thu, 21 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/</guid><description>Go 开发拾遗</description></item><item><title>概率统计</title><link>https://blog.ans20xx.com/posts/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</link><pubDate>Sun, 03 Aug 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</guid><description>程序员需要知道的数学知识-概率统计篇</description></item><item><title>实验-肩颈拉伸</title><link>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C-%E8%82%A9%E9%A2%88%E6%8B%89%E4%BC%B8/</link><pubDate>Tue, 25 Feb 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C-%E8%82%A9%E9%A2%88%E6%8B%89%E4%BC%B8/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
 &lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
-&lt;p&gt;实验编号/标题：实验-肩颈拉伸&lt;/p&gt;</description></item><item><title>接雨水</title><link>https://blog.ans20xx.com/posts/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>接雨水</description></item><item><title>三数之和</title><link>https://blog.ans20xx.com/posts/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</guid><description>三数之和</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</guid><description>移动零</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</guid><description>移动零</description></item><item><title>字母异位词分组</title><link>https://blog.ans20xx.com/posts/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description>字母异位词分组</description></item><item><title>最长连续序列</title><link>https://blog.ans20xx.com/posts/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid><description>最长连续序列</description></item><item><title>容器类</title><link>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</link><pubDate>Sat, 11 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</guid><description>关于容器的一些心得体会</description></item><item><title>业务开发的技术成长 15 业务编程如何进行通用性抽象</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</link><pubDate>Tue, 22 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</guid><description>业务开发的技术成长-15-业务编程如何进行通用性抽象</description></item><item><title>业务开发的技术成长 14 源码分享以及如何通过本项目学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</link><pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</guid><description>源码分享以及如何通过本项目学习</description></item><item><title>业务开发的技术成长 10 出入库领域分析与代码实战</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</guid><description>出入库领域分析与代码实战</description></item><item><title>业务开发的技术成长 11 订单领域设计及代码实践</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</guid><description>订单领域设计及代码实践</description></item><item><title>业务开发的技术成长 12 业务开发代码如何简洁统一</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</guid><description>业务开发代码如何简洁统一</description></item><item><title>业务开发的技术成长 13 发票系统需求分析及领域设计</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</guid><description>发票系统需求分析及领域设计</description></item><item><title>业务开发的技术成长 9 数据校验深入学习及如何高效进行学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</guid><description>数据校验深入学习及如何高效进行学习</description></item><item><title>业务开发的技术成长 8 领域开发产品录入代码演示</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</link><pubDate>Fri, 11 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</guid><description>领域开发产品录入</description></item><item><title>业务开发的技术成长 7 如何更好的理解登录</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</link><pubDate>Thu, 10 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</guid><description>如何更好的理解登录</description></item><item><title>业务开发的技术成长 6 中间件建设之统一权限集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</link><pubDate>Tue, 08 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</guid><description>中间件建设之统一权限集成</description></item><item><title>业务开发的技术成长 5 中间件建设之通用文件集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</link><pubDate>Mon, 07 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</guid><description>中间件建设之通用文件集成</description></item><item><title>业务开发的技术成长 1 Maven 环境配置</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</guid><description>关于Java项目Maven环境配置</description></item><item><title>业务开发的技术成长 2 如何打造高效的学习环境</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</guid><description>如何打造高效的学习环境</description></item><item><title>业务开发的技术成长 3 技术架构及如何快速开发技巧</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</guid><description>技术架构及如何快速开发技巧</description></item><item><title>业务开发的技术成长 4 代码生成器原理</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</guid><description>代码生成器原理</description></item><item><title>整洁代码之注释篇</title><link>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</link><pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</guid><description>关于如何写好注释</description></item><item><title>Diagram Support</title><link>https://blog.ans20xx.com/posts/diagram-support/</link><pubDate>Wed, 31 Mar 2021 13:11:22 +0800</pubDate><guid>https://blog.ans20xx.com/posts/diagram-support/</guid><description>&lt;p&gt;Eureka supports the rendering of diagrams by using Mermaid.&lt;/p&gt;</description></item><item><title>Math Support</title><link>https://blog.ans20xx.com/posts/math-support/</link><pubDate>Fri, 20 Nov 2020 22:52:56 +0800</pubDate><guid>https://blog.ans20xx.com/posts/math-support/</guid><description>&lt;p&gt;Eureka supports the rendering of mathematical formulas by using KaTeX.&lt;/p&gt;</description></item><item><title>Featured Image</title><link>https://blog.ans20xx.com/posts/featured-image/</link><pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/featured-image/</guid><description>Post with featured image.</description></item><item><title>Markdown Syntax Guide</title><link>https://blog.ans20xx.com/posts/markdown-syntax/</link><pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/markdown-syntax/</guid><description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description></item><item><title>Emoji Support</title><link>https://blog.ans20xx.com/posts/emoji-support/</link><pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/emoji-support/</guid><description>Guide to emoji usage in Hugo</description></item><item><title/><link>https://blog.ans20xx.com/posts/test/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/test/</guid><description>&lt;h1 id="实验标题"&gt;实验标题&lt;/h1&gt;
+&lt;p&gt;实验编号/标题：实验-肩颈拉伸&lt;/p&gt;</description></item><item><title>接雨水</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-42-%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>接雨水</description></item><item><title>三数之和</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</guid><description>三数之和</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/</guid><description>移动零</description></item><item><title>移动零</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</guid><description>移动零</description></item><item><title>字母异位词分组</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description>字母异位词分组</description></item><item><title>最长连续序列</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</link><pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-128-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid><description>最长连续序列</description></item><item><title>容器类</title><link>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</link><pubDate>Sat, 11 Jan 2025 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%B9%E5%99%A8/</guid><description>关于容器的一些心得体会</description></item><item><title>业务开发的技术成长 15 业务编程如何进行通用性抽象</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</link><pubDate>Tue, 22 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-15-%E4%B8%9A%E5%8A%A1%E7%BC%96%E7%A8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E7%94%A8%E6%80%A7%E6%8A%BD%E8%B1%A1/</guid><description>业务开发的技术成长-15-业务编程如何进行通用性抽象</description></item><item><title>业务开发的技术成长 14 源码分享以及如何通过本项目学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</link><pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-14-%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</guid><description>源码分享以及如何通过本项目学习</description></item><item><title>业务开发的技术成长 10 出入库领域分析与代码实战</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-10-%E5%87%BA%E5%85%A5%E5%BA%93%E9%A2%86%E5%9F%9F%E5%88%86%E6%9E%90%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98/</guid><description>出入库领域分析与代码实战</description></item><item><title>业务开发的技术成长 11 订单领域设计及代码实践</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-11-%E8%AE%A2%E5%8D%95%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</guid><description>订单领域设计及代码实践</description></item><item><title>业务开发的技术成长 12 业务开发代码如何简洁统一</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-12-%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81%E5%A6%82%E4%BD%95%E7%AE%80%E6%B4%81%E7%BB%9F%E4%B8%80/</guid><description>业务开发代码如何简洁统一</description></item><item><title>业务开发的技术成长 13 发票系统需求分析及领域设计</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-13-%E5%8F%91%E7%A5%A8%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%8F%8A%E9%A2%86%E5%9F%9F%E8%AE%BE%E8%AE%A1/</guid><description>发票系统需求分析及领域设计</description></item><item><title>业务开发的技术成长 9 数据校验深入学习及如何高效进行学习</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</link><pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-9-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%BF%9B%E8%A1%8C%E5%AD%A6%E4%B9%A0/</guid><description>数据校验深入学习及如何高效进行学习</description></item><item><title>业务开发的技术成长 8 领域开发产品录入代码演示</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</link><pubDate>Fri, 11 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-8-%E9%A2%86%E5%9F%9F%E5%BC%80%E5%8F%91%E4%BA%A7%E5%93%81%E5%BD%95%E5%85%A5%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</guid><description>领域开发产品录入</description></item><item><title>业务开发的技术成长 7 如何更好的理解登录</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</link><pubDate>Thu, 10 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-7-%E5%A6%82%E4%BD%95%E6%9B%B4%E5%A5%BD%E7%9A%84%E7%90%86%E8%A7%A3%E7%99%BB%E5%BD%95/</guid><description>如何更好的理解登录</description></item><item><title>业务开发的技术成长 6 中间件建设之统一权限集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</link><pubDate>Tue, 08 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-6-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E7%BB%9F%E4%B8%80%E6%9D%83%E9%99%90%E9%9B%86%E6%88%90/</guid><description>中间件建设之统一权限集成</description></item><item><title>业务开发的技术成长 5 中间件建设之通用文件集成</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</link><pubDate>Mon, 07 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-5-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%BB%BA%E8%AE%BE%E4%B9%8B%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E9%9B%86%E6%88%90/</guid><description>中间件建设之通用文件集成</description></item><item><title>业务开发的技术成长 1 Maven 环境配置</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-1-maven-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</guid><description>关于Java项目Maven环境配置</description></item><item><title>业务开发的技术成长 2 如何打造高效的学习环境</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-2-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</guid><description>如何打造高效的学习环境</description></item><item><title>业务开发的技术成长 3 技术架构及如何快速开发技巧</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-3-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</guid><description>技术架构及如何快速开发技巧</description></item><item><title>业务开发的技术成长 4 代码生成器原理</title><link>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</link><pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF/%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF-4-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%9F%E7%90%86/</guid><description>代码生成器原理</description></item><item><title>整洁代码之注释篇</title><link>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</link><pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E7%AC%94%E8%AE%B04/</guid><description>关于如何写好注释</description></item><item><title>Diagram Support</title><link>https://blog.ans20xx.com/posts/diagram-support/</link><pubDate>Wed, 31 Mar 2021 13:11:22 +0800</pubDate><guid>https://blog.ans20xx.com/posts/diagram-support/</guid><description>&lt;p&gt;Eureka supports the rendering of diagrams by using Mermaid.&lt;/p&gt;</description></item><item><title>Math Support</title><link>https://blog.ans20xx.com/posts/math-support/</link><pubDate>Fri, 20 Nov 2020 22:52:56 +0800</pubDate><guid>https://blog.ans20xx.com/posts/math-support/</guid><description>&lt;p&gt;Eureka supports the rendering of mathematical formulas by using KaTeX.&lt;/p&gt;</description></item><item><title>Featured Image</title><link>https://blog.ans20xx.com/posts/featured-image/</link><pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/featured-image/</guid><description>Post with featured image.</description></item><item><title>Markdown Syntax Guide</title><link>https://blog.ans20xx.com/posts/markdown-syntax/</link><pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/markdown-syntax/</guid><description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description></item><item><title>Emoji Support</title><link>https://blog.ans20xx.com/posts/emoji-support/</link><pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/emoji-support/</guid><description>Guide to emoji usage in Hugo</description></item><item><title/><link>https://blog.ans20xx.com/posts/test/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/test/</guid><description>&lt;h1 id="实验标题"&gt;实验标题&lt;/h1&gt;
 &lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
 &lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;</description></item></channel></rss>
