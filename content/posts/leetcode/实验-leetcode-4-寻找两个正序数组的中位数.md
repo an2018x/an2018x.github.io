@@ -98,7 +98,7 @@ class Solution {
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         if (nums1.length > nums2.length) {
-            return findMedianSortedArrays(nums1, nums2);
+            return findMedianSortedArrays(nums2, nums1);
         }
 
         int m = nums1.length;
@@ -107,7 +107,7 @@ class Solution {
         int left = 0, right = m;
 
         while (left < right) {
-            int i = (left + rigth) >> 1;
+            int i = (left + right) >> 1;
             int j = totalLeft - i;
 
             if (nums1[i] < nums2[j-1]) {
@@ -117,6 +117,7 @@ class Solution {
             }
         }
 
+        int i = left, j = totalLeft - i;
         int nums1LeftMax = (i == 0) ? Integer.MIN_VALUE : nums1[i - 1];
         int nums1RightMin = (i == m) ? Integer.MAX_VALUE : nums1[i];
         int nums2LeftMax = (j == 0) ? Integer.MIN_VALUE : nums2[j - 1];
