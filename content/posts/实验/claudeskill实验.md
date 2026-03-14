@@ -107,16 +107,11 @@ If the content is a technical concept, provide a short interview-style answer.
 ## 观察到的现象：
 
 1. 查看生效的 skills: /skills
-
-![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314161640967.png)
-
+    ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314161640967.png)
 2. 不主动指定 skills
-
-![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314162814086.png)
-
+    ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314162814086.png)
 3. 主动指定 skills
-
-![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314162838740.png)
+    ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314162838740.png)
 
 ## 产出物的样子（附截图/照片）。
 
