@@ -1,0 +1,665 @@
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>可参考的ClaudeCode Skills | 安橙的博客</title><meta name=keywords content><meta name=description content='/grill-me
+
+不断修改计划细节
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+---
+name: grill-me
+description: Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
+---
+
+Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
+
+If a question can be answered by exploring the codebase, explore the codebase instead.
+
+
+/write-a-prd
+
+将对话转化为产品稿子'><meta name=author content="map[name:An]"><link rel=canonical href=https://blog.ans20xx.com/posts/%E5%8F%AF%E5%8F%82%E8%80%83%E7%9A%84claudeskills/><link crossorigin=anonymous href=/assets/css/stylesheet.f4fedab9d53412ea63bf634d03c801676875fe6531a3812debcc3a7c6610af14.css integrity="sha256-9P7audU0Eupjv2NNA8gBZ2h1/mUxo4Et68w6fGYQrxQ=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/%E5%8F%AF%E5%8F%82%E8%80%83%E7%9A%84claudeskills/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css media=print onload='this.media="all"'><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.css><script src=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.iife.js></script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/ accesskey=h title="安橙的博客 (Alt + H)">安橙的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">可参考的ClaudeCode Skills</h1><div class=post-meta><span title='2026-03-18 00:00:00 +0000 UTC'>三月 18, 2026</span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#grill-me aria-label=/grill-me>/grill-me</a></li><li><a href=#write-a-prd aria-label=/write-a-prd>/write-a-prd</a></li><li><a href=#prd-to-issue aria-label=/prd-to-issue>/prd-to-issue</a></li><li><a href=#tdd aria-label=/tdd>/tdd</a></li><li><a href=#improve-codebase-architecture aria-label=/improve-codebase-architecture>/improve-codebase-architecture</a></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><h1 id=grill-me>/grill-me<a hidden class=anchor aria-hidden=true href=#grill-me>#</a></h1><blockquote><p>不断修改计划细节</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-md data-lang=md><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>name: grill-me
+</span></span><span class=line><span class=cl>description: Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions &#34;grill me&#34;.
+</span></span><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>If a question can be answered by exploring the codebase, explore the codebase instead.
+</span></span></code></pre></td></tr></table></div></div><h1 id=write-a-prd>/write-a-prd<a hidden class=anchor aria-hidden=true href=#write-a-prd>#</a></h1><blockquote><p>将对话转化为产品稿子</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-md data-lang=md><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>name: write-a-prd
+</span></span><span class=line><span class=cl>description: Create a PRD through user interview, codebase exploration, and module design, then submit as a GitHub issue. Use when user wants to write a PRD, create a product requirements document, or plan a new feature.
+</span></span><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>This skill will be invoked when the user wants to create a PRD. You may skip steps if you don&#39;t consider them necessary.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>1.</span> Ask the user for a long, detailed description of the problem they want to solve and any potential ideas for solutions.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>2.</span> Explore the repo to verify their assertions and understand the current state of the codebase.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>3.</span> Interview the user relentlessly about every aspect of this plan until you reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>4.</span> Sketch out the major modules you will need to build or modify to complete the implementation. Actively look for opportunities to extract deep modules that can be tested in isolation.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A deep module (as opposed to a shallow module) is one which encapsulates a lot of functionality in a simple, testable interface which rarely changes.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Check with the user that these modules match their expectations. Check with the user which modules they want tests written for.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>5.</span> Once you have a complete understanding of the problem and solution, use the template below to write the PRD. The PRD should be submitted as a GitHub issue.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>&lt;prd-template&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Problem Statement
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>The problem that the user is facing, from the user&#39;s perspective.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Solution
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>The solution to the problem, from the user&#39;s perspective.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## User Stories
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A LONG, numbered list of user stories. Each user story should be in the format of:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>1.</span> As an &lt;actor&gt;, I want a &lt;feature&gt;, so that &lt;benefit&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>&lt;user-story-example&gt;
+</span></span><span class=line><span class=cl><span class=k>1.</span> As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
+</span></span><span class=line><span class=cl>&lt;/user-story-example&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>This list of user stories should be extremely extensive and cover all aspects of the feature.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Implementation Decisions
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A list of implementation decisions that were made. This can include:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> The modules that will be built/modified
+</span></span><span class=line><span class=cl><span class=k>-</span> The interfaces of those modules that will be modified
+</span></span><span class=line><span class=cl><span class=k>-</span> Technical clarifications from the developer
+</span></span><span class=line><span class=cl><span class=k>-</span> Architectural decisions
+</span></span><span class=line><span class=cl><span class=k>-</span> Schema changes
+</span></span><span class=line><span class=cl><span class=k>-</span> API contracts
+</span></span><span class=line><span class=cl><span class=k>-</span> Specific interactions
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Testing Decisions
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A list of testing decisions that were made. Include:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> A description of what makes a good test (only test external behavior, not implementation details)
+</span></span><span class=line><span class=cl><span class=k>-</span> Which modules will be tested
+</span></span><span class=line><span class=cl><span class=k>-</span> Prior art for the tests (i.e. similar types of tests in the codebase)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Out of Scope
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A description of the things that are out of scope for this PRD.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Further Notes
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Any further notes about the feature.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>&lt;/prd-template&gt;
+</span></span></code></pre></td></tr></table></div></div><h1 id=prd-to-issue>/prd-to-issue<a hidden class=anchor aria-hidden=true href=#prd-to-issue>#</a></h1><blockquote><p>将 prd 转换为 github issues</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-md data-lang=md><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>name: write-a-prd
+</span></span><span class=line><span class=cl>description: Create a PRD through user interview, codebase exploration, and module design, then submit as a GitHub issue. Use when user wants to write a PRD, create a product requirements document, or plan a new feature.
+</span></span><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>This skill will be invoked when the user wants to create a PRD. You may skip steps if you don&#39;t consider them necessary.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>1.</span> Ask the user for a long, detailed description of the problem they want to solve and any potential ideas for solutions.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>2.</span> Explore the repo to verify their assertions and understand the current state of the codebase.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>3.</span> Interview the user relentlessly about every aspect of this plan until you reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>4.</span> Sketch out the major modules you will need to build or modify to complete the implementation. Actively look for opportunities to extract deep modules that can be tested in isolation.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A deep module (as opposed to a shallow module) is one which encapsulates a lot of functionality in a simple, testable interface which rarely changes.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Check with the user that these modules match their expectations. Check with the user which modules they want tests written for.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>5.</span> Once you have a complete understanding of the problem and solution, use the template below to write the PRD. The PRD should be submitted as a GitHub issue.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>&lt;prd-template&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Problem Statement
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>The problem that the user is facing, from the user&#39;s perspective.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Solution
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>The solution to the problem, from the user&#39;s perspective.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## User Stories
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A LONG, numbered list of user stories. Each user story should be in the format of:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>1.</span> As an &lt;actor&gt;, I want a &lt;feature&gt;, so that &lt;benefit&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>&lt;user-story-example&gt;
+</span></span><span class=line><span class=cl><span class=k>1.</span> As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
+</span></span><span class=line><span class=cl>&lt;/user-story-example&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>This list of user stories should be extremely extensive and cover all aspects of the feature.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Implementation Decisions
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A list of implementation decisions that were made. This can include:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> The modules that will be built/modified
+</span></span><span class=line><span class=cl><span class=k>-</span> The interfaces of those modules that will be modified
+</span></span><span class=line><span class=cl><span class=k>-</span> Technical clarifications from the developer
+</span></span><span class=line><span class=cl><span class=k>-</span> Architectural decisions
+</span></span><span class=line><span class=cl><span class=k>-</span> Schema changes
+</span></span><span class=line><span class=cl><span class=k>-</span> API contracts
+</span></span><span class=line><span class=cl><span class=k>-</span> Specific interactions
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Testing Decisions
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A list of testing decisions that were made. Include:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> A description of what makes a good test (only test external behavior, not implementation details)
+</span></span><span class=line><span class=cl><span class=k>-</span> Which modules will be tested
+</span></span><span class=line><span class=cl><span class=k>-</span> Prior art for the tests (i.e. similar types of tests in the codebase)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Out of Scope
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A description of the things that are out of scope for this PRD.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Further Notes
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Any further notes about the feature.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>&lt;/prd-template&gt;
+</span></span></code></pre></td></tr></table></div></div><h1 id=tdd>/tdd<a hidden class=anchor aria-hidden=true href=#tdd>#</a></h1><blockquote><p>测试驱动</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-md data-lang=md><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>name: tdd
+</span></span><span class=line><span class=cl>description: Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions &#34;red-green-refactor&#34;, wants integration tests, or asks for test-first development.
+</span></span><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gh># Test-Driven Development
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Philosophy
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gs>**Core principle**</span>: Tests should verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn&#39;t.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gs>**Good tests**</span> are integration-style: they exercise real code paths through public APIs. They describe <span class=ge>_what_</span> the system does, not <span class=ge>_how_</span> it does it. A good test reads like a specification - &#34;user can checkout with valid cart&#34; tells you exactly what capability exists. These tests survive refactors because they don&#39;t care about internal structure.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gs>**Bad tests**</span> are coupled to implementation. They mock internal collaborators, test private methods, or verify through external means (like querying a database directly instead of using the interface). The warning sign: your test breaks when you refactor, but behavior hasn&#39;t changed. If you rename an internal function and tests fail, those tests were testing implementation, not behavior.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>See [<span class=nt>tests.md</span>](<span class=na>tests.md</span>) for examples and [<span class=nt>mocking.md</span>](<span class=na>mocking.md</span>) for mocking guidelines.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Anti-Pattern: Horizontal Slices
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gs>**DO NOT write all tests first, then all implementation.**</span> This is &#34;horizontal slicing&#34; - treating RED as &#34;write all tests&#34; and GREEN as &#34;write all code.&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>This produces <span class=gs>**crap tests**</span>:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> Tests written in bulk test <span class=ge>_imagined_</span> behavior, not <span class=ge>_actual_</span> behavior
+</span></span><span class=line><span class=cl><span class=k>-</span> You end up testing the <span class=ge>_shape_</span> of things (data structures, function signatures) rather than user-facing behavior
+</span></span><span class=line><span class=cl><span class=k>-</span> Tests become insensitive to real changes - they pass when behavior breaks, fail when behavior is fine
+</span></span><span class=line><span class=cl><span class=k>-</span> You outrun your headlights, committing to test structure before understanding the implementation
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gs>**Correct approach**</span>: Vertical slices via tracer bullets. One test → one implementation → repeat. Each test responds to what you learned from the previous cycle. Because you just wrote the code, you know exactly what behavior matters and how to verify it.
+</span></span></code></pre></td></tr></table></div></div><p>WRONG (horizontal):
+RED: test1, test2, test3, test4, test5
+GREEN: impl1, impl2, impl3, impl4, impl5</p><p>RIGHT (vertical):
+RED→GREEN: test1→impl1
+RED→GREEN: test2→impl2
+RED→GREEN: test3→impl3
+&mldr;</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>## Workflow
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>### 1. Planning
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Before writing any code:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>- [ ] Confirm with user what interface changes are needed
+</span></span><span class=line><span class=cl>- [ ] Confirm with user which behaviors to test (prioritize)
+</span></span><span class=line><span class=cl>- [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
+</span></span><span class=line><span class=cl>- [ ] Design interfaces for [testability](interface-design.md)
+</span></span><span class=line><span class=cl>- [ ] List the behaviors to test (not implementation steps)
+</span></span><span class=line><span class=cl>- [ ] Get user approval on the plan
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Ask: &#34;What should the public interface look like? Which behaviors are most important to test?&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>**You can&#39;t test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical paths and complex logic, not every possible edge case.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>### 2. Tracer Bullet
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Write ONE test that confirms ONE thing about the system:
+</span></span></code></pre></td></tr></table></div></div><p>RED: Write test for first behavior → test fails
+GREEN: Write minimal code to pass → test passes</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>This is your tracer bullet - proves the path works end-to-end.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>### 3. Incremental Loop
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>For each remaining behavior:
+</span></span></code></pre></td></tr></table></div></div><p>RED: Write next test → fails
+GREEN: Minimal code to pass → passes</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Rules:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>- One test at a time
+</span></span><span class=line><span class=cl>- Only enough code to pass current test
+</span></span><span class=line><span class=cl>- Don&#39;t anticipate future tests
+</span></span><span class=line><span class=cl>- Keep tests focused on observable behavior
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>### 4. Refactor
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>After all tests pass, look for [refactor candidates](refactoring.md):
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>- [ ] Extract duplication
+</span></span><span class=line><span class=cl>- [ ] Deepen modules (move complexity behind simple interfaces)
+</span></span><span class=line><span class=cl>- [ ] Apply SOLID principles where natural
+</span></span><span class=line><span class=cl>- [ ] Consider what new code reveals about existing code
+</span></span><span class=line><span class=cl>- [ ] Run tests after each refactor step
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>**Never refactor while RED.** Get to GREEN first.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>## Checklist Per Cycle
+</span></span></code></pre></td></tr></table></div></div><p>[ ] Test describes behavior, not implementation
+[ ] Test uses public interface only
+[ ] Test would survive internal refactor
+[ ] Code is minimal for this test
+[ ] No speculative features added</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback></code></pre></td></tr></table></div></div><h1 id=improve-codebase-architecture>/improve-codebase-architecture<a hidden class=anchor aria-hidden=true href=#improve-codebase-architecture>#</a></h1><blockquote><p>优化代码架构</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-md data-lang=md><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>name: improve-codebase-architecture
+</span></span><span class=line><span class=cl>description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable.
+</span></span><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gh># Improve Codebase Architecture
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Explore a codebase like an AI would, surface architectural friction, discover opportunities for improving testability, and propose module-deepening refactors as GitHub issue RFCs.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>A <span class=gs>**deep module**</span> (John Ousterhout, &#34;A Philosophy of Software Design&#34;) has a small interface hiding a large implementation. Deep modules are more testable, more AI-navigable, and let you test at the boundary instead of inside.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## Process
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>### 1. Explore the codebase
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Use the Agent tool with subagent_type=Explore to navigate the codebase naturally. Do NOT follow rigid heuristics — explore organically and note where you experience friction:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> Where does understanding one concept require bouncing between many small files?
+</span></span><span class=line><span class=cl><span class=k>-</span> Where are modules so shallow that the interface is nearly as complex as the implementation?
+</span></span><span class=line><span class=cl><span class=k>-</span> Where have pure functions been extracted just for testability, but the real bugs hide in how they&#39;re called?
+</span></span><span class=line><span class=cl><span class=k>-</span> Where do tightly-coupled modules create integration risk in the seams between them?
+</span></span><span class=line><span class=cl><span class=k>-</span> Which parts of the codebase are untested, or hard to test?
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>The friction you encounter IS the signal.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>### 2. Present candidates
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Present a numbered list of deepening opportunities. For each candidate, show:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> **Cluster**: Which modules/concepts are involved
+</span></span><span class=line><span class=cl><span class=k>-</span> **Why they&#39;re coupled**: Shared types, call patterns, co-ownership of a concept
+</span></span><span class=line><span class=cl><span class=k>-</span> **Dependency category**: See [<span class=nt>REFERENCE.md</span>](<span class=na>REFERENCE.md</span>) for the four categories
+</span></span><span class=line><span class=cl><span class=k>-</span> **Test impact**: What existing tests would be replaced by boundary tests
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Do NOT propose interfaces yet. Ask the user: &#34;Which of these would you like to explore?&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>### 3. User picks a candidate
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>### 4. Frame the problem space
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Before spawning sub-agents, write a user-facing explanation of the problem space for the chosen candidate:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> The constraints any new interface would need to satisfy
+</span></span><span class=line><span class=cl><span class=k>-</span> The dependencies it would need to rely on
+</span></span><span class=line><span class=cl><span class=k>-</span> A rough illustrative code sketch to make the constraints concrete — this is not a proposal, just a way to ground the constraints
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Show this to the user, then immediately proceed to Step 5. The user reads and thinks about the problem while the sub-agents work in parallel.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>### 5. Design multiple interfaces
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Spawn 3+ sub-agents in parallel using the Agent tool. Each must produce a <span class=gs>**radically different**</span> interface for the deepened module.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Prompt each sub-agent with a separate technical brief (file paths, coupling details, dependency category, what&#39;s being hidden). This brief is independent of the user-facing explanation in Step 4. Give each agent a different design constraint:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> Agent 1: &#34;Minimize the interface — aim for 1-3 entry points max&#34;
+</span></span><span class=line><span class=cl><span class=k>-</span> Agent 2: &#34;Maximize flexibility — support many use cases and extension&#34;
+</span></span><span class=line><span class=cl><span class=k>-</span> Agent 3: &#34;Optimize for the most common caller — make the default case trivial&#34;
+</span></span><span class=line><span class=cl><span class=k>-</span> Agent 4 (if applicable): &#34;Design around the ports &amp; adapters pattern for cross-boundary dependencies&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Each sub-agent outputs:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>1.</span> Interface signature (types, methods, params)
+</span></span><span class=line><span class=cl><span class=k>2.</span> Usage example showing how callers use it
+</span></span><span class=line><span class=cl><span class=k>3.</span> What complexity it hides internally
+</span></span><span class=line><span class=cl><span class=k>4.</span> Dependency strategy (how deps are handled — see [<span class=nt>REFERENCE.md</span>](<span class=na>REFERENCE.md</span>))
+</span></span><span class=line><span class=cl><span class=k>5.</span> Trade-offs
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Present designs sequentially, then compare them in prose.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>After comparing, give your own recommendation: which design you think is strongest and why. If elements from different designs would combine well, propose a hybrid. Be opinionated — the user wants a strong read, not just a menu.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>### 6. User picks an interface (or accepts recommendation)
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>### 7. Create GitHub issue
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Create a refactor RFC as a GitHub issue using <span class=sb>`gh issue create`</span>. Use the template in [<span class=nt>REFERENCE.md</span>](<span class=na>REFERENCE.md</span>). Do NOT ask the user to review before creating — just create it and share the URL.
+</span></span></code></pre></td></tr></table></div></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>© 2025 <a href=https://www.ans20xx.com/>安橙</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+<span id=read_progress></span>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
