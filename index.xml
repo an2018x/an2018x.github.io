@@ -1,4 +1,255 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>安橙的博客</title><link>https://blog.ans20xx.com/</link><description>Recent content on 安橙的博客</description><generator>Hugo -- 0.158.0</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Wed, 18 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/index.xml" rel="self" type="application/rss+xml"/><item><title>查看 OpenClaw 的 memory 系统</title><link>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/%E6%9F%A5%E7%9C%8Bopenclaw%E7%9A%84memory%E7%B3%BB%E7%BB%9F/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/%E6%9F%A5%E7%9C%8Bopenclaw%E7%9A%84memory%E7%B3%BB%E7%BB%9F/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>安橙的博客</title><link>https://blog.ans20xx.com/</link><description>Recent content on 安橙的博客</description><generator>Hugo -- 0.158.0</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Thu, 19 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/index.xml" rel="self" type="application/rss+xml"/><item><title>HBase 复习</title><link>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="基础认知"&gt;基础认知&lt;/h1&gt;
+&lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_0_src"&gt;
+"\"- 基础认知\\n - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别\\n - HBase\\n - 一个建立在 Hadoop/HDFS 上的、支持联机、实时读写的分布式数据库，适合承载超大表\\n - 面向宽表/稀疏表\\n - 以 RowKey 为核心访问路径\\n - 强项是海量数据下的主键访问和范围扫描\\n - MySQL\\n - 关系型数据库\\n - 强 SQL 能力\\n - 强事务\\n - 适合 OLTP 业务系统\\n - Redis\\n - 内存型数据存储\\n - 超低延迟\\n - 丰富数据结构\\n - 更像高性能数据结构引擎/缓存平台\\n - ElasticSerach\\n - 分布式搜索引擎\\n - 文档模型\\n - 擅长全文检索、相关性排序、聚合分析\\n - 不是传统事务数据库\\n - Hive\\n - 数据仓库\\n - 面向离线分析\\n - 适合大规模批处理、报表、数仓\\n - 不适合在线高并发事务场景\\n - 列式/列族模型是什么\\n - 列族模型\\n - 看起来像一张表\\n - 但是每一行并不是必须拥有同样的列\\n - HBase 把列分成若干个 Column Family (列族)\\n - 同一个列族里面的数据会被一起管理和物理存储\\n - 每一条具体的数据单元是一个 Cell，由行键、列族、列限定符、事件戳和值共同确定\\n - HBase 是一个按 RowKey 组织、按列族管理、按单元格存值、支持多版本的稀疏宽表结构\\n - 模型示例\\n - 层次结构\\n - Table -\\u003e Row -\\u003e Column Family -\\u003e Column Qualifier -\\u003e Cell(Value + TimeStamp)\\n - 一张用户表 user_profile，定义了两个列族 info + stat\\n - 一行数据\\n - RowKey = user_1001\\n - info:name = \\\"Alice\\\"\\n - info:city = \\\"Tokyo\\\"\\n - stat:login_cnt = 25\\n - info、stat 是列族\\n - name、city、login_cnt 是列限定符\\n - 完整列名是 family:qualifier\\n - 每个值都带 timestamp，可以保留多个版本\\n - 列族、列、Cell\\n - RowKey\\n - 是一行数据的主键，也是 HBase 最核心的访问入口\\n - 查 HBase，本质是在查某个 RowKey，或者扫描一段 RowKey 的范围\\n - 决定这一行是谁\\n - 决定数据在字典序上的排序方式\\n - 决定大部分查询的性能上限\\n - Column Family\\n - 是 HBase 中必须定义的逻辑分组\\n - 列族在创建表时就确定好\\n - HBase shell 和 API 文档都以先创建表，定义 family，再在 family 下写具体列的方式使用 HBase\\n - 列族是一组经常一起出现，一起管理，一起存储策略配置的数据\\n - Column Qualifier（列限定符）\\n - 列限定符就是列族下面具体的列名\\n - 列限定符不需要像 MySQL 字段在建表时全部固定列出来\\n - 列族通常固定，但是 qualifier 可以按需动态增加。\\n - HBase 适合列很多，而且不同记录拥有的列不一样的场景\\n - Cell\\n - Cell 是最小存储单元\\n - 一个 Cell 由这些部分唯一定位\\n - row\\n - family\\n - qualifier\\n - timestamp\\n - value\\n - TimeStamp/Version\\n - HBase 天然支持多版本\\n - 同一个 row + family + qualifier，可以在不同 timestamp 下保存多个值\\n - Get/Scan API 也支持按照版本范围取数据\\n - HBase 的默认思维是：一个单元格可以有历史版本\\n - 为什么要有列族\\n - HBase 不只是逻辑上分组，还会影响物理管理和存储策略\\n - 列族可以把访问模式相近的数据放在一起\\n - 列族可以让不同数据有不同的存储策略\\n - 列族可以让稀疏表更自然\\n - 稀疏宽表\\n - 稀疏\\n - 不是每一行都有同样的列\\n - 举例\\n - 商品 A：颜色、尺寸、品牌\\n - 商品 B：品牌、功率、电压\\n - 商品 C：材质、长度、颜色、重量\\n - 如果用 MySQL，固定列会导致很多字段为空\\n - HBase 只保存实际存在的 family:qualifier-\\u003evalue 即可\\n - HBase 在列族下使用动态 qualifier\\n - 宽表\\n - 列非常多，甚至 qualifier 的数量可以远大于传统关系表的字段数\\n - HBase 为什么是 Bigtable 风格数据库\\n - 什么是 Bigtable\\n - Bigtable 是 Google 提出的一个分布式存储系统，用来存放结构化数据，典型特点\\n - 面向超大规模数据\\n - 稀疏，可扩展的表\\n - 以 row key 为核心组织数据\\n - 支持列族\\n - 支持多版本\\n - 支持按键范围扫描\\n - 以 RowKey 为中心，而不是以 SQL 为中心\\n - Bigtable 风格数据库核心访问方式\\n - 按 RowKey 精准查\\n - 按 RowKey 前缀或范围扫描\\n - 设计 schema 时优先围绕查询路径设计 row key\\n - 设计数据库时，优先设计 RowKey 和访问路径，而不是优先设计复杂 SQL\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_0";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="数据模型与表设计"&gt;数据模型与表设计&lt;/h1&gt;
+&lt;div id="me_1" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_1_src"&gt;
+"\"- 数据模型与表设计\\n - RowKey 设计原则\\n - 总纲\\n - RowKey 不是随便选一个主键，而是 HBase 里面最重要的访问索引、排序依据和分布依据。\\n - 每行只有一个被索引的值，就是 row key\\n - 本质\\n - 数据如何定位\\n - 数据怎么按字典序排序\\n - 数据怎么在集群中分布，会不会热点\\n - RowKey 为什么重要\\n - 最快、最强、最自然的访问路径就是按照 RowKey 去查和按范围扫\\n - RowKey 设计不好\\n - 查询路径不顺\\n - scan 范围过大\\n - 热点集中\\n - 读写吞吐不均衡\\n - 很难靠 SQL 或者二级索引补救\\n - 核心原则\\n - 先按查询方式设计，不要按照字段含义设计\\n - 最常见的查询是什么\\n - 查询是点查还是范围查\\n - 查询维度谁排第一\\n - 结果取最近一条、最近 N 条还是一个时间段\\n - 让最常用的过滤维度出现在 RowKey 前部\\n - Row Key 前缀直接决定\\n - 哪些数据会排在一起\\n - 哪些数据可以用 prefix/range 高效扫描\\n - Row Key 要支持高频查询的自然范围扫描\\n - HBase 擅长的不是随意条件查询，而是连续键空间扫描\\n - 建议围绕 row key prefix 设计 schema\\n - 例如查询设备时序数据\\n - 按设备查最近数据\\n - 按设备查某段时间数据\\n - device_id#reverse_ts\\n - 避免单 key 递增直接写入，防止热点\\n - 不断递增的 rowKey 最新写入通常会不断打到键空间尾部，把写压力集中到少数 region\\n - 在可扫描性和均匀分布之间做平衡\\n - 分桶：bucket(user_id)#user_id#reverse_ts\\n - 时间类场景通常需要显式设计时间顺序\\n - rowKey 要短、稳定、可解析\\n - 常见设计模式\\n - 单主键模型\\n - user_id\\n - 一行就是一个主键\\n - 点查为主\\n - 不需要时间维度\\n - 主维度 + 时间\\n - user_id#ts\\n - 主维度 + 倒序时间\\n - user_id#reverse_ts\\n - 桶 + 主维度 + 时间\\n - bucket(user_id)%16#user_id#reverse_ts\\n - 数据集前缀 + 业务键\\n - U#1001\\n - 列族应该怎么拆\\n - 为什么列族拆分重要\\n - 列族会把同一族的一组列物理共置\\n - 列族带有独立的存储属性\\n - 每一行都拥有相同的列族集合\\n - 未写入的单元格不占用实际空间\\n - 列族拆分总原则\\n - 同查：经常一起读的字段，放在一起\\n - 同配：需要相同存储策略的字段，适合放在一起\\n - 同寿命：生命周期相近的字段，适合放在一起\\n - 同频率：更新频率相近的字段，适合放在一起\\n - 拆分口诀\\n - 基础资料一族、频繁指标一族、短期日志一族、打对象单独一族\\n - 版本机制\\n - 什么是版本\\n - 同一个字段可能保存多份历史值\\n - 每一份历史值靠 timestamp 区分\\n - HBase 官方文档把 Cell 展示为包含 row、column、timestamp 和 value\\n - timestamp 和 version 的关系\\n - timestamp 是版本标识\\n - 在 HBase 里，每写入一个 Cell，都要有对应的 timestamp\\n - timestamp 由系统自动生成，也可以由自己指定\\n - version 是字段保留的历史份数\\n - 按列族配置，说明最多留多少份历史数据\\n - TTL、压缩、Bloom Filter\\n - TTL 是什么\\n - Time To Live，生存时间\\n - 是 cell contents 的生存时间，单位是 s\\n - 是列族级的数据过期策略\\n - TTL 解决的问题\\n - 控制历史数据无限膨胀\\n - 降低存储成本\\n - 让冷热数据边界更为清晰\\n - 压缩是什么\\n - 压缩就是把 HBase 存到 StoreFile/HFile 里面的数据，用某种压缩算法压小\\n - 可以在 ColumnFamily 上启用压缩，且不需要重建表\\n - 用 CPU 换磁盘空间、换 I/O 带宽\\n - Bloom Filter 是什么\\n - 是一种概率型存在性判断结构\\n - 帮助你快速判断这个 StoreFile 里面大概率没有你想要的数据，就不去做无效读取了\\n - 热点问题\\n - 什么是热点\\n - HBase/Bigtable 这类系统的数据是按照 rowKey 的字段序排列的\\n - 相邻的 Key 也会落在相邻的 key range 上，这些 key range 被分配给特定的 Region/RegionServer 来服务\\n - 如果请求集中在某一个 RowKey/某一小段连续 RowKey/某个不断增长的最新 key 区间，负载就不会均匀摊开，造成热点\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_1";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="架构原理"&gt;架构原理&lt;/h1&gt;
+&lt;div id="me_2" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_2_src"&gt;
+"\"- 架构原理\\n - HMaster 做什么\\n - HMaster 的定位\\n - HMaster 负责协调和管理，真正承担读写请求的是 RegionServer\\n - HMaster 类似调度中心和元数据/运维控制器\\n - HMaster 的核心职责\\n - 管理整个集群的 Region 分配\\n - HBase 的表会被切分成很多 Region\\n - 集群启动时给 Region 找归属的 RegionServer\\n - RegionServer 宕机后重新分配它原来负责 Region\\n - 负载均衡主动迁移 Region\\n - 监控 RegionServer 的存活状态\\n - 处理 RegionServer 故障后的恢复\\n - 做负载均衡\\n - 处理 DDL 和 schema 管理\\n - 参与主备切换和集群高可用\\n - RegionServer 做什么\\n - RegionServer 的定位\\n - 是数据面\\n - 真正保存并服务 Region\\n - 真正执行 Put/Get/Scan/Delete\\n - 真正把数据从内存刷到 File\\n - 真正做 compaction 和 split\\n - RegionServer 的核心职责\\n - 持有并管理 Region\\n - HMaster 决定 Region 给谁\\n - RegionServer 真正把 Region 跑起来\\n - 处理客户端读请求\\n - 处理客户端写请求\\n - 管理每个 Region 内部的 Store/MemStore/StoreFile\\n - 运行后台维护线程：flush、compaction、WAL 滚动、split\\n - 管理 BlockCache\\n - 执行部分 Region 级维护操作\\n - Put 流程\\n - 客户端根据元数据找到 Region 所在的 Region Server\\n - 请求发到该 Region Server\\n - RegionServer 找到这个 Region 对应 family 的 Store\\n - 先写 WAL\\n - 在把数据写到 Store 里面的 MemStore\\n - 后台达到条件后，MemStoreFlusher 把数据 flush 到 StoreFile\\n - 之后 CompactSplitThread/MajorCompactionChecker 再持续维护这些文件\\n - Get/Scan 流程\\n - 客户端根据元数据找到 Region 所在的 Region Server\\n - RegionServer 在对应 Region 的 Store 中查找\\n - 优先利用 BlockCache\\n - 必要时再读 StoreFile/HFile\\n - 利用索引和 BloomFilter 缩小无效读取\\n - 返回结果给客户端\\n - Region 是什么\\n - Region 定义\\n - Region 是一段连续的、按 RowKey 排序的行范围\\n - 表的层级结构 Table-\\u003eRegion-\\u003eStore-\\u003eMemStore/StoreFile-\\u003eBlock\\n - 为什么要有 Region\\n - 做分布式切片\\n - 支持扩展\\n - 支持负载均衡\\n - Region 结构\\n - 一个 Region 内部，每个 ColumFile 对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile\\n - Region 如何分配\\n - 同一时刻，一个 Region 只由一个 RegionServer 提供服务\\n - 一个 RegionServer 可以持有很多 Region\\n - HMaster 负责 Region 给谁、是否迁移、是否均衡\\n - RegionServer 负责真正持有 Region 并处理这个 Region 的读写\\n - Region 为什么需要切分\\n - 单个 Region 太大，迁移和恢复成本高\\n - 该 Region 所在 RegionServer 负载可能过重\\n - 并行度不够，一大段数据只能由一个 Region 服务\\n - 热点更集中，难以分散\\n - split 的目的，是把一个过大的 key range 拆分成两个更小的 key range，来提升可扩展性和分布性\\n - 什么时候会 split\\n - 由 RegionSplitPolicy 决定\\n - 当 Region 增长到某个阈值/满足当前 split policy 的条件\\n - WAL 是什么\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_2";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;</description></item><item><title>查看 OpenClaw 的 memory 系统</title><link>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/%E6%9F%A5%E7%9C%8Bopenclaw%E7%9A%84memory%E7%B3%BB%E7%BB%9F/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/%E6%9F%A5%E7%9C%8Bopenclaw%E7%9A%84memory%E7%B3%BB%E7%BB%9F/</guid><description>&lt;h1 id="实验元数据-meta-data"&gt;实验元数据 (Meta Data)&lt;/h1&gt;
 &lt;p&gt;用于日后检索和归档，建立知识索引。&lt;/p&gt;
 &lt;p&gt;实验编号/标题：例如：查看 OpenClaw 的 Memory 系统&lt;/p&gt;</description></item><item><title>钉钉天元 AI 实践</title><link>https://blog.ans20xx.com/posts/%E9%92%89%E9%92%89%E5%A4%A9%E5%85%83ai%E5%AE%9E%E8%B7%B5/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E9%92%89%E9%92%89%E5%A4%A9%E5%85%83ai%E5%AE%9E%E8%B7%B5/</guid><description>&lt;p&gt;客户情报 + 销售助理&lt;/p&gt;
 &lt;p&gt;
