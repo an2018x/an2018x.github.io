@@ -1,4 +1,89 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.158.0</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Thu, 19 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>HBase 复习</title><link>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="基础认知"&gt;基础认知&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.159.0</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Tue, 24 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Flink 复习</title><link>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="flink-整体认知"&gt;Flink 整体认知&lt;/h1&gt;
+&lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_0_src"&gt;
+"\"- Flink 整体认知\\n - 认识 Flink\\n - Flink 是什么\\n - Flink 是一个对于有界和无界数据流进行有状态计算的框架和分布式处理引擎\\n - 框架：Flink 不是一个单独的软件命令，而是一套开发 + 运行的系统\\n - Flink 和 Hadoop/Spark/Storm 的区别\\n - 基本定义\\n - Hadoop 是什么\\n - 大数据基础设施体系\\n - HDFS：分布式存储\\n - MapReduce：离线批处理计算\\n - YARN：资源管理\\n - 早期大数据时代的“存储+资源管理+离线计算“基础平台\\n - Spark 是什么\\n - 通用的大数据计算引擎\\n - 流处理主要通过 Structured Streaming\\n - 更偏通用分析平台，批处理很强，流处理也能做\\n - Storm 是什么\\n - 是一个分布式实时计算系统\\n - 较早一代的纯流式处理框架，比 Flink 早\\n - 比较维度\\n - 主要定位\\n - Hadoop\\n - 海量数据存储\\n - 离线批处理\\n - 高吞吐，不强调低延迟\\n - Spark\\n - 通用大数据引擎\\n - 强批处理\\n - 可扩展到 SQL、ML、Streaming\\n - Flink\\n - 有状态流处理\\n - 事件时间\\n - 流批统一\\n - 更强实时计算语义\\n - 处理模型\\n - Hadoop: Batch\\n - 读一批数据-\\u003emap-\\u003eshuffle-\\u003ereduce-\\u003e输出结果\\n - Spark: Batch + Micro-batch\\n - Flink: Native Streaming，批流统一\\n - 延迟特征\\n - Hadoop\\n - 延迟高，通常分钟级甚至更长\\n - Spark\\n - micor-batch 延迟比原生流高一点\\n - Flink\\n - 低延迟实时计算\\n - 状态能力\\n - Hadoop\\n - 不擅长生命周期有状态流计算\\n - Spark\\n - 能做状态处理，但不是以 stateful streaming 为核心\\n - Flink\\n - stateful computations over data streams\\n - exactly-once state consistency\\n - 什么是批处理、流处理、实时计算\\n - 批处理\\n - 定义：先把一段时间内的数据收集起来，等数据攒够一批后，再统一进行计算\\n - 特点：先到齐，再处理、延迟高、吞吐高、程序有结束点\\n - 流处理\\n - 定义：把数据看成一个持续到来的事件流，数据一到，系统就持续处理\\n - 特点：连续不断、持续进行、低延迟、要处理历史记忆\\n - 实时计算\\n - 定义：从数据产生，到计算结果可用，时间尽可能短\\n - 实时计算不是来了就必须零延迟，而是在业务可接受的时间范围内尽快给出结果\\n - Flink 的应用场景\\n - 事件驱动应用\\n - 系统不是定时查数据库，而是收到事件才触发计算、状态更新或外部动作\\n - 典型业务\\n - 欺诈检测\\n - 异常检测\\n - 规则告警\\n - 业务流程监控\\n - 数据分析应用\\n - 从原始数据中提取信息和洞察\\n - 典型业务\\n - 每分钟订单量\\n - 热门榜单\\n - 实时数仓\\n - 离线 + 实时一体分析\\n - 数据管道与 ETF\\n - 从上游系统读数据，做清洗、转换、补全、标准化、过滤、路由，再写到下游系统\\n - 典型业务\\n - Kafka 到 Kafka\\n - Kafka 到数据库/搜索引擎/湖仓\\n - CDC + 实时同步\\n - Flink 基本架构\\n - JobManager、TaskManager\\n - 最小 Flink 集群\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324174529584.png,474,301)\\n - 在本地或某台机器上提交作业\\n - JobManager 接收这个作业，分析要怎么跑\\n - 把真正要执行的子任务分发给多个 TaskManager\\n - TaskManager 在各自机器上并行处理数据\\n - 什么是 JobManager\\n - 是 Flink 集群的控制中心\\n - 负责接收/解析/调度/监控/作业、协调故障恢复、管理元信息\\n - 什么是 TaskManager\\n - 是 Flink 集群里真正干活的 worker\\n - 主要负责执行子任务/占用和提供计算资源/与其他 TaskManger 传输数据/向 JobManager 汇报状态\\n - Slot 是什么\\n - 定义\\n - Flink 用 Slot 告诉调度器：这台 TaskManager 最多能接多少份执行任务\\n - 为什么需要 Slot\\n - 控制一个 TaskManager 能接多少任务\\n - 做资源切分\\n - 在隔离与利用率之间做平衡\\n - Slot 和 TaskManager 的关系\\n - 一个 TaskManager 可以有多个 Slot\\n - Slot 是 TaskManager 提供给集群调度的执行容量\\n - Slot 是资源申请和任务放置的基本单位之一\\n - Slot 和并行度的关系\\n - 并行度指的是一个算子会拆成多少个并行子任务\\n - 执行这些子任务需要 Slot\\n - 在默认 slot sharing 开启时，作业大致需要的 slot 数 = 该作业的最高并行度\\n - JobGraph、ExecutionGraph\\n - 什么是 JobGraph\\n - Flink 作业的逻辑图/逻辑执行计划\\n - JobGraph 里面的点，叫做 JobVertex，它是一个逻辑阶段/一个逻辑算子节点\\n - JobGraph 不强调每个并行子任务\\n - 什么是 ExecutionGraph\\n - 是 JobGraph 经过并行展开后的实际执行拓扑\\n - ExecutionGraph 的核心点是 ExecutionVertex\\n - 并行度是什么\\n - 本质\\n - Flink 算子可以想象成一个类似读 Kafka/做 map 转换/做窗口聚合的工作\\n - 并行度决定一个算子会被拆分成几个 subtask 一起做\\n - 为什么需要并行度\\n - 一份工作只让一个实例做，处理能力有限\\n - 提高并行度，本质就是把工作拆开，让多个 subtask 同时处理\\n - 一个 flink 作业如何运行起来\\n - 总流程\\n - 写 Flink 程序，调用 execute()\\n - Client 负责提交作业\\n - 程序先形成逻辑数据流图\\n - JobManager 接收作业\\n - JobManager 把 JobGraph 转成 ExecutionGraph\\n - 调度器根据并行度和可用 slot 做任务部署\\n - TaskManager 真正执行 subtask\\n - 运行中持续监控、处理状态、必要时恢复故障\\n - 编写代码时，发生了什么\\n - 写的是逻辑处理链路，不是真正的分布式执行指令\\n - 调用 execute() 后，作业才真正进入提交流程\\n - Client 做了什么\\n - Client 是提交入口，负责将应用提交到集群\\n - Client 不是主要计算节点\\n - JobGraph 在什么时候出现\\n - 代码先被整理为数据流图，也就是 JobGraph\\n - JobGraph 偏逻辑层，还没有真正展开成每个 subtask，不是最终的并发执行形态\\n - JobManager 接手后做什么\\n - 接收作业\\n - 管理作业生命周期\\n - 把逻辑图变成执行图\\n - 协调资源和任务部署\\n - Execution Graph 怎么来的\\n - ExecutionGraph 是 JobGraph 的并行化版本\\n - 并行度在这里真正展开\\n - 运行状态也在这里变得具体\\n - 调度阶段发生什么\\n - 要跑多少个 subtask\\n - 这些 subtask 放到哪些地方跑\\n - 数据怎么在它们之间流动\\n - slot 发挥什么作用\\n - TaskManager 提供 slots\\n - 调度器找空闲 slot\\n - 默认 slot sharing 会影响所需 slot 数\\n - TaskManager 真正干活时发生了什么\\n - TaskManager 执行 subtask\\n - 每个 subtask 处理自己那部分的输入数据\\n - 上下游 subtask 之间可能发生网络传输\\n - 状态、窗口、定时器等能力都在这里真正运作\\n - 作业运行中，JobManager 还在做什么\\n - 跟踪任务状态\\n - 监控资源与任务健康情况\\n - 失败时触发恢复\\n - 作业失败了会怎样\\n - JobManager 感知失败\\n - 调度器决定如何恢复\\n - TaskManager 上的任务可能被重新部署\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_0";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;</description></item><item><title>价值</title><link>https://blog.ans20xx.com/posts/%E4%BB%B7%E5%80%BC/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E4%BB%B7%E5%80%BC/</guid><description>&lt;p&gt;有人随着年龄增值，&lt;/p&gt;
+&lt;p&gt;有人随着年龄贬值，&lt;/p&gt;
+&lt;p&gt;这就说明了追求生命内涵的重要性。&lt;/p&gt;</description></item><item><title>HBase 复习</title><link>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="基础认知"&gt;基础认知&lt;/h1&gt;
 &lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
 &lt;script type="application/json" id="me_0_src"&gt;
 "\"- 基础认知\\n - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别\\n - HBase\\n - 一个建立在 Hadoop/HDFS 上的、支持联机、实时读写的分布式数据库，适合承载超大表\\n - 面向宽表/稀疏表\\n - 以 RowKey 为核心访问路径\\n - 强项是海量数据下的主键访问和范围扫描\\n - MySQL\\n - 关系型数据库\\n - 强 SQL 能力\\n - 强事务\\n - 适合 OLTP 业务系统\\n - Redis\\n - 内存型数据存储\\n - 超低延迟\\n - 丰富数据结构\\n - 更像高性能数据结构引擎/缓存平台\\n - ElasticSerach\\n - 分布式搜索引擎\\n - 文档模型\\n - 擅长全文检索、相关性排序、聚合分析\\n - 不是传统事务数据库\\n - Hive\\n - 数据仓库\\n - 面向离线分析\\n - 适合大规模批处理、报表、数仓\\n - 不适合在线高并发事务场景\\n - 列式/列族模型是什么\\n - 列族模型\\n - 看起来像一张表\\n - 但是每一行并不是必须拥有同样的列\\n - HBase 把列分成若干个 Column Family (列族)\\n - 同一个列族里面的数据会被一起管理和物理存储\\n - 每一条具体的数据单元是一个 Cell，由行键、列族、列限定符、事件戳和值共同确定\\n - HBase 是一个按 RowKey 组织、按列族管理、按单元格存值、支持多版本的稀疏宽表结构\\n - 模型示例\\n - 层次结构\\n - Table -\\u003e Row -\\u003e Column Family -\\u003e Column Qualifier -\\u003e Cell(Value + TimeStamp)\\n - 一张用户表 user_profile，定义了两个列族 info + stat\\n - 一行数据\\n - RowKey = user_1001\\n - info:name = \\\"Alice\\\"\\n - info:city = \\\"Tokyo\\\"\\n - stat:login_cnt = 25\\n - info、stat 是列族\\n - name、city、login_cnt 是列限定符\\n - 完整列名是 family:qualifier\\n - 每个值都带 timestamp，可以保留多个版本\\n - 列族、列、Cell\\n - RowKey\\n - 是一行数据的主键，也是 HBase 最核心的访问入口\\n - 查 HBase，本质是在查某个 RowKey，或者扫描一段 RowKey 的范围\\n - 决定这一行是谁\\n - 决定数据在字典序上的排序方式\\n - 决定大部分查询的性能上限\\n - Column Family\\n - 是 HBase 中必须定义的逻辑分组\\n - 列族在创建表时就确定好\\n - HBase shell 和 API 文档都以先创建表，定义 family，再在 family 下写具体列的方式使用 HBase\\n - 列族是一组经常一起出现，一起管理，一起存储策略配置的数据\\n - Column Qualifier（列限定符）\\n - 列限定符就是列族下面具体的列名\\n - 列限定符不需要像 MySQL 字段在建表时全部固定列出来\\n - 列族通常固定，但是 qualifier 可以按需动态增加。\\n - HBase 适合列很多，而且不同记录拥有的列不一样的场景\\n - Cell\\n - Cell 是最小存储单元\\n - 一个 Cell 由这些部分唯一定位\\n - row\\n - family\\n - qualifier\\n - timestamp\\n - value\\n - TimeStamp/Version\\n - HBase 天然支持多版本\\n - 同一个 row + family + qualifier，可以在不同 timestamp 下保存多个值\\n - Get/Scan API 也支持按照版本范围取数据\\n - HBase 的默认思维是：一个单元格可以有历史版本\\n - 为什么要有列族\\n - HBase 不只是逻辑上分组，还会影响物理管理和存储策略\\n - 列族可以把访问模式相近的数据放在一起\\n - 列族可以让不同数据有不同的存储策略\\n - 列族可以让稀疏表更自然\\n - 稀疏宽表\\n - 稀疏\\n - 不是每一行都有同样的列\\n - 举例\\n - 商品 A：颜色、尺寸、品牌\\n - 商品 B：品牌、功率、电压\\n - 商品 C：材质、长度、颜色、重量\\n - 如果用 MySQL，固定列会导致很多字段为空\\n - HBase 只保存实际存在的 family:qualifier-\\u003evalue 即可\\n - HBase 在列族下使用动态 qualifier\\n - 宽表\\n - 列非常多，甚至 qualifier 的数量可以远大于传统关系表的字段数\\n - HBase 为什么是 Bigtable 风格数据库\\n - 什么是 Bigtable\\n - Bigtable 是 Google 提出的一个分布式存储系统，用来存放结构化数据，典型特点\\n - 面向超大规模数据\\n - 稀疏，可扩展的表\\n - 以 row key 为核心组织数据\\n - 支持列族\\n - 支持多版本\\n - 支持按键范围扫描\\n - 以 RowKey 为中心，而不是以 SQL 为中心\\n - Bigtable 风格数据库核心访问方式\\n - 按 RowKey 精准查\\n - 按 RowKey 前缀或范围扫描\\n - 设计 schema 时优先围绕查询路径设计 row key\\n - 设计数据库时，优先设计 RowKey 和访问路径，而不是优先设计复杂 SQL\""
@@ -169,7 +254,7 @@ mind.init(data);
 &lt;h1 id="架构原理"&gt;架构原理&lt;/h1&gt;
 &lt;div id="me_2" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
 &lt;script type="application/json" id="me_2_src"&gt;
-"\"- 架构原理\\n - HMaster 做什么\\n - HMaster 的定位\\n - HMaster 负责协调和管理，真正承担读写请求的是 RegionServer\\n - HMaster 类似调度中心和元数据/运维控制器\\n - HMaster 的核心职责\\n - 管理整个集群的 Region 分配\\n - HBase 的表会被切分成很多 Region\\n - 集群启动时给 Region 找归属的 RegionServer\\n - RegionServer 宕机后重新分配它原来负责 Region\\n - 负载均衡主动迁移 Region\\n - 监控 RegionServer 的存活状态\\n - 处理 RegionServer 故障后的恢复\\n - 做负载均衡\\n - 处理 DDL 和 schema 管理\\n - 参与主备切换和集群高可用\\n - RegionServer 做什么\\n - RegionServer 的定位\\n - 是数据面\\n - 真正保存并服务 Region\\n - 真正执行 Put/Get/Scan/Delete\\n - 真正把数据从内存刷到 File\\n - 真正做 compaction 和 split\\n - RegionServer 的核心职责\\n - 持有并管理 Region\\n - HMaster 决定 Region 给谁\\n - RegionServer 真正把 Region 跑起来\\n - 处理客户端读请求\\n - 处理客户端写请求\\n - 管理每个 Region 内部的 Store/MemStore/StoreFile\\n - 运行后台维护线程：flush、compaction、WAL 滚动、split\\n - 管理 BlockCache\\n - 执行部分 Region 级维护操作\\n - Put 流程\\n - 客户端根据元数据找到 Region 所在的 Region Server\\n - 请求发到该 Region Server\\n - RegionServer 找到这个 Region 对应 family 的 Store\\n - 先写 WAL\\n - 在把数据写到 Store 里面的 MemStore\\n - 后台达到条件后，MemStoreFlusher 把数据 flush 到 StoreFile\\n - 之后 CompactSplitThread/MajorCompactionChecker 再持续维护这些文件\\n - Get/Scan 流程\\n - 客户端根据元数据找到 Region 所在的 Region Server\\n - RegionServer 在对应 Region 的 Store 中查找\\n - 优先利用 BlockCache\\n - 必要时再读 StoreFile/HFile\\n - 利用索引和 BloomFilter 缩小无效读取\\n - 返回结果给客户端\\n - Region 是什么\\n - Region 定义\\n - Region 是一段连续的、按 RowKey 排序的行范围\\n - 表的层级结构 Table-\\u003eRegion-\\u003eStore-\\u003eMemStore/StoreFile-\\u003eBlock\\n - 为什么要有 Region\\n - 做分布式切片\\n - 支持扩展\\n - 支持负载均衡\\n - Region 结构\\n - 一个 Region 内部，每个 ColumFile 对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile\\n - Region 如何分配\\n - 同一时刻，一个 Region 只由一个 RegionServer 提供服务\\n - 一个 RegionServer 可以持有很多 Region\\n - HMaster 负责 Region 给谁、是否迁移、是否均衡\\n - RegionServer 负责真正持有 Region 并处理这个 Region 的读写\\n - Region 为什么需要切分\\n - 单个 Region 太大，迁移和恢复成本高\\n - 该 Region 所在 RegionServer 负载可能过重\\n - 并行度不够，一大段数据只能由一个 Region 服务\\n - 热点更集中，难以分散\\n - split 的目的，是把一个过大的 key range 拆分成两个更小的 key range，来提升可扩展性和分布性\\n - 什么时候会 split\\n - 由 RegionSplitPolicy 决定\\n - 当 Region 增长到某个阈值/满足当前 split policy 的条件\\n - WAL 是什么\""
+"\"- 架构原理\\n - HMaster 做什么\\n - HMaster 的定位\\n - HMaster 负责协调和管理，真正承担读写请求的是 RegionServer\\n - HMaster 类似调度中心和元数据/运维控制器\\n - HMaster 的核心职责\\n - 管理整个集群的 Region 分配\\n - HBase 的表会被切分成很多 Region\\n - 集群启动时给 Region 找归属的 RegionServer\\n - RegionServer 宕机后重新分配它原来负责 Region\\n - 负载均衡主动迁移 Region\\n - 监控 RegionServer 的存活状态\\n - 处理 RegionServer 故障后的恢复\\n - 做负载均衡\\n - 处理 DDL 和 schema 管理\\n - 参与主备切换和集群高可用\\n - RegionServer 做什么\\n - RegionServer 的定位\\n - 是数据面\\n - 真正保存并服务 Region\\n - 真正执行 Put/Get/Scan/Delete\\n - 真正把数据从内存刷到 File\\n - 真正做 compaction 和 split\\n - RegionServer 的核心职责\\n - 持有并管理 Region\\n - HMaster 决定 Region 给谁\\n - RegionServer 真正把 Region 跑起来\\n - 处理客户端读请求\\n - 处理客户端写请求\\n - 管理每个 Region 内部的 Store/MemStore/StoreFile\\n - 运行后台维护线程：flush、compaction、WAL 滚动、split\\n - 管理 BlockCache\\n - 执行部分 Region 级维护操作\\n - Put 流程\\n - 客户端根据元数据找到 Region 所在的 Region Server\\n - 请求发到该 Region Server\\n - RegionServer 找到这个 Region 对应 family 的 Store\\n - 先写 WAL\\n - 在把数据写到 Store 里面的 MemStore\\n - 后台达到条件后，MemStoreFlusher 把数据 flush 到 StoreFile\\n - 之后 CompactSplitThread/MajorCompactionChecker 再持续维护这些文件\\n - Get/Scan 流程\\n - 客户端根据元数据找到 Region 所在的 Region Server\\n - RegionServer 在对应 Region 的 Store 中查找\\n - 优先利用 BlockCache\\n - 必要时再读 StoreFile/HFile\\n - 利用索引和 BloomFilter 缩小无效读取\\n - 返回结果给客户端\\n - Region 是什么\\n - Region 定义\\n - Region 是一段连续的、按 RowKey 排序的行范围\\n - 表的层级结构 Table-\\u003eRegion-\\u003eStore-\\u003eMemStore/StoreFile-\\u003eBlock\\n - 为什么要有 Region\\n - 做分布式切片\\n - 支持扩展\\n - 支持负载均衡\\n - Region 结构\\n - 一个 Region 内部，每个 ColumFile 对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile\\n - Region 如何分配\\n - 同一时刻，一个 Region 只由一个 RegionServer 提供服务\\n - 一个 RegionServer 可以持有很多 Region\\n - HMaster 负责 Region 给谁、是否迁移、是否均衡\\n - RegionServer 负责真正持有 Region 并处理这个 Region 的读写\\n - Region 为什么需要切分\\n - 单个 Region 太大，迁移和恢复成本高\\n - 该 Region 所在 RegionServer 负载可能过重\\n - 并行度不够，一大段数据只能由一个 Region 服务\\n - 热点更集中，难以分散\\n - split 的目的，是把一个过大的 key range 拆分成两个更小的 key range，来提升可扩展性和分布性\\n - 什么时候会 split\\n - 由 RegionSplitPolicy 决定\\n - 当 Region 增长到某个阈值/满足当前 split policy 的条件\\n - WAL 是什么\\n - 为什么需要 WAL\\n - HBase 不是收到请求就立即写成 HFile\\n - 写请求先进入内存里面的 MemStore\\n - MemStore 是内存结构，掉电或进程崩溃会丢\\n - WAL 为还没落成 HFile 的持久化阶段兜底\\n - 写入请求里的 cells 会一直保留，直到成功持久化到 WAL 和 MemStore\\n - MemStore 负责写入速度，WAL 负责稳定性\\n - 为什么叫 Write-Ahead\\n - 先把将要发生的修改记录到日志中，再依赖后续流程把它整理进正式数据文件\\n - 这条写操作在正式长期存储结构整理完成之前\\n - 已经被写入到一个可恢复的日志里\\n - WAL 处在的位置/Put 操作链路\\n - 客户端把 Put 请求发送到目标 RegionServer\\n - RegionServer 把这次修改追加到 WAL\\n - 同时把数据写入目标 Store 的 MemStore\\n - 之后后台线程再把 MemStore Flush 成 StoreFile/HFile\\n - 最后通过 compaction 整理文件\\n - WAL 记录的内容\\n - WAL 记录的是这次写操作的增量编辑记录\\n - WAL 写入的内容加做 WALEdit，有 WAL.Entry、WALKey 类型来表示一条日志条目及其键\\n - MemStore、StoreFile/HFile、BlockCache\\n - 概述\\n - MemStore：写入时的内存缓冲区\\n - StoreFile/HFile：Flush 之后落盘的正式数据文件\\n - BlockCache：读路径上的数据块缓存\\n - 在一个 Region 里，每个列族对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile\\n - MemStore 是什么\\n - MemStore 是 Store 在内存中的缓冲区\\n - 客户端写入数据， RegionServer 会先把修改写入 WAL，并把数据存放在对应的 Store 的 MemStore\\n - 后续达到条件后，再 flush 到磁盘形成 StoreFile\\n - 主要解决写的快的问题，如果每次 Put/Delete 都直接改磁盘主文件，开销会很大\\n - 先写入内存，可以把随机小写聚合起来，再批量 flush 到磁盘\\n - MemStore 只是内存态，不是最终查询文件，内容会在后续 flush 后变为 StoreFile/HFile\\n - StoreFile 是什么\\n - 是 Store 在磁盘上的数据文件\\n - MemStore 不会只 flush 一次，每次 flush 会生成新的 StoreFile\\n - 当 BlockCache miss 且 MemStore 没有目标数据，RegionStore 会去 HFile/StoreFile 中查\\n - HFile 是什么\\n - 是底层文件格式，StoreFile 是 HBase 在 RegionServer/Store 这一层使用的数据文件抽象\\n - 一个 StoreFile 对应一个 HFile\\n - BlockCache 是什么\\n - 是 HBase 读路径上的数据库缓存\\n - 缓存的是从 HFile 里读出来的 block\\n - 解决的是读的快的问题\\n - Flush、Compaction、Split 的流程\\n - Flush 是什么\\n - 定义\\n - 把某个 Store 的 MemStore 内容写到磁盘，生成新的 StoreFile\\n - 为什么必须 Flush\\n - MemStore 在内存中，不能无限增长\\n - flush 后发生什么\\n - flush 完成后，这批数据会变成新的 StoreFile，被纳入该 Store 的文件集合。\\n - Flush 触发条件\\n - 内存压力触发\\n - 时间触发\\n - 运维/内部流程触发\\n - Compaction 是什么\\n - Compaction 是把一个 Store 多个 StoreFile 文件合并整理成更少的新文件\\n - Minor Compaction 和 Major Compaction 的区别\\n - Minor Compaction\\n - 把若干个较小的 StoreFile 合并成更少的较大文件，但通常不是把该 Store 的所有文件一次性全部重写\\n - Major Compaction\\n - 更彻底地重写该 Store 的文件集合\\n - Split 是什么\\n - Split 是把一个 Region 沿 RowKey 边界切成两个子 Region\\n - Zookeeper 的作用\\n - 核心作用\\n - 主节点选举：决定谁是 active HMaster\\n - 服务发现：让客户端知道该连谁\\n - 节点状态感知：知道哪些服务还活着\\n - 协调关键元数据入口\\n - 为什么 HBase 需要 ZooKeeper\\n - HBase 把协调问题外包给 ZooKeeper，把自己更多精力放在存储和读写路径上\\n - Zookeeper 不做什么\\n - 不存储业务明细数据\\n - 不承担高吞吐读写\\n - 不等于 HMaster\""
 &lt;/script&gt;
 &lt;script&gt;
 (function () {
@@ -178,6 +263,174 @@ console.error("MindElixir not loaded. Check your CDN script tag.");
 return;
 }
 const hostId = "me_2";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="实际操作"&gt;实际操作&lt;/h1&gt;
+&lt;div id="me_3" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_3_src"&gt;
+"\"- 实操\\n - 启动单机 HBase\\n - 单机模式是什么\\n - 单机模式是 HBase 最基础的步数形态\\n - 在 standalone 模式下，所有 HBase 守护进程都运行在一个 JVM 里\\n - Docker 启动\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324134824394.png,252,116)\\n - 进入容器进行最小验证命令\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324135239051.png,625,612)\\n - 用 Shell 建表、删表、put/get/scan\\n - 进入 shell\\n - hbase shell\\n - 命令基本结构\\n - 表名：test\\n - row key：row1\\n - 列：cf:a（列族:列限定符）\\n - create 建表\\n - create 'test','cf'\\n - 创建表 test，在表中预定义列族 cf\\n - put 写入数据\\n - put 'test', 'row1', 'cf:a', 'value1'\\n - 'test'：表名\\n - 'row1'：row key\\n - 'cf:a'：列\\n - 'value1'：值\\n - 本质：往某个表的某一行、不同列写值\\n - scan 扫描数据\\n - scan 'test'\\n - 按 RowKey 顺序把表里面的一批数据扫出来\\n - get 读一行数据\\n - get 'test', 'row1'\\n - 按 Rowkey 精确读取某一行\\n - get 是点查，scan 是范围扫\\n - disable 和 drop\\n - disable 的作用：先把表停用，把表从可服务状态切到不可服务状态\\n - drop 的作用：删除表\\n - 创建 namespace \\n - 什么是 namespace\\n - 如果创建表时未指定 namespace，则表存放在 default namespace 下\\n - create 'test','cf' 本质等价于 'default:test'\\n - 为什么要有 namespace\\n - 表分组管理\\n - 避免表名冲突\\n - 便于做配额/约束\\n - namespace 是 HBase 里按业务域组织表的基本单位\\n - hbase 存在哪些 namespace\\n - default\\n - 用户表默认所在 namespace\\n - hbase\\n - 系统 namespace，保留给 hbase 内部表\\n - 创建 namespace\\n - create_namespace 'demo'\\n - 查看 namespace\\n - list_namespace\\n - 在 namespace 下建表\\n - create 'demo:test', 'cf'\\n - 写入和读取\\n - put 'demo:test', 'row1', 'cf:a', 'value1'\\n - get 'demo:test', 'row1'\\n - scan 'demo:test'\\n - 删除 namespace\\n - drop_namespace 'demo'\\n - 设置版本数、TTL、压缩\\n - 列族级配置\\n - family 是物理和策略边界\\n - VERSIONS、TTL、COMPRESSION 这类配置，默认思维都是这个 family 怎么存，不是这一列怎么存\\n - alter 是什么命令\\n - alter 用来修改已有表的 schema 或表/列族相关配置\\n - VERSIONS\\n - 控制什么\\n - 同一个 row+family+qualifier 最多保存多少个历史版本\\n - 怎么改\\n - alter 'test', NAME =\\u003e 'cf', VERSIONS =\\u003e 5\\n - TTL\\n - 控制什么\\n - 这个列族里面的数据默认能活多久\\n - 怎么改\\n - alter 'test', NAME =\\u003e 'cf', TTL =\\u003e 2592000\\n - COMPRESSION\\n - 控制什么\\n - 这个列族的 StoreFile/HFile 落盘时用什么压缩算法\\n - 怎么改\\n - alter 'test', NAME =\\u003e 'cf', COMPRESSION =\\u003e 'SNAPPY'\\n - 验证修改\\n - describe 'test'\\n - 查看 Region 分布\\n - web ui\\n - localhost:16010\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324154801170.png,600,400)\\n - 简单 filter 查询\\n - 为什么要用 filter\\n - 不想整表扫出来自己筛\\n - 只看某些 row key 前缀/只看某些列名前缀/只取前 N 行/只保留某个列值满足条件的行\\n - 让 RegionServer 在服务端先过滤（server-side filtering）\\n - filter 的基本写法\\n - scan '表明', { FILTER =\\u003e \\\"过滤器表达式\\\" }\\n - 准备练习数据\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155538852.png,475,206)\\n - 5 类简单 filter\\n - PrefixFilter：按 row key 前缀过滤\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155813044.png,801,131)\\n - PageFilter：限制返回多少行\\n - scan 'demo:filter_test', { FILTER =\\u003e \\\"PageFilter(2)\\\" }\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160025865.png,799,138)\\n - ColumnPrefixFilter：按列限定符前缀过滤\\n - scan 'demo:filter_test', { FILTER =\\u003e \\\"ColumnPrefixFilter('na')\\\" }\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160109778.png,801,134)\\n - SingleColumnValueFilter：按某一列的值筛行\\n - scan 'demo:filter_test', { FILTER =\\u003e \\\"SingleColumnValueFilter('cf', 'city', =, 'binary:Tokyo')\\\" }\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160214742.png,941,100)\\n - ValueFilter：按值过滤列\\n - 如果只是做简单的 family:qualifier:value 等值判断，推荐限制后再配 ValueFilter，这样能避免扫描无关的 family/column\\n - 组合使用 filter\\n - \\\"PrefixFilter ('Row') AND PageFilter (1) AND FirstKeyOnlyFilter ()\\\"\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_3";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="java-客户端开发"&gt;Java 客户端开发&lt;/h1&gt;
+&lt;div id="me_4" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_4_src"&gt;
+"\"- Java 客户端开发\\n - Connection/Admin/Table\\n - 职责边界\\n - Connection：集群级入口\\n - 封装了到实际服务器和 ZooKeeper 的连接\\n - Admin：管理面接口\\n - Table：单表数据面接口\\n - 代码关系\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324161657372.png,584,113)\\n - 最小 Java 示例\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_4";
 let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
 function genId() {
 return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
