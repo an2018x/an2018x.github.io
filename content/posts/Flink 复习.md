@@ -1,0 +1,192 @@
+---
+title: "Flink 复习"
+date: '2026-03-24'
+draft: false
+description:  
+toc: true
+---
+
+# Flink 整体认知
+
+
+{{< mind height="860px" >}}
+- Flink 整体认知
+    - 认识 Flink
+        - Flink 是什么
+            - Flink 是一个对于有界和无界数据流进行有状态计算的框架和分布式处理引擎
+            - 框架：Flink 不是一个单独的软件命令，而是一套开发 + 运行的系统
+        - Flink 和 Hadoop/Spark/Storm 的区别
+            - 基本定义
+                - Hadoop 是什么
+                    - 大数据基础设施体系
+                    - HDFS：分布式存储
+                    - MapReduce：离线批处理计算
+                    - YARN：资源管理
+                    - 早期大数据时代的“存储+资源管理+离线计算“基础平台
+                - Spark 是什么
+                    - 通用的大数据计算引擎
+                    - 流处理主要通过 Structured Streaming
+                    - 更偏通用分析平台，批处理很强，流处理也能做
+                - Storm 是什么
+                    - 是一个分布式实时计算系统
+                    - 较早一代的纯流式处理框架，比 Flink 早
+            - 比较维度
+                - 主要定位
+                    - Hadoop
+                        - 海量数据存储
+                        - 离线批处理
+                        - 高吞吐，不强调低延迟
+                    - Spark
+                        - 通用大数据引擎
+                        - 强批处理
+                        - 可扩展到 SQL、ML、Streaming
+                    - Flink
+                        - 有状态流处理
+                        - 事件时间
+                        - 流批统一
+                        - 更强实时计算语义
+                - 处理模型
+                    - Hadoop: Batch
+                        - 读一批数据->map->shuffle->reduce->输出结果
+                    - Spark: Batch + Micro-batch
+                    - Flink: Native Streaming，批流统一
+                - 延迟特征
+                    - Hadoop
+                        - 延迟高，通常分钟级甚至更长
+                    - Spark
+                        - micor-batch 延迟比原生流高一点
+                    - Flink
+                        - 低延迟实时计算
+                - 状态能力
+                    - Hadoop
+                        - 不擅长生命周期有状态流计算
+                    - Spark
+                        - 能做状态处理，但不是以 stateful streaming 为核心
+                    - Flink
+                        - stateful computations over data streams
+                        - exactly-once state consistency
+        - 什么是批处理、流处理、实时计算
+            - 批处理
+                - 定义：先把一段时间内的数据收集起来，等数据攒够一批后，再统一进行计算
+                - 特点：先到齐，再处理、延迟高、吞吐高、程序有结束点
+            - 流处理
+                - 定义：把数据看成一个持续到来的事件流，数据一到，系统就持续处理
+                - 特点：连续不断、持续进行、低延迟、要处理历史记忆
+            - 实时计算
+                - 定义：从数据产生，到计算结果可用，时间尽可能短
+                - 实时计算不是来了就必须零延迟，而是在业务可接受的时间范围内尽快给出结果
+        - Flink 的应用场景
+            - 事件驱动应用
+                - 系统不是定时查数据库，而是收到事件才触发计算、状态更新或外部动作
+                - 典型业务
+                    - 欺诈检测
+                    - 异常检测
+                    - 规则告警
+                    - 业务流程监控
+            - 数据分析应用
+                - 从原始数据中提取信息和洞察
+                - 典型业务
+                    - 每分钟订单量
+                    - 热门榜单
+                    - 实时数仓
+                    - 离线 + 实时一体分析
+            - 数据管道与 ETF
+                - 从上游系统读数据，做清洗、转换、补全、标准化、过滤、路由，再写到下游系统
+                - 典型业务
+                    - Kafka 到 Kafka
+                    - Kafka 到数据库/搜索引擎/湖仓
+                    - CDC + 实时同步
+    - Flink 基本架构
+        - JobManager、TaskManager
+            - 最小 Flink 集群
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324174529584.png,474,301)
+                - 在本地或某台机器上提交作业
+                - JobManager 接收这个作业，分析要怎么跑
+                - 把真正要执行的子任务分发给多个 TaskManager
+                - TaskManager 在各自机器上并行处理数据
+            - 什么是 JobManager
+                - 是 Flink 集群的控制中心
+                - 负责接收/解析/调度/监控/作业、协调故障恢复、管理元信息
+            - 什么是 TaskManager
+                - 是 Flink 集群里真正干活的 worker
+                - 主要负责执行子任务/占用和提供计算资源/与其他 TaskManger 传输数据/向 JobManager 汇报状态
+        - Slot 是什么
+            - 定义
+                - Flink 用 Slot 告诉调度器：这台 TaskManager 最多能接多少份执行任务
+            - 为什么需要 Slot
+                - 控制一个 TaskManager 能接多少任务
+                - 做资源切分
+                - 在隔离与利用率之间做平衡
+            - Slot 和 TaskManager 的关系
+                - 一个 TaskManager 可以有多个 Slot
+                - Slot 是 TaskManager 提供给集群调度的执行容量
+                - Slot 是资源申请和任务放置的基本单位之一
+            - Slot 和并行度的关系
+                - 并行度指的是一个算子会拆成多少个并行子任务
+                - 执行这些子任务需要 Slot
+                - 在默认 slot sharing 开启时，作业大致需要的 slot 数 = 该作业的最高并行度
+        - JobGraph、ExecutionGraph
+            - 什么是 JobGraph
+                - Flink 作业的逻辑图/逻辑执行计划
+                - JobGraph 里面的点，叫做 JobVertex，它是一个逻辑阶段/一个逻辑算子节点
+                - JobGraph 不强调每个并行子任务
+            - 什么是 ExecutionGraph
+                - 是 JobGraph 经过并行展开后的实际执行拓扑
+                - ExecutionGraph 的核心点是 ExecutionVertex
+        - 并行度是什么
+            - 本质
+                - Flink 算子可以想象成一个类似读 Kafka/做 map 转换/做窗口聚合的工作
+                - 并行度决定一个算子会被拆分成几个 subtask 一起做
+            - 为什么需要并行度
+                - 一份工作只让一个实例做，处理能力有限
+                - 提高并行度，本质就是把工作拆开，让多个 subtask 同时处理
+        - 一个 flink 作业如何运行起来
+            - 总流程
+                - 写 Flink 程序，调用 execute()
+                - Client 负责提交作业
+                - 程序先形成逻辑数据流图
+                - JobManager 接收作业
+                - JobManager 把 JobGraph 转成 ExecutionGraph
+                - 调度器根据并行度和可用 slot 做任务部署
+                - TaskManager 真正执行 subtask
+                - 运行中持续监控、处理状态、必要时恢复故障
+            - 编写代码时，发生了什么
+                - 写的是逻辑处理链路，不是真正的分布式执行指令
+                - 调用 execute() 后，作业才真正进入提交流程
+            - Client 做了什么
+                - Client 是提交入口，负责将应用提交到集群
+                - Client 不是主要计算节点
+            - JobGraph 在什么时候出现
+                - 代码先被整理为数据流图，也就是 JobGraph
+                - JobGraph 偏逻辑层，还没有真正展开成每个 subtask，不是最终的并发执行形态
+            - JobManager 接手后做什么
+                - 接收作业
+                - 管理作业生命周期
+                - 把逻辑图变成执行图
+                - 协调资源和任务部署
+            - Execution Graph 怎么来的
+                - ExecutionGraph 是 JobGraph 的并行化版本
+                - 并行度在这里真正展开
+                - 运行状态也在这里变得具体
+            - 调度阶段发生什么
+                - 要跑多少个 subtask
+                - 这些 subtask 放到哪些地方跑
+                - 数据怎么在它们之间流动
+            - slot 发挥什么作用
+                - TaskManager 提供 slots
+                - 调度器找空闲 slot
+                - 默认 slot sharing 会影响所需 slot 数
+            - TaskManager 真正干活时发生了什么
+                - TaskManager 执行 subtask
+                - 每个 subtask 处理自己那部分的输入数据
+                - 上下游 subtask 之间可能发生网络传输
+                - 状态、窗口、定时器等能力都在这里真正运作
+            - 作业运行中，JobManager 还在做什么
+                - 跟踪任务状态
+                - 监控资源与任务健康情况
+                - 失败时触发恢复
+            - 作业失败了会怎样
+                - JobManager 感知失败
+                - 调度器决定如何恢复
+                - TaskManager 上的任务可能被重新部署
+{{< /mind >}}

@@ -300,5 +300,216 @@ toc: true
         - 什么时候会 split
             - 由 RegionSplitPolicy 决定
             - 当 Region 增长到某个阈值/满足当前 split policy 的条件
-    - WAL 是什么    
+    - WAL 是什么
+        - 为什么需要 WAL
+            - HBase 不是收到请求就立即写成 HFile
+            - 写请求先进入内存里面的 MemStore
+            - MemStore 是内存结构，掉电或进程崩溃会丢
+            - WAL 为还没落成 HFile 的持久化阶段兜底
+            - 写入请求里的 cells 会一直保留，直到成功持久化到 WAL 和 MemStore
+            - MemStore 负责写入速度，WAL 负责稳定性
+        - 为什么叫 Write-Ahead
+            - 先把将要发生的修改记录到日志中，再依赖后续流程把它整理进正式数据文件
+            - 这条写操作在正式长期存储结构整理完成之前
+            - 已经被写入到一个可恢复的日志里
+        - WAL 处在的位置/Put 操作链路
+            - 客户端把 Put 请求发送到目标 RegionServer
+            - RegionServer 把这次修改追加到 WAL
+            - 同时把数据写入目标 Store 的 MemStore
+            - 之后后台线程再把 MemStore Flush 成 StoreFile/HFile
+            - 最后通过 compaction 整理文件
+        - WAL 记录的内容
+            - WAL 记录的是这次写操作的增量编辑记录
+            - WAL 写入的内容加做 WALEdit，有 WAL.Entry、WALKey 类型来表示一条日志条目及其键
+    - MemStore、StoreFile/HFile、BlockCache
+        - 概述
+            - MemStore：写入时的内存缓冲区
+            - StoreFile/HFile：Flush 之后落盘的正式数据文件
+            - BlockCache：读路径上的数据块缓存
+            - 在一个 Region 里，每个列族对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile
+        - MemStore 是什么
+            - MemStore 是 Store 在内存中的缓冲区
+            - 客户端写入数据， RegionServer 会先把修改写入 WAL，并把数据存放在对应的 Store 的 MemStore
+            - 后续达到条件后，再 flush 到磁盘形成 StoreFile
+            - 主要解决写的快的问题，如果每次 Put/Delete 都直接改磁盘主文件，开销会很大
+            - 先写入内存，可以把随机小写聚合起来，再批量 flush 到磁盘
+            - MemStore 只是内存态，不是最终查询文件，内容会在后续 flush 后变为 StoreFile/HFile
+        - StoreFile 是什么
+            - 是 Store 在磁盘上的数据文件
+            - MemStore 不会只 flush 一次，每次 flush 会生成新的 StoreFile
+            - 当 BlockCache miss 且 MemStore 没有目标数据，RegionStore 会去 HFile/StoreFile 中查
+        - HFile 是什么
+            - 是底层文件格式，StoreFile 是 HBase 在 RegionServer/Store 这一层使用的数据文件抽象
+            - 一个 StoreFile 对应一个 HFile
+        - BlockCache 是什么
+            - 是 HBase 读路径上的数据库缓存
+            - 缓存的是从 HFile 里读出来的 block
+            - 解决的是读的快的问题
+    - Flush、Compaction、Split 的流程
+        - Flush 是什么
+            - 定义
+                - 把某个 Store 的 MemStore 内容写到磁盘，生成新的 StoreFile
+            - 为什么必须 Flush
+                - MemStore 在内存中，不能无限增长
+            - flush 后发生什么
+                - flush 完成后，这批数据会变成新的 StoreFile，被纳入该 Store 的文件集合。
+        - Flush 触发条件
+            - 内存压力触发
+            - 时间触发
+            - 运维/内部流程触发
+        - Compaction 是什么
+            - Compaction 是把一个 Store 多个 StoreFile 文件合并整理成更少的新文件
+        - Minor Compaction 和 Major Compaction 的区别
+            - Minor Compaction
+                - 把若干个较小的 StoreFile 合并成更少的较大文件，但通常不是把该 Store 的所有文件一次性全部重写
+            - Major Compaction
+                - 更彻底地重写该 Store 的文件集合
+        - Split 是什么
+            - Split 是把一个 Region 沿 RowKey 边界切成两个子 Region
+    - Zookeeper 的作用
+        - 核心作用
+            - 主节点选举：决定谁是 active HMaster
+            - 服务发现：让客户端知道该连谁
+            - 节点状态感知：知道哪些服务还活着
+            - 协调关键元数据入口
+        - 为什么 HBase 需要 ZooKeeper
+            - HBase 把协调问题外包给 ZooKeeper，把自己更多精力放在存储和读写路径上
+        - Zookeeper 不做什么
+            - 不存储业务明细数据
+            - 不承担高吞吐读写
+            - 不等于 HMaster
+{{< /mind >}}
+
+# 实际操作
+
+{{< mind height="860px" >}}
+- 实操
+    - 启动单机 HBase
+        - 单机模式是什么
+            - 单机模式是 HBase 最基础的步数形态
+            - 在 standalone 模式下，所有 HBase 守护进程都运行在一个 JVM 里
+        - Docker 启动
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324134824394.png,252,116)
+        - 进入容器进行最小验证命令
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324135239051.png,625,612)
+    - 用 Shell 建表、删表、put/get/scan
+        - 进入 shell
+            - hbase shell
+        - 命令基本结构
+            - 表名：test
+            - row key：row1
+            - 列：cf:a（列族:列限定符）
+        - create 建表
+            - create 'test','cf'
+            - 创建表 test，在表中预定义列族 cf
+        - put 写入数据
+            - put 'test', 'row1', 'cf:a', 'value1'
+            - 'test'：表名
+            - 'row1'：row key
+            - 'cf:a'：列
+            - 'value1'：值
+            - 本质：往某个表的某一行、不同列写值
+        - scan 扫描数据
+            - scan 'test'
+            - 按 RowKey 顺序把表里面的一批数据扫出来
+        - get 读一行数据
+            - get 'test', 'row1'
+            - 按 Rowkey 精确读取某一行
+            - get 是点查，scan 是范围扫
+        - disable 和 drop
+            - disable 的作用：先把表停用，把表从可服务状态切到不可服务状态
+            - drop 的作用：删除表
+    - 创建 namespace 
+        - 什么是 namespace
+            - 如果创建表时未指定 namespace，则表存放在 default namespace 下
+            - create 'test','cf' 本质等价于 'default:test'
+        - 为什么要有 namespace
+            - 表分组管理
+            - 避免表名冲突
+            - 便于做配额/约束
+            - namespace 是 HBase 里按业务域组织表的基本单位
+        - hbase 存在哪些 namespace
+            - default
+                - 用户表默认所在 namespace
+            - hbase
+                - 系统 namespace，保留给 hbase 内部表
+        - 创建 namespace
+            - create_namespace 'demo'
+        - 查看 namespace
+            - list_namespace
+        - 在 namespace 下建表
+            - create 'demo:test', 'cf'
+        - 写入和读取
+            - put 'demo:test', 'row1', 'cf:a', 'value1'
+            - get 'demo:test', 'row1'
+            - scan 'demo:test'
+        - 删除 namespace
+            - drop_namespace 'demo'
+    - 设置版本数、TTL、压缩
+        - 列族级配置
+            - family 是物理和策略边界
+            - VERSIONS、TTL、COMPRESSION 这类配置，默认思维都是这个 family 怎么存，不是这一列怎么存
+        - alter 是什么命令
+            - alter 用来修改已有表的 schema 或表/列族相关配置
+        - VERSIONS
+            - 控制什么
+                - 同一个 row+family+qualifier 最多保存多少个历史版本
+            - 怎么改
+                - alter 'test', NAME => 'cf', VERSIONS => 5
+        - TTL
+            - 控制什么
+                - 这个列族里面的数据默认能活多久
+            - 怎么改
+                - alter 'test', NAME => 'cf', TTL => 2592000
+        - COMPRESSION
+            - 控制什么
+                - 这个列族的 StoreFile/HFile 落盘时用什么压缩算法
+            - 怎么改
+                - alter 'test', NAME => 'cf', COMPRESSION => 'SNAPPY'
+        - 验证修改
+            - describe 'test'
+    - 查看 Region 分布
+        - web ui
+            - localhost:16010
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324154801170.png,600,400)
+    - 简单 filter 查询
+        - 为什么要用 filter
+            - 不想整表扫出来自己筛
+            - 只看某些 row key 前缀/只看某些列名前缀/只取前 N 行/只保留某个列值满足条件的行
+            - 让 RegionServer 在服务端先过滤（server-side filtering）
+        - filter 的基本写法
+            - scan '表明', { FILTER => "过滤器表达式" }
+        - 准备练习数据
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155538852.png,475,206)
+        - 5 类简单 filter
+            - PrefixFilter：按 row key 前缀过滤
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155813044.png,801,131)
+            - PageFilter：限制返回多少行
+                - scan 'demo:filter_test', { FILTER => "PageFilter(2)" }
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160025865.png,799,138)
+            - ColumnPrefixFilter：按列限定符前缀过滤
+                - scan 'demo:filter_test', { FILTER => "ColumnPrefixFilter('na')" }
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160109778.png,801,134)
+            - SingleColumnValueFilter：按某一列的值筛行
+                - scan 'demo:filter_test', { FILTER => "SingleColumnValueFilter('cf', 'city', =, 'binary:Tokyo')" }
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160214742.png,941,100)
+            - ValueFilter：按值过滤列
+                - 如果只是做简单的 family:qualifier:value 等值判断，推荐限制后再配 ValueFilter，这样能避免扫描无关的 family/column
+        - 组合使用 filter
+            - "PrefixFilter ('Row') AND PageFilter (1) AND FirstKeyOnlyFilter ()"
+{{< /mind >}}
+
+# Java 客户端开发
+
+{{< mind height="860px" >}}
+- Java 客户端开发
+    - Connection/Admin/Table
+        - 职责边界
+            - Connection：集群级入口
+                - 封装了到实际服务器和 ZooKeeper 的连接
+            - Admin：管理面接口
+            - Table：单表数据面接口
+        - 代码关系
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324161657372.png,584,113)
+        - 最小 Java 示例
 {{< /mind >}}
