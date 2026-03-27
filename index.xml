@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>安橙的博客</title><link>https://blog.ans20xx.com/</link><description>Recent content on 安橙的博客</description><generator>Hugo -- 0.159.0</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Tue, 24 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Flink 复习</title><link>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="flink-整体认知"&gt;Flink 整体认知&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>安橙的博客</title><link>https://blog.ans20xx.com/</link><description>Recent content on 安橙的博客</description><generator>Hugo -- 0.159.1</generator><language>zh</language><copyright>2025 安橙</copyright><lastBuildDate>Tue, 24 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Flink 复习</title><link>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="flink-整体认知"&gt;Flink 整体认知&lt;/h1&gt;
 &lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
 &lt;script type="application/json" id="me_0_src"&gt;
-"\"- Flink 整体认知\\n - 认识 Flink\\n - Flink 是什么\\n - Flink 是一个对于有界和无界数据流进行有状态计算的框架和分布式处理引擎\\n - 框架：Flink 不是一个单独的软件命令，而是一套开发 + 运行的系统\\n - Flink 和 Hadoop/Spark/Storm 的区别\\n - 基本定义\\n - Hadoop 是什么\\n - 大数据基础设施体系\\n - HDFS：分布式存储\\n - MapReduce：离线批处理计算\\n - YARN：资源管理\\n - 早期大数据时代的“存储+资源管理+离线计算“基础平台\\n - Spark 是什么\\n - 通用的大数据计算引擎\\n - 流处理主要通过 Structured Streaming\\n - 更偏通用分析平台，批处理很强，流处理也能做\\n - Storm 是什么\\n - 是一个分布式实时计算系统\\n - 较早一代的纯流式处理框架，比 Flink 早\\n - 比较维度\\n - 主要定位\\n - Hadoop\\n - 海量数据存储\\n - 离线批处理\\n - 高吞吐，不强调低延迟\\n - Spark\\n - 通用大数据引擎\\n - 强批处理\\n - 可扩展到 SQL、ML、Streaming\\n - Flink\\n - 有状态流处理\\n - 事件时间\\n - 流批统一\\n - 更强实时计算语义\\n - 处理模型\\n - Hadoop: Batch\\n - 读一批数据-\\u003emap-\\u003eshuffle-\\u003ereduce-\\u003e输出结果\\n - Spark: Batch + Micro-batch\\n - Flink: Native Streaming，批流统一\\n - 延迟特征\\n - Hadoop\\n - 延迟高，通常分钟级甚至更长\\n - Spark\\n - micor-batch 延迟比原生流高一点\\n - Flink\\n - 低延迟实时计算\\n - 状态能力\\n - Hadoop\\n - 不擅长生命周期有状态流计算\\n - Spark\\n - 能做状态处理，但不是以 stateful streaming 为核心\\n - Flink\\n - stateful computations over data streams\\n - exactly-once state consistency\\n - 什么是批处理、流处理、实时计算\\n - 批处理\\n - 定义：先把一段时间内的数据收集起来，等数据攒够一批后，再统一进行计算\\n - 特点：先到齐，再处理、延迟高、吞吐高、程序有结束点\\n - 流处理\\n - 定义：把数据看成一个持续到来的事件流，数据一到，系统就持续处理\\n - 特点：连续不断、持续进行、低延迟、要处理历史记忆\\n - 实时计算\\n - 定义：从数据产生，到计算结果可用，时间尽可能短\\n - 实时计算不是来了就必须零延迟，而是在业务可接受的时间范围内尽快给出结果\\n - Flink 的应用场景\\n - 事件驱动应用\\n - 系统不是定时查数据库，而是收到事件才触发计算、状态更新或外部动作\\n - 典型业务\\n - 欺诈检测\\n - 异常检测\\n - 规则告警\\n - 业务流程监控\\n - 数据分析应用\\n - 从原始数据中提取信息和洞察\\n - 典型业务\\n - 每分钟订单量\\n - 热门榜单\\n - 实时数仓\\n - 离线 + 实时一体分析\\n - 数据管道与 ETF\\n - 从上游系统读数据，做清洗、转换、补全、标准化、过滤、路由，再写到下游系统\\n - 典型业务\\n - Kafka 到 Kafka\\n - Kafka 到数据库/搜索引擎/湖仓\\n - CDC + 实时同步\\n - Flink 基本架构\\n - JobManager、TaskManager\\n - 最小 Flink 集群\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324174529584.png,474,301)\\n - 在本地或某台机器上提交作业\\n - JobManager 接收这个作业，分析要怎么跑\\n - 把真正要执行的子任务分发给多个 TaskManager\\n - TaskManager 在各自机器上并行处理数据\\n - 什么是 JobManager\\n - 是 Flink 集群的控制中心\\n - 负责接收/解析/调度/监控/作业、协调故障恢复、管理元信息\\n - 什么是 TaskManager\\n - 是 Flink 集群里真正干活的 worker\\n - 主要负责执行子任务/占用和提供计算资源/与其他 TaskManger 传输数据/向 JobManager 汇报状态\\n - Slot 是什么\\n - 定义\\n - Flink 用 Slot 告诉调度器：这台 TaskManager 最多能接多少份执行任务\\n - 为什么需要 Slot\\n - 控制一个 TaskManager 能接多少任务\\n - 做资源切分\\n - 在隔离与利用率之间做平衡\\n - Slot 和 TaskManager 的关系\\n - 一个 TaskManager 可以有多个 Slot\\n - Slot 是 TaskManager 提供给集群调度的执行容量\\n - Slot 是资源申请和任务放置的基本单位之一\\n - Slot 和并行度的关系\\n - 并行度指的是一个算子会拆成多少个并行子任务\\n - 执行这些子任务需要 Slot\\n - 在默认 slot sharing 开启时，作业大致需要的 slot 数 = 该作业的最高并行度\\n - JobGraph、ExecutionGraph\\n - 什么是 JobGraph\\n - Flink 作业的逻辑图/逻辑执行计划\\n - JobGraph 里面的点，叫做 JobVertex，它是一个逻辑阶段/一个逻辑算子节点\\n - JobGraph 不强调每个并行子任务\\n - 什么是 ExecutionGraph\\n - 是 JobGraph 经过并行展开后的实际执行拓扑\\n - ExecutionGraph 的核心点是 ExecutionVertex\\n - 并行度是什么\\n - 本质\\n - Flink 算子可以想象成一个类似读 Kafka/做 map 转换/做窗口聚合的工作\\n - 并行度决定一个算子会被拆分成几个 subtask 一起做\\n - 为什么需要并行度\\n - 一份工作只让一个实例做，处理能力有限\\n - 提高并行度，本质就是把工作拆开，让多个 subtask 同时处理\\n - 一个 flink 作业如何运行起来\\n - 总流程\\n - 写 Flink 程序，调用 execute()\\n - Client 负责提交作业\\n - 程序先形成逻辑数据流图\\n - JobManager 接收作业\\n - JobManager 把 JobGraph 转成 ExecutionGraph\\n - 调度器根据并行度和可用 slot 做任务部署\\n - TaskManager 真正执行 subtask\\n - 运行中持续监控、处理状态、必要时恢复故障\\n - 编写代码时，发生了什么\\n - 写的是逻辑处理链路，不是真正的分布式执行指令\\n - 调用 execute() 后，作业才真正进入提交流程\\n - Client 做了什么\\n - Client 是提交入口，负责将应用提交到集群\\n - Client 不是主要计算节点\\n - JobGraph 在什么时候出现\\n - 代码先被整理为数据流图，也就是 JobGraph\\n - JobGraph 偏逻辑层，还没有真正展开成每个 subtask，不是最终的并发执行形态\\n - JobManager 接手后做什么\\n - 接收作业\\n - 管理作业生命周期\\n - 把逻辑图变成执行图\\n - 协调资源和任务部署\\n - Execution Graph 怎么来的\\n - ExecutionGraph 是 JobGraph 的并行化版本\\n - 并行度在这里真正展开\\n - 运行状态也在这里变得具体\\n - 调度阶段发生什么\\n - 要跑多少个 subtask\\n - 这些 subtask 放到哪些地方跑\\n - 数据怎么在它们之间流动\\n - slot 发挥什么作用\\n - TaskManager 提供 slots\\n - 调度器找空闲 slot\\n - 默认 slot sharing 会影响所需 slot 数\\n - TaskManager 真正干活时发生了什么\\n - TaskManager 执行 subtask\\n - 每个 subtask 处理自己那部分的输入数据\\n - 上下游 subtask 之间可能发生网络传输\\n - 状态、窗口、定时器等能力都在这里真正运作\\n - 作业运行中，JobManager 还在做什么\\n - 跟踪任务状态\\n - 监控资源与任务健康情况\\n - 失败时触发恢复\\n - 作业失败了会怎样\\n - JobManager 感知失败\\n - 调度器决定如何恢复\\n - TaskManager 上的任务可能被重新部署\""
+"\"- Flink 整体认知\\n - 认识 Flink\\n - Flink 是什么\\n - Flink 是一个对于有界和无界数据流进行有状态计算的框架和分布式处理引擎\\n - 框架：Flink 不是一个单独的软件命令，而是一套开发 + 运行的系统\\n - Flink 和 Hadoop/Spark/Storm 的区别\\n - 基本定义\\n - Hadoop 是什么\\n - 大数据基础设施体系\\n - HDFS：分布式存储\\n - MapReduce：离线批处理计算\\n - YARN：资源管理\\n - 早期大数据时代的“存储+资源管理+离线计算“基础平台\\n - Spark 是什么\\n - 通用的大数据计算引擎\\n - 流处理主要通过 Structured Streaming\\n - 更偏通用分析平台，批处理很强，流处理也能做\\n - Storm 是什么\\n - 是一个分布式实时计算系统\\n - 较早一代的纯流式处理框架，比 Flink 早\\n - 比较维度\\n - 主要定位\\n - Hadoop\\n - 海量数据存储\\n - 离线批处理\\n - 高吞吐，不强调低延迟\\n - Spark\\n - 通用大数据引擎\\n - 强批处理\\n - 可扩展到 SQL、ML、Streaming\\n - Flink\\n - 有状态流处理\\n - 事件时间\\n - 流批统一\\n - 更强实时计算语义\\n - 处理模型\\n - Hadoop: Batch\\n - 读一批数据-\\u003emap-\\u003eshuffle-\\u003ereduce-\\u003e输出结果\\n - Spark: Batch + Micro-batch\\n - Flink: Native Streaming，批流统一\\n - 延迟特征\\n - Hadoop\\n - 延迟高，通常分钟级甚至更长\\n - Spark\\n - micor-batch 延迟比原生流高一点\\n - Flink\\n - 低延迟实时计算\\n - 状态能力\\n - Hadoop\\n - 不擅长生命周期有状态流计算\\n - Spark\\n - 能做状态处理，但不是以 stateful streaming 为核心\\n - Flink\\n - stateful computations over data streams\\n - exactly-once state consistency\\n - 什么是批处理、流处理、实时计算\\n - 批处理\\n - 定义：先把一段时间内的数据收集起来，等数据攒够一批后，再统一进行计算\\n - 特点：先到齐，再处理、延迟高、吞吐高、程序有结束点\\n - 流处理\\n - 定义：把数据看成一个持续到来的事件流，数据一到，系统就持续处理\\n - 特点：连续不断、持续进行、低延迟、要处理历史记忆\\n - 实时计算\\n - 定义：从数据产生，到计算结果可用，时间尽可能短\\n - 实时计算不是来了就必须零延迟，而是在业务可接受的时间范围内尽快给出结果\\n - Flink 的应用场景\\n - 事件驱动应用\\n - 系统不是定时查数据库，而是收到事件才触发计算、状态更新或外部动作\\n - 典型业务\\n - 欺诈检测\\n - 异常检测\\n - 规则告警\\n - 业务流程监控\\n - 数据分析应用\\n - 从原始数据中提取信息和洞察\\n - 典型业务\\n - 每分钟订单量\\n - 热门榜单\\n - 实时数仓\\n - 离线 + 实时一体分析\\n - 数据管道与 ETF\\n - 从上游系统读数据，做清洗、转换、补全、标准化、过滤、路由，再写到下游系统\\n - 典型业务\\n - Kafka 到 Kafka\\n - Kafka 到数据库/搜索引擎/湖仓\\n - CDC + 实时同步\\n - Flink 基本架构\\n - JobManager、TaskManager\\n - 最小 Flink 集群\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324174529584.png,474,301)\\n - 在本地或某台机器上提交作业\\n - JobManager 接收这个作业，分析要怎么跑\\n - 把真正要执行的子任务分发给多个 TaskManager\\n - TaskManager 在各自机器上并行处理数据\\n - 什么是 JobManager\\n - 是 Flink 集群的控制中心\\n - 负责接收/解析/调度/监控/作业、协调故障恢复、管理元信息\\n - 什么是 TaskManager\\n - 是 Flink 集群里真正干活的 worker\\n - 主要负责执行子任务/占用和提供计算资源/与其他 TaskManger 传输数据/向 JobManager 汇报状态\\n - Slot 是什么\\n - 定义\\n - Flink 用 Slot 告诉调度器：这台 TaskManager 最多能接多少份执行任务\\n - 为什么需要 Slot\\n - 控制一个 TaskManager 能接多少任务\\n - 做资源切分\\n - 在隔离与利用率之间做平衡\\n - Slot 和 TaskManager 的关系\\n - 一个 TaskManager 可以有多个 Slot\\n - Slot 是 TaskManager 提供给集群调度的执行容量\\n - Slot 是资源申请和任务放置的基本单位之一\\n - Slot 和并行度的关系\\n - 并行度指的是一个算子会拆成多少个并行子任务\\n - 执行这些子任务需要 Slot\\n - 在默认 slot sharing 开启时，作业大致需要的 slot 数 = 该作业的最高并行度\\n - JobGraph、ExecutionGraph\\n - 什么是 JobGraph\\n - Flink 作业的逻辑图/逻辑执行计划\\n - JobGraph 里面的点，叫做 JobVertex，它是一个逻辑阶段/一个逻辑算子节点\\n - JobGraph 不强调每个并行子任务\\n - 什么是 ExecutionGraph\\n - 是 JobGraph 经过并行展开后的实际执行拓扑\\n - ExecutionGraph 的核心点是 ExecutionVertex\\n - 并行度是什么\\n - 本质\\n - Flink 算子可以想象成一个类似读 Kafka/做 map 转换/做窗口聚合的工作\\n - 并行度决定一个算子会被拆分成几个 subtask 一起做\\n - 为什么需要并行度\\n - 一份工作只让一个实例做，处理能力有限\\n - 提高并行度，本质就是把工作拆开，让多个 subtask 同时处理\\n - 一个 flink 作业如何运行起来\\n - 总流程\\n - 写 Flink 程序，调用 execute()\\n - Client 负责提交作业\\n - 程序先形成逻辑数据流图\\n - JobManager 接收作业\\n - JobManager 把 JobGraph 转成 ExecutionGraph\\n - 调度器根据并行度和可用 slot 做任务部署\\n - TaskManager 真正执行 subtask\\n - 运行中持续监控、处理状态、必要时恢复故障\\n - 编写代码时，发生了什么\\n - 写的是逻辑处理链路，不是真正的分布式执行指令\\n - 调用 execute() 后，作业才真正进入提交流程\\n - Client 做了什么\\n - Client 是提交入口，负责将应用提交到集群\\n - Client 不是主要计算节点\\n - JobGraph 在什么时候出现\\n - 代码先被整理为数据流图，也就是 JobGraph\\n - JobGraph 偏逻辑层，还没有真正展开成每个 subtask，不是最终的并发执行形态\\n - JobManager 接手后做什么\\n - 接收作业\\n - 管理作业生命周期\\n - 把逻辑图变成执行图\\n - 协调资源和任务部署\\n - Execution Graph 怎么来的\\n - ExecutionGraph 是 JobGraph 的并行化版本\\n - 并行度在这里真正展开\\n - 运行状态也在这里变得具体\\n - 调度阶段发生什么\\n - 要跑多少个 subtask\\n - 这些 subtask 放到哪些地方跑\\n - 数据怎么在它们之间流动\\n - slot 发挥什么作用\\n - TaskManager 提供 slots\\n - 调度器找空闲 slot\\n - 默认 slot sharing 会影响所需 slot 数\\n - TaskManager 真正干活时发生了什么\\n - TaskManager 执行 subtask\\n - 每个 subtask 处理自己那部分的输入数据\\n - 上下游 subtask 之间可能发生网络传输\\n - 状态、窗口、定时器等能力都在这里真正运作\\n - 作业运行中，JobManager 还在做什么\\n - 跟踪任务状态\\n - 监控资源与任务健康情况\\n - 失败时触发恢复\\n - 作业失败了会怎样\\n - JobManager 感知失败\\n - 调度器决定如何恢复\\n - TaskManager 上的任务可能被重新部署\\n - 搭建开发环境\\n - Maven 项目骨架\\n - POM 文件\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325093933331.png,434,339)\\n - fink-streaming-java\\n - 是 DataStream API 入门最核心的依赖之一\\n - 编写 StreamExecutionEnvironment、DataStream 这类代码会用到它\\n - flink-clients\\n - 用于本地执行、提交作业相关能力\\n - DataStream API 的基本项目结构\\n - 最小程序骨架\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325094745793.png,603,238)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325095338401.png,509,191)\\n - 代码详解\\n - StreamExecutionEnvironment\\n - 这是 DataStream 程序的入口\\n - StreamExectionEnviroment 是所有 Flink 程序的基础，通过 getExecutionEnvironment() 获取\\n - 是整个 Flink 程序的运行上下文或总入口\\n - 负责创建 source、串起数据流、设置并行度/checkpoint 等运行参数、触发执行\\n - Source\\n - Source 就是数据从哪里来\\n - DataStrema 最初是从各种 source 创建出来的\\n - Transformation\\n - 就是对数据流做处理\\n - DataStream 程序是对数据流做 transformation 的程序\\n - 基础类别\\n - map：一条变一条\\n - filter：按条件过滤\\n - flatMap：一条变多条\\n - keyBy：按 key 分组\\n - sum/reduce：聚合\\n - Sink\\n - Sink 就是结果往哪里去\\n - 结果通过 sink 返回，可以写入文件、标准输出等\\n - print() 可以直接在控制台打印输出\\n - sinkTo(xxx) 可以写入自定义的目的\\n - execute()\\n - Flink Job 是在调用 execute() 时创建并提交的\\n - DataStream 程序最后一步就是触发程序执行\\n - 跑通 WordCount\\n - 最小 WordCount 代码\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133401924.png,572,459)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133433816.png,92,160)\\n - 代码解析\\n - 创建执行环境\\n - StreamExecutionEnvironment 是每个 DataStream 程序的起点，表示开始描述一条 Flink 数据处理流水线了\\n - 创建输入流\\n - flatMap 把每一行拆分成单词\\n - flatMap 可以对一个输入产生任意多输出\\n - Tuple2\\u003cString, Integer\\u003e \\n - 是 Flink 常见的二元组类型\\n - keyBy(value -\\u003e value.f0)：按单词分组\\n - keyBy 会把流按照 key 逻辑分区，所有相同 key 会进入同一个分区\\n - sum(1)：对第二个字段求和\\n - DataStreamAPI 基础\\n - Source、Transformation、Sink\\n - Source\\n - Flink 程序接收数据的地方\\n - 可以来自内存集合、文件、消息队列、socket 等\\n - 集合 Source\\n - DataStream\\u003cString\\u003e stream = env.fromElements(\\\"a\\\",\\\"b\\\",\\\"c\\\");\\n - DataStream\\u003cInteger\\u003e nums = env.fromElements(1,2,3);\\n - 真实生产的 Source\\n - Kafka\\n - 文件\\n - Socket\\n - 自定义 source\\n - 其他外部系统 connector\\n - Transformation\\n - Operators 会把一个或多个 DataStream 转换成新的 DataStream\\n - 程序可以把这些变换组合成复杂的数据流拓扑\\n - map\\n - 一条输入变成一条输出\\n - DataStream\\u003cInteger\\u003e result = nums.map(x -\\u003e x*2)\\n - map 不会改变条数\\n - 适合做字段转换、格式转换、简单加工\\n - flatMap\\n - 一条输入可以变为多条输出，也可以一条都不输出\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225144380.png,509,92)\\n - flat 适合切词、拆分、展开\\n - WordCount 通常用它来把一行拆分成多个词\\n - 比 map 更灵活\\n - filter\\n - 按条件保留或丢弃数据\\n - DataStream\\u003cInteger\\u003e evenNums = nums.filter(x -\\u003e x % 2 == 0);\\n - filter 不改数据结构，主要做筛选\\n - keyBy\\n - 按 Key 对数据流做分组\\n - 所有具有相同 key 的记录会被分到同一个分区上，通常内部是哈希分区\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225552264.png,392,146)\\n - keyBy 不是聚合\\n - 只是按 key 把数据归组\\n - 后面的 sum、reduce、状态、窗口通常都要建立在 keyBy 后面\\n - reduce\\n - 对同一个 key 下的数据做增量操作\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225815274.png,627,58)\\n - reduce 必须通常接在 keyBy 后面\\n - 是增量聚合\\n - 比一次性收集所有数据再算更高效\\n - Sink\\n - result.print()\\n - print() 是最小可用 Sink\\n - 主要用于学习和调试\\n - 后续接 Kafka、文件、数据库，思路还是一样，只是 Sink 换了\\n - union/connect\\n - union\\n - 定义\\n - 会把两条或多条数据流合并为一条新流，新流包含所有输入流的元素\\n - 所有输入流必须是相同类型\\n - 示例\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326230432339.png,365,77)\\n - 关键点\\n - 类型必须一直\\n - union 后得到的还是同一种类型的普通 DataStream\\n - union 适合本来就是同类数据，只是来自不同来源\\n - connect\\n - 连接两条流，但是保留各自的类型信息\\n - 示例\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327105019878.png,425,77)\\n - connect 更像先把两条流并排放在一起，然后你自己决定怎么分别处理左边和右边\\n - connect 后怎么用\\n - connect 一般不会单独停在那，通常会继续接处理函数\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327110726215.png,481,276)\\n - RichFunction\\n - 为什么要有 RichFunction\\n - map/filter/flatMap 拿不到 Flink 运行时信息，也不方便做初始化和清理\\n - 需求：程序开始时初始化资源/程序结束时做清理/知道当前子任务编号/知道并行度/拿到运行时上下文\\n - RichFunction 定义了生命周期方法，以及访问函数执行上下文方法\\n - RichFunction 是什么\\n - RichFunction 是一个基础接口，很多常见的 rich 版本函数都建立在它之上\\n - 平时真正会写的，不是 RichFunction 本身，而是具体子类\\n - RichMapFunction\\n - RichFilterFunction\\n - RichFlatMapFunction\\n - 可以理解为普通 Function 的增强版\""
 &lt;/script&gt;
 &lt;script&gt;
 (function () {
@@ -5870,7 +5870,174 @@ return;
 const mind = new ME({ el: "#" + hostId });
 mind.init(data);
 })();
-&lt;/script&gt;</description></item><item><title>股票</title><link>https://blog.ans20xx.com/posts/%E8%82%A1%E7%A5%A8/</link><pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%82%A1%E7%A5%A8/</guid><description/></item><item><title>mysql 知识点</title><link>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h1 id="环境准备"&gt;环境准备&lt;/h1&gt;
+&lt;/script&gt;</description></item><item><title>投资</title><link>https://blog.ans20xx.com/posts/%E6%8A%95%E8%B5%84/</link><pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8A%95%E8%B5%84/</guid><description>&lt;h1 id="投资基础认知"&gt;投资基础认知&lt;/h1&gt;
+&lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_0_src"&gt;
+"\"- 投资基础认知\\n - 什么是投资\\n - 储蓄\\n - 把钱存起来，追求安全，收益很低\\n - 保住本金，几乎没有风险，也跑不赢通胀\\n - 投资\\n - 将钱投入到能长期产生回报的资产中\\n - 有逻辑依据，关注长期价值、承担合理风险以获取合理回报\\n - 投机\\n - 试图通过短期价格波动赚差价\\n - 投机接近于赌方向，往往没有对资产本身价值的深入分析，风险很高\\n - 资产与负债\\n - 资产\\n - 能把钱放进你口袋的东西\\n - 买了一套房，每月收租金 3000 元\\n - 负债\\n - 从口袋里面掏钱的东西\\n - 买了一套房，每月还房贷 8000 元\\n - 资产和负债的区别在于是给你创造现金流还是消耗现金流\\n - 复利的力量\\n - 单利\\n - 投入 10000，年化收益 10%，每年赚 1000，10 年后有 20000\\n - 复利\\n - 同样投入 10000，第一年 11000，第二年 12100，利息变成利息，十年后有 25937\\n - 公式：终值 = 本金 x (1 + 收益率) ^ 年数\\n - 重要的不是能赚多高的收益率，而是能让钱复利多长时间\\n - 通货膨胀\\n - 本质：同样一笔钱，买到的东西变少\\n - CPI（消费者价格指数）：是通胀的衡量标准，追踪一篮子日常消费品的价格变化\\n - 虽然 CPI 每年只有 2%-3%，但是实际感知到的通胀更高，房价、教育、医疗这些大头支出涨幅远超 CPI\\n - 发生的原因\\n - 货币超发，央行印了更多的钱，但是东西没多\\n - 需求拉动或者成本推动，原材料涨价\\n - 投资收益率必须跑赢通胀，否则财富实际上是缩水的\\n - 实际收益率 = 名义收益率 - 通胀率\\n - 风险与收益\\n - 风险排序：银行存款-\\u003e货币基金-\\u003e国债-\\u003e企业债券-\\u003e债券基金-\\u003e股票指数基金-\\u003e个股-\\u003e期货期权-\\u003e加密货币\\n - 系统性风险：整个市场的风险，比如经济衰退、金融危机、战争，所有资产都会跌\\n - 非系统性风险：某个公司或行业特有的风险，可以通过分散投资来大幅降低风险\\n - 分散投资能消除非系统性风险，无法消除系统性风险\\n - 主要投资品种概览\\n - 股票\\n - 花钱买了一家公司的一小块所有权\\n - 赚钱方式\\n - 价差：50 块买入，80 块卖出\\n - 分红：赚钱的公司把利润分一部分给股东，叫做股息或分红\\n - 银行股股价 5 元，每年每股分红 0.3 元，股息率就是 6%\\n - 股票特点：长期收益潜力最高，但是短期波动大，适合长期持有\\n - 市值：股价乘以总股数，代表市场认为这家公司值多少钱\\n - 大盘股：指市值几百亿以上的公司，波动相对较小，比较稳\\n - 小盘股：市值较小，波动大，涨跌剧烈\\n - 涨跌停：A 股特有的规则，普通股票每天最多涨/跌 10%，创业板和科创板是 20%\\n - 债券\\n - 把钱借给别人，对方承诺按时还本付息\\n - 发行方分类\\n - 国债：政府发行，信用最高，基本不违约，但是收益率也最低\\n - 地方政府和企业债：信用等级低于国债，利率会更高\\n - 可转债：是债券但是可以在指定条件下转换成股票\\n - 债券和利率是反向关系，市场利率上升，已发行债券的价格就下降\\n - 基金\\n - 基金的本质是众筹投资：很多人凑钱给基金经理，由他决定买什么\\n - 基金购买的是基金经理帮忙搭配好的一篮子资产\\n - 解决的问题\\n - 钱少，买不了那么多股票来分散风险\\n - 不专业，选股的事给专业的人做\\n - 投资方向分类\\n - 股票型基金\\n - 债权型基金\\n - 混合性基金\\n - 货币基金\\n - 管理方式分类\\n - 主动性基金：基金尽力主动选择，管理费较高（1.2%-1.5%）\\n - 被动型基金：直接复制某个指数的成分股，管理费很低（0.1%-0.5%）\\n - 长期来看，大多数主动型基金经理跑不赢指数\\n - 关注的核心指标\\n - 费率\\n - 规模\\n - 历史业绩\\n - 基金经理的从业年限和风格\\n - ETF\\n - 全称是“交易所交易基金“，可以理解为是一只可以像股票一样在交易所买卖的基金\\n - 和普通基金的区别在交易方式上\\n - 普通基金在支付宝或者银行 app 申购赎回，一天只有一个价格（收盘后结算），到账通常 T+1 或者更久\\n - ETF 直接在股票交易软件里买卖，和股票一样实时报价、实时成交，流动性好的多\\n - ETF 大多是被动型的，跟着一个指数\\n - ETF 的费率很低\\n - 大宗商品与加密货币\\n - 大宗商品指的是黄金、白银、石油、铜、大豆这类标准化的原材料\\n - 普通人参与大宗商品的方式是买黄金或者相关的 ETF\\n - 黄金被称为避险资产，当股市暴跌，通胀飙升或地缘政治紧张，资金会涌入黄金避险，推高金价\\n - 黄金不产生任何现金流，不付利息也不分红，长期收益率不如股票\\n - 加密货币以比特币和以太坊为代表\\n - 比特币的设计理念是总量固定 2100 万枚，不受任何政府控制的数字货币\\n - 以太坊是一个可以运行智能合约的平台，ETH 是这个平台的燃料\\n - 加密货币波动性极高，24 小时不间断交易，没有涨跌停限制，全球流通，机会和风险都极大\\n - 新手建议只碰比特币和以太坊两个主流币\\n - 开户与交易规则\\n - 投资不同品种需要不同的账户\\n - 证券账户是买卖股票和场内 ETF 的，需要在一家证券公司（券商）开户，开完后得到一个资金账户和股东账户\\n - 基金账户是买场外基金用的，可以通过银行 APP、基金公司 APP、第三方平台\\n - 加密货币账户需要在交易所注册\\n - 银行账户是所有投资的资金中转站，证券账户需要绑定一张银行卡，通过银证转账把钱转进转出\\n - 交易规则和费用\\n - 交易时间\\n - 交易时间是每个工作日的上午 9:30-11:30 和下午的 13:00-15:00\\n - 9:15-9:25 是集合竞价时间，决定开盘价\\n - 美股的交易时间换算成北京时间是晚上 21:30 到次日凌晨 4:00，冬令时推迟一个小时\\n - 加密货币是 7x24h 全天候交易\\n - 交易单位\\n - A 股买入最少 100 股（一手），卖出没有这个限制\\n - ETF 通常 100 份起买，但是有些券商支持拆零\\n - 费用\\n - 券商佣金\\n - 券商佣金是每次买卖股票或者 ETF 券商收的手续费，大概是万2.5-万 3，买卖各收一次\\n - 很多券商会有最低 5 元的门槛\\n - 开户的时候可以和客户经理谈佣金率，通常能谈到万 1.5 甚至更低\\n - 印花税\\n - 是国家收的，目前税率是千分之 0.5，只在卖出股票时收\\n - 过户费\\n - 很少，每 10 万收 1 元，可以忽略不计\\n - 基金费用\\n - 申购费是买入时收，股票型基金 1.5%，第三方平台通常打一折只要 0.15%\\n - 赎回费根据持有时间不同，持有越久费率越低，超过一定时间免赎回费\\n - 管理费和托管费是每天从基金净值里扣，看到的基金收益已经扣过了\\n - 读懂行情软件\\n - 行情软件核心信息\\n - 现价：这只股票此刻的交易价格，也叫最新价，几秒钟就会跳动一次\\n - 涨跌幅：今天相比昨天收盘价涨了或跌了百分之几\\n - 开盘价：今天第一笔交易的成交价，由早上 9:15-9:25 集合竞价决定\\n - 收盘价：当天最后的价格，15:00 收盘时确定\\n - 最高价和最低价：今天盘中达到的极端值\\n - 成交量：今天到目前为止总共成交了多少股，成交量突然放大说明有大资金在行动，需要注意\\n - 成交额：总共成交了多少钱\\n - 换手率：今天成交的股数占这只股票总流通股数的百分比，换手率 1-3% 正常，5% 比较活跃，10% 非常热烈\\n - 总市值：股价乘以总股本，代表市场给这家公司的总定价\\n - 流通市值：市场上能自由买卖的那部分股份，因为很多大股东的股份是有锁定期的\\n - K 线图\\n - 是 200 多年前日本米商发明的价格记录方法\\n - 每一根 K 线代表一个时间周期内的四个价格：开盘价、收盘价、最高价、最低价\\n - 如果收盘价高于开盘价，说明这个周期价格涨了，K 线画成红色，中间的实心方块叫做阳线\\n - 方块的下边缘是开盘价，上边缘是收盘价\\n - 如果收盘价低于开盘价，说明价格低了，画成绿色，叫阴线\\n - 方块上下伸出的线叫做影线，上影线的顶端是最高价，下影线的底段是最低价\\n - 上影线越长说明上方抛压越大，价格冲高后被打回来了\\n - 下影线越长说明下方有支撑，价格跌下去又被拉起来了\\n - 方块越长说明开盘价和收盘价差距越大，当天的趋势越明显\\n - 方块很小说明多空双方力量接近，市场在犹豫\\n - 日 K 代表一天，周 K 代表一周\\n - K 线下方还有成交量柱，红色柱子对应上涨，绿色柱子对应下跌\\n - 价格上涨同时成交量放大，说明涨势有资金支撑，比较健康\\n - 价格上涨但是成交量萎缩，可能是虚涨，持续性存疑\\n - 均线初识\\n - K 线图上叠加的几条彩色的曲线就是均线（MA）\\n - 均线把过去 N 天的收盘价求平均值连成一条线\\n - MA5 是 5 日均线，反映最近一周的平均成本\\n - MA20 是 20 日均线，反映一个月的平均成本\\n - MA60 是 60 日均线，代表一个季度\\n - MA250(年线)，代表一年\\n - 基本逻辑\\n - 股价在均线上方，代表近期买入的人平均是赚钱的，市场情绪偏乐观\\n - 股价在均线下方，代表大部分人被套，情绪偏悲观\\n - 短期均线在长期均线上方被视为上升趋势，否则是下降趋势\\n - 什么是指数\\n - 指数的本质\\n - 指数就是从市场里面挑出一篮子股票，按照某种规则计算出来的一个数字，用来代表这一篮子股票的整体表现\\n - 指数本身不能买卖，它只是一个统计数字\\n - 可以通过购买跟踪指数的 ETF 或者指数基金来间接买入指数\\n - 指数由专门的指数公司编制和维护，中国由中证指数公司编制，美国由标普道琼斯、MSCI等公司编制\\n - 指数会定期调整成分股，把不合格的公司踢出去，把新的优质公司纳入进来\\n - 指数自带优胜劣汰，长期看质量不会越来越差\\n - 核心指数\\n - 中国市场\\n - 上证指数\\n - 涵盖了上海证券交易所的所有股票\\n - 按总市值加权，包含大量银行、石油等大盘股\\n - 包含所有股票不含优劣\\n - 沪深 300 指数\\n - 从沪深两市挑出市值最大、流动性最好的 300 只股票，按自由市值加权\\n - 覆盖了 A 股越 6 成的总市值，是公认的最能代表 A 股大盘蓝筹表现的指数\\n - 中证 500 指数\\n - 排除沪深 300 之后的 500 只中等市值股票\\n - 代表中盘成长股的表现\\n - 沪深 300 代表大公司，中证 500 代表小公司\\n - 创业板指数\\n - 从创业板挑出 100 只市值最大的股票，科技和医药公司占比高，波动比沪深大，弹性也更强\\n - 美国市场\\n - 标普 500 指数\\n - 由美国市值最大的 500 家公司组成，覆盖每股 80% 的总市值\\n - 长期年化收益率大概在 10% 左右\\n - 纳斯达克 100 指数\\n - 从纳斯达克交易所挑出 100 家最大的非金融公司，科技股权重极高\\n - 道琼斯工业指数\\n - 只包含 30 只股票，用的是价格加权，专业性不高，但是历史悠久\\n - 香港市场\\n - 恒生指数\\n - 日本市场\\n - 日经 225 指数\\n - 全球市场\\n - MSCI 全球指数\\n - 富时全球指数\\n - 什么是 ETF\\n - ETF 的运作机制\\n - ETF 背后有一家交易公司管理\\n - 基金公司的任务是买入指数所有成分股，按照指数中每只股票的权重来配置\\n - 交易所买到的 ETF 份额，代表了这一篮子股票的一小部分所有权\\n - ETF 价格会紧贴它所跟踪的指数走势\\n - IOPV（参考净值）：交易时段每 15s 更新一次，告诉 ETF 底层那一篮子股票此刻值多少钱\\n - 如果 ETF 的市场价格明显高于或低于 IOPV，说明此时出现了溢价或折价，不建议买入\\n - 如何挑选一支好的 ETF\\n - 跟踪误差\\n - 衡量 ETF 的实际表现和它所跟踪的指数之间的偏差\\n - 跟踪误差越小，说明 ETF 越忠实\\n - 年化跟踪误差控制在 0.1% 以内的算优秀\\n - 费率\\n - ETF 的费用主要包含管理费和托管费，加起来每年 0.2%~0.6% 之间\\n - 规模\\n - 规模太小会出现买卖大的价差，或者被基金公司清盘\\n - 建议选规模在 10 亿元以上的 ETF\\n - 流动性\\n - 成交额越大，说明买卖的人越多\\n - 日均成交额在 1 亿以上的 ETF 就算不错\\n - 成立时间\\n - 运作时间越长的 ETF，数据越充分，管理经验越丰富\\n - 优选 3 年以上的\\n - 常见 ETF 分类\\n - 宽基 ETF\\n - 代表整个市场的宽基指数\\n - 例如沪深 300 ETF、中证 500 ETF\\n - 行业 ETF\\n - 跟踪某个特定行业的指数\\n - 例如医药 ETF、半导体 ETF、消费 ETF，集中度高，波动大\\n - 策略 ETF\\n - 不按市值加权，而是按照某种因子策略来选股和加权\\n - 例如红利 ETF 选择高分红的公司，低波 ETF 选择波动低的公司\\n - 跨境 ETF\\n - 用人民币投资海外市场\\n - 可能会有较大溢价，需要看溢价率\\n - 债券 ETF\\n - 跟踪债券指数\\n - 商品 ETF\\n - 跟踪大宗商品价格\\n - 什么是债券\\n - 核心要素\\n - 面值\\n - 债券到期时发行方要还给你的本金，通常是 100 元一张\\n - 面值和买入价不一定相同，如果在二级市场买，可能要 101 一张（溢价买入）或者 98 一张（折价买入）\\n - 票面利率（息票率）\\n - 发行方承诺每年按面值的百分之几付利息\\n - 期限\\n - 从发行到到期还本的时间长度\\n - 短期债一般 1 年以内，中期 1-10 年，长期 10 年以上\\n - 到期收益率（YTM）\\n - 考虑买入价格，未来收到的所有利息和到期拿回的本金，算出的年化实际回报率\\n - 到期收益率才是真正能拿到的回报率\\n - 信用评级\\n - 是评级机构对债券发行方偿债能力的评估\\n - AAA 是高等级，基本不会违约，往下依次是 AA、A、BBB 等\\n - BBB 及以上是投资级债券，以下叫高收益债券（垃圾债）\\n - 债券的分类和特点\\n - 按发行方分类\\n - 国债\\n - 地方政府债\\n - 企业债和公司债\\n - 金融债\\n - 可转换债\\n - 利率与债券\\n - 举例\\n - 持有一张面值 100 元，票面利率 3% 的 10 年期债券\\n - 市场利率从 3% 涨到了 4%\\n - 新发行的债券能给投资者 4% 的回报\\n - 债券必须降价，新买家才能接近 4% 的回报\\n - 如果市场利率低了，那么债券就抢手\\n - 如果预期未来利率要下降，现在买长期债券，未来债券价格上涨就赚到了资本利得\\n - 降息周期中，债券是好投资，不光拿利息，还能赚价差\\n - 期限越长的债券，对利率变化越敏感\\n - 加密货币\\n - 区块链与加密货币\\n - 区块链要解决的问题\\n - 不依赖任何中心化机构，让一群互补信任的人也能安全的记账和转账\\n - 实现方案\\n - 不把账本交给机构，而是让网络中所有参与者各持有一份完整的账本副本\\n - 每当发生一笔交易，全网广播，大家一起验证这笔交易是否合法\\n - 验证通过后，这笔交易会被打包进一个区块，链接到之前的区块后面，形成一条链\\n - 特点\\n - 由于每个人都有一份账本，每个区块都包含前一个区块的信息\\n - 要篡改任何一笔历史记录就必须同时修改全网超过一半的账本，几乎不可能\\n - 比特币\\n - 是区块链技术的第一个也是最成功的应用\\n - 总量上限 2100 万枚，永远不会增发\\n - 每 4 年产出速度减半\\n - 任何人都可以参与网络维护（挖矿），维护者获得新产出的比特币作为奖励\\n - 以太坊与加密生态\\n - 比特币类似数字黄金，以太坊更像一台全球共享的计算机\\n - 以太坊的创新在于引入了智能合约，可以在区块链上写程序，这些程序一旦部署自动执行，不需要任何中间人\\n - 智能合约的方式是把规则和赌金都锁在一段代码里，代码自动从天气数据源获取结果，赢了自动把钱转给赢家，不需要裁判\\n - DeFi(去中心化金融)用智能合约实现了借贷、保险、交易等传统金融功能\\n - NFT 是基于区块链的数字所有权证明\\n - 稳定币(USDT、USDC)是价格锚定美元的加密货币\\n - 以太坊的代币是 ETH，是使用以太坊网络的燃料，任何人在以太坊上执行智能合约都要支付 ETF 作为手续费\\n - ETF 的价值和整个以太坊的繁荣程度挂钩\\n - 风险\\n - 加密货币极端波动是常态\\n - 监管不确定性是最大的系统性风险\\n - 安全风险，交易所被黑客攻击、个人钱包密钥丢失\\n - 信息不对称\\n - 没有涨跌停和熔断机制\\n - 投资者心态\\n - 市场大多数人在亏钱\\n - 市场指数长期上涨\\n - 大多数人亏钱是由于在错误的时间做出了被情绪驱动的决策\\n - 贪婪与恐惧的循环\\n - 追涨杀跌，在贪婪的时候高位买入，在恐惧的时候低位卖出\\n - 常见的心态陷阱\\n - 频繁交易的冲动\\n - 过渡关注短期涨跌\\n - 盲目跟风\\n - 死扛不止损\\n - 赚了觉得自己是天才\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_0";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="财务报表与公司分析"&gt;财务报表与公司分析&lt;/h1&gt;
+&lt;div id="me_1" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_1_src"&gt;
+"\"- 财务报表与公司分析\\n - 为什么要看财报\\n - 财报是什么\\n - 财务报表就是一家上市公司定期公布的财务数据报告，是公司的体检报告\\n - 上市公司被法律要求定期披露财报：年报每年一次，最全面最重要\\n - 年报通常在每年 4 月 30 日之前披露完成\\n - 财报提供了第一手的、经过审计的、客观的数据\\n - 三张核心报表速览\\n - 资产负债表\\n - 这家公司在某个时间点拥有什么，欠了什么\\n - 给公司在某一天拍了快照：左边列出所有资产，右边列出所有负债和股东权益\\n - 资产 = 负债 + 股东权益\\n - 告诉一家公司家底有多厚，杠杆有多高\\n - 利润表\\n - 这家公司在一段时间内赚了多少钱\\n - 像一段视频，记录了从年初到年末，公司收入多少，花了多少成本和费用、最终净赚多少\\n - 收入 - 成本 - 费用 = 利润\\n - 告诉一家公司赚钱能力如何\\n - 现金流量表\\n - 这家公司在一段时间内实际收到和花出了多少真金白银\\n - 利润和现金不是一回事，公司卖出一批货记录 100 万收入和 20 万利润，但是可能没收到客户付款，没有现金\\n - 现金流量表就是为了区分账面利润和真实现金的\\n - 告诉一家公司造血能力是否健康\\n - 在哪里找财报\\n - 交易所官网\\n - 上交所上市公司公告页\\n - 同花顺 APP 个股详情\\n - 财报看什么\\n - 主要财务数据和指标（前几页），会汇总最关键的数据，例如营收、净利润、总资产、每股收益等\\n - 管理层讨论与分析（MD\\u0026A）是公司管理层用文字解释这一年经营情况的章节，更容易理解\\n - 三张核心财务报表的具体数字与附注\\n - 资产负债表\\n - 基本结构\\n - 核心等式：资产=负债+股东权益\\n - 一家公司拥有的所有东西（资产）要么是借来的（负债），要命是股东投入的或者经营积累的（股东权益）\\n - 假设购买了 300 万房子，首付 100 万是存款，200 万是银行贷款\\n - 资产 300 万 = 负债 200 万 + 自有权益 100 万\\n - 资产：公司拥有的现金、厂房、机器设备、存货、别人欠公司的钱\\n - 负债：公司欠银行的钱、欠供应商的钱、欠员工的工资\\n - 股东权益：股东投入到本金、历年积累下来没有分掉的利润\\n - 资产端（变现速度分类）\\n - 流动资产\\n - 一年内能变成现金的资产，流动性高\\n - 例如\\n - 货币基金（公司银行账号里的现金和扣款）\\n - 应收帐款（公司已经把货卖出去了，但是客户没付钱）\\n - 存货（公司仓库里面还没卖出去的产品和原材料）\\n - 预付款项（公司提前付给供应商的钱，还没有收到货）\\n - 非流动性资产\\n - 需要超过一年才能变现或者公司打算长期持有的资产\\n - 例如\\n - 固定资产（厂房、机器设备、办公楼等实物资产）\\n - 无形资产（专利、商标、软件著作权、土地使用权）\\n - 商誉（公司收购另一家公司时多付的溢价）\\n - 长期股权投资（公司持有其他公司的股份）\\n - 负债端（按时间分类）\\n - 流动负债\\n - 一年内必须偿还的债务\\n - 例如\\n - 短期借款（一年内到期的银行贷款）\\n - 应付帐款（公司从供应商那里拿货了，但是没付钱）\\n - 预收帐款（客户提前付给公司，公司还没交货）\\n - 应付职工薪资\\n - 非流动性负债\\n - 一年以后需要偿还的长期债务\\n - 例如\\n - 长期借款\\n - 应付债券\\n - 股东权益\\n - 股本（股东投入的本金，按面值计算）\\n - 资本公积（股东投入中超过面值的部分，比如 IPO 溢价）\\n - 未分配利润（公司历年赚的钱中没有分红分掉的部分，这是公司内部积累的家底）\\n - 资产负债表的关键视角\\n - 公司有多少真金白银\\n - 货币资金：一家公司账上有大量现金，说明财务弹性好，有钱应对突发情况，也有能力抓住新的投资机会\\n - 如果一家公司常年积累大量现金却不分红也不投入业务，可能说明管理层没有找到好的投资方向，资本配置效率低\\n - 公司的资产质量如何\\n - 现金是最优质的资产\\n - 应收帐款有风险，如果客户赖账不还，应收帐款变成坏账，需要从利润扣除\\n - 存货：如果是电子产品，存货放久了会贬值或者变为废品\\n - 如果应收帐款和存货的占比在扩大，远快于营收增速，往往是危险信号\\n - 钱从哪里来\\n - 负债和股东权益的结构\\n - 如果负债占总资产比例很高(\\u003e70%)，说明公司高度依赖借债经营，一旦经营出现波动，可能出现问题\\n - 负债率不是越低越好，适度举债可以放大股东的回报率\\n - 不同行业负债差异很大，银行和房地产天然是高负债行业，科技公司和消费品公司负债率很低\\n - 衡量偿债能力的指标\\n - 短期偿债能力\\n - 看的是公司能不能应付眼前的债务\\n - 流动比率=流动资产/流动负债\\n - 衡量的是公司用短期内能变现的资产去覆盖短期内必须偿还的债务的能力\\n - 一般认为流动比率在 1.5 到 2 之间比较健康，低于 1 意味着短期资产不够偿还短期债务\\n - 速动比率\\n - (流动资产-存货)/流动负债\\n - 把存货提出来，只看更容易变现的资产\\n - 速动比率在 1 以上通常被认为是安全的，意味着不靠存货就能覆盖短期债务\\n - 现金比率\\n - 货币资金/流动负债\\n - 只看账上最硬的真金白银能覆盖多少短期债务\\n - 这个指标过于保守，实际中不常用\\n - 长期偿债能力\\n - 看的是公司整体的杠杆水平\\n - 资产负债率=总负债/总资产*100%\\n - 这是最常用的杠杆指标\\n - 制造业和消费行业资产负债率 40%-60% 算正常，房地产行业 60%-80% 常见\\n - 科技轻资产公司通常在 30%-50%\\n - 公用事业公司有大量固定资产可能在 50%-70%\\n - 衡量资产质量的指标\\n - 资产质量指标告诉你的公司家底是否扎实\\n - 应收帐款周转天数\\n - 365 / (营业收入/平均应收帐款)\\n - 衡量的是公司从卖出货物到收回现金平均需要多少时间\\n - 周转天数越短说明公司收钱越快，议价能力越强\\n - 如果周转天数从去年的 45 天变成了 90 天，说明客户的付款速度明显变慢了\\n - 要么是公司放松了信用政策，要么是下游客户的经营出了问题，两种都不是好消息\\n - 存货周转天数\\n - 365 / (营业成本/平均存货)\\n - 衡量存货从采购到卖出平均需要多少天\\n - 对于食品、电子产品这类保质期短或者贬值快的行业，存货周期变慢是严重的预警\\n - 上述两个指标不看绝对值，而是看趋势和同行对比\\n - 商誉\\n - 如果一家公司收购另一家公司，出价高于被收购公司净资产的公允价值，多付的被称为商誉\\n - 商誉本质是对未来协同效应的乐观预期\\n - 如果收购后实际效果不如预期，商誉会减值\\n - 商誉会直接从利润扣除，一下让公司从盈利变为亏损\\n - 当公司资产负债表商誉占比很高，要注意\\n - 一家好公司的资产负债表\\n - 账号有充足的资金，不用为短期生存发愁\\n - 应收帐款和存货的增速与营收增速大致匹配\\n - 流动比率在 1.5 以上，短期偿债没有压力\\n - 资产负债率在行业合理范围，没有过度举债\\n - 商誉占比不高或者没有商誉\\n - 股东权益中未分配利润持续增长\\n - 利润表\\n - 利润表的结构与逻辑\\n - 利润表记录的是一段时间内公司经营的全过程\\n - 核心逻辑可以用漏斗来理解：钱从营业收入开始流入，经过一层层的成本和费用扣减，最终剩下的就是净利润\\n - 营业收入\\n - 营业收入是起点，也叫营收或者收入，公司通过卖产品或提供服务获得的总金额\\n - 营收是一家公司规模和市场地位最直观的体现\\n - 营收不等于公司公司收到的现金，只要货物已交付或者任务已完成，哪怕客户还没付款，会计上也可以确定为收入\\n - 营业成本\\n - 公司为了生产产品或提供服务而直接发生的支出\\n -\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_1";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;</description></item><item><title>mysql 知识点</title><link>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h1 id="环境准备"&gt;环境准备&lt;/h1&gt;
 &lt;div id="me_0" class="mindelixir-container" style="height: 560px; width: 100%;"&gt;&lt;/div&gt;
 &lt;script type="application/json" id="me_0_src"&gt;
 "\"- 环境配置与校验\\n - docker-compose 启动\\n - 命令行连接\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213500728.png,300,150)\\n - 自检命令\\n - 版本、用户、数据库\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213607553.png,330,510)\\n - 字符集\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213658757.png,200,200)\\n - 时区\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213740266.png,300,200)\\n - 当前 sql_mode\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213813122.png,500,100)\\n - 建库建表\\n - 建库\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212213857582.png,370,88)\\n - 建表\\n - 插入数据\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214005617.png,400,300)\\n - 查/改/删\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214121561.png,500,400)\\n - 导入导出\\n - 导出（逻辑备份）\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214319634.png,300,35)\\n - 导入\\n - mysql -h 127.0.0.1 -P 3306 -u root -p demo \\u003c demo.sql\\n - 仅导出表结构\\n - mysqldump -h 127.0.0.1 -P 3306 -u root -p --no-data demo \\u003e demo_schema.sql\\n - 账号与权限\\n - 创建业务账号 (最小权限)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214524944.png,400,150)\\n - 查看权限\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214555267.png,700,161)\""
