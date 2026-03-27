@@ -189,4 +189,140 @@ toc: true
                 - JobManager 感知失败
                 - 调度器决定如何恢复
                 - TaskManager 上的任务可能被重新部署
+    - 搭建开发环境
+        - Maven 项目骨架
+            - POM 文件
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325093933331.png,434,339)
+                - fink-streaming-java
+                    - 是 DataStream API 入门最核心的依赖之一
+                    - 编写 StreamExecutionEnvironment、DataStream 这类代码会用到它
+                - flink-clients
+                    - 用于本地执行、提交作业相关能力
+        - DataStream API 的基本项目结构
+            - 最小程序骨架
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325094745793.png,603,238)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325095338401.png,509,191)
+            - 代码详解
+                - StreamExecutionEnvironment
+                    - 这是 DataStream 程序的入口
+                    - StreamExectionEnviroment 是所有 Flink 程序的基础，通过 getExecutionEnvironment() 获取
+                    - 是整个 Flink 程序的运行上下文或总入口
+                    - 负责创建 source、串起数据流、设置并行度/checkpoint 等运行参数、触发执行
+                - Source
+                    - Source 就是数据从哪里来
+                    - DataStrema 最初是从各种 source 创建出来的
+                - Transformation
+                    - 就是对数据流做处理
+                    - DataStream 程序是对数据流做 transformation 的程序
+                    - 基础类别
+                        - map：一条变一条
+                        - filter：按条件过滤
+                        - flatMap：一条变多条
+                        - keyBy：按 key 分组
+                        - sum/reduce：聚合
+                - Sink
+                    - Sink 就是结果往哪里去
+                    - 结果通过 sink 返回，可以写入文件、标准输出等
+                    - print() 可以直接在控制台打印输出
+                    - sinkTo(xxx) 可以写入自定义的目的
+                - execute()
+                    - Flink Job 是在调用 execute() 时创建并提交的
+                    - DataStream 程序最后一步就是触发程序执行
+        - 跑通 WordCount
+            - 最小 WordCount 代码
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133401924.png,572,459)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133433816.png,92,160)
+            - 代码解析
+                - 创建执行环境
+                    - StreamExecutionEnvironment 是每个 DataStream 程序的起点，表示开始描述一条 Flink 数据处理流水线了
+                - 创建输入流
+                - flatMap 把每一行拆分成单词
+                    - flatMap 可以对一个输入产生任意多输出
+                - Tuple2<String, Integer> 
+                    - 是 Flink 常见的二元组类型
+                - keyBy(value -> value.f0)：按单词分组
+                    - keyBy 会把流按照 key 逻辑分区，所有相同 key 会进入同一个分区
+                - sum(1)：对第二个字段求和
+        - DataStreamAPI 基础
+            - Source、Transformation、Sink
+                - Source
+                    - Flink 程序接收数据的地方
+                    - 可以来自内存集合、文件、消息队列、socket 等
+                    - 集合 Source
+                        - DataStream<String> stream = env.fromElements("a","b","c");
+                        - DataStream<Integer> nums = env.fromElements(1,2,3);
+                    - 真实生产的 Source
+                        - Kafka
+                        - 文件
+                        - Socket
+                        - 自定义 source
+                        - 其他外部系统 connector
+                - Transformation
+                    - Operators 会把一个或多个 DataStream 转换成新的 DataStream
+                    - 程序可以把这些变换组合成复杂的数据流拓扑
+                    - map
+                        - 一条输入变成一条输出
+                        - DataStream<Integer> result = nums.map(x -> x*2)
+                        - map 不会改变条数
+                        - 适合做字段转换、格式转换、简单加工
+                    - flatMap
+                        - 一条输入可以变为多条输出，也可以一条都不输出
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225144380.png,509,92)
+                        - flat 适合切词、拆分、展开
+                        - WordCount 通常用它来把一行拆分成多个词
+                        - 比 map 更灵活
+                    - filter
+                        - 按条件保留或丢弃数据
+                        - DataStream<Integer> evenNums = nums.filter(x -> x % 2 == 0);
+                        - filter 不改数据结构，主要做筛选
+                    - keyBy
+                        - 按 Key 对数据流做分组
+                        - 所有具有相同 key 的记录会被分到同一个分区上，通常内部是哈希分区
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225552264.png,392,146)
+                        - keyBy 不是聚合
+                        - 只是按 key 把数据归组
+                        - 后面的 sum、reduce、状态、窗口通常都要建立在 keyBy 后面
+                    - reduce
+                        - 对同一个 key 下的数据做增量操作
+                        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225815274.png,627,58)
+                        - reduce 必须通常接在 keyBy 后面
+                        - 是增量聚合
+                        - 比一次性收集所有数据再算更高效
+                    - Sink
+                        - result.print()
+                        - print() 是最小可用 Sink
+                        - 主要用于学习和调试
+                        - 后续接 Kafka、文件、数据库，思路还是一样，只是 Sink 换了
+                    - union/connect
+                        - union
+                            - 定义
+                                - 会把两条或多条数据流合并为一条新流，新流包含所有输入流的元素
+                                - 所有输入流必须是相同类型
+                            - 示例
+                                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326230432339.png,365,77)
+                            - 关键点
+                                - 类型必须一直
+                                - union 后得到的还是同一种类型的普通 DataStream
+                                - union 适合本来就是同类数据，只是来自不同来源
+                        - connect
+                            - 连接两条流，但是保留各自的类型信息
+                            - 示例
+                                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327105019878.png,425,77)
+                            - connect 更像先把两条流并排放在一起，然后你自己决定怎么分别处理左边和右边
+                            - connect 后怎么用
+                                - connect 一般不会单独停在那，通常会继续接处理函数
+                                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327110726215.png,481,276)
+                    - RichFunction
+                        - 为什么要有 RichFunction
+                            - map/filter/flatMap 拿不到 Flink 运行时信息，也不方便做初始化和清理
+                            - 需求：程序开始时初始化资源/程序结束时做清理/知道当前子任务编号/知道并行度/拿到运行时上下文
+                            - RichFunction 定义了生命周期方法，以及访问函数执行上下文方法
+                        - RichFunction 是什么
+                            - RichFunction 是一个基础接口，很多常见的 rich 版本函数都建立在它之上
+                            - 平时真正会写的，不是 RichFunction 本身，而是具体子类
+                                - RichMapFunction
+                                - RichFilterFunction
+                                - RichFlatMapFunction
+                            - 可以理解为普通 Function 的增强版
+                        
 {{< /mind >}}
