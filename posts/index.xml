@@ -3,7 +3,7 @@
 &lt;p&gt;一切都会显得不同寻常。&lt;/p&gt;</description></item><item><title>Flink 复习</title><link>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="flink-整体认知"&gt;Flink 整体认知&lt;/h1&gt;
 &lt;div id="me_0" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
 &lt;script type="application/json" id="me_0_src"&gt;
-"\"- Flink 整体认知\\n - 认识 Flink\\n - Flink 是什么\\n - Flink 是一个对于有界和无界数据流进行有状态计算的框架和分布式处理引擎\\n - 框架：Flink 不是一个单独的软件命令，而是一套开发 + 运行的系统\\n - Flink 和 Hadoop/Spark/Storm 的区别\\n - 基本定义\\n - Hadoop 是什么\\n - 大数据基础设施体系\\n - HDFS：分布式存储\\n - MapReduce：离线批处理计算\\n - YARN：资源管理\\n - 早期大数据时代的“存储+资源管理+离线计算“基础平台\\n - Spark 是什么\\n - 通用的大数据计算引擎\\n - 流处理主要通过 Structured Streaming\\n - 更偏通用分析平台，批处理很强，流处理也能做\\n - Storm 是什么\\n - 是一个分布式实时计算系统\\n - 较早一代的纯流式处理框架，比 Flink 早\\n - 比较维度\\n - 主要定位\\n - Hadoop\\n - 海量数据存储\\n - 离线批处理\\n - 高吞吐，不强调低延迟\\n - Spark\\n - 通用大数据引擎\\n - 强批处理\\n - 可扩展到 SQL、ML、Streaming\\n - Flink\\n - 有状态流处理\\n - 事件时间\\n - 流批统一\\n - 更强实时计算语义\\n - 处理模型\\n - Hadoop: Batch\\n - 读一批数据-\\u003emap-\\u003eshuffle-\\u003ereduce-\\u003e输出结果\\n - Spark: Batch + Micro-batch\\n - Flink: Native Streaming，批流统一\\n - 延迟特征\\n - Hadoop\\n - 延迟高，通常分钟级甚至更长\\n - Spark\\n - micor-batch 延迟比原生流高一点\\n - Flink\\n - 低延迟实时计算\\n - 状态能力\\n - Hadoop\\n - 不擅长生命周期有状态流计算\\n - Spark\\n - 能做状态处理，但不是以 stateful streaming 为核心\\n - Flink\\n - stateful computations over data streams\\n - exactly-once state consistency\\n - 什么是批处理、流处理、实时计算\\n - 批处理\\n - 定义：先把一段时间内的数据收集起来，等数据攒够一批后，再统一进行计算\\n - 特点：先到齐，再处理、延迟高、吞吐高、程序有结束点\\n - 流处理\\n - 定义：把数据看成一个持续到来的事件流，数据一到，系统就持续处理\\n - 特点：连续不断、持续进行、低延迟、要处理历史记忆\\n - 实时计算\\n - 定义：从数据产生，到计算结果可用，时间尽可能短\\n - 实时计算不是来了就必须零延迟，而是在业务可接受的时间范围内尽快给出结果\\n - Flink 的应用场景\\n - 事件驱动应用\\n - 系统不是定时查数据库，而是收到事件才触发计算、状态更新或外部动作\\n - 典型业务\\n - 欺诈检测\\n - 异常检测\\n - 规则告警\\n - 业务流程监控\\n - 数据分析应用\\n - 从原始数据中提取信息和洞察\\n - 典型业务\\n - 每分钟订单量\\n - 热门榜单\\n - 实时数仓\\n - 离线 + 实时一体分析\\n - 数据管道与 ETF\\n - 从上游系统读数据，做清洗、转换、补全、标准化、过滤、路由，再写到下游系统\\n - 典型业务\\n - Kafka 到 Kafka\\n - Kafka 到数据库/搜索引擎/湖仓\\n - CDC + 实时同步\\n - Flink 基本架构\\n - JobManager、TaskManager\\n - 最小 Flink 集群\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324174529584.png,474,301)\\n - 在本地或某台机器上提交作业\\n - JobManager 接收这个作业，分析要怎么跑\\n - 把真正要执行的子任务分发给多个 TaskManager\\n - TaskManager 在各自机器上并行处理数据\\n - 什么是 JobManager\\n - 是 Flink 集群的控制中心\\n - 负责接收/解析/调度/监控/作业、协调故障恢复、管理元信息\\n - 什么是 TaskManager\\n - 是 Flink 集群里真正干活的 worker\\n - 主要负责执行子任务/占用和提供计算资源/与其他 TaskManger 传输数据/向 JobManager 汇报状态\\n - Slot 是什么\\n - 定义\\n - Flink 用 Slot 告诉调度器：这台 TaskManager 最多能接多少份执行任务\\n - 为什么需要 Slot\\n - 控制一个 TaskManager 能接多少任务\\n - 做资源切分\\n - 在隔离与利用率之间做平衡\\n - Slot 和 TaskManager 的关系\\n - 一个 TaskManager 可以有多个 Slot\\n - Slot 是 TaskManager 提供给集群调度的执行容量\\n - Slot 是资源申请和任务放置的基本单位之一\\n - Slot 和并行度的关系\\n - 并行度指的是一个算子会拆成多少个并行子任务\\n - 执行这些子任务需要 Slot\\n - 在默认 slot sharing 开启时，作业大致需要的 slot 数 = 该作业的最高并行度\\n - JobGraph、ExecutionGraph\\n - 什么是 JobGraph\\n - Flink 作业的逻辑图/逻辑执行计划\\n - JobGraph 里面的点，叫做 JobVertex，它是一个逻辑阶段/一个逻辑算子节点\\n - JobGraph 不强调每个并行子任务\\n - 什么是 ExecutionGraph\\n - 是 JobGraph 经过并行展开后的实际执行拓扑\\n - ExecutionGraph 的核心点是 ExecutionVertex\\n - 并行度是什么\\n - 本质\\n - Flink 算子可以想象成一个类似读 Kafka/做 map 转换/做窗口聚合的工作\\n - 并行度决定一个算子会被拆分成几个 subtask 一起做\\n - 为什么需要并行度\\n - 一份工作只让一个实例做，处理能力有限\\n - 提高并行度，本质就是把工作拆开，让多个 subtask 同时处理\\n - 一个 flink 作业如何运行起来\\n - 总流程\\n - 写 Flink 程序，调用 execute()\\n - Client 负责提交作业\\n - 程序先形成逻辑数据流图\\n - JobManager 接收作业\\n - JobManager 把 JobGraph 转成 ExecutionGraph\\n - 调度器根据并行度和可用 slot 做任务部署\\n - TaskManager 真正执行 subtask\\n - 运行中持续监控、处理状态、必要时恢复故障\\n - 编写代码时，发生了什么\\n - 写的是逻辑处理链路，不是真正的分布式执行指令\\n - 调用 execute() 后，作业才真正进入提交流程\\n - Client 做了什么\\n - Client 是提交入口，负责将应用提交到集群\\n - Client 不是主要计算节点\\n - JobGraph 在什么时候出现\\n - 代码先被整理为数据流图，也就是 JobGraph\\n - JobGraph 偏逻辑层，还没有真正展开成每个 subtask，不是最终的并发执行形态\\n - JobManager 接手后做什么\\n - 接收作业\\n - 管理作业生命周期\\n - 把逻辑图变成执行图\\n - 协调资源和任务部署\\n - Execution Graph 怎么来的\\n - ExecutionGraph 是 JobGraph 的并行化版本\\n - 并行度在这里真正展开\\n - 运行状态也在这里变得具体\\n - 调度阶段发生什么\\n - 要跑多少个 subtask\\n - 这些 subtask 放到哪些地方跑\\n - 数据怎么在它们之间流动\\n - slot 发挥什么作用\\n - TaskManager 提供 slots\\n - 调度器找空闲 slot\\n - 默认 slot sharing 会影响所需 slot 数\\n - TaskManager 真正干活时发生了什么\\n - TaskManager 执行 subtask\\n - 每个 subtask 处理自己那部分的输入数据\\n - 上下游 subtask 之间可能发生网络传输\\n - 状态、窗口、定时器等能力都在这里真正运作\\n - 作业运行中，JobManager 还在做什么\\n - 跟踪任务状态\\n - 监控资源与任务健康情况\\n - 失败时触发恢复\\n - 作业失败了会怎样\\n - JobManager 感知失败\\n - 调度器决定如何恢复\\n - TaskManager 上的任务可能被重新部署\\n - 搭建开发环境\\n - Maven 项目骨架\\n - POM 文件\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325093933331.png,434,339)\\n - fink-streaming-java\\n - 是 DataStream API 入门最核心的依赖之一\\n - 编写 StreamExecutionEnvironment、DataStream 这类代码会用到它\\n - flink-clients\\n - 用于本地执行、提交作业相关能力\\n - DataStream API 的基本项目结构\\n - 最小程序骨架\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325094745793.png,603,238)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325095338401.png,509,191)\\n - 代码详解\\n - StreamExecutionEnvironment\\n - 这是 DataStream 程序的入口\\n - StreamExectionEnviroment 是所有 Flink 程序的基础，通过 getExecutionEnvironment() 获取\\n - 是整个 Flink 程序的运行上下文或总入口\\n - 负责创建 source、串起数据流、设置并行度/checkpoint 等运行参数、触发执行\\n - Source\\n - Source 就是数据从哪里来\\n - DataStrema 最初是从各种 source 创建出来的\\n - Transformation\\n - 就是对数据流做处理\\n - DataStream 程序是对数据流做 transformation 的程序\\n - 基础类别\\n - map：一条变一条\\n - filter：按条件过滤\\n - flatMap：一条变多条\\n - keyBy：按 key 分组\\n - sum/reduce：聚合\\n - Sink\\n - Sink 就是结果往哪里去\\n - 结果通过 sink 返回，可以写入文件、标准输出等\\n - print() 可以直接在控制台打印输出\\n - sinkTo(xxx) 可以写入自定义的目的\\n - execute()\\n - Flink Job 是在调用 execute() 时创建并提交的\\n - DataStream 程序最后一步就是触发程序执行\\n - 跑通 WordCount\\n - 最小 WordCount 代码\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133401924.png,572,459)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133433816.png,92,160)\\n - 代码解析\\n - 创建执行环境\\n - StreamExecutionEnvironment 是每个 DataStream 程序的起点，表示开始描述一条 Flink 数据处理流水线了\\n - 创建输入流\\n - flatMap 把每一行拆分成单词\\n - flatMap 可以对一个输入产生任意多输出\\n - Tuple2\\u003cString, Integer\\u003e \\n - 是 Flink 常见的二元组类型\\n - keyBy(value -\\u003e value.f0)：按单词分组\\n - keyBy 会把流按照 key 逻辑分区，所有相同 key 会进入同一个分区\\n - sum(1)：对第二个字段求和\\n - DataStreamAPI 基础\\n - Source、Transformation、Sink\\n - Source\\n - Flink 程序接收数据的地方\\n - 可以来自内存集合、文件、消息队列、socket 等\\n - 集合 Source\\n - DataStream\\u003cString\\u003e stream = env.fromElements(\\\"a\\\",\\\"b\\\",\\\"c\\\");\\n - DataStream\\u003cInteger\\u003e nums = env.fromElements(1,2,3);\\n - 真实生产的 Source\\n - Kafka\\n - 文件\\n - Socket\\n - 自定义 source\\n - 其他外部系统 connector\\n - Transformation\\n - Operators 会把一个或多个 DataStream 转换成新的 DataStream\\n - 程序可以把这些变换组合成复杂的数据流拓扑\\n - map\\n - 一条输入变成一条输出\\n - DataStream\\u003cInteger\\u003e result = nums.map(x -\\u003e x*2)\\n - map 不会改变条数\\n - 适合做字段转换、格式转换、简单加工\\n - flatMap\\n - 一条输入可以变为多条输出，也可以一条都不输出\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225144380.png,509,92)\\n - flat 适合切词、拆分、展开\\n - WordCount 通常用它来把一行拆分成多个词\\n - 比 map 更灵活\\n - filter\\n - 按条件保留或丢弃数据\\n - DataStream\\u003cInteger\\u003e evenNums = nums.filter(x -\\u003e x % 2 == 0);\\n - filter 不改数据结构，主要做筛选\\n - keyBy\\n - 按 Key 对数据流做分组\\n - 所有具有相同 key 的记录会被分到同一个分区上，通常内部是哈希分区\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225552264.png,392,146)\\n - keyBy 不是聚合\\n - 只是按 key 把数据归组\\n - 后面的 sum、reduce、状态、窗口通常都要建立在 keyBy 后面\\n - reduce\\n - 对同一个 key 下的数据做增量操作\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225815274.png,627,58)\\n - reduce 必须通常接在 keyBy 后面\\n - 是增量聚合\\n - 比一次性收集所有数据再算更高效\\n - Sink\\n - result.print()\\n - print() 是最小可用 Sink\\n - 主要用于学习和调试\\n - 后续接 Kafka、文件、数据库，思路还是一样，只是 Sink 换了\\n - union/connect\\n - union\\n - 定义\\n - 会把两条或多条数据流合并为一条新流，新流包含所有输入流的元素\\n - 所有输入流必须是相同类型\\n - 示例\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326230432339.png,365,77)\\n - 关键点\\n - 类型必须一直\\n - union 后得到的还是同一种类型的普通 DataStream\\n - union 适合本来就是同类数据，只是来自不同来源\\n - connect\\n - 连接两条流，但是保留各自的类型信息\\n - 示例\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327105019878.png,425,77)\\n - connect 更像先把两条流并排放在一起，然后你自己决定怎么分别处理左边和右边\\n - connect 后怎么用\\n - connect 一般不会单独停在那，通常会继续接处理函数\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327110726215.png,481,276)\\n - RichFunction\\n - 为什么要有 RichFunction\\n - map/filter/flatMap 拿不到 Flink 运行时信息，也不方便做初始化和清理\\n - 需求：程序开始时初始化资源/程序结束时做清理/知道当前子任务编号/知道并行度/拿到运行时上下文\\n - RichFunction 定义了生命周期方法，以及访问函数执行上下文方法\\n - RichFunction 是什么\\n - RichFunction 是一个基础接口，很多常见的 rich 版本函数都建立在它之上\\n - 平时真正会写的，不是 RichFunction 本身，而是具体子类\\n - RichMapFunction\\n - RichFilterFunction\\n - RichFlatMapFunction\\n - 可以理解为普通 Function 的增强版\""
+"\"- Flink 整体认知\\n - 认识 Flink\\n - Flink 是什么\\n - Flink 是一个对于有界和无界数据流进行有状态计算的框架和分布式处理引擎\\n - 框架：Flink 不是一个单独的软件命令，而是一套开发 + 运行的系统\\n - Flink 和 Hadoop/Spark/Storm 的区别\\n - 基本定义\\n - Hadoop 是什么\\n - 大数据基础设施体系\\n - HDFS：分布式存储\\n - MapReduce：离线批处理计算\\n - YARN：资源管理\\n - 早期大数据时代的“存储+资源管理+离线计算“基础平台\\n - Spark 是什么\\n - 通用的大数据计算引擎\\n - 流处理主要通过 Structured Streaming\\n - 更偏通用分析平台，批处理很强，流处理也能做\\n - Storm 是什么\\n - 是一个分布式实时计算系统\\n - 较早一代的纯流式处理框架，比 Flink 早\\n - 比较维度\\n - 主要定位\\n - Hadoop\\n - 海量数据存储\\n - 离线批处理\\n - 高吞吐，不强调低延迟\\n - Spark\\n - 通用大数据引擎\\n - 强批处理\\n - 可扩展到 SQL、ML、Streaming\\n - Flink\\n - 有状态流处理\\n - 事件时间\\n - 流批统一\\n - 更强实时计算语义\\n - 处理模型\\n - Hadoop: Batch\\n - 读一批数据-\\u003emap-\\u003eshuffle-\\u003ereduce-\\u003e输出结果\\n - Spark: Batch + Micro-batch\\n - Flink: Native Streaming，批流统一\\n - 延迟特征\\n - Hadoop\\n - 延迟高，通常分钟级甚至更长\\n - Spark\\n - micor-batch 延迟比原生流高一点\\n - Flink\\n - 低延迟实时计算\\n - 状态能力\\n - Hadoop\\n - 不擅长生命周期有状态流计算\\n - Spark\\n - 能做状态处理，但不是以 stateful streaming 为核心\\n - Flink\\n - stateful computations over data streams\\n - exactly-once state consistency\\n - 什么是批处理、流处理、实时计算\\n - 批处理\\n - 定义：先把一段时间内的数据收集起来，等数据攒够一批后，再统一进行计算\\n - 特点：先到齐，再处理、延迟高、吞吐高、程序有结束点\\n - 流处理\\n - 定义：把数据看成一个持续到来的事件流，数据一到，系统就持续处理\\n - 特点：连续不断、持续进行、低延迟、要处理历史记忆\\n - 实时计算\\n - 定义：从数据产生，到计算结果可用，时间尽可能短\\n - 实时计算不是来了就必须零延迟，而是在业务可接受的时间范围内尽快给出结果\\n - Flink 的应用场景\\n - 事件驱动应用\\n - 系统不是定时查数据库，而是收到事件才触发计算、状态更新或外部动作\\n - 典型业务\\n - 欺诈检测\\n - 异常检测\\n - 规则告警\\n - 业务流程监控\\n - 数据分析应用\\n - 从原始数据中提取信息和洞察\\n - 典型业务\\n - 每分钟订单量\\n - 热门榜单\\n - 实时数仓\\n - 离线 + 实时一体分析\\n - 数据管道与 ETF\\n - 从上游系统读数据，做清洗、转换、补全、标准化、过滤、路由，再写到下游系统\\n - 典型业务\\n - Kafka 到 Kafka\\n - Kafka 到数据库/搜索引擎/湖仓\\n - CDC + 实时同步\\n - Flink 基本架构\\n - JobManager、TaskManager\\n - 最小 Flink 集群\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324174529584.png,474,301)\\n - 在本地或某台机器上提交作业\\n - JobManager 接收这个作业，分析要怎么跑\\n - 把真正要执行的子任务分发给多个 TaskManager\\n - TaskManager 在各自机器上并行处理数据\\n - 什么是 JobManager\\n - 是 Flink 集群的控制中心\\n - 负责接收/解析/调度/监控/作业、协调故障恢复、管理元信息\\n - 什么是 TaskManager\\n - 是 Flink 集群里真正干活的 worker\\n - 主要负责执行子任务/占用和提供计算资源/与其他 TaskManger 传输数据/向 JobManager 汇报状态\\n - Slot 是什么\\n - 定义\\n - Flink 用 Slot 告诉调度器：这台 TaskManager 最多能接多少份执行任务\\n - 为什么需要 Slot\\n - 控制一个 TaskManager 能接多少任务\\n - 做资源切分\\n - 在隔离与利用率之间做平衡\\n - Slot 和 TaskManager 的关系\\n - 一个 TaskManager 可以有多个 Slot\\n - Slot 是 TaskManager 提供给集群调度的执行容量\\n - Slot 是资源申请和任务放置的基本单位之一\\n - Slot 和并行度的关系\\n - 并行度指的是一个算子会拆成多少个并行子任务\\n - 执行这些子任务需要 Slot\\n - 在默认 slot sharing 开启时，作业大致需要的 slot 数 = 该作业的最高并行度\\n - JobGraph、ExecutionGraph\\n - 什么是 JobGraph\\n - Flink 作业的逻辑图/逻辑执行计划\\n - JobGraph 里面的点，叫做 JobVertex，它是一个逻辑阶段/一个逻辑算子节点\\n - JobGraph 不强调每个并行子任务\\n - 什么是 ExecutionGraph\\n - 是 JobGraph 经过并行展开后的实际执行拓扑\\n - ExecutionGraph 的核心点是 ExecutionVertex\\n - 并行度是什么\\n - 本质\\n - Flink 算子可以想象成一个类似读 Kafka/做 map 转换/做窗口聚合的工作\\n - 并行度决定一个算子会被拆分成几个 subtask 一起做\\n - 为什么需要并行度\\n - 一份工作只让一个实例做，处理能力有限\\n - 提高并行度，本质就是把工作拆开，让多个 subtask 同时处理\\n - 一个 flink 作业如何运行起来\\n - 总流程\\n - 写 Flink 程序，调用 execute()\\n - Client 负责提交作业\\n - 程序先形成逻辑数据流图\\n - JobManager 接收作业\\n - JobManager 把 JobGraph 转成 ExecutionGraph\\n - 调度器根据并行度和可用 slot 做任务部署\\n - TaskManager 真正执行 subtask\\n - 运行中持续监控、处理状态、必要时恢复故障\\n - 编写代码时，发生了什么\\n - 写的是逻辑处理链路，不是真正的分布式执行指令\\n - 调用 execute() 后，作业才真正进入提交流程\\n - Client 做了什么\\n - Client 是提交入口，负责将应用提交到集群\\n - Client 不是主要计算节点\\n - JobGraph 在什么时候出现\\n - 代码先被整理为数据流图，也就是 JobGraph\\n - JobGraph 偏逻辑层，还没有真正展开成每个 subtask，不是最终的并发执行形态\\n - JobManager 接手后做什么\\n - 接收作业\\n - 管理作业生命周期\\n - 把逻辑图变成执行图\\n - 协调资源和任务部署\\n - Execution Graph 怎么来的\\n - ExecutionGraph 是 JobGraph 的并行化版本\\n - 并行度在这里真正展开\\n - 运行状态也在这里变得具体\\n - 调度阶段发生什么\\n - 要跑多少个 subtask\\n - 这些 subtask 放到哪些地方跑\\n - 数据怎么在它们之间流动\\n - slot 发挥什么作用\\n - TaskManager 提供 slots\\n - 调度器找空闲 slot\\n - 默认 slot sharing 会影响所需 slot 数\\n - TaskManager 真正干活时发生了什么\\n - TaskManager 执行 subtask\\n - 每个 subtask 处理自己那部分的输入数据\\n - 上下游 subtask 之间可能发生网络传输\\n - 状态、窗口、定时器等能力都在这里真正运作\\n - 作业运行中，JobManager 还在做什么\\n - 跟踪任务状态\\n - 监控资源与任务健康情况\\n - 失败时触发恢复\\n - 作业失败了会怎样\\n - JobManager 感知失败\\n - 调度器决定如何恢复\\n - TaskManager 上的任务可能被重新部署\\n - 搭建开发环境\\n - Maven 项目骨架\\n - POM 文件\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325093933331.png,434,339)\\n - fink-streaming-java\\n - 是 DataStream API 入门最核心的依赖之一\\n - 编写 StreamExecutionEnvironment、DataStream 这类代码会用到它\\n - flink-clients\\n - 用于本地执行、提交作业相关能力\\n - DataStream API 的基本项目结构\\n - 最小程序骨架\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325094745793.png,603,238)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325095338401.png,509,191)\\n - 代码详解\\n - StreamExecutionEnvironment\\n - 这是 DataStream 程序的入口\\n - StreamExectionEnviroment 是所有 Flink 程序的基础，通过 getExecutionEnvironment() 获取\\n - 是整个 Flink 程序的运行上下文或总入口\\n - 负责创建 source、串起数据流、设置并行度/checkpoint 等运行参数、触发执行\\n - Source\\n - Source 就是数据从哪里来\\n - DataStrema 最初是从各种 source 创建出来的\\n - Transformation\\n - 就是对数据流做处理\\n - DataStream 程序是对数据流做 transformation 的程序\\n - 基础类别\\n - map：一条变一条\\n - filter：按条件过滤\\n - flatMap：一条变多条\\n - keyBy：按 key 分组\\n - sum/reduce：聚合\\n - Sink\\n - Sink 就是结果往哪里去\\n - 结果通过 sink 返回，可以写入文件、标准输出等\\n - print() 可以直接在控制台打印输出\\n - sinkTo(xxx) 可以写入自定义的目的\\n - execute()\\n - Flink Job 是在调用 execute() 时创建并提交的\\n - DataStream 程序最后一步就是触发程序执行\\n - 跑通 WordCount\\n - 最小 WordCount 代码\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133401924.png,572,459)\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/25/20260325133433816.png,92,160)\\n - 代码解析\\n - 创建执行环境\\n - StreamExecutionEnvironment 是每个 DataStream 程序的起点，表示开始描述一条 Flink 数据处理流水线了\\n - 创建输入流\\n - flatMap 把每一行拆分成单词\\n - flatMap 可以对一个输入产生任意多输出\\n - Tuple2\\u003cString, Integer\\u003e \\n - 是 Flink 常见的二元组类型\\n - keyBy(value -\\u003e value.f0)：按单词分组\\n - keyBy 会把流按照 key 逻辑分区，所有相同 key 会进入同一个分区\\n - sum(1)：对第二个字段求和\\n - DataStreamAPI 基础\\n - Source、Transformation、Sink\\n - Source\\n - Flink 程序接收数据的地方\\n - 可以来自内存集合、文件、消息队列、socket 等\\n - 集合 Source\\n - DataStream\\u003cString\\u003e stream = env.fromElements(\\\"a\\\",\\\"b\\\",\\\"c\\\");\\n - DataStream\\u003cInteger\\u003e nums = env.fromElements(1,2,3);\\n - 真实生产的 Source\\n - Kafka\\n - 文件\\n - Socket\\n - 自定义 source\\n - 其他外部系统 connector\\n - Transformation\\n - Operators 会把一个或多个 DataStream 转换成新的 DataStream\\n - 程序可以把这些变换组合成复杂的数据流拓扑\\n - map\\n - 一条输入变成一条输出\\n - DataStream\\u003cInteger\\u003e result = nums.map(x -\\u003e x*2)\\n - map 不会改变条数\\n - 适合做字段转换、格式转换、简单加工\\n - flatMap\\n - 一条输入可以变为多条输出，也可以一条都不输出\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225144380.png,509,92)\\n - flat 适合切词、拆分、展开\\n - WordCount 通常用它来把一行拆分成多个词\\n - 比 map 更灵活\\n - filter\\n - 按条件保留或丢弃数据\\n - DataStream\\u003cInteger\\u003e evenNums = nums.filter(x -\\u003e x % 2 == 0);\\n - filter 不改数据结构，主要做筛选\\n - keyBy\\n - 按 Key 对数据流做分组\\n - 所有具有相同 key 的记录会被分到同一个分区上，通常内部是哈希分区\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225552264.png,392,146)\\n - keyBy 不是聚合\\n - 只是按 key 把数据归组\\n - 后面的 sum、reduce、状态、窗口通常都要建立在 keyBy 后面\\n - reduce\\n - 对同一个 key 下的数据做增量操作\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326225815274.png,627,58)\\n - reduce 必须通常接在 keyBy 后面\\n - 是增量聚合\\n - 比一次性收集所有数据再算更高效\\n - Sink\\n - result.print()\\n - print() 是最小可用 Sink\\n - 主要用于学习和调试\\n - 后续接 Kafka、文件、数据库，思路还是一样，只是 Sink 换了\\n - union/connect\\n - union\\n - 定义\\n - 会把两条或多条数据流合并为一条新流，新流包含所有输入流的元素\\n - 所有输入流必须是相同类型\\n - 示例\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/26/20260326230432339.png,365,77)\\n - 关键点\\n - 类型必须一直\\n - union 后得到的还是同一种类型的普通 DataStream\\n - union 适合本来就是同类数据，只是来自不同来源\\n - connect\\n - 连接两条流，但是保留各自的类型信息\\n - 示例\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327105019878.png,425,77)\\n - connect 更像先把两条流并排放在一起，然后你自己决定怎么分别处理左边和右边\\n - connect 后怎么用\\n - connect 一般不会单独停在那，通常会继续接处理函数\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327110726215.png,481,276)\\n - RichFunction\\n - 为什么要有 RichFunction\\n - map/filter/flatMap 拿不到 Flink 运行时信息，也不方便做初始化和清理\\n - 需求：程序开始时初始化资源/程序结束时做清理/知道当前子任务编号/知道并行度/拿到运行时上下文\\n - RichFunction 定义了生命周期方法，以及访问函数执行上下文方法\\n - RichFunction 是什么\\n - RichFunction 是一个基础接口，很多常见的 rich 版本函数都建立在它之上\\n - 平时真正会写的，不是 RichFunction 本身，而是具体子类\\n - RichMapFunction\\n - RichFilterFunction\\n - RichFlatMapFunction\\n - 可以理解为普通 Function 的增强版\\n - 和普通函数的区别\\n - 除了处理逻辑，还多了 open()、close()、getRuntimeContext()\\n - open 用于初始化，close 用于清理，getRuntimeContext 用于获取运行时上下文\\n - RichFunction 最核心的三个能力\\n - open(OpenContext openContext)\\n - 这是初始化方法\\n - 会在真正工作方法例如 map、join 前调用\\n - 适合做一次性初始化工作\\n - 就像开工前准备\\n - close()\\n - 这是清理方法\\n - 会在主工作方法最后一次调用之后执行\\n - 适合做清理工作\\n - 就像收工后打扫现场\\n - getRuntimeContext()\\n - 拿运行时上下文的方法\\n - 包含函数运行并行度、当前 subtask 的索引、执行该 task 的名称\\n - 例子\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327151346647.png,646,581)\\n - 基本调试方法\\n - 先用最小输入跑通\\n - 先用 fromElements() 构造很小的输入集\\n - 最基础的调试方式: print()\\n - 中间的关键步骤也可以加上 print()\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/27/20260327151659872.png,402,159)\\n - 按 source/transformation/sink 分段排查\\n - 先怀疑 source\\n - source 有没有真的产生数据\\n - 输入是不是空的\\n - 输入格式是不是和我想的不一样\\n - 可以先 lines.print(\\\"source\\\") 确认下\\n - 再怀疑 transformation\\n - 每做一步变化，就临时加一个 print()\\n - 最后怀疑 sink\""
 &lt;/script&gt;
 &lt;script&gt;
 (function () {
@@ -12,6 +12,426 @@ console.error("MindElixir not loaded. Check your CDN script tag.");
 return;
 }
 const hostId = "me_0";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="时间与窗口"&gt;时间与窗口&lt;/h1&gt;
+&lt;div id="me_1" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_1_src"&gt;
+"\"- 时间与窗口\\n - 时间语义\\n - processing time\\n - 什么是 processing time\\n - processing time 就是某个算子在处理这条数据时，所在机器的系统时间\\n - 不看事件真正什么时候发生，而是看 Flink 现在处理到它时是几点\\n - processing time 的本质\\n - 用机器时钟当做时间标准\\n - 不需要从数据取时间戳\\n - 不需要 watermark 来推动时间前进\\n - event time\\n - 什么是 event time\\n - 不看 flink 什么时候处理到这条数据，而是看这条数据业务上到底是什么时候发生的\\n - 这个时间通常在进入 flink 前就嵌入到记录了\\n - 为什么 event time 重要\\n - 如果想得到可复现、符合业务真实时间的分析结果，就应该用 event time\\n - 把统计口径从系统什么时间看到它，切回什么时候真正发生\\n - 本质\\n - 用事件自带的时间戳，作为所有时间相关操作的基准\\n - 必须能从数据集提取时间戳\\n - 系统需要某种机制来判断某个时间点之前的数据大致到齐了\\n - ingestion time\\n - 事件进入 Flink 时被赋予的时间 \\n - WaterMark\\n - WaterMark 是什么\\n - WaterMark 是 Flink 用于衡量 EventTime 进度的机制\\n - Watermark 在数据流中携带一个时间戳 t，WaterMark(t) 表示事件已经推进到 t\\n - 为什么需要 WaterMark\\n - 真实世界里的数据经常会乱序到达\\n - 问题：应该等到什么时候，才能认为某个时间点之前的数据差不多到齐了\\n - Watermark 表示什么\\n - 到目前为止，我认为时间戳小于等于 t 的事件应该都到了\\n - Watermark 和窗口的关系\\n - Watermark 最常见的作用，就是触发 EventTime 窗口计算\\n - Watermark 决定什么时间可以开始算\\n - Watermark 和迟到数据有什么关系\\n - 如果某条事件的时间戳小于等于当前已经到达的 watermark，但现在才到，这条数据就是迟到数据\\n - Watermark 怎么来的\\n - 使用 Event Time 时，Flink 需要知道每个元素的时间戳\\n - 时间戳可以通过 TimestampAssigner 提取\\n - 需要 WatermarkGenerator 生成 watermark，两者一起通过 WatermarkStrategy 配置\\n - Watermark 来自于定义的时间策略\\n - Watermark 理解\\n - Watermark 就像 Event Time 世界里的逻辑时钟\\n - 系统告诉下游：可以把时间推进到这里了\\n - 有序和乱序流的 Watermark 生成方式\\n - 为什么分有序流和乱序流\\n - Watermark 的生成方式，本质取决于你的数据时间戳分布特征\\n - 有序流的 Watermark 生成方式\\n - 核心假设\\n - 后面到来的事件，时间戳不会比前面的小\\n - 生成逻辑\\n - 在有序流里，当前看到的最大时间戳就代表时间已经推进到那里了\\n - 乱序流的 Watermark 生成方式\\n - 核心假设\\n - 虽然事件会乱序到达，但是可以给出一个最大乱序范围 B\\n - 生成逻辑\\n - 当前 watermark = 已观察到的最大事件时间戳 - 最大乱序容忍时间\\n - 具体例子\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/28/20260328195843653.png,729,820)\\n - 事件对象里面要有事件时间字段\\n - Source 只是构造测试数据\\n - WatermarkStrategy 是核心\\n - forBoundedOutOfOrderness(Duration.ofSeconds(5))\\n - 允许这条流最多乱序 5s\\n - Watermark 会根据当前看到的最大时间戳-5 秒来推进\\n - withTimestampAssigner()告诉 Flink 事件时间从那一列取\\n - assignTImestampsAnsWatermarks \\n - 给流里的每个元素附上事件时间戳\\n - 同时让 Flink 根据策略找 Watermark\\n - 窗口基础\\n - 为什么需要窗口\\n - 流数据是无界的，理论上不会自然结束\\n - 对这种数据不能简单说等全部到期再统计\\n - Flink 的窗口机制就是把连续到来的流按规则划分为一个个有序集合\\n - Flink 里窗口的总体分类\\n - Tumbling Window (滚动窗口)\\n - 定义：是固定大小、连续、互不重叠的窗口\\n - 适合场景\\n - 每 5 分钟订单数\\n - 每小时 GMV\\n - 每日 UV\\n - 每分钟接口调用量\\n - Sliding Window (滑动窗口)\\n - 定义：也是固定大小的窗口，会按照一个更小的步长持续滑动\\n - 示例：窗口大小 10 分钟，每 5 分钟滑动一次\\n - 适合场景\\n - 最近 10 分钟 PV，每分钟更新一次\\n - 最近 30 分钟订单量，每 5 分钟更新一次\\n - Session Window (会话窗口)\\n - 定义\\n - Session Window 没有固定窗口，它的边界由活动间隔决定\\n - session window 的边界由 inactivity gap 定义\\n - 指定 gap 时间内没有新事件到来，当前 session 就关闭\\n - 如果中间一直没有很长时间断开，这些行为属于同一个会话\\n - 适合场景\\n - 用户会话分析\\n - App 连续使用时长\\n - 连续操作链路\\n - Count Window (计数窗口)\\n - 定义\\n - Count Window 按元素个数切\\n - 每 10 条数据统计一次/每 100 条点击做一次聚合\\n - 适合常见\\n - 每 100 条日志做一次分析\\n - 每 50 条事件批量聚合\\n - 窗口最重要的两个维度\\n - 切分维度\\n - 按时间切\\n - 按数量切\\n - 是否重叠\\n - 不重叠\\n - 可能重叠\\n - 不固定边界\\n - 窗口对齐\\n - 时间窗口是对齐到 epoch 的\\n - 时间窗口默认是按时间对齐的，不是按程序启动时刻随意切\\n - 窗口聚合\\n - 窗口聚合解决什么问题\\n - 窗口把无界流切成有限片段后，通常还要对每个片段做计算\\n - 不同业务对怎么算有不同要求\\n - 有的业务只要一个简单结果，例如总数\\n - 有的要复杂中间结构，比如平均值要维护 sunm 和 count\\n - 有的除了结果，还要输出窗口边界、key、触发时间等元信息\\n - 增量聚合\\n - 增量聚合，就是数据一到，就立即把它并入当前结果\\n - 不是把整个窗口所有元素都存起来，等窗口结束后再统一计算\\n - 全量窗口处理\\n - 先把窗口里所有元素都留着，等窗口触发时，再把完整集合交给函数处理\\n - reduce：最轻量的窗口聚合\\n - 本质\\n - ReduceFunction 的核心思想是：把两个同类型元素合并成一个同类型元素\\n - 为什么高效\\n - 窗口里不需要保留全部元素，只需要持续维护一个当前归并结果\\n - 最大的限制\\n - 输入类型和输出类型必须一致\\n - aggregate：更通用的增量聚合\\n - 本质\\n - 把聚合拆成了几个阶段\\n - 创建累加器 createAccumulator()\\n - 把新元素加进累加器 add()\\n - 从累加器得到最终输出 getResult()\\n - 为什么比 reduce 更灵活\\n - 把三种类型分开\\n - 输入类型 IN\\n - 累加器类型 ACC\\n - 输出类型 OUT\\n - ProcessWindowFunction：最灵活的窗口处理\\n - 本质\\n - 核心价值不是更快，而是信息更多、能力更强\\n - 适合什么场景\\n - 需要窗口开始时间/结束时间\\n - 需要访问 key\\n - 需要输出带窗口元信息的结果\\n - 需要看完整窗口数据\\n - 需要复杂后处理逻辑\\n - 最大的优势\\n - 能够拿到窗口元信息\\n - 迟到数据处理\\n - 什么叫迟到数据\\n - 这条数据的事件时间本来属于某个旧窗口\\n - 但它到达系统时，这个窗口已经因为 watermark 推进而触发过了\\n - 它来晚了\\n - allow lateness\\n - 是 Flink 为窗口保留的额外容忍时间\\n - allowedLateness(...) 指定窗口在 watermark 超过结束时间后还能保存多久，以接收迟到数据\\n - side output\\n - side output 是把某些特殊数据从主流旁路输出的机制\\n - 把太晚了、已经不能再进主窗口的数据单独收集出来\\n - 结果修正\\n - 配置了 allow lateness 后，窗口第一次输出的结果可能不是最终结果\\n - 后面如果又来了还能接受的迟到数据，窗口结果会更新并再次触发输出\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_1";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="状态与容错"&gt;状态与容错&lt;/h1&gt;
+&lt;div id="me_2" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_2_src"&gt;
+"\"- 状态与容错\\n - State 基础\\n - 什么是状态\\n - 状态=程序对过去信息的记忆\\n - 没有状态：程序只看当前一条数据\\n - 有状态：程序处理当前数据时，还能参考历史数据\\n - 为什么流处理需要状态\\n - 要做累计\\n - 用户累计消费金额\\n - 某设备累计告警次数\\n - 某单词当前总出现次数\\n - 要做对比\\n - 当前温度和上一次温度相比是否突增\\n - 当前订单状态和之前状态是否矛盾\\n - 要做时序逻辑\\n - 10 s 内连续 3 次登录失败\\n - 下单后 15 分钟未支付\\n - 一段会话里的连续点击行为\\n - 要在故障后恢复业务上下文\\n - Key State\\n - 定义\\n - Keyed State 是和 Key 绑定的状态\\n - Keyed State 只能用于 Keyed Stream 上\\n - 先对 DataStream 做 keyBy(...)，然后才能使用 keyed state\\n - 为什么重要\\n - 很多业务天然都是按照实体分开记忆的\\n - 底层直觉\\n - 一个分布式哈希表，按 key 切开，每个并行实例只负责自己那部分 key\\n - Operate State\\n - 定义\\n - Operator State 是和算子并行实例绑定到状态，而不是和业务 key 绑定\\n - 算子级记忆，而不是业务实体记忆\\n - 适合什么场景\\n - source/sink 级别的处理位点\\n - 算子实例自己的工作上下文\\n - Keyed State\\n - ValueState：最常用的 Keyed State\\n - 是什么 \\n - ValueState\\u003cT\\u003e 表示：每个 key 只有一个值\\n - 典型场景\\n - 每个用户累计点击次数\\n - 每个订单当前状态\\n - 每个设备最近一次温度\\n - 每个用户最近一次登录时间\\n - 每个 key 当前告警开关状态\\n - ListState：每个 Key 存一串值\\n - 是什么\\n - ListState\\u003cT\\u003e 表示：每个 Key 下面维护一个列表\\n - 典型场景\\n - 缓存最近若干条事件\\n - 暂存等待拼接到多条消息\\n - 收集一个 key 下的一批原始记录\\n - 先攒起啦，后面统一处理\\n - 风险\\n - 容易无限增长\\n - MapState：每个 Key 下再套一个 map\\n - 是什么\\n - MapState\\u003cUK,UV\\u003e 表示：每个 key 对应一个 map\\n - 典型场景\\n - 每个用户下，不同商品类别的点击次数\\n - 每个设备下，不同传感器字段的最新值\\n - ReducingState：自动做同类型聚合\\n - 是什么\\n - ReducingState\\u003cT\\u003e 表示：每个 key 不直接存明细，而是存一个经过 reduce 的聚合结果\\n - AggregatingState：更灵活的聚合状态\\n - 是什么\\n - AggregatingState\\u003cIN, OUT\\u003e 和 Reducing State 很像，但更通用\\n - 包含输入类型\\n - ProcessFunction\\n - 为什么需要 ProcessFunction\\n - 传统的算子\\n - map/filter/flatMap/keyBy/window 聚合\\n - 更偏声明式处理，而不是自己掌控每条事件+时间回调+状态细节\\n - 无法解决的问题\\n - 订单创建后 15 分钟未支付就报警\\n - 用户 10s 内连续登录失败 3 次\\n - 某 key 1 分钟没有更新时输出当前统计值\\n - 无法解决问题共同点\\n - 要逐条处理事件\\n - 要记住状态\\n - 要在未来某个时间点触发逻辑\\n - ProcessFunction 是什么\\n - 当高级 API 不够表达你的业务规则时，就下到 ProcessFunction 这一层自己控制\\n - 更像一个加强版的 flatMap\\n - 对每条输入都能处理\\n - 能产生 0、1 或多条输出\\n - 能访问上下文\\n - 能注册 timer\\n - 在 timer 到点时再执行逻辑\\n - KeyedProcessFunction 的核心方法\\n - processElement(...)\\n - 每来一条输入事件，Flink 就会调用它\\n - 事件到了，现在立即处理它\\n - onTimer(...)\\n - 注册的 timer 到点时，Flink 会调用它\\n - 之前约好的时间到了，现在执行补充逻辑\\n - Context 提供什么\\n - 在 processElement(...)，Flink 会提供一个 Context，这个 Context 能做几件事\\n - timestamp()：拿当前元素时间戳\\n - timeService()：访问定时器服务\\n - getCurrentKey()：拿当前 Key\\n - output(...)：输出到 side output\\n - 什么是 Timer\\n - 在当前处理某条事件时，告诉 Flink：“到未来某个时间点，请再回头执行一次逻辑“\\n - Timer 为什么 和状态一起用\\n - Timer 只负责未来提醒你一次，但是提醒你时应该做什么，要靠状态来判断\\n - Checkpoint 与容错\\n - Checkpoint 是什么\\n - Checkpoint 是 Flink 对“作业状态+输入流位置“的一致性快照\\n - Checkpoint 至少包含两类东西\\n - 各个 Stateful operator 的状态快照\\n - 各个 source 当前读到哪儿的位点，例如 Kafka offset 这类输入位置\\n - 为什么流处理必须依赖 Checkpoint\\n - 状态负责记忆，checkpoint 负责让记忆在失败后不丢\\n - Checkpoint 保存的是什么\\n - Operator/Keyed State\\n - Source 位置\\n - Timers\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_2";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="连接外部系统"&gt;连接外部系统&lt;/h1&gt;
+&lt;div id="me_3" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_3_src"&gt;
+"\"- 连接外部系统\\n - Flink 读写文件与接\\n - Kafka 集成\\n - Flink 与数据库\\n - 序列化与数据格式\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_3";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="flink-sql-与-table-api"&gt;Flink SQL 与 Table API&lt;/h1&gt;
+&lt;div id="me_4" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_4_src"&gt;
+"\"- Flink SQL 与 Table API\\n - 认识 Table API 与 Flink SQL\\n - 为什么要有 Table API 与 SQL\\n - DataStream 更像手写处理逻辑，Table API/SQL 更像声明我要算什么\\n - Table API 是什么\\n - Table API 是一种 language-integrated query API\\n - 是 SQL 的超集，专为 Flink 设计\\n - Flink SQL 是什么\\n - 用 SQL 语法来描述 Flink 上的流批处理逻辑\\n - 可以理解为\\n - 输入表先注册好\\n - 直接写 SQL\\n - Flink 帮你把 SQL 变为实际可执行程序\\n - Table API 和 SQL 的关系是什么\\n - 不是两套互斥系统，而是同一层抽象的两种表达方式\\n - SQL\\n - 更适合分析型开发\\n - 数仓开发\\n - DDL/DML 风格任务\\n - 让更多懂 SQL 的人参与开发\\n - Table SQL\\n - 想保留代码层面的类型和组合能力\\n - 需要和 Java/Scala/Python 代码更紧密集成\\n - 想在 API 层做更多程序化的表运算\\n - 什么是 Dynamic Table (动态表)\\n - 动态表就是把“不断到来的流“逻辑上看成一张会持续变化的表\\n - 什么是 Continuous Query (连续查询)\\n - Flink SQL 不是查一下就结束都传统 SQL，而是持续运行、持续更新结果的 SQL\\n - append/retract/upsert 结果是什么意思\\n - 问题：结果表变化，怎么把这个变化告诉下游？\\n - 动态表包含三种编码方式\\n - Append-only\\n - 结果表只会新增，不会修改旧结果，只发追加记录就行\\n - Retract\\n - 如果结果表中的旧值会被更新或删除，就不能只 append\\n - retract stream 用 add/retract message 来表示\\n - 对于 update 会先发撤回旧值，再发一条新增新值\\n - Upsert\\n - upsert stream 需要唯一键\\n - INSERT 和 UPDATE 都可以用 upsert message 表示\\n - DELETE 用 delete message 表示\\n - 相比 retract，upsert 只需一条消息\\n - Flink SQL 基础语法\\n - 整体心智模型\\n - 典型 Flink SQL 作业\\n - CREATE TABLE source ...\\n - CREATE TABLE sink ...\\n - INSERT INTO sink\\n - SELECT ... FROM source WHERE ... GROUP BY ...\\n - 四步流程\\n - 定义源表\\n - 定义结果表\\n - 写查询逻辑\\n - 把查询逻辑结果写到目标表\\n - CREATE TABLE 是什么\\n - 本质\\n - CREATE TABLE 是在当前 Catalog 里注册一个表定义，让这个表可以被 SQL 使用\\n - 告诉 Flink：有一张表，它的字段是什么，连接那个外部系统，怎么读，怎么写\\n - 最小骨架\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/29/20260329201448039.png,228,152)\\n - 列定义：字段名和类型\\n - WITH (...)：连接器和外部系统参数\\n - WITH(...)\\n - 通常是连接外部系统所需的 table options\\n - connector\\n - 指定背后连接那个系统（Kafka/filesystem/upsert-kafka/print）\\n - format 相关参数\\n - 告诉 Flink 数据是 JSON、CSV、Avro 等什么格式\\n - 外部系统连接参数\\n - 例如 Kafka topic、broker 地址、分区键等\\n - Flink SQL 最基础的查询语法\\n - SELECT\\n - SELECT user_id, amount FROM orders;\\n - WHERE\\n - SELECT user_id, amount FROM orders WHERE amount \\u003e 100;\\n - GROUP BY\\n - SELECT user_id, COUNT(*) FROM orders GROUP BY user_id;\\n - INSERT TO\\n - INSERT INTO result SELECT user_id, COUNT(*) FROM orders GROUP BY user_id;\\n - sqlQuery() 和 executeSql() 怎么理解\\n - sqlQuery() 用于 SELECT/VALUES 这类查询，返回一个 Table\\n - executeSql() 用于执行 DDL、DML 等语句，例如 CREATE TABLE、INSERT INTO\\n - 时间属性与窗口 SQL\\n - 什么是时间属性\\n - 在流式 SQL 中，窗口函数要求引用的是有效的时间属性，也就是 processing time attribuet 或 event time attribute\\n - 被 Flink 运行时承认，并能参与时间推进和窗口计算的特殊时间列\\n - 时间属性分类\\n - 处理时间属性 (Processing Time)\\n - 这条记录被 Flink 当前机器处理到的时间\\n - 事件时间属性 (Event Time/Rowtime)\\n - 事件时间是业务事件真正发生的时间\\n - 在 SQL 中定义处理时间属性\\n - 在 CREATE TABLE 时，可以定义一个处理时间列\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/29/20260329231102861.png,189,112)\\n - 在 SQL 中定义事件时间属性\\n - 事件时间通常来自源数据中的某个时间段\\n - 仅仅有这个字段还不够，通常要搭配 WATERMARK\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/29/20260329231325444.png,403,131)\\n - ts 是事件时间类\\n - WATERMARK FOR ts AS ... 告诉 Flink 如何基于 ts 推进事件时间\\n - 窗口 SQL 推荐怎么写\\n - Windowing TVF (窗口表值函数)\\n - 窗口聚合支持 TUMBLE/HOP/CUMULATE/SESSION 这些都通过 Windowing TVF 表达的\\n - 什么是 TUMBLE 窗口 SQL\\n - TUMBLE 对应滚动窗口\\n - 按固定窗口大小分配数据\\n - 窗口不重叠\\n - 在结果中增加 window_start、window_end、window_time 三列\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/29/20260329231739213.png,522,109)\\n - DESCRIPTOR(ts)：告诉 Flink 用 ts 这列作为时间属性\\n - INTERVAL '5' MINUTES：窗口大小 5 分钟\\n - 什么是 HOP 窗口 SQL\\n - HOP 对应滑动窗口\\n - HOP 有 slide 和 size\\n - 它会创建可能重叠的窗口\\n - 同一条记录可能会进入多个窗口\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/29/20260329232103658.png,435,204)\\n - 每 1 分钟滑动一次\\n - 每个窗口覆盖近 10 分钟\\n - 结果表同样会带窗口边界列\\n - 什么是 CUMULATE 窗口 SQL\\n - CUMULATE 是累积窗口\\n - 适合总窗口范围较大，但想看逐步累积结果\\n - 每小时一个大窗口，每 5 分钟输出一次当前已累计到哪里的聚合值\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/29/20260329232258791.png,463,215)\\n - step 是 5 分钟\\n - max size 是 1 小时\\n - 窗口会逐步扩张输出\\n - 什么是 SESSION 窗口 SQL\\n - SESSION 对应会话窗口\\n - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/29/20260329232406267.png,439,186)\\n - 30 分钟内持续有事件，属于同一会话\\n - 维表 JOIN 与实时数仓\\n - 什么是事实流，什么是维表\\n - 实时流\\n - 不断到来的业务事件流\\n - 通常来自于 Kafka、CDC、日志流等 source table\\n - 维表\\n - 维表通常是描述型、补充型信息\\n - 为什么实时数仓一定遇到维表 JOIN\\n - 事实流提供发生了什么，维表提供这件事属于谁、是什么、怎么解释\\n - 什么是实时宽表\\n - 把事实流和一个或多个维表关联后，得到的一张字段更完整、可直接分析或落库的结果表\\n - 什么是 Lookup Join\\n - 以事实流为驱动，对外部维表做按键查询\\n - 什么是 Temporal Join/Versioned Table Join\\n - 按某个时间点，去取维表在那个时刻的版本，再和事实表做关联\\n - 什么是 Versioned Table\\n - 一张会变化、并且保留变化历史的表\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_4";
+let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
+function genId() {
+return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+function parseMindMarkdown(md) {
+const lines = md
+.split(/\n/)
+.map(l =&gt; l.replace(/\s+$/g, ""))
+.filter(l =&gt; l.trim().length &gt; 0);
+console.log(lines)
+const stack = [];
+let root = null;
+for (const line of lines) {
+const m = line.match(/^(\s*)([-*+])\s+(.*)$/);
+if (!m) continue;
+const indent = m[1].replace(/\t/g, " ").length;
+const level = Math.floor(indent / 2);
+let text = m[3].trim();
+let hyperLink = null;
+const linkMatch = text.match(/^(.*?)(?:\s*-&gt;\s*)(https?:\/\/\S+)\s*$/);
+if (linkMatch) {
+text = linkMatch[1].trim();
+hyperLink = linkMatch[2].trim();
+}
+const node = { id: genId(), topic: text, children: [] };
+const imgMatch = text.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+if (imgMatch) {
+const url = imgMatch[1].trim();
+const width = Number(imgMatch[2]);
+const height = Number(imgMatch[3]);
+text = text.replace(imgMatch[0], "").trim();
+node.topic=""
+node.image = { url, width, height };
+}
+if (hyperLink) node.hyperLink = hyperLink;
+if (!root) {
+root = node;
+stack.push({ level: 0, node: root });
+continue;
+}
+while (stack.length &amp;&amp; stack[stack.length - 1].level &gt;= level) stack.pop();
+const parent = stack.length ? stack[stack.length - 1].node : root;
+parent.children.push(node);
+stack.push({ level, node });
+}
+return root || { id: genId(), topic: "Empty", children: [] };
+}
+raw = JSON.parse(raw)
+console.log(raw)
+const root = parseMindMarkdown(raw);
+console.log(root)
+const data = {
+nodeData: {
+id: root.id,
+topic: root.topic,
+root: true,
+children: root.children || [],
+},
+arrows: [],
+summaries: [],
+direction: 2,
+};
+console.log(data)
+const ME = window.MindElixir?.default ?? window.MindElixir;
+if (typeof ME !== "function") {
+console.error("MindElixir loaded but not a constructor. window.MindElixir =", window.MindElixir);
+return;
+}
+const mind = new ME({ el: "#" + hostId });
+mind.init(data);
+})();
+&lt;/script&gt;
+&lt;h1 id="原理深入"&gt;原理深入&lt;/h1&gt;
+&lt;div id="me_5" class="mindelixir-container" style="height: 860px; width: 100%;"&gt;&lt;/div&gt;
+&lt;script type="application/json" id="me_5_src"&gt;
+"\"- 原理深入\\n - 背压与性能调优\\n - 什么是背压\\n - 上游发太快，下游吃不动\""
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+if (typeof MindElixir === "undefined") {
+console.error("MindElixir not loaded. Check your CDN script tag.");
+return;
+}
+const hostId = "me_5";
 let raw = JSON.parse(document.getElementById(hostId + "_src").textContent);
 function genId() {
 return "n_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
