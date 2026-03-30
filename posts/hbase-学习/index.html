@@ -2,11 +2,7 @@
 
 
 
-
-
 数据模型与表设计
-
-
 
 
 
@@ -14,24 +10,506 @@
 
 
 
-
-
 实际操作
-
-
 
 
 
 Java 客户端开发
 
 
-
-
-"><meta name=author content="map[name:An]"><link rel=canonical href=https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/><link crossorigin=anonymous href=/assets/css/stylesheet.30441cb37b10db8cca022a88dd9129eef55acb89c4ad48727bf253f7195824d3.css integrity="sha256-MEQcs3sQ24zKAiqI3ZEp7vVay4nErUhye/JT9xlYJNM=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link crossorigin=anonymous href=/assets/css/fancyboxcss.min.css integrity rel="preload stylesheet" as=style></link>
-<script crossorigin=anonymous src=/assets/js/fancybox.js integrity async></script><script type=text/javascript async src="https://cdn.jsdmirror.com/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">MathJax.Hub.Config({tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["[[","]]"]],processEscapes:!0,processEnvironments:!0,skipTags:["script","noscript","style","textarea","pre"],TeX:{equationNumbers:{autoNumber:"AMS"},extensions:["AMSmath.js","AMSsymbols.js"]}},"HTML-CSS":{availableFonts:["Arial","TeX"],preferredFont:"TeX",webFont:"TeX"}}),MathJax.Hub.Queue(function(){var e,t=MathJax.Hub.getAllJax();for(e=0;e<t.length;e+=1)t[e].SourceElement().parentNode.className+=" has-jax"})</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style><link rel=stylesheet href=https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css media=print onload='this.media="all"'><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.css><script src=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.iife.js></script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/ accesskey=h title="安橙的博客 (Alt + H)">安橙的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+"><meta name=author content="map[name:An]"><link rel=canonical href=https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/><link crossorigin=anonymous href=/assets/css/stylesheet.30441cb37b10db8cca022a88dd9129eef55acb89c4ad48727bf253f7195824d3.css integrity="sha256-MEQcs3sQ24zKAiqI3ZEp7vVay4nErUhye/JT9xlYJNM=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script src=/js/mindmap.min.js defer></script><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css><link crossorigin=anonymous href=/assets/css/fancyboxcss.min.css integrity rel="preload stylesheet" as=style></link>
+<script crossorigin=anonymous src=/assets/js/fancybox.js integrity async></script><link rel=stylesheet href=https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css media=print onload='this.media="all"'><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.css><script src=https://cdn.jsdelivr.net/npm/mind-elixir@5.6.1/dist/MindElixir.iife.js></script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/ accesskey=h title="安橙的博客 (Alt + H)">安橙的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
 <svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">HBase 复习</h1><div class=post-meta><span title='2026-03-19 00:00:00 +0000 UTC'>三月 19, 2026</span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e5%9f%ba%e7%a1%80%e8%ae%a4%e7%9f%a5 aria-label=基础认知>基础认知</a></li><li><a href=#%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b%e4%b8%8e%e8%a1%a8%e8%ae%be%e8%ae%a1 aria-label=数据模型与表设计>数据模型与表设计</a></li><li><a href=#%e6%9e%b6%e6%9e%84%e5%8e%9f%e7%90%86 aria-label=架构原理>架构原理</a></li><li><a href=#%e5%ae%9e%e9%99%85%e6%93%8d%e4%bd%9c aria-label=实际操作>实际操作</a></li><li><a href=#java-%e5%ae%a2%e6%88%b7%e7%ab%af%e5%bc%80%e5%8f%91 aria-label="Java 客户端开发">Java 客户端开发</a></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><h1 id=基础认知>基础认知<a hidden class=anchor aria-hidden=true href=#基础认知>#</a></h1><div id=me_0 class=mindelixir-container style=height:860px;width:100%></div><script type=application/json id=me_0_src>"\"- 基础认知\\n    - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别\\n        - HBase\\n            - 一个建立在 Hadoop/HDFS 上的、支持联机、实时读写的分布式数据库，适合承载超大表\\n            - 面向宽表/稀疏表\\n            - 以 RowKey 为核心访问路径\\n            - 强项是海量数据下的主键访问和范围扫描\\n        - MySQL\\n            - 关系型数据库\\n            - 强 SQL 能力\\n            - 强事务\\n            - 适合 OLTP 业务系统\\n        - Redis\\n            - 内存型数据存储\\n            - 超低延迟\\n            - 丰富数据结构\\n            - 更像高性能数据结构引擎/缓存平台\\n        - ElasticSerach\\n            - 分布式搜索引擎\\n            - 文档模型\\n            - 擅长全文检索、相关性排序、聚合分析\\n            - 不是传统事务数据库\\n        - Hive\\n            - 数据仓库\\n            - 面向离线分析\\n            - 适合大规模批处理、报表、数仓\\n            - 不适合在线高并发事务场景\\n    - 列式/列族模型是什么\\n        - 列族模型\\n            - 看起来像一张表\\n            - 但是每一行并不是必须拥有同样的列\\n            - HBase 把列分成若干个 Column Family (列族)\\n            - 同一个列族里面的数据会被一起管理和物理存储\\n            - 每一条具体的数据单元是一个 Cell，由行键、列族、列限定符、事件戳和值共同确定\\n            - HBase 是一个按 RowKey 组织、按列族管理、按单元格存值、支持多版本的稀疏宽表结构\\n        - 模型示例\\n            - 层次结构\\n                - Table -\\u003e Row -\\u003e Column Family -\\u003e Column Qualifier -\\u003e Cell(Value + TimeStamp)\\n            - 一张用户表 user_profile，定义了两个列族 info + stat\\n                - 一行数据\\n                    - RowKey = user_1001\\n                    - info:name = \\\"Alice\\\"\\n                    - info:city = \\\"Tokyo\\\"\\n                    - stat:login_cnt = 25\\n                - info、stat 是列族\\n                - name、city、login_cnt 是列限定符\\n                - 完整列名是 family:qualifier\\n                - 每个值都带 timestamp，可以保留多个版本\\n        - 列族、列、Cell\\n            - RowKey\\n                - 是一行数据的主键，也是 HBase 最核心的访问入口\\n                - 查 HBase，本质是在查某个 RowKey，或者扫描一段 RowKey 的范围\\n                - 决定这一行是谁\\n                - 决定数据在字典序上的排序方式\\n                - 决定大部分查询的性能上限\\n            - Column Family\\n                - 是 HBase 中必须定义的逻辑分组\\n                - 列族在创建表时就确定好\\n                - HBase shell 和 API 文档都以先创建表，定义 family，再在 family 下写具体列的方式使用 HBase\\n                - 列族是一组经常一起出现，一起管理，一起存储策略配置的数据\\n            - Column Qualifier（列限定符）\\n                - 列限定符就是列族下面具体的列名\\n                - 列限定符不需要像 MySQL 字段在建表时全部固定列出来\\n                - 列族通常固定，但是 qualifier 可以按需动态增加。\\n                - HBase 适合列很多，而且不同记录拥有的列不一样的场景\\n            - Cell\\n                - Cell 是最小存储单元\\n                - 一个 Cell 由这些部分唯一定位\\n                    - row\\n                    - family\\n                    - qualifier\\n                    - timestamp\\n                    - value\\n            - TimeStamp/Version\\n                - HBase 天然支持多版本\\n                - 同一个 row + family + qualifier，可以在不同 timestamp 下保存多个值\\n                - Get/Scan API 也支持按照版本范围取数据\\n                - HBase 的默认思维是：一个单元格可以有历史版本\\n        - 为什么要有列族\\n            - HBase 不只是逻辑上分组，还会影响物理管理和存储策略\\n            - 列族可以把访问模式相近的数据放在一起\\n            - 列族可以让不同数据有不同的存储策略\\n            - 列族可以让稀疏表更自然\\n        - 稀疏宽表\\n            - 稀疏\\n                - 不是每一行都有同样的列\\n                - 举例\\n                    - 商品 A：颜色、尺寸、品牌\\n                    - 商品 B：品牌、功率、电压\\n                    - 商品 C：材质、长度、颜色、重量\\n                - 如果用 MySQL，固定列会导致很多字段为空\\n                - HBase 只保存实际存在的 family:qualifier-\\u003evalue 即可\\n                - HBase 在列族下使用动态 qualifier\\n            - 宽表\\n                - 列非常多，甚至 qualifier 的数量可以远大于传统关系表的字段数\\n    - HBase 为什么是 Bigtable 风格数据库\\n        - 什么是 Bigtable\\n            - Bigtable 是 Google 提出的一个分布式存储系统，用来存放结构化数据，典型特点\\n                - 面向超大规模数据\\n                - 稀疏，可扩展的表\\n                - 以 row key 为核心组织数据\\n                - 支持列族\\n                - 支持多版本\\n                - 支持按键范围扫描\\n        - 以 RowKey 为中心，而不是以 SQL 为中心\\n            - Bigtable 风格数据库核心访问方式\\n                - 按 RowKey 精准查\\n                - 按 RowKey 前缀或范围扫描\\n                - 设计 schema 时优先围绕查询路径设计 row key\\n            - 设计数据库时，优先设计 RowKey 和访问路径，而不是优先设计复杂 SQL\""</script><script>(function(){if(typeof MindElixir=="undefined"){console.error("MindElixir not loaded. Check your CDN script tag.");return}const n="me_0";let e=JSON.parse(document.getElementById(n+"_src").textContent);function s(){return"n_"+Math.random().toString(16).slice(2)+Date.now().toString(16)}function a(e){const o=e.split(/\n/).map(e=>e.replace(/\s+$/g,"")).filter(e=>e.trim().length>0);console.log(o);const t=[];let n=null;for(const u of o){const r=u.match(/^(\s*)([-*+])\s+(.*)$/);if(!r)continue;const h=r[1].replace(/\t/g,"  ").length,d=Math.floor(h/2);let e=r[3].trim(),c=null;const l=e.match(/^(.*?)(?:\s*->\s*)(https?:\/\/\S+)\s*$/);l&&(e=l[1].trim(),c=l[2].trim());const i={id:s(),topic:e,children:[]},a=e.match(/!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);if(a){const t=a[1].trim(),n=Number(a[2]),s=Number(a[3]);e=e.replace(a[0],"").trim(),i.topic="",i.image={url:t,width:n,height:s}}if(c&&(i.hyperLink=c),!n){n=i,t.push({level:0,node:n});continue}for(;t.length&&t[t.length-1].level>=d;)t.pop();const m=t.length?t[t.length-1].node:n;m.children.push(i),t.push({level:d,node:i})}return n||{id:s(),topic:"Empty",children:[]}}e=JSON.parse(e),console.log(e);const t=a(e);console.log(t);const o={nodeData:{id:t.id,topic:t.topic,root:!0,children:t.children||[]},arrows:[],summaries:[],direction:2};console.log(o);const i=window.MindElixir?.default??window.MindElixir;if(typeof i!="function"){console.error("MindElixir loaded but not a constructor. window.MindElixir =",window.MindElixir);return}const r=new i({el:"#"+n});r.init(o)})()</script><h1 id=数据模型与表设计>数据模型与表设计<a hidden class=anchor aria-hidden=true href=#数据模型与表设计>#</a></h1><div id=me_1 class=mindelixir-container style=height:860px;width:100%></div><script type=application/json id=me_1_src>"\"- 数据模型与表设计\\n    - RowKey 设计原则\\n        - 总纲\\n            - RowKey 不是随便选一个主键，而是 HBase 里面最重要的访问索引、排序依据和分布依据。\\n            - 每行只有一个被索引的值，就是 row key\\n        - 本质\\n            - 数据如何定位\\n            - 数据怎么按字典序排序\\n            - 数据怎么在集群中分布，会不会热点\\n        - RowKey 为什么重要\\n            - 最快、最强、最自然的访问路径就是按照 RowKey 去查和按范围扫\\n            - RowKey 设计不好\\n                - 查询路径不顺\\n                - scan 范围过大\\n                - 热点集中\\n                - 读写吞吐不均衡\\n                - 很难靠 SQL 或者二级索引补救\\n        - 核心原则\\n            - 先按查询方式设计，不要按照字段含义设计\\n                - 最常见的查询是什么\\n                - 查询是点查还是范围查\\n                - 查询维度谁排第一\\n                - 结果取最近一条、最近 N 条还是一个时间段\\n            - 让最常用的过滤维度出现在 RowKey 前部\\n                - Row Key 前缀直接决定\\n                    - 哪些数据会排在一起\\n                    - 哪些数据可以用 prefix/range 高效扫描\\n            - Row Key 要支持高频查询的自然范围扫描\\n                - HBase 擅长的不是随意条件查询，而是连续键空间扫描\\n                - 建议围绕 row key prefix 设计 schema\\n                - 例如查询设备时序数据\\n                    - 按设备查最近数据\\n                    - 按设备查某段时间数据\\n                    - device_id#reverse_ts\\n                - 避免单 key 递增直接写入，防止热点\\n                    - 不断递增的 rowKey 最新写入通常会不断打到键空间尾部，把写压力集中到少数 region\\n            - 在可扫描性和均匀分布之间做平衡\\n                - 分桶：bucket(user_id)#user_id#reverse_ts\\n            - 时间类场景通常需要显式设计时间顺序\\n            - rowKey 要短、稳定、可解析\\n        - 常见设计模式\\n            - 单主键模型\\n                - user_id\\n                - 一行就是一个主键\\n                - 点查为主\\n                - 不需要时间维度\\n            - 主维度 + 时间\\n                - user_id#ts\\n            - 主维度 + 倒序时间\\n                - user_id#reverse_ts\\n            - 桶 + 主维度 + 时间\\n                - bucket(user_id)%16#user_id#reverse_ts\\n            - 数据集前缀 + 业务键\\n                - U#1001\\n    - 列族应该怎么拆\\n        - 为什么列族拆分重要\\n            - 列族会把同一族的一组列物理共置\\n            - 列族带有独立的存储属性\\n            - 每一行都拥有相同的列族集合\\n            - 未写入的单元格不占用实际空间\\n        - 列族拆分总原则\\n            - 同查：经常一起读的字段，放在一起\\n            - 同配：需要相同存储策略的字段，适合放在一起\\n            - 同寿命：生命周期相近的字段，适合放在一起\\n            - 同频率：更新频率相近的字段，适合放在一起\\n        - 拆分口诀\\n            - 基础资料一族、频繁指标一族、短期日志一族、打对象单独一族\\n    - 版本机制\\n        - 什么是版本\\n            - 同一个字段可能保存多份历史值\\n            - 每一份历史值靠 timestamp 区分\\n            - HBase 官方文档把 Cell 展示为包含 row、column、timestamp 和 value\\n        - timestamp 和 version 的关系\\n            - timestamp 是版本标识\\n                - 在 HBase 里，每写入一个 Cell，都要有对应的 timestamp\\n                - timestamp 由系统自动生成，也可以由自己指定\\n            - version 是字段保留的历史份数\\n                - 按列族配置，说明最多留多少份历史数据\\n    - TTL、压缩、Bloom Filter\\n        - TTL 是什么\\n            - Time To Live，生存时间\\n            - 是 cell contents 的生存时间，单位是 s\\n            - 是列族级的数据过期策略\\n        - TTL 解决的问题\\n            - 控制历史数据无限膨胀\\n            - 降低存储成本\\n            - 让冷热数据边界更为清晰\\n        - 压缩是什么\\n            - 压缩就是把 HBase 存到 StoreFile/HFile 里面的数据，用某种压缩算法压小\\n            - 可以在 ColumnFamily 上启用压缩，且不需要重建表\\n            - 用 CPU 换磁盘空间、换 I/O 带宽\\n        - Bloom Filter 是什么\\n            - 是一种概率型存在性判断结构\\n            - 帮助你快速判断这个 StoreFile 里面大概率没有你想要的数据，就不去做无效读取了\\n    - 热点问题\\n        - 什么是热点\\n            - HBase/Bigtable 这类系统的数据是按照 rowKey 的字段序排列的\\n            - 相邻的 Key 也会落在相邻的 key range 上，这些 key range 被分配给特定的 Region/RegionServer 来服务\\n            - 如果请求集中在某一个 RowKey/某一小段连续 RowKey/某个不断增长的最新 key 区间，负载就不会均匀摊开，造成热点\""</script><script>(function(){if(typeof MindElixir=="undefined"){console.error("MindElixir not loaded. Check your CDN script tag.");return}const n="me_1";let e=JSON.parse(document.getElementById(n+"_src").textContent);function s(){return"n_"+Math.random().toString(16).slice(2)+Date.now().toString(16)}function a(e){const o=e.split(/\n/).map(e=>e.replace(/\s+$/g,"")).filter(e=>e.trim().length>0);console.log(o);const t=[];let n=null;for(const u of o){const r=u.match(/^(\s*)([-*+])\s+(.*)$/);if(!r)continue;const h=r[1].replace(/\t/g,"  ").length,d=Math.floor(h/2);let e=r[3].trim(),c=null;const l=e.match(/^(.*?)(?:\s*->\s*)(https?:\/\/\S+)\s*$/);l&&(e=l[1].trim(),c=l[2].trim());const i={id:s(),topic:e,children:[]},a=e.match(/!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);if(a){const t=a[1].trim(),n=Number(a[2]),s=Number(a[3]);e=e.replace(a[0],"").trim(),i.topic="",i.image={url:t,width:n,height:s}}if(c&&(i.hyperLink=c),!n){n=i,t.push({level:0,node:n});continue}for(;t.length&&t[t.length-1].level>=d;)t.pop();const m=t.length?t[t.length-1].node:n;m.children.push(i),t.push({level:d,node:i})}return n||{id:s(),topic:"Empty",children:[]}}e=JSON.parse(e),console.log(e);const t=a(e);console.log(t);const o={nodeData:{id:t.id,topic:t.topic,root:!0,children:t.children||[]},arrows:[],summaries:[],direction:2};console.log(o);const i=window.MindElixir?.default??window.MindElixir;if(typeof i!="function"){console.error("MindElixir loaded but not a constructor. window.MindElixir =",window.MindElixir);return}const r=new i({el:"#"+n});r.init(o)})()</script><h1 id=架构原理>架构原理<a hidden class=anchor aria-hidden=true href=#架构原理>#</a></h1><div id=me_2 class=mindelixir-container style=height:860px;width:100%></div><script type=application/json id=me_2_src>"\"- 架构原理\\n    - HMaster 做什么\\n        - HMaster 的定位\\n            - HMaster 负责协调和管理，真正承担读写请求的是 RegionServer\\n            - HMaster 类似调度中心和元数据/运维控制器\\n        - HMaster 的核心职责\\n            - 管理整个集群的 Region 分配\\n                - HBase 的表会被切分成很多 Region\\n                - 集群启动时给 Region 找归属的 RegionServer\\n                - RegionServer 宕机后重新分配它原来负责 Region\\n                - 负载均衡主动迁移 Region\\n            - 监控 RegionServer 的存活状态\\n            - 处理 RegionServer 故障后的恢复\\n            - 做负载均衡\\n            - 处理 DDL 和 schema 管理\\n            - 参与主备切换和集群高可用\\n    - RegionServer 做什么\\n        - RegionServer 的定位\\n            - 是数据面\\n            - 真正保存并服务 Region\\n            - 真正执行 Put/Get/Scan/Delete\\n            - 真正把数据从内存刷到 File\\n            - 真正做 compaction 和 split\\n        - RegionServer 的核心职责\\n            - 持有并管理 Region\\n                - HMaster 决定 Region 给谁\\n                - RegionServer 真正把 Region 跑起来\\n            - 处理客户端读请求\\n            - 处理客户端写请求\\n            - 管理每个 Region 内部的 Store/MemStore/StoreFile\\n            - 运行后台维护线程：flush、compaction、WAL 滚动、split\\n            - 管理 BlockCache\\n            - 执行部分 Region 级维护操作\\n        - Put 流程\\n            - 客户端根据元数据找到 Region 所在的 Region Server\\n            - 请求发到该 Region Server\\n            - RegionServer 找到这个 Region 对应 family 的 Store\\n            - 先写 WAL\\n            - 在把数据写到 Store 里面的 MemStore\\n            - 后台达到条件后，MemStoreFlusher 把数据 flush 到 StoreFile\\n            - 之后 CompactSplitThread/MajorCompactionChecker 再持续维护这些文件\\n        - Get/Scan 流程\\n            - 客户端根据元数据找到 Region 所在的 Region Server\\n            - RegionServer 在对应 Region 的 Store 中查找\\n            - 优先利用 BlockCache\\n            - 必要时再读 StoreFile/HFile\\n            - 利用索引和 BloomFilter 缩小无效读取\\n            - 返回结果给客户端\\n    - Region 是什么\\n        - Region 定义\\n            - Region 是一段连续的、按 RowKey 排序的行范围\\n            - 表的层级结构 Table-\\u003eRegion-\\u003eStore-\\u003eMemStore/StoreFile-\\u003eBlock\\n        - 为什么要有 Region\\n            - 做分布式切片\\n            - 支持扩展\\n            - 支持负载均衡\\n        - Region 结构\\n            - 一个 Region 内部，每个 ColumFile 对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile\\n        - Region 如何分配\\n            - 同一时刻，一个 Region 只由一个 RegionServer 提供服务\\n            - 一个 RegionServer 可以持有很多 Region\\n            - HMaster 负责 Region 给谁、是否迁移、是否均衡\\n            - RegionServer 负责真正持有 Region 并处理这个 Region 的读写\\n        - Region 为什么需要切分\\n            - 单个 Region 太大，迁移和恢复成本高\\n            - 该 Region 所在 RegionServer 负载可能过重\\n            - 并行度不够，一大段数据只能由一个 Region 服务\\n            - 热点更集中，难以分散\\n            - split 的目的，是把一个过大的 key range 拆分成两个更小的 key range，来提升可扩展性和分布性\\n        - 什么时候会 split\\n            - 由 RegionSplitPolicy 决定\\n            - 当 Region 增长到某个阈值/满足当前 split policy 的条件\\n    - WAL 是什么\\n        - 为什么需要 WAL\\n            - HBase 不是收到请求就立即写成 HFile\\n            - 写请求先进入内存里面的 MemStore\\n            - MemStore 是内存结构，掉电或进程崩溃会丢\\n            - WAL 为还没落成 HFile 的持久化阶段兜底\\n            - 写入请求里的 cells 会一直保留，直到成功持久化到 WAL 和 MemStore\\n            - MemStore 负责写入速度，WAL 负责稳定性\\n        - 为什么叫 Write-Ahead\\n            - 先把将要发生的修改记录到日志中，再依赖后续流程把它整理进正式数据文件\\n            - 这条写操作在正式长期存储结构整理完成之前\\n            - 已经被写入到一个可恢复的日志里\\n        - WAL 处在的位置/Put 操作链路\\n            - 客户端把 Put 请求发送到目标 RegionServer\\n            - RegionServer 把这次修改追加到 WAL\\n            - 同时把数据写入目标 Store 的 MemStore\\n            - 之后后台线程再把 MemStore Flush 成 StoreFile/HFile\\n            - 最后通过 compaction 整理文件\\n        - WAL 记录的内容\\n            - WAL 记录的是这次写操作的增量编辑记录\\n            - WAL 写入的内容加做 WALEdit，有 WAL.Entry、WALKey 类型来表示一条日志条目及其键\\n    - MemStore、StoreFile/HFile、BlockCache\\n        - 概述\\n            - MemStore：写入时的内存缓冲区\\n            - StoreFile/HFile：Flush 之后落盘的正式数据文件\\n            - BlockCache：读路径上的数据块缓存\\n            - 在一个 Region 里，每个列族对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile\\n        - MemStore 是什么\\n            - MemStore 是 Store 在内存中的缓冲区\\n            - 客户端写入数据， RegionServer 会先把修改写入 WAL，并把数据存放在对应的 Store 的 MemStore\\n            - 后续达到条件后，再 flush 到磁盘形成 StoreFile\\n            - 主要解决写的快的问题，如果每次 Put/Delete 都直接改磁盘主文件，开销会很大\\n            - 先写入内存，可以把随机小写聚合起来，再批量 flush 到磁盘\\n            - MemStore 只是内存态，不是最终查询文件，内容会在后续 flush 后变为 StoreFile/HFile\\n        - StoreFile 是什么\\n            - 是 Store 在磁盘上的数据文件\\n            - MemStore 不会只 flush 一次，每次 flush 会生成新的 StoreFile\\n            - 当 BlockCache miss 且 MemStore 没有目标数据，RegionStore 会去 HFile/StoreFile 中查\\n        - HFile 是什么\\n            - 是底层文件格式，StoreFile 是 HBase 在 RegionServer/Store 这一层使用的数据文件抽象\\n            - 一个 StoreFile 对应一个 HFile\\n        - BlockCache 是什么\\n            - 是 HBase 读路径上的数据库缓存\\n            - 缓存的是从 HFile 里读出来的 block\\n            - 解决的是读的快的问题\\n    - Flush、Compaction、Split 的流程\\n        - Flush 是什么\\n            - 定义\\n                - 把某个 Store 的 MemStore 内容写到磁盘，生成新的 StoreFile\\n            - 为什么必须 Flush\\n                - MemStore 在内存中，不能无限增长\\n            - flush 后发生什么\\n                - flush 完成后，这批数据会变成新的 StoreFile，被纳入该 Store 的文件集合。\\n        - Flush 触发条件\\n            - 内存压力触发\\n            - 时间触发\\n            - 运维/内部流程触发\\n        - Compaction 是什么\\n            - Compaction 是把一个 Store 多个 StoreFile 文件合并整理成更少的新文件\\n        - Minor Compaction 和 Major Compaction 的区别\\n            - Minor Compaction\\n                - 把若干个较小的 StoreFile 合并成更少的较大文件，但通常不是把该 Store 的所有文件一次性全部重写\\n            - Major Compaction\\n                - 更彻底地重写该 Store 的文件集合\\n        - Split 是什么\\n            - Split 是把一个 Region 沿 RowKey 边界切成两个子 Region\\n    - Zookeeper 的作用\\n        - 核心作用\\n            - 主节点选举：决定谁是 active HMaster\\n            - 服务发现：让客户端知道该连谁\\n            - 节点状态感知：知道哪些服务还活着\\n            - 协调关键元数据入口\\n        - 为什么 HBase 需要 ZooKeeper\\n            - HBase 把协调问题外包给 ZooKeeper，把自己更多精力放在存储和读写路径上\\n        - Zookeeper 不做什么\\n            - 不存储业务明细数据\\n            - 不承担高吞吐读写\\n            - 不等于 HMaster\""</script><script>(function(){if(typeof MindElixir=="undefined"){console.error("MindElixir not loaded. Check your CDN script tag.");return}const n="me_2";let e=JSON.parse(document.getElementById(n+"_src").textContent);function s(){return"n_"+Math.random().toString(16).slice(2)+Date.now().toString(16)}function a(e){const o=e.split(/\n/).map(e=>e.replace(/\s+$/g,"")).filter(e=>e.trim().length>0);console.log(o);const t=[];let n=null;for(const u of o){const r=u.match(/^(\s*)([-*+])\s+(.*)$/);if(!r)continue;const h=r[1].replace(/\t/g,"  ").length,d=Math.floor(h/2);let e=r[3].trim(),c=null;const l=e.match(/^(.*?)(?:\s*->\s*)(https?:\/\/\S+)\s*$/);l&&(e=l[1].trim(),c=l[2].trim());const i={id:s(),topic:e,children:[]},a=e.match(/!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);if(a){const t=a[1].trim(),n=Number(a[2]),s=Number(a[3]);e=e.replace(a[0],"").trim(),i.topic="",i.image={url:t,width:n,height:s}}if(c&&(i.hyperLink=c),!n){n=i,t.push({level:0,node:n});continue}for(;t.length&&t[t.length-1].level>=d;)t.pop();const m=t.length?t[t.length-1].node:n;m.children.push(i),t.push({level:d,node:i})}return n||{id:s(),topic:"Empty",children:[]}}e=JSON.parse(e),console.log(e);const t=a(e);console.log(t);const o={nodeData:{id:t.id,topic:t.topic,root:!0,children:t.children||[]},arrows:[],summaries:[],direction:2};console.log(o);const i=window.MindElixir?.default??window.MindElixir;if(typeof i!="function"){console.error("MindElixir loaded but not a constructor. window.MindElixir =",window.MindElixir);return}const r=new i({el:"#"+n});r.init(o)})()</script><h1 id=实际操作>实际操作<a hidden class=anchor aria-hidden=true href=#实际操作>#</a></h1><div id=me_3 class=mindelixir-container style=height:860px;width:100%></div><script type=application/json id=me_3_src>"\"- 实操\\n    - 启动单机 HBase\\n        - 单机模式是什么\\n            - 单机模式是 HBase 最基础的步数形态\\n            - 在 standalone 模式下，所有 HBase 守护进程都运行在一个 JVM 里\\n        - Docker 启动\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324134824394.png,252,116)\\n        - 进入容器进行最小验证命令\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324135239051.png,625,612)\\n    - 用 Shell 建表、删表、put/get/scan\\n        - 进入 shell\\n            - hbase shell\\n        - 命令基本结构\\n            - 表名：test\\n            - row key：row1\\n            - 列：cf:a（列族:列限定符）\\n        - create 建表\\n            - create 'test','cf'\\n            - 创建表 test，在表中预定义列族 cf\\n        - put 写入数据\\n            - put 'test', 'row1', 'cf:a', 'value1'\\n            - 'test'：表名\\n            - 'row1'：row key\\n            - 'cf:a'：列\\n            - 'value1'：值\\n            - 本质：往某个表的某一行、不同列写值\\n        - scan 扫描数据\\n            - scan 'test'\\n            - 按 RowKey 顺序把表里面的一批数据扫出来\\n        - get 读一行数据\\n            - get 'test', 'row1'\\n            - 按 Rowkey 精确读取某一行\\n            - get 是点查，scan 是范围扫\\n        - disable 和 drop\\n            - disable 的作用：先把表停用，把表从可服务状态切到不可服务状态\\n            - drop 的作用：删除表\\n    - 创建 namespace \\n        - 什么是 namespace\\n            - 如果创建表时未指定 namespace，则表存放在 default namespace 下\\n            - create 'test','cf' 本质等价于 'default:test'\\n        - 为什么要有 namespace\\n            - 表分组管理\\n            - 避免表名冲突\\n            - 便于做配额/约束\\n            - namespace 是 HBase 里按业务域组织表的基本单位\\n        - hbase 存在哪些 namespace\\n            - default\\n                - 用户表默认所在 namespace\\n            - hbase\\n                - 系统 namespace，保留给 hbase 内部表\\n        - 创建 namespace\\n            - create_namespace 'demo'\\n        - 查看 namespace\\n            - list_namespace\\n        - 在 namespace 下建表\\n            - create 'demo:test', 'cf'\\n        - 写入和读取\\n            - put 'demo:test', 'row1', 'cf:a', 'value1'\\n            - get 'demo:test', 'row1'\\n            - scan 'demo:test'\\n        - 删除 namespace\\n            - drop_namespace 'demo'\\n    - 设置版本数、TTL、压缩\\n        - 列族级配置\\n            - family 是物理和策略边界\\n            - VERSIONS、TTL、COMPRESSION 这类配置，默认思维都是这个 family 怎么存，不是这一列怎么存\\n        - alter 是什么命令\\n            - alter 用来修改已有表的 schema 或表/列族相关配置\\n        - VERSIONS\\n            - 控制什么\\n                - 同一个 row+family+qualifier 最多保存多少个历史版本\\n            - 怎么改\\n                - alter 'test', NAME =\\u003e 'cf', VERSIONS =\\u003e 5\\n        - TTL\\n            - 控制什么\\n                - 这个列族里面的数据默认能活多久\\n            - 怎么改\\n                - alter 'test', NAME =\\u003e 'cf', TTL =\\u003e 2592000\\n        - COMPRESSION\\n            - 控制什么\\n                - 这个列族的 StoreFile/HFile 落盘时用什么压缩算法\\n            - 怎么改\\n                - alter 'test', NAME =\\u003e 'cf', COMPRESSION =\\u003e 'SNAPPY'\\n        - 验证修改\\n            - describe 'test'\\n    - 查看 Region 分布\\n        - web ui\\n            - localhost:16010\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324154801170.png,600,400)\\n    - 简单 filter 查询\\n        - 为什么要用 filter\\n            - 不想整表扫出来自己筛\\n            - 只看某些 row key 前缀/只看某些列名前缀/只取前 N 行/只保留某个列值满足条件的行\\n            - 让 RegionServer 在服务端先过滤（server-side filtering）\\n        - filter 的基本写法\\n            - scan '表明', { FILTER =\\u003e \\\"过滤器表达式\\\" }\\n        - 准备练习数据\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155538852.png,475,206)\\n        - 5 类简单 filter\\n            - PrefixFilter：按 row key 前缀过滤\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155813044.png,801,131)\\n            - PageFilter：限制返回多少行\\n                - scan 'demo:filter_test', { FILTER =\\u003e \\\"PageFilter(2)\\\" }\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160025865.png,799,138)\\n            - ColumnPrefixFilter：按列限定符前缀过滤\\n                - scan 'demo:filter_test', { FILTER =\\u003e \\\"ColumnPrefixFilter('na')\\\" }\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160109778.png,801,134)\\n            - SingleColumnValueFilter：按某一列的值筛行\\n                - scan 'demo:filter_test', { FILTER =\\u003e \\\"SingleColumnValueFilter('cf', 'city', =, 'binary:Tokyo')\\\" }\\n                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160214742.png,941,100)\\n            - ValueFilter：按值过滤列\\n                - 如果只是做简单的 family:qualifier:value 等值判断，推荐限制后再配 ValueFilter，这样能避免扫描无关的 family/column\\n        - 组合使用 filter\\n            - \\\"PrefixFilter ('Row') AND PageFilter (1) AND FirstKeyOnlyFilter ()\\\"\""</script><script>(function(){if(typeof MindElixir=="undefined"){console.error("MindElixir not loaded. Check your CDN script tag.");return}const n="me_3";let e=JSON.parse(document.getElementById(n+"_src").textContent);function s(){return"n_"+Math.random().toString(16).slice(2)+Date.now().toString(16)}function a(e){const o=e.split(/\n/).map(e=>e.replace(/\s+$/g,"")).filter(e=>e.trim().length>0);console.log(o);const t=[];let n=null;for(const u of o){const r=u.match(/^(\s*)([-*+])\s+(.*)$/);if(!r)continue;const h=r[1].replace(/\t/g,"  ").length,d=Math.floor(h/2);let e=r[3].trim(),c=null;const l=e.match(/^(.*?)(?:\s*->\s*)(https?:\/\/\S+)\s*$/);l&&(e=l[1].trim(),c=l[2].trim());const i={id:s(),topic:e,children:[]},a=e.match(/!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);if(a){const t=a[1].trim(),n=Number(a[2]),s=Number(a[3]);e=e.replace(a[0],"").trim(),i.topic="",i.image={url:t,width:n,height:s}}if(c&&(i.hyperLink=c),!n){n=i,t.push({level:0,node:n});continue}for(;t.length&&t[t.length-1].level>=d;)t.pop();const m=t.length?t[t.length-1].node:n;m.children.push(i),t.push({level:d,node:i})}return n||{id:s(),topic:"Empty",children:[]}}e=JSON.parse(e),console.log(e);const t=a(e);console.log(t);const o={nodeData:{id:t.id,topic:t.topic,root:!0,children:t.children||[]},arrows:[],summaries:[],direction:2};console.log(o);const i=window.MindElixir?.default??window.MindElixir;if(typeof i!="function"){console.error("MindElixir loaded but not a constructor. window.MindElixir =",window.MindElixir);return}const r=new i({el:"#"+n});r.init(o)})()</script><h1 id=java-客户端开发>Java 客户端开发<a hidden class=anchor aria-hidden=true href=#java-客户端开发>#</a></h1><div id=me_4 class=mindelixir-container style=height:860px;width:100%></div><script type=application/json id=me_4_src>"\"- Java 客户端开发\\n    - Connection/Admin/Table\\n        - 职责边界\\n            - Connection：集群级入口\\n                - 封装了到实际服务器和 ZooKeeper 的连接\\n            - Admin：管理面接口\\n            - Table：单表数据面接口\\n        - 代码关系\\n            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324161657372.png,584,113)\\n        - 最小 Java 示例\""</script><script>(function(){if(typeof MindElixir=="undefined"){console.error("MindElixir not loaded. Check your CDN script tag.");return}const n="me_4";let e=JSON.parse(document.getElementById(n+"_src").textContent);function s(){return"n_"+Math.random().toString(16).slice(2)+Date.now().toString(16)}function a(e){const o=e.split(/\n/).map(e=>e.replace(/\s+$/g,"")).filter(e=>e.trim().length>0);console.log(o);const t=[];let n=null;for(const u of o){const r=u.match(/^(\s*)([-*+])\s+(.*)$/);if(!r)continue;const h=r[1].replace(/\t/g,"  ").length,d=Math.floor(h/2);let e=r[3].trim(),c=null;const l=e.match(/^(.*?)(?:\s*->\s*)(https?:\/\/\S+)\s*$/);l&&(e=l[1].trim(),c=l[2].trim());const i={id:s(),topic:e,children:[]},a=e.match(/!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);if(a){const t=a[1].trim(),n=Number(a[2]),s=Number(a[3]);e=e.replace(a[0],"").trim(),i.topic="",i.image={url:t,width:n,height:s}}if(c&&(i.hyperLink=c),!n){n=i,t.push({level:0,node:n});continue}for(;t.length&&t[t.length-1].level>=d;)t.pop();const m=t.length?t[t.length-1].node:n;m.children.push(i),t.push({level:d,node:i})}return n||{id:s(),topic:"Empty",children:[]}}e=JSON.parse(e),console.log(e);const t=a(e);console.log(t);const o={nodeData:{id:t.id,topic:t.topic,root:!0,children:t.children||[]},arrows:[],summaries:[],direction:2};console.log(o);const i=window.MindElixir?.default??window.MindElixir;if(typeof i!="function"){console.error("MindElixir loaded but not a constructor. window.MindElixir =",window.MindElixir);return}const r=new i({el:"#"+n});r.init(o)})()</script></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>© 2025 <a href=https://www.ans20xx.com/>安橙</a></span> ·
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">HBase 复习</h1><div class=post-meta><span title='2026-03-19 00:00:00 +0000 UTC'>三月 19, 2026</span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e5%9f%ba%e7%a1%80%e8%ae%a4%e7%9f%a5 aria-label=基础认知>基础认知</a></li><li><a href=#%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b%e4%b8%8e%e8%a1%a8%e8%ae%be%e8%ae%a1 aria-label=数据模型与表设计>数据模型与表设计</a></li><li><a href=#%e6%9e%b6%e6%9e%84%e5%8e%9f%e7%90%86 aria-label=架构原理>架构原理</a></li><li><a href=#%e5%ae%9e%e9%99%85%e6%93%8d%e4%bd%9c aria-label=实际操作>实际操作</a></li><li><a href=#java-%e5%ae%a2%e6%88%b7%e7%ab%af%e5%bc%80%e5%8f%91 aria-label="Java 客户端开发">Java 客户端开发</a></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><h1 id=基础认知>基础认知<a hidden class=anchor aria-hidden=true href=#基础认知>#</a></h1><div class=mindmap-container data-markdown='
+- 基础认知
+    - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别
+        - HBase
+            - 一个建立在 Hadoop/HDFS 上的、支持联机、实时读写的分布式数据库，适合承载超大表
+            - 面向宽表/稀疏表
+            - 以 RowKey 为核心访问路径
+            - 强项是海量数据下的主键访问和范围扫描
+        - MySQL
+            - 关系型数据库
+            - 强 SQL 能力
+            - 强事务
+            - 适合 OLTP 业务系统
+        - Redis
+            - 内存型数据存储
+            - 超低延迟
+            - 丰富数据结构
+            - 更像高性能数据结构引擎/缓存平台
+        - ElasticSerach
+            - 分布式搜索引擎
+            - 文档模型
+            - 擅长全文检索、相关性排序、聚合分析
+            - 不是传统事务数据库
+        - Hive
+            - 数据仓库
+            - 面向离线分析
+            - 适合大规模批处理、报表、数仓
+            - 不适合在线高并发事务场景
+    - 列式/列族模型是什么
+        - 列族模型
+            - 看起来像一张表
+            - 但是每一行并不是必须拥有同样的列
+            - HBase 把列分成若干个 Column Family (列族)
+            - 同一个列族里面的数据会被一起管理和物理存储
+            - 每一条具体的数据单元是一个 Cell，由行键、列族、列限定符、事件戳和值共同确定
+            - HBase 是一个按 RowKey 组织、按列族管理、按单元格存值、支持多版本的稀疏宽表结构
+        - 模型示例
+            - 层次结构
+                - Table -> Row -> Column Family -> Column Qualifier -> Cell(Value + TimeStamp)
+            - 一张用户表 user_profile，定义了两个列族 info + stat
+                - 一行数据
+                    - RowKey = user_1001
+                    - info:name = "Alice"
+                    - info:city = "Tokyo"
+                    - stat:login_cnt = 25
+                - info、stat 是列族
+                - name、city、login_cnt 是列限定符
+                - 完整列名是 family:qualifier
+                - 每个值都带 timestamp，可以保留多个版本
+        - 列族、列、Cell
+            - RowKey
+                - 是一行数据的主键，也是 HBase 最核心的访问入口
+                - 查 HBase，本质是在查某个 RowKey，或者扫描一段 RowKey 的范围
+                - 决定这一行是谁
+                - 决定数据在字典序上的排序方式
+                - 决定大部分查询的性能上限
+            - Column Family
+                - 是 HBase 中必须定义的逻辑分组
+                - 列族在创建表时就确定好
+                - HBase shell 和 API 文档都以先创建表，定义 family，再在 family 下写具体列的方式使用 HBase
+                - 列族是一组经常一起出现，一起管理，一起存储策略配置的数据
+            - Column Qualifier（列限定符）
+                - 列限定符就是列族下面具体的列名
+                - 列限定符不需要像 MySQL 字段在建表时全部固定列出来
+                - 列族通常固定，但是 qualifier 可以按需动态增加。
+                - HBase 适合列很多，而且不同记录拥有的列不一样的场景
+            - Cell
+                - Cell 是最小存储单元
+                - 一个 Cell 由这些部分唯一定位
+                    - row
+                    - family
+                    - qualifier
+                    - timestamp
+                    - value
+            - TimeStamp/Version
+                - HBase 天然支持多版本
+                - 同一个 row + family + qualifier，可以在不同 timestamp 下保存多个值
+                - Get/Scan API 也支持按照版本范围取数据
+                - HBase 的默认思维是：一个单元格可以有历史版本
+        - 为什么要有列族
+            - HBase 不只是逻辑上分组，还会影响物理管理和存储策略
+            - 列族可以把访问模式相近的数据放在一起
+            - 列族可以让不同数据有不同的存储策略
+            - 列族可以让稀疏表更自然
+        - 稀疏宽表
+            - 稀疏
+                - 不是每一行都有同样的列
+                - 举例
+                    - 商品 A：颜色、尺寸、品牌
+                    - 商品 B：品牌、功率、电压
+                    - 商品 C：材质、长度、颜色、重量
+                - 如果用 MySQL，固定列会导致很多字段为空
+                - HBase 只保存实际存在的 family:qualifier->value 即可
+                - HBase 在列族下使用动态 qualifier
+            - 宽表
+                - 列非常多，甚至 qualifier 的数量可以远大于传统关系表的字段数
+    - HBase 为什么是 Bigtable 风格数据库
+        - 什么是 Bigtable
+            - Bigtable 是 Google 提出的一个分布式存储系统，用来存放结构化数据，典型特点
+                - 面向超大规模数据
+                - 稀疏，可扩展的表
+                - 以 row key 为核心组织数据
+                - 支持列族
+                - 支持多版本
+                - 支持按键范围扫描
+        - 以 RowKey 为中心，而不是以 SQL 为中心
+            - Bigtable 风格数据库核心访问方式
+                - 按 RowKey 精准查
+                - 按 RowKey 前缀或范围扫描
+                - 设计 schema 时优先围绕查询路径设计 row key
+            - 设计数据库时，优先设计 RowKey 和访问路径，而不是优先设计复杂 SQL
+' style=width:100%;height:500px></div><h1 id=数据模型与表设计>数据模型与表设计<a hidden class=anchor aria-hidden=true href=#数据模型与表设计>#</a></h1><div class=mindmap-container data-markdown="
+- 数据模型与表设计
+    - RowKey 设计原则
+        - 总纲
+            - RowKey 不是随便选一个主键，而是 HBase 里面最重要的访问索引、排序依据和分布依据。
+            - 每行只有一个被索引的值，就是 row key
+        - 本质
+            - 数据如何定位
+            - 数据怎么按字典序排序
+            - 数据怎么在集群中分布，会不会热点
+        - RowKey 为什么重要
+            - 最快、最强、最自然的访问路径就是按照 RowKey 去查和按范围扫
+            - RowKey 设计不好
+                - 查询路径不顺
+                - scan 范围过大
+                - 热点集中
+                - 读写吞吐不均衡
+                - 很难靠 SQL 或者二级索引补救
+        - 核心原则
+            - 先按查询方式设计，不要按照字段含义设计
+                - 最常见的查询是什么
+                - 查询是点查还是范围查
+                - 查询维度谁排第一
+                - 结果取最近一条、最近 N 条还是一个时间段
+            - 让最常用的过滤维度出现在 RowKey 前部
+                - Row Key 前缀直接决定
+                    - 哪些数据会排在一起
+                    - 哪些数据可以用 prefix/range 高效扫描
+            - Row Key 要支持高频查询的自然范围扫描
+                - HBase 擅长的不是随意条件查询，而是连续键空间扫描
+                - 建议围绕 row key prefix 设计 schema
+                - 例如查询设备时序数据
+                    - 按设备查最近数据
+                    - 按设备查某段时间数据
+                    - device_id#reverse_ts
+                - 避免单 key 递增直接写入，防止热点
+                    - 不断递增的 rowKey 最新写入通常会不断打到键空间尾部，把写压力集中到少数 region
+            - 在可扫描性和均匀分布之间做平衡
+                - 分桶：bucket(user_id)#user_id#reverse_ts
+            - 时间类场景通常需要显式设计时间顺序
+            - rowKey 要短、稳定、可解析
+        - 常见设计模式
+            - 单主键模型
+                - user_id
+                - 一行就是一个主键
+                - 点查为主
+                - 不需要时间维度
+            - 主维度 + 时间
+                - user_id#ts
+            - 主维度 + 倒序时间
+                - user_id#reverse_ts
+            - 桶 + 主维度 + 时间
+                - bucket(user_id)%16#user_id#reverse_ts
+            - 数据集前缀 + 业务键
+                - U#1001
+    - 列族应该怎么拆
+        - 为什么列族拆分重要
+            - 列族会把同一族的一组列物理共置
+            - 列族带有独立的存储属性
+            - 每一行都拥有相同的列族集合
+            - 未写入的单元格不占用实际空间
+        - 列族拆分总原则
+            - 同查：经常一起读的字段，放在一起
+            - 同配：需要相同存储策略的字段，适合放在一起
+            - 同寿命：生命周期相近的字段，适合放在一起
+            - 同频率：更新频率相近的字段，适合放在一起
+        - 拆分口诀
+            - 基础资料一族、频繁指标一族、短期日志一族、打对象单独一族
+    - 版本机制
+        - 什么是版本
+            - 同一个字段可能保存多份历史值
+            - 每一份历史值靠 timestamp 区分
+            - HBase 官方文档把 Cell 展示为包含 row、column、timestamp 和 value
+        - timestamp 和 version 的关系
+            - timestamp 是版本标识
+                - 在 HBase 里，每写入一个 Cell，都要有对应的 timestamp
+                - timestamp 由系统自动生成，也可以由自己指定
+            - version 是字段保留的历史份数
+                - 按列族配置，说明最多留多少份历史数据
+    - TTL、压缩、Bloom Filter
+        - TTL 是什么
+            - Time To Live，生存时间
+            - 是 cell contents 的生存时间，单位是 s
+            - 是列族级的数据过期策略
+        - TTL 解决的问题
+            - 控制历史数据无限膨胀
+            - 降低存储成本
+            - 让冷热数据边界更为清晰
+        - 压缩是什么
+            - 压缩就是把 HBase 存到 StoreFile/HFile 里面的数据，用某种压缩算法压小
+            - 可以在 ColumnFamily 上启用压缩，且不需要重建表
+            - 用 CPU 换磁盘空间、换 I/O 带宽
+        - Bloom Filter 是什么
+            - 是一种概率型存在性判断结构
+            - 帮助你快速判断这个 StoreFile 里面大概率没有你想要的数据，就不去做无效读取了
+    - 热点问题
+        - 什么是热点
+            - HBase/Bigtable 这类系统的数据是按照 rowKey 的字段序排列的
+            - 相邻的 Key 也会落在相邻的 key range 上，这些 key range 被分配给特定的 Region/RegionServer 来服务
+            - 如果请求集中在某一个 RowKey/某一小段连续 RowKey/某个不断增长的最新 key 区间，负载就不会均匀摊开，造成热点
+" style=width:100%;height:500px></div><h1 id=架构原理>架构原理<a hidden class=anchor aria-hidden=true href=#架构原理>#</a></h1><div class=mindmap-container data-markdown="
+- 架构原理
+    - HMaster 做什么
+        - HMaster 的定位
+            - HMaster 负责协调和管理，真正承担读写请求的是 RegionServer
+            - HMaster 类似调度中心和元数据/运维控制器
+        - HMaster 的核心职责
+            - 管理整个集群的 Region 分配
+                - HBase 的表会被切分成很多 Region
+                - 集群启动时给 Region 找归属的 RegionServer
+                - RegionServer 宕机后重新分配它原来负责 Region
+                - 负载均衡主动迁移 Region
+            - 监控 RegionServer 的存活状态
+            - 处理 RegionServer 故障后的恢复
+            - 做负载均衡
+            - 处理 DDL 和 schema 管理
+            - 参与主备切换和集群高可用
+    - RegionServer 做什么
+        - RegionServer 的定位
+            - 是数据面
+            - 真正保存并服务 Region
+            - 真正执行 Put/Get/Scan/Delete
+            - 真正把数据从内存刷到 File
+            - 真正做 compaction 和 split
+        - RegionServer 的核心职责
+            - 持有并管理 Region
+                - HMaster 决定 Region 给谁
+                - RegionServer 真正把 Region 跑起来
+            - 处理客户端读请求
+            - 处理客户端写请求
+            - 管理每个 Region 内部的 Store/MemStore/StoreFile
+            - 运行后台维护线程：flush、compaction、WAL 滚动、split
+            - 管理 BlockCache
+            - 执行部分 Region 级维护操作
+        - Put 流程
+            - 客户端根据元数据找到 Region 所在的 Region Server
+            - 请求发到该 Region Server
+            - RegionServer 找到这个 Region 对应 family 的 Store
+            - 先写 WAL
+            - 在把数据写到 Store 里面的 MemStore
+            - 后台达到条件后，MemStoreFlusher 把数据 flush 到 StoreFile
+            - 之后 CompactSplitThread/MajorCompactionChecker 再持续维护这些文件
+        - Get/Scan 流程
+            - 客户端根据元数据找到 Region 所在的 Region Server
+            - RegionServer 在对应 Region 的 Store 中查找
+            - 优先利用 BlockCache
+            - 必要时再读 StoreFile/HFile
+            - 利用索引和 BloomFilter 缩小无效读取
+            - 返回结果给客户端
+    - Region 是什么
+        - Region 定义
+            - Region 是一段连续的、按 RowKey 排序的行范围
+            - 表的层级结构 Table->Region->Store->MemStore/StoreFile->Block
+        - 为什么要有 Region
+            - 做分布式切片
+            - 支持扩展
+            - 支持负载均衡
+        - Region 结构
+            - 一个 Region 内部，每个 ColumFile 对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile
+        - Region 如何分配
+            - 同一时刻，一个 Region 只由一个 RegionServer 提供服务
+            - 一个 RegionServer 可以持有很多 Region
+            - HMaster 负责 Region 给谁、是否迁移、是否均衡
+            - RegionServer 负责真正持有 Region 并处理这个 Region 的读写
+        - Region 为什么需要切分
+            - 单个 Region 太大，迁移和恢复成本高
+            - 该 Region 所在 RegionServer 负载可能过重
+            - 并行度不够，一大段数据只能由一个 Region 服务
+            - 热点更集中，难以分散
+            - split 的目的，是把一个过大的 key range 拆分成两个更小的 key range，来提升可扩展性和分布性
+        - 什么时候会 split
+            - 由 RegionSplitPolicy 决定
+            - 当 Region 增长到某个阈值/满足当前 split policy 的条件
+    - WAL 是什么
+        - 为什么需要 WAL
+            - HBase 不是收到请求就立即写成 HFile
+            - 写请求先进入内存里面的 MemStore
+            - MemStore 是内存结构，掉电或进程崩溃会丢
+            - WAL 为还没落成 HFile 的持久化阶段兜底
+            - 写入请求里的 cells 会一直保留，直到成功持久化到 WAL 和 MemStore
+            - MemStore 负责写入速度，WAL 负责稳定性
+        - 为什么叫 Write-Ahead
+            - 先把将要发生的修改记录到日志中，再依赖后续流程把它整理进正式数据文件
+            - 这条写操作在正式长期存储结构整理完成之前
+            - 已经被写入到一个可恢复的日志里
+        - WAL 处在的位置/Put 操作链路
+            - 客户端把 Put 请求发送到目标 RegionServer
+            - RegionServer 把这次修改追加到 WAL
+            - 同时把数据写入目标 Store 的 MemStore
+            - 之后后台线程再把 MemStore Flush 成 StoreFile/HFile
+            - 最后通过 compaction 整理文件
+        - WAL 记录的内容
+            - WAL 记录的是这次写操作的增量编辑记录
+            - WAL 写入的内容加做 WALEdit，有 WAL.Entry、WALKey 类型来表示一条日志条目及其键
+    - MemStore、StoreFile/HFile、BlockCache
+        - 概述
+            - MemStore：写入时的内存缓冲区
+            - StoreFile/HFile：Flush 之后落盘的正式数据文件
+            - BlockCache：读路径上的数据块缓存
+            - 在一个 Region 里，每个列族对应一个 Store，每个 Store 有自己的 MemStore 和若干 StoreFile
+        - MemStore 是什么
+            - MemStore 是 Store 在内存中的缓冲区
+            - 客户端写入数据， RegionServer 会先把修改写入 WAL，并把数据存放在对应的 Store 的 MemStore
+            - 后续达到条件后，再 flush 到磁盘形成 StoreFile
+            - 主要解决写的快的问题，如果每次 Put/Delete 都直接改磁盘主文件，开销会很大
+            - 先写入内存，可以把随机小写聚合起来，再批量 flush 到磁盘
+            - MemStore 只是内存态，不是最终查询文件，内容会在后续 flush 后变为 StoreFile/HFile
+        - StoreFile 是什么
+            - 是 Store 在磁盘上的数据文件
+            - MemStore 不会只 flush 一次，每次 flush 会生成新的 StoreFile
+            - 当 BlockCache miss 且 MemStore 没有目标数据，RegionStore 会去 HFile/StoreFile 中查
+        - HFile 是什么
+            - 是底层文件格式，StoreFile 是 HBase 在 RegionServer/Store 这一层使用的数据文件抽象
+            - 一个 StoreFile 对应一个 HFile
+        - BlockCache 是什么
+            - 是 HBase 读路径上的数据库缓存
+            - 缓存的是从 HFile 里读出来的 block
+            - 解决的是读的快的问题
+    - Flush、Compaction、Split 的流程
+        - Flush 是什么
+            - 定义
+                - 把某个 Store 的 MemStore 内容写到磁盘，生成新的 StoreFile
+            - 为什么必须 Flush
+                - MemStore 在内存中，不能无限增长
+            - flush 后发生什么
+                - flush 完成后，这批数据会变成新的 StoreFile，被纳入该 Store 的文件集合。
+        - Flush 触发条件
+            - 内存压力触发
+            - 时间触发
+            - 运维/内部流程触发
+        - Compaction 是什么
+            - Compaction 是把一个 Store 多个 StoreFile 文件合并整理成更少的新文件
+        - Minor Compaction 和 Major Compaction 的区别
+            - Minor Compaction
+                - 把若干个较小的 StoreFile 合并成更少的较大文件，但通常不是把该 Store 的所有文件一次性全部重写
+            - Major Compaction
+                - 更彻底地重写该 Store 的文件集合
+        - Split 是什么
+            - Split 是把一个 Region 沿 RowKey 边界切成两个子 Region
+    - Zookeeper 的作用
+        - 核心作用
+            - 主节点选举：决定谁是 active HMaster
+            - 服务发现：让客户端知道该连谁
+            - 节点状态感知：知道哪些服务还活着
+            - 协调关键元数据入口
+        - 为什么 HBase 需要 ZooKeeper
+            - HBase 把协调问题外包给 ZooKeeper，把自己更多精力放在存储和读写路径上
+        - Zookeeper 不做什么
+            - 不存储业务明细数据
+            - 不承担高吞吐读写
+            - 不等于 HMaster
+" style=width:100%;height:500px></div><h1 id=实际操作>实际操作<a hidden class=anchor aria-hidden=true href=#实际操作>#</a></h1><div class=mindmap-container data-markdown="
+- 实操
+    - 启动单机 HBase
+        - 单机模式是什么
+            - 单机模式是 HBase 最基础的步数形态
+            - 在 standalone 模式下，所有 HBase 守护进程都运行在一个 JVM 里
+        - Docker 启动
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324134824394.png,252,116)
+        - 进入容器进行最小验证命令
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324135239051.png,625,612)
+    - 用 Shell 建表、删表、put/get/scan
+        - 进入 shell
+            - hbase shell
+        - 命令基本结构
+            - 表名：test
+            - row key：row1
+            - 列：cf:a（列族:列限定符）
+        - create 建表
+            - create 'test','cf'
+            - 创建表 test，在表中预定义列族 cf
+        - put 写入数据
+            - put 'test', 'row1', 'cf:a', 'value1'
+            - 'test'：表名
+            - 'row1'：row key
+            - 'cf:a'：列
+            - 'value1'：值
+            - 本质：往某个表的某一行、不同列写值
+        - scan 扫描数据
+            - scan 'test'
+            - 按 RowKey 顺序把表里面的一批数据扫出来
+        - get 读一行数据
+            - get 'test', 'row1'
+            - 按 Rowkey 精确读取某一行
+            - get 是点查，scan 是范围扫
+        - disable 和 drop
+            - disable 的作用：先把表停用，把表从可服务状态切到不可服务状态
+            - drop 的作用：删除表
+    - 创建 namespace 
+        - 什么是 namespace
+            - 如果创建表时未指定 namespace，则表存放在 default namespace 下
+            - create 'test','cf' 本质等价于 'default:test'
+        - 为什么要有 namespace
+            - 表分组管理
+            - 避免表名冲突
+            - 便于做配额/约束
+            - namespace 是 HBase 里按业务域组织表的基本单位
+        - hbase 存在哪些 namespace
+            - default
+                - 用户表默认所在 namespace
+            - hbase
+                - 系统 namespace，保留给 hbase 内部表
+        - 创建 namespace
+            - create_namespace 'demo'
+        - 查看 namespace
+            - list_namespace
+        - 在 namespace 下建表
+            - create 'demo:test', 'cf'
+        - 写入和读取
+            - put 'demo:test', 'row1', 'cf:a', 'value1'
+            - get 'demo:test', 'row1'
+            - scan 'demo:test'
+        - 删除 namespace
+            - drop_namespace 'demo'
+    - 设置版本数、TTL、压缩
+        - 列族级配置
+            - family 是物理和策略边界
+            - VERSIONS、TTL、COMPRESSION 这类配置，默认思维都是这个 family 怎么存，不是这一列怎么存
+        - alter 是什么命令
+            - alter 用来修改已有表的 schema 或表/列族相关配置
+        - VERSIONS
+            - 控制什么
+                - 同一个 row+family+qualifier 最多保存多少个历史版本
+            - 怎么改
+                - alter 'test', NAME => 'cf', VERSIONS => 5
+        - TTL
+            - 控制什么
+                - 这个列族里面的数据默认能活多久
+            - 怎么改
+                - alter 'test', NAME => 'cf', TTL => 2592000
+        - COMPRESSION
+            - 控制什么
+                - 这个列族的 StoreFile/HFile 落盘时用什么压缩算法
+            - 怎么改
+                - alter 'test', NAME => 'cf', COMPRESSION => 'SNAPPY'
+        - 验证修改
+            - describe 'test'
+    - 查看 Region 分布
+        - web ui
+            - localhost:16010
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324154801170.png,600,400)
+    - 简单 filter 查询
+        - 为什么要用 filter
+            - 不想整表扫出来自己筛
+            - 只看某些 row key 前缀/只看某些列名前缀/只取前 N 行/只保留某个列值满足条件的行
+            - 让 RegionServer 在服务端先过滤（server-side filtering）
+        - filter 的基本写法
+            - scan '表明', { FILTER => &#34;过滤器表达式&#34; }
+        - 准备练习数据
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155538852.png,475,206)
+        - 5 类简单 filter
+            - PrefixFilter：按 row key 前缀过滤
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324155813044.png,801,131)
+            - PageFilter：限制返回多少行
+                - scan 'demo:filter_test', { FILTER => &#34;PageFilter(2)&#34; }
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160025865.png,799,138)
+            - ColumnPrefixFilter：按列限定符前缀过滤
+                - scan 'demo:filter_test', { FILTER => &#34;ColumnPrefixFilter('na')&#34; }
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160109778.png,801,134)
+            - SingleColumnValueFilter：按某一列的值筛行
+                - scan 'demo:filter_test', { FILTER => &#34;SingleColumnValueFilter('cf', 'city', =, 'binary:Tokyo')&#34; }
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324160214742.png,941,100)
+            - ValueFilter：按值过滤列
+                - 如果只是做简单的 family:qualifier:value 等值判断，推荐限制后再配 ValueFilter，这样能避免扫描无关的 family/column
+        - 组合使用 filter
+            - &#34;PrefixFilter ('Row') AND PageFilter (1) AND FirstKeyOnlyFilter ()&#34;
+" style=width:100%;height:500px></div><h1 id=java-客户端开发>Java 客户端开发<a hidden class=anchor aria-hidden=true href=#java-客户端开发>#</a></h1><div class=mindmap-container data-markdown="
+- Java 客户端开发
+    - Connection/Admin/Table
+        - 职责边界
+            - Connection：集群级入口
+                - 封装了到实际服务器和 ZooKeeper 的连接
+            - Admin：管理面接口
+            - Table：单表数据面接口
+        - 代码关系
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324161657372.png,584,113)
+        - 最小 Java 示例
+" style=width:100%;height:500px></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>© 2025 <a href=https://www.ans20xx.com/>安橙</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
 <span id=read_progress></span>
-</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{console.log("codeblock",e);const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
