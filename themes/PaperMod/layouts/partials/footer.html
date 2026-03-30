@@ -131,6 +131,7 @@
 {{- if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }}
 <script>
     document.querySelectorAll('pre > code').forEach((codeblock) => {
+        console.log('codeblock', codeblock)
         const container = codeblock.parentNode.parentNode;
 
         const copybutton = document.createElement('button');
