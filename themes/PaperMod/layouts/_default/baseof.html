@@ -22,6 +22,14 @@
         {{- block "main" . }}{{ end }}
     </main>
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
+
+
+{{/* 放在 </body> 之前 */}}
+{{ if findRE "mindmap" .Content }}
+  {{ $js := resources.Get "js/mindmap.js" | js.Build (dict "format" "iife") | minify }}
+  <script src="{{ $js.RelPermalink }}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+{{ end }}
 </body>
 
 </html>

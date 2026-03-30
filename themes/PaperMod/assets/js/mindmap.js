@@ -6,12 +6,14 @@ import javascript from 'highlight.js/lib/languages/javascript'
 import python from 'highlight.js/lib/languages/python'
 import go from 'highlight.js/lib/languages/go'
 import bash from 'highlight.js/lib/languages/bash'
+import java from 'highlight.js/lib/languages/java'
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('js', javascript)  // js 是 javascript 的别名
 hljs.registerLanguage('python', python)
 hljs.registerLanguage('go', go)
 hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('java', java)
 
 
 function generateId() {
@@ -25,14 +27,11 @@ function formatTopic(text) {
         /!\[([^\]]*)\]\(([^)]+),.+,.+\)/g,
         '<img src="$2" alt="$1" style="vertical-align:middle;border-radius:3px;margin-left:6px;" />'
     )
-    console.log('格式化 topic：', text)
     return text.replace(/`([^`]+)`/g, '<code>$1</code>')
 }
 
 function highlightCode(code, lang) {
-    console.log('提取代码块2：', code)
     if (lang && hljs.getLanguage(lang)) {
-        console.log('提取代码块3：', code)
         return hljs.highlight(code, { language: lang }).value
     }
     return escapeHtml(code)
@@ -44,7 +43,6 @@ function parseMarkdownList(text) {
     const stack = [{ node: root, indent: -1 }]
 
     let i = 0
-    console.log('lines', lines)
     while (i < lines.length) {
         const line = lines[i]
 
@@ -60,12 +58,10 @@ function parseMarkdownList(text) {
 
         // 往下看是否紧跟代码块
         let codeBlock = ''
-        console.log('检查代码块：', i, lines[i + 1].trim())
         if (i + 1 < lines.length && lines[i + 1].trim().startsWith('```')) {
             i++ // 跳到 ``` 开始行
             const langMatch = lines[i].trim().match(/^```(\w*)/)
             const lang = langMatch ? langMatch[1] : ''
-            console.log('lang', lang)
             i++ // 跳过开始行
             let codeLines = []
             while (i < lines.length && !lines[i].trim().startsWith('```')) {
@@ -81,9 +77,7 @@ function parseMarkdownList(text) {
             codeLines = codeLines.map(l => l.slice(minIndent))
             // i 现在指向结束的 ```，循环末尾 i++ 会跳过它
             codeBlock = codeLines.join('\n')
-            console.log('提取代码块：', codeBlock)
             const highlighted = highlightCode(codeBlock, lang)
-            console.log('高亮后的代码：', highlighted)
             topic += `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`
         }
         const node = { topic, children: [] }
@@ -130,23 +124,52 @@ function toMindElixirData(node) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.mindmap-container').forEach(container => {
-        const raw = container.dataset.markdown
-        if (!raw) return
 
-        const tree = parseMarkdownList(raw)
-        const data = { nodeData: toMindElixirData(tree) }
+function initMindmaps() {
+  document.querySelectorAll('.mindmap-container').forEach(container => {
+    // 防止重复初始化
+    if (container.dataset.initialized) return
+    
+    const raw = container.dataset.markdown
+    if (!raw) return
 
-        const mind = new MindElixir({
-            el: container,
-            direction: 2,
-            draggable: true,
-            contextMenu: false,
-            toolBar: false,
-            nodeMenu: false,
-            keypress: false,
-        })
-        mind.init(data)
+    // 确保容器有实际尺寸
+    const rect = container.getBoundingClientRect()
+    if (rect.width === 0) {
+      // 容器还没渲染，稍后重试
+      setTimeout(initMindmaps, 200)
+      return
+    }
+
+    const tree = parseMarkdownList(raw)
+    const data = { nodeData: toMindElixirData(tree) }
+
+    const mind = new MindElixir({
+      el: container,
+      direction: 2,
+      draggable: true,
+      contextMenu: false,
+      toolBar: true,
+      nodeMenu: false,
+      keypress: false,
     })
-})
+    mind.init(data)
+    mind.toCenter()
+
+    container.dataset.initialized = 'true'
+  })
+}
+
+// 覆盖所有可能的加载时机
+if (document.readyState === 'complete') {
+  initMindmaps()
+} else {
+  window.addEventListener('load', initMindmaps)
+}
+
+// 兼容 PaperMod 的页面切换
+document.addEventListener('DOMContentLoaded', initMindmaps)
+
+// 兼容 instant.page / PJAX
+document.addEventListener('pjax:end', initMindmaps)
+document.addEventListener('page:loaded', initMindmaps)
