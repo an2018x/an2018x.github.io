@@ -127,49 +127,38 @@ function toMindElixirData(node) {
 
 function initMindmaps() {
   document.querySelectorAll('.mindmap-container').forEach(container => {
-    // 防止重复初始化
     if (container.dataset.initialized) return
-    
+
     const raw = container.dataset.markdown
     if (!raw) return
 
-    // 确保容器有实际尺寸
-    const rect = container.getBoundingClientRect()
-    if (rect.width === 0) {
-      // 容器还没渲染，稍后重试
-      setTimeout(initMindmaps, 200)
-      return
-    }
+    const observer = new ResizeObserver(entries => {
+      const { width, height } = entries[0].contentRect
+      if (width > 0 && height > 0) {
+        observer.disconnect()
 
-    const tree = parseMarkdownList(raw)
-    const data = { nodeData: toMindElixirData(tree) }
+        const tree = parseMarkdownList(raw)
+        const data = { nodeData: toMindElixirData(tree) }
 
-    const mind = new MindElixir({
-      el: container,
-      direction: 2,
-      draggable: true,
-      contextMenu: false,
-      toolBar: true,
-      nodeMenu: false,
-      keypress: false,
+        const mind = new MindElixir({
+          el: container,
+          direction: 2,
+          draggable: true,
+          contextMenu: false,
+          toolBar: false,
+          nodeMenu: false,
+          keypress: false,
+        })
+        mind.init(data)
+        mind.toCenter()
+
+        container.dataset.initialized = 'true'
+      }
     })
-    mind.init(data)
-    mind.toCenter()
 
-    container.dataset.initialized = 'true'
+    observer.observe(container)
   })
 }
 
-// 覆盖所有可能的加载时机
-if (document.readyState === 'complete') {
-  initMindmaps()
-} else {
-  window.addEventListener('load', initMindmaps)
-}
-
-// 兼容 PaperMod 的页面切换
 document.addEventListener('DOMContentLoaded', initMindmaps)
-
-// 兼容 instant.page / PJAX
-document.addEventListener('pjax:end', initMindmaps)
-document.addEventListener('page:loaded', initMindmaps)
+window.addEventListener('load', initMindmaps)
