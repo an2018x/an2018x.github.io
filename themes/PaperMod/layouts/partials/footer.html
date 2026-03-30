@@ -177,3 +177,21 @@
     });
 </script>
 {{- end }}
+
+
+<div id="site-toast" class="site-toast"></div>
+
+<script>
+window.showToast = function (message, duration = 2000) {
+const toast = document.getElementById('site-toast')
+if (!toast) return
+
+toast.textContent = message
+toast.classList.add('show')
+
+clearTimeout(window.__toastTimer)
+window.__toastTimer = setTimeout(() => {
+    toast.classList.remove('show')
+}, duration)
+}
+</script>

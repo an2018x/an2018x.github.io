@@ -80,7 +80,15 @@ function parseMarkdownList(text) {
             const highlighted = highlightCode(codeBlock, lang)
             topic += `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`
         }
-        const node = { topic, children: [] }
+        let node = { topic: topic, dangerouslySetInnerHTML: topic , children: [] }
+
+        if (codeBlock) {
+            node = {
+                topic: codeBlock,
+                dangerouslySetInnerHTML: topic,
+                children: [],
+            }
+        }
 
         // 解析图片标记：[img:/path/a.png,160,120]
         const imgMatch = topic.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i)
@@ -117,64 +125,57 @@ function escapeHtml(str) {
 
 function toMindElixirData(node) {
     return {
-        topic: formatTopic(node.topic),
+        topic: node.topic,
         id: generateId(),
         image: node.image ? {
             url: node.image.url,
             width: node.image.width,
             height: node.image.height
         } : undefined,
-        dangerouslySetInnerHTML: formatTopic(node.topic),
+        dangerouslySetInnerHTML: formatTopic(node.dangerouslySetInnerHTML),
         children: (node.children || []).map(c => toMindElixirData(c))
     }
 }
 
+function refreshMindmaps() {
+    document.querySelectorAll('.mindmap-container').forEach(container => {
+
+        const raw = container.dataset.markdown
+        if (!raw) return
+
+        const tree = parseMarkdownList(raw)
+        const data = { nodeData: toMindElixirData(tree) }
+
+        const mind = new MindElixir({
+            el: container,
+            direction: 2,
+            draggable: true,
+            contextMenu: {
+                focus: true,
+                link: true,
+                extend: [
+                {
+                    name: 'Copy Text',
+                    onclick: () => {
+                        const node = mind.currentNode?.nodeObj
+                        navigator.clipboard.writeText(node.topic)
+                        showToast('复制成功')
+                    },
+                },
+                ],
+            },
+            toolBar: true,
+            nodeMenu: true,
+            keypress: true,
+            overflowHidden: false,
+        })
+        mind.init(data)
+    })
+}
 
 function initMindmaps() {
-    setTimeout(() => {
-        document.querySelectorAll('.mindmap-container').forEach(container => {
-
-            const raw = container.dataset.markdown
-            if (!raw) return
-
-            const tree = parseMarkdownList(raw)
-            const data = { nodeData: toMindElixirData(tree) }
-
-            const mind = new MindElixir({
-                el: container,
-                direction: 2,
-                draggable: true,
-                contextMenu: true,
-                toolBar: true,
-                nodeMenu: true,
-                keypress: true,
-            })
-            mind.init(data)
-        })
-    },500)
-    setTimeout(() => {
-        document.querySelectorAll('.mindmap-container').forEach(container => {
-
-            const raw = container.dataset.markdown
-            if (!raw) return
-
-            const tree = parseMarkdownList(raw)
-            console.log('parsed tree', tree) // 调试输出
-            const data = { nodeData: toMindElixirData(tree) }
-
-            const mind = new MindElixir({
-                el: container,
-                direction: 2,
-                draggable: true,
-                contextMenu: false,
-                toolBar: true,
-                nodeMenu: false,
-                keypress: false,
-            })
-            // console.log('mindmap data', data) // 调试输出
-            mind.init(data)
-        })
-    },1000)
+    setTimeout(() => refreshMindmaps(),500)
+    setTimeout(() => refreshMindmaps(),1000)
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{initMindmaps()})
