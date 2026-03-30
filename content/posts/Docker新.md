@@ -145,8 +145,10 @@ toc: true
                 - builder 阶段，专门用来编译、构建、打包
                 - COPY --from 从 builder 阶段复制文件，只会复制构建产物
                 - runtime 阶段，最终镜像只包含 dist 运行文件 + node runtime
-
     - 国内镜像配置
         - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206153717824.png,500,200)
         
 {{< /mind >}}
+
+
+# 容器原理

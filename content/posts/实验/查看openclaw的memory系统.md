@@ -49,11 +49,22 @@ List tools or resources used.
 
 ## 执行步骤 (Log)：
 
-第一步...
-
-第二步... (在此处遇到意外，调整了参数X)
-
-第三步...
+1. 查看 OpenClaw workspace 的路径
+    * 输入命令
+    ```bash
+    openclaw config get agents.defaults.workspace
+    ```
+    * ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/18/20260318171206008.png)
+2. 查看记忆状态
+    * ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/18/20260318171406945.png)
+3. 启用记忆
+    * 
+3. 创建记忆
+    * ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/18/20260318171553291.png)
+4. 重建索引
+    * ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/18/20260318171641219.png)
+5. 启用记忆
+    * 
 
 # 👁️ 实验后：现象与数据 (Check)
 客观记录发生了什么，不要带主观评价。
