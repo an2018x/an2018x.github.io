@@ -6338,7 +6338,14 @@
         const highlighted = highlightCode(codeBlock, lang);
         topic += `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
       }
-      const node = { topic, children: [] };
+      let node = { topic, dangerouslySetInnerHTML: topic, children: [] };
+      if (codeBlock) {
+        node = {
+          topic: codeBlock,
+          dangerouslySetInnerHTML: topic,
+          children: []
+        };
+      }
       const imgMatch = topic.match(/\!\[\]\(\s*([^,\]]+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
       if (imgMatch) {
         const url = imgMatch[1].trim();
@@ -6363,55 +6370,52 @@
   }
   function toMindElixirData(node) {
     return {
-      topic: formatTopic(node.topic),
+      topic: node.topic,
       id: generateId(),
       image: node.image ? {
         url: node.image.url,
         width: node.image.width,
         height: node.image.height
       } : void 0,
-      dangerouslySetInnerHTML: formatTopic(node.topic),
+      dangerouslySetInnerHTML: formatTopic(node.dangerouslySetInnerHTML),
       children: (node.children || []).map((c) => toMindElixirData(c))
     };
   }
+  function refreshMindmaps() {
+    document.querySelectorAll(".mindmap-container").forEach((container) => {
+      const raw = container.dataset.markdown;
+      if (!raw) return;
+      const tree = parseMarkdownList(raw);
+      const data = { nodeData: toMindElixirData(tree) };
+      const mind = new I({
+        el: container,
+        direction: 2,
+        draggable: true,
+        contextMenu: {
+          focus: true,
+          link: true,
+          extend: [
+            {
+              name: "Copy Text",
+              onclick: () => {
+                const node = mind.currentNode?.nodeObj;
+                navigator.clipboard.writeText(node.topic);
+                showToast("\u590D\u5236\u6210\u529F");
+              }
+            }
+          ]
+        },
+        toolBar: true,
+        nodeMenu: true,
+        keypress: true,
+        overflowHidden: false
+      });
+      mind.init(data);
+    });
+  }
   function initMindmaps() {
-    setTimeout(() => {
-      document.querySelectorAll(".mindmap-container").forEach((container) => {
-        const raw = container.dataset.markdown;
-        if (!raw) return;
-        const tree = parseMarkdownList(raw);
-        const data = { nodeData: toMindElixirData(tree) };
-        const mind = new I({
-          el: container,
-          direction: 2,
-          draggable: true,
-          contextMenu: true,
-          toolBar: true,
-          nodeMenu: true,
-          keypress: true
-        });
-        mind.init(data);
-      });
-    }, 500);
-    setTimeout(() => {
-      document.querySelectorAll(".mindmap-container").forEach((container) => {
-        const raw = container.dataset.markdown;
-        if (!raw) return;
-        const tree = parseMarkdownList(raw);
-        console.log("parsed tree", tree);
-        const data = { nodeData: toMindElixirData(tree) };
-        const mind = new I({
-          el: container,
-          direction: 2,
-          draggable: true,
-          contextMenu: false,
-          toolBar: true,
-          nodeMenu: false,
-          keypress: false
-        });
-        mind.init(data);
-      });
-    }, 1e3);
+    setTimeout(() => refreshMindmaps(), 500);
+    setTimeout(() => refreshMindmaps(), 1e3);
   }
   document.addEventListener("DOMContentLoaded", () => {
     initMindmaps();
