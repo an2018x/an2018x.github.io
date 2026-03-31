@@ -7,6 +7,9 @@ import python from 'highlight.js/lib/languages/python'
 import go from 'highlight.js/lib/languages/go'
 import bash from 'highlight.js/lib/languages/bash'
 import java from 'highlight.js/lib/languages/java'
+import html from 'highlight.js/lib/languages/xml'  // highlight.js 用 xml 来处理 html
+import css from 'highlight.js/lib/languages/css'  
+
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('js', javascript)  // js 是 javascript 的别名
@@ -14,6 +17,8 @@ hljs.registerLanguage('python', python)
 hljs.registerLanguage('go', go)
 hljs.registerLanguage('bash', bash)
 hljs.registerLanguage('java', java)
+hljs.registerLanguage('html', html)
+hljs.registerLanguage('css', css)
 
 
 function generateId() {
@@ -32,6 +37,7 @@ function formatTopic(text) {
 
 function highlightCode(code, lang) {
     if (lang && hljs.getLanguage(lang)) {
+        console.log(`Highlighting code block with language: ${lang} ${code}`)
         return hljs.highlight(code, { language: lang }).value
     }
     return escapeHtml(code)
@@ -41,7 +47,7 @@ function parseMarkdownList(text) {
     const lines = text.split('\n')
     const root = { topic: '', children: [] }
     const stack = [{ node: root, indent: -1 }]
-
+    console.log('Parsing markdown list:', lines)
     let i = 0
     while (i < lines.length) {
         const line = lines[i]
@@ -77,6 +83,7 @@ function parseMarkdownList(text) {
             codeLines = codeLines.map(l => l.slice(minIndent))
             // i 现在指向结束的 ```，循环末尾 i++ 会跳过它
             codeBlock = codeLines.join('\n')
+            console.log(`Found code block with language: ${lang} ${codeBlock}`)
             const highlighted = highlightCode(codeBlock, lang)
             topic += `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`
         }
@@ -140,9 +147,11 @@ function toMindElixirData(node) {
 function refreshMindmaps() {
     document.querySelectorAll('.mindmap-container').forEach(container => {
 
-        const raw = container.dataset.markdown
+        const id = container.id.replace('mindmap-', '')
+        const el = document.getElementById('mindmap-data-' + id)
+        const raw = el ? el.value : ''
         if (!raw) return
-
+        console.log(raw)
         const tree = parseMarkdownList(raw)
         const data = { nodeData: toMindElixirData(tree) }
 

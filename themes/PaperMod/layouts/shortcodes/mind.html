@@ -1,7 +1,9 @@
 <!-- layouts/shortcodes/mind.html -->
 {{ $raw := .Inner }}
+{{ $id := delimit (shuffle (seq 8)) "" }}
 <div
   class="mindmap-container"
-  data-markdown="{{ $raw }}"
+  id="mindmap-{{ $id }}"
   style="width:100%; height:860px; min-height: 860px;"
 ></div>
+<textarea id="mindmap-data-{{ $id }}" style="display:none;">{{ $raw }}</textarea>
