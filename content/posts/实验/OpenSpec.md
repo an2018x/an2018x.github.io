@@ -176,7 +176,7 @@ toc: true
         );
     }
     ```
-![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/31/20260331170255755.png)
+    ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/31/20260331170255755.png)
 8. 收尾 archive
     * /opsx:archive
     * ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/31/20260331171005261.png)
