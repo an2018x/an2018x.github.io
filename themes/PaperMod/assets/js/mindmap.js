@@ -146,7 +146,6 @@ function toMindElixirData(node) {
 
 function refreshMindmaps() {
     document.querySelectorAll('.mindmap-container').forEach(container => {
-
         const id = container.id.replace('mindmap-', '')
         const el = document.getElementById('mindmap-data-' + id)
         const raw = el ? el.value : ''
