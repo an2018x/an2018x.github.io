@@ -212,6 +212,7 @@
 
 
 
+- 核心技能
     - PromQL
         - 两种向量 - PromQL 的基石
             - 即时向量
@@ -403,6 +404,24 @@
                 - 修改面板查询为 rate(prometheus_http_requests_total{handler=~"$handler"}[5m])
                 - Grafana 会将多选处理为正则表达式
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/12/20260412153751767.png,430,350)
+        - 内置变量
+            - Grafana 提供了一些内置变量，不需要手动创建，可以直接在查询中使用
+            - $__interval 和 $__rate_interval
+                - 是最重要的内置变量
+                - 会根据 Dashboard 的时间范围和面板宽度，自动计算一个合理的时间步长
+                - $__rate_interval 的智能之处
+                    - 当查看过去一小时的数据，可能是 1 分钟
+                    - 查看过去 7 天的数据，可能是 15 分钟
+                    - 无论时间范围怎么变，都能返回合理密度的数据点
+                - $__rate_interval 和 $interval 的区别
+                    - $__rate_interval 至少覆盖 4 个采样周期，更适合搭配 rate() 使用
+                    - $__interval 纯根据面板像素密度计算步长
+            - $__range
+                - 表示当前 Dashboard 选择的完整时间范围，在 increase 中有用
+                - increase(prometheus_http_requests_total{handler=~"$handler"}[$__range])
+            - $__dashboard 和 $__name
+                - $__dashboard 是当前 Dashboard 的名称，$__name 是面板的名称
+                - 一般用在告警通知模板中，不常用在查询里
     - 用 Go 构建可观测 HTTP 服务
         - 编写带 Prometheus 指标的 Go 服务
             - 构建一个模拟的订单 API 服务，会暴露：请求计数 (Counter)、请求延迟 (Histogram)、当前处理中的请求数 (Gauge)。
@@ -483,12 +502,169 @@
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/12/20260412225759292.png,310,150)
 
 
+告警与日志
+
+
+
+
+
+- 告警与日志
+    - Grafana 的告警系统
+        - 理解 Grafana 告警架构
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104323716.png,618,330)
+        - 配置 Contact Point
+            - 左侧导航栏 Alerting -> Contact points -> Create contact points
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104545088.png,277,414)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104623733.png,400,150)
+            - Name 填学习用 Webhook，Integration 选 Webhook，URL 填 http://myapp:8080/health
+            - 用 Go 应用的健康检查端点作为 Webhook 接收地址，不会真正处理报警，但能验证通知是否发出
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104854183.png,400,250)
+            - 内置了一个默认的 grafana-default-email Contact Point，生产环境会配置 Email、Slack、DingTalk、PagerDuty 等
+        - 创建第一条告警规则（监控 Go 应用的错误率）
+            - 创建告警规则
+                - Alerting -> Alert Rules -> New alert rule
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418105203977.png,400,350)
+            - 命名规则
+                - Rule name 填入应用错误率过高
+            - 定义查询和条件
+                - 在 Define query and alert condition 部分，会看到一个查询编辑器
+                - 查询 A: 选择数据源 Prometheus，切换到 Code 模式，输入
+                    - sum(rate(myapp_http_requests_total{status=~"4..|5.."}[5m])) / sum(rate(myapp_http_requests_total[5m])) * 100
+                    - 计算的是过去 5 分钟内的错误率百分比
+                - 下方 Set Alert Condition，设置 WHERE QUERY IS ABOVE 5
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418105855803.png,400,125)
+                - 通过 preview alert rule condition 可以预览报警状态，如果已经满足条件，会显示为 firing
+            - 配置评估行为
+                - 在 Add foler and labels 下选择或创建一个文件夹 (学习告警)
+                - Evaluation 创建一个新的，叫做默认评估组，评估间隔 1m，每分钟评估一次
+                - Pending period 填写 2，这个参数很重要，表示条件必须持续满足 2 分钟后才会真正触发告警
+                - 避免了短暂的尖峰导致的误报，告警会先进入 Pending 状态，2 分钟后才会变为 Firing
+            - 添加标签和注释
+                - 在 Add folder and labels 部分
+                - 添加一个 Label: key 填 severity，value 填 warning。标签用于告警路由
+                - Notification Policy 可以决定把报警发给谁
+                - 在 Configure notification message 中：Summary 填应用错误率超过 5%
+                - Description 填当前错误率为 {{$value.B.value}}，已超过 5% 的告警阈值
+                - {{ $value.B.value }} 是模板变量，会在告警触发时被替换为实际的错误率数值。
+        - 理解告警状态与查看告警
+            - 在 Alerting -> Alert Rules 可以查看所有规则的状态
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418174616492.png,300,100)
+            - 在 Dashboard 中添加一个 Alert list 面板，会展示当前活跃的所有告警
+    - Loki 与日志监控
+        - Loki 的设计哲学
+            - 传统日志系统（ElasticSearch）会对日志内容做全文索引，每个词都被索引，搜索速度快但是存储和计算成本高
+            - Loki 只索引日志的元数据标签，不索引日志内容本身，查询先通过标签快速定位到相关的日志流，再在这些流中做文本搜索
+        - 部署 Loki 和 Promtail
+            - Loki 是日志存储和查询引擎，Promtail 是日志采集代理，类似 Node Exporter 采集指标，Promtail 采集日志
+            - 更新 docker-compose.yml
+                - 在底部的 volumns 部分添加 loki_data:
+            - 创建 Promtail 配置文件
+                - 放在 grafana-learning/promtail 目录下
+            - 理解 Promtail 配置
+                - clients 指定了日志推送的目标地址 - Loki 的 api 端点
+                - 和 Prometheus 的拉取模型不同，Loki 使用推送模型：Promtail 主动把采集到的日志推送给 Loki
+                - scrape_configs 定义了日志采集源
+                - 本次使用了 docker_sd_configs，通过 Docker Socket 自动发现所有运行中的容器并采集它们的标准输出日志
+                - relabel_configs 对标签做转换
+                - __meta_docker_container_name 是 Docker 自动提供的元数据，映射到 container 标签，就能按容器名筛选日志
+            - 验证
+                - 访问 http://localhost:3100/ready，返回 ready 说明 Loki 已启动
+                - docker-compose logs promtail --tail 20
+                - 能看到 Successfully connected to Loki 的日志
+        - 在 Grafana 中添加 Loki 数据源
+            - 在 Grafana 中点击 Connections -> Data sources -> Add data source，搜索 Loki
+            - Connection URL 填写 http://loki:3100
+        - 用 Explore 查看日志
+            - 点击左侧 Explore，在顶部数据源下拉框中切换到 Loki
+            - 第一次查询
+                - Loki 查询语言是 LogQL，结构和 PromQL 非常相似
+                - 最基本的查询是用花括号指定标签筛选：{container="myapp"}
+                - 输入后点击 Run query
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418210037672.png,430,360)
+            - 按容器筛选
+                - {container="prometheus}
+            - 查看所有容器的日志
+                - {container=~".+"}
+                - =~".+" 是正则匹配
+        - LogQL 管道操作
+            - 可以在标签筛选的基础上，用 ｜ 符号串联多个处理步骤
+            - 文本过滤
+                - 只看包含 error 的日志
+                    - {container="myapp"} |= "error"
+                - |= 表示包含，!= 表示不包含
+                - {container="myapp"} != "health"
+            - 正则过滤
+                - {container="myapp"} |~ "status.*500"
+                - |~ 是正则匹配，!~ 是反向正则过滤
+            - 管道串联
+                - 多个过滤条件可以串联，形成管道
+                - {container="myapp"} |= "error" != "health"
+                - 管道中的每一步都在上一步的结果基础上继续过滤
+            - JSON 解析
+                - 如果 Go 应用输出的是 JSON 格式的日志，可以用 | json 进行自动解析
+                - {container="myapp"} | json
+                - 解析后，json 中的每个字段都变成了可筛选的标签
+                - {"level":"error"}
+                - {container="myapp"} | json | level="error"
+            - 行格式化
+                - | line_format 可以重新格式化日志的显示方式
+                - {container="myapp"} | line_format "{{.container}}: {{.__line__}}"
+            - 从日志提取指标
+                - Metrics from Logs 能让你不需要在代码埋点就能从日志中生成监控指标
+                - 计算日志量速率
+                    - rate({container="myapp"}[5m])
+                - 按容器分组统计
+                    - sum by (container) (rate({container=~".+"}[5m]))
+                - count_over_time
+                    - 计算时间窗口内的日志总行数
+                    - count_over_time({container="myapp"} |= "error" [1h])
+        - 在 Dashboard 中整合日志面板
+            - 实时日志流
+                - 右侧面板类型选择 Logs，数据源选 Loki
+                - 查询: {container="myapp"} != "metrics"，排除 /metrics 端点的请求日志
+                - 在右侧面板设置中，找到 Log details 区域，确保 Show time 和 Wrap lines 都开启
+                - Tilte 填应用日志，这个面板会实时滚动 Go 应用的最新日志
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418220304056.png,260,150)
+            - 错误日志速率 (Time Series 面板)
+                - 新建 Time Series 类型，数据源选择 Loki
+                - rate({container="myapp"} |= "error" [5m])
+                - Title 填写错误日志速率，Unit 设置为 logs/sec
+    - LogQL 进阶与指标日志联动
+        - 更多日志解析器
+            - logfmt 解析器
+                - logfmt 是 Go 生态常见的日志格式，形如 level=info msg="request handled" method="GET"
+                - 如果日志是这种键值对格式，可以用：{container="myapp"} | logfmt
+                - 解析后每个键值对都变成可以筛选的标签
+                - 当前 Go 应用用的是标准 log.Println 输出，不是 logfmt 格式
+            - pattern 解析器
+                - pattern 是最灵活的解析器，允许用模板来描述日志的结构，提取出其中的字段
+                - 语法是使用 <field_name> 来做占位符
+                - {container="myapp"} | pattern `<_> "<method> <path> <_>" <status> <_>`
+                - 这条查询假设日志中包含类似 "GET /api/orders HTTP/1.1" 200 ... 的内容
+                - 会把 HTTP 方法提取为 method，路径提取为 path，状态码提取为 status
+                - <_> 是丢弃占位符，匹配但是不保存
+            - regxp 解析器
+                - {container="myapp"} | regexp `(?P<method>GET|POST|PUT|DELETE) (?P<path>/\S+)`
+                - (?P<name>...) 是命名捕获组，提取的值会变成同名标签，正则解析器功能最强但是性能最差
+        - 标签提取与 label_format
+            - line_format 重新格式化日志显示
+                - line_format 用 Go 模板语法重新定义每行日志的显示内容
+                - {container=~"myapp|prometheus"} | line_format "[{{.container}}] {{.__line__}}"
+                - 这会在每行日志前加上方括号包裹的容器名
+            - line_format 转换标签
+                - label_format 可以基于现有标签生成新标签或修改标签名
+                - {container="myapp"} | label_format short_id="{{.container_id | trunc 12}}"
+                - 这条查询把容器 ID 截取前 12 位，存为 short_id 标签，trunc 12 是 Go 模板的字符串截取函数
+            - drop 和 keep 标签
+                - 当解析器提取了太多标签导致查询杂乱，可以用 drop 丢弃不需要的标签，或用 keep 只保留需要的
+                - {container="myapp"} | json | keep container, level, msg
+
 附录
 环境配置
 docker-compose.yml'><meta name=author content="map[name:An]"><link rel=canonical href=https://blog.ans20xx.com/posts/grafana-%E5%A4%8D%E4%B9%A0/><link crossorigin=anonymous href=/assets/css/stylesheet.665936e6620639f30015927a07115e0022bb8ef81c4357e948686ef545d9b128.css integrity="sha256-Zlk25mIGOfMAFZJ6BxFeACK7jvgcQ1fpSGhu9UXZsSg=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.ans20xx.com/img/icon.png><link rel=apple-touch-icon href=https://blog.ans20xx.com/apple-touch-icon.png><link rel=mask-icon href=https://blog.ans20xx.com/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh href=https://blog.ans20xx.com/posts/grafana-%E5%A4%8D%E4%B9%A0/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:#eee8d5;--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link crossorigin=anonymous href=/assets/css/fancyboxcss.min.css integrity rel="preload stylesheet" as=style></link>
 <script crossorigin=anonymous src=/assets/js/fancybox.js integrity async></script><script type=text/javascript async src="https://cdn.jsdmirror.com/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">MathJax.Hub.Config({tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["[[","]]"]],processEscapes:!0,processEnvironments:!0,skipTags:["script","noscript","style","textarea","pre"],TeX:{equationNumbers:{autoNumber:"AMS"},extensions:["AMSmath.js","AMSsymbols.js"]}},"HTML-CSS":{availableFonts:["Arial","TeX"],preferredFont:"TeX",webFont:"TeX"}}),MathJax.Hub.Queue(function(){var e,t=MathJax.Hub.getAllJax();for(e=0;e<t.length;e+=1)t[e].SourceElement().parentNode.className+=" has-jax"})</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style><link rel=stylesheet href=https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css media=print onload='this.media="all"'><link rel=stylesheet href=/css/includes/mind-elixir.min.css></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/ accesskey=h title="安橙的博客 (Alt + H)">安橙的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
 <svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Grafana 复习</h1><div class=post-meta><span title='2026-04-10 00:00:00 +0000 UTC'>四月 10, 2026</span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e5%9f%ba%e7%a1%80%e5%85%a5%e9%97%a8 aria-label=基础入门>基础入门</a></li><li><a href=#%e6%a0%b8%e5%bf%83%e6%8a%80%e8%83%bd aria-label=核心技能>核心技能</a></li><li><a href=#%e9%99%84%e5%bd%95 aria-label=附录>附录</a><ul><li><a href=#%e7%8e%af%e5%a2%83%e9%85%8d%e7%bd%ae aria-label=环境配置>环境配置</a></li><li><a href=#%e7%94%a8-go-%e6%9e%84%e5%bb%ba%e5%8f%af%e8%a7%82%e6%b5%8b%e7%9a%84-http-%e6%9c%8d%e5%8a%a1 aria-label="用 Go 构建可观测的 HTTP 服务">用 Go 构建可观测的 HTTP 服务</a></li></ul></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><h1 id=基础入门>基础入门<a hidden class=anchor aria-hidden=true href=#基础入门>#</a></h1><div class=mindmap-container id=mindmap-75428316 style=width:100%;height:860px;min-height:860px></div><textarea id=mindmap-data-75428316 style=display:none>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/ title=博文><span>博文</span></a></li><li><a href=https://blog.ans20xx.com/docs/ title=文档><span>文档</span></a></li><li><a href=https://blog.ans20xx.com/tags/ title=标签><span>标签</span></a></li><li><a href=https://blog.ans20xx.com/search/ title=搜索><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Grafana 复习</h1><div class=post-meta><span title='2026-04-10 00:00:00 +0000 UTC'>四月 10, 2026</span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e5%9f%ba%e7%a1%80%e5%85%a5%e9%97%a8 aria-label=基础入门>基础入门</a></li><li><a href=#%e6%a0%b8%e5%bf%83%e6%8a%80%e8%83%bd aria-label=核心技能>核心技能</a></li><li><a href=#%e5%91%8a%e8%ad%a6%e4%b8%8e%e6%97%a5%e5%bf%97 aria-label=告警与日志>告警与日志</a></li><li><a href=#%e9%99%84%e5%bd%95 aria-label=附录>附录</a><ul><li><a href=#%e7%8e%af%e5%a2%83%e9%85%8d%e7%bd%ae aria-label=环境配置>环境配置</a></li><li><a href=#%e7%94%a8-go-%e6%9e%84%e5%bb%ba%e5%8f%af%e8%a7%82%e6%b5%8b%e7%9a%84-http-%e6%9c%8d%e5%8a%a1 aria-label="用 Go 构建可观测的 HTTP 服务">用 Go 构建可观测的 HTTP 服务</a></li><li><a href=#loki-%e4%b8%8e%e6%97%a5%e5%bf%97%e7%9b%91%e6%8e%a7 aria-label="Loki 与日志监控">Loki 与日志监控</a></li></ul></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><h1 id=基础入门>基础入门<a hidden class=anchor aria-hidden=true href=#基础入门>#</a></h1><div class=mindmap-container id=mindmap-21856734 style=width:100%;height:860px;min-height:860px></div><textarea id=mindmap-data-21856734 style=display:none>
 - 基础入门
     - 可观测性与 Grafana 概览
         - 理解可观测性
@@ -690,7 +866,8 @@ docker-compose.yml'><meta name=author content="map[name:An]"><link rel=canonical
                 - Standard options 包含最常用的显示设置：Unit 单位、Min/Max 范围、Decimals 小数位数、Color Schema 配色方案
                 - Threshholds 用颜色编码数值区间，帮助快速判断好坏
                 - Overrides 允许为特定的时间序列覆盖全局设置
-</textarea><h1 id=核心技能>核心技能<a hidden class=anchor aria-hidden=true href=#核心技能>#</a></h1><div class=mindmap-container id=mindmap-82567134 style=width:100%;height:860px;min-height:860px></div><textarea id=mindmap-data-82567134 style=display:none>
+</textarea><h1 id=核心技能>核心技能<a hidden class=anchor aria-hidden=true href=#核心技能>#</a></h1><div class=mindmap-container id=mindmap-54837216 style=width:100%;height:860px;min-height:860px></div><textarea id=mindmap-data-54837216 style=display:none>
+- 核心技能
     - PromQL
         - 两种向量 - PromQL 的基石
             - 即时向量
@@ -882,6 +1059,24 @@ docker-compose.yml'><meta name=author content="map[name:An]"><link rel=canonical
                 - 修改面板查询为 rate(prometheus_http_requests_total{handler=~&#34;$handler&#34;}[5m])
                 - Grafana 会将多选处理为正则表达式
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/12/20260412153751767.png,430,350)
+        - 内置变量
+            - Grafana 提供了一些内置变量，不需要手动创建，可以直接在查询中使用
+            - $__interval 和 $__rate_interval
+                - 是最重要的内置变量
+                - 会根据 Dashboard 的时间范围和面板宽度，自动计算一个合理的时间步长
+                - $__rate_interval 的智能之处
+                    - 当查看过去一小时的数据，可能是 1 分钟
+                    - 查看过去 7 天的数据，可能是 15 分钟
+                    - 无论时间范围怎么变，都能返回合理密度的数据点
+                - $__rate_interval 和 $interval 的区别
+                    - $__rate_interval 至少覆盖 4 个采样周期，更适合搭配 rate() 使用
+                    - $__interval 纯根据面板像素密度计算步长
+            - $__range
+                - 表示当前 Dashboard 选择的完整时间范围，在 increase 中有用
+                - increase(prometheus_http_requests_total{handler=~&#34;$handler&#34;}[$__range])
+            - $__dashboard 和 $__name
+                - $__dashboard 是当前 Dashboard 的名称，$__name 是面板的名称
+                - 一般用在告警通知模板中，不常用在查询里
     - 用 Go 构建可观测 HTTP 服务
         - 编写带 Prometheus 指标的 Go 服务
             - 构建一个模拟的订单 API 服务，会暴露：请求计数 (Counter)、请求延迟 (Histogram)、当前处理中的请求数 (Gauge)。
@@ -961,6 +1156,157 @@ docker-compose.yml'><meta name=author content="map[name:An]"><link rel=canonical
                 - 通过 Overrides 给三条线设置不同的视觉效果：P50 绿色实线，P90 用黄色实线，P99 用红色实线
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/12/20260412225759292.png,310,150)
 
+</textarea><h1 id=告警与日志>告警与日志<a hidden class=anchor aria-hidden=true href=#告警与日志>#</a></h1><div class=mindmap-container id=mindmap-68412357 style=width:100%;height:860px;min-height:860px></div><textarea id=mindmap-data-68412357 style=display:none>
+- 告警与日志
+    - Grafana 的告警系统
+        - 理解 Grafana 告警架构
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104323716.png,618,330)
+        - 配置 Contact Point
+            - 左侧导航栏 Alerting -&gt; Contact points -&gt; Create contact points
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104545088.png,277,414)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104623733.png,400,150)
+            - Name 填学习用 Webhook，Integration 选 Webhook，URL 填 http://myapp:8080/health
+            - 用 Go 应用的健康检查端点作为 Webhook 接收地址，不会真正处理报警，但能验证通知是否发出
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104854183.png,400,250)
+            - 内置了一个默认的 grafana-default-email Contact Point，生产环境会配置 Email、Slack、DingTalk、PagerDuty 等
+        - 创建第一条告警规则（监控 Go 应用的错误率）
+            - 创建告警规则
+                - Alerting -&gt; Alert Rules -&gt; New alert rule
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418105203977.png,400,350)
+            - 命名规则
+                - Rule name 填入应用错误率过高
+            - 定义查询和条件
+                - 在 Define query and alert condition 部分，会看到一个查询编辑器
+                - 查询 A: 选择数据源 Prometheus，切换到 Code 模式，输入
+                    - sum(rate(myapp_http_requests_total{status=~&#34;4..|5..&#34;}[5m])) / sum(rate(myapp_http_requests_total[5m])) * 100
+                    - 计算的是过去 5 分钟内的错误率百分比
+                - 下方 Set Alert Condition，设置 WHERE QUERY IS ABOVE 5
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418105855803.png,400,125)
+                - 通过 preview alert rule condition 可以预览报警状态，如果已经满足条件，会显示为 firing
+            - 配置评估行为
+                - 在 Add foler and labels 下选择或创建一个文件夹 (学习告警)
+                - Evaluation 创建一个新的，叫做默认评估组，评估间隔 1m，每分钟评估一次
+                - Pending period 填写 2，这个参数很重要，表示条件必须持续满足 2 分钟后才会真正触发告警
+                - 避免了短暂的尖峰导致的误报，告警会先进入 Pending 状态，2 分钟后才会变为 Firing
+            - 添加标签和注释
+                - 在 Add folder and labels 部分
+                - 添加一个 Label: key 填 severity，value 填 warning。标签用于告警路由
+                - Notification Policy 可以决定把报警发给谁
+                - 在 Configure notification message 中：Summary 填应用错误率超过 5%
+                - Description 填当前错误率为 {{$value.B.value}}，已超过 5% 的告警阈值
+                - {{ $value.B.value }} 是模板变量，会在告警触发时被替换为实际的错误率数值。
+        - 理解告警状态与查看告警
+            - 在 Alerting -&gt; Alert Rules 可以查看所有规则的状态
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418174616492.png,300,100)
+            - 在 Dashboard 中添加一个 Alert list 面板，会展示当前活跃的所有告警
+    - Loki 与日志监控
+        - Loki 的设计哲学
+            - 传统日志系统（ElasticSearch）会对日志内容做全文索引，每个词都被索引，搜索速度快但是存储和计算成本高
+            - Loki 只索引日志的元数据标签，不索引日志内容本身，查询先通过标签快速定位到相关的日志流，再在这些流中做文本搜索
+        - 部署 Loki 和 Promtail
+            - Loki 是日志存储和查询引擎，Promtail 是日志采集代理，类似 Node Exporter 采集指标，Promtail 采集日志
+            - 更新 docker-compose.yml
+                - 在底部的 volumns 部分添加 loki_data:
+            - 创建 Promtail 配置文件
+                - 放在 grafana-learning/promtail 目录下
+            - 理解 Promtail 配置
+                - clients 指定了日志推送的目标地址 - Loki 的 api 端点
+                - 和 Prometheus 的拉取模型不同，Loki 使用推送模型：Promtail 主动把采集到的日志推送给 Loki
+                - scrape_configs 定义了日志采集源
+                - 本次使用了 docker_sd_configs，通过 Docker Socket 自动发现所有运行中的容器并采集它们的标准输出日志
+                - relabel_configs 对标签做转换
+                - __meta_docker_container_name 是 Docker 自动提供的元数据，映射到 container 标签，就能按容器名筛选日志
+            - 验证
+                - 访问 http://localhost:3100/ready，返回 ready 说明 Loki 已启动
+                - docker-compose logs promtail --tail 20
+                - 能看到 Successfully connected to Loki 的日志
+        - 在 Grafana 中添加 Loki 数据源
+            - 在 Grafana 中点击 Connections -&gt; Data sources -&gt; Add data source，搜索 Loki
+            - Connection URL 填写 http://loki:3100
+        - 用 Explore 查看日志
+            - 点击左侧 Explore，在顶部数据源下拉框中切换到 Loki
+            - 第一次查询
+                - Loki 查询语言是 LogQL，结构和 PromQL 非常相似
+                - 最基本的查询是用花括号指定标签筛选：{container=&#34;myapp&#34;}
+                - 输入后点击 Run query
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418210037672.png,430,360)
+            - 按容器筛选
+                - {container=&#34;prometheus}
+            - 查看所有容器的日志
+                - {container=~&#34;.&#43;&#34;}
+                - =~&#34;.&#43;&#34; 是正则匹配
+        - LogQL 管道操作
+            - 可以在标签筛选的基础上，用 ｜ 符号串联多个处理步骤
+            - 文本过滤
+                - 只看包含 error 的日志
+                    - {container=&#34;myapp&#34;} |= &#34;error&#34;
+                - |= 表示包含，!= 表示不包含
+                - {container=&#34;myapp&#34;} != &#34;health&#34;
+            - 正则过滤
+                - {container=&#34;myapp&#34;} |~ &#34;status.*500&#34;
+                - |~ 是正则匹配，!~ 是反向正则过滤
+            - 管道串联
+                - 多个过滤条件可以串联，形成管道
+                - {container=&#34;myapp&#34;} |= &#34;error&#34; != &#34;health&#34;
+                - 管道中的每一步都在上一步的结果基础上继续过滤
+            - JSON 解析
+                - 如果 Go 应用输出的是 JSON 格式的日志，可以用 | json 进行自动解析
+                - {container=&#34;myapp&#34;} | json
+                - 解析后，json 中的每个字段都变成了可筛选的标签
+                - {&#34;level&#34;:&#34;error&#34;}
+                - {container=&#34;myapp&#34;} | json | level=&#34;error&#34;
+            - 行格式化
+                - | line_format 可以重新格式化日志的显示方式
+                - {container=&#34;myapp&#34;} | line_format &#34;{{.container}}: {{.__line__}}&#34;
+            - 从日志提取指标
+                - Metrics from Logs 能让你不需要在代码埋点就能从日志中生成监控指标
+                - 计算日志量速率
+                    - rate({container=&#34;myapp&#34;}[5m])
+                - 按容器分组统计
+                    - sum by (container) (rate({container=~&#34;.&#43;&#34;}[5m]))
+                - count_over_time
+                    - 计算时间窗口内的日志总行数
+                    - count_over_time({container=&#34;myapp&#34;} |= &#34;error&#34; [1h])
+        - 在 Dashboard 中整合日志面板
+            - 实时日志流
+                - 右侧面板类型选择 Logs，数据源选 Loki
+                - 查询: {container=&#34;myapp&#34;} != &#34;metrics&#34;，排除 /metrics 端点的请求日志
+                - 在右侧面板设置中，找到 Log details 区域，确保 Show time 和 Wrap lines 都开启
+                - Tilte 填应用日志，这个面板会实时滚动 Go 应用的最新日志
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418220304056.png,260,150)
+            - 错误日志速率 (Time Series 面板)
+                - 新建 Time Series 类型，数据源选择 Loki
+                - rate({container=&#34;myapp&#34;} |= &#34;error&#34; [5m])
+                - Title 填写错误日志速率，Unit 设置为 logs/sec
+    - LogQL 进阶与指标日志联动
+        - 更多日志解析器
+            - logfmt 解析器
+                - logfmt 是 Go 生态常见的日志格式，形如 level=info msg=&#34;request handled&#34; method=&#34;GET&#34;
+                - 如果日志是这种键值对格式，可以用：{container=&#34;myapp&#34;} | logfmt
+                - 解析后每个键值对都变成可以筛选的标签
+                - 当前 Go 应用用的是标准 log.Println 输出，不是 logfmt 格式
+            - pattern 解析器
+                - pattern 是最灵活的解析器，允许用模板来描述日志的结构，提取出其中的字段
+                - 语法是使用 &lt;field_name&gt; 来做占位符
+                - {container=&#34;myapp&#34;} | pattern `&lt;_&gt; &#34;&lt;method&gt; &lt;path&gt; &lt;_&gt;&#34; &lt;status&gt; &lt;_&gt;`
+                - 这条查询假设日志中包含类似 &#34;GET /api/orders HTTP/1.1&#34; 200 ... 的内容
+                - 会把 HTTP 方法提取为 method，路径提取为 path，状态码提取为 status
+                - &lt;_&gt; 是丢弃占位符，匹配但是不保存
+            - regxp 解析器
+                - {container=&#34;myapp&#34;} | regexp `(?P&lt;method&gt;GET|POST|PUT|DELETE) (?P&lt;path&gt;/\S&#43;)`
+                - (?P&lt;name&gt;...) 是命名捕获组，提取的值会变成同名标签，正则解析器功能最强但是性能最差
+        - 标签提取与 label_format
+            - line_format 重新格式化日志显示
+                - line_format 用 Go 模板语法重新定义每行日志的显示内容
+                - {container=~&#34;myapp|prometheus&#34;} | line_format &#34;[{{.container}}] {{.__line__}}&#34;
+                - 这会在每行日志前加上方括号包裹的容器名
+            - line_format 转换标签
+                - label_format 可以基于现有标签生成新标签或修改标签名
+                - {container=&#34;myapp&#34;} | label_format short_id=&#34;{{.container_id | trunc 12}}&#34;
+                - 这条查询把容器 ID 截取前 12 位，存为 short_id 标签，trunc 12 是 Go 模板的字符串截取函数
+            - drop 和 keep 标签
+                - 当解析器提取了太多标签导致查询杂乱，可以用 drop 丢弃不需要的标签，或用 keep 只保留需要的
+                - {container=&#34;myapp&#34;} | json | keep container, level, msg
 </textarea><h1 id=附录>附录<a hidden class=anchor aria-hidden=true href=#附录>#</a></h1><h2 id=环境配置>环境配置<a hidden class=anchor aria-hidden=true href=#环境配置>#</a></h2><p>docker-compose.yml</p><div class=highlight><div style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
@@ -1653,6 +1999,102 @@ docker-compose.yml'><meta name=author content="map[name:An]"><link rel=canonical
 </span></span><span style=display:flex><span><span style=color:#268bd2;font-weight:700>volumes</span>:
 </span></span><span style=display:flex><span>  <span style=color:#268bd2;font-weight:700>prometheus_data</span>:
 </span></span><span style=display:flex><span>  <span style=color:#268bd2;font-weight:700>grafana_data</span>:
+</span></span></code></pre></td></tr></table></div></div><h2 id=loki-与日志监控>Loki 与日志监控<a hidden class=anchor aria-hidden=true href=#loki-与日志监控>#</a></h2><p>docker-compose.yml 在 node-exporter 服务后添加 Loki 和 Promtail</p><div class=highlight><div style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yml data-lang=yml><span style=display:flex><span><span style=color:#93a1a1;font-style:italic># Loki - 日志存储与查询</span>
+</span></span><span style=display:flex><span>  <span style=color:#268bd2;font-weight:700>loki</span>:
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>image</span>: <span style=color:#2aa198>grafana/loki:latest</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>container_name</span>: <span style=color:#2aa198>loki</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>ports</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#2aa198>&#34;3100:3100&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>command</span>: -<span style=color:#2aa198>config.file=/etc/loki/local-config.yaml</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#2aa198>loki_data:/loki</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>restart</span>: <span style=color:#2aa198>unless-stopped</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#93a1a1;font-style:italic># Promtail - 日志采集代理</span>
+</span></span><span style=display:flex><span>  <span style=color:#268bd2;font-weight:700>promtail</span>:
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>image</span>: <span style=color:#2aa198>grafana/promtail:latest</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>container_name</span>: <span style=color:#2aa198>promtail</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#2aa198>/var/log:/var/log:ro</span>
+</span></span><span style=display:flex><span>      - <span style=color:#2aa198>/var/lib/docker/containers:/var/lib/docker/containers:ro</span>
+</span></span><span style=display:flex><span>      - <span style=color:#2aa198>/var/run/docker.sock:/var/run/docker.sock</span>
+</span></span><span style=display:flex><span>      - <span style=color:#2aa198>./promtail/promtail-config.yml:/etc/promtail/config.yml</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>command</span>: -<span style=color:#2aa198>config.file=/etc/promtail/config.yml</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>depends_on</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#2aa198>loki</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>restart</span>: <span style=color:#2aa198>unless-stopped</span>
+</span></span></code></pre></td></tr></table></div></div><p>promtail-config.yml</p><div class=highlight><div style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yml data-lang=yml><span style=display:flex><span><span style=color:#268bd2;font-weight:700>server</span>:
+</span></span><span style=display:flex><span>  <span style=color:#268bd2;font-weight:700>http_listen_port</span>: <span style=color:#2aa198;font-weight:700>9080</span>
+</span></span><span style=display:flex><span>  <span style=color:#268bd2;font-weight:700>grpc_listen_port</span>: <span style=color:#2aa198;font-weight:700>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#268bd2;font-weight:700>positions</span>:
+</span></span><span style=display:flex><span>  <span style=color:#268bd2;font-weight:700>filename</span>: <span style=color:#2aa198>/tmp/positions.yaml</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#268bd2;font-weight:700>clients</span>:
+</span></span><span style=display:flex><span>  - <span style=color:#268bd2;font-weight:700>url</span>: <span style=color:#2aa198>http://loki:3100/loki/api/v1/push</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#268bd2;font-weight:700>scrape_configs</span>:
+</span></span><span style=display:flex><span>  <span style=color:#93a1a1;font-style:italic># 采集 Docker 容器日志</span>
+</span></span><span style=display:flex><span>  - <span style=color:#268bd2;font-weight:700>job_name</span>: <span style=color:#2aa198>docker</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>docker_sd_configs</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#268bd2;font-weight:700>host</span>: <span style=color:#2aa198>unix:///var/run/docker.sock</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2;font-weight:700>refresh_interval</span>: <span style=color:#2aa198>5s</span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2;font-weight:700>relabel_configs</span>:
+</span></span><span style=display:flex><span>      <span style=color:#93a1a1;font-style:italic># 用容器名作为标签</span>
+</span></span><span style=display:flex><span>      - <span style=color:#268bd2;font-weight:700>source_labels</span>: [<span style=color:#2aa198>&#39;__meta_docker_container_name&#39;</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2;font-weight:700>regex</span>: <span style=color:#2aa198>&#39;/(.*)&#39;</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2;font-weight:700>target_label</span>: <span style=color:#2aa198>&#39;container&#39;</span>
+</span></span><span style=display:flex><span>      <span style=color:#93a1a1;font-style:italic># 用容器 ID 作为标签</span>
+</span></span><span style=display:flex><span>      - <span style=color:#268bd2;font-weight:700>source_labels</span>: [<span style=color:#2aa198>&#39;__meta_docker_container_id&#39;</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2;font-weight:700>target_label</span>: <span style=color:#2aa198>&#39;container_id&#39;</span>
 </span></span></code></pre></td></tr></table></div></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
