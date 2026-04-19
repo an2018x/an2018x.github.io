@@ -63,7 +63,7 @@ toc: true
                 - 现在 Go Modules 是默认模式，不需要关注 GOPATH 了
                 - 只需要确认 GO111MODULE=on
             - 设置常用模块
-                -
+                - 
                 ```bash
                 # 确保模块模式开启
                 go env -w GO111MODULE=on
@@ -152,7 +152,7 @@ toc: true
                 - 声明但是暂不赋值，用var name Type
             - 常见陷阱
                 - 短声明的遮蔽
-                -
+                - 
                 ```go
                 x := 1
                 fmt.Println(x)  // 1
@@ -173,7 +173,7 @@ toc: true
             - Go 没有 undefined、null、None 的概念
             - 每个类型都有一个确定的零值，声明变量时不赋值就是零值
             - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418230943782.png,200,180)
-            -
+            - 
             ```go
             // 零值是安全的，可以直接使用
             var count int      // 0，可以直接 count++
@@ -306,7 +306,7 @@ toc: true
                 // 3. else 必须和右大括号同一行
                 ```
             - 前置初始化语句 (GO 特色)
-                -
+                - 
                 ```Go
                 // 在条件中声明并使用变量
                 if err := doSomething(); err != nil {
@@ -338,12 +338,12 @@ toc: true
                 }
                 ```
             - 类 while 循环 (只有条件)
-                -
+                - 
                 ```Go
                 n := 10
                 for n > 0 {
                     fmt.Println(n)
-                    n--
+                    n-- 
                 }
                 ```
             - 无限循环
@@ -400,7 +400,7 @@ toc: true
                 ```
             - 循环复用坑
                 - 在 Go 1.22 之前，for-range 的循环变量是复用的，在 go routine 中捕获会出现问题
-                -
+                - 
                 ```Go
                 // Go 1.22+ 这样写是安全的
                 for _, v := range []int{1, 2, 3} {
@@ -478,7 +478,7 @@ toc: true
                 }
                 ```
             - fallthrough:显式穿透
-                -
+                - 
                 ```go
                 // 如果真的需要穿透到下一个 case，用 fallthrough
                 switch n := 1; n {
@@ -494,7 +494,7 @@ toc: true
                 ```
         - break、continue、goto
             - 基础 break 和 continue
-                -
+                - 
                 ```go
                 for i := 0; i < 10; i++ {
                     if i == 3 {
@@ -508,7 +508,7 @@ toc: true
                 // 输出：0 1 2 4 5 6
                 ```
             - 标签：跳出嵌套循环
-                -
+                - 
                 ```go
                 // 问题：break 只能跳出一层循环
                 // 在嵌套循环中如何跳出外层？
@@ -530,7 +530,7 @@ toc: true
             - defer 是 Go 的标志性特性，用来注册「函数退出前必须执行」的逻辑
             - 它彻底解决了资源清理、错误恢复等场景
             - 基本行为：函数返回前执行
-                -
+                - 
                 ```go
                 func main() {
                     fmt.Println("1. 开始")
@@ -543,7 +543,7 @@ toc: true
                 // 3. 延迟执行 ← 在函数返回前执行
                 ```
             - 典型用法：资源清理
-                -
+                - 
                 ```go
                 // 文件操作
                 func readFile(name string) error {
@@ -568,7 +568,7 @@ toc: true
                 }
                 ```
             - 多个 defer: LIFO 栈顺序
-                -
+                - 
                 ```go
                 func main() {
                     defer fmt.Println("1")
@@ -584,7 +584,7 @@ toc: true
                 ```
             - defer 语句参数
                 - defer 语句的参数在注册是就计算好，不是执行时
-                -
+                - 
                 ```go
                 func main() {
                     x := 10
@@ -609,7 +609,7 @@ toc: true
     - 函数深入
         - 函数基础
             - Go 的函数定义和 C 系列语言不一样：关键字 func 在前，返回值类型在后
-                -
+                - 
                 ```go
                 // 基本语法：func 函数名(参数列表) 返回值类型 { 函数体 }
                 func add(a int, b int) int {
@@ -634,7 +634,7 @@ toc: true
             - 函数是一等公民
                 - Go 的函数可以赋值给变量、作为参数传递、作为返回值返回
                 - 这让 Go 支持函数式编程风格，比如高阶函数、回调、中间件模式等
-                -
+                - 
                 ```go
                 // 函数赋值给变量
                 var operation func(int, int) int = add
@@ -655,7 +655,7 @@ toc: true
                 ```
         - 多返回值
             - go 原生支持多返回值
-                -
+                - 
                 ```go
                 // 返回商和余数
                 func divmod(a, b int) (int, int) {
@@ -690,7 +690,7 @@ toc: true
                 ```
         - 命名返回值
             - go 允许给返回值命名，在返回值多，复杂逻辑时有用
-                -
+                - 
                 ```go
                 // 普通多返回值
                 func divide1(a, b float64) (float64, error) {
@@ -711,7 +711,7 @@ toc: true
                 }
                 ```
             - 命名返回值 + defer
-                -
+                - 
                 ```go
                 // 在 defer 中修改返回值
                 func doWork() (err error) {
@@ -773,7 +773,7 @@ toc: true
             - 闭包是能访问外部作用域变量的函数
             - Go 的闭包语法简洁，是实现迭代器、中间件、回调等模式的基础
             - 匿名函数
-                -
+                - 
                 ```go
                 // 定义后立即调用（IIFE）
                 func() {
@@ -787,7 +787,7 @@ toc: true
                 fmt.Println(add(1, 2)) // 3
                 ```
             - 闭包：捕获外部变量
-                -
+                - 
                 ```go
                 // 计数器生成器
                 func makeCounter() func() int {
@@ -809,7 +809,7 @@ toc: true
                 fmt.Println(c1()) // 4（c1 继续累加）
                 ```
             - 闭包实战：装饰器模式
-                -
+                - 
                 ```go
                 // 为函数添加日志功能
                 func withLogging(name string, fn func(int) int) func(int) int {
@@ -856,7 +856,7 @@ toc: true
                 // 方式三：自定义类型（后续再深入）
                 ```
             - 标准返回模式
-                -
+                - 
                 ```go
                 // ✅ Go 惯用写法：err 作为最后一个返回值
                 func findUser(id int) (*User, error) {
@@ -971,7 +971,7 @@ toc: true
                 - 切片是 Go 中最常用的数据结构
                 - 看起来像动态数组，但底层是对数组的视图
                 - 切片的三要素
-                    -
+                    - 
                     ```go
                     // 切片在内存中是一个结构体（概念上）：
                     // type slice struct {
@@ -985,7 +985,7 @@ toc: true
                     fmt.Println(cap(s))  // 3（容量）
                     ```
                 - 创建切片的五种方式
-                    -
+                    - 
                     ```go
                     // ① 字面量
                     s1 := []int{1, 2, 3}
@@ -1014,7 +1014,7 @@ toc: true
                     - 推荐总是优先使用 nil 切片
             - 切片操作：切割与 append
                 - 切割语法 s[low:high:max]
-                    -
+                    - 
                     ```go
                     s := []int{0, 1, 2, 3, 4, 5}
 
@@ -1030,7 +1030,7 @@ toc: true
                     // 不加 :max 的话，cap(s2) 会是 5（底层数组剩余容量）
                     ```
                 - append: 扩容机制
-                    -
+                    - 
                     ```go
                     s := []int{1, 2, 3}
                     s = append(s, 4)          // [1 2 3 4]
@@ -1080,7 +1080,7 @@ toc: true
                     fmt.Println(original)       // [1 2 3 4 5]  ← 不受影响
                     ```
                 - append 可能修改原切片
-                    -
+                    - 
                     ```go
                     original := []int{1, 2, 3, 4, 5}
                     sub := original[:3]         // [1 2 3]，cap=5
@@ -1113,7 +1113,7 @@ toc: true
                     ```
             - 切片常见操作
                 - 删除元素
-                    -
+                    - 
                     ```go
                     // Go 没有内置的删除函数，用切片拼接
                     s := []int{1, 2, 3, 4, 5}
@@ -1128,7 +1128,7 @@ toc: true
                     s = slices.Delete(s, i, i+1)
                     ```
                 - 插入元素
-                    -
+                    - 
                     ```go
                     s := []int{1, 2, 4, 5}
                     i := 2       // 插入位置
@@ -1142,7 +1142,7 @@ toc: true
                     s = slices.Insert(s, i, val)
                     ```
                 - 复制、反转、排序
-                    -
+                    - 
                     ```go
                     // 复制
                     src := []int{1, 2, 3}
@@ -1171,7 +1171,7 @@ toc: true
                 - Go 的 map 是哈希表实现，支持任何可比较类型作为 key
                 - 使用前必须初始化，nil map 不能写入
                 - 声明与初始化
-                    -
+                    - 
                     ```go
                     // ❌ 错误：只声明，没初始化
                     var m1 map[string]int
@@ -1192,7 +1192,7 @@ toc: true
                     m4 := make(map[string]int, 1000)  // 提前分配空间
                     ```
                 - 增删改查
-                    -
+                    - 
                     ```go
                     m := map[string]int{"a": 1, "b": 2}
 
@@ -1218,7 +1218,7 @@ toc: true
                     fmt.Println(len(m))
                     ```
                 - 遍历(顺序随机)
-                    -
+                    - 
                     ```go
                     m := map[string]int{"a": 1, "b": 2, "c": 3}
 
@@ -1240,7 +1240,7 @@ toc: true
                     ```
             - map 进阶：零值技巧与并发
                 - 零值技巧：计数器模式
-                    -
+                    - 
                     ```go
                     // map 访问不存在的 key 返回零值，这特性很好用
                     words := []string{"go", "rust", "go", "python", "go", "rust"}
@@ -1269,7 +1269,7 @@ toc: true
                     // byCity["Tokyo"] = [{Alice Tokyo} {Bob Tokyo}]
                     ```
                 - map 作为集合
-                    -
+                    - 
                     ```go
                     // Go 没有内置 Set，用 map[T]struct{} 模拟
                     set := map[string]struct{}{}
@@ -1288,7 +1288,7 @@ toc: true
                     // struct{} 不占内存（0 字节），比 bool（1字节）更省空间
                     ```
                 - map 不是并发安全的
-                    -
+                    - 
                     ```go
                     // ❌ 多个 goroutine 同时读写 map 会 panic！
                     m := make(map[string]int)
@@ -1371,7 +1371,7 @@ toc: true
                 - 小写的是未导出的（private），只能包内使用
         - 值类型 vs 指针
             - struct 是值类型。赋值、传参、返回都是完整拷贝
-                -
+                - 
                 ```go
                 u1 := User{Name: "Alice"}
                 u2 := u1           // ✨ 完全拷贝！u1 和 u2 是两个独立对象
@@ -1395,7 +1395,7 @@ toc: true
                 fmt.Println(u1.Name)  // Changed
                 ```
             - 什么时候用指针
-                -
+                - 
                 ```go
                 // ✅ 使用指针的场景：
 
@@ -1431,7 +1431,7 @@ toc: true
             - 方法是绑定到特定类型的函数
             - Go 的方法语法有点特别——接收者写在函数名前面
             - 方法定义语法
-                -
+                - 
                 ```go
                 type Rectangle struct {
                     Width, Height float64
@@ -1452,7 +1452,7 @@ toc: true
                 fmt.Println(rect.Perimeter())  // 14
                 ```
             - 值接收者 vs 指针接收者
-                -
+                - 
                 ```go
                 type Counter struct {
                     count int
@@ -1510,7 +1510,7 @@ toc: true
                 ```
         - 给任意类型定义方法
             - 方法不只能定义在 struct 上，任何在当前包定义的类型都可以有方法
-                -
+                - 
                 ```go
                 // 给 int 起别名并加方法
                 type Celsius float64
@@ -1565,7 +1565,7 @@ toc: true
             - 把一个 struct 嵌入到另一个里面，外层可以直接访问内层的字段和方法
             - 这就是 Go 面向对象的核心——组合优于继承
             - 基本嵌入
-                -
+                - 
                 ```go
                 type Animal struct {
                     Name string
@@ -1596,7 +1596,7 @@ toc: true
                 fmt.Println(d.Animal.Name)  // 同上
                 ```
             - 方法覆盖
-                -
+                - 
                 ```go
                 // Dog 可以定义同名方法「覆盖」Animal 的
                 func (d Dog) Describe() string {
@@ -1609,7 +1609,7 @@ toc: true
                 fmt.Println(d.Describe())  // "旺财, 3岁，品种：柴犬"
                 ```
             - 嵌入接口
-                -
+                - 
                 ```go
                 // 也可以嵌入接口，常见于标准库
                 type ReadCloser interface {
@@ -1643,7 +1643,7 @@ toc: true
             - Go 没有 constructor 关键字
             - 惯例是定义 NewXxx 函数返回初始化好的实例，这样可以封装验证、默认值、依赖注入等逻辑。
             - 示例
-                -
+                - 
                 ```go
                 type User struct {
                     ID        int
@@ -1684,7 +1684,7 @@ toc: true
                 fmt.Println(u.Name)
                 ```
             - 函数选项模式
-                -
+                - 
                 ```go
                 // 问题：构造函数参数太多怎么办？
                 // func NewServer(host string, port int, timeout time.Duration, tls bool, ...) 
@@ -1740,7 +1740,7 @@ toc: true
             - Struct Tag 是字段后面的反引号字符串，为字段附加元数据
             - JSON 序列化、数据库映射、表单校验都用它
             - 示例
-                -
+                - 
                 ```go
                 type User struct {
                     ID       int       `json:"id"`
@@ -1766,7 +1766,7 @@ toc: true
                 // 注意：password 不在输出中，age 也被忽略
                 ```
             - 常见 Tag 用法一览
-                -
+                - 
                 ```go
                 type Article struct {
                     // encoding/json
@@ -1797,7 +1797,7 @@ toc: true
             - 它定义了一组方法签名，任何实现了这些方法的类型都「自动」满足这个接口——不需要显式声明 implements。
             - 这叫做「隐式接口实现」，也叫鸭子类型。
             - 接口示例
-                -
+                - 
                 ```go
                 // 定义接口：只有方法签名，没有实现
                 type Animal interface {
@@ -1844,7 +1844,7 @@ toc: true
         - 接口值的内部结构
             - 接口值在底层由两部分组成：动态类型（type）和动态值（value）
             - 示例
-                -
+                - 
                 ```go
                 // 接口值 = (type, value)
                 var a Animal  // (nil, nil)，零值
@@ -1857,7 +1857,7 @@ toc: true
                 fmt.Printf("值: %v\n", a)    // {旺财}
                 ```
             - nil 接口 vs 含 nil 的接口
-                -
+                - 
                 ```go
                 // 这是 Go 最反直觉的陷阱之一！
 
@@ -1896,7 +1896,7 @@ toc: true
             - 有时候你需要从接口里把具体类型「取出来」
             - Go 提供了两种方式：类型断言和 type switch
             - 类型断言
-                -
+                - 
                 ```go
                 var a Animal = Dog{name: "旺财"}
 
@@ -1924,7 +1924,7 @@ toc: true
                 }
                 ```
             - type switch
-                -
+                - 
                 ```go
                 func describe(i interface{}) {
                     switch v := i.(type) {
@@ -1976,7 +1976,7 @@ toc: true
                 fmt.Printf("%s\n", p) // (3, 4)
                 ```
             - error：自定义错误类型
-                -
+                - 
                 ```go
                 // error 接口只有一个方法：
                 // type error interface {
@@ -2015,7 +2015,7 @@ toc: true
                 }
                 ```
             - io.Reader 和 io.Writer：I/O 的基石
-                -
+                - 
                 ```go
                 // io.Reader：能被读取的任何东西
                 // type Reader interface {
@@ -2058,7 +2058,7 @@ toc: true
             - 和结构体嵌入一样，接口也可以嵌入其他接口
             - Go 鼓励定义小接口，再通过组合构建大接口
             - 示例
-                -
+                - 
                 ```go
                 // 小接口：单一职责
                 type Reader interface {
@@ -2102,7 +2102,7 @@ toc: true
                 }
                 ```
             - 接口应该越小越好
-                -
+                - 
                 ```go
                 // ❌ 大接口：实现困难，测试困难，耦合高
                 type UserService interface {
@@ -2140,7 +2140,7 @@ toc: true
             - 空接口 interface{} 没有任何方法要求，所以所有类型都满足它
             - Go 1.18 引入了 any 作为 interface{} 的别名，更简洁
             - 示例
-                -
+                - 
                 ```go
                 // interface{} 和 any 完全等价
                 var x any = 42
@@ -2170,7 +2170,7 @@ toc: true
                 }
                 ```
             - 使用 any 的代价
-                -
+                - 
                 ```go
                 // any 丢失了类型信息，使用时必须断言
                 var v any = 42
@@ -2221,7 +2221,7 @@ toc: true
                 }
                 ```
             - 接口让测试更容易
-                -
+                - 
                 ```go
                 // 生产代码
                 type DBStore struct { db *sql.DB }
@@ -2265,37 +2265,430 @@ toc: true
 
 {{< mind height="860px" >}}
 - 并发与工程化
-    - Goroutine 是什么
-        - Goroutine 是 Go 并发的核心——比线程轻量得多的「协程」
-        - 启动一个 Goroutine 只需要在函数调用前加 go 关键字
-        - 示例
-            -
-            ```go
-            package main
+    - Goroutine 入门
+        - Goroutine 是什么
+            - Goroutine 是 Go 并发的核心——比线程轻量得多的「协程」
+            - 启动一个 Goroutine 只需要在函数调用前加 go 关键字
+            - 示例
+                - 
+                ```go
+                package main
 
-            import (
-                "fmt"
-                "time"
-            )
+                import (
+                    "fmt"
+                    "time"
+                )
 
-            func say(s string) {
-                for i := 0; i < 3; i++ {
-                    fmt.Println(s)
-                    time.Sleep(100 * time.Millisecond)
+                func say(s string) {
+                    for i := 0; i < 3; i++ {
+                        fmt.Println(s)
+                        time.Sleep(100 * time.Millisecond)
+                    }
                 }
-            }
 
-            func main() {
-                go say("世界")   // 新 goroutine 中运行
-                say("你好")      // 当前 goroutine 中运行
-            }
+                func main() {
+                    go say("世界")   // 新 goroutine 中运行
+                    say("你好")      // 当前 goroutine 中运行
+                }
 
-            // 输出（顺序不确定）：
-            // 你好
-            // 世界
-            // 你好
-            // 世界
-            // 你好
-            // 世界
-            ```
+                // 输出（顺序不确定）：
+                // 你好
+                // 世界
+                // 你好
+                // 世界
+                // 你好
+                // 世界
+                ```
+            - Goroutine vs 线程
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/19/20260419160732615.png,310,100)
+        - GMP 调度模型（概览）
+            - Go 运行时用 GMP 模型来调度 Goroutine
+            - 示例
+                - 
+                ```go
+                // G = Goroutine（协程）
+                // M = Machine（OS 线程）
+                // P = Processor（逻辑处理器，调度上下文）
+
+                // P 的数量默认等于 CPU 核数，可以设置
+                import "runtime"
+
+                runtime.GOMAXPROCS(4)              // 设置使用 4 个 P
+                fmt.Println(runtime.GOMAXPROCS(0)) // 查看当前 P 数量
+                fmt.Println(runtime.NumCPU())      // CPU 核数
+
+                // Go 1.5+ 默认 GOMAXPROCS = NumCPU
+                // 大多数时候不需要手动设置
+                ```
+            - 调度模型示意
+                - 
+                ```
+                P1 [G1→G2→G3]   P2 [G4→G5→G6]
+                    ↓                  ↓
+                    M1                 M2
+                    ↓                  ↓
+                OS Thread          OS Thread
+
+                当 G 执行系统调用阻塞时，P 会把 M 换掉继续跑其他 G
+                这叫"work stealing"（工作窃取）——空闲的 P 会从别的 P 偷 G 来跑
+                ```
+        - sync.WaitGroup 等待协程完成
+            - 启动 Goroutine 后，main 函数不会自动等待它们结束
+            - 如果 main 退出，所有 Goroutine 都会被强制终止
+            - WaitGroup 是等待一组 Goroutine 完成的标准方式
+            - 示例
+                - 
+                ```go
+                // ❌ 错误：main 退出，goroutine 还没跑完
+                func main() {
+                    go fmt.Println("可能跑不到")
+                    // main 立即结束，goroutine 被杀死
+                }
+
+                // ✅ 用 WaitGroup 等待
+                import "sync"
+
+                func main() {
+                    var wg sync.WaitGroup
+
+                    for i := 0; i < 5; i++ {
+                        wg.Add(1)              // 计数器 +1
+                        go func(id int) {
+                            defer wg.Done()    // 函数结束时计数器 -1
+                            fmt.Printf("Worker %d 完成\n", id)
+                        }(i)
+                    }
+
+                    wg.Wait()  // 阻塞，直到计数器归零
+                    fmt.Println("所有 Worker 完成")
+                }
+                ```
+            - WaitGroup 的使用规范
+                - 
+                ```go
+                // ✅ 正确：在 goroutine 启动前 Add
+                wg.Add(1)
+                go func() {
+                    defer wg.Done()
+                    // ...
+                }()
+
+                // ❌ 错误：在 goroutine 内部 Add（可能来不及）
+                go func() {
+                    wg.Add(1)      // 可能 Wait() 已经过了，竞态！
+                    defer wg.Done()
+                    // ...
+                }()
+
+                // ✅ WaitGroup 不能拷贝，传指针
+                func process(wg *sync.WaitGroup) {
+                    defer wg.Done()
+                    // ...
+                }
+
+                var wg sync.WaitGroup
+                wg.Add(1)
+                go process(&wg)
+                wg.Wait()
+                ```
+            - 固定节奏
+                - 启动 goroutine 前 wg.Add(1)
+                - goroutine 内第一行 defer wg.Done()
+                - 主流程 wg.Wait()
+        - Goroutine 泄露
+            - Goroutine 泄漏是 Go 并发最常见的 bug：启动了 Goroutine，但它永远不会退出，一直占用内存和资源
+            - 泄露的常见原因
+                - 
+                ```go
+                // ❌ 泄漏一：等待永远不会发送的 channel
+                func leak1() {
+                    ch := make(chan int)
+                    go func() {
+                        val := <-ch  // 永远阻塞！没人往 ch 发数据
+                        fmt.Println(val)
+                    }()
+                    // 函数返回，但 goroutine 永远卡在这
+                }
+
+                // ❌ 泄漏二：没有退出机制的无限循环
+                func leak2() {
+                    go func() {
+                        for {
+                            doWork()  // 没有 break/return/cancel 条件
+                        }
+                    }()
+                }
+
+                // ❌ 泄漏三：阻塞的 HTTP 请求没有超时
+                func leak3() {
+                    go func() {
+                        resp, _ := http.Get("http://slow-server.com")  
+                        // 如果服务器不响应，goroutine 永远等着
+                        _ = resp
+                    }()
+                }
+                ```
+            - 正确的退出机制
+                - 
+                ```go
+                // ✅ 用 done channel 通知退出
+                func worker(done <-chan struct{}) {
+                    for {
+                        select {
+                        case <-done:
+                            fmt.Println("收到退出信号，正在退出")
+                            return
+                        default:
+                            doWork()
+                        }
+                    }
+                }
+
+                done := make(chan struct{})
+                go worker(done)
+
+                time.Sleep(5 * time.Second)
+                close(done)  // 通知所有监听 done 的 goroutine 退出
+
+                // ✅ 用 context.Context（更推荐，Day 10 详讲）
+                ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+                defer cancel()
+
+                go func() {
+                    select {
+                    case <-ctx.Done():
+                        fmt.Println("超时退出:", ctx.Err())
+                        return
+                    case result := <-doAsyncWork():
+                        fmt.Println("完成:", result)
+                    }
+                }()
+                ```
+            - 检测泄露工具 goleak
+                - 
+                ```go
+                // 在测试中检测 goroutine 泄漏
+                import "go.uber.org/goleak"
+
+                func TestNoLeak(t *testing.T) {
+                    defer goleak.VerifyNone(t)  // 测试结束时检查是否有泄漏的 goroutine
+                    
+                    // 你的业务代码
+                    runSomeTask()
+                }
+
+                // 也可以用运行时查看当前 goroutine 数量
+                import "runtime"
+                fmt.Println("goroutine 数量:", runtime.NumGoroutine())
+                ```
+            - Goroutine 的黄金原则
+                - 启动 Goroutine 的人负责结束它
+                - 每次 go func() 之前，问自己：这个 Goroutine 什么时候、在什么条件下会退出？
+        - 数据竞争与 Race Detector
+            - 多个 Goroutine 同时读写同一变量时，会产生数据竞争（Data Race）
+            - Go 自带了竞态检测器
+                - 
+                ```go
+                // ❌ 数据竞争：多个 goroutine 同时写 counter
+                var counter int
+
+                func main() {
+                    var wg sync.WaitGroup
+                    for i := 0; i < 1000; i++ {
+                        wg.Add(1)
+                        go func() {
+                            defer wg.Done()
+                            counter++  // ❌ 非原子操作，存在竞争！
+                        }()
+                    }
+                    wg.Wait()
+                    fmt.Println(counter)  // 结果不确定，可能不是 1000
+                }
+
+                // 运行竞态检测器
+                // go run -race main.go
+                // 输出：WARNING: DATA RACE
+                // 清晰显示哪些行在竞争
+                ```
+            - 三种解决方案
+                - 
+                ```go
+                // ✅ 方案一：sync.Mutex 加锁
+                var (
+                    mu      sync.Mutex
+                    counter int
+                )
+
+                go func() {
+                    mu.Lock()
+                    defer mu.Unlock()
+                    counter++
+                }()
+
+                // ✅ 方案二：atomic 原子操作（更快，适合简单计数）
+                import "sync/atomic"
+                var counter int64
+
+                go func() {
+                    atomic.AddInt64(&counter, 1)
+                }()
+                result := atomic.LoadInt64(&counter)
+
+                // ✅ 方案三：用 channel 传递数据（不共享状态）
+                // 这是最地道的 Go 风格（Day 9 详讲）
+                ch := make(chan int, 1000)
+
+                for i := 0; i < 1000; i++ {
+                    go func() { ch <- 1 }()
+                }
+
+                total := 0
+                for i := 0; i < 1000; i++ {
+                    total += <-ch
+                }
+                fmt.Println(total)  // 1000，保证正确
+                ```
+            - -race 标志
+                - 开发阶段始终用 go test -race 和 go run -race 运行代码
+                - Race Detector 会在运行时检测数据竞争并打印详细报告（文件名、行号、goroutine 栈）
+                - 生产环境不用开（有约 20% 性能损耗），但 CI/CD 流水线里一定要跑
+        - sync 包核心原语
+            - sync 包提供了并发编程的基础工具
+            - 除了 WaitGroup，还有互斥锁、读写锁和 Once
+            - sync.Mutex 互斥锁
+                - 
+                ```go
+                type SafeCounter struct {
+                    mu    sync.Mutex
+                    count int
+                }
+
+                func (c *SafeCounter) Inc() {
+                    c.mu.Lock()
+                    defer c.mu.Unlock()  // 保证解锁
+                    c.count++
+                }
+
+                func (c *SafeCounter) Value() int {
+                    c.mu.Lock()
+                    defer c.mu.Unlock()
+                    return c.count
+                }
+
+                // 使用
+                counter := &SafeCounter{}
+                var wg sync.WaitGroup
+                for i := 0; i < 1000; i++ {
+                    wg.Add(1)
+                    go func() {
+                        defer wg.Done()
+                        counter.Inc()
+                    }()
+                }
+                wg.Wait()
+                fmt.Println(counter.Value())  // 1000，保证正确
+                ```
+            - sync.RWMutex 读写锁 (读多写少场景)
+                - 
+                ```go
+                type Cache struct {
+                    mu   sync.RWMutex
+                    data map[string]string
+                }
+
+                // 写操作：独占锁
+                func (c *Cache) Set(key, val string) {
+                    c.mu.Lock()
+                    defer c.mu.Unlock()
+                    c.data[key] = val
+                }
+
+                // 读操作：共享锁（多个 goroutine 可同时读）
+                func (c *Cache) Get(key string) (string, bool) {
+                    c.mu.RLock()
+                    defer c.mu.RUnlock()
+                    v, ok := c.data[key]
+                    return v, ok
+                }
+
+                // 读写锁的性能优势：
+                // 纯读的场景下，多个 goroutine 可以并发读，不阻塞
+                // 只有写时才独占，适合缓存、配置这类读多写少的场景
+                ```
+            - sync.Once 单例初始化
+                - 
+                ```go
+                // 保证函数只执行一次，线程安全
+                var (
+                    instance *DB
+                    once     sync.Once
+                )
+
+                func GetDB() *DB {
+                    once.Do(func() {
+                        instance = &DB{
+                            conn: openConnection(),
+                        }
+                    })
+                    return instance
+                }
+
+                // 无论多少 goroutine 并发调用 GetDB()
+                // openConnection() 只会执行一次
+                // 这是 Go 实现单例模式的标准方式
+                ```
+    - Channel 通信
+        - Channel 基础
+            - Channel 是 Go 并发的通信机制
+            - Go 的并发哲学是：「不要通过共享内存来通信，要通过通信来共享内存。」
+            - Channel 就是这个哲学的具体实现——Goroutine 之间通过 channel 传递数据，而不是共享变量。
+            - 示例
+                - 
+                ```go
+                // 创建 channel：make(chan 类型)
+                ch := make(chan int)       // 无缓冲 channel
+                ch := make(chan string, 5) // 有缓冲 channel，容量 5
+
+                // 发送数据：ch <- value
+                ch <- 42
+
+                // 接收数据：value := <-ch
+                v := <-ch
+
+                // 关闭 channel
+                close(ch)
+
+                // 判断 channel 是否关闭
+                v, ok := <-ch
+                // ok == false 说明 channel 已关闭且已空
+
+                // channel 的零值是 nil
+                var ch chan int  // nil channel
+                // 向 nil channel 发送/接收会永远阻塞！
+                ```
+            - 两个 Goroutine 通信
+                - 
+                ```go
+                func main() {
+                    ch := make(chan string)
+
+                    // 发送方 goroutine
+                    go func() {
+                        ch <- "Hello from goroutine!"
+                    }()
+
+                    // 接收方（主 goroutine）
+                    msg := <-ch
+                    fmt.Println(msg)  // Hello from goroutine!
+                }
+
+                // ✨ 不需要 WaitGroup！
+                // <-ch 会阻塞，直到有数据，天然同步
+                ```
+            - Channel 的方向是通信，不是存储
+                - Channel 不是消息队列，不是用来存数据的
+                - 它是两个 Goroutine 之间的「传送带」，一端发送，另一端接收，数据在两者之间流动
+        - 无缓冲 vs 有缓冲
+            - 无缓冲和有缓冲 channel 的行为差异很大，选错会导致死锁或意外的并发行为。
+            - 无缓冲 Channel (同步)
 {{< /mind >}}
