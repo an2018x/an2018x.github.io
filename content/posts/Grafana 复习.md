@@ -215,6 +215,7 @@ toc: true
 # 核心技能
 
 {{< mind height="860px" >}}
+- 核心技能
     - PromQL
         - 两种向量 - PromQL 的基石
             - 即时向量
@@ -406,6 +407,24 @@ toc: true
                 - 修改面板查询为 rate(prometheus_http_requests_total{handler=~"$handler"}[5m])
                 - Grafana 会将多选处理为正则表达式
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/12/20260412153751767.png,430,350)
+        - 内置变量
+            - Grafana 提供了一些内置变量，不需要手动创建，可以直接在查询中使用
+            - $__interval 和 $__rate_interval
+                - 是最重要的内置变量
+                - 会根据 Dashboard 的时间范围和面板宽度，自动计算一个合理的时间步长
+                - $__rate_interval 的智能之处
+                    - 当查看过去一小时的数据，可能是 1 分钟
+                    - 查看过去 7 天的数据，可能是 15 分钟
+                    - 无论时间范围怎么变，都能返回合理密度的数据点
+                - $__rate_interval 和 $interval 的区别
+                    - $__rate_interval 至少覆盖 4 个采样周期，更适合搭配 rate() 使用
+                    - $__interval 纯根据面板像素密度计算步长
+            - $__range
+                - 表示当前 Dashboard 选择的完整时间范围，在 increase 中有用
+                - increase(prometheus_http_requests_total{handler=~"$handler"}[$__range])
+            - $__dashboard 和 $__name
+                - $__dashboard 是当前 Dashboard 的名称，$__name 是面板的名称
+                - 一般用在告警通知模板中，不常用在查询里
     - 用 Go 构建可观测 HTTP 服务
         - 编写带 Prometheus 指标的 Go 服务
             - 构建一个模拟的订单 API 服务，会暴露：请求计数 (Counter)、请求延迟 (Histogram)、当前处理中的请求数 (Gauge)。
@@ -486,6 +505,163 @@ toc: true
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/12/20260412225759292.png,310,150)
 
 {{< /mind >}}
+
+# 告警与日志
+
+{{< mind height="860px" >}}
+- 告警与日志
+    - Grafana 的告警系统
+        - 理解 Grafana 告警架构
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104323716.png,618,330)
+        - 配置 Contact Point
+            - 左侧导航栏 Alerting -> Contact points -> Create contact points
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104545088.png,277,414)
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104623733.png,400,150)
+            - Name 填学习用 Webhook，Integration 选 Webhook，URL 填 http://myapp:8080/health
+            - 用 Go 应用的健康检查端点作为 Webhook 接收地址，不会真正处理报警，但能验证通知是否发出
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418104854183.png,400,250)
+            - 内置了一个默认的 grafana-default-email Contact Point，生产环境会配置 Email、Slack、DingTalk、PagerDuty 等
+        - 创建第一条告警规则（监控 Go 应用的错误率）
+            - 创建告警规则
+                - Alerting -> Alert Rules -> New alert rule
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418105203977.png,400,350)
+            - 命名规则
+                - Rule name 填入应用错误率过高
+            - 定义查询和条件
+                - 在 Define query and alert condition 部分，会看到一个查询编辑器
+                - 查询 A: 选择数据源 Prometheus，切换到 Code 模式，输入
+                    - sum(rate(myapp_http_requests_total{status=~"4..|5.."}[5m])) / sum(rate(myapp_http_requests_total[5m])) * 100
+                    - 计算的是过去 5 分钟内的错误率百分比
+                - 下方 Set Alert Condition，设置 WHERE QUERY IS ABOVE 5
+                    - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418105855803.png,400,125)
+                - 通过 preview alert rule condition 可以预览报警状态，如果已经满足条件，会显示为 firing
+            - 配置评估行为
+                - 在 Add foler and labels 下选择或创建一个文件夹 (学习告警)
+                - Evaluation 创建一个新的，叫做默认评估组，评估间隔 1m，每分钟评估一次
+                - Pending period 填写 2，这个参数很重要，表示条件必须持续满足 2 分钟后才会真正触发告警
+                - 避免了短暂的尖峰导致的误报，告警会先进入 Pending 状态，2 分钟后才会变为 Firing
+            - 添加标签和注释
+                - 在 Add folder and labels 部分
+                - 添加一个 Label: key 填 severity，value 填 warning。标签用于告警路由
+                - Notification Policy 可以决定把报警发给谁
+                - 在 Configure notification message 中：Summary 填应用错误率超过 5%
+                - Description 填当前错误率为 {{$value.B.value}}，已超过 5% 的告警阈值
+                - {{ $value.B.value }} 是模板变量，会在告警触发时被替换为实际的错误率数值。
+        - 理解告警状态与查看告警
+            - 在 Alerting -> Alert Rules 可以查看所有规则的状态
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418174616492.png,300,100)
+            - 在 Dashboard 中添加一个 Alert list 面板，会展示当前活跃的所有告警
+    - Loki 与日志监控
+        - Loki 的设计哲学
+            - 传统日志系统（ElasticSearch）会对日志内容做全文索引，每个词都被索引，搜索速度快但是存储和计算成本高
+            - Loki 只索引日志的元数据标签，不索引日志内容本身，查询先通过标签快速定位到相关的日志流，再在这些流中做文本搜索
+        - 部署 Loki 和 Promtail
+            - Loki 是日志存储和查询引擎，Promtail 是日志采集代理，类似 Node Exporter 采集指标，Promtail 采集日志
+            - 更新 docker-compose.yml
+                - 在底部的 volumns 部分添加 loki_data:
+            - 创建 Promtail 配置文件
+                - 放在 grafana-learning/promtail 目录下
+            - 理解 Promtail 配置
+                - clients 指定了日志推送的目标地址 - Loki 的 api 端点
+                - 和 Prometheus 的拉取模型不同，Loki 使用推送模型：Promtail 主动把采集到的日志推送给 Loki
+                - scrape_configs 定义了日志采集源
+                - 本次使用了 docker_sd_configs，通过 Docker Socket 自动发现所有运行中的容器并采集它们的标准输出日志
+                - relabel_configs 对标签做转换
+                - __meta_docker_container_name 是 Docker 自动提供的元数据，映射到 container 标签，就能按容器名筛选日志
+            - 验证
+                - 访问 http://localhost:3100/ready，返回 ready 说明 Loki 已启动
+                - docker-compose logs promtail --tail 20
+                - 能看到 Successfully connected to Loki 的日志
+        - 在 Grafana 中添加 Loki 数据源
+            - 在 Grafana 中点击 Connections -> Data sources -> Add data source，搜索 Loki
+            - Connection URL 填写 http://loki:3100
+        - 用 Explore 查看日志
+            - 点击左侧 Explore，在顶部数据源下拉框中切换到 Loki
+            - 第一次查询
+                - Loki 查询语言是 LogQL，结构和 PromQL 非常相似
+                - 最基本的查询是用花括号指定标签筛选：{container="myapp"}
+                - 输入后点击 Run query
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418210037672.png,430,360)
+            - 按容器筛选
+                - {container="prometheus}
+            - 查看所有容器的日志
+                - {container=~".+"}
+                - =~".+" 是正则匹配
+        - LogQL 管道操作
+            - 可以在标签筛选的基础上，用 ｜ 符号串联多个处理步骤
+            - 文本过滤
+                - 只看包含 error 的日志
+                    - {container="myapp"} |= "error"
+                - |= 表示包含，!= 表示不包含
+                - {container="myapp"} != "health"
+            - 正则过滤
+                - {container="myapp"} |~ "status.*500"
+                - |~ 是正则匹配，!~ 是反向正则过滤
+            - 管道串联
+                - 多个过滤条件可以串联，形成管道
+                - {container="myapp"} |= "error" != "health"
+                - 管道中的每一步都在上一步的结果基础上继续过滤
+            - JSON 解析
+                - 如果 Go 应用输出的是 JSON 格式的日志，可以用 | json 进行自动解析
+                - {container="myapp"} | json
+                - 解析后，json 中的每个字段都变成了可筛选的标签
+                - {"level":"error"}
+                - {container="myapp"} | json | level="error"
+            - 行格式化
+                - | line_format 可以重新格式化日志的显示方式
+                - {container="myapp"} | line_format "{{.container}}: {{.__line__}}"
+            - 从日志提取指标
+                - Metrics from Logs 能让你不需要在代码埋点就能从日志中生成监控指标
+                - 计算日志量速率
+                    - rate({container="myapp"}[5m])
+                - 按容器分组统计
+                    - sum by (container) (rate({container=~".+"}[5m]))
+                - count_over_time
+                    - 计算时间窗口内的日志总行数
+                    - count_over_time({container="myapp"} |= "error" [1h])
+        - 在 Dashboard 中整合日志面板
+            - 实时日志流
+                - 右侧面板类型选择 Logs，数据源选 Loki
+                - 查询: {container="myapp"} != "metrics"，排除 /metrics 端点的请求日志
+                - 在右侧面板设置中，找到 Log details 区域，确保 Show time 和 Wrap lines 都开启
+                - Tilte 填应用日志，这个面板会实时滚动 Go 应用的最新日志
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/18/20260418220304056.png,260,150)
+            - 错误日志速率 (Time Series 面板)
+                - 新建 Time Series 类型，数据源选择 Loki
+                - rate({container="myapp"} |= "error" [5m])
+                - Title 填写错误日志速率，Unit 设置为 logs/sec
+    - LogQL 进阶与指标日志联动
+        - 更多日志解析器
+            - logfmt 解析器
+                - logfmt 是 Go 生态常见的日志格式，形如 level=info msg="request handled" method="GET"
+                - 如果日志是这种键值对格式，可以用：{container="myapp"} | logfmt
+                - 解析后每个键值对都变成可以筛选的标签
+                - 当前 Go 应用用的是标准 log.Println 输出，不是 logfmt 格式
+            - pattern 解析器
+                - pattern 是最灵活的解析器，允许用模板来描述日志的结构，提取出其中的字段
+                - 语法是使用 <field_name> 来做占位符
+                - {container="myapp"} | pattern `<_> "<method> <path> <_>" <status> <_>`
+                - 这条查询假设日志中包含类似 "GET /api/orders HTTP/1.1" 200 ... 的内容
+                - 会把 HTTP 方法提取为 method，路径提取为 path，状态码提取为 status
+                - <_> 是丢弃占位符，匹配但是不保存
+            - regxp 解析器
+                - {container="myapp"} | regexp `(?P<method>GET|POST|PUT|DELETE) (?P<path>/\S+)`
+                - (?P<name>...) 是命名捕获组，提取的值会变成同名标签，正则解析器功能最强但是性能最差
+        - 标签提取与 label_format
+            - line_format 重新格式化日志显示
+                - line_format 用 Go 模板语法重新定义每行日志的显示内容
+                - {container=~"myapp|prometheus"} | line_format "[{{.container}}] {{.__line__}}"
+                - 这会在每行日志前加上方括号包裹的容器名
+            - line_format 转换标签
+                - label_format 可以基于现有标签生成新标签或修改标签名
+                - {container="myapp"} | label_format short_id="{{.container_id | trunc 12}}"
+                - 这条查询把容器 ID 截取前 12 位，存为 short_id 标签，trunc 12 是 Go 模板的字符串截取函数
+            - drop 和 keep 标签
+                - 当解析器提取了太多标签导致查询杂乱，可以用 drop 丢弃不需要的标签，或用 keep 只保留需要的
+                - {container="myapp"} | json | keep container, level, msg
+{{< /mind >}}
+
+
 
 # 附录
 
@@ -871,4 +1047,64 @@ services:
 volumes:
   prometheus_data:
   grafana_data:
+```
+
+## Loki 与日志监控
+
+docker-compose.yml 在 node-exporter 服务后添加 Loki 和 Promtail
+
+```yml
+# Loki - 日志存储与查询
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+    restart: unless-stopped
+
+  # Promtail - 日志采集代理
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    restart: unless-stopped
+```
+
+promtail-config.yml
+
+```yml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # 采集 Docker 容器日志
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      # 用容器名作为标签
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      # 用容器 ID 作为标签
+      - source_labels: ['__meta_docker_container_id']
+        target_label: 'container_id'
 ```
