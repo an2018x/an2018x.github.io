@@ -1488,25 +1488,814 @@ toc: true
                 - 包含 sync.Mutex 等不可拷贝字段 -> 必须用指针
                 - 其他情况两者都行，但是一个类型的方法应该统一
                 - 要么全值接收者，要么全指针接收者
-        - go 的自动转换
-            - 
-            ```go
-            // Go 会在值和指针之间自动转换，调用方法时不用纠结
-            
-            c := Counter{}   // 值
-            c.Increment()    // ✨ Go 自动取地址 (&c).Increment()
-            c.Get()          // 值调用值方法，直接
-            
-            p := &Counter{}  // 指针
-            p.Increment()    // 指针调用指针方法，直接
-            p.Get()          // ✨ Go 自动解引用 (*p).Get()
-            
-            // 唯一限制：不能在「不可寻址」的值上调用指针方法
-            Counter{}.Increment()  // ❌ 编译错误，字面量不可寻址
-            
-            // 但可以：
-            c := Counter{}
-            c.Increment()          // ✅ 变量可寻址
-            ```
+            - go 的自动转换
+                - 
+                ```go
+                // Go 会在值和指针之间自动转换，调用方法时不用纠结
+                
+                c := Counter{}   // 值
+                c.Increment()    // ✨ Go 自动取地址 (&c).Increment()
+                c.Get()          // 值调用值方法，直接
+                
+                p := &Counter{}  // 指针
+                p.Increment()    // 指针调用指针方法，直接
+                p.Get()          // ✨ Go 自动解引用 (*p).Get()
+                
+                // 唯一限制：不能在「不可寻址」的值上调用指针方法
+                Counter{}.Increment()  // ❌ 编译错误，字面量不可寻址
+                
+                // 但可以：
+                c := Counter{}
+                c.Increment()          // ✅ 变量可寻址
+                ```
+        - 给任意类型定义方法
+            - 方法不只能定义在 struct 上，任何在当前包定义的类型都可以有方法
+                -
+                ```go
+                // 给 int 起别名并加方法
+                type Celsius float64
 
+                func (c Celsius) ToFahrenheit() float64 {
+                    return float64(c)*9/5 + 32
+                }
+
+                func (c Celsius) String() string {
+                    return fmt.Sprintf("%.1f°C", float64(c))
+                }
+
+                // 给切片起别名并加方法
+                type IntSlice []int
+
+                func (s IntSlice) Sum() int {
+                    total := 0
+                    for _, n := range s {
+                        total += n
+                    }
+                    return total
+                }
+
+                func (s IntSlice) Max() int {
+                    if len(s) == 0 {
+                        return 0
+                    }
+                    m := s[0]
+                    for _, n := range s[1:] {
+                        if n > m {
+                            m = n
+                        }
+                    }
+                    return m
+                }
+
+                func main() {
+                    temp := Celsius(25)
+                    fmt.Println(temp)               // 25.0°C（调用了 String 方法）
+                    fmt.Println(temp.ToFahrenheit()) // 77
+
+                    nums := IntSlice{1, 5, 3, 8, 2}
+                    fmt.Println(nums.Sum())  // 19
+                    fmt.Println(nums.Max())  // 8
+                }
+                ```
+            - 只能给本包类型加方法
+                - 不能直接给 int、string 等内置类型加方法，也不能给其他包的类型加方法
+                - 需要的话就 type MyInt int 定义一个新类型。这个限制防止混乱——每个类型的方法归属清晰
+        - 结构体嵌入
+            - Go 没有继承，但有「嵌入」
+            - 把一个 struct 嵌入到另一个里面，外层可以直接访问内层的字段和方法
+            - 这就是 Go 面向对象的核心——组合优于继承
+            - 基本嵌入
+                -
+                ```go
+                type Animal struct {
+                    Name string
+                    Age  int
+                }
+
+                func (a Animal) Describe() string {
+                    return fmt.Sprintf("%s, %d岁", a.Name, a.Age)
+                }
+
+                // Dog 嵌入 Animal
+                type Dog struct {
+                    Animal          // ✨ 嵌入字段（没有字段名）
+                    Breed  string
+                }
+
+                d := Dog{
+                    Animal: Animal{Name: "旺财", Age: 3},
+                    Breed:  "柴犬",
+                }
+
+                // 直接访问嵌入字段的属性和方法（提升）
+                fmt.Println(d.Name)         // "旺财"（不用 d.Animal.Name）
+                fmt.Println(d.Describe())   // "旺财, 3岁"（继承了 Animal 的方法）
+                fmt.Println(d.Breed)        // "柴犬"
+
+                // 也可以显式访问
+                fmt.Println(d.Animal.Name)  // 同上
+                ```
+            - 方法覆盖
+                -
+                ```go
+                // Dog 可以定义同名方法「覆盖」Animal 的
+                func (d Dog) Describe() string {
+                    // 可以调用被覆盖的方法
+                    base := d.Animal.Describe()
+                    return fmt.Sprintf("%s，品种：%s", base, d.Breed)
+                }
+
+                d := Dog{Animal: Animal{Name: "旺财", Age: 3}, Breed: "柴犬"}
+                fmt.Println(d.Describe())  // "旺财, 3岁，品种：柴犬"
+                ```
+            - 嵌入接口
+                -
+                ```go
+                // 也可以嵌入接口，常见于标准库
+                type ReadCloser interface {
+                    io.Reader    // 嵌入接口
+                    io.Closer    // 嵌入接口
+                }
+                // 等价于：
+                // type ReadCloser interface {
+                //     Read(p []byte) (n int, err error)
+                //     Close() error
+                // }
+
+                // 实战场景：给一个已有类型「增强」
+                type LoggedDB struct {
+                    *sql.DB          // 嵌入指针，继承所有方法
+                    logger *log.Logger
+                }
+
+                // 只需要定义想增强的方法
+                func (db *LoggedDB) Query(query string, args ...any) (*sql.Rows, error) {
+                    db.logger.Printf("SQL: %s", query)
+                    return db.DB.Query(query, args...)
+                }
+                // 其他方法（Ping、Exec 等）自动继承自 *sql.DB
+                ```
+            - 嵌入 vs 继承
+                - 嵌入不是继承
+                - 嵌入字段是一个真实存在的字段，外层 struct has-a 内层，不是 is-a
+                - 你可以嵌入多个类型（多继承的感觉），但本质是组合：Dog 不是 Animal 的子类，而是「包含了一个 Animal」
+        - 构造函数模式
+            - Go 没有 constructor 关键字
+            - 惯例是定义 NewXxx 函数返回初始化好的实例，这样可以封装验证、默认值、依赖注入等逻辑。
+            - 示例
+                -
+                ```go
+                type User struct {
+                    ID        int
+                    Name      string
+                    Email     string
+                    CreatedAt time.Time
+                }
+
+                // 标准构造函数：返回值
+                func NewUser(name, email string) User {
+                    return User{
+                        Name:      name,
+                        Email:     email,
+                        CreatedAt: time.Now(),
+                    }
+                }
+
+                // 更常见：返回指针 + error
+                func NewUser(name, email string) (*User, error) {
+                    if name == "" {
+                        return nil, errors.New("name 不能为空")
+                    }
+                    if !strings.Contains(email, "@") {
+                        return nil, fmt.Errorf("无效的 email: %s", email)
+                    }
+                    return &User{
+                        Name:      name,
+                        Email:     email,
+                        CreatedAt: time.Now(),
+                    }, nil
+                }
+
+                // 使用
+                u, err := NewUser("Alice", "alice@example.com")
+                if err != nil {
+                    log.Fatal(err)
+                }
+                fmt.Println(u.Name)
+                ```
+            - 函数选项模式
+                -
+                ```go
+                // 问题：构造函数参数太多怎么办？
+                // func NewServer(host string, port int, timeout time.Duration, tls bool, ...) 
+
+                // 解决：函数选项模式（Functional Options）
+                type Server struct {
+                    host    string
+                    port    int
+                    timeout time.Duration
+                    tls     bool
+                }
+
+                // Option 是一个修改 Server 的函数
+                type Option func(*Server)
+
+                func WithPort(p int) Option {
+                    return func(s *Server) { s.port = p }
+                }
+
+                func WithTimeout(t time.Duration) Option {
+                    return func(s *Server) { s.timeout = t }
+                }
+
+                func WithTLS() Option {
+                    return func(s *Server) { s.tls = true }
+                }
+
+                // 构造函数接受任意个 Option
+                func NewServer(host string, opts ...Option) *Server {
+                    // 默认值
+                    s := &Server{
+                        host:    host,
+                        port:    80,
+                        timeout: 30 * time.Second,
+                        tls:     false,
+                    }
+                    // 应用选项
+                    for _, opt := range opts {
+                        opt(s)
+                    }
+                    return s
+                }
+
+                // 使用：非常灵活
+                s1 := NewServer("localhost")
+                s2 := NewServer("example.com", WithPort(443), WithTLS())
+                s3 := NewServer("api.com", WithTimeout(10*time.Second))
+                ```
+            - 函数选项模式的威力
+                - 这个模式在 Go 生态广泛使用（gRPC、Kubernetes、各种库的配置都是这个模式）
+                - 优势：可选参数不用硬编码、扩展性好（加新选项不破坏现有代码）、可读性强（调用方清楚写出每个选项）
+        - 结构体标签
+            - Struct Tag 是字段后面的反引号字符串，为字段附加元数据
+            - JSON 序列化、数据库映射、表单校验都用它
+            - 示例
+                -
+                ```go
+                type User struct {
+                    ID       int       `json:"id"`
+                    Name     string    `json:"name" validate:"required,min=2"`
+                    Email    string    `json:"email" validate:"required,email"`
+                    Password string    `json:"-"`                          // - 表示不参与 JSON 序列化
+                    Age      int       `json:"age,omitempty"`               // omitempty：零值时忽略
+                    Role     string    `json:"role" db:"user_role"`          // 同一字段可有多个 tag
+                }
+
+                // JSON 序列化
+                u := User{
+                    ID:    1,
+                    Name:  "Alice",
+                    Email: "alice@example.com",
+                    Password: "secret",
+                    // Age 是 0，会被忽略
+                }
+
+                data, _ := json.Marshal(u)
+                fmt.Println(string(data))
+                // {"id":1,"name":"Alice","email":"alice@example.com","role":""}
+                // 注意：password 不在输出中，age 也被忽略
+                ```
+            - 常见 Tag 用法一览
+                -
+                ```go
+                type Article struct {
+                    // encoding/json
+                    ID       int       `json:"id"`
+                    Title    string    `json:"title"`
+                    Content  string    `json:"content,omitempty"`  // 空时忽略
+                    Internal string    `json:"-"`                   // 从不序列化
+
+                    // GORM（Day 17-18）
+                    CreatedAt time.Time `gorm:"autoCreateTime"`
+                    Slug      string    `gorm:"uniqueIndex;size:100"`
+
+                    // validator（参数校验）
+                    Author   string    `validate:"required,min=2,max=50"`
+                    Views    int       `validate:"gte=0"`
+
+                    // 组合使用
+                    Email    string    `json:"email" validate:"required,email" db:"user_email"`
+                }
+                ```
+            - tag 只是字符串
+                - Tag 本身只是给字段附加的字符串元数据，语言本身不处理
+                - 是各个库（encoding/json、gorm、validator...）通过反射读取 tag 并做相应处理
+                - tag 的语法完全由使用它的库定义
+    - 接口与多态
+        - 接口是什么
+            - 接口是 Go 最优雅的特性。
+            - 它定义了一组方法签名，任何实现了这些方法的类型都「自动」满足这个接口——不需要显式声明 implements。
+            - 这叫做「隐式接口实现」，也叫鸭子类型。
+            - 接口示例
+                -
+                ```go
+                // 定义接口：只有方法签名，没有实现
+                type Animal interface {
+                    Sound() string
+                    Name() string
+                }
+
+                // Dog 实现了 Animal 接口
+                // 注意：不需要写 "implements Animal"！
+                type Dog struct{ name string }
+
+                func (d Dog) Sound() string { return "汪汪" }
+                func (d Dog) Name() string  { return d.name }
+
+                // Cat 也实现了 Animal 接口
+                type Cat struct{ name string }
+
+                func (c Cat) Sound() string { return "喵喵" }
+                func (c Cat) Name() string  { return c.name }
+
+                // 函数接受接口类型
+                func Describe(a Animal) {
+                    fmt.Printf("%s 说：%s\n", a.Name(), a.Sound())
+                }
+
+                func main() {
+                    dog := Dog{name: "旺财"}
+                    cat := Cat{name: "咪咪"}
+
+                    Describe(dog)  // 旺财 说：汪汪
+                    Describe(cat)  // 咪咪 说：喵喵
+
+                    // 接口变量可以持有任意满足条件的类型
+                    var a Animal = dog
+                    a = cat  // 随时切换
+                }
+                ```
+            - 隐式实现的威力
+                - Java/C# 要写 implements Animal，Go 不需要
+                - 只要你的类型有对应的方法，它就是那个接口
+                - 你可以让一个你不能修改的第三方类型满足你的接口
+                - 也可以在不改动现有代码的情况下新定义接口来约束它们
+                - 这是 Go 解耦的核心武器
+        - 接口值的内部结构
+            - 接口值在底层由两部分组成：动态类型（type）和动态值（value）
+            - 示例
+                -
+                ```go
+                // 接口值 = (type, value)
+                var a Animal  // (nil, nil)，零值
+
+                a = Dog{name: "旺财"}
+                // a 现在是 (Dog, {name:"旺财"})
+
+                // 打印类型和值
+                fmt.Printf("类型: %T\n", a)  // main.Dog
+                fmt.Printf("值: %v\n", a)    // {旺财}
+                ```
+            - nil 接口 vs 含 nil 的接口
+                -
+                ```go
+                // 这是 Go 最反直觉的陷阱之一！
+
+                var d *Dog = nil  // d 是 nil 指针
+
+                var a Animal = d  // a 的 type=*Dog, value=nil
+                                // a 不是 nil！因为 type 部分有值
+
+                fmt.Println(a == nil)   // false ← 让人意外！
+                fmt.Println(d == nil)   // true
+
+                // 正确判断接口是否有效
+                func process(a Animal) {
+                    // ❌ 错误：a != nil 不代表 a 里的值不是 nil
+                    if a != nil {
+                        // 如果 a = (*Dog)(nil)，这里调用方法会 panic
+                    }
+                    
+                    // ✅ 正确：用 reflect 或 type switch 检查
+                    if a == nil {
+                        return
+                    }
+                }
+
+                // 最佳实践：函数返回接口时，失败直接返回 nil
+                func findAnimal() Animal {
+                    var d *Dog = nil
+                    return d   // ❌ 坑！返回的接口不是 nil
+                    return nil // ✅ 这才是真正的 nil 接口
+                }
+                ```
+                - 「含有 nil 指针的接口，不等于 nil 接口。」
+                - 一个接口值只有当 type 和 value 都是 nil 时，它才等于 nil
+                - 函数返回接口类型时，失败直接 return nil，而不是 return (*ConcreteType)(nil)
+        - 类型断言与 type switch
+            - 有时候你需要从接口里把具体类型「取出来」
+            - Go 提供了两种方式：类型断言和 type switch
+            - 类型断言
+                -
+                ```go
+                var a Animal = Dog{name: "旺财"}
+
+                // 方式一：直接断言（不安全，失败会 panic）
+                d := a.(Dog)
+                fmt.Println(d.name)  // 旺财
+
+                // 方式二：逗号 ok（推荐，安全）
+                d, ok := a.(Dog)
+                if ok {
+                    fmt.Println("是 Dog:", d.name)
+                } else {
+                    fmt.Println("不是 Dog")
+                }
+
+                // 断言为接口（检查是否实现了另一个接口）
+                type Swimmer interface {
+                    Swim() string
+                }
+
+                if s, ok := a.(Swimmer); ok {
+                    fmt.Println(s.Swim())
+                } else {
+                    fmt.Println("不会游泳")
+                }
+                ```
+            - type switch
+                -
+                ```go
+                func describe(i interface{}) {
+                    switch v := i.(type) {
+                    case int:
+                        fmt.Printf("整数: %d，翻倍是 %d\n", v, v*2)
+                    case string:
+                        fmt.Printf("字符串: %q，长度 %d\n", v, len(v))
+                    case bool:
+                        fmt.Printf("布尔值: %t\n", v)
+                    case []int:
+                        fmt.Printf("整数切片，长度 %d\n", len(v))
+                    case nil:
+                        fmt.Println("是 nil")
+                    default:
+                        fmt.Printf("未知类型: %T\n", v)
+                    }
+                }
+
+                describe(42)            // 整数: 42，翻倍是 84
+                describe("hello")       // 字符串: "hello"，长度 5
+                describe(true)          // 布尔值: true
+                describe([]int{1,2,3})  // 整数切片，长度 3
+                describe(nil)           // 是 nil
+                ```
+            - 类型断言 vs 类型转换
+                - 类型断言 a.(Dog) 是从接口里取出具体类型
+                - 运行时才知道结果，失败会 panic
+                - 类型转换 int(3.14) 是编译时已知的类型转换，不会失败（但可能丢精度）
+        - 标准库核心接口
+            - Go 标准库定义了很多小接口，每个接口只有 1-3 个方法
+            - fmt.Stringer：自定义打印格式
+                - 
+                ```go
+                // 标准库定义：
+                // type Stringer interface {
+                //     String() string
+                // }
+
+                type Point struct{ X, Y int }
+
+                // 实现 Stringer 接口
+                func (p Point) String() string {
+                    return fmt.Sprintf("(%d, %d)", p.X, p.Y)
+                }
+
+                p := Point{3, 4}
+                fmt.Println(p)        // (3, 4)  ← 自动调用 String()
+                fmt.Printf("%v\n", p) // (3, 4)
+                fmt.Printf("%s\n", p) // (3, 4)
+                ```
+            - error：自定义错误类型
+                -
+                ```go
+                // error 接口只有一个方法：
+                // type error interface {
+                //     Error() string
+                // }
+
+                // 自定义错误类型（携带更多信息）
+                type ValidationError struct {
+                    Field   string
+                    Message string
+                }
+
+                func (e *ValidationError) Error() string {
+                    return fmt.Sprintf("字段 %s 验证失败: %s", e.Field, e.Message)
+                }
+
+                // 使用
+                func validateAge(age int) error {
+                    if age < 0 || age > 150 {
+                        return &ValidationError{
+                            Field:   "age",
+                            Message: fmt.Sprintf("值 %d 超出合法范围 [0, 150]", age),
+                        }
+                    }
+                    return nil
+                }
+
+                err := validateAge(-1)
+                if err != nil {
+                    fmt.Println(err)  // 字段 age 验证失败: 值 -1 超出合法范围 [0, 150]
+                    
+                    // 用类型断言获取详细信息
+                    if ve, ok := err.(*ValidationError); ok {
+                        fmt.Println("出问题的字段:", ve.Field)
+                    }
+                }
+                ```
+            - io.Reader 和 io.Writer：I/O 的基石
+                -
+                ```go
+                // io.Reader：能被读取的任何东西
+                // type Reader interface {
+                //     Read(p []byte) (n int, err error)
+                // }
+
+                // io.Writer：能被写入的任何东西
+                // type Writer interface {
+                //     Write(p []byte) (n int, err error)
+                // }
+
+                // 这两个接口让函数极其通用：
+                func copyData(dst io.Writer, src io.Reader) (int64, error) {
+                    return io.Copy(dst, src)
+                }
+
+                // 文件、网络连接、内存 buffer 都实现了这两个接口：
+                file, _ := os.Open("input.txt")
+                buf := &bytes.Buffer{}
+
+                copyData(buf, file)      // 文件 → 内存
+                copyData(os.Stdout, buf) // 内存 → 标准输出
+                copyData(os.Stdout, strings.NewReader("hello")) // 字符串 → 标准输出
+
+                // 自己实现 io.Writer（比如日志收集器）
+                type LogWriter struct {
+                    prefix string
+                }
+
+                func (w *LogWriter) Write(p []byte) (int, error) {
+                    fmt.Printf("[%s] %s", w.prefix, p)
+                    return len(p), nil
+                }
+
+                lw := &LogWriter{prefix: "INFO"}
+                fmt.Fprintf(lw, "服务器启动在端口 %d\n", 8080)
+                // [INFO] 服务器启动在端口 8080
+                ```
+        - 接口组合
+            - 和结构体嵌入一样，接口也可以嵌入其他接口
+            - Go 鼓励定义小接口，再通过组合构建大接口
+            - 示例
+                -
+                ```go
+                // 小接口：单一职责
+                type Reader interface {
+                    Read(p []byte) (n int, err error)
+                }
+
+                type Writer interface {
+                    Write(p []byte) (n int, err error)
+                }
+
+                type Closer interface {
+                    Close() error
+                }
+
+                // 通过组合构建复合接口
+                type ReadWriter interface {
+                    Reader
+                    Writer
+                }
+
+                type ReadWriteCloser interface {
+                    Reader
+                    Writer
+                    Closer
+                }
+
+                // 实践中的例子
+                type Shape interface {
+                    Area() float64
+                    Perimeter() float64
+                }
+
+                type Drawable interface {
+                    Draw() string
+                }
+
+                // 组合成「可绘制的形状」
+                type DrawableShape interface {
+                    Shape
+                    Drawable
+                }
+                ```
+            - 接口应该越小越好
+                -
+                ```go
+                // ❌ 大接口：实现困难，测试困难，耦合高
+                type UserService interface {
+                    CreateUser(name, email string) (*User, error)
+                    GetUser(id int) (*User, error)
+                    UpdateUser(id int, name string) error
+                    DeleteUser(id int) error
+                    ListUsers() ([]*User, error)
+                    AuthenticateUser(email, password string) (string, error)
+                    ResetPassword(email string) error
+                    // ... 还有 20 个方法
+                }
+
+                // ✅ 小接口：精准，易测试，低耦合
+                type UserCreator interface {
+                    CreateUser(name, email string) (*User, error)
+                }
+
+                type UserFinder interface {
+                    GetUser(id int) (*User, error)
+                }
+
+                type Authenticator interface {
+                    Authenticate(email, password string) (string, error)
+                }
+
+                // 函数只声明它真正需要的
+                func registerHandler(creator UserCreator) http.HandlerFunc {
+                    return func(w http.ResponseWriter, r *http.Request) {
+                        // 只需要 CreateUser，不依赖整个 UserService
+                    }
+                }
+                ```
+        - 空接口与 any
+            - 空接口 interface{} 没有任何方法要求，所以所有类型都满足它
+            - Go 1.18 引入了 any 作为 interface{} 的别名，更简洁
+            - 示例
+                -
+                ```go
+                // interface{} 和 any 完全等价
+                var x any = 42
+                x = "hello"
+                x = []int{1, 2, 3}
+                x = struct{ Name string }{"Alice"}
+
+                // 常见于需要处理任意类型的场景
+                func printAll(values ...any) {
+                    for _, v := range values {
+                        fmt.Printf("%T: %v\n", v, v)
+                    }
+                }
+
+                printAll(1, "hello", true, 3.14)
+                // int: 1
+                // string: hello
+                // bool: true
+                // float64: 3.14
+
+                // map 存储任意类型（类似 JSON 对象）
+                config := map[string]any{
+                    "host":    "localhost",
+                    "port":    8080,
+                    "debug":   true,
+                    "timeout": 30.5,
+                }
+                ```
+            - 使用 any 的代价
+                -
+                ```go
+                // any 丢失了类型信息，使用时必须断言
+                var v any = 42
+
+                // ❌ 不能直接运算
+                // fmt.Println(v + 1)  // 编译错误
+
+                // ✅ 先断言再使用
+                if n, ok := v.(int); ok {
+                    fmt.Println(n + 1)  // 43
+                }
+
+                // any 的性能也比具体类型差（有装箱开销）
+                // 能用泛型（Day 14）就用泛型，不要滥用 any
+
+                // 合理使用场景：
+                // 1. JSON 解析（结构未知时）
+                // 2. 通用容器（在泛型之前的历史代码）
+                // 3. fmt.Println 这种需要接受任意值的工具函数
+                ```
+            - any 不是银弹
+                - any 让你绕过了类型系统，失去了编译器的保护
+                - 能用具体类型就用具体类型，能用泛型就用泛型（Go 1.18+），any 是最后的选择
+        - 接口定义最佳实践
+            - 在使用方定义接口，不在实现方
+                - 
+                ```go
+                // ❌ 在实现包里定义接口（Java 风格）
+                // package userservice
+                // type UserService interface { ... }
+                // type UserServiceImpl struct { ... }
+
+                // ✅ Go 风格：在需要的地方定义接口
+                // package handler
+
+                type userStore interface {  // 小写，包私有
+                    GetUser(id int) (*User, error)
+                    CreateUser(name, email string) (*User, error)
+                }
+
+                type Handler struct {
+                    store userStore  // 依赖接口，不依赖具体类型
+                }
+
+                // 任何实现了 GetUser 和 CreateUser 的类型都可以注入
+                func NewHandler(store userStore) *Handler {
+                    return &Handler{store: store}
+                }
+                ```
+            - 接口让测试更容易
+                -
+                ```go
+                // 生产代码
+                type DBStore struct { db *sql.DB }
+                func (s *DBStore) GetUser(id int) (*User, error) { /* 查数据库 */ }
+
+                // 测试用 Mock（不需要数据库！）
+                type MockStore struct {
+                    users map[int]*User
+                }
+                func (m *MockStore) GetUser(id int) (*User, error) {
+                    u, ok := m.users[id]
+                    if !ok {
+                        return nil, errors.New("not found")
+                    }
+                    return u, nil
+                }
+                func (m *MockStore) CreateUser(name, email string) (*User, error) {
+                    u := &User{ID: len(m.users) + 1, Name: name, Email: email}
+                    m.users[u.ID] = u
+                    return u, nil
+                }
+
+                // 测试
+                func TestHandler(t *testing.T) {
+                    mock := &MockStore{users: map[int]*User{
+                        1: {ID: 1, Name: "Alice"},
+                    }}
+                    h := NewHandler(mock)  // 注入 Mock
+                    // ... 测试 handler 逻辑，完全不依赖数据库
+                }
+                ```
+            - 接口是 Go 依赖注入的基础
+                - Go 不需要 Spring 这样的 DI 框架
+                - 接口 + 构造函数注入就够了
+                - 生产环境注入真实实现，测试时注入 Mock
+                - 这让代码既解耦又易测试
+                - 这是 Go 后端项目的标准架构模式
+{{< /mind >}}
+
+# 并发与工程化
+
+{{< mind height="860px" >}}
+- 并发与工程化
+    - Goroutine 是什么
+        - Goroutine 是 Go 并发的核心——比线程轻量得多的「协程」
+        - 启动一个 Goroutine 只需要在函数调用前加 go 关键字
+        - 示例
+            -
+            ```go
+            package main
+
+            import (
+                "fmt"
+                "time"
+            )
+
+            func say(s string) {
+                for i := 0; i < 3; i++ {
+                    fmt.Println(s)
+                    time.Sleep(100 * time.Millisecond)
+                }
+            }
+
+            func main() {
+                go say("世界")   // 新 goroutine 中运行
+                say("你好")      // 当前 goroutine 中运行
+            }
+
+            // 输出（顺序不确定）：
+            // 你好
+            // 世界
+            // 你好
+            // 世界
+            // 你好
+            // 世界
+            ```
 {{< /mind >}}
