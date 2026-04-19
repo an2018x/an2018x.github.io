@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.160.1</generator><language>zh</language><lastBuildDate>Sat, 18 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Go 复习</title><link>https://blog.ans20xx.com/posts/go-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sat, 18 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础"&gt;基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-58216734"
+id="mindmap-16873254"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-58216734" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-16873254" style="display:none;"&gt;
 - 基础
 - Go 环境搭建与工具链
 - 安装 Go
@@ -1352,14 +1352,713 @@ Counter{}.Increment() // ❌ 编译错误，字面量不可寻址
 c := Counter{}
 c.Increment() // ✅ 变量可寻址
 ```
+- 给任意类型定义方法
+- 方法不只能定义在 struct 上，任何在当前包定义的类型都可以有方法
+-
+```go
+// 给 int 起别名并加方法
+type Celsius float64
+func (c Celsius) ToFahrenheit() float64 {
+return float64(c)*9/5 &amp;#43; 32
+}
+func (c Celsius) String() string {
+return fmt.Sprintf(&amp;#34;%.1f°C&amp;#34;, float64(c))
+}
+// 给切片起别名并加方法
+type IntSlice []int
+func (s IntSlice) Sum() int {
+total := 0
+for _, n := range s {
+total &amp;#43;= n
+}
+return total
+}
+func (s IntSlice) Max() int {
+if len(s) == 0 {
+return 0
+}
+m := s[0]
+for _, n := range s[1:] {
+if n &amp;gt; m {
+m = n
+}
+}
+return m
+}
+func main() {
+temp := Celsius(25)
+fmt.Println(temp) // 25.0°C（调用了 String 方法）
+fmt.Println(temp.ToFahrenheit()) // 77
+nums := IntSlice{1, 5, 3, 8, 2}
+fmt.Println(nums.Sum()) // 19
+fmt.Println(nums.Max()) // 8
+}
+```
+- 只能给本包类型加方法
+- 不能直接给 int、string 等内置类型加方法，也不能给其他包的类型加方法
+- 需要的话就 type MyInt int 定义一个新类型。这个限制防止混乱——每个类型的方法归属清晰
+- 结构体嵌入
+- Go 没有继承，但有「嵌入」
+- 把一个 struct 嵌入到另一个里面，外层可以直接访问内层的字段和方法
+- 这就是 Go 面向对象的核心——组合优于继承
+- 基本嵌入
+-
+```go
+type Animal struct {
+Name string
+Age int
+}
+func (a Animal) Describe() string {
+return fmt.Sprintf(&amp;#34;%s, %d岁&amp;#34;, a.Name, a.Age)
+}
+// Dog 嵌入 Animal
+type Dog struct {
+Animal // ✨ 嵌入字段（没有字段名）
+Breed string
+}
+d := Dog{
+Animal: Animal{Name: &amp;#34;旺财&amp;#34;, Age: 3},
+Breed: &amp;#34;柴犬&amp;#34;,
+}
+// 直接访问嵌入字段的属性和方法（提升）
+fmt.Println(d.Name) // &amp;#34;旺财&amp;#34;（不用 d.Animal.Name）
+fmt.Println(d.Describe()) // &amp;#34;旺财, 3岁&amp;#34;（继承了 Animal 的方法）
+fmt.Println(d.Breed) // &amp;#34;柴犬&amp;#34;
+// 也可以显式访问
+fmt.Println(d.Animal.Name) // 同上
+```
+- 方法覆盖
+-
+```go
+// Dog 可以定义同名方法「覆盖」Animal 的
+func (d Dog) Describe() string {
+// 可以调用被覆盖的方法
+base := d.Animal.Describe()
+return fmt.Sprintf(&amp;#34;%s，品种：%s&amp;#34;, base, d.Breed)
+}
+d := Dog{Animal: Animal{Name: &amp;#34;旺财&amp;#34;, Age: 3}, Breed: &amp;#34;柴犬&amp;#34;}
+fmt.Println(d.Describe()) // &amp;#34;旺财, 3岁，品种：柴犬&amp;#34;
+```
+- 嵌入接口
+-
+```go
+// 也可以嵌入接口，常见于标准库
+type ReadCloser interface {
+io.Reader // 嵌入接口
+io.Closer // 嵌入接口
+}
+// 等价于：
+// type ReadCloser interface {
+// Read(p []byte) (n int, err error)
+// Close() error
+// }
+// 实战场景：给一个已有类型「增强」
+type LoggedDB struct {
+*sql.DB // 嵌入指针，继承所有方法
+logger *log.Logger
+}
+// 只需要定义想增强的方法
+func (db *LoggedDB) Query(query string, args ...any) (*sql.Rows, error) {
+db.logger.Printf(&amp;#34;SQL: %s&amp;#34;, query)
+return db.DB.Query(query, args...)
+}
+// 其他方法（Ping、Exec 等）自动继承自 *sql.DB
+```
+- 嵌入 vs 继承
+- 嵌入不是继承
+- 嵌入字段是一个真实存在的字段，外层 struct has-a 内层，不是 is-a
+- 你可以嵌入多个类型（多继承的感觉），但本质是组合：Dog 不是 Animal 的子类，而是「包含了一个 Animal」
+- 构造函数模式
+- Go 没有 constructor 关键字
+- 惯例是定义 NewXxx 函数返回初始化好的实例，这样可以封装验证、默认值、依赖注入等逻辑。
+- 示例
+-
+```go
+type User struct {
+ID int
+Name string
+Email string
+CreatedAt time.Time
+}
+// 标准构造函数：返回值
+func NewUser(name, email string) User {
+return User{
+Name: name,
+Email: email,
+CreatedAt: time.Now(),
+}
+}
+// 更常见：返回指针 &amp;#43; error
+func NewUser(name, email string) (*User, error) {
+if name == &amp;#34;&amp;#34; {
+return nil, errors.New(&amp;#34;name 不能为空&amp;#34;)
+}
+if !strings.Contains(email, &amp;#34;@&amp;#34;) {
+return nil, fmt.Errorf(&amp;#34;无效的 email: %s&amp;#34;, email)
+}
+return &amp;User{
+Name: name,
+Email: email,
+CreatedAt: time.Now(),
+}, nil
+}
+// 使用
+u, err := NewUser(&amp;#34;Alice&amp;#34;, &amp;#34;alice@example.com&amp;#34;)
+if err != nil {
+log.Fatal(err)
+}
+fmt.Println(u.Name)
+```
+- 函数选项模式
+-
+```go
+// 问题：构造函数参数太多怎么办？
+// func NewServer(host string, port int, timeout time.Duration, tls bool, ...)
+// 解决：函数选项模式（Functional Options）
+type Server struct {
+host string
+port int
+timeout time.Duration
+tls bool
+}
+// Option 是一个修改 Server 的函数
+type Option func(*Server)
+func WithPort(p int) Option {
+return func(s *Server) { s.port = p }
+}
+func WithTimeout(t time.Duration) Option {
+return func(s *Server) { s.timeout = t }
+}
+func WithTLS() Option {
+return func(s *Server) { s.tls = true }
+}
+// 构造函数接受任意个 Option
+func NewServer(host string, opts ...Option) *Server {
+// 默认值
+s := &amp;Server{
+host: host,
+port: 80,
+timeout: 30 * time.Second,
+tls: false,
+}
+// 应用选项
+for _, opt := range opts {
+opt(s)
+}
+return s
+}
+// 使用：非常灵活
+s1 := NewServer(&amp;#34;localhost&amp;#34;)
+s2 := NewServer(&amp;#34;example.com&amp;#34;, WithPort(443), WithTLS())
+s3 := NewServer(&amp;#34;api.com&amp;#34;, WithTimeout(10*time.Second))
+```
+- 函数选项模式的威力
+- 这个模式在 Go 生态广泛使用（gRPC、Kubernetes、各种库的配置都是这个模式）
+- 优势：可选参数不用硬编码、扩展性好（加新选项不破坏现有代码）、可读性强（调用方清楚写出每个选项）
+- 结构体标签
+- Struct Tag 是字段后面的反引号字符串，为字段附加元数据
+- JSON 序列化、数据库映射、表单校验都用它
+- 示例
+-
+```go
+type User struct {
+ID int `json:&amp;#34;id&amp;#34;`
+Name string `json:&amp;#34;name&amp;#34; validate:&amp;#34;required,min=2&amp;#34;`
+Email string `json:&amp;#34;email&amp;#34; validate:&amp;#34;required,email&amp;#34;`
+Password string `json:&amp;#34;-&amp;#34;` // - 表示不参与 JSON 序列化
+Age int `json:&amp;#34;age,omitempty&amp;#34;` // omitempty：零值时忽略
+Role string `json:&amp;#34;role&amp;#34; db:&amp;#34;user_role&amp;#34;` // 同一字段可有多个 tag
+}
+// JSON 序列化
+u := User{
+ID: 1,
+Name: &amp;#34;Alice&amp;#34;,
+Email: &amp;#34;alice@example.com&amp;#34;,
+Password: &amp;#34;secret&amp;#34;,
+// Age 是 0，会被忽略
+}
+data, _ := json.Marshal(u)
+fmt.Println(string(data))
+// {&amp;#34;id&amp;#34;:1,&amp;#34;name&amp;#34;:&amp;#34;Alice&amp;#34;,&amp;#34;email&amp;#34;:&amp;#34;alice@example.com&amp;#34;,&amp;#34;role&amp;#34;:&amp;#34;&amp;#34;}
+// 注意：password 不在输出中，age 也被忽略
+```
+- 常见 Tag 用法一览
+-
+```go
+type Article struct {
+// encoding/json
+ID int `json:&amp;#34;id&amp;#34;`
+Title string `json:&amp;#34;title&amp;#34;`
+Content string `json:&amp;#34;content,omitempty&amp;#34;` // 空时忽略
+Internal string `json:&amp;#34;-&amp;#34;` // 从不序列化
+// GORM（Day 17-18）
+CreatedAt time.Time `gorm:&amp;#34;autoCreateTime&amp;#34;`
+Slug string `gorm:&amp;#34;uniqueIndex;size:100&amp;#34;`
+// validator（参数校验）
+Author string `validate:&amp;#34;required,min=2,max=50&amp;#34;`
+Views int `validate:&amp;#34;gte=0&amp;#34;`
+// 组合使用
+Email string `json:&amp;#34;email&amp;#34; validate:&amp;#34;required,email&amp;#34; db:&amp;#34;user_email&amp;#34;`
+}
+```
+- tag 只是字符串
+- Tag 本身只是给字段附加的字符串元数据，语言本身不处理
+- 是各个库（encoding/json、gorm、validator...）通过反射读取 tag 并做相应处理
+- tag 的语法完全由使用它的库定义
+- 接口与多态
+- 接口是什么
+- 接口是 Go 最优雅的特性。
+- 它定义了一组方法签名，任何实现了这些方法的类型都「自动」满足这个接口——不需要显式声明 implements。
+- 这叫做「隐式接口实现」，也叫鸭子类型。
+- 接口示例
+-
+```go
+// 定义接口：只有方法签名，没有实现
+type Animal interface {
+Sound() string
+Name() string
+}
+// Dog 实现了 Animal 接口
+// 注意：不需要写 &amp;#34;implements Animal&amp;#34;！
+type Dog struct{ name string }
+func (d Dog) Sound() string { return &amp;#34;汪汪&amp;#34; }
+func (d Dog) Name() string { return d.name }
+// Cat 也实现了 Animal 接口
+type Cat struct{ name string }
+func (c Cat) Sound() string { return &amp;#34;喵喵&amp;#34; }
+func (c Cat) Name() string { return c.name }
+// 函数接受接口类型
+func Describe(a Animal) {
+fmt.Printf(&amp;#34;%s 说：%s\n&amp;#34;, a.Name(), a.Sound())
+}
+func main() {
+dog := Dog{name: &amp;#34;旺财&amp;#34;}
+cat := Cat{name: &amp;#34;咪咪&amp;#34;}
+Describe(dog) // 旺财 说：汪汪
+Describe(cat) // 咪咪 说：喵喵
+// 接口变量可以持有任意满足条件的类型
+var a Animal = dog
+a = cat // 随时切换
+}
+```
+- 隐式实现的威力
+- Java/C# 要写 implements Animal，Go 不需要
+- 只要你的类型有对应的方法，它就是那个接口
+- 你可以让一个你不能修改的第三方类型满足你的接口
+- 也可以在不改动现有代码的情况下新定义接口来约束它们
+- 这是 Go 解耦的核心武器
+- 接口值的内部结构
+- 接口值在底层由两部分组成：动态类型（type）和动态值（value）
+- 示例
+-
+```go
+// 接口值 = (type, value)
+var a Animal // (nil, nil)，零值
+a = Dog{name: &amp;#34;旺财&amp;#34;}
+// a 现在是 (Dog, {name:&amp;#34;旺财&amp;#34;})
+// 打印类型和值
+fmt.Printf(&amp;#34;类型: %T\n&amp;#34;, a) // main.Dog
+fmt.Printf(&amp;#34;值: %v\n&amp;#34;, a) // {旺财}
+```
+- nil 接口 vs 含 nil 的接口
+-
+```go
+// 这是 Go 最反直觉的陷阱之一！
+var d *Dog = nil // d 是 nil 指针
+var a Animal = d // a 的 type=*Dog, value=nil
+// a 不是 nil！因为 type 部分有值
+fmt.Println(a == nil) // false ← 让人意外！
+fmt.Println(d == nil) // true
+// 正确判断接口是否有效
+func process(a Animal) {
+// ❌ 错误：a != nil 不代表 a 里的值不是 nil
+if a != nil {
+// 如果 a = (*Dog)(nil)，这里调用方法会 panic
+}
+// ✅ 正确：用 reflect 或 type switch 检查
+if a == nil {
+return
+}
+}
+// 最佳实践：函数返回接口时，失败直接返回 nil
+func findAnimal() Animal {
+var d *Dog = nil
+return d // ❌ 坑！返回的接口不是 nil
+return nil // ✅ 这才是真正的 nil 接口
+}
+```
+- 「含有 nil 指针的接口，不等于 nil 接口。」
+- 一个接口值只有当 type 和 value 都是 nil 时，它才等于 nil
+- 函数返回接口类型时，失败直接 return nil，而不是 return (*ConcreteType)(nil)
+- 类型断言与 type switch
+- 有时候你需要从接口里把具体类型「取出来」
+- Go 提供了两种方式：类型断言和 type switch
+- 类型断言
+-
+```go
+var a Animal = Dog{name: &amp;#34;旺财&amp;#34;}
+// 方式一：直接断言（不安全，失败会 panic）
+d := a.(Dog)
+fmt.Println(d.name) // 旺财
+// 方式二：逗号 ok（推荐，安全）
+d, ok := a.(Dog)
+if ok {
+fmt.Println(&amp;#34;是 Dog:&amp;#34;, d.name)
+} else {
+fmt.Println(&amp;#34;不是 Dog&amp;#34;)
+}
+// 断言为接口（检查是否实现了另一个接口）
+type Swimmer interface {
+Swim() string
+}
+if s, ok := a.(Swimmer); ok {
+fmt.Println(s.Swim())
+} else {
+fmt.Println(&amp;#34;不会游泳&amp;#34;)
+}
+```
+- type switch
+-
+```go
+func describe(i interface{}) {
+switch v := i.(type) {
+case int:
+fmt.Printf(&amp;#34;整数: %d，翻倍是 %d\n&amp;#34;, v, v*2)
+case string:
+fmt.Printf(&amp;#34;字符串: %q，长度 %d\n&amp;#34;, v, len(v))
+case bool:
+fmt.Printf(&amp;#34;布尔值: %t\n&amp;#34;, v)
+case []int:
+fmt.Printf(&amp;#34;整数切片，长度 %d\n&amp;#34;, len(v))
+case nil:
+fmt.Println(&amp;#34;是 nil&amp;#34;)
+default:
+fmt.Printf(&amp;#34;未知类型: %T\n&amp;#34;, v)
+}
+}
+describe(42) // 整数: 42，翻倍是 84
+describe(&amp;#34;hello&amp;#34;) // 字符串: &amp;#34;hello&amp;#34;，长度 5
+describe(true) // 布尔值: true
+describe([]int{1,2,3}) // 整数切片，长度 3
+describe(nil) // 是 nil
+```
+- 类型断言 vs 类型转换
+- 类型断言 a.(Dog) 是从接口里取出具体类型
+- 运行时才知道结果，失败会 panic
+- 类型转换 int(3.14) 是编译时已知的类型转换，不会失败（但可能丢精度）
+- 标准库核心接口
+- Go 标准库定义了很多小接口，每个接口只有 1-3 个方法
+- fmt.Stringer：自定义打印格式
+-
+```go
+// 标准库定义：
+// type Stringer interface {
+// String() string
+// }
+type Point struct{ X, Y int }
+// 实现 Stringer 接口
+func (p Point) String() string {
+return fmt.Sprintf(&amp;#34;(%d, %d)&amp;#34;, p.X, p.Y)
+}
+p := Point{3, 4}
+fmt.Println(p) // (3, 4) ← 自动调用 String()
+fmt.Printf(&amp;#34;%v\n&amp;#34;, p) // (3, 4)
+fmt.Printf(&amp;#34;%s\n&amp;#34;, p) // (3, 4)
+```
+- error：自定义错误类型
+-
+```go
+// error 接口只有一个方法：
+// type error interface {
+// Error() string
+// }
+// 自定义错误类型（携带更多信息）
+type ValidationError struct {
+Field string
+Message string
+}
+func (e *ValidationError) Error() string {
+return fmt.Sprintf(&amp;#34;字段 %s 验证失败: %s&amp;#34;, e.Field, e.Message)
+}
+// 使用
+func validateAge(age int) error {
+if age &amp;lt; 0 || age &amp;gt; 150 {
+return &amp;ValidationError{
+Field: &amp;#34;age&amp;#34;,
+Message: fmt.Sprintf(&amp;#34;值 %d 超出合法范围 [0, 150]&amp;#34;, age),
+}
+}
+return nil
+}
+err := validateAge(-1)
+if err != nil {
+fmt.Println(err) // 字段 age 验证失败: 值 -1 超出合法范围 [0, 150]
+// 用类型断言获取详细信息
+if ve, ok := err.(*ValidationError); ok {
+fmt.Println(&amp;#34;出问题的字段:&amp;#34;, ve.Field)
+}
+}
+```
+- io.Reader 和 io.Writer：I/O 的基石
+-
+```go
+// io.Reader：能被读取的任何东西
+// type Reader interface {
+// Read(p []byte) (n int, err error)
+// }
+// io.Writer：能被写入的任何东西
+// type Writer interface {
+// Write(p []byte) (n int, err error)
+// }
+// 这两个接口让函数极其通用：
+func copyData(dst io.Writer, src io.Reader) (int64, error) {
+return io.Copy(dst, src)
+}
+// 文件、网络连接、内存 buffer 都实现了这两个接口：
+file, _ := os.Open(&amp;#34;input.txt&amp;#34;)
+buf := &amp;bytes.Buffer{}
+copyData(buf, file) // 文件 → 内存
+copyData(os.Stdout, buf) // 内存 → 标准输出
+copyData(os.Stdout, strings.NewReader(&amp;#34;hello&amp;#34;)) // 字符串 → 标准输出
+// 自己实现 io.Writer（比如日志收集器）
+type LogWriter struct {
+prefix string
+}
+func (w *LogWriter) Write(p []byte) (int, error) {
+fmt.Printf(&amp;#34;[%s] %s&amp;#34;, w.prefix, p)
+return len(p), nil
+}
+lw := &amp;LogWriter{prefix: &amp;#34;INFO&amp;#34;}
+fmt.Fprintf(lw, &amp;#34;服务器启动在端口 %d\n&amp;#34;, 8080)
+// [INFO] 服务器启动在端口 8080
+```
+- 接口组合
+- 和结构体嵌入一样，接口也可以嵌入其他接口
+- Go 鼓励定义小接口，再通过组合构建大接口
+- 示例
+-
+```go
+// 小接口：单一职责
+type Reader interface {
+Read(p []byte) (n int, err error)
+}
+type Writer interface {
+Write(p []byte) (n int, err error)
+}
+type Closer interface {
+Close() error
+}
+// 通过组合构建复合接口
+type ReadWriter interface {
+Reader
+Writer
+}
+type ReadWriteCloser interface {
+Reader
+Writer
+Closer
+}
+// 实践中的例子
+type Shape interface {
+Area() float64
+Perimeter() float64
+}
+type Drawable interface {
+Draw() string
+}
+// 组合成「可绘制的形状」
+type DrawableShape interface {
+Shape
+Drawable
+}
+```
+- 接口应该越小越好
+-
+```go
+// ❌ 大接口：实现困难，测试困难，耦合高
+type UserService interface {
+CreateUser(name, email string) (*User, error)
+GetUser(id int) (*User, error)
+UpdateUser(id int, name string) error
+DeleteUser(id int) error
+ListUsers() ([]*User, error)
+AuthenticateUser(email, password string) (string, error)
+ResetPassword(email string) error
+// ... 还有 20 个方法
+}
+// ✅ 小接口：精准，易测试，低耦合
+type UserCreator interface {
+CreateUser(name, email string) (*User, error)
+}
+type UserFinder interface {
+GetUser(id int) (*User, error)
+}
+type Authenticator interface {
+Authenticate(email, password string) (string, error)
+}
+// 函数只声明它真正需要的
+func registerHandler(creator UserCreator) http.HandlerFunc {
+return func(w http.ResponseWriter, r *http.Request) {
+// 只需要 CreateUser，不依赖整个 UserService
+}
+}
+```
+- 空接口与 any
+- 空接口 interface{} 没有任何方法要求，所以所有类型都满足它
+- Go 1.18 引入了 any 作为 interface{} 的别名，更简洁
+- 示例
+-
+```go
+// interface{} 和 any 完全等价
+var x any = 42
+x = &amp;#34;hello&amp;#34;
+x = []int{1, 2, 3}
+x = struct{ Name string }{&amp;#34;Alice&amp;#34;}
+// 常见于需要处理任意类型的场景
+func printAll(values ...any) {
+for _, v := range values {
+fmt.Printf(&amp;#34;%T: %v\n&amp;#34;, v, v)
+}
+}
+printAll(1, &amp;#34;hello&amp;#34;, true, 3.14)
+// int: 1
+// string: hello
+// bool: true
+// float64: 3.14
+// map 存储任意类型（类似 JSON 对象）
+config := map[string]any{
+&amp;#34;host&amp;#34;: &amp;#34;localhost&amp;#34;,
+&amp;#34;port&amp;#34;: 8080,
+&amp;#34;debug&amp;#34;: true,
+&amp;#34;timeout&amp;#34;: 30.5,
+}
+```
+- 使用 any 的代价
+-
+```go
+// any 丢失了类型信息，使用时必须断言
+var v any = 42
+// ❌ 不能直接运算
+// fmt.Println(v &amp;#43; 1) // 编译错误
+// ✅ 先断言再使用
+if n, ok := v.(int); ok {
+fmt.Println(n &amp;#43; 1) // 43
+}
+// any 的性能也比具体类型差（有装箱开销）
+// 能用泛型（Day 14）就用泛型，不要滥用 any
+// 合理使用场景：
+// 1. JSON 解析（结构未知时）
+// 2. 通用容器（在泛型之前的历史代码）
+// 3. fmt.Println 这种需要接受任意值的工具函数
+```
+- any 不是银弹
+- any 让你绕过了类型系统，失去了编译器的保护
+- 能用具体类型就用具体类型，能用泛型就用泛型（Go 1.18&amp;#43;），any 是最后的选择
+- 接口定义最佳实践
+- 在使用方定义接口，不在实现方
+-
+```go
+// ❌ 在实现包里定义接口（Java 风格）
+// package userservice
+// type UserService interface { ... }
+// type UserServiceImpl struct { ... }
+// ✅ Go 风格：在需要的地方定义接口
+// package handler
+type userStore interface { // 小写，包私有
+GetUser(id int) (*User, error)
+CreateUser(name, email string) (*User, error)
+}
+type Handler struct {
+store userStore // 依赖接口，不依赖具体类型
+}
+// 任何实现了 GetUser 和 CreateUser 的类型都可以注入
+func NewHandler(store userStore) *Handler {
+return &amp;Handler{store: store}
+}
+```
+- 接口让测试更容易
+-
+```go
+// 生产代码
+type DBStore struct { db *sql.DB }
+func (s *DBStore) GetUser(id int) (*User, error) { /* 查数据库 */ }
+// 测试用 Mock（不需要数据库！）
+type MockStore struct {
+users map[int]*User
+}
+func (m *MockStore) GetUser(id int) (*User, error) {
+u, ok := m.users[id]
+if !ok {
+return nil, errors.New(&amp;#34;not found&amp;#34;)
+}
+return u, nil
+}
+func (m *MockStore) CreateUser(name, email string) (*User, error) {
+u := &amp;User{ID: len(m.users) &amp;#43; 1, Name: name, Email: email}
+m.users[u.ID] = u
+return u, nil
+}
+// 测试
+func TestHandler(t *testing.T) {
+mock := &amp;MockStore{users: map[int]*User{
+1: {ID: 1, Name: &amp;#34;Alice&amp;#34;},
+}}
+h := NewHandler(mock) // 注入 Mock
+// ... 测试 handler 逻辑，完全不依赖数据库
+}
+```
+- 接口是 Go 依赖注入的基础
+- Go 不需要 Spring 这样的 DI 框架
+- 接口 &amp;#43; 构造函数注入就够了
+- 生产环境注入真实实现，测试时注入 Mock
+- 这让代码既解耦又易测试
+- 这是 Go 后端项目的标准架构模式
+&lt;/textarea&gt;
+&lt;h1 id="并发与工程化"&gt;并发与工程化&lt;/h1&gt;
+&lt;div
+class="mindmap-container"
+id="mindmap-85637241"
+style="width:100%; height:860px; min-height: 860px;"
+&gt;&lt;/div&gt;
+&lt;textarea id="mindmap-data-85637241" style="display:none;"&gt;
+- 并发与工程化
+- Goroutine 是什么
+- Goroutine 是 Go 并发的核心——比线程轻量得多的「协程」
+- 启动一个 Goroutine 只需要在函数调用前加 go 关键字
+- 示例
+-
+```go
+package main
+import (
+&amp;#34;fmt&amp;#34;
+&amp;#34;time&amp;#34;
+)
+func say(s string) {
+for i := 0; i &amp;lt; 3; i&amp;#43;&amp;#43; {
+fmt.Println(s)
+time.Sleep(100 * time.Millisecond)
+}
+}
+func main() {
+go say(&amp;#34;世界&amp;#34;) // 新 goroutine 中运行
+say(&amp;#34;你好&amp;#34;) // 当前 goroutine 中运行
+}
+// 输出（顺序不确定）：
+// 你好
+// 世界
+// 你好
+// 世界
+// 你好
+// 世界
+```
 &lt;/textarea&gt;</description></item><item><title>claude code plugin 实验</title><link>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/claude-code-plugin/</link><pubDate>Fri, 10 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/claude-code-plugin/</guid><description>&lt;h1 id="-实验前假设与目标-plan"&gt;🎯 实验前：假设与目标 (Plan)&lt;/h1&gt;
 &lt;p&gt;开发一个 Plugin 给 Claude Code 使用。&lt;/p&gt;</description></item><item><title>Grafana 复习</title><link>https://blog.ans20xx.com/posts/grafana-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 10 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/grafana-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础入门"&gt;基础入门&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35261847"
+id="mindmap-34856172"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35261847" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-34856172" style="display:none;"&gt;
 - 基础入门
 - 可观测性与 Grafana 概览
 - 理解可观测性
@@ -1565,10 +2264,10 @@ prometheus_http_requests_total{code=&amp;#34;302&amp;#34;, handler=&amp;#34;/&am
 &lt;h1 id="核心技能"&gt;核心技能&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-56318427"
+id="mindmap-15634782"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-56318427" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15634782" style="display:none;"&gt;
 - 核心技能
 - PromQL
 - 两种向量 - PromQL 的基石
@@ -1861,10 +2560,10 @@ sum(rate(myapp_http_requests_total{endpoint=~&amp;#34;$endpoint&amp;#34;}[$__rat
 &lt;h1 id="告警与日志"&gt;告警与日志&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65148327"
+id="mindmap-84362517"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65148327" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-84362517" style="display:none;"&gt;
 - 告警与日志
 - Grafana 的告警系统
 - 理解 Grafana 告警架构
@@ -2021,10 +2720,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;docker-compose.yml&lt;/p&gt;</description></item><item><title>js 复习</title><link>https://blog.ans20xx.com/posts/js-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/js-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="语言核心基础"&gt;语言核心基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-24316785"
+id="mindmap-35824167"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-24316785" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-35824167" style="display:none;"&gt;
 - 语言核心基础
 - 变量与数据类型
 - 变量声明
@@ -3459,10 +4158,10 @@ console.log(`${index &amp;#43; 1}. ${name}`);
 &lt;h1 id="面向对象与核心机制"&gt;面向对象与核心机制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-57432186"
+id="mindmap-26418375"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-57432186" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-26418375" style="display:none;"&gt;
 - 面向对象与核心机制
 - this 指向
 - 为什么 this 这么重要
@@ -4639,10 +5338,10 @@ const utils = require(&amp;#39;./utils&amp;#39;);
 &lt;h1 id="异步编程与浏览器-api"&gt;异步编程与浏览器 API&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-63851742"
+id="mindmap-35681427"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-63851742" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-35681427" style="display:none;"&gt;
 - 异步编程与浏览器 API
 - 异步基础与回调
 - 同步 vs 异步
@@ -5034,10 +5733,10 @@ return { user, orders };
 &lt;p&gt;实验编号/标题：OpenSpec 实验&lt;/p&gt;</description></item><item><title>CSS 复习</title><link>https://blog.ans20xx.com/posts/css-%E5%A4%8D%E4%B9%A0/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/css-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础核心"&gt;基础核心&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34281576"
+id="mindmap-14623857"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34281576" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-14623857" style="display:none;"&gt;
 - 基础核心
 - CSS 基础与选择器
 - CSS 的三种引入方式
@@ -5962,10 +6661,10 @@ overflow-wrap: break-word;
 &lt;h1 id="布局体系"&gt;布局体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34867215"
+id="mindmap-31682457"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34867215" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-31682457" style="display:none;"&gt;
 - 布局体系
 - Flex 基础与主轴
 - Flex 容器与项目
@@ -6599,10 +7298,10 @@ repeat(auto-fit, minmax(280px, 1fr))
 &lt;h1 id="响应式与进阶"&gt;响应式与进阶&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46725138"
+id="mindmap-56382471"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46725138" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56382471" style="display:none;"&gt;
 - 响应式与进阶
 - 响应式基础与媒体查询
 - viewport meta 标签
@@ -7621,17 +8320,17 @@ to { transform: translateY(0); }
 &lt;h1 id="工程化与实战"&gt;工程化与实战&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-15742863"
+id="mindmap-82137546"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-15742863" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-82137546" style="display:none;"&gt;
 - 标题
 &lt;/textarea&gt;</description></item><item><title>思维导图新功能测试</title><link>https://blog.ans20xx.com/posts/%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-83476152"
+id="mindmap-56871324"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-83476152" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56871324" style="display:none;"&gt;
 - 项目规划
 - 前端
 - 示例代码
@@ -7698,10 +8397,10 @@ env.execute(&amp;#34;timestamp-water-mark-demo&amp;#34;);
 &lt;p&gt;一切都会显得不同寻常。&lt;/p&gt;</description></item><item><title>Flink 复习</title><link>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="flink-整体认知"&gt;Flink 整体认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-32871456"
+id="mindmap-16527348"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-32871456" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-16527348" style="display:none;"&gt;
 - Flink 整体认知
 - 认识 Flink
 - Flink 是什么
@@ -8054,10 +8753,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="时间与窗口"&gt;时间与窗口&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-15724386"
+id="mindmap-78456123"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-15724386" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-78456123" style="display:none;"&gt;
 - 时间与窗口
 - 时间语义
 - processing time
@@ -8234,10 +8933,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="状态与容错"&gt;状态与容错&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21654837"
+id="mindmap-41752386"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21654837" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41752386" style="display:none;"&gt;
 - 状态与容错
 - State 基础
 - 什么是状态
@@ -8360,10 +9059,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="连接外部系统"&gt;连接外部系统&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-81734256"
+id="mindmap-25376418"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-81734256" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25376418" style="display:none;"&gt;
 - 连接外部系统
 - Flink 读写文件与接
 - Kafka 集成
@@ -8373,10 +9072,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="flink-sql-与-table-api"&gt;Flink SQL 与 Table API&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-51734826"
+id="mindmap-37812546"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-51734826" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-37812546" style="display:none;"&gt;
 - Flink SQL 与 Table API
 - 认识 Table API 与 Flink SQL
 - 为什么要有 Table API 与 SQL
@@ -8530,10 +9229,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="原理深入"&gt;原理深入&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38716425"
+id="mindmap-84362517"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38716425" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-84362517" style="display:none;"&gt;
 - 原理深入
 - 背压与性能调优
 - 什么是背压
@@ -8543,10 +9242,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;这就说明了追求生命内涵的重要性。&lt;/p&gt;</description></item><item><title>HBase 复习</title><link>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="基础认知"&gt;基础认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42683175"
+id="mindmap-23576148"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42683175" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-23576148" style="display:none;"&gt;
 - 基础认知
 - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别
 - HBase
@@ -8661,10 +9360,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据模型与表设计"&gt;数据模型与表设计&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-37128654"
+id="mindmap-15687234"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-37128654" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15687234" style="display:none;"&gt;
 - 数据模型与表设计
 - RowKey 设计原则
 - 总纲
@@ -8768,10 +9467,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="架构原理"&gt;架构原理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-72158364"
+id="mindmap-56427138"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-72158364" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56427138" style="display:none;"&gt;
 - 架构原理
 - HMaster 做什么
 - HMaster 的定位
@@ -8926,10 +9625,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="实际操作"&gt;实际操作&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-12468735"
+id="mindmap-26754381"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-12468735" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-26754381" style="display:none;"&gt;
 - 实操
 - 启动单机 HBase
 - 单机模式是什么
@@ -9048,10 +9747,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="java-客户端开发"&gt;Java 客户端开发&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-68431572"
+id="mindmap-67238154"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-68431572" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-67238154" style="display:none;"&gt;
 - Java 客户端开发
 - Connection/Admin/Table
 - 职责边界
@@ -9192,10 +9891,10 @@ ClaudeCode Skill 如何实现的&lt;/p&gt;</description></item><item><title>禅�
 &lt;p&gt;就是帮助我们开发觉醒的心。&lt;/p&gt;</description></item><item><title>面试冲刺</title><link>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</link><pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</guid><description>&lt;h1 id="算法"&gt;算法&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47351826"
+id="mindmap-43165782"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47351826" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-43165782" style="display:none;"&gt;
 - 算法
 - 通用操作技巧
 - 数组常用操作
@@ -9387,10 +10086,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="数据库"&gt;数据库&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-25136487"
+id="mindmap-61437258"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-25136487" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-61437258" style="display:none;"&gt;
 - 数据库
 - 基础认识
 - InnoDB 和 MyISAM 的区别是什么？
@@ -9721,10 +10420,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="计算机网络"&gt;计算机网络&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46852713"
+id="mindmap-81274563"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46852713" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-81274563" style="display:none;"&gt;
 - 计算机网络
 - TCP/UDP
 - TCP/UDP 区别
@@ -10020,10 +10719,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="java"&gt;Java&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65148723"
+id="mindmap-17823465"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65148723" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17823465" style="display:none;"&gt;
 - Java
 - Java 集合
 - HashMap 为什么线程不安全？
@@ -10194,10 +10893,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="spring"&gt;Spring&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-12678354"
+id="mindmap-38152674"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-12678354" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-38152674" style="display:none;"&gt;
 - Spring
 - Spring 核心基础
 - 什么是 Spring？它解决了什么问题？
@@ -10323,10 +11022,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="系统设计"&gt;系统设计&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-76815324"
+id="mindmap-68235471"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-76815324" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-68235471" style="display:none;"&gt;
 - 系统设计
 - RPC 框架
 - 第一层是服务定义与代理层
@@ -10354,10 +11053,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="redis"&gt;Redis&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-25674381"
+id="mindmap-37462851"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-25674381" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-37462851" style="display:none;"&gt;
 - Redis
 - 基础认知
 - Redis 为什么快
@@ -10571,10 +11270,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="rocketmq"&gt;RocketMQ&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-75284316"
+id="mindmap-84516732"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-75284316" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-84516732" style="display:none;"&gt;
 - RocketMQ
 - 基础认知
 - RocketMQ 解决了哪些问题？
@@ -10670,10 +11369,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="agent-开发"&gt;Agent 开发&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35817264"
+id="mindmap-86473215"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35817264" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-86473215" style="display:none;"&gt;
 - Agent 开发
 - 基础概念
 - 什么是 Agent？它和普通 Chatbot 的本质区别是什么？
@@ -11005,10 +11704,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="nacos-配置中心"&gt;Nacos 配置中心&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-26145738"
+id="mindmap-13482576"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-26145738" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-13482576" style="display:none;"&gt;
 - Nacos 配置中心
 - Nacos 是什么？解决了什么问题？
 - 服务实例很多，IP 和端口是动态变化的，如果没有注册中心，服务之间就很难稳定地互相发现和调用
@@ -11038,10 +11737,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="websocket"&gt;WebSocket&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38465712"
+id="mindmap-46723815"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38465712" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46723815" style="display:none;"&gt;
 - WebSocket
 - 解决了什么问题
 - 一种基于 TCP 的应用层全双工通信协议
@@ -11151,10 +11850,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="linux"&gt;Linux&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65874321"
+id="mindmap-25317486"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65874321" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25317486" style="display:none;"&gt;
 - Linux
 - 基础认知
 - Linux 的内核态和用户态有什么区别？
@@ -11437,10 +12136,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="计算机组成原理"&gt;计算机组成原理&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-74285163"
+id="mindmap-31685742"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-74285163" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-31685742" style="display:none;"&gt;
 - 计算机组成原理
 - 存储系统
 - 虚拟内存与地址转换
@@ -11464,10 +12163,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="elasticserach"&gt;ElasticSerach&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38726541"
+id="mindmap-35648721"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38726541" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-35648721" style="display:none;"&gt;
 - ElasticSerach
 - 基础概念
 - ElasticSearch 的核心应用场景有哪些？
@@ -11590,10 +12289,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="系统设计-1"&gt;系统设计&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-28135674"
+id="mindmap-32517648"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-28135674" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-32517648" style="display:none;"&gt;
 - 系统设计
 - 设计一个短链接系统（类似 TinyURL）
 - 客户端把长链接发到服务端，服务端先做参数校验，比如 URL 格式是否合法，是否命中黑名单
@@ -11673,10 +12372,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="项目"&gt;项目&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-83174652"
+id="mindmap-17485236"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-83174652" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17485236" style="display:none;"&gt;
 - 项目
 - 异步收银台
 - 问题
@@ -11848,10 +12547,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;实验编号/标题：Transformer 实验&lt;/p&gt;</description></item><item><title>LLM 复习</title><link>https://blog.ans20xx.com/posts/llm-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sun, 22 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/llm-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="预备知识"&gt;预备知识&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46273158"
+id="mindmap-71268345"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46273158" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-71268345" style="display:none;"&gt;
 - 预备知识
 - 线性代数
 - 向量与矩阵乘法
@@ -12004,10 +12703,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/ul&gt;</description></item><item><title>Java IO</title><link>https://blog.ans20xx.com/posts/java-io/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/java-io/</guid><description>&lt;h1 id="io-模型与概念框架"&gt;IO 模型与概念框架&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-48365721"
+id="mindmap-58247631"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-48365721" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-58247631" style="display:none;"&gt;
 - IO 模型与概念框架
 - 四个基本概念
 - 阻塞 vs 非阻塞
@@ -12070,10 +12769,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="java-bio"&gt;Java BIO&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-31785462"
+id="mindmap-56841372"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-31785462" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56841372" style="display:none;"&gt;
 - Java BIO
 - IO 流体系
 - 两大抽象
@@ -12143,10 +12842,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="nio-基础-bufferchannel"&gt;NIO 基础 Buffer/Channel&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-48657321"
+id="mindmap-35748162"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-48657321" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-35748162" style="display:none;"&gt;
 - NIO 基础
 - NIO 的核心心智模型：Buffer&amp;#43;Channel
 - 在 NIO 中，数据永远在 Buffer 里转
@@ -12212,10 +12911,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="nio-进阶-selector多路复用"&gt;NIO 进阶 Selector/多路复用&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-57628143"
+id="mindmap-27654381"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-57628143" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-27654381" style="display:none;"&gt;
 - NIO 进阶 Selector/多路复用
 - Selector/SelectionKey/Channel：三者关系与生命周期
 - 三件套职责
@@ -12259,10 +12958,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="netty"&gt;Netty&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-13287564"
+id="mindmap-75218634"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-13287564" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-75218634" style="display:none;"&gt;
 - Netty
 - 解决什么问题
 - 原生 NIO 的痛点
@@ -12317,10 +13016,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="selectpollepoll"&gt;select/poll/epoll&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-64318572"
+id="mindmap-71564238"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-64318572" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-71564238" style="display:none;"&gt;
 - select/poll/epoll
 - 简介
 - 都是操作系统提供的 I/O 多路复用机制
@@ -12360,10 +13059,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>nosql 复习.md</title><link>https://blog.ans20xx.com/posts/nosql-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/nosql-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="cap-与一致性模型"&gt;CAP 与一致性模型&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-45217863"
+id="mindmap-48763512"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-45217863" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48763512" style="display:none;"&gt;
 - CAP 与一致性模型
 - CAP 定理
 - 组成
@@ -12434,10 +13133,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="分布式存储底层"&gt;分布式存储底层&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-16432857"
+id="mindmap-37645218"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-16432857" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-37645218" style="display:none;"&gt;
 - 分布式存储底层
 - 分布式存储底层总览
 - Client/SDK
@@ -12557,10 +13256,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="cassandrahbase"&gt;Cassandra/HBase&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-84152763"
+id="mindmap-63175824"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-84152763" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-63175824" style="display:none;"&gt;
 - Cassandra/HBase
 - LSM-Tree &amp;#43; WAL
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/22/20260222101553862.png,604,382)
@@ -12631,10 +13330,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据建模与查询建模"&gt;数据建模与查询建模&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21836754"
+id="mindmap-67318254"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21836754" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-67318254" style="display:none;"&gt;
 - 数据建模与查询建模
 - NoSQL 建模的通用原则
 - Query-driven modeling(按查询建模)
@@ -12659,10 +13358,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>搜索引擎复习</title><link>https://blog.ans20xx.com/posts/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/</guid><description>&lt;h1 id="信息检索核心原理"&gt;信息检索核心原理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34571862"
+id="mindmap-26734518"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34571862" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-26734518" style="display:none;"&gt;
 - 信息检索 IR 核心原理
 - IR 的基本对象与术语
 - 文档、语料、字段
@@ -12720,10 +13419,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="索引结构与写入链路"&gt;索引结构与写入链路&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-85164237"
+id="mindmap-17284356"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-85164237" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17284356" style="display:none;"&gt;
 - 索引结构与写入链路
 - ES 的索引
 - InvertedIndex（倒排）：解决词-&amp;gt;文档的快速检索
@@ -12758,10 +13457,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>Java 并发复习</title><link>https://blog.ans20xx.com/posts/java-%E5%B9%B6%E5%8F%91/</link><pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/java-%E5%B9%B6%E5%8F%91/</guid><description>&lt;h1 id="并发基础与-jmm-入门"&gt;并发基础与 JMM 入门&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-85423617"
+id="mindmap-81645327"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-85423617" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-81645327" style="display:none;"&gt;
 - 并发基础与 JMM 入门
 - 并发三大问题
 - 原子性
@@ -12839,10 +13538,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线程模型与线程安全"&gt;线程模型与线程安全&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-61245873"
+id="mindmap-86713254"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-61245873" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-86713254" style="display:none;"&gt;
 - 线程模型与线程安全
 - Java 线程模型：Thread/Runnable/Callable/Future
 - 四者关系与使用场景
@@ -12997,10 +13696,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="juc-核心与-aqs"&gt;JUC 核心与 AQS&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43158276"
+id="mindmap-71245836"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43158276" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-71245836" style="display:none;"&gt;
 - JUC 核心与 AQS
 - CAS 与原子类
 - CAS 是什么
@@ -13104,10 +13803,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线程池与并发工程实战"&gt;线程池与并发工程实战&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-27435618"
+id="mindmap-17236485"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-27435618" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17236485" style="display:none;"&gt;
 - 线程池与并发工程实战
 - 不用线程池的问题
 - 线程创建/销毁成本高（栈、TLAB、调度）
@@ -13253,10 +13952,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="并发容器阻塞队列并发设计"&gt;并发容器、阻塞队列、并发设计&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-73418625"
+id="mindmap-75261384"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-73418625" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-75261384" style="display:none;"&gt;
 - 并发容器、阻塞队列、并发设计
 - 并发容器解决的问题
 - 线程安全访问：多线程读写不会破坏结构、不丢数据
@@ -13340,10 +14039,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>Sping 复习</title><link>https://blog.ans20xx.com/posts/spring-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/spring-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="spring-core"&gt;Spring Core&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-85426713"
+id="mindmap-85276431"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-85426713" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-85276431" style="display:none;"&gt;
 - Spring Core（IoC/DI/Bean 生命周期）
 - 概述
 - Spring 的核心是 IoC 容器，它负责把对象 Bean 的创建、依赖装配、生命周期管理、扩展点回调统一托管
@@ -13490,10 +14189,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-aop"&gt;Spring AOP&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-25763814"
+id="mindmap-75384261"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-25763814" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-75384261" style="display:none;"&gt;
 - Spring AOP
 - AOP 在 Spring 里解决什么问题
 - 目标：把横切关注点从业务逻辑中剥离出来，日志，鉴权，事务，监控，限流，缓存，重试等
@@ -13591,10 +14290,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-transaction"&gt;Spring Transaction&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-67538124"
+id="mindmap-14378265"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-67538124" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-14378265" style="display:none;"&gt;
 - Spring Transaction
 - 定义：Spring 事务本质是 AOP 拦截方法调用，在方法执行前后通过 TransactionManager 控制开启/加入事务、提交/回滚、资源绑定/解绑
 - 事务体系的关键对象
@@ -13661,10 +14360,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-mvc"&gt;Spring MVC&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-71482536"
+id="mindmap-62543718"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-71482536" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62543718" style="display:none;"&gt;
 - SpringMVC(请求链路、参数绑定、异常处理)
 - 总控思维模型
 - Spring MVC 是一个基于 DispatcherServlet 的前端控制器框架，它把一次 HTTP 请求拆分
@@ -13778,10 +14477,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-boot-自动配置启动过程外部化配置"&gt;Spring boot （自动配置、启动过程、外部化配置）&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-78425631"
+id="mindmap-67248315"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-78425631" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-67248315" style="display:none;"&gt;
 - Spring boot
 - 解决了什么问题
 - Boot 的核心价值是：约定优于配置&amp;#43;自动配置&amp;#43;Starter依赖聚合
@@ -13859,10 +14558,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据访问整合"&gt;数据访问整合&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21348657"
+id="mindmap-74861253"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21348657" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74861253" style="display:none;"&gt;
 - 数据访问整合
 - 通用底座
 - DataSource：连接的来源
@@ -13897,10 +14596,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-security"&gt;Spring Security&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-48175263"
+id="mindmap-82763514"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-48175263" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-82763514" style="display:none;"&gt;
 - Spring Security
 - 核心概念
 - SecurityContext：安全上下文，存当前请求/线程的认证信息
@@ -13939,10 +14638,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>JVM 学习</title><link>https://blog.ans20xx.com/posts/jvm/</link><pubDate>Thu, 19 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/jvm/</guid><description>&lt;h1 id="类加载与字节码"&gt;类加载与字节码&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-16243587"
+id="mindmap-24358716"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-16243587" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-24358716" style="display:none;"&gt;
 - 类加载与字节码
 - 类加载机制
 - 类的生命周期
@@ -14012,10 +14711,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="jvm-内存结构与对象模型"&gt;JVM 内存结构与对象模型&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-45362187"
+id="mindmap-36142587"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-45362187" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-36142587" style="display:none;"&gt;
 - JVM 内存结构与对象模型
 - 运行时数据区
 - 整体结构
@@ -14128,10 +14827,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="gc-体系"&gt;GC 体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-85712634"
+id="mindmap-84571263"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-85712634" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-84571263" style="display:none;"&gt;
 - GC 体系
 - GC 基础原理
 - GC 要解决的问题
@@ -14314,10 +15013,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="jit-与性能"&gt;JIT 与性能&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-85324176"
+id="mindmap-78453216"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-85324176" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-78453216" style="display:none;"&gt;
 - JIT 与性能
 - 解释器 vs JIT
 - 解释器：启动快、编译开销低，但是每次执行都要逐条解释代码，长期运行慢
@@ -14334,10 +15033,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线上排障与工具链"&gt;线上排障与工具链&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-57342816"
+id="mindmap-28645731"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-57342816" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-28645731" style="display:none;"&gt;
 - 线上排障与工具链
 - 保存现场
 - 采集 4 件套
@@ -14441,10 +15140,10 @@ style="width:100%; height:860px; min-height: 860px;"
 （例如：Transformer、Redis 持久化、JVM 垃圾回收、操作系统进程调度）&lt;/p&gt;</description></item><item><title>RocketMQ 复习</title><link>https://blog.ans20xx.com/posts/rocketmq-%E5%AD%A6%E4%B9%A0/</link><pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/rocketmq-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="概述"&gt;概述&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-81754236"
+id="mindmap-23165847"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-81754236" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-23165847" style="display:none;"&gt;
 - 概述
 - 定位
 - RocketMQ 是一个分布式消息中间件，用于在分布式系统中以异步方式传递时间/数据
@@ -14506,10 +15205,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="核心概念"&gt;核心概念&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-52741386"
+id="mindmap-62385147"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-52741386" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62385147" style="display:none;"&gt;
 - 核心概念
 - Topic
 - 定义：消息的逻辑分类，Producer 发送到 Topic，Consumer 订阅 Topic。
@@ -14577,10 +15276,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="可靠性语义幂等重试死信"&gt;可靠性、语义、幂等、重试、死信&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-52467381"
+id="mindmap-67821453"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-52467381" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-67821453" style="display:none;"&gt;
 - 可靠性/语义/幂等/重试/死信
 - 消息语义
 - 三种语义
@@ -14623,10 +15322,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="性能与扩展顺序与分区堆积治理"&gt;性能与扩展、顺序与分区、堆积治理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-58467213"
+id="mindmap-65184732"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-58467213" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65184732" style="display:none;"&gt;
 - 性能与扩展、顺序与分区、堆积治理
 - 吞吐与并发怎么调
 - 吞吐链路拆解，多个环节的 min
@@ -14688,10 +15387,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="存储与高可用"&gt;存储与高可用&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35178462"
+id="mindmap-17425683"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35178462" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17425683" style="display:none;"&gt;
 - 存储与高可用
 - Broker 存储核心
 - 三类文件
@@ -14747,10 +15446,10 @@ SSE 原理&lt;/p&gt;
 （写清楚用途、场景、目标，比如面试、项目、论文、考试）&lt;/p&gt;</description></item><item><title>计算机组成原理</title><link>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</link><pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</guid><description>&lt;h1 id="全局框架"&gt;全局框架&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65372841"
+id="mindmap-24587631"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65372841" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-24587631" style="display:none;"&gt;
 - 全局框架
 - 系统层次
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/18/20260218105815855.png,424,537)
@@ -14766,10 +15465,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="指令系统与数据表示"&gt;指令系统与数据表示&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-82613475"
+id="mindmap-64875132"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-82613475" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-64875132" style="display:none;"&gt;
 - 指令系统与数据表示
 - 整数与位运算的数据表示
 - 位、字节、字
@@ -14878,10 +15577,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="cpu-执行与控制"&gt;CPU 执行与控制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-81462753"
+id="mindmap-48563712"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-81462753" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48563712" style="display:none;"&gt;
 - CPU 执行与控制
 - 单周期 Datapath
 - 必备组件
@@ -14971,10 +15670,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="流水线与冒险"&gt;流水线与冒险&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-64123758"
+id="mindmap-85317462"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-64123758" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-85317462" style="display:none;"&gt;
 - 流水线与冒险
 - 五级流水线核心内容
 - 五段功能定义
@@ -15047,10 +15746,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="存储体系"&gt;存储体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-86435712"
+id="mindmap-65712384"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-86435712" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65712384" style="display:none;"&gt;
 - 存储体系
 - 核心矛盾
 - CPU 周期是纳秒级，DRAM 访问通常是几十到上百纳秒级，差一个数量级
@@ -15141,10 +15840,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="虚拟内存"&gt;虚拟内存&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-36781542"
+id="mindmap-12357684"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-36781542" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-12357684" style="display:none;"&gt;
 - 虚拟内存
 - 要解决的问题
 - 抽象：每个进程看到连续的虚拟内存空间（VA）
@@ -15256,10 +15955,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="io-总线"&gt;IO 总线&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43215867"
+id="mindmap-87654132"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43215867" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-87654132" style="display:none;"&gt;
 - IO 总线
 - IO 本质上慢
 - 设备物理特性：SSD/网卡/磁盘的延迟远远高于 CPU
@@ -15325,10 +16024,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>计算机网络</title><link>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</link><pubDate>Mon, 16 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="网络分层--端到端路径"&gt;网络分层 + 端到端路径&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-81743625"
+id="mindmap-41365827"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-81743625" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41365827" style="display:none;"&gt;
 - 网络分层 &amp;#43; 端到端路径
 - 分层模型
 - 链路层 (LINK)
@@ -15409,10 +16108,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="tcp-精讲"&gt;TCP 精讲&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-81325746"
+id="mindmap-42368751"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-81325746" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-42368751" style="display:none;"&gt;
 - TCP 精讲
 - TCP 本质：在不可靠 IP 上提供可靠字节流
 - TCP 提供内容
@@ -15679,10 +16378,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="http-与-web-体系"&gt;HTTP 与 Web 体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46758213"
+id="mindmap-43576182"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46758213" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-43576182" style="display:none;"&gt;
 - HTTP 与 Web 体系
 - HTTP 基础语义
 - HTTP 是无状态应用层协议：每个请求都自包含信息，状态由 Cookie/Token/Session 等机制在应用层实现
@@ -16100,10 +16799,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>投资</title><link>https://blog.ans20xx.com/posts/%E6%8A%95%E8%B5%84/</link><pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8A%95%E8%B5%84/</guid><description>&lt;h1 id="投资基础认知"&gt;投资基础认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-63742158"
+id="mindmap-74183562"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-63742158" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74183562" style="display:none;"&gt;
 - 投资基础认知
 - 什么是投资
 - 储蓄
@@ -16426,10 +17125,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="财务报表与公司分析"&gt;财务报表与公司分析&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-25376481"
+id="mindmap-68547132"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-25376481" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-68547132" style="display:none;"&gt;
 - 财务报表与公司分析
 - 为什么要看财报
 - 财报是什么
@@ -16793,10 +17492,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>mysql 知识点</title><link>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h1 id="环境准备"&gt;环境准备&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-13526478"
+id="mindmap-47136852"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-13526478" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-47136852" style="display:none;"&gt;
 - 环境配置与校验
 - docker-compose 启动
 - 命令行连接
@@ -16834,10 +17533,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="基础查询"&gt;基础查询&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-12567483"
+id="mindmap-17368245"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-12567483" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17368245" style="display:none;"&gt;
 - 基础查询
 - 电商数据集
 - 单表查询
@@ -17011,10 +17710,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="约束与范式基础"&gt;约束与范式基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-15463782"
+id="mindmap-48532617"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-15463782" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48532617" style="display:none;"&gt;
 - 约束与范式基础
 - 约束
 - 目的
@@ -17074,10 +17773,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="索引--explain"&gt;索引 + EXPLAIN&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46217358"
+id="mindmap-36428175"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46217358" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-36428175" style="display:none;"&gt;
 - 索引 &amp;#43; EXPLAIN
 - 准备索引
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214111724844.png,200,50)
@@ -17285,10 +17984,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="事务与并发控制"&gt;事务与并发控制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-64317258"
+id="mindmap-72581436"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-64317258" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-72581436" style="display:none;"&gt;
 - 事务与并发控制
 - ACID
 - A 原子性：要么全成功，要么全失败，依靠 undo log &amp;#43; 回滚机制
@@ -17682,10 +18381,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="表设计与数据治理"&gt;表设计与数据治理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-58167234"
+id="mindmap-46352178"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-58167234" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46352178" style="display:none;"&gt;
 - 表设计与数据治理
 - 建模方法与边界
 - 建模方法
@@ -17864,10 +18563,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="运维与排障"&gt;运维与排障&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34756281"
+id="mindmap-17482653"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34756281" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17482653" style="display:none;"&gt;
 - 运维与排障
 - 指标体系
 - 指标分层
@@ -17896,10 +18595,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="体系架构"&gt;体系架构&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47538126"
+id="mindmap-73428615"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47538126" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-73428615" style="display:none;"&gt;
 - mysql 体系架构
 - Server 层
 - 连接与会话管理
@@ -18085,10 +18784,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;li&gt;有鹦鹉的情况下，可以给触发战吼野兽套盾&lt;/li&gt;
 &lt;/ol&gt;</description></item><item><title>Docker复习</title><link>https://blog.ans20xx.com/posts/docker%E6%96%B0/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/docker%E6%96%B0/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-12683475"
+id="mindmap-61258374"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-12683475" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-61258374" style="display:none;"&gt;
 - Docker
 - mac 安装 -&amp;gt; https://www.docker.com
 - Container 容器
@@ -18231,10 +18930,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;
 &lt;h1 id="容器原理"&gt;容器原理&lt;/h1&gt;</description></item><item><title>Redis 复习</title><link>https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-56314728"
+id="mindmap-52713864"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-56314728" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-52713864" style="display:none;"&gt;
 - Redis
 - 环境安装
 - docker run -d --name redis -p 6379:6379 redis
@@ -20022,10 +20721,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;思路 1 ：动态规划&lt;/p&gt;
 &lt;p&gt;dp[i] = 以 i 位置结尾的最大子数组和&lt;/p&gt;</description></item><item><title>无重复字符的最长子串</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</guid><description>无重复字符的最长子串</description></item><item><title>重启人生</title><link>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-56374812"
+id="mindmap-76421835"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-56374812" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-76421835" style="display:none;"&gt;
 - 重启人生
 - 重要
 - 万事切不可急躁，三思而后行
@@ -20922,10 +21621,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/div&gt;</description></item><item><title>mindmap 测试</title><link>https://blog.ans20xx.com/posts/mindmap/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mindmap/</guid><description>mindmap 测试</description></item><item><title>Python语法汇总</title><link>https://blog.ans20xx.com/posts/python%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/python%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/</guid><description>&lt;h1 id="基础用法"&gt;基础用法&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47361285"
+id="mindmap-48362175"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47361285" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48362175" style="display:none;"&gt;
 - Python 语法
 - 注释
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/15/20260315235532706.png,201,109)
@@ -21195,10 +21894,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="uv-安装包"&gt;uv 安装包&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-87645231"
+id="mindmap-31782456"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-87645231" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-31782456" style="display:none;"&gt;
 - uv
 - 安装 uv
 - curl -LsSf https://astral.sh/uv/install.sh | sh
