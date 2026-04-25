@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.160.1</generator><language>zh</language><lastBuildDate>Sat, 18 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Go 复习</title><link>https://blog.ans20xx.com/posts/go-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sat, 18 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/go-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础"&gt;基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-18235647"
+id="mindmap-67583421"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-18235647" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-67583421" style="display:none;"&gt;
 - 基础
 - Go 环境搭建与工具链
 - 安装 Go
@@ -2017,10 +2017,10 @@ h := NewHandler(mock) // 注入 Mock
 &lt;h1 id="并发与工程化"&gt;并发与工程化&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-51478362"
+id="mindmap-28675134"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-51478362" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-28675134" style="display:none;"&gt;
 - 并发与工程化
 - Goroutine 入门
 - Goroutine 是什么
@@ -3623,14 +3623,2834 @@ git config --global url.&amp;#34;git@github.com:mycompany/&amp;#34;.insteadOf &a
 go env -w GOPROXY=&amp;#34;https://goproxy.company.com,https://proxy.golang.org,direct&amp;#34;
 go env -w GOPRIVATE=&amp;#34;*.company.com&amp;#34;
 ```
+- 测试与基准测试
+- Go Test 框架基础
+- Go 内置了完整的测试框架，不需要任何第三方库。
+- 测试文件以 _test.go 结尾，测试函数以 Test 开头，接受 *testing.T 参数。这三条规则，就是 Go 测试的全部入场门票。
+- 示例
+-
+```go
+// math/add.go
+package math
+func Add(a, b int) int {
+return a &amp;#43; b
+}
+func Divide(a, b float64) (float64, error) {
+if b == 0 {
+return 0, errors.New(&amp;#34;除数不能为零&amp;#34;)
+}
+return a / b, nil
+}
+// math/add_test.go（同一个包，_test.go 结尾）
+package math
+import &amp;#34;testing&amp;#34;
+func TestAdd(t *testing.T) {
+result := Add(1, 2)
+if result != 3 {
+t.Errorf(&amp;#34;Add(1, 2) = %d，期望 3&amp;#34;, result)
+}
+}
+func TestDivide(t *testing.T) {
+result, err := Divide(10, 2)
+if err != nil {
+t.Fatalf(&amp;#34;意外错误: %v&amp;#34;, err)
+}
+if result != 5 {
+t.Errorf(&amp;#34;Divide(10, 2) = %f，期望 5&amp;#34;, result)
+}
+}
+```
+- 运行测试的常用命令
+- ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/21/20260421000815190.png,310,160)
+- testing.T 的核心方法
+-
+```go
+// 测试失败但继续执行
+t.Errorf(&amp;#34;期望 %d，实际 %d&amp;#34;, expected, actual)
+t.Error(&amp;#34;发现问题&amp;#34;)
+// 测试失败并立即停止（Fatal = Error &amp;#43; runtime.Goexit）
+t.Fatalf(&amp;#34;致命错误: %v&amp;#34;, err)
+t.Fatal(&amp;#34;不可继续&amp;#34;)
+// 仅打印日志（不影响测试结果）
+t.Logf(&amp;#34;调试信息: %v&amp;#34;, value)
+t.Log(&amp;#34;这里到了&amp;#34;)
+// 跳过测试
+t.Skip(&amp;#34;跳过原因：需要数据库&amp;#34;)
+t.Skipf(&amp;#34;跳过：CI 环境不支持 %s&amp;#34;, feature)
+// 标记为并行测试
+t.Parallel()
+// 子测试（下一节讲）
+t.Run(&amp;#34;子测试名&amp;#34;, func(t *testing.T) { ... })
+```
+- 表驱动测试
+- 表驱动测试是 Go 最推荐的测试写法。
+- 把所有测试用例放进一个切片，用循环执行，消除重复代码，添加新用例只需加一行。
+- 这是 Go 测试的标准惯用法。
+- 示例
+-
+```go
+func TestAdd(t *testing.T) {
+// 定义测试用例表
+tests := []struct {
+name string // 用例名（出错时显示）
+a, b int
+expected int
+}{
+{&amp;#34;正数相加&amp;#34;, 1, 2, 3},
+{&amp;#34;负数相加&amp;#34;, -1, -2, -3},
+{&amp;#34;正负相加&amp;#34;, 5, -3, 2},
+{&amp;#34;零值&amp;#34;, 0, 0, 0},
+{&amp;#34;大数&amp;#34;, 1000000, 2000000, 3000000},
+}
+for _, tt := range tests {
+t.Run(tt.name, func(t *testing.T) { // ✨ 子测试
+result := Add(tt.a, tt.b)
+if result != tt.expected {
+t.Errorf(&amp;#34;Add(%d, %d) = %d，期望 %d&amp;#34;,
+tt.a, tt.b, result, tt.expected)
+}
+})
+}
+}
+```
+- 测试有 error 返回的函数
+-
+```go
+func TestDivide(t *testing.T) {
+tests := []struct {
+name string
+a, b float64
+expected float64
+wantErr bool // 是否期望出错
+errMsg string // 期望的错误信息（可选）
+}{
+{&amp;#34;正常除法&amp;#34;, 10, 2, 5, false, &amp;#34;&amp;#34;},
+{&amp;#34;除以1&amp;#34;, 9, 1, 9, false, &amp;#34;&amp;#34;},
+{&amp;#34;除以零&amp;#34;, 10, 0, 0, true, &amp;#34;除数不能为零&amp;#34;},
+{&amp;#34;负数除法&amp;#34;, -10, 2, -5, false, &amp;#34;&amp;#34;},
+}
+for _, tt := range tests {
+t.Run(tt.name, func(t *testing.T) {
+result, err := Divide(tt.a, tt.b)
+// 检查是否符合预期的错误行为
+if tt.wantErr {
+if err == nil {
+t.Error(&amp;#34;期望有错误，但没有&amp;#34;)
+}
+if tt.errMsg != &amp;#34;&amp;#34; &amp;&amp; !strings.Contains(err.Error(), tt.errMsg) {
+t.Errorf(&amp;#34;错误信息 %q 不包含 %q&amp;#34;, err.Error(), tt.errMsg)
+}
+return // 有预期错误，不检查结果
+}
+if err != nil {
+t.Fatalf(&amp;#34;意外错误: %v&amp;#34;, err)
+}
+if math.Abs(result-tt.expected) &amp;gt; 1e-9 {
+t.Errorf(&amp;#34;Divide(%.2f, %.2f) = %.2f，期望 %.2f&amp;#34;,
+tt.a, tt.b, result, tt.expected)
+}
+})
+}
+}
+```
+- t.Run 子测试的好处
+- t.Run 为每个用例创建独立的子测试
+- 出错时精确定位是哪个用例失败（如 TestDivide/除以零）
+- 可以单独运行某个子测试 go test -run TestDivide/除以零
+- 支持 t.Parallel() 并行运行各个子测试
+- 测试前后的准备与清理
+- 很多测试需要初始化环境（启动数据库、创建临时文件）和清理（关闭连接、删除文件）。Go 提供了几种机制来处理这些需求。
+- TestMain: 包级别的 setup/teardown
+-
+```go
+// 如果定义了 TestMain，go test 会优先调用它
+// 可以在这里做全局初始化
+func TestMain(m *testing.M) {
+// ─── Setup ───
+fmt.Println(&amp;#34;全局初始化：启动测试数据库...&amp;#34;)
+db, err := setupTestDB()
+if err != nil {
+log.Fatalf(&amp;#34;数据库初始化失败: %v&amp;#34;, err)
+}
+// ─── 运行所有测试 ───
+exitCode := m.Run()
+// ─── Teardown ───
+fmt.Println(&amp;#34;全局清理：关闭测试数据库...&amp;#34;)
+db.Close()
+cleanupTestData()
+// 必须调用 os.Exit，否则 defer 不会执行
+os.Exit(exitCode)
+}
+```
+- t.Cleanup: 函数级别的清理
+-
+```go
+func TestWriteFile(t *testing.T) {
+// 创建临时目录
+tmpDir := t.TempDir() // ✨ 测试结束自动删除！
+// t.Cleanup 注册清理函数（类似 defer，但属于测试框架）
+tmpFile := filepath.Join(tmpDir, &amp;#34;test.txt&amp;#34;)
+t.Cleanup(func() {
+os.Remove(tmpFile)
+t.Log(&amp;#34;清理临时文件&amp;#34;)
+})
+// 测试逻辑
+err := os.WriteFile(tmpFile, []byte(&amp;#34;hello&amp;#34;), 0644)
+if err != nil {
+t.Fatal(err)
+}
+content, err := os.ReadFile(tmpFile)
+if err != nil {
+t.Fatal(err)
+}
+if string(content) != &amp;#34;hello&amp;#34; {
+t.Errorf(&amp;#34;内容不匹配&amp;#34;)
+}
+}
+// t.TempDir() 创建临时目录，测试结束（包括失败）后自动删除
+// 比手写 defer os.RemoveAll 更安全
+```
+- 辅助函数: Helper
+-
+```go
+// 当多个测试有重复逻辑时，提取为 helper 函数
+// ✨ 注意 t.Helper()：让错误报告指向调用 helper 的地方，而不是 helper 内部
+func assertNoError(t *testing.T, err error) {
+t.Helper() // 声明这是 helper 函数
+if err != nil {
+t.Fatalf(&amp;#34;意外错误: %v&amp;#34;, err)
+}
+}
+func assertEqual(t *testing.T, got, want interface{}) {
+t.Helper()
+if got != want {
+t.Errorf(&amp;#34;期望 %v，实际 %v&amp;#34;, want, got)
+}
+}
+// 使用
+func TestSomething(t *testing.T) {
+result, err := doWork()
+assertNoError(t, err) // 出错时报告这一行，不是 assertNoError 内部
+assertEqual(t, result, 42) // 同上
+}
+```
+- testify 更好的断言库
+- 标准库的 testing 功能够用，但写法有点啰嗦。
+- testify 是 Go 生态最流行的测试辅助库，提供更简洁的断言、Mock 和测试套件支持。
+- 安装：go get github.com/stretchr/testify
+- assert vs require
+-
+```go
+import (
+&amp;#34;testing&amp;#34;
+&amp;#34;github.com/stretchr/testify/assert&amp;#34;
+&amp;#34;github.com/stretchr/testify/require&amp;#34;
+)
+func TestWithTestify(t *testing.T) {
+// assert：失败后继续执行（类似 t.Errorf）
+assert.Equal(t, 3, Add(1, 2))
+assert.NotNil(t, someValue)
+assert.NoError(t, err)
+assert.Contains(t, &amp;#34;hello world&amp;#34;, &amp;#34;world&amp;#34;)
+assert.True(t, isValid)
+assert.Len(t, slice, 3)
+// require：失败后立即停止（类似 t.Fatalf）
+require.NoError(t, err) // err 不为 nil 就立即停止
+require.NotNil(t, result) // 后续代码依赖 result 不为 nil
+// 带自定义消息
+assert.Equal(t, want, got, &amp;#34;用户列表长度应该相等&amp;#34;)
+// 错误断言
+assert.Error(t, err) // 期望有 error
+assert.ErrorIs(t, err, ErrNotFound) // 等价于 errors.Is
+assert.ErrorAs(t, err, &amp;ValidationError{}) // 等价于 errors.As
+}
+```
+- 常用断言
+-
+```go
+// 相等性
+assert.Equal(t, expected, actual) // ==
+assert.NotEqual(t, expected, actual) // !=
+assert.EqualValues(t, expected, actual) // 类型不同但值相等
+// nil 检查
+assert.Nil(t, val)
+assert.NotNil(t, val)
+// 布尔
+assert.True(t, condition)
+assert.False(t, condition)
+// 错误
+assert.NoError(t, err)
+assert.Error(t, err)
+assert.ErrorIs(t, err, target)
+// 字符串/切片
+assert.Contains(t, &amp;#34;hello&amp;#34;, &amp;#34;ell&amp;#34;)
+assert.Contains(t, []int{1,2,3}, 2)
+assert.Len(t, slice, 3)
+assert.Empty(t, slice)
+assert.NotEmpty(t, slice)
+// 数值比较
+assert.Greater(t, 5, 3)
+assert.GreaterOrEqual(t, 5, 5)
+assert.InDelta(t, 1.5, 1.500001, 0.001) // 浮点近似相等
+// 结构体（深度相等）
+assert.Equal(t, expected, actual) // 自动深度比较
+// 或用 ObjectsAreEqual：
+require.True(t, reflect.DeepEqual(want, got))
+```
+- assert 和 require 的选择原则
+- 当后续的测试逻辑依赖当前断言成立时（比如 err == nil 才能用 result），用 require。
+- 否则用 assert，收集更多失败信息。一个简单口诀：「之后还要用这个值，就 require；不用就 assert」。
+- Mock 测试
+- Mock 是测试中最重要的技术之一。当你的代码依赖外部服务（数据库、HTTP API、邮件服务），测试时用 Mock 替换这些依赖，让测试快速、可靠、独立。
+- 手写 Mock
+-
+```go
+// 被测代码依赖接口（Day 12 项目结构的价值体现）
+type UserRepository interface {
+FindByID(ctx context.Context, id int) (*User, error)
+Create(ctx context.Context, u *User) error
+}
+type UserService struct {
+repo UserRepository
+}
+// 手写 Mock：直接实现接口
+type MockUserRepo struct {
+users map[int]*User
+nextID int
+// 可以记录调用次数、参数等
+CreateCalled int
+FindCalled int
+}
+func (m *MockUserRepo) FindByID(_ context.Context, id int) (*User, error) {
+m.FindCalled&amp;#43;&amp;#43;
+u, ok := m.users[id]
+if !ok {
+return nil, ErrNotFound
+}
+return u, nil
+}
+func (m *MockUserRepo) Create(_ context.Context, u *User) error {
+m.CreateCalled&amp;#43;&amp;#43;
+u.ID = m.nextID
+m.users[u.ID] = u
+m.nextID&amp;#43;&amp;#43;
+return nil
+}
+// 测试时注入 Mock
+func TestUserService_Register(t *testing.T) {
+mockRepo := &amp;MockUserRepo{
+users: make(map[int]*User),
+nextID: 1,
+}
+svc := &amp;UserService{repo: mockRepo}
+ctx := context.Background()
+u, err := svc.Register(ctx, &amp;#34;Alice&amp;#34;, &amp;#34;alice@example.com&amp;#34;)
+require.NoError(t, err)
+assert.Equal(t, &amp;#34;Alice&amp;#34;, u.Name)
+assert.Equal(t, 1, mockRepo.CreateCalled) // 验证调用次数
+}
+```
+- testify/mock：功能更强的 mock
+-
+```go
+import &amp;#34;github.com/stretchr/testify/mock&amp;#34;
+// 用 testify/mock 生成 Mock
+type MockUserRepo struct {
+mock.Mock // 嵌入 mock.Mock
+}
+func (m *MockUserRepo) FindByID(ctx context.Context, id int) (*User, error) {
+args := m.Called(ctx, id) // 记录调用，返回预设值
+if args.Get(0) == nil {
+return nil, args.Error(1)
+}
+return args.Get(0).(*User), args.Error(1)
+}
+func (m *MockUserRepo) Create(ctx context.Context, u *User) error {
+args := m.Called(ctx, u)
+return args.Error(0)
+}
+// 使用：设置期望
+func TestWithMock(t *testing.T) {
+mockRepo := new(MockUserRepo)
+expectedUser := &amp;User{ID: 1, Name: &amp;#34;Alice&amp;#34;}
+// 设置期望：当 FindByID 被用 id=1 调用时，返回 expectedUser
+mockRepo.On(&amp;#34;FindByID&amp;#34;, mock.Anything, 1).Return(expectedUser, nil)
+// 设置期望：Create 被调用时成功
+mockRepo.On(&amp;#34;Create&amp;#34;, mock.Anything, mock.AnythingOfType(&amp;#34;*User&amp;#34;)).Return(nil)
+svc := &amp;UserService{repo: mockRepo}
+u, err := svc.GetUser(context.Background(), 1)
+require.NoError(t, err)
+assert.Equal(t, &amp;#34;Alice&amp;#34;, u.Name)
+// 验证所有期望都被满足
+mockRepo.AssertExpectations(t)
+}
+```
+- Mock 的正确姿势
+- Mock 应该只 Mock 你控制不了的东西：数据库、HTTP 接口、时间、随机数。
+- 不要 Mock 你自己写的业务逻辑——那会让测试失去意义。
+- 最好的测试策略是：单元测试 Mock 外部依赖，集成测试用真实的基础设施（用 testcontainers）。
+- 基准测试
+- 基准测试用来测量代码的性能。函数以 Benchmark 开头，接受 *testing.B 参数。Go 会自动调整循环次数，让结果更准确。
+- 示例
+-
+```go
+func BenchmarkAdd(b *testing.B) {
+// b.N 由 go test 自动决定（通常是几百万次）
+for i := 0; i &amp;lt; b.N; i&amp;#43;&amp;#43; {
+Add(1, 2)
+}
+}
+// 运行基准测试
+// go test -bench=. -benchmem ./...
+// -bench=. 运行所有 Benchmark
+// -benchmem 同时显示内存分配
+// -benchtime=5s 指定运行时间
+// -count=3 运行 3 次取平均
+// 示例输出：
+// BenchmarkAdd-8 1000000000 0.2891 ns/op 0 B/op 0 allocs/op
+// ↑执行次数 ↑每次耗时 ↑内存 ↑分配次数
+```
+- 比较两种实现的性能
+-
+```go
+// 对比字符串拼接：&amp;#43; vs strings.Builder
+func BenchmarkStringConcat(b *testing.B) {
+words := []string{&amp;#34;hello&amp;#34;, &amp;#34;world&amp;#34;, &amp;#34;go&amp;#34;, &amp;#34;test&amp;#34;}
+b.Run(&amp;#34;用&amp;#43;拼接&amp;#34;, func(b *testing.B) {
+for i := 0; i &amp;lt; b.N; i&amp;#43;&amp;#43; {
+result := &amp;#34;&amp;#34;
+for _, w := range words {
+result &amp;#43;= w // 每次拼接都分配新内存
+}
+_ = result
+}
+})
+b.Run(&amp;#34;用Builder&amp;#34;, func(b *testing.B) {
+for i := 0; i &amp;lt; b.N; i&amp;#43;&amp;#43; {
+var sb strings.Builder
+for _, w := range words {
+sb.WriteString(w) // 预分配，减少内存分配
+}
+_ = sb.String()
+}
+})
+}
+// 输出示例：
+// BenchmarkStringConcat/用&amp;#43;拼接-8 3000000 450 ns/op 128 B/op 4 allocs/op
+// BenchmarkStringConcat/用Builder-8 10000000 120 ns/op 64 B/op 1 allocs/op
+// Builder 快 3.7 倍，内存分配少 4 倍
+```
+- b.ResetTimer 和 b.StopTimer
+-
+```go
+func BenchmarkWithSetup(b *testing.B) {
+// 做一些耗时的初始化（不计入基准）
+data := generateLargeTestData()
+b.ResetTimer() // 重置计时器，排除初始化时间
+for i := 0; i &amp;lt; b.N; i&amp;#43;&amp;#43; {
+b.StopTimer() // 暂停计时
+input := prepareInput(data) // 每次迭代的准备工作
+b.StartTimer() // 恢复计时
+processData(input) // 只测量这部分
+}
+}
+```
+- 示例测试
+- Example 函数有双重作用：既是可运行的测试，也是文档。
+- go doc 命令会显示 Example 函数，godoc 网站也会展示它们。
+- 示例
+-
+```go
+// 函数名：Example &amp;#43; 函数名
+func ExampleAdd() {
+result := Add(1, 2)
+fmt.Println(result)
+// Output: 3 ← go test 会验证输出与这里一致
+}
+func ExampleDivide() {
+result, err := Divide(10, 2)
+fmt.Println(result, err)
+// Output: 5 &amp;lt;nil&amp;gt;
+}
+// 无法预测输出顺序时用 Unordered output
+func ExamplePrintMap() {
+m := map[string]int{&amp;#34;a&amp;#34;: 1, &amp;#34;b&amp;#34;: 2}
+for k, v := range m {
+fmt.Printf(&amp;#34;%s: %d\n&amp;#34;, k, v)
+}
+// Unordered output:
+// a: 1
+// b: 2
+}
+// 类型/方法的 Example
+func ExampleUser_GetName() {
+u := User{Name: &amp;#34;Alice&amp;#34;}
+fmt.Println(u.GetName())
+// Output: Alice
+}
+```
+- Example 是活的文档
+- Example 函数最大的优点是：它会被 go test 执行，如果输出和注释不匹配就会失败。
+- 这意味着你的文档示例代码永远是正确的——代码改了但没更新文档，测试会提醒你。
+- 这是 Go 「文档即测试」哲学的体现。
+- 测试覆盖率
+- 覆盖率不是越高越好，但低覆盖率通常意味着关键路径没有被测试。
+- Go 内置了覆盖率工具，不需要额外安装。
+- 示例
+-
+```go
+# 查看覆盖率（百分比）
+go test -cover ./...
+# ok myapp/internal/service coverage: 78.5% of statements
+# 生成覆盖率文件
+go test -coverprofile=coverage.out ./...
+# 用浏览器查看哪些行被覆盖（绿色），哪些没有（红色）
+go tool cover -html=coverage.out
+# 按函数查看覆盖率
+go tool cover -func=coverage.out
+# myapp/internal/service/user.go:Register 100.0%
+# myapp/internal/service/user.go:GetUser 75.0%
+# total: 82.3%
+# 生成覆盖率徽章（常用于 README）
+# 需要第三方工具，如 goveralls、codecov
+```
+- 覆盖率的合理目标
+-
+```go
+// 什么应该测？
+// ✅ 核心业务逻辑（service 层）
+// ✅ 复杂算法
+// ✅ 错误处理路径
+// ✅ 边界条件（空值、极值）
+// 什么可以不测/难测？
+// ❌ main 函数
+// ❌ 简单的 getter/setter
+// ❌ 第三方库（已有自己的测试）
+// ❌ 纯配置代码
+// 行业参考值：
+// 核心业务代码：80% 以上
+// 整体项目：60-70% 是健康的
+// 追求 100% 反而可能浪费时间在无价值的测试上
+// 一个常见的 .golangci.yml 配置
+// testpackage: 是否要求测试在独立的 _test 包
+// 建议：核心包用 package xxx_test，确保测试只用公开 API
+```
+- 测试覆盖率的正确理解
+- 覆盖率是工具，不是目标。
+- 80% 覆盖率但测试都是走正常路径，不如 60% 但每个边界条件都测到。
+- 真正重要的是：关键业务路径有测试、错误路径有测试、修改代码后测试能告诉你哪里坏了。
+- 泛型
+- Go 1.18 引入泛型之前，想写「适用于任意类型」的函数有两种选择：为每种类型写重复代码，或者用 any 丢失类型安全。
+- 泛型解决了这个两难困境——既通用，又类型安全。
+- 没有泛型的问题
+-
+```go
+// ❌ 方案一：为每种类型写重复代码
+func SumInt(nums []int) int {
+total := 0
+for _, n := range nums { total &amp;#43;= n }
+return total
+}
+func SumFloat64(nums []float64) float64 {
+total := 0.0
+for _, n := range nums { total &amp;#43;= n }
+return total
+}
+// 如果要支持 int32、int64、float32... 噩梦
+// ❌ 方案二：用 any，丢失类型安全
+func Sum(nums []any) any {
+// 怎么相加？any 不支持 &amp;#43; 运算符
+// 必须类型断言，运行时才发现错误
+}
+// ✅ 泛型：一次编写，类型安全，适用所有数字类型
+func Sum[T int | int64 | float64](nums []T) T {
+var total T
+for _, n := range nums { total &amp;#43;= n }
+return total
+}
+Sum([]int{1, 2, 3}) // 6
+Sum([]float64{1.1, 2.2}) // 3.3
+Sum([]string{&amp;#34;a&amp;#34;, &amp;#34;b&amp;#34;}) // ❌ 编译错误：string 不满足约束
+```
+- 泛型 vs any 的本质区别
+- any 在运行时丢失类型信息，错误只能在运行时发现。
+- 泛型在编译时确定类型，错误在编译时发现，且不需要类型断言，性能也更好（零运行时开销）。
+- 泛型是编译器的能力，any 是程序员的妥协。
+- 类型参数基础语法
+- 泛型通过「类型参数」实现。
+- 类型参数放在方括号 [] 里，紧跟在函数名或类型名后面。
+- 每个类型参数都有一个「约束」，限制它能接受哪些类型。
+- 泛型函数
+-
+```go
+// func 函数名[类型参数 约束](普通参数) 返回值
+func Map[T, R any](slice []T, fn func(T) R) []R {
+result := make([]R, len(slice))
+for i, v := range slice {
+result[i] = fn(v)
+}
+return result
+}
+// 使用：Go 能自动推断类型参数，通常不用显式写
+nums := Map([]int{1, 2, 3}, func(n int) int { return n * 2 })
+// nums = [2, 4, 6]
+strs := Map([]int{1, 2, 3}, func(n int) string {
+return fmt.Sprintf(&amp;#34;No.%d&amp;#34;, n)
+})
+// strs = [&amp;#34;No.1&amp;#34;, &amp;#34;No.2&amp;#34;, &amp;#34;No.3&amp;#34;]
+// 显式指定类型参数（推断失败时）
+result := Map[int, string]([]int{1, 2, 3}, func(n int) string {
+return strconv.Itoa(n)
+})
+```
+- 泛型类型 (结构体)
+-
+```go
+// type 类型名[类型参数 约束] struct { ... }
+type Stack[T any] struct {
+items []T
+}
+func (s *Stack[T]) Push(item T) {
+s.items = append(s.items, item)
+}
+func (s *Stack[T]) Pop() (T, bool) {
+if len(s.items) == 0 {
+var zero T // ✨ 零值：泛型类型的默认值
+return zero, false
+}
+top := s.items[len(s.items)-1]
+s.items = s.items[:len(s.items)-1]
+return top, true
+}
+func (s *Stack[T]) Peek() (T, bool) {
+if len(s.items) == 0 {
+var zero T
+return zero, false
+}
+return s.items[len(s.items)-1], true
+}
+func (s *Stack[T]) Len() int { return len(s.items) }
+// 使用
+intStack := Stack[int]{} // 整数栈
+intStack.Push(1)
+intStack.Push(2)
+v, ok := intStack.Pop() // v=2, ok=true
+strStack := Stack[string]{} // 字符串栈
+strStack.Push(&amp;#34;hello&amp;#34;)
+```
+- 类型泛型
+- 约束定义了类型参数能接受哪些类型。
+- 约束本质上是接口——只不过这个接口里可以包含「类型集合」（type set），不只是方法列表。
+- 内置约束
+-
+```go
+// any：没有限制（等价于 interface{}）
+func Identity[T any](v T) T { return v }
+// comparable：可以用 == 和 != 比较的类型
+// int, string, bool, 指针, channel, 不含 slice/map/func 的 struct 等
+func Contains[T comparable](slice []T, target T) bool {
+for _, v := range slice {
+if v == target { return true }
+}
+return false
+}
+Contains([]int{1, 2, 3}, 2) // true
+Contains([]string{&amp;#34;a&amp;#34;, &amp;#34;b&amp;#34;}, &amp;#34;c&amp;#34;) // false
+// 注意：slice、map、func 不是 comparable
+// Contains([][]int{{1,2}}, []int{1,2}) // ❌ 编译错误
+```
+- contraints 包的内置约束
+-
+```go
+import &amp;#34;golang.org/x/exp/constraints&amp;#34;
+// 或 Go 1.21&amp;#43; 用标准库 cmp 包
+// constraints.Ordered：支持 &amp;lt; &amp;gt; &amp;lt;= &amp;gt;= 的类型
+// int, int8, int16, int32, int64
+// uint, uint8, ..., uintptr
+// float32, float64
+// string
+func Min[T constraints.Ordered](a, b T) T {
+if a &amp;lt; b { return a }
+return b
+}
+func Max[T constraints.Ordered](a, b T) T {
+if a &amp;gt; b { return a }
+return b
+}
+func Clamp[T constraints.Ordered](val, lo, hi T) T {
+return Max(lo, Min(val, hi))
+}
+Min(3, 5) // 3
+Min(&amp;#34;apple&amp;#34;, &amp;#34;banana&amp;#34;) // &amp;#34;apple&amp;#34;（字符串也可以比较）
+Clamp(15, 0, 10) // 10（限制在 [0, 10] 范围内）
+```
+- 自定义约束
+-
+```go
+// 约束是接口，可以包含：
+// 1. 方法列表
+// 2. 类型集合（~ 表示底层类型）
+// 类型集合：只允许这些具体类型
+type Integer interface {
+int | int8 | int16 | int32 | int64
+}
+// ~ 表示底层类型（包含所有基于这些类型的自定义类型）
+type Number interface {
+~int | ~int8 | ~int16 | ~int32 | ~int64 |
+~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 |
+~float32 | ~float64
+}
+func Sum[T Number](nums []T) T {
+var total T
+for _, n := range nums { total &amp;#43;= n }
+return total
+}
+// ~ 的重要性：
+type MyInt int // 基于 int 的自定义类型
+Sum([]MyInt{1, 2, 3}) // ✅ ~int 包含 MyInt
+// 不加 ~ 的话，Sum[int | float64] 就不接受 MyInt
+// 方法 &amp;#43; 类型混合约束
+type Stringer interface {
+~string | ~[]byte // 类型集合
+String() string // 方法要求
+}
+```
+- ~ 操作符的含义
+- ~T 表示「底层类型为 T 的所有类型」
+- type MyInt int 的底层类型是 int，所以 ~int 包含 MyInt
+- 不加 ~ 则只接受 int 本身，不接受基于 int 的自定义类型
+- 实际项目中，数值约束通常都要加 ~
+- 实用泛型函数库
+- 掌握泛型最好的方式是实现那些经典的高阶函数。
+- Go 1.21 的 slices 和 maps 标准包已经内置了很多。
+- 切片操作三件套
+-
+```go
+// Map：对每个元素应用函数
+func Map[T, R any](s []T, fn func(T) R) []R {
+result := make([]R, len(s))
+for i, v := range s { result[i] = fn(v) }
+return result
+}
+// Filter：保留满足条件的元素
+func Filter[T any](s []T, keep func(T) bool) []T {
+result := make([]T, 0, len(s))
+for _, v := range s {
+if keep(v) { result = append(result, v) }
+}
+return result
+}
+// Reduce：累积计算
+func Reduce[T, R any](s []T, init R, fn func(R, T) R) R {
+result := init
+for _, v := range s { result = fn(result, v) }
+return result
+}
+// 使用：组合成管道
+nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+result := Reduce(
+Map(
+Filter(nums, func(n int) bool { return n%2 == 0 }),
+func(n int) int { return n * n },
+),
+0,
+func(acc, n int) int { return acc &amp;#43; n },
+)
+// 偶数的平方和：4&amp;#43;16&amp;#43;36&amp;#43;64&amp;#43;100 = 220
+```
+- 通用工具函数
+-
+```go
+// Contains：检查元素是否在切片中
+func Contains[T comparable](s []T, target T) bool {
+for _, v := range s {
+if v == target { return true }
+}
+return false
+}
+// Index：查找元素的索引，-1 表示不存在
+func Index[T comparable](s []T, target T) int {
+for i, v := range s {
+if v == target { return i }
+}
+return -1
+}
+// Unique：去重，保持顺序
+func Unique[T comparable](s []T) []T {
+seen := make(map[T]struct{})
+result := make([]T, 0, len(s))
+for _, v := range s {
+if _, ok := seen[v]; !ok {
+seen[v] = struct{}{}
+result = append(result, v)
+}
+}
+return result
+}
+// Keys：取出 map 的所有 key
+func Keys[K comparable, V any](m map[K]V) []K {
+keys := make([]K, 0, len(m))
+for k := range m { keys = append(keys, k) }
+return keys
+}
+// Values：取出 map 的所有 value
+func Values[K comparable, V any](m map[K]V) []V {
+vals := make([]V, 0, len(m))
+for _, v := range m { vals = append(vals, v) }
+return vals
+}
+// GroupBy：按 key 函数分组
+func GroupBy[T any, K comparable](s []T, key func(T) K) map[K][]T {
+groups := make(map[K][]T)
+for _, v := range s {
+k := key(v)
+groups[k] = append(groups[k], v)
+}
+return groups
+}
+// 使用 GroupBy
+type Person struct{ Name, City string }
+people := []Person{
+{&amp;#34;Alice&amp;#34;, &amp;#34;Tokyo&amp;#34;}, {&amp;#34;Bob&amp;#34;, &amp;#34;Tokyo&amp;#34;}, {&amp;#34;Charlie&amp;#34;, &amp;#34;Osaka&amp;#34;},
+}
+byCity := GroupBy(people, func(p Person) string { return p.City })
+// byCity[&amp;#34;Tokyo&amp;#34;] = [{Alice Tokyo} {Bob Tokyo}]
+```
+- 泛型数据结构
+- 泛型最大的价值之一是可以写真正通用的数据结构。下面实现几个常用的容器。
+- 泛型 Set (集合)
+-
+```go
+type Set[T comparable] struct {
+items map[T]struct{}
+}
+func NewSet[T comparable](items ...T) *Set[T] {
+s := &amp;Set[T]{items: make(map[T]struct{})}
+for _, item := range items { s.Add(item) }
+return s
+}
+func (s *Set[T]) Add(item T) { s.items[item] = struct{}{} }
+func (s *Set[T]) Remove(item T) { delete(s.items, item) }
+func (s *Set[T]) Contains(item T) bool {
+_, ok := s.items[item]
+return ok
+}
+func (s *Set[T]) Len() int { return len(s.items) }
+// 集合运算
+func (s *Set[T]) Union(other *Set[T]) *Set[T] {
+result := NewSet[T]()
+for k := range s.items { result.Add(k) }
+for k := range other.items { result.Add(k) }
+return result
+}
+func (s *Set[T]) Intersection(other *Set[T]) *Set[T] {
+result := NewSet[T]()
+for k := range s.items {
+if other.Contains(k) { result.Add(k) }
+}
+return result
+}
+// 使用
+a := NewSet(1, 2, 3, 4)
+b := NewSet(3, 4, 5, 6)
+union := a.Union(b) // {1,2,3,4,5,6}
+inter := a.Intersection(b) // {3,4}
+```
+- 泛型 Optional (可选值)
+-
+```go
+// 类似 Rust 的 Option&amp;lt;T&amp;gt;，比返回 (T, bool) 更语义化
+type Optional[T any] struct {
+value T
+hasValue bool
+}
+func Some[T any](v T) Optional[T] {
+return Optional[T]{value: v, hasValue: true}
+}
+func None[T any]() Optional[T] {
+return Optional[T]{}
+}
+func (o Optional[T]) IsPresent() bool { return o.hasValue }
+func (o Optional[T]) Get() (T, bool) {
+return o.value, o.hasValue
+}
+func (o Optional[T]) OrElse(defaultVal T) T {
+if o.hasValue { return o.value }
+return defaultVal
+}
+func (o Optional[T]) Map(fn func(T) T) Optional[T] {
+if !o.hasValue { return None[T]() }
+return Some(fn(o.value))
+}
+// 使用
+func findUser(id int) Optional[User] {
+user, ok := db[id]
+if !ok { return None[User]() }
+return Some(user)
+}
+result := findUser(42).
+Map(func(u User) User { u.Name = strings.ToUpper(u.Name); return u }).
+OrElse(User{Name: &amp;#34;anonymous&amp;#34;})
+```
+- 标准库的泛型包
+- Go 1.21 起标准库加入了几个泛型包，直接使用它们比自己实现更好。
+- slice
+-
+```go
+import &amp;#34;slices&amp;#34;
+nums := []int{3, 1, 4, 1, 5, 9, 2, 6}
+// 排序
+slices.Sort(nums) // [1 1 2 3 4 5 6 9]
+slices.SortFunc(nums, func(a, b int) int {
+return b - a // 降序
+})
+// 查找
+idx := slices.Index(nums, 5) // 找到返回索引，否则 -1
+ok := slices.Contains(nums, 5) // true
+// 修改
+slices.Reverse(nums) // 原地反转
+unique := slices.Compact(nums) // 去除连续重复
+nums = slices.Delete(nums, 2, 4) // 删除 [2,4) 区间
+nums = slices.Insert(nums, 1, 99, 88) // 在索引 1 处插入
+// 复制（独立副本）
+clone := slices.Clone(nums)
+// 比较
+equal := slices.Equal([]int{1,2}, []int{1,2}) // true
+```
+- maps 包
+-
+```go
+import &amp;#34;maps&amp;#34;
+m := map[string]int{&amp;#34;a&amp;#34;: 1, &amp;#34;b&amp;#34;: 2, &amp;#34;c&amp;#34;: 3}
+// 复制
+clone := maps.Clone(m)
+// 删除满足条件的 key
+maps.DeleteFunc(m, func(k string, v int) bool {
+return v &amp;lt; 2 // 删除 value &amp;lt; 2 的条目
+})
+// 判断是否相等
+eq := maps.Equal(m, map[string]int{&amp;#34;b&amp;#34;: 2, &amp;#34;c&amp;#34;: 3})
+// 遍历（Go 1.23&amp;#43; range over func）
+for k, v := range maps.All(m) {
+fmt.Printf(&amp;#34;%s: %d\n&amp;#34;, k, v)
+}
+```
+- cmp 包
+-
+```go
+import &amp;#34;cmp&amp;#34;
+// cmp.Ordered：可排序类型的约束（等价于 constraints.Ordered）
+func Min[T cmp.Ordered](a, b T) T {
+return min(a, b) // Go 1.21&amp;#43; 内置了 min/max 函数
+}
+// cmp.Compare：三路比较（-1, 0, 1）
+cmp.Compare(1, 2) // -1
+cmp.Compare(2, 2) // 0
+cmp.Compare(3, 2) // 1
+cmp.Compare(&amp;#34;a&amp;#34;, &amp;#34;b&amp;#34;) // -1（字符串也支持）
+// 配合 slices.SortFunc 使用
+type User struct{ Name string; Age int }
+users := []User{{&amp;#34;Alice&amp;#34;, 30}, {&amp;#34;Bob&amp;#34;, 25}, {&amp;#34;Charlie&amp;#34;, 35}}
+slices.SortFunc(users, func(a, b User) int {
+return cmp.Compare(a.Age, b.Age) // 按年龄排序
+})
+// Go 1.21&amp;#43; 内置 min/max（泛型版本）
+fmt.Println(min(3, 5)) // 3
+fmt.Println(max(&amp;#34;a&amp;#34;, &amp;#34;b&amp;#34;)) // b
+fmt.Println(min(1, 2, 3, 4)) // 1（支持多参数）
+```
+- 泛型的限制与最佳实践
+- 当前的限制
+-
+```go
+// ❌ 限制一：不能在方法上定义新的类型参数
+type Foo struct{}
+func (f Foo) Bar[T any](v T) {} // ❌ 编译错误！方法不能有类型参数
+// ✅ 解决：把类型参数放到结构体上
+type Foo[T any] struct{}
+func (f Foo[T]) Bar(v T) {}
+// ❌ 限制二：类型参数不能用作类型断言的目标
+func wrong[T any](v any) T {
+return v.(T) // ❌ 编译错误
+}
+// ✅ 解决：用 switch 或 reflect
+func convert[T any](v any) (T, bool) {
+result, ok := v.(T)
+return result, ok
+}
+// ❌ 限制三：泛型类型不能直接比较（如果类型参数不是 comparable）
+func Equal[T any](a, b T) bool {
+return a == b // ❌ 如果 T 是 any，不能用 ==
+}
+// ✅ 解决：约束为 comparable
+func Equal[T comparable](a, b T) bool {
+return a == b
+}
+// ❌ 限制四：不支持特化（不能为特定类型提供不同实现）
+// Go 泛型目前没有 C&amp;#43;&amp;#43; 那样的模板特化
+```
+- 什么时候用泛型，什么时候不用
+-
+```go
+// ✅ 适合用泛型：
+// 1. 通用容器（Stack, Queue, Set, Tree）
+// 2. 算法函数（Sort, Map, Filter, Reduce）
+// 3. 工具函数（Min, Max, Contains, GroupBy）
+// 4. 类型安全的包装（Optional, Result）
+// ❌ 不适合用泛型：
+// 1. 单一类型的业务逻辑（用具体类型更清晰）
+// 2. 接口能解决的多态问题（优先接口）
+// 3. 能用 any 且不需要类型安全的场景
+// 判断口诀：
+// 「如果写了两个只有类型不同的函数，考虑泛型」
+// 「如果行为因类型不同而不同，用接口」
+// 反面教材：泛型滥用
+type GenericService[T any] struct { // ❌ 过度泛型
+repo Repository[T]
+}
+// 如果 T 只有一种可能，直接用具体类型
+// 正确：当真正需要通用性时才用
+type Cache[K comparable, V any] struct { // ✅ 合理
+mu sync.RWMutex
+data map[K]V
+ttl time.Duration
+}
+```
+&lt;/textarea&gt;
+&lt;h1 id="web-开发实战"&gt;Web 开发实战&lt;/h1&gt;
+&lt;div
+class="mindmap-container"
+id="mindmap-83417526"
+style="width:100%; height:860px; min-height: 860px;"
+&gt;&lt;/div&gt;
+&lt;textarea id="mindmap-data-83417526" style="display:none;"&gt;
+- Web 开发实战
+- net/http 标准库
+- net/http 核心概念
+- Go 的 net/http 标准库是同类中最强大的之一——不需要任何框架就能构建生产级 HTTP 服务器。
+- 理解标准库是学好 Gin/Echo 等框架的基础，因为框架只是在它之上加了一层糖衣。
+- HTTP 服务器示例
+-
+```go
+package main
+import (
+&amp;#34;fmt&amp;#34;
+&amp;#34;net/http&amp;#34;
+)
+func main() {
+// 注册路由处理器
+http.HandleFunc(&amp;#34;/&amp;#34;, func(w http.ResponseWriter, r *http.Request) {
+fmt.Fprintln(w, &amp;#34;Hello, Go Web!&amp;#34;)
+})
+http.HandleFunc(&amp;#34;/ping&amp;#34;, func(w http.ResponseWriter, r *http.Request) {
+fmt.Fprintln(w, &amp;#34;pong&amp;#34;)
+})
+// 启动服务器（阻塞）
+fmt.Println(&amp;#34;服务器启动在 :8080&amp;#34;)
+if err := http.ListenAndServe(&amp;#34;:8080&amp;#34;, nil); err != nil {
+panic(err)
+}
+}
+// curl http://localhost:8080/
+// → Hello, Go Web!
+// curl http://localhost:8080/ping
+// → pong
+```
+- http.Handler 接口：一切方法的核心
+-
+```go
+// Handler 接口只有一个方法
+// type Handler interface {
+// ServeHTTP(ResponseWriter, *Request)
+// }
+// ResponseWriter：写响应
+// *Request：读请求
+// 实现 Handler 接口的三种方式：
+// 方式一：函数（用 http.HandlerFunc 适配）
+func myHandler(w http.ResponseWriter, r *http.Request) {
+w.WriteHeader(http.StatusOK)
+fmt.Fprintln(w, &amp;#34;Hello&amp;#34;)
+}
+http.Handle(&amp;#34;/&amp;#34;, http.HandlerFunc(myHandler))
+// 方式二：http.HandleFunc（语法糖，最常用）
+http.HandleFunc(&amp;#34;/&amp;#34;, myHandler)
+// 方式三：实现 ServeHTTP 方法的结构体
+type MyHandler struct{ greeting string }
+func (h *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+fmt.Fprintln(w, h.greeting)
+}
+http.Handle(&amp;#34;/&amp;#34;, &amp;MyHandler{greeting: &amp;#34;Hello from struct!&amp;#34;})
+```
+- nil 是默认 ServeMux
+- http.HandleFunc 和 http.Handle 注册到默认的 http.DefaultServeMux 上。
+- ListenAndServe 传 nil 就用这个默认路由器。
+- 生产代码通常自己创建 http.NewServeMux()，避免全局状态污染——特别是在写库的时候。
+- 解析请求
+- *http.Request 包含请求的所有信息。掌握如何读取 URL 参数、Header、Body 是写 API 的基础。
+- URL 参数与路径
+-
+```go
+func handler(w http.ResponseWriter, r *http.Request) {
+// 请求方法
+method := r.Method // &amp;#34;GET&amp;#34;, &amp;#34;POST&amp;#34;, &amp;#34;PUT&amp;#34;, &amp;#34;DELETE&amp;#34;
+// URL 路径
+path := r.URL.Path // &amp;#34;/api/users/42&amp;#34;
+// Query 参数（?name=Alice&amp;age=30）
+name := r.URL.Query().Get(&amp;#34;name&amp;#34;) // &amp;#34;Alice&amp;#34;
+age := r.URL.Query().Get(&amp;#34;age&amp;#34;) // &amp;#34;30&amp;#34;（字符串，需手动转换）
+all := r.URL.Query() // url.Values（map[string][]string）
+// ⚠️ 标准库没有路径参数（:id 这种）
+// 需要自己解析或用 Go 1.22 的新路由器
+// 例如：从 /api/users/42 提取 42
+parts := strings.Split(r.URL.Path, &amp;#34;/&amp;#34;)
+// parts = [&amp;#34;&amp;#34;, &amp;#34;api&amp;#34;, &amp;#34;users&amp;#34;, &amp;#34;42&amp;#34;]
+fmt.Fprintf(w, &amp;#34;method=%s path=%s name=%s&amp;#34;, method, path, name)
+}
+```
+- 读取 Header 和 Body
+-
+```go
+func handler(w http.ResponseWriter, r *http.Request) {
+// Headers
+contentType := r.Header.Get(&amp;#34;Content-Type&amp;#34;)
+token := r.Header.Get(&amp;#34;Authorization&amp;#34;)
+userAgent := r.Header.Get(&amp;#34;User-Agent&amp;#34;)
+// Body（只能读一次！）
+defer r.Body.Close()
+body, err := io.ReadAll(r.Body)
+if err != nil {
+http.Error(w, &amp;#34;读取 body 失败&amp;#34;, http.StatusBadRequest)
+return
+}
+// JSON 解析
+var payload struct {
+Name string `json:&amp;#34;name&amp;#34;`
+Email string `json:&amp;#34;email&amp;#34;`
+}
+if err := json.Unmarshal(body, &amp;payload); err != nil {
+http.Error(w, &amp;#34;JSON 解析失败&amp;#34;, http.StatusBadRequest)
+return
+}
+// 或者用 Decoder（更高效，不需要先读入 []byte）
+var data map[string]any
+if err := json.NewDecoder(r.Body).Decode(&amp;data); err != nil {
+http.Error(w, &amp;#34;invalid json&amp;#34;, http.StatusBadRequest)
+return
+}
+_ = contentType; _ = token; _ = userAgent
+fmt.Fprintf(w, &amp;#34;name=%s email=%s&amp;#34;, payload.Name, payload.Email)
+}
+```
+- 表单与文件上传
+-
+```go
+func handler(w http.ResponseWriter, r *http.Request) {
+// 解析表单（必须先调用）
+if err := r.ParseForm(); err != nil {
+http.Error(w, &amp;#34;解析表单失败&amp;#34;, http.StatusBadRequest)
+return
+}
+name := r.FormValue(&amp;#34;name&amp;#34;) // 同时读取 form 和 query 参数
+// 文件上传
+r.ParseMultipartForm(10 &amp;lt;&amp;lt; 20) // 最大 10MB
+file, header, err := r.FormFile(&amp;#34;avatar&amp;#34;)
+if err != nil {
+http.Error(w, &amp;#34;读取文件失败&amp;#34;, http.StatusBadRequest)
+return
+}
+defer file.Close()
+fmt.Printf(&amp;#34;文件名: %s, 大小: %d\n&amp;#34;, header.Filename, header.Size)
+// 保存文件
+dst, _ := os.Create(&amp;#34;upload/&amp;#34; &amp;#43; header.Filename)
+defer dst.Close()
+io.Copy(dst, file)
+_ = name
+fmt.Fprintln(w, &amp;#34;上传成功&amp;#34;)
+}
+```
+- 构建响应
+- http.ResponseWriter 用于写响应。
+- 理解写入顺序很重要：必须先设置 Header，再 WriteHeader，最后写 Body。
+-
+```go
+func handler(w http.ResponseWriter, r *http.Request) {
+// ⚠️ 顺序很重要：Header → WriteHeader → Body
+// 1. 设置响应头（必须在 WriteHeader 之前）
+w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;)
+w.Header().Set(&amp;#34;X-Request-ID&amp;#34;, &amp;#34;abc-123&amp;#34;)
+// 2. 设置状态码（只能调用一次，之后会 superfluous）
+w.WriteHeader(http.StatusCreated) // 201
+// 3. 写 Body
+fmt.Fprintln(w, `{&amp;#34;message&amp;#34;: &amp;#34;created&amp;#34;}`)
+}
+// 常用状态码常量
+http.StatusOK // 200
+http.StatusCreated // 201
+http.StatusNoContent // 204
+http.StatusBadRequest // 400
+http.StatusUnauthorized // 401
+http.StatusForbidden // 403
+http.StatusNotFound // 404
+http.StatusInternalServerError // 500
+```
+- JSON 响应的标准写法
+-
+```go
+// 封装一个通用的 JSON 响应函数
+func writeJSON(w http.ResponseWriter, status int, data any) {
+w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;)
+w.WriteHeader(status)
+if err := json.NewEncoder(w).Encode(data); err != nil {
+// 已经 WriteHeader 了，只能 log，不能再改状态码
+log.Printf(&amp;#34;写入 JSON 响应失败: %v&amp;#34;, err)
+}
+}
+// 封装错误响应
+type ErrorResponse struct {
+Code int `json:&amp;#34;code&amp;#34;`
+Message string `json:&amp;#34;message&amp;#34;`
+}
+func writeError(w http.ResponseWriter, status int, msg string) {
+writeJSON(w, status, ErrorResponse{Code: status, Message: msg})
+}
+// 使用
+func getUserHandler(w http.ResponseWriter, r *http.Request) {
+user, err := findUser(1)
+if err != nil {
+writeError(w, http.StatusNotFound, &amp;#34;用户不存在&amp;#34;)
+return
+}
+writeJSON(w, http.StatusOK, user)
+}
+```
+- 重定向与文件服务
+-
+```go
+// 重定向
+http.Redirect(w, r, &amp;#34;/new-path&amp;#34;, http.StatusMovedPermanently) // 301
+http.Redirect(w, r, &amp;#34;/login&amp;#34;, http.StatusFound) // 302
+// 简单错误响应
+http.Error(w, &amp;#34;资源不存在&amp;#34;, http.StatusNotFound)
+// 等价于：
+// w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;text/plain; charset=utf-8&amp;#34;)
+// w.WriteHeader(http.StatusNotFound)
+// fmt.Fprintln(w, &amp;#34;资源不存在&amp;#34;)
+// 静态文件服务
+http.Handle(&amp;#34;/static/&amp;#34;, http.StripPrefix(
+&amp;#34;/static/&amp;#34;,
+http.FileServer(http.Dir(&amp;#34;./public&amp;#34;)),
+))
+// ServeFile：返回单个文件
+http.ServeFile(w, r, &amp;#34;./public/index.html&amp;#34;)
+// ServeContent：带 Range 支持的文件（视频流）
+http.ServeContent(w, r, &amp;#34;video.mp4&amp;#34;, time.Now(), file)
+```
+- ServerMux 路由与 Go 1.22 新路由
+- 标准库的 ServeMux 在 Go 1.22 之前功能很有限——不支持路径参数和方法限制。
+- Go 1.22 大幅增强了路由能力，现在可以直接用标准库写出接近框架的路由。
+- 传统 ServerMux
+-
+```go
+mux := http.NewServeMux()
+// 精确匹配
+mux.HandleFunc(&amp;#34;/api/users&amp;#34;, usersHandler)
+// 前缀匹配（以 / 结尾）
+mux.HandleFunc(&amp;#34;/static/&amp;#34;, staticHandler)
+// ⚠️ 传统 ServeMux 的限制：
+// 1. 不支持路径参数（/users/:id）
+// 2. 不支持 HTTP 方法区分（GET vs POST）
+// 需要在 handler 内手动判断
+func usersHandler(w http.ResponseWriter, r *http.Request) {
+switch r.Method {
+case http.MethodGet:
+listUsers(w, r)
+case http.MethodPost:
+createUser(w, r)
+default:
+http.Error(w, &amp;#34;Method Not Allowed&amp;#34;, http.StatusMethodNotAllowed)
+}
+}
+```
+- Go 1.22&amp;#43; 增强路由
+-
+```go
+// Go 1.22 的 ServeMux 支持：
+// 1. HTTP 方法前缀
+// 2. 路径参数 {name}
+// 3. 通配符 {path...}
+mux := http.NewServeMux()
+// 方法 &amp;#43; 路径
+mux.HandleFunc(&amp;#34;GET /api/users&amp;#34;, listUsers)
+mux.HandleFunc(&amp;#34;POST /api/users&amp;#34;, createUser)
+// 路径参数 {id}
+mux.HandleFunc(&amp;#34;GET /api/users/{id}&amp;#34;, getUser)
+mux.HandleFunc(&amp;#34;PUT /api/users/{id}&amp;#34;, updateUser)
+mux.HandleFunc(&amp;#34;DELETE /api/users/{id}&amp;#34;, deleteUser)
+// 通配符（匹配任意后续路径）
+mux.HandleFunc(&amp;#34;GET /static/{path...}&amp;#34;, staticHandler)
+// 在 handler 中读取路径参数
+func getUser(w http.ResponseWriter, r *http.Request) {
+id := r.PathValue(&amp;#34;id&amp;#34;) // ✨ Go 1.22 新增！
+fmt.Fprintf(w, &amp;#34;获取用户 ID: %s&amp;#34;, id)
+}
+// 精确匹配（末尾加 {$} 防止前缀匹配）
+mux.HandleFunc(&amp;#34;GET /{$}&amp;#34;, homeHandler) // 只匹配根路径
+```
+- 路由组织：分文件
+-
+```go
+// 把路由注册拆分到各模块
+// cmd/server/main.go
+func main() {
+mux := http.NewServeMux()
+// 注册各模块的路由
+registerUserRoutes(mux)
+registerAuthRoutes(mux)
+registerHealthRoutes(mux)
+srv := &amp;http.Server{
+Addr: &amp;#34;:8080&amp;#34;,
+Handler: mux,
+ReadTimeout: 15 * time.Second,
+WriteTimeout: 15 * time.Second,
+IdleTimeout: 60 * time.Second,
+}
+log.Fatal(srv.ListenAndServe())
+}
+// internal/handler/user.go
+func registerUserRoutes(mux *http.ServeMux) {
+mux.HandleFunc(&amp;#34;GET /api/users&amp;#34;, listUsers)
+mux.HandleFunc(&amp;#34;POST /api/users&amp;#34;, createUser)
+mux.HandleFunc(&amp;#34;GET /api/users/{id}&amp;#34;, getUser)
+mux.HandleFunc(&amp;#34;PUT /api/users/{id}&amp;#34;, updateUser)
+mux.HandleFunc(&amp;#34;DELETE /api/users/{id}&amp;#34;, deleteUser)
+}
+```
+- 用 http.Server 而不是 http.ListenrAndServe
+- http.ListenAndServe 是快速启动用的，没办法设置超时。
+- 生产环境必须用 http.Server 并设置 ReadTimeout、WriteTimeout、IdleTimeout。
+- 没有这些超时，慢速客户端可以让你的服务器资源耗尽（slowloris 攻击）。
+- 中间件模式
+- 中间件是包裹 Handler 的函数，在请求前后添加通用逻辑（日志、认证、CORS、限流）。
+- 标准库的中间件模式非常简洁，用函数包装函数实现。
+- 中间件的定义与使用
+-
+```go
+// 中间件的签名：接受 Handler，返回 Handler
+type Middleware func(http.Handler) http.Handler
+// 日志中间件
+func Logger(next http.Handler) http.Handler {
+return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+start := time.Now()
+next.ServeHTTP(w, r) // 调用下一个 handler
+log.Printf(&amp;#34;%s %s %v&amp;#34;, r.Method, r.URL.Path, time.Since(start))
+})
+}
+// Recovery 中间件（防 panic 崩溃）
+func Recovery(next http.Handler) http.Handler {
+return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+defer func() {
+if err := recover(); err != nil {
+log.Printf(&amp;#34;panic 恢复: %v\n%s&amp;#34;, err, debug.Stack())
+http.Error(w, &amp;#34;内部服务错误&amp;#34;, http.StatusInternalServerError)
+}
+}()
+next.ServeHTTP(w, r)
+})
+}
+// 链式组合多个中间件
+func Chain(h http.Handler, middlewares ...Middleware) http.Handler {
+// 反序应用，保证执行顺序正确
+for i := len(middlewares) - 1; i &amp;gt;= 0; i-- {
+h = middlewares[i](h)
+}
+return h
+}
+// 使用
+mux := http.NewServeMux()
+mux.HandleFunc(&amp;#34;GET /api/users&amp;#34;, listUsers)
+// 应用中间件：Recovery → Logger → mux（从外到内）
+handler := Chain(mux, Recovery, Logger)
+http.ListenAndServe(&amp;#34;:8080&amp;#34;, handler)
+```
+- 认证中间件（JWT 示意）
+-
+```go
+type contextKey string
+const userIDKey contextKey = &amp;#34;userID&amp;#34;
+func Auth(next http.Handler) http.Handler {
+return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+token := r.Header.Get(&amp;#34;Authorization&amp;#34;)
+if token == &amp;#34;&amp;#34; {
+http.Error(w, &amp;#34;未授权&amp;#34;, http.StatusUnauthorized)
+return
+}
+// 验证 token，提取 userID
+userID, err := validateToken(strings.TrimPrefix(token, &amp;#34;Bearer &amp;#34;))
+if err != nil {
+http.Error(w, &amp;#34;无效令牌&amp;#34;, http.StatusUnauthorized)
+return
+}
+// 把 userID 注入 context（Day 10 学的技能）
+ctx := context.WithValue(r.Context(), userIDKey, userID)
+next.ServeHTTP(w, r.WithContext(ctx))
+})
+}
+// 在 handler 中读取
+func profileHandler(w http.ResponseWriter, r *http.Request) {
+userID, ok := r.Context().Value(userIDKey).(int)
+if !ok {
+http.Error(w, &amp;#34;未认证&amp;#34;, http.StatusUnauthorized)
+return
+}
+fmt.Fprintf(w, &amp;#34;当前用户 ID: %d&amp;#34;, userID)
+}
+// 只对特定路由加认证
+mux.Handle(&amp;#34;GET /api/profile&amp;#34;, Auth(http.HandlerFunc(profileHandler)))
+```
+- CORS 中间件
+-
+```go
+func CORS(allowOrigin string) Middleware {
+return func(next http.Handler) http.Handler {
+return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+w.Header().Set(&amp;#34;Access-Control-Allow-Origin&amp;#34;, allowOrigin)
+w.Header().Set(&amp;#34;Access-Control-Allow-Methods&amp;#34;, &amp;#34;GET, POST, PUT, DELETE, OPTIONS&amp;#34;)
+w.Header().Set(&amp;#34;Access-Control-Allow-Headers&amp;#34;, &amp;#34;Content-Type, Authorization&amp;#34;)
+// OPTIONS 预检请求直接返回
+if r.Method == http.MethodOptions {
+w.WriteHeader(http.StatusNoContent)
+return
+}
+next.ServeHTTP(w, r)
+})
+}
+}
+// 使用
+handler := Chain(mux,
+Recovery,
+Logger,
+CORS(&amp;#34;https://myapp.com&amp;#34;),
+)
+```
+- 构建完整 REST API
+- 完整用户 CRUD REST API
+-
+```go
+package main
+import (
+&amp;#34;encoding/json&amp;#34;
+&amp;#34;errors&amp;#34;
+&amp;#34;fmt&amp;#34;
+&amp;#34;log&amp;#34;
+&amp;#34;net/http&amp;#34;
+&amp;#34;strconv&amp;#34;
+&amp;#34;sync&amp;#34;
+&amp;#34;time&amp;#34;
+)
+// ───── 模型 ─────
+type User struct {
+ID int `json:&amp;#34;id&amp;#34;`
+Name string `json:&amp;#34;name&amp;#34;`
+Email string `json:&amp;#34;email&amp;#34;`
+CreatedAt time.Time `json:&amp;#34;created_at&amp;#34;`
+}
+// ───── 存储（内存）─────
+type Store struct {
+mu sync.RWMutex
+users map[int]*User
+nextID int
+}
+func NewStore() *Store {
+return &amp;Store{users: make(map[int]*User), nextID: 1}
+}
+var ErrNotFound = errors.New(&amp;#34;not found&amp;#34;)
+func (s *Store) List() []*User {
+s.mu.RLock(); defer s.mu.RUnlock()
+list := make([]*User, 0, len(s.users))
+for _, u := range s.users { list = append(list, u) }
+return list
+}
+func (s *Store) Get(id int) (*User, error) {
+s.mu.RLock(); defer s.mu.RUnlock()
+u, ok := s.users[id]
+if !ok { return nil, ErrNotFound }
+return u, nil
+}
+func (s *Store) Create(u *User) {
+s.mu.Lock(); defer s.mu.Unlock()
+u.ID = s.nextID; u.CreatedAt = time.Now()
+s.users[u.ID] = u; s.nextID&amp;#43;&amp;#43;
+}
+func (s *Store) Update(id int, name, email string) (*User, error) {
+s.mu.Lock(); defer s.mu.Unlock()
+u, ok := s.users[id]
+if !ok { return nil, ErrNotFound }
+if name != &amp;#34;&amp;#34; { u.Name = name }
+if email != &amp;#34;&amp;#34; { u.Email = email }
+return u, nil
+}
+func (s *Store) Delete(id int) error {
+s.mu.Lock(); defer s.mu.Unlock()
+if _, ok := s.users[id]; !ok { return ErrNotFound }
+delete(s.users, id); return nil
+}
+// ───── Handler ─────
+type UserHandler struct{ store *Store }
+func (h *UserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+// 路由分发（Go 1.22 前的方式）
+id, err := strconv.Atoi(r.PathValue(&amp;#34;id&amp;#34;))
+if err != nil &amp;&amp; r.PathValue(&amp;#34;id&amp;#34;) != &amp;#34;&amp;#34; {
+writeError(w, 400, &amp;#34;无效的 ID&amp;#34;)
+return
+}
+switch {
+case r.Method == &amp;#34;GET&amp;#34; &amp;&amp; id == 0:
+h.list(w, r)
+case r.Method == &amp;#34;POST&amp;#34; &amp;&amp; id == 0:
+h.create(w, r)
+case r.Method == &amp;#34;GET&amp;#34; &amp;&amp; id &amp;gt; 0:
+h.get(w, r, id)
+case r.Method == &amp;#34;PUT&amp;#34; &amp;&amp; id &amp;gt; 0:
+h.update(w, r, id)
+case r.Method == &amp;#34;DELETE&amp;#34; &amp;&amp; id &amp;gt; 0:
+h.delete(w, r, id)
+default:
+http.Error(w, &amp;#34;Not Found&amp;#34;, 404)
+}
+}
+func (h *UserHandler) list(w http.ResponseWriter, r *http.Request) {
+writeJSON(w, 200, h.store.List())
+}
+func (h *UserHandler) create(w http.ResponseWriter, r *http.Request) {
+var u User
+if err := json.NewDecoder(r.Body).Decode(&amp;u); err != nil {
+writeError(w, 400, &amp;#34;无效的请求体&amp;#34;)
+return
+}
+if u.Name == &amp;#34;&amp;#34; || u.Email == &amp;#34;&amp;#34; {
+writeError(w, 400, &amp;#34;name 和 email 不能为空&amp;#34;)
+return
+}
+h.store.Create(&amp;u)
+writeJSON(w, 201, u)
+}
+func (h *UserHandler) get(w http.ResponseWriter, r *http.Request, id int) {
+u, err := h.store.Get(id)
+if errors.Is(err, ErrNotFound) {
+writeError(w, 404, &amp;#34;用户不存在&amp;#34;)
+return
+}
+writeJSON(w, 200, u)
+}
+func (h *UserHandler) update(w http.ResponseWriter, r *http.Request, id int) {
+var req struct {
+Name string `json:&amp;#34;name&amp;#34;`
+Email string `json:&amp;#34;email&amp;#34;`
+}
+json.NewDecoder(r.Body).Decode(&amp;req)
+u, err := h.store.Update(id, req.Name, req.Email)
+if errors.Is(err, ErrNotFound) {
+writeError(w, 404, &amp;#34;用户不存在&amp;#34;)
+return
+}
+writeJSON(w, 200, u)
+}
+func (h *UserHandler) delete(w http.ResponseWriter, r *http.Request, id int) {
+if err := h.store.Delete(id); errors.Is(err, ErrNotFound) {
+writeError(w, 404, &amp;#34;用户不存在&amp;#34;)
+return
+}
+w.WriteHeader(204)
+}
+// ───── 工具函数 ─────
+func writeJSON(w http.ResponseWriter, status int, data any) {
+w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;)
+w.WriteHeader(status)
+json.NewEncoder(w).Encode(data)
+}
+func writeError(w http.ResponseWriter, status int, msg string) {
+writeJSON(w, status, map[string]string{&amp;#34;error&amp;#34;: msg})
+}
+// ───── main ─────
+func main() {
+store := NewStore()
+h := &amp;UserHandler{store: store}
+mux := http.NewServeMux()
+// Go 1.22&amp;#43; 路由
+mux.HandleFunc(&amp;#34;GET /api/users&amp;#34;, h.list)
+mux.HandleFunc(&amp;#34;POST /api/users&amp;#34;, h.create)
+mux.HandleFunc(&amp;#34;GET /api/users/{id}&amp;#34;, func(w http.ResponseWriter, r *http.Request) {
+id, _ := strconv.Atoi(r.PathValue(&amp;#34;id&amp;#34;))
+h.get(w, r, id)
+})
+mux.HandleFunc(&amp;#34;PUT /api/users/{id}&amp;#34;, func(w http.ResponseWriter, r *http.Request) {
+id, _ := strconv.Atoi(r.PathValue(&amp;#34;id&amp;#34;))
+h.update(w, r, id)
+})
+mux.HandleFunc(&amp;#34;DELETE /api/users/{id}&amp;#34;, func(w http.ResponseWriter, r *http.Request) {
+id, _ := strconv.Atoi(r.PathValue(&amp;#34;id&amp;#34;))
+h.delete(w, r, id)
+})
+handler := Chain(mux, Recovery, Logger)
+srv := &amp;http.Server{
+Addr: &amp;#34;:8080&amp;#34;,
+Handler: handler,
+ReadTimeout: 15 * time.Second,
+WriteTimeout: 15 * time.Second,
+}
+fmt.Println(&amp;#34;🚀 服务器启动: http://localhost:8080&amp;#34;)
+log.Fatal(srv.ListenAndServe())
+}
+```
+- 用 curl 测试
+-
+```go
+# 创建用户
+curl -X POST http://localhost:8080/api/users \
+-H &amp;#34;Content-Type: application/json&amp;#34; \
+-d &amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;Alice&amp;#34;,&amp;#34;email&amp;#34;:&amp;#34;alice@example.com&amp;#34;}&amp;#39;
+# → {&amp;#34;id&amp;#34;:1,&amp;#34;name&amp;#34;:&amp;#34;Alice&amp;#34;,&amp;#34;email&amp;#34;:&amp;#34;alice@example.com&amp;#34;,&amp;#34;created_at&amp;#34;:&amp;#34;...&amp;#34;}
+# 获取所有用户
+curl http://localhost:8080/api/users
+# 获取单个用户
+curl http://localhost:8080/api/users/1
+# 更新用户
+curl -X PUT http://localhost:8080/api/users/1 \
+-H &amp;#34;Content-Type: application/json&amp;#34; \
+-d &amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;Alicia&amp;#34;}&amp;#39;
+# 删除用户
+curl -X DELETE http://localhost:8080/api/users/1
+```
+- 优雅关闭
+- 生产环境的服务器不能强制关闭——要等正在处理的请求完成后再退出。
+- Go 的 http.Server.Shutdown 方法实现了这个功能，配合系统信号使用。
+-
+```go
+package main
+import (
+&amp;#34;context&amp;#34;
+&amp;#34;log&amp;#34;
+&amp;#34;net/http&amp;#34;
+&amp;#34;os&amp;#34;
+&amp;#34;os/signal&amp;#34;
+&amp;#34;syscall&amp;#34;
+&amp;#34;time&amp;#34;
+)
+func main() {
+mux := http.NewServeMux()
+mux.HandleFunc(&amp;#34;GET /&amp;#34;, func(w http.ResponseWriter, r *http.Request) {
+// 模拟慢请求
+time.Sleep(2 * time.Second)
+fmt.Fprintln(w, &amp;#34;OK&amp;#34;)
+})
+srv := &amp;http.Server{
+Addr: &amp;#34;:8080&amp;#34;,
+Handler: mux,
+}
+// 在独立 goroutine 中启动服务器
+go func() {
+log.Println(&amp;#34;🚀 服务器启动: :8080&amp;#34;)
+if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+log.Fatalf(&amp;#34;服务器错误: %v&amp;#34;, err)
+}
+}()
+// 监听系统信号（Ctrl&amp;#43;C 或 kill）
+quit := make(chan os.Signal, 1)
+signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+&amp;lt;-quit // 阻塞，等待信号
+log.Println(&amp;#34;🛑 收到关闭信号，正在优雅关闭...&amp;#34;)
+// 给正在处理的请求 30 秒完成
+ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+defer cancel()
+if err := srv.Shutdown(ctx); err != nil {
+log.Printf(&amp;#34;强制关闭: %v&amp;#34;, err)
+} else {
+log.Println(&amp;#34;✅ 服务器已优雅关闭&amp;#34;)
+}
+}
+// 测试优雅关闭：
+// 1. 启动服务器
+// 2. 发送慢请求：curl http://localhost:8080/
+// 3. 在请求处理中按 Ctrl&amp;#43;C
+// 4. 观察：服务器等待请求完成后才退出
+```
+- Gin 框架入门
+- 为什么用 Gin
+- Gin 是在标准库之上的增强层，保留了所有 handler 逻辑，但是减少了重复代码
+- 提供了更强的路由、更方便的参数绑定、更完善的错误处理
+- 标准库 vs Gin 对比
+- 标准库写法
+-
+```go
+// ─── 标准库写法 ───
+func getUser(w http.ResponseWriter, r *http.Request) {
+idStr := r.PathValue(&amp;#34;id&amp;#34;)
+id, err := strconv.Atoi(idStr)
+if err != nil {
+w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;)
+w.WriteHeader(400)
+json.NewEncoder(w).Encode(map[string]string{&amp;#34;error&amp;#34;: &amp;#34;无效的 ID&amp;#34;})
+return
+}
+user, err := findUser(id)
+if err != nil {
+w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;)
+w.WriteHeader(404)
+json.NewEncoder(w).Encode(map[string]string{&amp;#34;error&amp;#34;: &amp;#34;用户不存在&amp;#34;})
+return
+}
+w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;)
+w.WriteHeader(200)
+json.NewEncoder(w).Encode(user)
+}
+// ─── Gin 写法 ───
+func getUser(c *gin.Context) {
+id, err := strconv.Atoi(c.Param(&amp;#34;id&amp;#34;))
+if err != nil {
+c.JSON(400, gin.H{&amp;#34;error&amp;#34;: &amp;#34;无效的 ID&amp;#34;})
+return
+}
+user, err := findUser(id)
+if err != nil {
+c.JSON(404, gin.H{&amp;#34;error&amp;#34;: &amp;#34;用户不存在&amp;#34;})
+return
+}
+c.JSON(200, user)
+}
+```
+- 安装与快速上手
+-
+```go
+go get github.com/gin-gonic/gin
+```
+-
+```go
+package main
+import &amp;#34;github.com/gin-gonic/gin&amp;#34;
+func main() {
+r := gin.Default() // 默认包含 Logger &amp;#43; Recovery 中间件
+r.GET(&amp;#34;/ping&amp;#34;, func(c *gin.Context) {
+c.JSON(200, gin.H{&amp;#34;message&amp;#34;: &amp;#34;pong&amp;#34;})
+})
+r.Run(&amp;#34;:8080&amp;#34;) // 等价于 http.ListenAndServe(&amp;#34;:8080&amp;#34;, r)
+}
+// gin.H 是 map[string]any 的别名，专为 JSON 响应设计
+// curl http://localhost:8080/ping
+// → {&amp;#34;message&amp;#34;:&amp;#34;pong&amp;#34;}
+```
+- Gin 的性能
+- Gin 实用 httprouter 为底层路由，比标准库的 ServeMux 更快
+- 官方 benchmark 显示比标准库快 40 倍以上
+- 路由与路由分组
+- Gin 的路由系统非常强大，支持路径参数、通配符、路由分组，还能给分组统一加中间件。
+- 基本路由
+-
+```go
+r := gin.Default()
+// HTTP 方法
+r.GET(&amp;#34;/users&amp;#34;, listUsers)
+r.POST(&amp;#34;/users&amp;#34;, createUser)
+r.PUT(&amp;#34;/users/:id&amp;#34;, updateUser)
+r.DELETE(&amp;#34;/users/:id&amp;#34;, deleteUser)
+r.PATCH(&amp;#34;/users/:id/status&amp;#34;, updateStatus)
+// 路径参数
+r.GET(&amp;#34;/users/:id&amp;#34;, func(c *gin.Context) {
+id := c.Param(&amp;#34;id&amp;#34;) // 精确参数：/users/42 → &amp;#34;42&amp;#34;
+fmt.Println(id)
+})
+r.GET(&amp;#34;/files/*filepath&amp;#34;, func(c *gin.Context) {
+path := c.Param(&amp;#34;filepath&amp;#34;) // 通配符：/files/a/b/c → &amp;#34;/a/b/c&amp;#34;
+fmt.Println(path)
+})
+// Query 参数
+r.GET(&amp;#34;/search&amp;#34;, func(c *gin.Context) {
+keyword := c.Query(&amp;#34;q&amp;#34;) // ?q=golang
+page := c.DefaultQuery(&amp;#34;page&amp;#34;, &amp;#34;1&amp;#34;) // 带默认值
+fmt.Println(keyword, page)
+})
+// 任意方法
+r.Any(&amp;#34;/webhook&amp;#34;, webhookHandler)
+// 静态文件
+r.Static(&amp;#34;/static&amp;#34;, &amp;#34;./public&amp;#34;)
+r.StaticFile(&amp;#34;/favicon.ico&amp;#34;, &amp;#34;./favicon.ico&amp;#34;)
+```
+- 路由分组 Group
+-
+```go
+r := gin.Default()
+// 路由分组：共享前缀
+v1 := r.Group(&amp;#34;/api/v1&amp;#34;)
+{
+v1.GET(&amp;#34;/users&amp;#34;, listUsers)
+v1.POST(&amp;#34;/users&amp;#34;, createUser)
+v1.GET(&amp;#34;/users/:id&amp;#34;, getUser)
+}
+v2 := r.Group(&amp;#34;/api/v2&amp;#34;)
+{
+v2.GET(&amp;#34;/users&amp;#34;, listUsersV2) // 新版接口
+}
+// 嵌套分组 &amp;#43; 中间件
+admin := r.Group(&amp;#34;/admin&amp;#34;, AuthMiddleware(), AdminOnlyMiddleware())
+{
+admin.GET(&amp;#34;/dashboard&amp;#34;, dashboard)
+admin.GET(&amp;#34;/users&amp;#34;, adminListUsers)
+// 嵌套分组
+settings := admin.Group(&amp;#34;/settings&amp;#34;)
+{
+settings.GET(&amp;#34;/&amp;#34;, getSettings)
+settings.PUT(&amp;#34;/&amp;#34;, updateSettings)
+}
+}
+// 只对部分路由加中间件
+auth := r.Group(&amp;#34;/api&amp;#34;)
+auth.Use(AuthMiddleware()) // 这组路由都需要认证
+{
+auth.GET(&amp;#34;/profile&amp;#34;, profile)
+auth.PUT(&amp;#34;/profile&amp;#34;, updateProfile)
+}
+```
+- NoRoute 和 NoMethod
+-
+```go
+// 自定义 404
+r.NoRoute(func(c *gin.Context) {
+c.JSON(404, gin.H{&amp;#34;error&amp;#34;: &amp;#34;接口不存在&amp;#34;})
+})
+// 自定义 405（方法不允许）
+r.NoMethod(func(c *gin.Context) {
+c.JSON(405, gin.H{&amp;#34;error&amp;#34;: &amp;#34;方法不允许&amp;#34;})
+})
+```
+- gin.Context: 一切的核心
+- *gin.Context 封装了请求和响应，是 Gin handler 的唯一参数。掌握它的所有方法，你就掌握了 Gin 的核心。
+- 读取请求参数
+-
+```go
+func handler(c *gin.Context) {
+// ─── 路径参数 ───
+id := c.Param(&amp;#34;id&amp;#34;) // /users/:id
+// ─── Query 参数 ───
+q := c.Query(&amp;#34;keyword&amp;#34;) // ?keyword=go
+page := c.DefaultQuery(&amp;#34;page&amp;#34;, &amp;#34;1&amp;#34;) // 带默认值
+all := c.QueryMap(&amp;#34;tags&amp;#34;) // ?tags[a]=1&amp;tags[b]=2
+// ─── Form 参数 ───
+name := c.PostForm(&amp;#34;name&amp;#34;)
+nick := c.DefaultPostForm(&amp;#34;nick&amp;#34;, &amp;#34;anonymous&amp;#34;)
+// ─── Header ───
+token := c.GetHeader(&amp;#34;Authorization&amp;#34;)
+ua := c.GetHeader(&amp;#34;User-Agent&amp;#34;)
+// ─── 请求信息 ───
+ip := c.ClientIP() // 客户端 IP（处理了代理）
+method := c.Request.Method // 原始 *http.Request 仍可访问
+_ = id; _ = q; _ = page; _ = all
+_ = name; _ = nick; _ = token; _ = ua; _ = ip; _ = method
+}
+```
+- Context 的键值存储（在中间件传数据）
+-
+```go
+// 中间件设置值
+func AuthMiddleware() gin.HandlerFunc {
+return func(c *gin.Context) {
+token := c.GetHeader(&amp;#34;Authorization&amp;#34;)
+userID, err := validateToken(token)
+if err != nil {
+c.AbortWithStatusJSON(401, gin.H{&amp;#34;error&amp;#34;: &amp;#34;未授权&amp;#34;})
+return // Abort 后必须 return！
+}
+c.Set(&amp;#34;userID&amp;#34;, userID) // 存入 context
+c.Set(&amp;#34;isAdmin&amp;#34;, false)
+c.Next() // 继续执行后续 handler/中间件
+}
+}
+// Handler 取值
+func profileHandler(c *gin.Context) {
+userID, exists := c.Get(&amp;#34;userID&amp;#34;)
+if !exists {
+c.JSON(401, gin.H{&amp;#34;error&amp;#34;: &amp;#34;未认证&amp;#34;})
+return
+}
+// 类型断言
+id := userID.(int)
+// 或者用类型安全的方法
+id2, _ := c.GetInt(&amp;#34;userID&amp;#34;)
+isAdmin, _ := c.GetBool(&amp;#34;isAdmin&amp;#34;)
+c.JSON(200, gin.H{&amp;#34;userID&amp;#34;: id, &amp;#34;id2&amp;#34;: id2, &amp;#34;isAdmin&amp;#34;: isAdmin})
+}
+```
+- 响应方法
+-
+```go
+func handler(c *gin.Context) {
+// JSON 响应（最常用）
+c.JSON(200, gin.H{&amp;#34;message&amp;#34;: &amp;#34;ok&amp;#34;})
+c.JSON(200, user) // 结构体自动序列化
+// 其他格式
+c.String(200, &amp;#34;Hello, %s!&amp;#34;, &amp;#34;World&amp;#34;)
+c.HTML(200, &amp;#34;index.html&amp;#34;, gin.H{&amp;#34;title&amp;#34;: &amp;#34;首页&amp;#34;})
+c.XML(200, user)
+c.YAML(200, user)
+// 文件响应
+c.File(&amp;#34;./public/file.pdf&amp;#34;)
+c.FileAttachment(&amp;#34;./public/file.pdf&amp;#34;, &amp;#34;download.pdf&amp;#34;)
+c.Data(200, &amp;#34;image/png&amp;#34;, imageBytes)
+// 重定向
+c.Redirect(302, &amp;#34;https://example.com&amp;#34;)
+// 状态码快捷方式
+c.Status(204) // 只有状态码，无 body
+// 中止后续中间件（不中止当前 handler）
+c.Abort()
+c.AbortWithStatus(403)
+c.AbortWithStatusJSON(403, gin.H{&amp;#34;error&amp;#34;: &amp;#34;禁止访问&amp;#34;})
+}
+```
+- 参数绑定与校验
+- Gin 集成了 validator 库，可以在解析请求参数的同时做校验，大大减少了手动 if err 的代码量。
+- ShouldBind：绑定 &amp;#43; 校验
+-
+```go
+// 定义请求结构体，用 binding tag 指定校验规则
+type CreateUserRequest struct {
+Name string `json:&amp;#34;name&amp;#34; binding:&amp;#34;required,min=2,max=50&amp;#34;`
+Email string `json:&amp;#34;email&amp;#34; binding:&amp;#34;required,email&amp;#34;`
+Age int `json:&amp;#34;age&amp;#34; binding:&amp;#34;gte=0,lte=150&amp;#34;`
+Password string `json:&amp;#34;password&amp;#34; binding:&amp;#34;required,min=8&amp;#34;`
+}
+func createUser(c *gin.Context) {
+var req CreateUserRequest
+// ShouldBindJSON：解析 JSON body &amp;#43; 校验
+if err := c.ShouldBindJSON(&amp;req); err != nil {
+c.JSON(400, gin.H{&amp;#34;error&amp;#34;: err.Error()})
+return
+}
+// req 现在已经被填充且通过了校验
+user, err := userService.Create(c.Request.Context(), req.Name, req.Email)
+if err != nil {
+c.JSON(500, gin.H{&amp;#34;error&amp;#34;: err.Error()})
+return
+}
+c.JSON(201, user)
+}
+```
+- 各种 Bind 方法
+-
+```go
+// ShouldBindJSON：绑定 JSON body
+c.ShouldBindJSON(&amp;req)
+// ShouldBindQuery：绑定 query 参数
+type SearchRequest struct {
+Keyword string `form:&amp;#34;q&amp;#34; binding:&amp;#34;required&amp;#34;`
+Page int `form:&amp;#34;page&amp;#34; binding:&amp;#34;gte=1&amp;#34;`
+Size int `form:&amp;#34;size&amp;#34; binding:&amp;#34;gte=1,lte=100&amp;#34;`
+}
+c.ShouldBindQuery(&amp;req)
+// ShouldBindUri：绑定路径参数
+type UriRequest struct {
+ID int `uri:&amp;#34;id&amp;#34; binding:&amp;#34;required,gt=0&amp;#34;`
+}
+c.ShouldBindUri(&amp;req)
+// ShouldBind：自动根据 Content-Type 选择
+c.ShouldBind(&amp;req)
+// Bind 和 ShouldBind 的区别：
+// ShouldBind：失败只返回 error，状态码由你决定（推荐）
+// Bind：失败自动设置 400，并写入响应（不灵活）
+```
+- 常用校验规则
+-
+```go
+type Example struct {
+// 必填
+Name string `binding:&amp;#34;required&amp;#34;`
+// 长度限制
+Bio string `binding:&amp;#34;max=500&amp;#34;`
+Code string `binding:&amp;#34;len=6&amp;#34;`
+Tag string `binding:&amp;#34;min=1,max=20&amp;#34;`
+// 数值范围
+Age int `binding:&amp;#34;gte=0,lte=150&amp;#34;`
+Score float64 `binding:&amp;#34;gt=0&amp;#34;`
+// 格式校验
+Email string `binding:&amp;#34;required,email&amp;#34;`
+URL string `binding:&amp;#34;url&amp;#34;`
+Phone string `binding:&amp;#34;e164&amp;#34;` // 国际电话格式
+// 枚举值
+Status string `binding:&amp;#34;oneof=active inactive deleted&amp;#34;`
+Role string `binding:&amp;#34;oneof=admin editor viewer&amp;#34;`
+// 条件校验
+Password string `binding:&amp;#34;required_with=Email&amp;#34;` // Email 填了就必填
+// 自定义：omitempty &amp;#43; 条件
+Nick string `binding:&amp;#34;omitempty,min=2&amp;#34;` // 有值才校验
+}
+// 自定义校验器
+import &amp;#34;github.com/go-playground/validator/v10&amp;#34;
+func validateChinesePhone(fl validator.FieldLevel) bool {
+phone := fl.Field().String()
+matched, _ := regexp.MatchString(`^1[3-9]\d{9}$`, phone)
+return matched
+}
+// 注册到 Gin
+if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+v.RegisterValidation(&amp;#34;cnphone&amp;#34;, validateChinesePhone)
+}
+type Req struct {
+Phone string `binding:&amp;#34;required,cnphone&amp;#34;`
+}
+```
+- 统一处理校验错误
+- validator 返回的错误是 validator.ValidationErrors 类型
+- 可以提取字段名和校验规则，返回更友好的错误信息，而不是直接把 err.Error() 给用户
+- 生产代码应该封装一个 parseValidationError 函数。
+- Gin 中间件
+- Gin 的中间件是 gin.HandlerFunc（等价于 func(*gin.Context)），通过 c.Next() 和 c.Abort() 控制执行流。
+- 中间件的执行模型
+-
+```go
+// 中间件的结构：前置逻辑 → Next() → 后置逻辑
+func LoggerMiddleware() gin.HandlerFunc {
+return func(c *gin.Context) {
+start := time.Now()
+path := c.Request.URL.Path
+// ─── 前置：请求进来时执行 ───
+fmt.Printf(&amp;#34;→ %s %s\n&amp;#34;, c.Request.Method, path)
+c.Next() // 执行下一个 handler/中间件
+// ─── 后置：响应返回后执行 ───
+duration := time.Since(start)
+status := c.Writer.Status()
+fmt.Printf(&amp;#34;← %s %s %d %v\n&amp;#34;, c.Request.Method, path, status, duration)
+}
+}
+// 全局中间件
+r := gin.New() // 不用 gin.Default()（它自带 Logger 和 Recovery）
+r.Use(LoggerMiddleware())
+r.Use(RecoveryMiddleware())
+r.Use(CORSMiddleware())
+```
+- 认证/限流中间件（完整实现）
+-
+```go
+func JWTAuth() gin.HandlerFunc {
+return func(c *gin.Context) {
+authHeader := c.GetHeader(&amp;#34;Authorization&amp;#34;)
+if authHeader == &amp;#34;&amp;#34; {
+c.AbortWithStatusJSON(401, gin.H{&amp;#34;error&amp;#34;: &amp;#34;缺少认证令牌&amp;#34;})
+return
+}
+// &amp;#34;Bearer &amp;lt;token&amp;gt;&amp;#34;
+parts := strings.SplitN(authHeader, &amp;#34; &amp;#34;, 2)
+if len(parts) != 2 || parts[0] != &amp;#34;Bearer&amp;#34; {
+c.AbortWithStatusJSON(401, gin.H{&amp;#34;error&amp;#34;: &amp;#34;令牌格式错误&amp;#34;})
+return
+}
+claims, err := parseJWT(parts[1])
+if err != nil {
+c.AbortWithStatusJSON(401, gin.H{&amp;#34;error&amp;#34;: &amp;#34;无效的令牌&amp;#34;})
+return
+}
+// 把用户信息注入 context
+c.Set(&amp;#34;userID&amp;#34;, claims.UserID)
+c.Set(&amp;#34;userEmail&amp;#34;, claims.Email)
+c.Next()
+}
+}
+// 限流中间件
+func RateLimit(rpm int) gin.HandlerFunc {
+// 每个 IP 限制每分钟 rpm 次请求
+limiter := rate.NewLimiter(rate.Every(time.Minute/time.Duration(rpm)), rpm)
+return func(c *gin.Context) {
+ip := c.ClientIP()
+if !getLimiter(ip, limiter).Allow() {
+c.AbortWithStatusJSON(429, gin.H{
+&amp;#34;error&amp;#34;: &amp;#34;请求过于频繁，请稍后再试&amp;#34;,
+})
+return
+}
+c.Next()
+}
+}
+```
+- Abort vs Return
+-
+```go
+// ⚠️ 重要：Abort 不会停止当前函数执行！
+// 必须同时 return，否则后续代码还会执行
+func badMiddleware(c *gin.Context) {
+c.AbortWithStatusJSON(401, gin.H{&amp;#34;error&amp;#34;: &amp;#34;未授权&amp;#34;})
+// ❌ 没有 return，后续代码还会执行！
+doSomethingDangerous() // 会被执行
+}
+func goodMiddleware(c *gin.Context) {
+c.AbortWithStatusJSON(401, gin.H{&amp;#34;error&amp;#34;: &amp;#34;未授权&amp;#34;})
+return // ✅ 明确 return，停止执行
+}
+// Abort 的作用是：阻止后续的中间件和 handler 执行
+// 但当前函数中 Abort 之后的代码仍然会执行
+```
+- 统一错误处理
+- 在每个 handler 里写重复的错误处理代码很烦。
+- Gin 提供了统一错误处理的机制——handler 只负责「报告」错误，中间件统一「处理」错误。
+-
+```go
+// ─── 定义 AppError ───
+type AppError struct {
+Status int `json:&amp;#34;-&amp;#34;`
+Code string `json:&amp;#34;code&amp;#34;`
+Message string `json:&amp;#34;message&amp;#34;`
+Err error `json:&amp;#34;-&amp;#34;`
+}
+func (e *AppError) Error() string { return e.Message }
+// 快捷构造
+func NotFound(msg string) *AppError {
+return &amp;AppError{Status: 404, Code: &amp;#34;NOT_FOUND&amp;#34;, Message: msg}
+}
+func BadRequest(msg string) *AppError {
+return &amp;AppError{Status: 400, Code: &amp;#34;BAD_REQUEST&amp;#34;, Message: msg}
+}
+func Internal(err error) *AppError {
+return &amp;AppError{Status: 500, Code: &amp;#34;INTERNAL_ERROR&amp;#34;, Message: &amp;#34;内部服务错误&amp;#34;, Err: err}
+}
+// ─── 错误处理中间件 ───
+func ErrorHandler() gin.HandlerFunc {
+return func(c *gin.Context) {
+c.Next()
+// 收集所有 handler 添加的错误
+if len(c.Errors) == 0 {
+return
+}
+err := c.Errors.Last().Err
+var appErr *AppError
+if errors.As(err, &amp;appErr) {
+c.JSON(appErr.Status, appErr)
+} else {
+// 记录未预期的错误
+log.Printf(&amp;#34;未处理的错误: %v&amp;#34;, err)
+c.JSON(500, gin.H{&amp;#34;code&amp;#34;: &amp;#34;INTERNAL_ERROR&amp;#34;, &amp;#34;message&amp;#34;: &amp;#34;内部服务错误&amp;#34;})
+}
+}
+}
+// ─── Handler 里只需要 c.Error(err) ───
+func getUser(c *gin.Context) {
+id := c.Param(&amp;#34;id&amp;#34;)
+user, err := userService.GetUser(c.Request.Context(), id)
+if err != nil {
+// 只需添加错误，不需要写响应
+_ = c.Error(NotFound(&amp;#34;用户不存在&amp;#34;))
+return
+}
+c.JSON(200, user)
+}
+// ─── 注册 ───
+r := gin.New()
+r.Use(ErrorHandler()) // 必须注册（会在所有 handler 之后执行）
+r.Use(LoggerMiddleware())
+```
+- Gin 项目完整结构
+- 项目结构
+-
+```go
+myapp/
+├── cmd/server/main.go # 启动入口
+├── internal/
+│ ├── handler/ # HTTP 层（Gin handlers）
+│ │ ├── router.go # 路由注册
+│ │ ├── user.go # 用户相关 handler
+│ │ ├── auth.go # 认证 handler
+│ │ └── middleware/
+│ │ ├── auth.go # JWT 认证中间件
+│ │ ├── logger.go # 日志中间件
+│ │ ├── recovery.go # panic 恢复
+│ │ └── cors.go # CORS 中间件
+│ ├── service/ # 业务逻辑层
+│ │ ├── user.go
+│ │ └── auth.go
+│ ├── repository/ # 数据访问层
+│ │ └── user.go
+│ ├── model/ # 数据模型
+│ │ └── user.go
+│ └── config/ # 配置
+│ └── config.go
+└── go.mod
+```
+- 经典文件
+-
+```go
+// internal/handler/router.go
+package handler
+import (
+&amp;#34;github.com/gin-gonic/gin&amp;#34;
+&amp;#34;github.com/yourname/myapp/internal/handler/middleware&amp;#34;
+&amp;#34;github.com/yourname/myapp/internal/service&amp;#34;
+)
+func SetupRouter(
+userSvc *service.UserService,
+authSvc *service.AuthService,
+) *gin.Engine {
+// 生产环境关闭调试模式
+gin.SetMode(gin.ReleaseMode)
+r := gin.New() // 不用 Default，手动注册中间件
+// 全局中间件
+r.Use(middleware.Recovery())
+r.Use(middleware.Logger())
+r.Use(middleware.CORS())
+r.Use(middleware.RequestID())
+// 健康检查（不需要认证）
+r.GET(&amp;#34;/health&amp;#34;, func(c *gin.Context) {
+c.JSON(200, gin.H{&amp;#34;status&amp;#34;: &amp;#34;ok&amp;#34;})
+})
+// API 路由
+api := r.Group(&amp;#34;/api/v1&amp;#34;)
+{
+// 认证路由（不需要 JWT）
+auth := NewAuthHandler(authSvc)
+api.POST(&amp;#34;/register&amp;#34;, auth.Register)
+api.POST(&amp;#34;/login&amp;#34;, auth.Login)
+api.POST(&amp;#34;/refresh&amp;#34;, auth.RefreshToken)
+// 需要认证的路由
+authed := api.Group(&amp;#34;&amp;#34;)
+authed.Use(middleware.JWTAuth())
+{
+users := NewUserHandler(userSvc)
+authed.GET(&amp;#34;/users&amp;#34;, users.List)
+authed.GET(&amp;#34;/users/:id&amp;#34;, users.Get)
+authed.PUT(&amp;#34;/users/:id&amp;#34;, users.Update)
+authed.DELETE(&amp;#34;/users/:id&amp;#34;, users.Delete)
+authed.GET(&amp;#34;/profile&amp;#34;, users.Profile)
+}
+}
+return r
+}
+// cmd/server/main.go
+func main() {
+cfg, err := config.Load()
+if err != nil { log.Fatal(err) }
+// 依赖注入
+repo := repository.NewUserRepo(db)
+userSvc := service.NewUserService(repo)
+authSvc := service.NewAuthService(repo, cfg.JWTSecret)
+r := handler.SetupRouter(userSvc, authSvc)
+srv := &amp;http.Server{
+Addr: &amp;#34;:&amp;#34; &amp;#43; cfg.Port,
+Handler: r,
+ReadTimeout: 15 * time.Second,
+WriteTimeout: 15 * time.Second,
+}
+// 优雅关闭（Day 15 学的）
+go gracefulShutdown(srv)
+log.Fatal(srv.ListenAndServe())
+}
+```
+- 数据库操作 GORM
+- GORM 简介与安装
+- GORM 是 Go 生态最流行的 ORM 库。它让你用 Go 结构体操作数据库，不需要手写 SQL（当然也支持原生 SQL）。
+- 支持 MySQL、PostgreSQL、SQLite、SQL Server 等主流数据库。
+- 安装
+-
+```go
+# GORM 核心库
+go get gorm.io/gorm
+# 数据库驱动（选择你用的数据库）
+go get gorm.io/driver/postgres # PostgreSQL（推荐）
+go get gorm.io/driver/mysql # MySQL
+go get gorm.io/driver/sqlite # SQLite（开发/测试用）
+```
+- 连接数据库
+-
+```go
+package db
+import (
+&amp;#34;gorm.io/driver/postgres&amp;#34;
+&amp;#34;gorm.io/driver/sqlite&amp;#34;
+&amp;#34;gorm.io/gorm&amp;#34;
+&amp;#34;gorm.io/gorm/logger&amp;#34;
+)
+// PostgreSQL（生产推荐）
+func NewPostgresDB(dsn string) (*gorm.DB, error) {
+db, err := gorm.Open(postgres.Open(dsn), &amp;gorm.Config{
+Logger: logger.Default.LogMode(logger.Info), // 打印 SQL
+})
+if err != nil {
+return nil, err
+}
+// 连接池配置
+sqlDB, _ := db.DB()
+sqlDB.SetMaxIdleConns(10) // 最大空闲连接
+sqlDB.SetMaxOpenConns(100) // 最大打开连接
+sqlDB.SetConnMaxLifetime(time.Hour) // 连接最大生命周期
+return db, nil
+}
+// DSN 格式
+// PostgreSQL: &amp;#34;host=localhost user=postgres password=secret dbname=myapp port=5432 sslmode=disable&amp;#34;
+// MySQL: &amp;#34;user:password@tcp(127.0.0.1:3306)/myapp?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&amp;#34;
+// SQLite（快速测试/开发用）
+func NewSQLiteDB(path string) (*gorm.DB, error) {
+return gorm.Open(sqlite.Open(path), &amp;gorm.Config{})
+}
+// 内存 SQLite（单元测试专用）
+func NewTestDB() (*gorm.DB, error) {
+return gorm.Open(sqlite.Open(&amp;#34;:memory:&amp;#34;), &amp;gorm.Config{})
+}
+```
+- GORM 和 database/sql 的关系
+- GORM 底层仍然使用 database/sql，只是在它之上封装了 ORM 的能力。
+- 通过 db.DB() 可以拿到底层的 *sql.DB，设置连接池、执行原生 SQL。两者不是替代关系，而是协作关系。
+- 模型定义
+- GORM 模型是普通的 Go 结构体，通过标签（tag）控制数据库映射行为。
+- 嵌入 gorm.Model 可以自动获得 ID、CreatedAt、UpdatedAt、DeletedAt 四个字段。
+- 基础模型定义
+-
+```go
+package model
+import (
+&amp;#34;time&amp;#34;
+&amp;#34;gorm.io/gorm&amp;#34;
+)
+// 嵌入 gorm.Model：自动拥有 id, created_at, updated_at, deleted_at
+type User struct {
+gorm.Model // 嵌入基础字段
+Name string `gorm:&amp;#34;size:100;not null&amp;#34;`
+Email string `gorm:&amp;#34;uniqueIndex;size:255;not null&amp;#34;`
+Password string `gorm:&amp;#34;size:255;not null&amp;#34;`
+Age int `gorm:&amp;#34;default:0&amp;#34;`
+Active bool `gorm:&amp;#34;default:true&amp;#34;`
+}
+// gorm.Model 展开后等价于：
+// ID uint `gorm:&amp;#34;primarykey&amp;#34;`
+// CreatedAt time.Time
+// UpdatedAt time.Time
+// DeletedAt gorm.DeletedAt `gorm:&amp;#34;index&amp;#34;` ← 软删除
+// 不想用 gorm.Model？自定义主键
+type Article struct {
+ID int `gorm:&amp;#34;primaryKey;autoIncrement&amp;#34;`
+Title string `gorm:&amp;#34;size:200;not null;index&amp;#34;`
+Content string `gorm:&amp;#34;type:text&amp;#34;`
+AuthorID uint `gorm:&amp;#34;not null&amp;#34;`
+Published bool `gorm:&amp;#34;default:false&amp;#34;`
+CreatedAt time.Time
+UpdatedAt time.Time
+}
+```
+- 常用 GORM TAG
+-
+```go
+type Example struct {
+// 主键
+ID uint `gorm:&amp;#34;primaryKey&amp;#34;`
+UUID string `gorm:&amp;#34;primaryKey;type:uuid;default:gen_random_uuid()&amp;#34;`
+// 列属性
+Name string `gorm:&amp;#34;column:full_name;size:100;not null&amp;#34;`
+Price float64 `gorm:&amp;#34;type:decimal(10,2);default:0&amp;#34;`
+Bio string `gorm:&amp;#34;type:text&amp;#34;`
+// 索引
+Email string `gorm:&amp;#34;uniqueIndex&amp;#34;` // 唯一索引
+City string `gorm:&amp;#34;index&amp;#34;` // 普通索引
+Code string `gorm:&amp;#34;index:idx_code_type&amp;#34;` // 联合索引（和 Type 同名）
+Type string `gorm:&amp;#34;index:idx_code_type&amp;#34;` // 联合索引
+// 忽略字段（不映射到数据库）
+Computed string `gorm:&amp;#34;-&amp;#34;`
+// 创建时只写、更新时只写
+CreatedBy string `gorm:&amp;#34;-&amp;gt;:false;&amp;lt;-:create&amp;#34;` // 只在创建时写
+// 嵌入结构体
+Address `gorm:&amp;#34;embedded;embeddedPrefix:addr_&amp;#34;` // 前缀 addr_
+}
+type Address struct {
+Street string
+City string
+}
+// 数据库列：addr_street, addr_city
+```
+- AutoMigrate：自动建表
+-
+```go
+// 自动创建/更新表结构（只加列，不删列，生产用专业迁移工具）
+err := db.AutoMigrate(
+&amp;model.User{},
+&amp;model.Article{},
+&amp;model.Comment{},
+)
+if err != nil {
+log.Fatal(&amp;#34;数据库迁移失败:&amp;#34;, err)
+}
+// AutoMigrate 的行为：
+// ✅ 表不存在 → 创建表
+// ✅ 字段不存在 → 添加字段
+// ✅ 索引不存在 → 创建索引
+// ❌ 字段类型变了 → 不会修改（需要手动迁移）
+// ❌ 删掉字段 → 不会删除数据库列（安全策略）
+```
+- CRUD 基础操作
+- Create (创建)
+-
+```go
+// 创建单条记录
+user := model.User{Name: &amp;#34;Alice&amp;#34;, Email: &amp;#34;alice@example.com&amp;#34;}
+result := db.Create(&amp;user) // ✨ 创建后 user.ID 会被填充
+if result.Error != nil {
+return result.Error
+}
+fmt.Println(&amp;#34;新用户 ID:&amp;#34;, user.ID)
+// 批量创建
+users := []model.User{
+{Name: &amp;#34;Bob&amp;#34;, Email: &amp;#34;bob@example.com&amp;#34;},
+{Name: &amp;#34;Charlie&amp;#34;, Email: &amp;#34;charlie@example.com&amp;#34;},
+}
+db.Create(&amp;users) // 单次 SQL 插入多行，比循环创建高效
+// 只创建指定字段
+db.Select(&amp;#34;Name&amp;#34;, &amp;#34;Email&amp;#34;).Create(&amp;user)
+// 忽略某些字段
+db.Omit(&amp;#34;Age&amp;#34;, &amp;#34;Active&amp;#34;).Create(&amp;user)
+```
+- Read (查询)
+-
+```go
+// 按主键查询
+var user model.User
+db.First(&amp;user, 1) // SELECT * FROM users WHERE id = 1 LIMIT 1
+db.First(&amp;user, &amp;#34;id = ?&amp;#34;, 1) // 等价写法
+// 查询单条（不按主键排序）
+db.Take(&amp;user, 1) // SELECT * FROM users WHERE id = 1 LIMIT 1
+db.Last(&amp;user) // 最后一条（按主键 DESC）
+// 条件查询
+db.Where(&amp;#34;name = ?&amp;#34;, &amp;#34;Alice&amp;#34;).First(&amp;user)
+db.Where(&amp;#34;age &amp;gt; ? AND active = ?&amp;#34;, 18, true).Find(&amp;users)
+// IN 查询
+db.Where(&amp;#34;id IN ?&amp;#34;, []int{1, 2, 3}).Find(&amp;users)
+// LIKE 查询
+db.Where(&amp;#34;name LIKE ?&amp;#34;, &amp;#34;%Alice%&amp;#34;).Find(&amp;users)
+// 查询多条
+var users []model.User
+result := db.Find(&amp;users) // SELECT * FROM users（自动过滤 deleted_at IS NULL）
+fmt.Println(&amp;#34;查到&amp;#34;, result.RowsAffected, &amp;#34;条&amp;#34;)
+// 查询所有（含软删除的）
+db.Unscoped().Find(&amp;users)
+// 只查指定字段
+db.Select(&amp;#34;id&amp;#34;, &amp;#34;name&amp;#34;, &amp;#34;email&amp;#34;).Find(&amp;users)
+// 检查记录是否存在
+var count int64
+db.Model(&amp;model.User{}).Where(&amp;#34;email = ?&amp;#34;, email).Count(&amp;count)
+exists := count &amp;gt; 0
+```
+- Update (更新)
+-
+```go
+// 更新单个字段
+db.Model(&amp;user).Update(&amp;#34;name&amp;#34;, &amp;#34;Alicia&amp;#34;)
+// UPDATE users SET name=&amp;#39;Alicia&amp;#39;, updated_at=NOW() WHERE id=1
+// 更新多个字段（用 map）
+db.Model(&amp;user).Updates(map[string]any{
+&amp;#34;name&amp;#34;: &amp;#34;Alicia&amp;#34;,
+&amp;#34;active&amp;#34;: false,
+})
+// 更新多个字段（用结构体，⚠️ 零值字段会被忽略！）
+db.Model(&amp;user).Updates(model.User{Name: &amp;#34;Alicia&amp;#34;, Age: 0})
+// ⚠️ Age=0 是零值，不会被更新！
+// 解决零值问题：用 Select 明确指定要更新的字段
+db.Model(&amp;user).Select(&amp;#34;Name&amp;#34;, &amp;#34;Age&amp;#34;).Updates(model.User{Name: &amp;#34;Alicia&amp;#34;, Age: 0})
+// Age=0 会被更新
+// 带条件的更新
+db.Model(&amp;model.User{}).Where(&amp;#34;active = ?&amp;#34;, false).Update(&amp;#34;deleted&amp;#34;, true)
+// 不触发 Hook 和 updated_at 的原生更新
+db.Model(&amp;user).UpdateColumn(&amp;#34;login_count&amp;#34;, gorm.Expr(&amp;#34;login_count &amp;#43; 1&amp;#34;))
+```
+- Delete (删除)
+-
+```go
+// 软删除（如果模型有 DeletedAt 字段）
+// 只设置 deleted_at，不真正删除
+db.Delete(&amp;user, 1)
+// UPDATE users SET deleted_at=NOW() WHERE id=1
+// 查询时自动过滤软删除的记录
+db.Find(&amp;users) // WHERE deleted_at IS NULL
+// 硬删除（真正删除）
+db.Unscoped().Delete(&amp;user, 1)
+// DELETE FROM users WHERE id=1
+// 批量删除（必须有条件，防止误删全表）
+db.Where(&amp;#34;active = ?&amp;#34;, false).Delete(&amp;model.User{})
+// 如果不加条件会报错（安全机制）
+```
+- 结构体 Updates 的零值陷阱
+- 用结构体更新时，GORM 会忽略零值字段（0、&amp;#34;&amp;#34;、false、nil），只更新非零值。
+- 这个设计防止了意外覆盖，但也导致你没法把一个字段更新为零值。
+- 解决方案：用 map[string]any 替代结构体，或者用 Select 明确列出要更新的字段。这是 GORM 面试高频考点！
+- 查询进阶
+- 链式调用构建复杂查询
+-
+```go
+// GORM 的链式 API：每个方法返回 *gorm.DB，可以任意组合
+var users []model.User
+db.
+Where(&amp;#34;age &amp;gt; ?&amp;#34;, 18).
+Where(&amp;#34;active = ?&amp;#34;, true).
+Order(&amp;#34;created_at DESC&amp;#34;).
+Limit(10).
+Offset(20). // 跳过 20 条（第 3 页，每页 10 条）
+Find(&amp;users)
+// 分页查询（通用封装）
+type Pagination struct {
+Page int
+Size int
+}
+func Paginate(p Pagination) func(db *gorm.DB) *gorm.DB {
+return func(db *gorm.DB) *gorm.DB {
+offset := (p.Page - 1) * p.Size
+return db.Offset(offset).Limit(p.Size)
+}
+}
+// 使用 Scopes 复用查询逻辑
+db.Scopes(Paginate(Pagination{Page: 2, Size: 10})).
+Where(&amp;#34;active = ?&amp;#34;, true).
+Order(&amp;#34;name ASC&amp;#34;).
+Find(&amp;users)
+```
+- 聚合与分组
+-
+```go
+// Count
+var count int64
+db.Model(&amp;model.User{}).Where(&amp;#34;active = ?&amp;#34;, true).Count(&amp;count)
+// Sum, Avg, Max, Min
+var totalAge float64
+db.Model(&amp;model.User{}).Select(&amp;#34;COALESCE(SUM(age), 0)&amp;#34;).Scan(&amp;totalAge)
+// Group By &amp;#43; Having
+type Result struct {
+City string
+Count int64
+}
+var results []Result
+db.Model(&amp;model.User{}).
+Select(&amp;#34;city, COUNT(*) as count&amp;#34;).
+Group(&amp;#34;city&amp;#34;).
+Having(&amp;#34;COUNT(*) &amp;gt; ?&amp;#34;, 10).
+Scan(&amp;results)
+// Distinct
+db.Distinct(&amp;#34;name&amp;#34;, &amp;#34;email&amp;#34;).Find(&amp;users)
+```
+- 原生 SQL
+-
+```go
+// Raw：执行原生 SQL 并扫描结果
+var users []model.User
+db.Raw(&amp;#34;SELECT * FROM users WHERE age &amp;gt; ? AND active = ?&amp;#34;, 18, true).Scan(&amp;users)
+// Exec：执行不返回行的 SQL
+db.Exec(&amp;#34;UPDATE users SET login_count = login_count &amp;#43; 1 WHERE id = ?&amp;#34;, userID)
+// 扫描到自定义结构体（不一定是模型）
+type UserSummary struct {
+Name string
+Email string
+Posts int
+}
+var summaries []UserSummary
+db.Raw(`
+SELECT u.name, u.email, COUNT(p.id) as posts
+FROM users u
+LEFT JOIN posts p ON p.author_id = u.id
+GROUP BY u.id
+`).Scan(&amp;summaries)
+// Named 参数（更安全）
+db.Where(&amp;#34;name = @name AND email = @email&amp;#34;,
+sql.Named(&amp;#34;name&amp;#34;, &amp;#34;Alice&amp;#34;),
+sql.Named(&amp;#34;email&amp;#34;, &amp;#34;alice@example.com&amp;#34;),
+).Find(&amp;users)
+```
+- 关联关系
+- GORM 支持所有常见的关联关系：一对一、一对多、多对多。理解关联关系是写复杂查询的基础。
+- 一对多
+-
+```go
+// 用户有多篇文章
+type User struct {
+gorm.Model
+Name string
+Articles []Article // Has Many（一对多）
+}
+// 文章属于一个用户
+type Article struct {
+gorm.Model
+Title string
+Content string
+UserID uint // 外键（约定：类型名&amp;#43;ID）
+User User // Belongs To
+Comments []Comment
+}
+// 创建关联数据
+user := User{
+Name: &amp;#34;Alice&amp;#34;,
+Articles: []Article{
+{Title: &amp;#34;Go 入门&amp;#34;, Content: &amp;#34;...&amp;#34;},
+{Title: &amp;#34;Gin 框架&amp;#34;, Content: &amp;#34;...&amp;#34;},
+},
+}
+db.Create(&amp;user) // 同时创建用户和文章
+// 预加载关联（避免 N&amp;#43;1 问题）
+var users []User
+db.Preload(&amp;#34;Articles&amp;#34;).Find(&amp;users)
+// SELECT * FROM users
+// SELECT * FROM articles WHERE user_id IN (1,2,3,...)
+// 嵌套预加载
+db.Preload(&amp;#34;Articles.Comments&amp;#34;).Find(&amp;users)
+// 条件预加载
+db.Preload(&amp;#34;Articles&amp;#34;, &amp;#34;published = ?&amp;#34;, true).Find(&amp;users)
+```
+- 多对多
+-
+```go
+// 文章有多个标签，标签也属于多篇文章
+type Article struct {
+gorm.Model
+Title string
+Tags []Tag `gorm:&amp;#34;many2many:article_tags&amp;#34;` // 中间表名
+}
+type Tag struct {
+gorm.Model
+Name string `gorm:&amp;#34;uniqueIndex&amp;#34;`
+Articles []Article `gorm:&amp;#34;many2many:article_tags&amp;#34;`
+}
+// GORM 自动管理中间表 article_tags (article_id, tag_id)
+// 创建时关联标签
+tags := []Tag{{Name: &amp;#34;Go&amp;#34;}, {Name: &amp;#34;Backend&amp;#34;}}
+article := Article{Title: &amp;#34;Go Web 开发&amp;#34;, Tags: tags}
+db.Create(&amp;article)
+// 追加关联
+db.Model(&amp;article).Association(&amp;#34;Tags&amp;#34;).Append([]Tag{{Name: &amp;#34;Tutorial&amp;#34;}})
+// 替换关联
+db.Model(&amp;article).Association(&amp;#34;Tags&amp;#34;).Replace(newTags)
+// 删除关联（只删关系，不删记录）
+db.Model(&amp;article).Association(&amp;#34;Tags&amp;#34;).Delete(tag)
+// 清空关联
+db.Model(&amp;article).Association(&amp;#34;Tags&amp;#34;).Clear()
+// 计数
+count := db.Model(&amp;article).Association(&amp;#34;Tags&amp;#34;).Count()
+```
+- 一对一
+-
+```go
+// 用户有一个个人资料
+type User struct {
+gorm.Model
+Name string
+Profile Profile // Has One
+}
+type Profile struct {
+gorm.Model
+Bio string
+Avatar string
+UserID uint // 外键
+}
+// 查询时预加载
+var user User
+db.Preload(&amp;#34;Profile&amp;#34;).First(&amp;user, 1)
+fmt.Println(user.Profile.Bio)
+```
+- 事务处理
+- 事务保证一组操作要么全部成功，要么全部回滚。GORM 提供了简洁的事务 API，支持自动和手动两种模式。
+- 自动事务
+-
+```go
+// Transaction 函数：返回 error 时自动回滚，nil 时自动提交
+err := db.Transaction(func(tx *gorm.DB) error {
+// 注意：事务内所有操作必须用 tx，不能用 db！
+// 创建订单
+order := Order{UserID: userID, Total: 100.0}
+if err := tx.Create(&amp;order).Error; err != nil {
+return err // 返回 error → 自动回滚
+}
+// 扣减库存
+result := tx.Model(&amp;Product{}).
+Where(&amp;#34;id = ? AND stock &amp;gt; 0&amp;#34;, productID).
+UpdateColumn(&amp;#34;stock&amp;#34;, gorm.Expr(&amp;#34;stock - 1&amp;#34;))
+if result.Error != nil {
+return result.Error
+}
+if result.RowsAffected == 0 {
+return errors.New(&amp;#34;库存不足&amp;#34;) // 返回 error → 回滚
+}
+// 记录流水
+if err := tx.Create(&amp;Transaction{OrderID: order.ID}).Error; err != nil {
+return err
+}
+return nil // 返回 nil → 自动提交
+})
+if err != nil {
+log.Printf(&amp;#34;下单失败: %v&amp;#34;, err)
+}
+```
+- 手动事务 (需要跨函数使用时)
+-
+```go
+// 手动控制
+tx := db.Begin() // 开启事务
+defer func() {
+if r := recover(); r != nil {
+tx.Rollback() // panic 时回滚
+}
+}()
+if err := tx.Error; err != nil {
+return err
+}
+if err := tx.Create(&amp;user).Error; err != nil {
+tx.Rollback()
+return err
+}
+if err := tx.Create(&amp;profile).Error; err != nil {
+tx.Rollback()
+return err
+}
+tx.Commit() // 全部成功才提交
+return nil
+// 保存点（嵌套事务）
+tx.SavePoint(&amp;#34;step1&amp;#34;)
+// ... 一些操作
+tx.RollbackTo(&amp;#34;step1&amp;#34;) // 只回滚到保存点，不全部回滚
+```
+- 事务内必须用 tx，不能用 db
+- 这是事务最常见的错误！
+- 在 Transaction 回调里，如果你误用了外部的 db 而不是回调参数 tx，那些操作不属于这个事务，不会被一起回滚。
+- 养成习惯：看到 Transaction 回调，里面所有 db 操作都换成 tx。
+- Hooks 钩子
+- GORM 的 Hook 允许在数据库操作前后自动执行逻辑，比如密码加密、数据校验、审计日志。
+-
+```go
+// Hook 方法列表：
+// BeforeCreate, AfterCreate
+// BeforeUpdate, AfterUpdate
+// BeforeDelete, AfterDelete
+// BeforeFind, AfterFind
+type User struct {
+gorm.Model
+Name string
+Email string
+Password string
+}
+// 创建前：自动加密密码
+func (u *User) BeforeCreate(tx *gorm.DB) error {
+if u.Password != &amp;#34;&amp;#34; {
+hashed, err := bcrypt.GenerateFromPassword(
+[]byte(u.Password), bcrypt.DefaultCost,
+)
+if err != nil {
+return err
+}
+u.Password = string(hashed)
+}
+return nil
+}
+// 查询后：脱敏处理（不把密码带出去）
+func (u *User) AfterFind(tx *gorm.DB) error {
+u.Password = &amp;#34;&amp;#34; // 查出来后清空密码字段
+return nil
+}
+// 更新前：校验必填字段
+func (u *User) BeforeUpdate(tx *gorm.DB) error {
+if u.Email == &amp;#34;&amp;#34; {
+return errors.New(&amp;#34;email 不能为空&amp;#34;)
+}
+return nil
+}
+// 删除前：记录审计日志
+func (u *User) BeforeDelete(tx *gorm.DB) error {
+return tx.Create(&amp;AuditLog{
+Action: &amp;#34;DELETE&amp;#34;,
+Resource: &amp;#34;users&amp;#34;,
+ResourceID: u.ID,
+}).Error
+}
+```
+- Repository 模式整合
+- 把 GORM 封装到 Repository 层，让 Service 层不依赖具体的数据库实现。
+-
+```go
+// internal/repository/user.go
+package repository
+import (
+&amp;#34;context&amp;#34;
+&amp;#34;errors&amp;#34;
+&amp;#34;gorm.io/gorm&amp;#34;
+&amp;#34;github.com/yourname/myapp/internal/model&amp;#34;
+)
+var ErrNotFound = errors.New(&amp;#34;记录不存在&amp;#34;)
+// 接口（让 service 层只依赖接口）
+type UserRepository interface {
+FindByID(ctx context.Context, id uint) (*model.User, error)
+FindByEmail(ctx context.Context, email string) (*model.User, error)
+List(ctx context.Context, page, size int) ([]*model.User, int64, error)
+Create(ctx context.Context, u *model.User) error
+Update(ctx context.Context, u *model.User) error
+Delete(ctx context.Context, id uint) error
+}
+// GORM 实现
+type gormUserRepo struct {
+db *gorm.DB
+}
+func NewUserRepository(db *gorm.DB) UserRepository {
+return &amp;gormUserRepo{db: db}
+}
+func (r *gormUserRepo) FindByID(ctx context.Context, id uint) (*model.User, error) {
+var u model.User
+err := r.db.WithContext(ctx).First(&amp;u, id).Error
+if errors.Is(err, gorm.ErrRecordNotFound) {
+return nil, ErrNotFound
+}
+return &amp;u, err
+}
+func (r *gormUserRepo) FindByEmail(ctx context.Context, email string) (*model.User, error) {
+var u model.User
+err := r.db.WithContext(ctx).Where(&amp;#34;email = ?&amp;#34;, email).First(&amp;u).Error
+if errors.Is(err, gorm.ErrRecordNotFound) {
+return nil, ErrNotFound
+}
+return &amp;u, err
+}
+func (r *gormUserRepo) List(ctx context.Context, page, size int) ([]*model.User, int64, error) {
+var users []*model.User
+var count int64
+offset := (page - 1) * size
+db := r.db.WithContext(ctx).Model(&amp;model.User{})
+if err := db.Count(&amp;count).Error; err != nil {
+return nil, 0, err
+}
+if err := db.Offset(offset).Limit(size).
+Order(&amp;#34;created_at DESC&amp;#34;).Find(&amp;users).Error; err != nil {
+return nil, 0, err
+}
+return users, count, nil
+}
+func (r *gormUserRepo) Create(ctx context.Context, u *model.User) error {
+return r.db.WithContext(ctx).Create(u).Error
+}
+func (r *gormUserRepo) Update(ctx context.Context, u *model.User) error {
+return r.db.WithContext(ctx).Save(u).Error
+}
+func (r *gormUserRepo) Delete(ctx context.Context, id uint) error {
+result := r.db.WithContext(ctx).Delete(&amp;model.User{}, id)
+if result.RowsAffected == 0 {
+return ErrNotFound
+}
+return result.Error
+}
+```
+- WithContext 的重要性
+-
+```go
+// ✅ 每个数据库操作都带上 context
+// 当 HTTP 请求超时或客户端断开时，数据库查询会自动取消
+func (r *gormUserRepo) FindByID(ctx context.Context, id uint) (*model.User, error) {
+var u model.User
+err := r.db.WithContext(ctx).First(&amp;u, id).Error
+// ↑ 把 ctx 传给 GORM，超时自动取消 SQL
+return &amp;u, err
+}
+// ❌ 没有 WithContext：HTTP 超时后 SQL 还在跑，浪费数据库资源
+func (r *gormUserRepo) FindByID(id uint) (*model.User, error) {
+var u model.User
+err := r.db.First(&amp;u, id).Error // 没有超时控制
+return &amp;u, err
+}
+```
 &lt;/textarea&gt;</description></item><item><title>claude code plugin 实验</title><link>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/claude-code-plugin/</link><pubDate>Fri, 10 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E5%AE%9E%E9%AA%8C/claude-code-plugin/</guid><description>&lt;h1 id="-实验前假设与目标-plan"&gt;🎯 实验前：假设与目标 (Plan)&lt;/h1&gt;
 &lt;p&gt;开发一个 Plugin 给 Claude Code 使用。&lt;/p&gt;</description></item><item><title>Grafana 复习</title><link>https://blog.ans20xx.com/posts/grafana-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 10 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/grafana-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础入门"&gt;基础入门&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42176538"
+id="mindmap-32154867"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42176538" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-32154867" style="display:none;"&gt;
 - 基础入门
 - 可观测性与 Grafana 概览
 - 理解可观测性
@@ -3836,10 +6656,10 @@ prometheus_http_requests_total{code=&amp;#34;302&amp;#34;, handler=&amp;#34;/&am
 &lt;h1 id="核心技能"&gt;核心技能&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-25176834"
+id="mindmap-78456123"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-25176834" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-78456123" style="display:none;"&gt;
 - 核心技能
 - PromQL
 - 两种向量 - PromQL 的基石
@@ -4132,10 +6952,10 @@ sum(rate(myapp_http_requests_total{endpoint=~&amp;#34;$endpoint&amp;#34;}[$__rat
 &lt;h1 id="告警与日志"&gt;告警与日志&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47386152"
+id="mindmap-63148257"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47386152" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-63148257" style="display:none;"&gt;
 - 告警与日志
 - Grafana 的告警系统
 - 理解 Grafana 告警架构
@@ -4292,10 +7112,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;docker-compose.yml&lt;/p&gt;</description></item><item><title>js 复习</title><link>https://blog.ans20xx.com/posts/js-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/js-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="语言核心基础"&gt;语言核心基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-28345716"
+id="mindmap-36752148"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-28345716" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-36752148" style="display:none;"&gt;
 - 语言核心基础
 - 变量与数据类型
 - 变量声明
@@ -5730,10 +8550,10 @@ console.log(`${index &amp;#43; 1}. ${name}`);
 &lt;h1 id="面向对象与核心机制"&gt;面向对象与核心机制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-64723581"
+id="mindmap-48713562"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-64723581" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48713562" style="display:none;"&gt;
 - 面向对象与核心机制
 - this 指向
 - 为什么 this 这么重要
@@ -6910,10 +9730,10 @@ const utils = require(&amp;#39;./utils&amp;#39;);
 &lt;h1 id="异步编程与浏览器-api"&gt;异步编程与浏览器 API&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-75462381"
+id="mindmap-17654823"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-75462381" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17654823" style="display:none;"&gt;
 - 异步编程与浏览器 API
 - 异步基础与回调
 - 同步 vs 异步
@@ -7305,10 +10125,10 @@ return { user, orders };
 &lt;p&gt;实验编号/标题：OpenSpec 实验&lt;/p&gt;</description></item><item><title>CSS 复习</title><link>https://blog.ans20xx.com/posts/css-%E5%A4%8D%E4%B9%A0/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/css-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础核心"&gt;基础核心&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-84613257"
+id="mindmap-26715843"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-84613257" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-26715843" style="display:none;"&gt;
 - 基础核心
 - CSS 基础与选择器
 - CSS 的三种引入方式
@@ -8233,10 +11053,10 @@ overflow-wrap: break-word;
 &lt;h1 id="布局体系"&gt;布局体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-54768132"
+id="mindmap-46327851"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-54768132" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46327851" style="display:none;"&gt;
 - 布局体系
 - Flex 基础与主轴
 - Flex 容器与项目
@@ -8870,10 +11690,10 @@ repeat(auto-fit, minmax(280px, 1fr))
 &lt;h1 id="响应式与进阶"&gt;响应式与进阶&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-87532416"
+id="mindmap-72563418"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-87532416" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-72563418" style="display:none;"&gt;
 - 响应式与进阶
 - 响应式基础与媒体查询
 - viewport meta 标签
@@ -9892,17 +12712,17 @@ to { transform: translateY(0); }
 &lt;h1 id="工程化与实战"&gt;工程化与实战&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-37584162"
+id="mindmap-68524137"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-37584162" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-68524137" style="display:none;"&gt;
 - 标题
 &lt;/textarea&gt;</description></item><item><title>思维导图新功能测试</title><link>https://blog.ans20xx.com/posts/%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-26847135"
+id="mindmap-67215843"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-26847135" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-67215843" style="display:none;"&gt;
 - 项目规划
 - 前端
 - 示例代码
@@ -9969,10 +12789,10 @@ env.execute(&amp;#34;timestamp-water-mark-demo&amp;#34;);
 &lt;p&gt;一切都会显得不同寻常。&lt;/p&gt;</description></item><item><title>Flink 复习</title><link>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/flink-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="flink-整体认知"&gt;Flink 整体认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-31654278"
+id="mindmap-34817652"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-31654278" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-34817652" style="display:none;"&gt;
 - Flink 整体认知
 - 认识 Flink
 - Flink 是什么
@@ -10325,10 +13145,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="时间与窗口"&gt;时间与窗口&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-14823765"
+id="mindmap-18576234"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-14823765" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-18576234" style="display:none;"&gt;
 - 时间与窗口
 - 时间语义
 - processing time
@@ -10505,10 +13325,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="状态与容错"&gt;状态与容错&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-25734681"
+id="mindmap-28516374"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-25734681" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-28516374" style="display:none;"&gt;
 - 状态与容错
 - State 基础
 - 什么是状态
@@ -10631,10 +13451,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="连接外部系统"&gt;连接外部系统&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-51264873"
+id="mindmap-13485267"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-51264873" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-13485267" style="display:none;"&gt;
 - 连接外部系统
 - Flink 读写文件与接
 - Kafka 集成
@@ -10644,10 +13464,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="flink-sql-与-table-api"&gt;Flink SQL 与 Table API&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-24638517"
+id="mindmap-18362475"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-24638517" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-18362475" style="display:none;"&gt;
 - Flink SQL 与 Table API
 - 认识 Table API 与 Flink SQL
 - 为什么要有 Table API 与 SQL
@@ -10801,10 +13621,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="原理深入"&gt;原理深入&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42365718"
+id="mindmap-61783245"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42365718" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-61783245" style="display:none;"&gt;
 - 原理深入
 - 背压与性能调优
 - 什么是背压
@@ -10814,10 +13634,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;这就说明了追求生命内涵的重要性。&lt;/p&gt;</description></item><item><title>HBase 复习</title><link>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/hbase-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="基础认知"&gt;基础认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43168752"
+id="mindmap-58361427"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43168752" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-58361427" style="display:none;"&gt;
 - 基础认知
 - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别
 - HBase
@@ -10932,10 +13752,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据模型与表设计"&gt;数据模型与表设计&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42358167"
+id="mindmap-74253681"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42358167" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74253681" style="display:none;"&gt;
 - 数据模型与表设计
 - RowKey 设计原则
 - 总纲
@@ -11039,10 +13859,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="架构原理"&gt;架构原理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-24317658"
+id="mindmap-56841237"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-24317658" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56841237" style="display:none;"&gt;
 - 架构原理
 - HMaster 做什么
 - HMaster 的定位
@@ -11197,10 +14017,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="实际操作"&gt;实际操作&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-86721354"
+id="mindmap-65123874"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-86721354" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65123874" style="display:none;"&gt;
 - 实操
 - 启动单机 HBase
 - 单机模式是什么
@@ -11319,10 +14139,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="java-客户端开发"&gt;Java 客户端开发&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-28356471"
+id="mindmap-47863512"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-28356471" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-47863512" style="display:none;"&gt;
 - Java 客户端开发
 - Connection/Admin/Table
 - 职责边界
@@ -11463,10 +14283,10 @@ ClaudeCode Skill 如何实现的&lt;/p&gt;</description></item><item><title>禅�
 &lt;p&gt;就是帮助我们开发觉醒的心。&lt;/p&gt;</description></item><item><title>面试冲刺</title><link>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</link><pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</guid><description>&lt;h1 id="算法"&gt;算法&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-84715632"
+id="mindmap-25813674"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-84715632" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25813674" style="display:none;"&gt;
 - 算法
 - 通用操作技巧
 - 数组常用操作
@@ -11658,10 +14478,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="数据库"&gt;数据库&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65814732"
+id="mindmap-62417358"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65814732" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62417358" style="display:none;"&gt;
 - 数据库
 - 基础认识
 - InnoDB 和 MyISAM 的区别是什么？
@@ -11992,10 +14812,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="计算机网络"&gt;计算机网络&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-81746352"
+id="mindmap-24678531"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-81746352" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-24678531" style="display:none;"&gt;
 - 计算机网络
 - TCP/UDP
 - TCP/UDP 区别
@@ -12291,10 +15111,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="java"&gt;Java&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-62413785"
+id="mindmap-47852316"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-62413785" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-47852316" style="display:none;"&gt;
 - Java
 - Java 集合
 - HashMap 为什么线程不安全？
@@ -12465,10 +15285,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="spring"&gt;Spring&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-63415782"
+id="mindmap-27658143"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-63415782" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-27658143" style="display:none;"&gt;
 - Spring
 - Spring 核心基础
 - 什么是 Spring？它解决了什么问题？
@@ -12594,10 +15414,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="系统设计"&gt;系统设计&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-51364287"
+id="mindmap-41573682"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-51364287" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41573682" style="display:none;"&gt;
 - 系统设计
 - RPC 框架
 - 第一层是服务定义与代理层
@@ -12625,10 +15445,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="redis"&gt;Redis&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-41683572"
+id="mindmap-25413768"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-41683572" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25413768" style="display:none;"&gt;
 - Redis
 - 基础认知
 - Redis 为什么快
@@ -12842,10 +15662,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="rocketmq"&gt;RocketMQ&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46375128"
+id="mindmap-52173648"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46375128" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-52173648" style="display:none;"&gt;
 - RocketMQ
 - 基础认知
 - RocketMQ 解决了哪些问题？
@@ -12941,10 +15761,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="agent-开发"&gt;Agent 开发&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-23715864"
+id="mindmap-14587362"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-23715864" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-14587362" style="display:none;"&gt;
 - Agent 开发
 - 基础概念
 - 什么是 Agent？它和普通 Chatbot 的本质区别是什么？
@@ -13276,10 +16096,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="nacos-配置中心"&gt;Nacos 配置中心&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-27368451"
+id="mindmap-47821365"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-27368451" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-47821365" style="display:none;"&gt;
 - Nacos 配置中心
 - Nacos 是什么？解决了什么问题？
 - 服务实例很多，IP 和端口是动态变化的，如果没有注册中心，服务之间就很难稳定地互相发现和调用
@@ -13309,10 +16129,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="websocket"&gt;WebSocket&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-56238714"
+id="mindmap-83564712"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-56238714" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-83564712" style="display:none;"&gt;
 - WebSocket
 - 解决了什么问题
 - 一种基于 TCP 的应用层全双工通信协议
@@ -13422,10 +16242,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="linux"&gt;Linux&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-28745631"
+id="mindmap-13586742"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-28745631" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-13586742" style="display:none;"&gt;
 - Linux
 - 基础认知
 - Linux 的内核态和用户态有什么区别？
@@ -13708,10 +16528,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="计算机组成原理"&gt;计算机组成原理&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-32156784"
+id="mindmap-47832165"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-32156784" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-47832165" style="display:none;"&gt;
 - 计算机组成原理
 - 存储系统
 - 虚拟内存与地址转换
@@ -13735,10 +16555,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="elasticserach"&gt;ElasticSerach&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-16428537"
+id="mindmap-82615473"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-16428537" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-82615473" style="display:none;"&gt;
 - ElasticSerach
 - 基础概念
 - ElasticSearch 的核心应用场景有哪些？
@@ -13861,10 +16681,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="系统设计-1"&gt;系统设计&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-14768253"
+id="mindmap-52714683"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-14768253" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-52714683" style="display:none;"&gt;
 - 系统设计
 - 设计一个短链接系统（类似 TinyURL）
 - 客户端把长链接发到服务端，服务端先做参数校验，比如 URL 格式是否合法，是否命中黑名单
@@ -13944,10 +16764,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="项目"&gt;项目&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-62815473"
+id="mindmap-74365182"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-62815473" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74365182" style="display:none;"&gt;
 - 项目
 - 异步收银台
 - 问题
@@ -14119,10 +16939,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;实验编号/标题：Transformer 实验&lt;/p&gt;</description></item><item><title>LLM 复习</title><link>https://blog.ans20xx.com/posts/llm-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sun, 22 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/llm-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="预备知识"&gt;预备知识&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-45123876"
+id="mindmap-14358276"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-45123876" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-14358276" style="display:none;"&gt;
 - 预备知识
 - 线性代数
 - 向量与矩阵乘法
@@ -14275,10 +17095,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/ul&gt;</description></item><item><title>Java IO</title><link>https://blog.ans20xx.com/posts/java-io/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/java-io/</guid><description>&lt;h1 id="io-模型与概念框架"&gt;IO 模型与概念框架&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65347281"
+id="mindmap-26745183"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65347281" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-26745183" style="display:none;"&gt;
 - IO 模型与概念框架
 - 四个基本概念
 - 阻塞 vs 非阻塞
@@ -14341,10 +17161,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="java-bio"&gt;Java BIO&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65472831"
+id="mindmap-35684217"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65472831" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-35684217" style="display:none;"&gt;
 - Java BIO
 - IO 流体系
 - 两大抽象
@@ -14414,10 +17234,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="nio-基础-bufferchannel"&gt;NIO 基础 Buffer/Channel&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-41572683"
+id="mindmap-81427365"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-41572683" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-81427365" style="display:none;"&gt;
 - NIO 基础
 - NIO 的核心心智模型：Buffer&amp;#43;Channel
 - 在 NIO 中，数据永远在 Buffer 里转
@@ -14483,10 +17303,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="nio-进阶-selector多路复用"&gt;NIO 进阶 Selector/多路复用&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-18245673"
+id="mindmap-65813247"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-18245673" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65813247" style="display:none;"&gt;
 - NIO 进阶 Selector/多路复用
 - Selector/SelectionKey/Channel：三者关系与生命周期
 - 三件套职责
@@ -14530,10 +17350,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="netty"&gt;Netty&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35146728"
+id="mindmap-48751326"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35146728" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48751326" style="display:none;"&gt;
 - Netty
 - 解决什么问题
 - 原生 NIO 的痛点
@@ -14588,10 +17408,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="selectpollepoll"&gt;select/poll/epoll&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46238715"
+id="mindmap-54731286"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46238715" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-54731286" style="display:none;"&gt;
 - select/poll/epoll
 - 简介
 - 都是操作系统提供的 I/O 多路复用机制
@@ -14631,10 +17451,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>nosql 复习.md</title><link>https://blog.ans20xx.com/posts/nosql-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/nosql-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="cap-与一致性模型"&gt;CAP 与一致性模型&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42371685"
+id="mindmap-52386417"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42371685" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-52386417" style="display:none;"&gt;
 - CAP 与一致性模型
 - CAP 定理
 - 组成
@@ -14705,10 +17525,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="分布式存储底层"&gt;分布式存储底层&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-62531748"
+id="mindmap-46573812"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-62531748" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46573812" style="display:none;"&gt;
 - 分布式存储底层
 - 分布式存储底层总览
 - Client/SDK
@@ -14828,10 +17648,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="cassandrahbase"&gt;Cassandra/HBase&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47163528"
+id="mindmap-15382764"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47163528" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15382764" style="display:none;"&gt;
 - Cassandra/HBase
 - LSM-Tree &amp;#43; WAL
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/22/20260222101553862.png,604,382)
@@ -14902,10 +17722,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据建模与查询建模"&gt;数据建模与查询建模&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35467821"
+id="mindmap-15723864"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35467821" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15723864" style="display:none;"&gt;
 - 数据建模与查询建模
 - NoSQL 建模的通用原则
 - Query-driven modeling(按查询建模)
@@ -14930,10 +17750,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>搜索引擎复习</title><link>https://blog.ans20xx.com/posts/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/</guid><description>&lt;h1 id="信息检索核心原理"&gt;信息检索核心原理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-37182465"
+id="mindmap-58364271"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-37182465" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-58364271" style="display:none;"&gt;
 - 信息检索 IR 核心原理
 - IR 的基本对象与术语
 - 文档、语料、字段
@@ -14991,10 +17811,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="索引结构与写入链路"&gt;索引结构与写入链路&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43615278"
+id="mindmap-51842376"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43615278" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-51842376" style="display:none;"&gt;
 - 索引结构与写入链路
 - ES 的索引
 - InvertedIndex（倒排）：解决词-&amp;gt;文档的快速检索
@@ -15029,10 +17849,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>Java 并发复习</title><link>https://blog.ans20xx.com/posts/java-%E5%B9%B6%E5%8F%91/</link><pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/java-%E5%B9%B6%E5%8F%91/</guid><description>&lt;h1 id="并发基础与-jmm-入门"&gt;并发基础与 JMM 入门&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-67423518"
+id="mindmap-37421568"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-67423518" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-37421568" style="display:none;"&gt;
 - 并发基础与 JMM 入门
 - 并发三大问题
 - 原子性
@@ -15110,10 +17930,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线程模型与线程安全"&gt;线程模型与线程安全&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-48267531"
+id="mindmap-53716284"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-48267531" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-53716284" style="display:none;"&gt;
 - 线程模型与线程安全
 - Java 线程模型：Thread/Runnable/Callable/Future
 - 四者关系与使用场景
@@ -15268,10 +18088,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="juc-核心与-aqs"&gt;JUC 核心与 AQS&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21846753"
+id="mindmap-35847621"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21846753" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-35847621" style="display:none;"&gt;
 - JUC 核心与 AQS
 - CAS 与原子类
 - CAS 是什么
@@ -15375,10 +18195,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线程池与并发工程实战"&gt;线程池与并发工程实战&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-14287563"
+id="mindmap-58364721"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-14287563" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-58364721" style="display:none;"&gt;
 - 线程池与并发工程实战
 - 不用线程池的问题
 - 线程创建/销毁成本高（栈、TLAB、调度）
@@ -15524,10 +18344,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="并发容器阻塞队列并发设计"&gt;并发容器、阻塞队列、并发设计&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-83164275"
+id="mindmap-45683217"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-83164275" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-45683217" style="display:none;"&gt;
 - 并发容器、阻塞队列、并发设计
 - 并发容器解决的问题
 - 线程安全访问：多线程读写不会破坏结构、不丢数据
@@ -15611,10 +18431,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>Sping 复习</title><link>https://blog.ans20xx.com/posts/spring-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/spring-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="spring-core"&gt;Spring Core&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-14538762"
+id="mindmap-42176385"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-14538762" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-42176385" style="display:none;"&gt;
 - Spring Core（IoC/DI/Bean 生命周期）
 - 概述
 - Spring 的核心是 IoC 容器，它负责把对象 Bean 的创建、依赖装配、生命周期管理、扩展点回调统一托管
@@ -15761,10 +18581,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-aop"&gt;Spring AOP&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34581726"
+id="mindmap-78652431"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34581726" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-78652431" style="display:none;"&gt;
 - Spring AOP
 - AOP 在 Spring 里解决什么问题
 - 目标：把横切关注点从业务逻辑中剥离出来，日志，鉴权，事务，监控，限流，缓存，重试等
@@ -15862,10 +18682,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-transaction"&gt;Spring Transaction&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-85713264"
+id="mindmap-61385724"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-85713264" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-61385724" style="display:none;"&gt;
 - Spring Transaction
 - 定义：Spring 事务本质是 AOP 拦截方法调用，在方法执行前后通过 TransactionManager 控制开启/加入事务、提交/回滚、资源绑定/解绑
 - 事务体系的关键对象
@@ -15932,10 +18752,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-mvc"&gt;Spring MVC&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-56374812"
+id="mindmap-17385246"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-56374812" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17385246" style="display:none;"&gt;
 - SpringMVC(请求链路、参数绑定、异常处理)
 - 总控思维模型
 - Spring MVC 是一个基于 DispatcherServlet 的前端控制器框架，它把一次 HTTP 请求拆分
@@ -16049,10 +18869,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-boot-自动配置启动过程外部化配置"&gt;Spring boot （自动配置、启动过程、外部化配置）&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47163825"
+id="mindmap-46831572"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47163825" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46831572" style="display:none;"&gt;
 - Spring boot
 - 解决了什么问题
 - Boot 的核心价值是：约定优于配置&amp;#43;自动配置&amp;#43;Starter依赖聚合
@@ -16130,10 +18950,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据访问整合"&gt;数据访问整合&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47658312"
+id="mindmap-73128564"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47658312" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-73128564" style="display:none;"&gt;
 - 数据访问整合
 - 通用底座
 - DataSource：连接的来源
@@ -16168,10 +18988,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-security"&gt;Spring Security&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-37864521"
+id="mindmap-37256418"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-37864521" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-37256418" style="display:none;"&gt;
 - Spring Security
 - 核心概念
 - SecurityContext：安全上下文，存当前请求/线程的认证信息
@@ -16210,10 +19030,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>JVM 学习</title><link>https://blog.ans20xx.com/posts/jvm/</link><pubDate>Thu, 19 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/jvm/</guid><description>&lt;h1 id="类加载与字节码"&gt;类加载与字节码&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-64317528"
+id="mindmap-12867435"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-64317528" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-12867435" style="display:none;"&gt;
 - 类加载与字节码
 - 类加载机制
 - 类的生命周期
@@ -16283,10 +19103,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="jvm-内存结构与对象模型"&gt;JVM 内存结构与对象模型&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-28634571"
+id="mindmap-41725836"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-28634571" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41725836" style="display:none;"&gt;
 - JVM 内存结构与对象模型
 - 运行时数据区
 - 整体结构
@@ -16399,10 +19219,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="gc-体系"&gt;GC 体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-31284675"
+id="mindmap-41572836"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-31284675" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41572836" style="display:none;"&gt;
 - GC 体系
 - GC 基础原理
 - GC 要解决的问题
@@ -16585,10 +19405,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="jit-与性能"&gt;JIT 与性能&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-17286354"
+id="mindmap-54216837"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-17286354" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-54216837" style="display:none;"&gt;
 - JIT 与性能
 - 解释器 vs JIT
 - 解释器：启动快、编译开销低，但是每次执行都要逐条解释代码，长期运行慢
@@ -16605,10 +19425,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线上排障与工具链"&gt;线上排障与工具链&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-53174268"
+id="mindmap-25813746"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-53174268" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25813746" style="display:none;"&gt;
 - 线上排障与工具链
 - 保存现场
 - 采集 4 件套
@@ -16712,10 +19532,10 @@ style="width:100%; height:860px; min-height: 860px;"
 （例如：Transformer、Redis 持久化、JVM 垃圾回收、操作系统进程调度）&lt;/p&gt;</description></item><item><title>RocketMQ 复习</title><link>https://blog.ans20xx.com/posts/rocketmq-%E5%AD%A6%E4%B9%A0/</link><pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/rocketmq-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="概述"&gt;概述&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-45362781"
+id="mindmap-56413827"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-45362781" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56413827" style="display:none;"&gt;
 - 概述
 - 定位
 - RocketMQ 是一个分布式消息中间件，用于在分布式系统中以异步方式传递时间/数据
@@ -16777,10 +19597,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="核心概念"&gt;核心概念&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-24735861"
+id="mindmap-56314827"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-24735861" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56314827" style="display:none;"&gt;
 - 核心概念
 - Topic
 - 定义：消息的逻辑分类，Producer 发送到 Topic，Consumer 订阅 Topic。
@@ -16848,10 +19668,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="可靠性语义幂等重试死信"&gt;可靠性、语义、幂等、重试、死信&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-87236415"
+id="mindmap-87615234"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-87236415" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-87615234" style="display:none;"&gt;
 - 可靠性/语义/幂等/重试/死信
 - 消息语义
 - 三种语义
@@ -16894,10 +19714,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="性能与扩展顺序与分区堆积治理"&gt;性能与扩展、顺序与分区、堆积治理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35842176"
+id="mindmap-62147853"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35842176" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62147853" style="display:none;"&gt;
 - 性能与扩展、顺序与分区、堆积治理
 - 吞吐与并发怎么调
 - 吞吐链路拆解，多个环节的 min
@@ -16959,10 +19779,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="存储与高可用"&gt;存储与高可用&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43182675"
+id="mindmap-82547631"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43182675" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-82547631" style="display:none;"&gt;
 - 存储与高可用
 - Broker 存储核心
 - 三类文件
@@ -17018,10 +19838,10 @@ SSE 原理&lt;/p&gt;
 （写清楚用途、场景、目标，比如面试、项目、论文、考试）&lt;/p&gt;</description></item><item><title>计算机组成原理</title><link>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</link><pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</guid><description>&lt;h1 id="全局框架"&gt;全局框架&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-32658714"
+id="mindmap-84726315"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-32658714" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-84726315" style="display:none;"&gt;
 - 全局框架
 - 系统层次
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/18/20260218105815855.png,424,537)
@@ -17037,10 +19857,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="指令系统与数据表示"&gt;指令系统与数据表示&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46871235"
+id="mindmap-63748521"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46871235" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-63748521" style="display:none;"&gt;
 - 指令系统与数据表示
 - 整数与位运算的数据表示
 - 位、字节、字
@@ -17149,10 +19969,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="cpu-执行与控制"&gt;CPU 执行与控制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-15374286"
+id="mindmap-24368571"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-15374286" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-24368571" style="display:none;"&gt;
 - CPU 执行与控制
 - 单周期 Datapath
 - 必备组件
@@ -17242,10 +20062,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="流水线与冒险"&gt;流水线与冒险&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34261857"
+id="mindmap-72841356"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34261857" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-72841356" style="display:none;"&gt;
 - 流水线与冒险
 - 五级流水线核心内容
 - 五段功能定义
@@ -17318,10 +20138,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="存储体系"&gt;存储体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-45276138"
+id="mindmap-64137825"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-45276138" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-64137825" style="display:none;"&gt;
 - 存储体系
 - 核心矛盾
 - CPU 周期是纳秒级，DRAM 访问通常是几十到上百纳秒级，差一个数量级
@@ -17412,10 +20232,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="虚拟内存"&gt;虚拟内存&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-86137425"
+id="mindmap-23471685"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-86137425" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-23471685" style="display:none;"&gt;
 - 虚拟内存
 - 要解决的问题
 - 抽象：每个进程看到连续的虚拟内存空间（VA）
@@ -17527,10 +20347,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="io-总线"&gt;IO 总线&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-16548327"
+id="mindmap-42516738"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-16548327" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-42516738" style="display:none;"&gt;
 - IO 总线
 - IO 本质上慢
 - 设备物理特性：SSD/网卡/磁盘的延迟远远高于 CPU
@@ -17596,10 +20416,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>计算机网络</title><link>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</link><pubDate>Mon, 16 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="网络分层--端到端路径"&gt;网络分层 + 端到端路径&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-54736128"
+id="mindmap-72563814"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-54736128" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-72563814" style="display:none;"&gt;
 - 网络分层 &amp;#43; 端到端路径
 - 分层模型
 - 链路层 (LINK)
@@ -17680,10 +20500,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="tcp-精讲"&gt;TCP 精讲&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-62714853"
+id="mindmap-17283645"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-62714853" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17283645" style="display:none;"&gt;
 - TCP 精讲
 - TCP 本质：在不可靠 IP 上提供可靠字节流
 - TCP 提供内容
@@ -17950,10 +20770,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="http-与-web-体系"&gt;HTTP 与 Web 体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47821563"
+id="mindmap-21567384"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47821563" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-21567384" style="display:none;"&gt;
 - HTTP 与 Web 体系
 - HTTP 基础语义
 - HTTP 是无状态应用层协议：每个请求都自包含信息，状态由 Cookie/Token/Session 等机制在应用层实现
@@ -18371,10 +21191,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>投资</title><link>https://blog.ans20xx.com/posts/%E6%8A%95%E8%B5%84/</link><pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E6%8A%95%E8%B5%84/</guid><description>&lt;h1 id="投资基础认知"&gt;投资基础认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43852671"
+id="mindmap-15648237"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43852671" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15648237" style="display:none;"&gt;
 - 投资基础认知
 - 什么是投资
 - 储蓄
@@ -18697,10 +21517,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="财务报表与公司分析"&gt;财务报表与公司分析&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-62734581"
+id="mindmap-21534768"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-62734581" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-21534768" style="display:none;"&gt;
 - 财务报表与公司分析
 - 为什么要看财报
 - 财报是什么
@@ -19064,10 +21884,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>mysql 知识点</title><link>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h1 id="环境准备"&gt;环境准备&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-72651843"
+id="mindmap-65843721"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-72651843" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65843721" style="display:none;"&gt;
 - 环境配置与校验
 - docker-compose 启动
 - 命令行连接
@@ -19105,10 +21925,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="基础查询"&gt;基础查询&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21574386"
+id="mindmap-25347618"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21574386" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25347618" style="display:none;"&gt;
 - 基础查询
 - 电商数据集
 - 单表查询
@@ -19282,10 +22102,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="约束与范式基础"&gt;约束与范式基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-62147385"
+id="mindmap-17826543"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-62147385" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17826543" style="display:none;"&gt;
 - 约束与范式基础
 - 约束
 - 目的
@@ -19345,10 +22165,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="索引--explain"&gt;索引 + EXPLAIN&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-68475231"
+id="mindmap-16258734"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-68475231" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-16258734" style="display:none;"&gt;
 - 索引 &amp;#43; EXPLAIN
 - 准备索引
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214111724844.png,200,50)
@@ -19556,10 +22376,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="事务与并发控制"&gt;事务与并发控制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-36821574"
+id="mindmap-24853761"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-36821574" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-24853761" style="display:none;"&gt;
 - 事务与并发控制
 - ACID
 - A 原子性：要么全成功，要么全失败，依靠 undo log &amp;#43; 回滚机制
@@ -19953,10 +22773,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="表设计与数据治理"&gt;表设计与数据治理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-67825134"
+id="mindmap-73462518"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-67825134" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-73462518" style="display:none;"&gt;
 - 表设计与数据治理
 - 建模方法与边界
 - 建模方法
@@ -20135,10 +22955,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="运维与排障"&gt;运维与排障&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-83215746"
+id="mindmap-75368421"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-83215746" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-75368421" style="display:none;"&gt;
 - 运维与排障
 - 指标体系
 - 指标分层
@@ -20167,10 +22987,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="体系架构"&gt;体系架构&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-86451372"
+id="mindmap-25638174"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-86451372" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25638174" style="display:none;"&gt;
 - mysql 体系架构
 - Server 层
 - 连接与会话管理
@@ -20356,10 +23176,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;li&gt;有鹦鹉的情况下，可以给触发战吼野兽套盾&lt;/li&gt;
 &lt;/ol&gt;</description></item><item><title>Docker复习</title><link>https://blog.ans20xx.com/posts/docker%E6%96%B0/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/docker%E6%96%B0/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-73564281"
+id="mindmap-87123546"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-73564281" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-87123546" style="display:none;"&gt;
 - Docker
 - mac 安装 -&amp;gt; https://www.docker.com
 - Container 容器
@@ -20502,10 +23322,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;
 &lt;h1 id="容器原理"&gt;容器原理&lt;/h1&gt;</description></item><item><title>Redis 复习</title><link>https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-63512784"
+id="mindmap-63281547"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-63512784" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-63281547" style="display:none;"&gt;
 - Redis
 - 环境安装
 - docker run -d --name redis -p 6379:6379 redis
@@ -22293,10 +25113,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;思路 1 ：动态规划&lt;/p&gt;
 &lt;p&gt;dp[i] = 以 i 位置结尾的最大子数组和&lt;/p&gt;</description></item><item><title>无重复字符的最长子串</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</guid><description>无重复字符的最长子串</description></item><item><title>重启人生</title><link>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-36145827"
+id="mindmap-15463827"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-36145827" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15463827" style="display:none;"&gt;
 - 重启人生
 - 重要
 - 万事切不可急躁，三思而后行
@@ -23193,10 +26013,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/div&gt;</description></item><item><title>mindmap 测试</title><link>https://blog.ans20xx.com/posts/mindmap/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/mindmap/</guid><description>mindmap 测试</description></item><item><title>Python语法汇总</title><link>https://blog.ans20xx.com/posts/python%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/python%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/</guid><description>&lt;h1 id="基础用法"&gt;基础用法&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-18643527"
+id="mindmap-56178432"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-18643527" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-56178432" style="display:none;"&gt;
 - Python 语法
 - 注释
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/15/20260315235532706.png,201,109)
@@ -23466,10 +26286,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="uv-安装包"&gt;uv 安装包&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-83561472"
+id="mindmap-48276513"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-83561472" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48276513" style="display:none;"&gt;
 - uv
 - 安装 uv
 - curl -LsSf https://astral.sh/uv/install.sh | sh
