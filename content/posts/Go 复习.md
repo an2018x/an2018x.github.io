@@ -4082,4 +4082,3247 @@ toc: true
                 go env -w GOPROXY="https://goproxy.company.com,https://proxy.golang.org,direct"
                 go env -w GOPRIVATE="*.company.com"
                 ```
+    - 测试与基准测试
+        - Go Test 框架基础
+            - Go 内置了完整的测试框架，不需要任何第三方库。
+            - 测试文件以 _test.go 结尾，测试函数以 Test 开头，接受 *testing.T 参数。这三条规则，就是 Go 测试的全部入场门票。
+            - 示例
+                - 
+                ```go
+                // math/add.go
+                package math
+
+                func Add(a, b int) int {
+                    return a + b
+                }
+
+                func Divide(a, b float64) (float64, error) {
+                    if b == 0 {
+                        return 0, errors.New("除数不能为零")
+                    }
+                    return a / b, nil
+                }
+
+                // math/add_test.go（同一个包，_test.go 结尾）
+                package math
+
+                import "testing"
+
+                func TestAdd(t *testing.T) {
+                    result := Add(1, 2)
+                    if result != 3 {
+                        t.Errorf("Add(1, 2) = %d，期望 3", result)
+                    }
+                }
+
+                func TestDivide(t *testing.T) {
+                    result, err := Divide(10, 2)
+                    if err != nil {
+                        t.Fatalf("意外错误: %v", err)
+                    }
+                    if result != 5 {
+                        t.Errorf("Divide(10, 2) = %f，期望 5", result)
+                    }
+                }
+                ```
+            - 运行测试的常用命令
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/21/20260421000815190.png,310,160)
+            - testing.T 的核心方法
+                - 
+                ```go
+                // 测试失败但继续执行
+                t.Errorf("期望 %d，实际 %d", expected, actual)
+                t.Error("发现问题")
+
+                // 测试失败并立即停止（Fatal = Error + runtime.Goexit）
+                t.Fatalf("致命错误: %v", err)
+                t.Fatal("不可继续")
+
+                // 仅打印日志（不影响测试结果）
+                t.Logf("调试信息: %v", value)
+                t.Log("这里到了")
+
+                // 跳过测试
+                t.Skip("跳过原因：需要数据库")
+                t.Skipf("跳过：CI 环境不支持 %s", feature)
+
+                // 标记为并行测试
+                t.Parallel()
+
+                // 子测试（下一节讲）
+                t.Run("子测试名", func(t *testing.T) { ... })
+                ```
+        - 表驱动测试
+            - 表驱动测试是 Go 最推荐的测试写法。
+            - 把所有测试用例放进一个切片，用循环执行，消除重复代码，添加新用例只需加一行。
+            - 这是 Go 测试的标准惯用法。
+            - 示例
+                - 
+                ```go
+                func TestAdd(t *testing.T) {
+                    // 定义测试用例表
+                    tests := []struct {
+                        name     string  // 用例名（出错时显示）
+                        a, b     int
+                        expected int
+                    }{
+                        {"正数相加", 1, 2, 3},
+                        {"负数相加", -1, -2, -3},
+                        {"正负相加", 5, -3, 2},
+                        {"零值", 0, 0, 0},
+                        {"大数", 1000000, 2000000, 3000000},
+                    }
+
+                    for _, tt := range tests {
+                        t.Run(tt.name, func(t *testing.T) {   // ✨ 子测试
+                            result := Add(tt.a, tt.b)
+                            if result != tt.expected {
+                                t.Errorf("Add(%d, %d) = %d，期望 %d",
+                                    tt.a, tt.b, result, tt.expected)
+                            }
+                        })
+                    }
+                }
+                ```
+            - 测试有 error 返回的函数
+                - 
+                ```go
+                func TestDivide(t *testing.T) {
+                    tests := []struct {
+                        name      string
+                        a, b      float64
+                        expected  float64
+                        wantErr   bool    // 是否期望出错
+                        errMsg    string  // 期望的错误信息（可选）
+                    }{
+                        {"正常除法", 10, 2, 5, false, ""},
+                        {"除以1", 9, 1, 9, false, ""},
+                        {"除以零", 10, 0, 0, true, "除数不能为零"},
+                        {"负数除法", -10, 2, -5, false, ""},
+                    }
+
+                    for _, tt := range tests {
+                        t.Run(tt.name, func(t *testing.T) {
+                            result, err := Divide(tt.a, tt.b)
+
+                            // 检查是否符合预期的错误行为
+                            if tt.wantErr {
+                                if err == nil {
+                                    t.Error("期望有错误，但没有")
+                                }
+                                if tt.errMsg != "" && !strings.Contains(err.Error(), tt.errMsg) {
+                                    t.Errorf("错误信息 %q 不包含 %q", err.Error(), tt.errMsg)
+                                }
+                                return  // 有预期错误，不检查结果
+                            }
+
+                            if err != nil {
+                                t.Fatalf("意外错误: %v", err)
+                            }
+
+                            if math.Abs(result-tt.expected) > 1e-9 {
+                                t.Errorf("Divide(%.2f, %.2f) = %.2f，期望 %.2f",
+                                    tt.a, tt.b, result, tt.expected)
+                            }
+                        })
+                    }
+                }
+                ```
+            - t.Run 子测试的好处
+                - t.Run 为每个用例创建独立的子测试
+                - 出错时精确定位是哪个用例失败（如 TestDivide/除以零）
+                - 可以单独运行某个子测试 go test -run TestDivide/除以零
+                - 支持 t.Parallel() 并行运行各个子测试
+        - 测试前后的准备与清理
+            - 很多测试需要初始化环境（启动数据库、创建临时文件）和清理（关闭连接、删除文件）。Go 提供了几种机制来处理这些需求。
+            - TestMain: 包级别的 setup/teardown
+                - 
+                ```go
+                // 如果定义了 TestMain，go test 会优先调用它
+                // 可以在这里做全局初始化
+                func TestMain(m *testing.M) {
+                    // ─── Setup ───
+                    fmt.Println("全局初始化：启动测试数据库...")
+                    db, err := setupTestDB()
+                    if err != nil {
+                        log.Fatalf("数据库初始化失败: %v", err)
+                    }
+
+                    // ─── 运行所有测试 ───
+                    exitCode := m.Run()
+
+                    // ─── Teardown ───
+                    fmt.Println("全局清理：关闭测试数据库...")
+                    db.Close()
+                    cleanupTestData()
+
+                    // 必须调用 os.Exit，否则 defer 不会执行
+                    os.Exit(exitCode)
+                }
+                ```
+            - t.Cleanup: 函数级别的清理
+                - 
+                ```go
+                func TestWriteFile(t *testing.T) {
+                    // 创建临时目录
+                    tmpDir := t.TempDir()  // ✨ 测试结束自动删除！
+
+                    // t.Cleanup 注册清理函数（类似 defer，但属于测试框架）
+                    tmpFile := filepath.Join(tmpDir, "test.txt")
+                    t.Cleanup(func() {
+                        os.Remove(tmpFile)
+                        t.Log("清理临时文件")
+                    })
+
+                    // 测试逻辑
+                    err := os.WriteFile(tmpFile, []byte("hello"), 0644)
+                    if err != nil {
+                        t.Fatal(err)
+                    }
+
+                    content, err := os.ReadFile(tmpFile)
+                    if err != nil {
+                        t.Fatal(err)
+                    }
+                    if string(content) != "hello" {
+                        t.Errorf("内容不匹配")
+                    }
+                }
+
+                // t.TempDir() 创建临时目录，测试结束（包括失败）后自动删除
+                // 比手写 defer os.RemoveAll 更安全
+                ```
+            - 辅助函数: Helper
+                - 
+                ```go
+                // 当多个测试有重复逻辑时，提取为 helper 函数
+                // ✨ 注意 t.Helper()：让错误报告指向调用 helper 的地方，而不是 helper 内部
+
+                func assertNoError(t *testing.T, err error) {
+                    t.Helper()  // 声明这是 helper 函数
+                    if err != nil {
+                        t.Fatalf("意外错误: %v", err)
+                    }
+                }
+
+                func assertEqual(t *testing.T, got, want interface{}) {
+                    t.Helper()
+                    if got != want {
+                        t.Errorf("期望 %v，实际 %v", want, got)
+                    }
+                }
+
+                // 使用
+                func TestSomething(t *testing.T) {
+                    result, err := doWork()
+                    assertNoError(t, err)      // 出错时报告这一行，不是 assertNoError 内部
+                    assertEqual(t, result, 42) // 同上
+                }
+                ```
+        - testify 更好的断言库
+            - 标准库的 testing 功能够用，但写法有点啰嗦。
+            - testify 是 Go 生态最流行的测试辅助库，提供更简洁的断言、Mock 和测试套件支持。
+            - 安装：go get github.com/stretchr/testify
+            - assert vs require
+                - 
+                ```go
+                import (
+                    "testing"
+                    "github.com/stretchr/testify/assert"
+                    "github.com/stretchr/testify/require"
+                )
+
+                func TestWithTestify(t *testing.T) {
+                    // assert：失败后继续执行（类似 t.Errorf）
+                    assert.Equal(t, 3, Add(1, 2))
+                    assert.NotNil(t, someValue)
+                    assert.NoError(t, err)
+                    assert.Contains(t, "hello world", "world")
+                    assert.True(t, isValid)
+                    assert.Len(t, slice, 3)
+
+                    // require：失败后立即停止（类似 t.Fatalf）
+                    require.NoError(t, err)       // err 不为 nil 就立即停止
+                    require.NotNil(t, result)     // 后续代码依赖 result 不为 nil
+
+                    // 带自定义消息
+                    assert.Equal(t, want, got, "用户列表长度应该相等")
+
+                    // 错误断言
+                    assert.Error(t, err)                          // 期望有 error
+                    assert.ErrorIs(t, err, ErrNotFound)           // 等价于 errors.Is
+                    assert.ErrorAs(t, err, &ValidationError{})    // 等价于 errors.As
+                }
+                ```
+            - 常用断言
+                - 
+                ```go
+                // 相等性
+                assert.Equal(t, expected, actual)         // ==
+                assert.NotEqual(t, expected, actual)      // !=
+                assert.EqualValues(t, expected, actual)   // 类型不同但值相等
+
+                // nil 检查
+                assert.Nil(t, val)
+                assert.NotNil(t, val)
+
+                // 布尔
+                assert.True(t, condition)
+                assert.False(t, condition)
+
+                // 错误
+                assert.NoError(t, err)
+                assert.Error(t, err)
+                assert.ErrorIs(t, err, target)
+
+                // 字符串/切片
+                assert.Contains(t, "hello", "ell")
+                assert.Contains(t, []int{1,2,3}, 2)
+                assert.Len(t, slice, 3)
+                assert.Empty(t, slice)
+                assert.NotEmpty(t, slice)
+
+                // 数值比较
+                assert.Greater(t, 5, 3)
+                assert.GreaterOrEqual(t, 5, 5)
+                assert.InDelta(t, 1.5, 1.500001, 0.001)  // 浮点近似相等
+
+                // 结构体（深度相等）
+                assert.Equal(t, expected, actual)  // 自动深度比较
+                // 或用 ObjectsAreEqual：
+                require.True(t, reflect.DeepEqual(want, got))
+                ```
+            - assert 和 require 的选择原则
+                - 当后续的测试逻辑依赖当前断言成立时（比如 err == nil 才能用 result），用 require。
+                - 否则用 assert，收集更多失败信息。一个简单口诀：「之后还要用这个值，就 require；不用就 assert」。
+        - Mock 测试
+            - Mock 是测试中最重要的技术之一。当你的代码依赖外部服务（数据库、HTTP API、邮件服务），测试时用 Mock 替换这些依赖，让测试快速、可靠、独立。
+            - 手写 Mock
+                - 
+                ```go
+                // 被测代码依赖接口（Day 12 项目结构的价值体现）
+                type UserRepository interface {
+                    FindByID(ctx context.Context, id int) (*User, error)
+                    Create(ctx context.Context, u *User) error
+                }
+
+                type UserService struct {
+                    repo UserRepository
+                }
+
+                // 手写 Mock：直接实现接口
+                type MockUserRepo struct {
+                    users  map[int]*User
+                    nextID int
+                    // 可以记录调用次数、参数等
+                    CreateCalled int
+                    FindCalled   int
+                }
+
+                func (m *MockUserRepo) FindByID(_ context.Context, id int) (*User, error) {
+                    m.FindCalled++
+                    u, ok := m.users[id]
+                    if !ok {
+                        return nil, ErrNotFound
+                    }
+                    return u, nil
+                }
+
+                func (m *MockUserRepo) Create(_ context.Context, u *User) error {
+                    m.CreateCalled++
+                    u.ID = m.nextID
+                    m.users[u.ID] = u
+                    m.nextID++
+                    return nil
+                }
+
+                // 测试时注入 Mock
+                func TestUserService_Register(t *testing.T) {
+                    mockRepo := &MockUserRepo{
+                        users:  make(map[int]*User),
+                        nextID: 1,
+                    }
+                    svc := &UserService{repo: mockRepo}
+
+                    ctx := context.Background()
+                    u, err := svc.Register(ctx, "Alice", "alice@example.com")
+
+                    require.NoError(t, err)
+                    assert.Equal(t, "Alice", u.Name)
+                    assert.Equal(t, 1, mockRepo.CreateCalled)  // 验证调用次数
+                }
+                ```
+            - testify/mock：功能更强的 mock
+                - 
+                ```go
+                import "github.com/stretchr/testify/mock"
+
+                // 用 testify/mock 生成 Mock
+                type MockUserRepo struct {
+                    mock.Mock  // 嵌入 mock.Mock
+                }
+
+                func (m *MockUserRepo) FindByID(ctx context.Context, id int) (*User, error) {
+                    args := m.Called(ctx, id)  // 记录调用，返回预设值
+                    if args.Get(0) == nil {
+                        return nil, args.Error(1)
+                    }
+                    return args.Get(0).(*User), args.Error(1)
+                }
+
+                func (m *MockUserRepo) Create(ctx context.Context, u *User) error {
+                    args := m.Called(ctx, u)
+                    return args.Error(0)
+                }
+
+                // 使用：设置期望
+                func TestWithMock(t *testing.T) {
+                    mockRepo := new(MockUserRepo)
+                    
+                    expectedUser := &User{ID: 1, Name: "Alice"}
+
+                    // 设置期望：当 FindByID 被用 id=1 调用时，返回 expectedUser
+                    mockRepo.On("FindByID", mock.Anything, 1).Return(expectedUser, nil)
+                    
+                    // 设置期望：Create 被调用时成功
+                    mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*User")).Return(nil)
+
+                    svc := &UserService{repo: mockRepo}
+                    
+                    u, err := svc.GetUser(context.Background(), 1)
+                    require.NoError(t, err)
+                    assert.Equal(t, "Alice", u.Name)
+
+                    // 验证所有期望都被满足
+                    mockRepo.AssertExpectations(t)
+                }
+                ```
+            - Mock 的正确姿势
+                - Mock 应该只 Mock 你控制不了的东西：数据库、HTTP 接口、时间、随机数。
+                - 不要 Mock 你自己写的业务逻辑——那会让测试失去意义。
+                - 最好的测试策略是：单元测试 Mock 外部依赖，集成测试用真实的基础设施（用 testcontainers）。
+        - 基准测试
+            - 基准测试用来测量代码的性能。函数以 Benchmark 开头，接受 *testing.B 参数。Go 会自动调整循环次数，让结果更准确。
+            - 示例
+                - 
+                ```go
+                func BenchmarkAdd(b *testing.B) {
+                    // b.N 由 go test 自动决定（通常是几百万次）
+                    for i := 0; i < b.N; i++ {
+                        Add(1, 2)
+                    }
+                }
+
+                // 运行基准测试
+                // go test -bench=. -benchmem ./...
+                // -bench=.         运行所有 Benchmark
+                // -benchmem        同时显示内存分配
+                // -benchtime=5s    指定运行时间
+                // -count=3         运行 3 次取平均
+
+                // 示例输出：
+                // BenchmarkAdd-8    1000000000    0.2891 ns/op    0 B/op    0 allocs/op
+                //                  ↑执行次数      ↑每次耗时         ↑内存     ↑分配次数
+                ```
+            - 比较两种实现的性能
+                - 
+                ```go
+                // 对比字符串拼接：+ vs strings.Builder
+                func BenchmarkStringConcat(b *testing.B) {
+                    words := []string{"hello", "world", "go", "test"}
+
+                    b.Run("用+拼接", func(b *testing.B) {
+                        for i := 0; i < b.N; i++ {
+                            result := ""
+                            for _, w := range words {
+                                result += w  // 每次拼接都分配新内存
+                            }
+                            _ = result
+                        }
+                    })
+
+                    b.Run("用Builder", func(b *testing.B) {
+                        for i := 0; i < b.N; i++ {
+                            var sb strings.Builder
+                            for _, w := range words {
+                                sb.WriteString(w)  // 预分配，减少内存分配
+                            }
+                            _ = sb.String()
+                        }
+                    })
+                }
+
+                // 输出示例：
+                // BenchmarkStringConcat/用+拼接-8     3000000   450 ns/op   128 B/op   4 allocs/op
+                // BenchmarkStringConcat/用Builder-8  10000000   120 ns/op    64 B/op   1 allocs/op
+                // Builder 快 3.7 倍，内存分配少 4 倍
+                ```
+            - b.ResetTimer 和 b.StopTimer
+                - 
+                ```go
+                func BenchmarkWithSetup(b *testing.B) {
+                    // 做一些耗时的初始化（不计入基准）
+                    data := generateLargeTestData()
+                    
+                    b.ResetTimer()  // 重置计时器，排除初始化时间
+                    
+                    for i := 0; i < b.N; i++ {
+                        b.StopTimer()  // 暂停计时
+                        input := prepareInput(data)  // 每次迭代的准备工作
+                        b.StartTimer() // 恢复计时
+                        
+                        processData(input)  // 只测量这部分
+                    }
+                }
+                ```
+        - 示例测试
+            - Example 函数有双重作用：既是可运行的测试，也是文档。
+            - go doc 命令会显示 Example 函数，godoc 网站也会展示它们。
+            - 示例
+                - 
+                ```go
+                // 函数名：Example + 函数名
+                func ExampleAdd() {
+                    result := Add(1, 2)
+                    fmt.Println(result)
+                    // Output: 3  ← go test 会验证输出与这里一致
+                }
+
+                func ExampleDivide() {
+                    result, err := Divide(10, 2)
+                    fmt.Println(result, err)
+                    // Output: 5 <nil>
+                }
+
+                // 无法预测输出顺序时用 Unordered output
+                func ExamplePrintMap() {
+                    m := map[string]int{"a": 1, "b": 2}
+                    for k, v := range m {
+                        fmt.Printf("%s: %d\n", k, v)
+                    }
+                    // Unordered output:
+                    // a: 1
+                    // b: 2
+                }
+
+                // 类型/方法的 Example
+                func ExampleUser_GetName() {
+                    u := User{Name: "Alice"}
+                    fmt.Println(u.GetName())
+                    // Output: Alice
+                }
+                ```
+            - Example 是活的文档
+                - Example 函数最大的优点是：它会被 go test 执行，如果输出和注释不匹配就会失败。
+                - 这意味着你的文档示例代码永远是正确的——代码改了但没更新文档，测试会提醒你。
+                - 这是 Go 「文档即测试」哲学的体现。
+        - 测试覆盖率
+            - 覆盖率不是越高越好，但低覆盖率通常意味着关键路径没有被测试。
+            - Go 内置了覆盖率工具，不需要额外安装。
+            - 示例
+                - 
+                ```go
+                # 查看覆盖率（百分比）
+                go test -cover ./...
+                # ok  myapp/internal/service  coverage: 78.5% of statements
+
+                # 生成覆盖率文件
+                go test -coverprofile=coverage.out ./...
+
+                # 用浏览器查看哪些行被覆盖（绿色），哪些没有（红色）
+                go tool cover -html=coverage.out
+
+                # 按函数查看覆盖率
+                go tool cover -func=coverage.out
+                # myapp/internal/service/user.go:Register   100.0%
+                # myapp/internal/service/user.go:GetUser    75.0%
+                # total:                                     82.3%
+
+                # 生成覆盖率徽章（常用于 README）
+                # 需要第三方工具，如 goveralls、codecov
+                ```
+            - 覆盖率的合理目标
+                - 
+                ```go
+                // 什么应该测？
+                // ✅ 核心业务逻辑（service 层）
+                // ✅ 复杂算法
+                // ✅ 错误处理路径
+                // ✅ 边界条件（空值、极值）
+
+                // 什么可以不测/难测？
+                // ❌ main 函数
+                // ❌ 简单的 getter/setter
+                // ❌ 第三方库（已有自己的测试）
+                // ❌ 纯配置代码
+
+                // 行业参考值：
+                // 核心业务代码：80% 以上
+                // 整体项目：60-70% 是健康的
+                // 追求 100% 反而可能浪费时间在无价值的测试上
+
+                // 一个常见的 .golangci.yml 配置
+                // testpackage: 是否要求测试在独立的 _test 包
+                // 建议：核心包用 package xxx_test，确保测试只用公开 API
+                ```
+            - 测试覆盖率的正确理解
+                - 覆盖率是工具，不是目标。
+                - 80% 覆盖率但测试都是走正常路径，不如 60% 但每个边界条件都测到。
+                - 真正重要的是：关键业务路径有测试、错误路径有测试、修改代码后测试能告诉你哪里坏了。
+    - 泛型
+        - Go 1.18 引入泛型之前，想写「适用于任意类型」的函数有两种选择：为每种类型写重复代码，或者用 any 丢失类型安全。
+        - 泛型解决了这个两难困境——既通用，又类型安全。
+        - 没有泛型的问题
+            - 
+            ```go
+            // ❌ 方案一：为每种类型写重复代码
+            func SumInt(nums []int) int {
+                total := 0
+                for _, n := range nums { total += n }
+                return total
+            }
+            func SumFloat64(nums []float64) float64 {
+                total := 0.0
+                for _, n := range nums { total += n }
+                return total
+            }
+            // 如果要支持 int32、int64、float32... 噩梦
+
+            // ❌ 方案二：用 any，丢失类型安全
+            func Sum(nums []any) any {
+                // 怎么相加？any 不支持 + 运算符
+                // 必须类型断言，运行时才发现错误
+            }
+
+            // ✅ 泛型：一次编写，类型安全，适用所有数字类型
+            func Sum[T int | int64 | float64](nums []T) T {
+                var total T
+                for _, n := range nums { total += n }
+                return total
+            }
+
+            Sum([]int{1, 2, 3})         // 6
+            Sum([]float64{1.1, 2.2})    // 3.3
+            Sum([]string{"a", "b"})     // ❌ 编译错误：string 不满足约束
+            ```
+        - 泛型 vs any 的本质区别
+            - any 在运行时丢失类型信息，错误只能在运行时发现。
+            - 泛型在编译时确定类型，错误在编译时发现，且不需要类型断言，性能也更好（零运行时开销）。
+            - 泛型是编译器的能力，any 是程序员的妥协。
+        - 类型参数基础语法
+            - 泛型通过「类型参数」实现。
+            - 类型参数放在方括号 [] 里，紧跟在函数名或类型名后面。
+            - 每个类型参数都有一个「约束」，限制它能接受哪些类型。
+            - 泛型函数
+                - 
+                ```go
+                // func 函数名[类型参数 约束](普通参数) 返回值
+                func Map[T, R any](slice []T, fn func(T) R) []R {
+                    result := make([]R, len(slice))
+                    for i, v := range slice {
+                        result[i] = fn(v)
+                    }
+                    return result
+                }
+
+                // 使用：Go 能自动推断类型参数，通常不用显式写
+                nums := Map([]int{1, 2, 3}, func(n int) int { return n * 2 })
+                // nums = [2, 4, 6]
+
+                strs := Map([]int{1, 2, 3}, func(n int) string {
+                    return fmt.Sprintf("No.%d", n)
+                })
+                // strs = ["No.1", "No.2", "No.3"]
+
+                // 显式指定类型参数（推断失败时）
+                result := Map[int, string]([]int{1, 2, 3}, func(n int) string {
+                    return strconv.Itoa(n)
+                })
+                ```
+            - 泛型类型 (结构体)
+                - 
+                ```go
+                // type 类型名[类型参数 约束] struct { ... }
+                type Stack[T any] struct {
+                    items []T
+                }
+
+                func (s *Stack[T]) Push(item T) {
+                    s.items = append(s.items, item)
+                }
+
+                func (s *Stack[T]) Pop() (T, bool) {
+                    if len(s.items) == 0 {
+                        var zero T  // ✨ 零值：泛型类型的默认值
+                        return zero, false
+                    }
+                    top := s.items[len(s.items)-1]
+                    s.items = s.items[:len(s.items)-1]
+                    return top, true
+                }
+
+                func (s *Stack[T]) Peek() (T, bool) {
+                    if len(s.items) == 0 {
+                        var zero T
+                        return zero, false
+                    }
+                    return s.items[len(s.items)-1], true
+                }
+
+                func (s *Stack[T]) Len() int { return len(s.items) }
+
+                // 使用
+                intStack := Stack[int]{}       // 整数栈
+                intStack.Push(1)
+                intStack.Push(2)
+                v, ok := intStack.Pop()        // v=2, ok=true
+
+                strStack := Stack[string]{}    // 字符串栈
+                strStack.Push("hello")
+                ```
+        - 类型泛型
+            - 约束定义了类型参数能接受哪些类型。
+            - 约束本质上是接口——只不过这个接口里可以包含「类型集合」（type set），不只是方法列表。
+            - 内置约束
+                - 
+                ```go
+                // any：没有限制（等价于 interface{}）
+                func Identity[T any](v T) T { return v }
+
+                // comparable：可以用 == 和 != 比较的类型
+                // int, string, bool, 指针, channel, 不含 slice/map/func 的 struct 等
+                func Contains[T comparable](slice []T, target T) bool {
+                    for _, v := range slice {
+                        if v == target { return true }
+                    }
+                    return false
+                }
+
+                Contains([]int{1, 2, 3}, 2)         // true
+                Contains([]string{"a", "b"}, "c")   // false
+
+                // 注意：slice、map、func 不是 comparable
+                // Contains([][]int{{1,2}}, []int{1,2})  // ❌ 编译错误
+                ```
+            - contraints 包的内置约束
+                - 
+                ```go
+                import "golang.org/x/exp/constraints"
+                // 或 Go 1.21+ 用标准库 cmp 包
+
+                // constraints.Ordered：支持 < > <= >= 的类型
+                // int, int8, int16, int32, int64
+                // uint, uint8, ..., uintptr
+                // float32, float64
+                // string
+
+                func Min[T constraints.Ordered](a, b T) T {
+                    if a < b { return a }
+                    return b
+                }
+
+                func Max[T constraints.Ordered](a, b T) T {
+                    if a > b { return a }
+                    return b
+                }
+
+                func Clamp[T constraints.Ordered](val, lo, hi T) T {
+                    return Max(lo, Min(val, hi))
+                }
+
+                Min(3, 5)          // 3
+                Min("apple", "banana")  // "apple"（字符串也可以比较）
+                Clamp(15, 0, 10)   // 10（限制在 [0, 10] 范围内）
+                ```
+            - 自定义约束
+                - 
+                ```go
+                // 约束是接口，可以包含：
+                // 1. 方法列表
+                // 2. 类型集合（~ 表示底层类型）
+
+                // 类型集合：只允许这些具体类型
+                type Integer interface {
+                    int | int8 | int16 | int32 | int64
+                }
+
+                // ~ 表示底层类型（包含所有基于这些类型的自定义类型）
+                type Number interface {
+                    ~int | ~int8 | ~int16 | ~int32 | ~int64 |
+                    ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 |
+                    ~float32 | ~float64
+                }
+
+                func Sum[T Number](nums []T) T {
+                    var total T
+                    for _, n := range nums { total += n }
+                    return total
+                }
+
+                // ~ 的重要性：
+                type MyInt int          // 基于 int 的自定义类型
+                Sum([]MyInt{1, 2, 3})  // ✅ ~int 包含 MyInt
+                // 不加 ~ 的话，Sum[int | float64] 就不接受 MyInt
+
+                // 方法 + 类型混合约束
+                type Stringer interface {
+                    ~string | ~[]byte  // 类型集合
+                    String() string    // 方法要求
+                }
+                ```
+            - ~ 操作符的含义
+                - ~T 表示「底层类型为 T 的所有类型」
+                - type MyInt int 的底层类型是 int，所以 ~int 包含 MyInt
+                - 不加 ~ 则只接受 int 本身，不接受基于 int 的自定义类型
+                - 实际项目中，数值约束通常都要加 ~
+        - 实用泛型函数库
+            - 掌握泛型最好的方式是实现那些经典的高阶函数。
+            - Go 1.21 的 slices 和 maps 标准包已经内置了很多。
+            - 切片操作三件套
+                - 
+                ```go
+                // Map：对每个元素应用函数
+                func Map[T, R any](s []T, fn func(T) R) []R {
+                    result := make([]R, len(s))
+                    for i, v := range s { result[i] = fn(v) }
+                    return result
+                }
+
+                // Filter：保留满足条件的元素
+                func Filter[T any](s []T, keep func(T) bool) []T {
+                    result := make([]T, 0, len(s))
+                    for _, v := range s {
+                        if keep(v) { result = append(result, v) }
+                    }
+                    return result
+                }
+
+                // Reduce：累积计算
+                func Reduce[T, R any](s []T, init R, fn func(R, T) R) R {
+                    result := init
+                    for _, v := range s { result = fn(result, v) }
+                    return result
+                }
+
+                // 使用：组合成管道
+                nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+                result := Reduce(
+                    Map(
+                        Filter(nums, func(n int) bool { return n%2 == 0 }),
+                        func(n int) int { return n * n },
+                    ),
+                    0,
+                    func(acc, n int) int { return acc + n },
+                )
+                // 偶数的平方和：4+16+36+64+100 = 220
+                ```
+            - 通用工具函数
+                - 
+                ```go
+                // Contains：检查元素是否在切片中
+                func Contains[T comparable](s []T, target T) bool {
+                    for _, v := range s {
+                        if v == target { return true }
+                    }
+                    return false
+                }
+
+                // Index：查找元素的索引，-1 表示不存在
+                func Index[T comparable](s []T, target T) int {
+                    for i, v := range s {
+                        if v == target { return i }
+                    }
+                    return -1
+                }
+
+                // Unique：去重，保持顺序
+                func Unique[T comparable](s []T) []T {
+                    seen := make(map[T]struct{})
+                    result := make([]T, 0, len(s))
+                    for _, v := range s {
+                        if _, ok := seen[v]; !ok {
+                            seen[v] = struct{}{}
+                            result = append(result, v)
+                        }
+                    }
+                    return result
+                }
+
+                // Keys：取出 map 的所有 key
+                func Keys[K comparable, V any](m map[K]V) []K {
+                    keys := make([]K, 0, len(m))
+                    for k := range m { keys = append(keys, k) }
+                    return keys
+                }
+
+                // Values：取出 map 的所有 value
+                func Values[K comparable, V any](m map[K]V) []V {
+                    vals := make([]V, 0, len(m))
+                    for _, v := range m { vals = append(vals, v) }
+                    return vals
+                }
+
+                // GroupBy：按 key 函数分组
+                func GroupBy[T any, K comparable](s []T, key func(T) K) map[K][]T {
+                    groups := make(map[K][]T)
+                    for _, v := range s {
+                        k := key(v)
+                        groups[k] = append(groups[k], v)
+                    }
+                    return groups
+                }
+
+                // 使用 GroupBy
+                type Person struct{ Name, City string }
+                people := []Person{
+                    {"Alice", "Tokyo"}, {"Bob", "Tokyo"}, {"Charlie", "Osaka"},
+                }
+                byCity := GroupBy(people, func(p Person) string { return p.City })
+                // byCity["Tokyo"] = [{Alice Tokyo} {Bob Tokyo}]
+                ```
+        - 泛型数据结构
+            - 泛型最大的价值之一是可以写真正通用的数据结构。下面实现几个常用的容器。
+            - 泛型 Set (集合)
+                - 
+                ```go
+                type Set[T comparable] struct {
+                    items map[T]struct{}
+                }
+
+                func NewSet[T comparable](items ...T) *Set[T] {
+                    s := &Set[T]{items: make(map[T]struct{})}
+                    for _, item := range items { s.Add(item) }
+                    return s
+                }
+
+                func (s *Set[T]) Add(item T)         { s.items[item] = struct{}{} }
+                func (s *Set[T]) Remove(item T)      { delete(s.items, item) }
+                func (s *Set[T]) Contains(item T) bool {
+                    _, ok := s.items[item]
+                    return ok
+                }
+                func (s *Set[T]) Len() int           { return len(s.items) }
+
+                // 集合运算
+                func (s *Set[T]) Union(other *Set[T]) *Set[T] {
+                    result := NewSet[T]()
+                    for k := range s.items { result.Add(k) }
+                    for k := range other.items { result.Add(k) }
+                    return result
+                }
+
+                func (s *Set[T]) Intersection(other *Set[T]) *Set[T] {
+                    result := NewSet[T]()
+                    for k := range s.items {
+                        if other.Contains(k) { result.Add(k) }
+                    }
+                    return result
+                }
+
+                // 使用
+                a := NewSet(1, 2, 3, 4)
+                b := NewSet(3, 4, 5, 6)
+                union := a.Union(b)         // {1,2,3,4,5,6}
+                inter := a.Intersection(b)  // {3,4}
+                ```
+            - 泛型 Optional (可选值)
+                - 
+                ```go
+                // 类似 Rust 的 Option<T>，比返回 (T, bool) 更语义化
+                type Optional[T any] struct {
+                    value    T
+                    hasValue bool
+                }
+
+                func Some[T any](v T) Optional[T] {
+                    return Optional[T]{value: v, hasValue: true}
+                }
+
+                func None[T any]() Optional[T] {
+                    return Optional[T]{}
+                }
+
+                func (o Optional[T]) IsPresent() bool { return o.hasValue }
+
+                func (o Optional[T]) Get() (T, bool) {
+                    return o.value, o.hasValue
+                }
+
+                func (o Optional[T]) OrElse(defaultVal T) T {
+                    if o.hasValue { return o.value }
+                    return defaultVal
+                }
+
+                func (o Optional[T]) Map(fn func(T) T) Optional[T] {
+                    if !o.hasValue { return None[T]() }
+                    return Some(fn(o.value))
+                }
+
+                // 使用
+                func findUser(id int) Optional[User] {
+                    user, ok := db[id]
+                    if !ok { return None[User]() }
+                    return Some(user)
+                }
+
+                result := findUser(42).
+                    Map(func(u User) User { u.Name = strings.ToUpper(u.Name); return u }).
+                    OrElse(User{Name: "anonymous"})
+                ```
+        - 标准库的泛型包
+            - Go 1.21 起标准库加入了几个泛型包，直接使用它们比自己实现更好。
+            - slice
+                - 
+                ```go
+                import "slices"
+
+                nums := []int{3, 1, 4, 1, 5, 9, 2, 6}
+
+                // 排序
+                slices.Sort(nums)                    // [1 1 2 3 4 5 6 9]
+                slices.SortFunc(nums, func(a, b int) int {
+                    return b - a                     // 降序
+                })
+
+                // 查找
+                idx := slices.Index(nums, 5)         // 找到返回索引，否则 -1
+                ok := slices.Contains(nums, 5)       // true
+
+                // 修改
+                slices.Reverse(nums)                 // 原地反转
+                unique := slices.Compact(nums)       // 去除连续重复
+                nums = slices.Delete(nums, 2, 4)     // 删除 [2,4) 区间
+                nums = slices.Insert(nums, 1, 99, 88) // 在索引 1 处插入
+
+                // 复制（独立副本）
+                clone := slices.Clone(nums)
+
+                // 比较
+                equal := slices.Equal([]int{1,2}, []int{1,2})  // true
+                ```
+            - maps 包
+                - 
+                ```go
+                import "maps"
+
+                m := map[string]int{"a": 1, "b": 2, "c": 3}
+
+                // 复制
+                clone := maps.Clone(m)
+
+                // 删除满足条件的 key
+                maps.DeleteFunc(m, func(k string, v int) bool {
+                    return v < 2  // 删除 value < 2 的条目
+                })
+
+                // 判断是否相等
+                eq := maps.Equal(m, map[string]int{"b": 2, "c": 3})
+
+                // 遍历（Go 1.23+ range over func）
+                for k, v := range maps.All(m) {
+                    fmt.Printf("%s: %d\n", k, v)
+                }
+                ```
+            - cmp 包
+                - 
+                ```go
+                import "cmp"
+
+                // cmp.Ordered：可排序类型的约束（等价于 constraints.Ordered）
+                func Min[T cmp.Ordered](a, b T) T {
+                    return min(a, b)  // Go 1.21+ 内置了 min/max 函数
+                }
+
+                // cmp.Compare：三路比较（-1, 0, 1）
+                cmp.Compare(1, 2)     // -1
+                cmp.Compare(2, 2)     // 0
+                cmp.Compare(3, 2)     // 1
+                cmp.Compare("a", "b") // -1（字符串也支持）
+
+                // 配合 slices.SortFunc 使用
+                type User struct{ Name string; Age int }
+                users := []User{{"Alice", 30}, {"Bob", 25}, {"Charlie", 35}}
+
+                slices.SortFunc(users, func(a, b User) int {
+                    return cmp.Compare(a.Age, b.Age)  // 按年龄排序
+                })
+
+                // Go 1.21+ 内置 min/max（泛型版本）
+                fmt.Println(min(3, 5))         // 3
+                fmt.Println(max("a", "b"))     // b
+                fmt.Println(min(1, 2, 3, 4))   // 1（支持多参数）
+                ```
+        - 泛型的限制与最佳实践
+            - 当前的限制
+                - 
+                ```go
+                // ❌ 限制一：不能在方法上定义新的类型参数
+                type Foo struct{}
+                func (f Foo) Bar[T any](v T) {}  // ❌ 编译错误！方法不能有类型参数
+
+                // ✅ 解决：把类型参数放到结构体上
+                type Foo[T any] struct{}
+                func (f Foo[T]) Bar(v T) {}
+
+                // ❌ 限制二：类型参数不能用作类型断言的目标
+                func wrong[T any](v any) T {
+                    return v.(T)  // ❌ 编译错误
+                }
+
+                // ✅ 解决：用 switch 或 reflect
+                func convert[T any](v any) (T, bool) {
+                    result, ok := v.(T)
+                    return result, ok
+                }
+
+                // ❌ 限制三：泛型类型不能直接比较（如果类型参数不是 comparable）
+                func Equal[T any](a, b T) bool {
+                    return a == b  // ❌ 如果 T 是 any，不能用 ==
+                }
+
+                // ✅ 解决：约束为 comparable
+                func Equal[T comparable](a, b T) bool {
+                    return a == b
+                }
+
+                // ❌ 限制四：不支持特化（不能为特定类型提供不同实现）
+                // Go 泛型目前没有 C++ 那样的模板特化
+                ```
+            - 什么时候用泛型，什么时候不用
+                - 
+                ```go
+                // ✅ 适合用泛型：
+                // 1. 通用容器（Stack, Queue, Set, Tree）
+                // 2. 算法函数（Sort, Map, Filter, Reduce）
+                // 3. 工具函数（Min, Max, Contains, GroupBy）
+                // 4. 类型安全的包装（Optional, Result）
+
+                // ❌ 不适合用泛型：
+                // 1. 单一类型的业务逻辑（用具体类型更清晰）
+                // 2. 接口能解决的多态问题（优先接口）
+                // 3. 能用 any 且不需要类型安全的场景
+
+                // 判断口诀：
+                // 「如果写了两个只有类型不同的函数，考虑泛型」
+                // 「如果行为因类型不同而不同，用接口」
+
+                // 反面教材：泛型滥用
+                type GenericService[T any] struct {  // ❌ 过度泛型
+                    repo Repository[T]
+                }
+                // 如果 T 只有一种可能，直接用具体类型
+
+                // 正确：当真正需要通用性时才用
+                type Cache[K comparable, V any] struct {  // ✅ 合理
+                    mu   sync.RWMutex
+                    data map[K]V
+                    ttl  time.Duration
+                }
+                ```
+{{< /mind >}}
+
+# Web 开发实战
+
+{{< mind height="860px" >}}
+- Web 开发实战
+    - net/http 标准库
+        - net/http 核心概念
+            - Go 的 net/http 标准库是同类中最强大的之一——不需要任何框架就能构建生产级 HTTP 服务器。
+            - 理解标准库是学好 Gin/Echo 等框架的基础，因为框架只是在它之上加了一层糖衣。
+            - HTTP 服务器示例
+                - 
+                ```go
+                package main
+
+                import (
+                    "fmt"
+                    "net/http"
+                )
+
+                func main() {
+                    // 注册路由处理器
+                    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+                        fmt.Fprintln(w, "Hello, Go Web!")
+                    })
+
+                    http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+                        fmt.Fprintln(w, "pong")
+                    })
+
+                    // 启动服务器（阻塞）
+                    fmt.Println("服务器启动在 :8080")
+                    if err := http.ListenAndServe(":8080", nil); err != nil {
+                        panic(err)
+                    }
+                }
+
+                // curl http://localhost:8080/
+                // → Hello, Go Web!
+                // curl http://localhost:8080/ping
+                // → pong
+                ```
+            - http.Handler 接口：一切方法的核心
+                - 
+                ```go
+                // Handler 接口只有一个方法
+                // type Handler interface {
+                //     ServeHTTP(ResponseWriter, *Request)
+                // }
+
+                // ResponseWriter：写响应
+                // *Request：读请求
+
+                // 实现 Handler 接口的三种方式：
+
+                // 方式一：函数（用 http.HandlerFunc 适配）
+                func myHandler(w http.ResponseWriter, r *http.Request) {
+                    w.WriteHeader(http.StatusOK)
+                    fmt.Fprintln(w, "Hello")
+                }
+                http.Handle("/", http.HandlerFunc(myHandler))
+
+                // 方式二：http.HandleFunc（语法糖，最常用）
+                http.HandleFunc("/", myHandler)
+
+                // 方式三：实现 ServeHTTP 方法的结构体
+                type MyHandler struct{ greeting string }
+
+                func (h *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+                    fmt.Fprintln(w, h.greeting)
+                }
+
+                http.Handle("/", &MyHandler{greeting: "Hello from struct!"})
+                ```
+            - nil 是默认 ServeMux
+                - http.HandleFunc 和 http.Handle 注册到默认的 http.DefaultServeMux 上。
+                - ListenAndServe 传 nil 就用这个默认路由器。
+                - 生产代码通常自己创建 http.NewServeMux()，避免全局状态污染——特别是在写库的时候。
+        - 解析请求
+            - *http.Request 包含请求的所有信息。掌握如何读取 URL 参数、Header、Body 是写 API 的基础。
+            - URL 参数与路径
+                - 
+                ```go
+                func handler(w http.ResponseWriter, r *http.Request) {
+                    // 请求方法
+                    method := r.Method            // "GET", "POST", "PUT", "DELETE"
+
+                    // URL 路径
+                    path := r.URL.Path            // "/api/users/42"
+
+                    // Query 参数（?name=Alice&age=30）
+                    name := r.URL.Query().Get("name")     // "Alice"
+                    age := r.URL.Query().Get("age")       // "30"（字符串，需手动转换）
+                    all := r.URL.Query()                  // url.Values（map[string][]string）
+
+                    // ⚠️ 标准库没有路径参数（:id 这种）
+                    // 需要自己解析或用 Go 1.22 的新路由器
+                    // 例如：从 /api/users/42 提取 42
+                    parts := strings.Split(r.URL.Path, "/")
+                    // parts = ["", "api", "users", "42"]
+
+                    fmt.Fprintf(w, "method=%s path=%s name=%s", method, path, name)
+                }
+                ```
+            - 读取 Header 和 Body
+                - 
+                ```go
+                func handler(w http.ResponseWriter, r *http.Request) {
+                    // Headers
+                    contentType := r.Header.Get("Content-Type")
+                    token := r.Header.Get("Authorization")
+                    userAgent := r.Header.Get("User-Agent")
+
+                    // Body（只能读一次！）
+                    defer r.Body.Close()
+                    body, err := io.ReadAll(r.Body)
+                    if err != nil {
+                        http.Error(w, "读取 body 失败", http.StatusBadRequest)
+                        return
+                    }
+
+                    // JSON 解析
+                    var payload struct {
+                        Name  string `json:"name"`
+                        Email string `json:"email"`
+                    }
+                    if err := json.Unmarshal(body, &payload); err != nil {
+                        http.Error(w, "JSON 解析失败", http.StatusBadRequest)
+                        return
+                    }
+
+                    // 或者用 Decoder（更高效，不需要先读入 []byte）
+                    var data map[string]any
+                    if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+                        http.Error(w, "invalid json", http.StatusBadRequest)
+                        return
+                    }
+
+                    _ = contentType; _ = token; _ = userAgent
+                    fmt.Fprintf(w, "name=%s email=%s", payload.Name, payload.Email)
+                }
+                ```
+            - 表单与文件上传
+                - 
+                ```go
+                func handler(w http.ResponseWriter, r *http.Request) {
+                    // 解析表单（必须先调用）
+                    if err := r.ParseForm(); err != nil {
+                        http.Error(w, "解析表单失败", http.StatusBadRequest)
+                        return
+                    }
+                    name := r.FormValue("name")    // 同时读取 form 和 query 参数
+
+                    // 文件上传
+                    r.ParseMultipartForm(10 << 20)  // 最大 10MB
+                    file, header, err := r.FormFile("avatar")
+                    if err != nil {
+                        http.Error(w, "读取文件失败", http.StatusBadRequest)
+                        return
+                    }
+                    defer file.Close()
+
+                    fmt.Printf("文件名: %s, 大小: %d\n", header.Filename, header.Size)
+                    // 保存文件
+                    dst, _ := os.Create("upload/" + header.Filename)
+                    defer dst.Close()
+                    io.Copy(dst, file)
+
+                    _ = name
+                    fmt.Fprintln(w, "上传成功")
+                }
+                ```
+        - 构建响应
+            - http.ResponseWriter 用于写响应。
+            - 理解写入顺序很重要：必须先设置 Header，再 WriteHeader，最后写 Body。
+                - 
+                ```go
+                func handler(w http.ResponseWriter, r *http.Request) {
+                    // ⚠️ 顺序很重要：Header → WriteHeader → Body
+
+                    // 1. 设置响应头（必须在 WriteHeader 之前）
+                    w.Header().Set("Content-Type", "application/json")
+                    w.Header().Set("X-Request-ID", "abc-123")
+
+                    // 2. 设置状态码（只能调用一次，之后会 superfluous）
+                    w.WriteHeader(http.StatusCreated)  // 201
+
+                    // 3. 写 Body
+                    fmt.Fprintln(w, `{"message": "created"}`)
+                }
+
+                // 常用状态码常量
+                http.StatusOK           // 200
+                http.StatusCreated      // 201
+                http.StatusNoContent    // 204
+                http.StatusBadRequest   // 400
+                http.StatusUnauthorized // 401
+                http.StatusForbidden    // 403
+                http.StatusNotFound     // 404
+                http.StatusInternalServerError // 500
+                ```
+            - JSON 响应的标准写法
+                - 
+                ```go
+                // 封装一个通用的 JSON 响应函数
+                func writeJSON(w http.ResponseWriter, status int, data any) {
+                    w.Header().Set("Content-Type", "application/json")
+                    w.WriteHeader(status)
+                    if err := json.NewEncoder(w).Encode(data); err != nil {
+                        // 已经 WriteHeader 了，只能 log，不能再改状态码
+                        log.Printf("写入 JSON 响应失败: %v", err)
+                    }
+                }
+
+                // 封装错误响应
+                type ErrorResponse struct {
+                    Code    int    `json:"code"`
+                    Message string `json:"message"`
+                }
+
+                func writeError(w http.ResponseWriter, status int, msg string) {
+                    writeJSON(w, status, ErrorResponse{Code: status, Message: msg})
+                }
+
+                // 使用
+                func getUserHandler(w http.ResponseWriter, r *http.Request) {
+                    user, err := findUser(1)
+                    if err != nil {
+                        writeError(w, http.StatusNotFound, "用户不存在")
+                        return
+                    }
+                    writeJSON(w, http.StatusOK, user)
+                }
+                ```
+            - 重定向与文件服务
+                - 
+                ```go
+                // 重定向
+                http.Redirect(w, r, "/new-path", http.StatusMovedPermanently)   // 301
+                http.Redirect(w, r, "/login", http.StatusFound)                  // 302
+
+                // 简单错误响应
+                http.Error(w, "资源不存在", http.StatusNotFound)
+                // 等价于：
+                // w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+                // w.WriteHeader(http.StatusNotFound)
+                // fmt.Fprintln(w, "资源不存在")
+
+                // 静态文件服务
+                http.Handle("/static/", http.StripPrefix(
+                    "/static/",
+                    http.FileServer(http.Dir("./public")),
+                ))
+
+                // ServeFile：返回单个文件
+                http.ServeFile(w, r, "./public/index.html")
+
+                // ServeContent：带 Range 支持的文件（视频流）
+                http.ServeContent(w, r, "video.mp4", time.Now(), file)
+                ```
+        - ServerMux 路由与 Go 1.22 新路由
+            - 标准库的 ServeMux 在 Go 1.22 之前功能很有限——不支持路径参数和方法限制。
+            - Go 1.22 大幅增强了路由能力，现在可以直接用标准库写出接近框架的路由。
+            - 传统 ServerMux
+                - 
+                ```go
+                mux := http.NewServeMux()
+
+                // 精确匹配
+                mux.HandleFunc("/api/users", usersHandler)
+
+                // 前缀匹配（以 / 结尾）
+                mux.HandleFunc("/static/", staticHandler)
+
+                // ⚠️ 传统 ServeMux 的限制：
+                // 1. 不支持路径参数（/users/:id）
+                // 2. 不支持 HTTP 方法区分（GET vs POST）
+                // 需要在 handler 内手动判断
+                func usersHandler(w http.ResponseWriter, r *http.Request) {
+                    switch r.Method {
+                    case http.MethodGet:
+                        listUsers(w, r)
+                    case http.MethodPost:
+                        createUser(w, r)
+                    default:
+                        http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+                    }
+                }
+                ```
+            - Go 1.22+ 增强路由
+                - 
+                ```go
+                // Go 1.22 的 ServeMux 支持：
+                // 1. HTTP 方法前缀
+                // 2. 路径参数 {name}
+                // 3. 通配符 {path...}
+
+                mux := http.NewServeMux()
+
+                // 方法 + 路径
+                mux.HandleFunc("GET /api/users", listUsers)
+                mux.HandleFunc("POST /api/users", createUser)
+
+                // 路径参数 {id}
+                mux.HandleFunc("GET /api/users/{id}", getUser)
+                mux.HandleFunc("PUT /api/users/{id}", updateUser)
+                mux.HandleFunc("DELETE /api/users/{id}", deleteUser)
+
+                // 通配符（匹配任意后续路径）
+                mux.HandleFunc("GET /static/{path...}", staticHandler)
+
+                // 在 handler 中读取路径参数
+                func getUser(w http.ResponseWriter, r *http.Request) {
+                    id := r.PathValue("id")  // ✨ Go 1.22 新增！
+                    fmt.Fprintf(w, "获取用户 ID: %s", id)
+                }
+
+                // 精确匹配（末尾加 {$} 防止前缀匹配）
+                mux.HandleFunc("GET /{$}", homeHandler)  // 只匹配根路径
+                ```
+            - 路由组织：分文件
+                - 
+                ```go
+                // 把路由注册拆分到各模块
+                // cmd/server/main.go
+                func main() {
+                    mux := http.NewServeMux()
+
+                    // 注册各模块的路由
+                    registerUserRoutes(mux)
+                    registerAuthRoutes(mux)
+                    registerHealthRoutes(mux)
+
+                    srv := &http.Server{
+                        Addr:         ":8080",
+                        Handler:      mux,
+                        ReadTimeout:  15 * time.Second,
+                        WriteTimeout: 15 * time.Second,
+                        IdleTimeout:  60 * time.Second,
+                    }
+                    log.Fatal(srv.ListenAndServe())
+                }
+
+                // internal/handler/user.go
+                func registerUserRoutes(mux *http.ServeMux) {
+                    mux.HandleFunc("GET /api/users", listUsers)
+                    mux.HandleFunc("POST /api/users", createUser)
+                    mux.HandleFunc("GET /api/users/{id}", getUser)
+                    mux.HandleFunc("PUT /api/users/{id}", updateUser)
+                    mux.HandleFunc("DELETE /api/users/{id}", deleteUser)
+                }
+                ```
+            - 用 http.Server 而不是 http.ListenrAndServe
+                - http.ListenAndServe 是快速启动用的，没办法设置超时。
+                - 生产环境必须用 http.Server 并设置 ReadTimeout、WriteTimeout、IdleTimeout。
+                - 没有这些超时，慢速客户端可以让你的服务器资源耗尽（slowloris 攻击）。
+        - 中间件模式
+            - 中间件是包裹 Handler 的函数，在请求前后添加通用逻辑（日志、认证、CORS、限流）。
+            - 标准库的中间件模式非常简洁，用函数包装函数实现。
+            - 中间件的定义与使用
+                - 
+                ```go
+                // 中间件的签名：接受 Handler，返回 Handler
+                type Middleware func(http.Handler) http.Handler
+
+                // 日志中间件
+                func Logger(next http.Handler) http.Handler {
+                    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+                        start := time.Now()
+                        next.ServeHTTP(w, r)  // 调用下一个 handler
+                        log.Printf("%s %s %v", r.Method, r.URL.Path, time.Since(start))
+                    })
+                }
+
+                // Recovery 中间件（防 panic 崩溃）
+                func Recovery(next http.Handler) http.Handler {
+                    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+                        defer func() {
+                            if err := recover(); err != nil {
+                                log.Printf("panic 恢复: %v\n%s", err, debug.Stack())
+                                http.Error(w, "内部服务错误", http.StatusInternalServerError)
+                            }
+                        }()
+                        next.ServeHTTP(w, r)
+                    })
+                }
+
+                // 链式组合多个中间件
+                func Chain(h http.Handler, middlewares ...Middleware) http.Handler {
+                    // 反序应用，保证执行顺序正确
+                    for i := len(middlewares) - 1; i >= 0; i-- {
+                        h = middlewares[i](h)
+                    }
+                    return h
+                }
+
+                // 使用
+                mux := http.NewServeMux()
+                mux.HandleFunc("GET /api/users", listUsers)
+
+                // 应用中间件：Recovery → Logger → mux（从外到内）
+                handler := Chain(mux, Recovery, Logger)
+
+                http.ListenAndServe(":8080", handler)
+                ```
+            - 认证中间件（JWT 示意）
+                - 
+                ```go
+                type contextKey string
+                const userIDKey contextKey = "userID"
+
+                func Auth(next http.Handler) http.Handler {
+                    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+                        token := r.Header.Get("Authorization")
+                        if token == "" {
+                            http.Error(w, "未授权", http.StatusUnauthorized)
+                            return
+                        }
+
+                        // 验证 token，提取 userID
+                        userID, err := validateToken(strings.TrimPrefix(token, "Bearer "))
+                        if err != nil {
+                            http.Error(w, "无效令牌", http.StatusUnauthorized)
+                            return
+                        }
+
+                        // 把 userID 注入 context（Day 10 学的技能）
+                        ctx := context.WithValue(r.Context(), userIDKey, userID)
+                        next.ServeHTTP(w, r.WithContext(ctx))
+                    })
+                }
+
+                // 在 handler 中读取
+                func profileHandler(w http.ResponseWriter, r *http.Request) {
+                    userID, ok := r.Context().Value(userIDKey).(int)
+                    if !ok {
+                        http.Error(w, "未认证", http.StatusUnauthorized)
+                        return
+                    }
+                    fmt.Fprintf(w, "当前用户 ID: %d", userID)
+                }
+
+                // 只对特定路由加认证
+                mux.Handle("GET /api/profile", Auth(http.HandlerFunc(profileHandler)))
+                ```
+            - CORS 中间件
+                - 
+                ```go
+                func CORS(allowOrigin string) Middleware {
+                    return func(next http.Handler) http.Handler {
+                        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+                            w.Header().Set("Access-Control-Allow-Origin", allowOrigin)
+                            w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                            w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+                            // OPTIONS 预检请求直接返回
+                            if r.Method == http.MethodOptions {
+                                w.WriteHeader(http.StatusNoContent)
+                                return
+                            }
+
+                            next.ServeHTTP(w, r)
+                        })
+                    }
+                }
+
+                // 使用
+                handler := Chain(mux,
+                    Recovery,
+                    Logger,
+                    CORS("https://myapp.com"),
+                )
+                ```
+        - 构建完整 REST API 
+            - 完整用户 CRUD REST API 
+                - 
+                ```go
+                package main
+
+                import (
+                    "encoding/json"
+                    "errors"
+                    "fmt"
+                    "log"
+                    "net/http"
+                    "strconv"
+                    "sync"
+                    "time"
+                )
+
+                // ───── 模型 ─────
+                type User struct {
+                    ID        int       `json:"id"`
+                    Name      string    `json:"name"`
+                    Email     string    `json:"email"`
+                    CreatedAt time.Time `json:"created_at"`
+                }
+
+                // ───── 存储（内存）─────
+                type Store struct {
+                    mu     sync.RWMutex
+                    users  map[int]*User
+                    nextID int
+                }
+
+                func NewStore() *Store {
+                    return &Store{users: make(map[int]*User), nextID: 1}
+                }
+
+                var ErrNotFound = errors.New("not found")
+
+                func (s *Store) List() []*User {
+                    s.mu.RLock(); defer s.mu.RUnlock()
+                    list := make([]*User, 0, len(s.users))
+                    for _, u := range s.users { list = append(list, u) }
+                    return list
+                }
+
+                func (s *Store) Get(id int) (*User, error) {
+                    s.mu.RLock(); defer s.mu.RUnlock()
+                    u, ok := s.users[id]
+                    if !ok { return nil, ErrNotFound }
+                    return u, nil
+                }
+
+                func (s *Store) Create(u *User) {
+                    s.mu.Lock(); defer s.mu.Unlock()
+                    u.ID = s.nextID; u.CreatedAt = time.Now()
+                    s.users[u.ID] = u; s.nextID++
+                }
+
+                func (s *Store) Update(id int, name, email string) (*User, error) {
+                    s.mu.Lock(); defer s.mu.Unlock()
+                    u, ok := s.users[id]
+                    if !ok { return nil, ErrNotFound }
+                    if name != "" { u.Name = name }
+                    if email != "" { u.Email = email }
+                    return u, nil
+                }
+
+                func (s *Store) Delete(id int) error {
+                    s.mu.Lock(); defer s.mu.Unlock()
+                    if _, ok := s.users[id]; !ok { return ErrNotFound }
+                    delete(s.users, id); return nil
+                }
+
+                // ───── Handler ─────
+                type UserHandler struct{ store *Store }
+
+                func (h *UserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+                    // 路由分发（Go 1.22 前的方式）
+                    id, err := strconv.Atoi(r.PathValue("id"))
+                    if err != nil && r.PathValue("id") != "" {
+                        writeError(w, 400, "无效的 ID")
+                        return
+                    }
+
+                    switch {
+                    case r.Method == "GET" && id == 0:
+                        h.list(w, r)
+                    case r.Method == "POST" && id == 0:
+                        h.create(w, r)
+                    case r.Method == "GET" && id > 0:
+                        h.get(w, r, id)
+                    case r.Method == "PUT" && id > 0:
+                        h.update(w, r, id)
+                    case r.Method == "DELETE" && id > 0:
+                        h.delete(w, r, id)
+                    default:
+                        http.Error(w, "Not Found", 404)
+                    }
+                }
+
+                func (h *UserHandler) list(w http.ResponseWriter, r *http.Request) {
+                    writeJSON(w, 200, h.store.List())
+                }
+
+                func (h *UserHandler) create(w http.ResponseWriter, r *http.Request) {
+                    var u User
+                    if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+                        writeError(w, 400, "无效的请求体")
+                        return
+                    }
+                    if u.Name == "" || u.Email == "" {
+                        writeError(w, 400, "name 和 email 不能为空")
+                        return
+                    }
+                    h.store.Create(&u)
+                    writeJSON(w, 201, u)
+                }
+
+                func (h *UserHandler) get(w http.ResponseWriter, r *http.Request, id int) {
+                    u, err := h.store.Get(id)
+                    if errors.Is(err, ErrNotFound) {
+                        writeError(w, 404, "用户不存在")
+                        return
+                    }
+                    writeJSON(w, 200, u)
+                }
+
+                func (h *UserHandler) update(w http.ResponseWriter, r *http.Request, id int) {
+                    var req struct {
+                        Name  string `json:"name"`
+                        Email string `json:"email"`
+                    }
+                    json.NewDecoder(r.Body).Decode(&req)
+                    u, err := h.store.Update(id, req.Name, req.Email)
+                    if errors.Is(err, ErrNotFound) {
+                        writeError(w, 404, "用户不存在")
+                        return
+                    }
+                    writeJSON(w, 200, u)
+                }
+
+                func (h *UserHandler) delete(w http.ResponseWriter, r *http.Request, id int) {
+                    if err := h.store.Delete(id); errors.Is(err, ErrNotFound) {
+                        writeError(w, 404, "用户不存在")
+                        return
+                    }
+                    w.WriteHeader(204)
+                }
+
+                // ───── 工具函数 ─────
+                func writeJSON(w http.ResponseWriter, status int, data any) {
+                    w.Header().Set("Content-Type", "application/json")
+                    w.WriteHeader(status)
+                    json.NewEncoder(w).Encode(data)
+                }
+
+                func writeError(w http.ResponseWriter, status int, msg string) {
+                    writeJSON(w, status, map[string]string{"error": msg})
+                }
+
+                // ───── main ─────
+                func main() {
+                    store := NewStore()
+                    h := &UserHandler{store: store}
+
+                    mux := http.NewServeMux()
+
+                    // Go 1.22+ 路由
+                    mux.HandleFunc("GET /api/users", h.list)
+                    mux.HandleFunc("POST /api/users", h.create)
+                    mux.HandleFunc("GET /api/users/{id}", func(w http.ResponseWriter, r *http.Request) {
+                        id, _ := strconv.Atoi(r.PathValue("id"))
+                        h.get(w, r, id)
+                    })
+                    mux.HandleFunc("PUT /api/users/{id}", func(w http.ResponseWriter, r *http.Request) {
+                        id, _ := strconv.Atoi(r.PathValue("id"))
+                        h.update(w, r, id)
+                    })
+                    mux.HandleFunc("DELETE /api/users/{id}", func(w http.ResponseWriter, r *http.Request) {
+                        id, _ := strconv.Atoi(r.PathValue("id"))
+                        h.delete(w, r, id)
+                    })
+
+                    handler := Chain(mux, Recovery, Logger)
+
+                    srv := &http.Server{
+                        Addr:         ":8080",
+                        Handler:      handler,
+                        ReadTimeout:  15 * time.Second,
+                        WriteTimeout: 15 * time.Second,
+                    }
+
+                    fmt.Println("🚀 服务器启动: http://localhost:8080")
+                    log.Fatal(srv.ListenAndServe())
+                }
+                ```
+            - 用 curl 测试
+                - 
+                ```go
+                # 创建用户
+                curl -X POST http://localhost:8080/api/users \
+                -H "Content-Type: application/json" \
+                -d '{"name":"Alice","email":"alice@example.com"}'
+                # → {"id":1,"name":"Alice","email":"alice@example.com","created_at":"..."}
+
+                # 获取所有用户
+                curl http://localhost:8080/api/users
+
+                # 获取单个用户
+                curl http://localhost:8080/api/users/1
+
+                # 更新用户
+                curl -X PUT http://localhost:8080/api/users/1 \
+                -H "Content-Type: application/json" \
+                -d '{"name":"Alicia"}'
+
+                # 删除用户
+                curl -X DELETE http://localhost:8080/api/users/1
+                ```
+        - 优雅关闭
+            - 生产环境的服务器不能强制关闭——要等正在处理的请求完成后再退出。
+            - Go 的 http.Server.Shutdown 方法实现了这个功能，配合系统信号使用。
+                - 
+                ```go
+                package main
+
+                import (
+                    "context"
+                    "log"
+                    "net/http"
+                    "os"
+                    "os/signal"
+                    "syscall"
+                    "time"
+                )
+
+                func main() {
+                    mux := http.NewServeMux()
+                    mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+                        // 模拟慢请求
+                        time.Sleep(2 * time.Second)
+                        fmt.Fprintln(w, "OK")
+                    })
+
+                    srv := &http.Server{
+                        Addr:    ":8080",
+                        Handler: mux,
+                    }
+
+                    // 在独立 goroutine 中启动服务器
+                    go func() {
+                        log.Println("🚀 服务器启动: :8080")
+                        if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+                            log.Fatalf("服务器错误: %v", err)
+                        }
+                    }()
+
+                    // 监听系统信号（Ctrl+C 或 kill）
+                    quit := make(chan os.Signal, 1)
+                    signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+                    <-quit  // 阻塞，等待信号
+
+                    log.Println("🛑 收到关闭信号，正在优雅关闭...")
+
+                    // 给正在处理的请求 30 秒完成
+                    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+                    defer cancel()
+
+                    if err := srv.Shutdown(ctx); err != nil {
+                        log.Printf("强制关闭: %v", err)
+                    } else {
+                        log.Println("✅ 服务器已优雅关闭")
+                    }
+                }
+
+                // 测试优雅关闭：
+                // 1. 启动服务器
+                // 2. 发送慢请求：curl http://localhost:8080/
+                // 3. 在请求处理中按 Ctrl+C
+                // 4. 观察：服务器等待请求完成后才退出
+                ```
+    - Gin 框架入门
+        - 为什么用 Gin
+            - Gin 是在标准库之上的增强层，保留了所有 handler 逻辑，但是减少了重复代码
+            - 提供了更强的路由、更方便的参数绑定、更完善的错误处理
+            - 标准库 vs Gin 对比
+                - 标准库写法
+                    - 
+                    ```go
+                    // ─── 标准库写法 ───
+                    func getUser(w http.ResponseWriter, r *http.Request) {
+                        idStr := r.PathValue("id")
+                        id, err := strconv.Atoi(idStr)
+                        if err != nil {
+                            w.Header().Set("Content-Type", "application/json")
+                            w.WriteHeader(400)
+                            json.NewEncoder(w).Encode(map[string]string{"error": "无效的 ID"})
+                            return
+                        }
+                        user, err := findUser(id)
+                        if err != nil {
+                            w.Header().Set("Content-Type", "application/json")
+                            w.WriteHeader(404)
+                            json.NewEncoder(w).Encode(map[string]string{"error": "用户不存在"})
+                            return
+                        }
+                        w.Header().Set("Content-Type", "application/json")
+                        w.WriteHeader(200)
+                        json.NewEncoder(w).Encode(user)
+                    }
+
+                    // ─── Gin 写法 ───
+                    func getUser(c *gin.Context) {
+                        id, err := strconv.Atoi(c.Param("id"))
+                        if err != nil {
+                            c.JSON(400, gin.H{"error": "无效的 ID"})
+                            return
+                        }
+                        user, err := findUser(id)
+                        if err != nil {
+                            c.JSON(404, gin.H{"error": "用户不存在"})
+                            return
+                        }
+                        c.JSON(200, user)
+                    }
+                    ```
+                - 安装与快速上手
+                    - 
+                    ```go
+                    go get github.com/gin-gonic/gin
+                    ```
+                    - 
+                    ```go
+                    package main
+
+                    import "github.com/gin-gonic/gin"
+
+                    func main() {
+                        r := gin.Default()  // 默认包含 Logger + Recovery 中间件
+
+                        r.GET("/ping", func(c *gin.Context) {
+                            c.JSON(200, gin.H{"message": "pong"})
+                        })
+
+                        r.Run(":8080")  // 等价于 http.ListenAndServe(":8080", r)
+                    }
+
+                    // gin.H 是 map[string]any 的别名，专为 JSON 响应设计
+                    // curl http://localhost:8080/ping
+                    // → {"message":"pong"}
+                    ```
+                - Gin 的性能
+                    - Gin 实用 httprouter 为底层路由，比标准库的 ServeMux 更快
+                    - 官方 benchmark 显示比标准库快 40 倍以上
+        - 路由与路由分组
+            - Gin 的路由系统非常强大，支持路径参数、通配符、路由分组，还能给分组统一加中间件。
+            - 基本路由
+                - 
+                ```go
+                r := gin.Default()
+
+                // HTTP 方法
+                r.GET("/users", listUsers)
+                r.POST("/users", createUser)
+                r.PUT("/users/:id", updateUser)
+                r.DELETE("/users/:id", deleteUser)
+                r.PATCH("/users/:id/status", updateStatus)
+
+                // 路径参数
+                r.GET("/users/:id", func(c *gin.Context) {
+                    id := c.Param("id")          // 精确参数：/users/42 → "42"
+                    fmt.Println(id)
+                })
+
+                r.GET("/files/*filepath", func(c *gin.Context) {
+                    path := c.Param("filepath")  // 通配符：/files/a/b/c → "/a/b/c"
+                    fmt.Println(path)
+                })
+
+                // Query 参数
+                r.GET("/search", func(c *gin.Context) {
+                    keyword := c.Query("q")              // ?q=golang
+                    page := c.DefaultQuery("page", "1") // 带默认值
+                    fmt.Println(keyword, page)
+                })
+
+                // 任意方法
+                r.Any("/webhook", webhookHandler)
+
+                // 静态文件
+                r.Static("/static", "./public")
+                r.StaticFile("/favicon.ico", "./favicon.ico")
+                ```
+            - 路由分组 Group
+                - 
+                ```go
+                r := gin.Default()
+
+                // 路由分组：共享前缀
+                v1 := r.Group("/api/v1")
+                {
+                    v1.GET("/users", listUsers)
+                    v1.POST("/users", createUser)
+                    v1.GET("/users/:id", getUser)
+                }
+
+                v2 := r.Group("/api/v2")
+                {
+                    v2.GET("/users", listUsersV2)  // 新版接口
+                }
+
+                // 嵌套分组 + 中间件
+                admin := r.Group("/admin", AuthMiddleware(), AdminOnlyMiddleware())
+                {
+                    admin.GET("/dashboard", dashboard)
+                    admin.GET("/users", adminListUsers)
+
+                    // 嵌套分组
+                    settings := admin.Group("/settings")
+                    {
+                        settings.GET("/", getSettings)
+                        settings.PUT("/", updateSettings)
+                    }
+                }
+
+                // 只对部分路由加中间件
+                auth := r.Group("/api")
+                auth.Use(AuthMiddleware())  // 这组路由都需要认证
+                {
+                    auth.GET("/profile", profile)
+                    auth.PUT("/profile", updateProfile)
+                }
+                ```
+            - NoRoute 和 NoMethod
+                - 
+                ```go
+                // 自定义 404
+                r.NoRoute(func(c *gin.Context) {
+                    c.JSON(404, gin.H{"error": "接口不存在"})
+                })
+
+                // 自定义 405（方法不允许）
+                r.NoMethod(func(c *gin.Context) {
+                    c.JSON(405, gin.H{"error": "方法不允许"})
+                })
+                ```
+        - gin.Context: 一切的核心
+            - *gin.Context 封装了请求和响应，是 Gin handler 的唯一参数。掌握它的所有方法，你就掌握了 Gin 的核心。
+            - 读取请求参数
+                - 
+                ```go
+                func handler(c *gin.Context) {
+                    // ─── 路径参数 ───
+                    id := c.Param("id")                     // /users/:id
+
+                    // ─── Query 参数 ───
+                    q := c.Query("keyword")                  // ?keyword=go
+                    page := c.DefaultQuery("page", "1")      // 带默认值
+                    all := c.QueryMap("tags")               // ?tags[a]=1&tags[b]=2
+
+                    // ─── Form 参数 ───
+                    name := c.PostForm("name")
+                    nick := c.DefaultPostForm("nick", "anonymous")
+
+                    // ─── Header ───
+                    token := c.GetHeader("Authorization")
+                    ua := c.GetHeader("User-Agent")
+
+                    // ─── 请求信息 ───
+                    ip := c.ClientIP()          // 客户端 IP（处理了代理）
+                    method := c.Request.Method  // 原始 *http.Request 仍可访问
+                    
+                    _ = id; _ = q; _ = page; _ = all
+                    _ = name; _ = nick; _ = token; _ = ua; _ = ip; _ = method
+                }
+                ```
+            - Context 的键值存储（在中间件传数据）
+                - 
+                ```go
+                // 中间件设置值
+                func AuthMiddleware() gin.HandlerFunc {
+                    return func(c *gin.Context) {
+                        token := c.GetHeader("Authorization")
+                        userID, err := validateToken(token)
+                        if err != nil {
+                            c.AbortWithStatusJSON(401, gin.H{"error": "未授权"})
+                            return  // Abort 后必须 return！
+                        }
+                        
+                        c.Set("userID", userID)   // 存入 context
+                        c.Set("isAdmin", false)
+                        
+                        c.Next()  // 继续执行后续 handler/中间件
+                    }
+                }
+
+                // Handler 取值
+                func profileHandler(c *gin.Context) {
+                    userID, exists := c.Get("userID")
+                    if !exists {
+                        c.JSON(401, gin.H{"error": "未认证"})
+                        return
+                    }
+                    
+                    // 类型断言
+                    id := userID.(int)
+                    
+                    // 或者用类型安全的方法
+                    id2, _ := c.GetInt("userID")
+                    isAdmin, _ := c.GetBool("isAdmin")
+                    
+                    c.JSON(200, gin.H{"userID": id, "id2": id2, "isAdmin": isAdmin})
+                }
+                ```
+            - 响应方法
+                - 
+                ```go
+                func handler(c *gin.Context) {
+                    // JSON 响应（最常用）
+                    c.JSON(200, gin.H{"message": "ok"})
+                    c.JSON(200, user)  // 结构体自动序列化
+
+                    // 其他格式
+                    c.String(200, "Hello, %s!", "World")
+                    c.HTML(200, "index.html", gin.H{"title": "首页"})
+                    c.XML(200, user)
+                    c.YAML(200, user)
+
+                    // 文件响应
+                    c.File("./public/file.pdf")
+                    c.FileAttachment("./public/file.pdf", "download.pdf")
+                    c.Data(200, "image/png", imageBytes)
+
+                    // 重定向
+                    c.Redirect(302, "https://example.com")
+
+                    // 状态码快捷方式
+                    c.Status(204)  // 只有状态码，无 body
+
+                    // 中止后续中间件（不中止当前 handler）
+                    c.Abort()
+                    c.AbortWithStatus(403)
+                    c.AbortWithStatusJSON(403, gin.H{"error": "禁止访问"})
+                }
+                ```
+        - 参数绑定与校验
+            - Gin 集成了 validator 库，可以在解析请求参数的同时做校验，大大减少了手动 if err 的代码量。
+            - ShouldBind：绑定 + 校验
+                - 
+                ```go
+                // 定义请求结构体，用 binding tag 指定校验规则
+                type CreateUserRequest struct {
+                    Name     string `json:"name"     binding:"required,min=2,max=50"`
+                    Email    string `json:"email"    binding:"required,email"`
+                    Age      int    `json:"age"      binding:"gte=0,lte=150"`
+                    Password string `json:"password" binding:"required,min=8"`
+                }
+
+                func createUser(c *gin.Context) {
+                    var req CreateUserRequest
+                    
+                    // ShouldBindJSON：解析 JSON body + 校验
+                    if err := c.ShouldBindJSON(&req); err != nil {
+                        c.JSON(400, gin.H{"error": err.Error()})
+                        return
+                    }
+                    
+                    // req 现在已经被填充且通过了校验
+                    user, err := userService.Create(c.Request.Context(), req.Name, req.Email)
+                    if err != nil {
+                        c.JSON(500, gin.H{"error": err.Error()})
+                        return
+                    }
+                    c.JSON(201, user)
+                }
+                ```
+            - 各种 Bind 方法
+                - 
+                ```go
+                // ShouldBindJSON：绑定 JSON body
+                c.ShouldBindJSON(&req)
+
+                // ShouldBindQuery：绑定 query 参数
+                type SearchRequest struct {
+                    Keyword string `form:"q"    binding:"required"`
+                    Page    int    `form:"page" binding:"gte=1"`
+                    Size    int    `form:"size" binding:"gte=1,lte=100"`
+                }
+                c.ShouldBindQuery(&req)
+
+                // ShouldBindUri：绑定路径参数
+                type UriRequest struct {
+                    ID int `uri:"id" binding:"required,gt=0"`
+                }
+                c.ShouldBindUri(&req)
+
+                // ShouldBind：自动根据 Content-Type 选择
+                c.ShouldBind(&req)
+
+                // Bind 和 ShouldBind 的区别：
+                // ShouldBind：失败只返回 error，状态码由你决定（推荐）
+                // Bind：失败自动设置 400，并写入响应（不灵活）
+                ```
+            - 常用校验规则
+                - 
+                ```go
+                type Example struct {
+                    // 必填
+                    Name     string `binding:"required"`
+
+                    // 长度限制
+                    Bio      string `binding:"max=500"`
+                    Code     string `binding:"len=6"`
+                    Tag      string `binding:"min=1,max=20"`
+
+                    // 数值范围
+                    Age      int    `binding:"gte=0,lte=150"`
+                    Score    float64 `binding:"gt=0"`
+
+                    // 格式校验
+                    Email    string `binding:"required,email"`
+                    URL      string `binding:"url"`
+                    Phone    string `binding:"e164"`  // 国际电话格式
+
+                    // 枚举值
+                    Status   string `binding:"oneof=active inactive deleted"`
+                    Role     string `binding:"oneof=admin editor viewer"`
+
+                    // 条件校验
+                    Password string `binding:"required_with=Email"`  // Email 填了就必填
+
+                    // 自定义：omitempty + 条件
+                    Nick     string `binding:"omitempty,min=2"`  // 有值才校验
+                }
+
+                // 自定义校验器
+                import "github.com/go-playground/validator/v10"
+
+                func validateChinesePhone(fl validator.FieldLevel) bool {
+                    phone := fl.Field().String()
+                    matched, _ := regexp.MatchString(`^1[3-9]\d{9}$`, phone)
+                    return matched
+                }
+
+                // 注册到 Gin
+                if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+                    v.RegisterValidation("cnphone", validateChinesePhone)
+                }
+
+                type Req struct {
+                    Phone string `binding:"required,cnphone"`
+                }
+                ```
+            - 统一处理校验错误
+                - validator 返回的错误是 validator.ValidationErrors 类型
+                - 可以提取字段名和校验规则，返回更友好的错误信息，而不是直接把 err.Error() 给用户
+                - 生产代码应该封装一个 parseValidationError 函数。
+        - Gin 中间件
+            - Gin 的中间件是 gin.HandlerFunc（等价于 func(*gin.Context)），通过 c.Next() 和 c.Abort() 控制执行流。
+            - 中间件的执行模型
+                - 
+                ```go
+                // 中间件的结构：前置逻辑 → Next() → 后置逻辑
+                func LoggerMiddleware() gin.HandlerFunc {
+                    return func(c *gin.Context) {
+                        start := time.Now()
+                        path := c.Request.URL.Path
+                        
+                        // ─── 前置：请求进来时执行 ───
+                        fmt.Printf("→ %s %s\n", c.Request.Method, path)
+                        
+                        c.Next()  // 执行下一个 handler/中间件
+                        
+                        // ─── 后置：响应返回后执行 ───
+                        duration := time.Since(start)
+                        status := c.Writer.Status()
+                        fmt.Printf("← %s %s %d %v\n", c.Request.Method, path, status, duration)
+                    }
+                }
+
+                // 全局中间件
+                r := gin.New()  // 不用 gin.Default()（它自带 Logger 和 Recovery）
+                r.Use(LoggerMiddleware())
+                r.Use(RecoveryMiddleware())
+                r.Use(CORSMiddleware())
+                ```
+            - 认证/限流中间件（完整实现）
+                - 
+                ```go
+                func JWTAuth() gin.HandlerFunc {
+                    return func(c *gin.Context) {
+                        authHeader := c.GetHeader("Authorization")
+                        if authHeader == "" {
+                            c.AbortWithStatusJSON(401, gin.H{"error": "缺少认证令牌"})
+                            return
+                        }
+
+                        // "Bearer <token>"
+                        parts := strings.SplitN(authHeader, " ", 2)
+                        if len(parts) != 2 || parts[0] != "Bearer" {
+                            c.AbortWithStatusJSON(401, gin.H{"error": "令牌格式错误"})
+                            return
+                        }
+
+                        claims, err := parseJWT(parts[1])
+                        if err != nil {
+                            c.AbortWithStatusJSON(401, gin.H{"error": "无效的令牌"})
+                            return
+                        }
+
+                        // 把用户信息注入 context
+                        c.Set("userID", claims.UserID)
+                        c.Set("userEmail", claims.Email)
+                        c.Next()
+                    }
+                }
+
+                // 限流中间件
+                func RateLimit(rpm int) gin.HandlerFunc {
+                    // 每个 IP 限制每分钟 rpm 次请求
+                    limiter := rate.NewLimiter(rate.Every(time.Minute/time.Duration(rpm)), rpm)
+                    
+                    return func(c *gin.Context) {
+                        ip := c.ClientIP()
+                        if !getLimiter(ip, limiter).Allow() {
+                            c.AbortWithStatusJSON(429, gin.H{
+                                "error": "请求过于频繁，请稍后再试",
+                            })
+                            return
+                        }
+                        c.Next()
+                    }
+                }
+                ```
+            - Abort vs Return
+                - 
+                ```go
+                // ⚠️ 重要：Abort 不会停止当前函数执行！
+                // 必须同时 return，否则后续代码还会执行
+
+                func badMiddleware(c *gin.Context) {
+                    c.AbortWithStatusJSON(401, gin.H{"error": "未授权"})
+                    // ❌ 没有 return，后续代码还会执行！
+                    doSomethingDangerous()  // 会被执行
+                }
+
+                func goodMiddleware(c *gin.Context) {
+                    c.AbortWithStatusJSON(401, gin.H{"error": "未授权"})
+                    return  // ✅ 明确 return，停止执行
+                }
+
+                // Abort 的作用是：阻止后续的中间件和 handler 执行
+                // 但当前函数中 Abort 之后的代码仍然会执行
+                ```
+        - 统一错误处理
+            - 在每个 handler 里写重复的错误处理代码很烦。
+            - Gin 提供了统一错误处理的机制——handler 只负责「报告」错误，中间件统一「处理」错误。
+                - 
+                ```go
+                // ─── 定义 AppError ───
+                type AppError struct {
+                    Status  int    `json:"-"`
+                    Code    string `json:"code"`
+                    Message string `json:"message"`
+                    Err     error  `json:"-"`
+                }
+
+                func (e *AppError) Error() string { return e.Message }
+
+                // 快捷构造
+                func NotFound(msg string) *AppError {
+                    return &AppError{Status: 404, Code: "NOT_FOUND", Message: msg}
+                }
+                func BadRequest(msg string) *AppError {
+                    return &AppError{Status: 400, Code: "BAD_REQUEST", Message: msg}
+                }
+                func Internal(err error) *AppError {
+                    return &AppError{Status: 500, Code: "INTERNAL_ERROR", Message: "内部服务错误", Err: err}
+                }
+
+                // ─── 错误处理中间件 ───
+                func ErrorHandler() gin.HandlerFunc {
+                    return func(c *gin.Context) {
+                        c.Next()
+
+                        // 收集所有 handler 添加的错误
+                        if len(c.Errors) == 0 {
+                            return
+                        }
+
+                        err := c.Errors.Last().Err
+                        var appErr *AppError
+                        if errors.As(err, &appErr) {
+                            c.JSON(appErr.Status, appErr)
+                        } else {
+                            // 记录未预期的错误
+                            log.Printf("未处理的错误: %v", err)
+                            c.JSON(500, gin.H{"code": "INTERNAL_ERROR", "message": "内部服务错误"})
+                        }
+                    }
+                }
+
+                // ─── Handler 里只需要 c.Error(err) ───
+                func getUser(c *gin.Context) {
+                    id := c.Param("id")
+                    user, err := userService.GetUser(c.Request.Context(), id)
+                    if err != nil {
+                        // 只需添加错误，不需要写响应
+                        _ = c.Error(NotFound("用户不存在"))
+                        return
+                    }
+                    c.JSON(200, user)
+                }
+
+                // ─── 注册 ───
+                r := gin.New()
+                r.Use(ErrorHandler())  // 必须注册（会在所有 handler 之后执行）
+                r.Use(LoggerMiddleware())
+                ```
+        - Gin 项目完整结构
+            - 项目结构
+                - 
+                ```go
+                myapp/
+                ├── cmd/server/main.go          # 启动入口
+                ├── internal/
+                │   ├── handler/                # HTTP 层（Gin handlers）
+                │   │   ├── router.go           # 路由注册
+                │   │   ├── user.go             # 用户相关 handler
+                │   │   ├── auth.go             # 认证 handler
+                │   │   └── middleware/
+                │   │       ├── auth.go         # JWT 认证中间件
+                │   │       ├── logger.go       # 日志中间件
+                │   │       ├── recovery.go     # panic 恢复
+                │   │       └── cors.go         # CORS 中间件
+                │   ├── service/                # 业务逻辑层
+                │   │   ├── user.go
+                │   │   └── auth.go
+                │   ├── repository/             # 数据访问层
+                │   │   └── user.go
+                │   ├── model/                  # 数据模型
+                │   │   └── user.go
+                │   └── config/                 # 配置
+                │       └── config.go
+                └── go.mod
+                ```
+            - 经典文件
+                - 
+                ```go
+                // internal/handler/router.go
+                package handler
+
+                import (
+                    "github.com/gin-gonic/gin"
+                    "github.com/yourname/myapp/internal/handler/middleware"
+                    "github.com/yourname/myapp/internal/service"
+                )
+
+                func SetupRouter(
+                    userSvc *service.UserService,
+                    authSvc *service.AuthService,
+                ) *gin.Engine {
+                    // 生产环境关闭调试模式
+                    gin.SetMode(gin.ReleaseMode)
+
+                    r := gin.New()  // 不用 Default，手动注册中间件
+
+                    // 全局中间件
+                    r.Use(middleware.Recovery())
+                    r.Use(middleware.Logger())
+                    r.Use(middleware.CORS())
+                    r.Use(middleware.RequestID())
+
+                    // 健康检查（不需要认证）
+                    r.GET("/health", func(c *gin.Context) {
+                        c.JSON(200, gin.H{"status": "ok"})
+                    })
+
+                    // API 路由
+                    api := r.Group("/api/v1")
+                    {
+                        // 认证路由（不需要 JWT）
+                        auth := NewAuthHandler(authSvc)
+                        api.POST("/register", auth.Register)
+                        api.POST("/login", auth.Login)
+                        api.POST("/refresh", auth.RefreshToken)
+
+                        // 需要认证的路由
+                        authed := api.Group("")
+                        authed.Use(middleware.JWTAuth())
+                        {
+                            users := NewUserHandler(userSvc)
+                            authed.GET("/users", users.List)
+                            authed.GET("/users/:id", users.Get)
+                            authed.PUT("/users/:id", users.Update)
+                            authed.DELETE("/users/:id", users.Delete)
+
+                            authed.GET("/profile", users.Profile)
+                        }
+                    }
+
+                    return r
+                }
+
+                // cmd/server/main.go
+                func main() {
+                    cfg, err := config.Load()
+                    if err != nil { log.Fatal(err) }
+
+                    // 依赖注入
+                    repo := repository.NewUserRepo(db)
+                    userSvc := service.NewUserService(repo)
+                    authSvc := service.NewAuthService(repo, cfg.JWTSecret)
+
+                    r := handler.SetupRouter(userSvc, authSvc)
+
+                    srv := &http.Server{
+                        Addr:         ":" + cfg.Port,
+                        Handler:      r,
+                        ReadTimeout:  15 * time.Second,
+                        WriteTimeout: 15 * time.Second,
+                    }
+
+                    // 优雅关闭（Day 15 学的）
+                    go gracefulShutdown(srv)
+                    log.Fatal(srv.ListenAndServe())
+                }
+                ```
+    - 数据库操作 GORM
+        - GORM 简介与安装
+            - GORM 是 Go 生态最流行的 ORM 库。它让你用 Go 结构体操作数据库，不需要手写 SQL（当然也支持原生 SQL）。
+            - 支持 MySQL、PostgreSQL、SQLite、SQL Server 等主流数据库。
+            - 安装
+                - 
+                ```go
+                # GORM 核心库
+                go get gorm.io/gorm
+
+                # 数据库驱动（选择你用的数据库）
+                go get gorm.io/driver/postgres   # PostgreSQL（推荐）
+                go get gorm.io/driver/mysql      # MySQL
+                go get gorm.io/driver/sqlite     # SQLite（开发/测试用）
+                ```
+            - 连接数据库
+                - 
+                ```go
+                package db
+
+                import (
+                    "gorm.io/driver/postgres"
+                    "gorm.io/driver/sqlite"
+                    "gorm.io/gorm"
+                    "gorm.io/gorm/logger"
+                )
+
+                // PostgreSQL（生产推荐）
+                func NewPostgresDB(dsn string) (*gorm.DB, error) {
+                    db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+                        Logger: logger.Default.LogMode(logger.Info), // 打印 SQL
+                    })
+                    if err != nil {
+                        return nil, err
+                    }
+
+                    // 连接池配置
+                    sqlDB, _ := db.DB()
+                    sqlDB.SetMaxIdleConns(10)          // 最大空闲连接
+                    sqlDB.SetMaxOpenConns(100)         // 最大打开连接
+                    sqlDB.SetConnMaxLifetime(time.Hour) // 连接最大生命周期
+
+                    return db, nil
+                }
+
+                // DSN 格式
+                // PostgreSQL: "host=localhost user=postgres password=secret dbname=myapp port=5432 sslmode=disable"
+                // MySQL:      "user:password@tcp(127.0.0.1:3306)/myapp?charset=utf8mb4&parseTime=True&loc=Local"
+
+                // SQLite（快速测试/开发用）
+                func NewSQLiteDB(path string) (*gorm.DB, error) {
+                    return gorm.Open(sqlite.Open(path), &gorm.Config{})
+                }
+
+                // 内存 SQLite（单元测试专用）
+                func NewTestDB() (*gorm.DB, error) {
+                    return gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
+                }
+                ```
+            - GORM 和 database/sql 的关系
+                - GORM 底层仍然使用 database/sql，只是在它之上封装了 ORM 的能力。
+                - 通过 db.DB() 可以拿到底层的 *sql.DB，设置连接池、执行原生 SQL。两者不是替代关系，而是协作关系。
+        - 模型定义
+            - GORM 模型是普通的 Go 结构体，通过标签（tag）控制数据库映射行为。
+            - 嵌入 gorm.Model 可以自动获得 ID、CreatedAt、UpdatedAt、DeletedAt 四个字段。
+            - 基础模型定义
+                - 
+                ```go
+                package model
+
+                import (
+                    "time"
+                    "gorm.io/gorm"
+                )
+
+                // 嵌入 gorm.Model：自动拥有 id, created_at, updated_at, deleted_at
+                type User struct {
+                    gorm.Model                       // 嵌入基础字段
+                    Name      string `gorm:"size:100;not null"`
+                    Email     string `gorm:"uniqueIndex;size:255;not null"`
+                    Password  string `gorm:"size:255;not null"`
+                    Age       int    `gorm:"default:0"`
+                    Active    bool   `gorm:"default:true"`
+                }
+
+                // gorm.Model 展开后等价于：
+                // ID        uint           `gorm:"primarykey"`
+                // CreatedAt time.Time
+                // UpdatedAt time.Time
+                // DeletedAt gorm.DeletedAt `gorm:"index"`  ← 软删除
+
+                // 不想用 gorm.Model？自定义主键
+                type Article struct {
+                    ID        int       `gorm:"primaryKey;autoIncrement"`
+                    Title     string    `gorm:"size:200;not null;index"`
+                    Content   string    `gorm:"type:text"`
+                    AuthorID  uint      `gorm:"not null"`
+                    Published bool      `gorm:"default:false"`
+                    CreatedAt time.Time
+                    UpdatedAt time.Time
+                }
+                ```
+            - 常用 GORM TAG
+                - 
+                ```go
+                type Example struct {
+                    // 主键
+                    ID   uint   `gorm:"primaryKey"`
+                    UUID string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+
+                    // 列属性
+                    Name     string  `gorm:"column:full_name;size:100;not null"`
+                    Price    float64 `gorm:"type:decimal(10,2);default:0"`
+                    Bio      string  `gorm:"type:text"`
+
+                    // 索引
+                    Email    string `gorm:"uniqueIndex"`           // 唯一索引
+                    City     string `gorm:"index"`                 // 普通索引
+                    Code     string `gorm:"index:idx_code_type"`   // 联合索引（和 Type 同名）
+                    Type     string `gorm:"index:idx_code_type"`   // 联合索引
+
+                    // 忽略字段（不映射到数据库）
+                    Computed string `gorm:"-"`
+                    
+                    // 创建时只写、更新时只写
+                    CreatedBy string `gorm:"->:false;<-:create"`  // 只在创建时写
+                    
+                    // 嵌入结构体
+                    Address `gorm:"embedded;embeddedPrefix:addr_"` // 前缀 addr_
+                }
+
+                type Address struct {
+                    Street string
+                    City   string
+                }
+                // 数据库列：addr_street, addr_city
+                ```
+            - AutoMigrate：自动建表
+                - 
+                ```go
+                // 自动创建/更新表结构（只加列，不删列，生产用专业迁移工具）
+                err := db.AutoMigrate(
+                    &model.User{},
+                    &model.Article{},
+                    &model.Comment{},
+                )
+                if err != nil {
+                    log.Fatal("数据库迁移失败:", err)
+                }
+
+                // AutoMigrate 的行为：
+                // ✅ 表不存在 → 创建表
+                // ✅ 字段不存在 → 添加字段
+                // ✅ 索引不存在 → 创建索引
+                // ❌ 字段类型变了 → 不会修改（需要手动迁移）
+                // ❌ 删掉字段 → 不会删除数据库列（安全策略）
+                ```
+        - CRUD 基础操作
+            - Create (创建)
+                - 
+                ```go
+                // 创建单条记录
+                user := model.User{Name: "Alice", Email: "alice@example.com"}
+                result := db.Create(&user)  // ✨ 创建后 user.ID 会被填充
+                if result.Error != nil {
+                    return result.Error
+                }
+                fmt.Println("新用户 ID:", user.ID)
+
+                // 批量创建
+                users := []model.User{
+                    {Name: "Bob", Email: "bob@example.com"},
+                    {Name: "Charlie", Email: "charlie@example.com"},
+                }
+                db.Create(&users)  // 单次 SQL 插入多行，比循环创建高效
+
+                // 只创建指定字段
+                db.Select("Name", "Email").Create(&user)
+
+                // 忽略某些字段
+                db.Omit("Age", "Active").Create(&user)
+                ```
+            - Read (查询)
+                - 
+                ```go
+                // 按主键查询
+                var user model.User
+                db.First(&user, 1)           // SELECT * FROM users WHERE id = 1 LIMIT 1
+                db.First(&user, "id = ?", 1) // 等价写法
+
+                // 查询单条（不按主键排序）
+                db.Take(&user, 1)    // SELECT * FROM users WHERE id = 1 LIMIT 1
+                db.Last(&user)       // 最后一条（按主键 DESC）
+
+                // 条件查询
+                db.Where("name = ?", "Alice").First(&user)
+                db.Where("age > ? AND active = ?", 18, true).Find(&users)
+
+                // IN 查询
+                db.Where("id IN ?", []int{1, 2, 3}).Find(&users)
+
+                // LIKE 查询
+                db.Where("name LIKE ?", "%Alice%").Find(&users)
+
+                // 查询多条
+                var users []model.User
+                result := db.Find(&users)  // SELECT * FROM users（自动过滤 deleted_at IS NULL）
+                fmt.Println("查到", result.RowsAffected, "条")
+
+                // 查询所有（含软删除的）
+                db.Unscoped().Find(&users)
+
+                // 只查指定字段
+                db.Select("id", "name", "email").Find(&users)
+
+                // 检查记录是否存在
+                var count int64
+                db.Model(&model.User{}).Where("email = ?", email).Count(&count)
+                exists := count > 0
+                ```
+            - Update (更新)
+                - 
+                ```go
+                // 更新单个字段
+                db.Model(&user).Update("name", "Alicia")
+                // UPDATE users SET name='Alicia', updated_at=NOW() WHERE id=1
+
+                // 更新多个字段（用 map）
+                db.Model(&user).Updates(map[string]any{
+                    "name":   "Alicia",
+                    "active": false,
+                })
+
+                // 更新多个字段（用结构体，⚠️ 零值字段会被忽略！）
+                db.Model(&user).Updates(model.User{Name: "Alicia", Age: 0})
+                // ⚠️ Age=0 是零值，不会被更新！
+
+                // 解决零值问题：用 Select 明确指定要更新的字段
+                db.Model(&user).Select("Name", "Age").Updates(model.User{Name: "Alicia", Age: 0})
+                // Age=0 会被更新
+
+                // 带条件的更新
+                db.Model(&model.User{}).Where("active = ?", false).Update("deleted", true)
+
+                // 不触发 Hook 和 updated_at 的原生更新
+                db.Model(&user).UpdateColumn("login_count", gorm.Expr("login_count + 1"))
+                ```
+            - Delete (删除)
+                - 
+                ```go
+                // 软删除（如果模型有 DeletedAt 字段）
+                // 只设置 deleted_at，不真正删除
+                db.Delete(&user, 1)
+                // UPDATE users SET deleted_at=NOW() WHERE id=1
+
+                // 查询时自动过滤软删除的记录
+                db.Find(&users)  // WHERE deleted_at IS NULL
+
+                // 硬删除（真正删除）
+                db.Unscoped().Delete(&user, 1)
+                // DELETE FROM users WHERE id=1
+
+                // 批量删除（必须有条件，防止误删全表）
+                db.Where("active = ?", false).Delete(&model.User{})
+                // 如果不加条件会报错（安全机制）
+                ```
+            - 结构体 Updates 的零值陷阱
+                - 用结构体更新时，GORM 会忽略零值字段（0、""、false、nil），只更新非零值。
+                - 这个设计防止了意外覆盖，但也导致你没法把一个字段更新为零值。
+                - 解决方案：用 map[string]any 替代结构体，或者用 Select 明确列出要更新的字段。这是 GORM 面试高频考点！
+        - 查询进阶
+            - 链式调用构建复杂查询
+                - 
+                ```go
+                // GORM 的链式 API：每个方法返回 *gorm.DB，可以任意组合
+                var users []model.User
+
+                db.
+                    Where("age > ?", 18).
+                    Where("active = ?", true).
+                    Order("created_at DESC").
+                    Limit(10).
+                    Offset(20).  // 跳过 20 条（第 3 页，每页 10 条）
+                    Find(&users)
+
+                // 分页查询（通用封装）
+                type Pagination struct {
+                    Page int
+                    Size int
+                }
+
+                func Paginate(p Pagination) func(db *gorm.DB) *gorm.DB {
+                    return func(db *gorm.DB) *gorm.DB {
+                        offset := (p.Page - 1) * p.Size
+                        return db.Offset(offset).Limit(p.Size)
+                    }
+                }
+
+                // 使用 Scopes 复用查询逻辑
+                db.Scopes(Paginate(Pagination{Page: 2, Size: 10})).
+                    Where("active = ?", true).
+                    Order("name ASC").
+                    Find(&users)
+                ```
+            - 聚合与分组
+                - 
+                ```go
+                // Count
+                var count int64
+                db.Model(&model.User{}).Where("active = ?", true).Count(&count)
+
+                // Sum, Avg, Max, Min
+                var totalAge float64
+                db.Model(&model.User{}).Select("COALESCE(SUM(age), 0)").Scan(&totalAge)
+
+                // Group By + Having
+                type Result struct {
+                    City  string
+                    Count int64
+                }
+                var results []Result
+                db.Model(&model.User{}).
+                    Select("city, COUNT(*) as count").
+                    Group("city").
+                    Having("COUNT(*) > ?", 10).
+                    Scan(&results)
+
+                // Distinct
+                db.Distinct("name", "email").Find(&users)
+                ```
+            - 原生 SQL
+                - 
+                ```go
+                // Raw：执行原生 SQL 并扫描结果
+                var users []model.User
+                db.Raw("SELECT * FROM users WHERE age > ? AND active = ?", 18, true).Scan(&users)
+
+                // Exec：执行不返回行的 SQL
+                db.Exec("UPDATE users SET login_count = login_count + 1 WHERE id = ?", userID)
+
+                // 扫描到自定义结构体（不一定是模型）
+                type UserSummary struct {
+                    Name  string
+                    Email string
+                    Posts int
+                }
+                var summaries []UserSummary
+                db.Raw(`
+                    SELECT u.name, u.email, COUNT(p.id) as posts
+                    FROM users u
+                    LEFT JOIN posts p ON p.author_id = u.id
+                    GROUP BY u.id
+                `).Scan(&summaries)
+
+                // Named 参数（更安全）
+                db.Where("name = @name AND email = @email",
+                    sql.Named("name", "Alice"),
+                    sql.Named("email", "alice@example.com"),
+                ).Find(&users)
+                ```
+        - 关联关系
+            - GORM 支持所有常见的关联关系：一对一、一对多、多对多。理解关联关系是写复杂查询的基础。
+            - 一对多
+                - 
+                ```go
+                // 用户有多篇文章
+                type User struct {
+                    gorm.Model
+                    Name     string
+                    Articles []Article  // Has Many（一对多）
+                }
+
+                // 文章属于一个用户
+                type Article struct {
+                    gorm.Model
+                    Title    string
+                    Content  string
+                    UserID   uint    // 外键（约定：类型名+ID）
+                    User     User    // Belongs To
+                    Comments []Comment
+                }
+
+                // 创建关联数据
+                user := User{
+                    Name: "Alice",
+                    Articles: []Article{
+                        {Title: "Go 入门", Content: "..."},
+                        {Title: "Gin 框架", Content: "..."},
+                    },
+                }
+                db.Create(&user)  // 同时创建用户和文章
+
+                // 预加载关联（避免 N+1 问题）
+                var users []User
+                db.Preload("Articles").Find(&users)
+                // SELECT * FROM users
+                // SELECT * FROM articles WHERE user_id IN (1,2,3,...)
+
+                // 嵌套预加载
+                db.Preload("Articles.Comments").Find(&users)
+
+                // 条件预加载
+                db.Preload("Articles", "published = ?", true).Find(&users)
+                ```
+            - 多对多
+                - 
+                ```go
+                // 文章有多个标签，标签也属于多篇文章
+                type Article struct {
+                    gorm.Model
+                    Title string
+                    Tags  []Tag `gorm:"many2many:article_tags"`  // 中间表名
+                }
+
+                type Tag struct {
+                    gorm.Model
+                    Name     string `gorm:"uniqueIndex"`
+                    Articles []Article `gorm:"many2many:article_tags"`
+                }
+
+                // GORM 自动管理中间表 article_tags (article_id, tag_id)
+
+                // 创建时关联标签
+                tags := []Tag{{Name: "Go"}, {Name: "Backend"}}
+                article := Article{Title: "Go Web 开发", Tags: tags}
+                db.Create(&article)
+
+                // 追加关联
+                db.Model(&article).Association("Tags").Append([]Tag{{Name: "Tutorial"}})
+
+                // 替换关联
+                db.Model(&article).Association("Tags").Replace(newTags)
+
+                // 删除关联（只删关系，不删记录）
+                db.Model(&article).Association("Tags").Delete(tag)
+
+                // 清空关联
+                db.Model(&article).Association("Tags").Clear()
+
+                // 计数
+                count := db.Model(&article).Association("Tags").Count()
+                ```
+            - 一对一
+                - 
+                ```go
+                // 用户有一个个人资料
+                type User struct {
+                    gorm.Model
+                    Name    string
+                    Profile Profile  // Has One
+                }
+
+                type Profile struct {
+                    gorm.Model
+                    Bio    string
+                    Avatar string
+                    UserID uint  // 外键
+                }
+
+                // 查询时预加载
+                var user User
+                db.Preload("Profile").First(&user, 1)
+
+                fmt.Println(user.Profile.Bio)
+                ```
+        - 事务处理
+            - 事务保证一组操作要么全部成功，要么全部回滚。GORM 提供了简洁的事务 API，支持自动和手动两种模式。
+            - 自动事务
+                - 
+                ```go
+                // Transaction 函数：返回 error 时自动回滚，nil 时自动提交
+                err := db.Transaction(func(tx *gorm.DB) error {
+                    // 注意：事务内所有操作必须用 tx，不能用 db！
+                    
+                    // 创建订单
+                    order := Order{UserID: userID, Total: 100.0}
+                    if err := tx.Create(&order).Error; err != nil {
+                        return err  // 返回 error → 自动回滚
+                    }
+
+                    // 扣减库存
+                    result := tx.Model(&Product{}).
+                        Where("id = ? AND stock > 0", productID).
+                        UpdateColumn("stock", gorm.Expr("stock - 1"))
+                    if result.Error != nil {
+                        return result.Error
+                    }
+                    if result.RowsAffected == 0 {
+                        return errors.New("库存不足")  // 返回 error → 回滚
+                    }
+
+                    // 记录流水
+                    if err := tx.Create(&Transaction{OrderID: order.ID}).Error; err != nil {
+                        return err
+                    }
+
+                    return nil  // 返回 nil → 自动提交
+                })
+
+                if err != nil {
+                    log.Printf("下单失败: %v", err)
+                }
+                ```
+            - 手动事务 (需要跨函数使用时)
+                - 
+                ```go
+                // 手动控制
+                tx := db.Begin()  // 开启事务
+
+                defer func() {
+                    if r := recover(); r != nil {
+                        tx.Rollback()  // panic 时回滚
+                    }
+                }()
+
+                if err := tx.Error; err != nil {
+                    return err
+                }
+
+                if err := tx.Create(&user).Error; err != nil {
+                    tx.Rollback()
+                    return err
+                }
+
+                if err := tx.Create(&profile).Error; err != nil {
+                    tx.Rollback()
+                    return err
+                }
+
+                tx.Commit()  // 全部成功才提交
+                return nil
+
+                // 保存点（嵌套事务）
+                tx.SavePoint("step1")
+                // ... 一些操作
+                tx.RollbackTo("step1")  // 只回滚到保存点，不全部回滚
+                ```
+            - 事务内必须用 tx，不能用 db
+                - 这是事务最常见的错误！
+                - 在 Transaction 回调里，如果你误用了外部的 db 而不是回调参数 tx，那些操作不属于这个事务，不会被一起回滚。
+                - 养成习惯：看到 Transaction 回调，里面所有 db 操作都换成 tx。
+        - Hooks 钩子
+            - GORM 的 Hook 允许在数据库操作前后自动执行逻辑，比如密码加密、数据校验、审计日志。
+                - 
+                ```go
+                // Hook 方法列表：
+                // BeforeCreate, AfterCreate
+                // BeforeUpdate, AfterUpdate
+                // BeforeDelete, AfterDelete
+                // BeforeFind, AfterFind
+
+                type User struct {
+                    gorm.Model
+                    Name     string
+                    Email    string
+                    Password string
+                }
+
+                // 创建前：自动加密密码
+                func (u *User) BeforeCreate(tx *gorm.DB) error {
+                    if u.Password != "" {
+                        hashed, err := bcrypt.GenerateFromPassword(
+                            []byte(u.Password), bcrypt.DefaultCost,
+                        )
+                        if err != nil {
+                            return err
+                        }
+                        u.Password = string(hashed)
+                    }
+                    return nil
+                }
+
+                // 查询后：脱敏处理（不把密码带出去）
+                func (u *User) AfterFind(tx *gorm.DB) error {
+                    u.Password = ""  // 查出来后清空密码字段
+                    return nil
+                }
+
+                // 更新前：校验必填字段
+                func (u *User) BeforeUpdate(tx *gorm.DB) error {
+                    if u.Email == "" {
+                        return errors.New("email 不能为空")
+                    }
+                    return nil
+                }
+
+                // 删除前：记录审计日志
+                func (u *User) BeforeDelete(tx *gorm.DB) error {
+                    return tx.Create(&AuditLog{
+                        Action:   "DELETE",
+                        Resource: "users",
+                        ResourceID: u.ID,
+                    }).Error
+                }
+                ```
+        - Repository 模式整合
+            - 把 GORM 封装到 Repository 层，让 Service 层不依赖具体的数据库实现。
+                - 
+                ```go
+                // internal/repository/user.go
+                package repository
+
+                import (
+                    "context"
+                    "errors"
+
+                    "gorm.io/gorm"
+                    "github.com/yourname/myapp/internal/model"
+                )
+
+                var ErrNotFound = errors.New("记录不存在")
+
+                // 接口（让 service 层只依赖接口）
+                type UserRepository interface {
+                    FindByID(ctx context.Context, id uint) (*model.User, error)
+                    FindByEmail(ctx context.Context, email string) (*model.User, error)
+                    List(ctx context.Context, page, size int) ([]*model.User, int64, error)
+                    Create(ctx context.Context, u *model.User) error
+                    Update(ctx context.Context, u *model.User) error
+                    Delete(ctx context.Context, id uint) error
+                }
+
+                // GORM 实现
+                type gormUserRepo struct {
+                    db *gorm.DB
+                }
+
+                func NewUserRepository(db *gorm.DB) UserRepository {
+                    return &gormUserRepo{db: db}
+                }
+
+                func (r *gormUserRepo) FindByID(ctx context.Context, id uint) (*model.User, error) {
+                    var u model.User
+                    err := r.db.WithContext(ctx).First(&u, id).Error
+                    if errors.Is(err, gorm.ErrRecordNotFound) {
+                        return nil, ErrNotFound
+                    }
+                    return &u, err
+                }
+
+                func (r *gormUserRepo) FindByEmail(ctx context.Context, email string) (*model.User, error) {
+                    var u model.User
+                    err := r.db.WithContext(ctx).Where("email = ?", email).First(&u).Error
+                    if errors.Is(err, gorm.ErrRecordNotFound) {
+                        return nil, ErrNotFound
+                    }
+                    return &u, err
+                }
+
+                func (r *gormUserRepo) List(ctx context.Context, page, size int) ([]*model.User, int64, error) {
+                    var users []*model.User
+                    var count int64
+
+                    offset := (page - 1) * size
+                    db := r.db.WithContext(ctx).Model(&model.User{})
+
+                    if err := db.Count(&count).Error; err != nil {
+                        return nil, 0, err
+                    }
+
+                    if err := db.Offset(offset).Limit(size).
+                        Order("created_at DESC").Find(&users).Error; err != nil {
+                        return nil, 0, err
+                    }
+
+                    return users, count, nil
+                }
+
+                func (r *gormUserRepo) Create(ctx context.Context, u *model.User) error {
+                    return r.db.WithContext(ctx).Create(u).Error
+                }
+
+                func (r *gormUserRepo) Update(ctx context.Context, u *model.User) error {
+                    return r.db.WithContext(ctx).Save(u).Error
+                }
+
+                func (r *gormUserRepo) Delete(ctx context.Context, id uint) error {
+                    result := r.db.WithContext(ctx).Delete(&model.User{}, id)
+                    if result.RowsAffected == 0 {
+                        return ErrNotFound
+                    }
+                    return result.Error
+                }
+                ```
+            - WithContext 的重要性
+                - 
+                ```go
+                // ✅ 每个数据库操作都带上 context
+                // 当 HTTP 请求超时或客户端断开时，数据库查询会自动取消
+
+                func (r *gormUserRepo) FindByID(ctx context.Context, id uint) (*model.User, error) {
+                    var u model.User
+                    err := r.db.WithContext(ctx).First(&u, id).Error
+                    //              ↑ 把 ctx 传给 GORM，超时自动取消 SQL
+                    return &u, err
+                }
+
+                // ❌ 没有 WithContext：HTTP 超时后 SQL 还在跑，浪费数据库资源
+                func (r *gormUserRepo) FindByID(id uint) (*model.User, error) {
+                    var u model.User
+                    err := r.db.First(&u, id).Error  // 没有超时控制
+                    return &u, err
+                }
+                ```
 {{< /mind >}}
