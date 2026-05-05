@@ -32,7 +32,7 @@ function formatTopic(text) {
         /!\[([^\]]*)\]\(([^)]+),.+,.+\)/g,
         '<img src="$2" alt="$1" style="vertical-align:middle;border-radius:3px;margin-left:6px;" />'
     )
-    return text.replace(/`([^`]+)`/g, '<code>$1</code>')
+    return text.replace(/^`([^`]+)`/g, '<code>$1</code>')
 }
 
 function highlightCode(code, lang) {
