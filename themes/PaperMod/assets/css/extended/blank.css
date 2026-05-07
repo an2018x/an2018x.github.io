@@ -29,9 +29,20 @@ Read https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#bundling-custom-cs
     color: var(--accent);
 }
 
-/* ========== 正文字体：Charter ========== */
+/* ========== 中文衬线字体映射 ========== */
+@font-face {
+    font-family: CJKSerif;
+    src: local("Songti SC"),
+         local("Songti TC"),
+         local("STSong"),
+         local("SimSun"),
+         local("Noto Serif CJK SC"),
+         local("Source Han Serif SC");
+}
+
+/* ========== 正文字体 ========== */
 body {
-    font-family: Charter, "Iowan Old Style", "Songti SC", Georgia, "Times New Roman", "Noto Serif SC", serif !important;
+    font-family: Charter, "Iowan Old Style", CJKSerif, Georgia, serif !important;
 }
 
 /* ========== 代码字体：JetBrains Mono ========== */
@@ -41,7 +52,7 @@ code {
 
 /* ========== 思维导图字体 ========== */
 .map-container {
-    font-family: Charter, "Iowan Old Style", "Songti SC", Georgia, "Times New Roman", "Noto Serif SC", serif !important;
+    font-family: Charter, "Iowan Old Style", CJKSerif, Georgia, serif !important;
 }
 
 
