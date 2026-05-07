@@ -4,14 +4,44 @@ This is just a placeholder blank stylesheet so as to support adding custom style
 Read https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#bundling-custom-css-with-themes-assets for more info
 */
 
-/* ========== 正文字体：落霞孤鹜 ========== */
+/* ========== Claude 主题：链接与强调色 ========== */
+.post-content a {
+    color: var(--accent);
+}
+
+.post-content a:hover {
+    text-decoration: underline;
+}
+
+.post-tags a {
+    color: var(--accent);
+}
+
+.paginav a:hover {
+    color: var(--accent);
+}
+
+.terms-tags a:hover {
+    color: var(--accent);
+}
+
+#menu .active {
+    color: var(--accent);
+}
+
+/* ========== 正文字体：Charter ========== */
 body {
-    font-family: "LXGW WenKai", sans-serif !important;
+    font-family: Charter, "Georgia", serif !important;
 }
 
 /* ========== 代码字体：JetBrains Mono ========== */
 code {
     font-family: "JetBrains Mono", "Consolas", monospace;
+}
+
+/* ========== 思维导图字体 ========== */
+.map-container {
+    font-family: Charter, "Georgia", serif !important;
 }
 
 
