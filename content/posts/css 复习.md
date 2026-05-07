@@ -850,7 +850,7 @@ toc: true
                 -
                 ```html
                 <!-- 在 HTML 的 <head> 中引入 -->
-                <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
                 ```
                 - 
                 ```css

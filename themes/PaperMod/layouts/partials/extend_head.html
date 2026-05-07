@@ -2,6 +2,10 @@
 {{- /*     Insert any custom code (web-analytics, resources, etc.) - it will appear in the <head></head> section of every page. */ -}}
 {{- /*     Can be overwritten by partial with the same name in the global layouts. */ -}}
 {{- /* Head custom content area end */ -}}
+<link rel="dns-prefetch" href="//cdn.jsdmirror.com">
+<link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin>
+<link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com">
+<link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin>
 <!-- MathJax Support -->
 
 {{ if or (in .Content "img") }}
@@ -57,9 +61,10 @@
 </style>
 {{ end }}
 
-<link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-webfont/style.css" media="print" onload="this.media='all'"/>
+<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/lxgw-wenkai-webfont/style.css" media="print" onload="this.media='all'"/>
 
 {{ if findRE "mindmap" .Content }}
   {{ $css := resources.Get "css/includes/mind-elixir.css" | minify }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+  <link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/katex@0.16.22/dist/katex.min.css">
 {{ end }}

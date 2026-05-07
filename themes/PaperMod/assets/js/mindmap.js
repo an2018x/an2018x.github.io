@@ -1,5 +1,6 @@
 import MindElixir from 'mind-elixir'
 import hljs from 'highlight.js/lib/core'
+import katex from 'katex'
 
 // 注意：有些语言的文件名和常用名不一样
 import javascript from 'highlight.js/lib/languages/javascript'
@@ -27,11 +28,21 @@ function generateId() {
 
 // 将 topic 中的 markdown 语法转成 HTML
 function formatTopic(text) {
-    // 行内代码
+    // 数学公式：$$...$$ 块级，$...$ 行内
+    text = text.replace(/\$\$([^$]+)\$\$/g, (_, tex) => {
+        try { return katex.renderToString(tex, { displayMode: true, throwOnError: false }) }
+        catch { return _ }
+    })
+    text = text.replace(/\$([^$]+)\$/g, (_, tex) => {
+        try { return katex.renderToString(tex, { displayMode: false, throwOnError: false }) }
+        catch { return _ }
+    })
+    // 图片
     text = text.replace(
         /!\[([^\]]*)\]\(([^)]+),.+,.+\)/g,
         '<img src="$2" alt="$1" style="vertical-align:middle;border-radius:3px;margin-left:6px;" />'
     )
+    // 行内代码
     return text.replace(/^`([^`]+)`/g, '<code>$1</code>')
 }
 

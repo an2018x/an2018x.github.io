@@ -28,7 +28,8 @@
 {{ if findRE "mindmap" .Content }}
   {{ $js := resources.Get "js/mindmap.js" | js.Build (dict "format" "iife")}}
   <script src="{{ $js.RelPermalink }}"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  {{ $hljscss := resources.Get "css/includes/atom-one-dark.min.css" | minify }}
+  <link rel="stylesheet" href="{{ $hljscss.RelPermalink }}">
 {{ end }}
 </body>
 
