@@ -26,10 +26,17 @@
 
 {{/* 放在 </body> 之前 */}}
 {{ if findRE "mindmap" .Content }}
-  {{ $js := resources.Get "js/mindmap.js" | js.Build (dict "format" "iife")}}
-  <script src="{{ $js.RelPermalink }}"></script>
+  {{ $js := resources.Get "js/mindmap.js" | js.Build (dict "format" "iife" "minify" true)}}
+  <script src="{{ $js.RelPermalink }}" defer></script>
   {{ $hljscss := resources.Get "css/includes/atom-one-dark.min.css" | minify }}
   <link rel="stylesheet" href="{{ $hljscss.RelPermalink }}">
+{{ end }}
+
+{{ if .Params.math }}
+  {{ $katexjs := resources.Get "js/katex.min.js" }}
+  <script defer src="{{ $katexjs.RelPermalink }}"></script>
+  {{ $autorender := resources.Get "js/auto-render.min.js" }}
+  <script defer src="{{ $autorender.RelPermalink }}" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
 {{ end }}
 </body>
 

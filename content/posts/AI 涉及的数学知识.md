@@ -4,6 +4,7 @@ date: '2026-05-05'
 draft: false
 description:  
 toc: true
+math: true
 ---
 
 # 线性代数

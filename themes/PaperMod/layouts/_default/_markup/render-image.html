@@ -1,6 +1,6 @@
 
 <div class="post-img-view">
 <a data-fancybox="" href="{{ .Destination | safeURL }}" onclick="if(!window.Fancybox){event.preventDefault()}">
-<img loading="lazy" src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}"{{ end }} />
+<img loading="lazy" decoding="async" src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}"{{ end }} />
 </a>
 </div>

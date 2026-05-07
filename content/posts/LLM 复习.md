@@ -4,6 +4,7 @@ date: '2026-02-22'
 draft: false
 description:  
 toc: true
+math: true
 ---
 
 # 预备知识
