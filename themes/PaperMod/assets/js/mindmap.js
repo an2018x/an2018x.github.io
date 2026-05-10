@@ -193,7 +193,8 @@ function refreshMindmaps() {
 }
 
 function initMindmaps() {
-    requestAnimationFrame(() => refreshMindmaps())
+    setTimeout(() => refreshMindmaps(),500)
+    setTimeout(() => refreshMindmaps(),1000)
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{initMindmaps()})
