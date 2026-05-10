@@ -2,20 +2,21 @@
 {{- /*     Insert any custom code (web-analytics, resources, etc.) - it will appear in the <head></head> section of every page. */ -}}
 {{- /*     Can be overwritten by partial with the same name in the global layouts. */ -}}
 {{- /* Head custom content area end */ -}}
+<link rel="dns-prefetch" href="//cdn.jsdmirror.com">
+<link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin>
+<link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com">
+<link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin>
 <script>
-var s=document.createElement("style");
-s.textContent="body{font-family:Charter,'Songti SC','Noto Serif SC','Iowan Old Style',Georgia,serif!important}";
-document.head.appendChild(s);
 if(!/Macintosh/.test(navigator.userAgent)){
   ["https://cdn.jsdmirror.com/npm/charter-webfont@4/charter.min.css",
    "https://cdn.jsdmirror.com/npm/@fontsource/noto-serif-sc@latest/400.css"
   ].forEach(function(h){var l=document.createElement("link");l.rel="stylesheet";l.href=h;document.head.appendChild(l)})
 }
 </script>
-<link rel="dns-prefetch" href="//cdn.jsdmirror.com">
-<link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin>
-<link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com">
-<link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin>
+<style>
+.post-content .highlight{overflow-x:auto}
+.post-content pre code{word-break:normal}
+</style>
 
 {{ if or (in .Content "img") }}
 {{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}

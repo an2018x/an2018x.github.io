@@ -2,28 +2,49 @@
     --gap: 24px;
     --content-gap: 20px;
     --nav-width: 1024px;
-    --main-width: 720px;
+    --main-width: 840px;
     --header-height: 60px;
     --footer-height: 60px;
-    --radius: 8px;
-    --theme: #FAF9F5;
-    --entry: #FFFFFF;
-    --primary: #1A1A1A;
-    --secondary: #6B6560;
-    --tertiary: #E8E0D8;
-    --content: #2C2520;
-    --code-block-bg: #F0EBE3;
-    --code-bg: #F3EDE5;
-    --border: #E8E0D8;
-    --li-bg: #2C2520;
-    --accent: #C4704A;
+    --radius: 12px;
+
+    /* Paper-tone color tokens */
+    --ivory:  #F0EEE6;
+    --paper:  #FFFFFF;
+    --slate:  #141413;
+    --clay:   #D97757;
+    --clay-d: #B85C3E;
+    --oat:    #E3DACC;
+    --olive:  #788C5D;
+    --g100:   #F0EEE6;
+    --g200:   #E6E3DA;
+    --g300:   #D1CFC5;
+    --g500:   #87867F;
+    --g700:   #3D3D3A;
+
+    /* PaperMod variable mapping */
+    --theme: var(--ivory);
+    --entry: var(--paper);
+    --primary: var(--slate);
+    --secondary: var(--g500);
+    --tertiary: var(--g200);
+    --content: var(--g700);
+    --code-block-bg: var(--g100);
+    --code-bg: var(--g100);
+    --border: var(--g300);
+    --li-bg: var(--slate);
+    --accent: var(--clay);
+
+    /* Typography stacks */
+    --serif: ui-serif, Charter, 'Songti SC', 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+    --sans:  system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --mono:  ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
 }
 
 .dark {
-    --li-bg: #E8DDD3;
+    --li-bg: var(--oat);
     --theme: #1C1917;
     --entry: #292524;
-    --primary: #F5F0E8;
+    --primary: #F0EEE6;
     --secondary: #A8A29E;
     --tertiary: #3D3835;
     --content: #E7E0D8;
@@ -34,7 +55,7 @@
 }
 
 .list {
-    background: var(--code-bg);
+    background: var(--theme);
 }
 
 .dark.list {

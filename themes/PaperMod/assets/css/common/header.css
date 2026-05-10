@@ -23,8 +23,10 @@
 }
 
 .logo a {
-    font-size: 24px;
-    font-weight: 700;
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.012em;
 }
 
 .logo a img, .logo a svg {
@@ -62,12 +64,21 @@ body:not(.dark) #sun {
 }
 
 #menu a {
-    font-size: 16px;
+    font-family: var(--sans);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--g500);
+    transition: color 150ms ease;
+}
+
+#menu a:hover {
+    color: var(--primary);
 }
 
 #menu .active {
     font-weight: 500;
-    border-bottom: 2px solid currentColor;
+    color: var(--primary);
+    border-bottom: 1.5px solid var(--accent);
 }
 
 .lang-switch li,
@@ -84,7 +95,7 @@ body:not(.dark) #sun {
 
 .lang-switch a {
     margin: auto 3px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
 }
 

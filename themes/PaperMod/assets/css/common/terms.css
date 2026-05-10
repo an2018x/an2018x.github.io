@@ -1,18 +1,27 @@
 .terms-tags li {
     display: inline-block;
-    margin: 10px;
+    margin: 8px;
     font-weight: 500;
 }
 
 .terms-tags a {
     display: block;
-    padding: 3px 10px;
-    background: var(--tertiary);
+    padding: 4px 14px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    background: var(--g100);
+    border: 1.5px solid var(--g300);
     border-radius: 6px;
-    transition: transform 0.1s;
+    color: var(--g700);
+    transition: border-color 150ms ease, color 150ms ease;
+}
+
+.terms-tags a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 .terms-tags a:active {
-    background: var(--tertiary);
-    transform: scale(0.96);
+    transform: scale(0.97);
 }

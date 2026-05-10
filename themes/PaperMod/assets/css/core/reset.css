@@ -8,6 +8,7 @@ html {
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    scroll-behavior: smooth;
 }
 
 a,
@@ -23,7 +24,7 @@ h6 {
 }
 
 body {
-    font-family: Charter, Georgia, serif;
+    font-family: var(--serif);
     font-size: 18px;
     line-height: 1.6;
     word-break: break-word;
@@ -50,7 +51,9 @@ h3,
 h4,
 h5,
 h6 {
-    line-height: 1.2;
+    font-family: var(--serif);
+    font-weight: 700;
+    line-height: 1.15;
 }
 
 h1,
@@ -70,6 +73,7 @@ ul {
 
 a {
     text-decoration: none;
+    transition: color 150ms ease;
 }
 
 body,
@@ -78,69 +82,50 @@ ul {
     margin: 0;
 }
 
+em {
+    color: var(--accent);
+}
+
 table {
-  border-collapse: collapse;
-  display: table;
-  margin-bottom: 1rem;
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-
-  & thead th {
-    vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  & td,
-  & th {
-    vertical-align: top;
-    border-top: 1px solid #dee2e6;
-    border-bottom: 1px solid #dee2e6;
-  }
-
-  & tbody tr:hover {
-    /* background-color: rgba(0, 0, 0, 0.075); */
-  }
-
-  /* & tbody tr:nth-of-type(2n + 1) {
-    background-color: rgba(0, 0, 0, 0.05);
-  } */
-  & tr:last-of-type {
-    vertical-align: bottom;
-    /* border-bottom: 2px solid #dee2e6; */
-  }
+    border-collapse: collapse;
+    display: table;
+    margin-bottom: 1rem;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-.dark table {
-  border-collapse: collapse;
-  display: table;
-  margin-bottom: 1rem;
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-
-  & thead th {
+table thead th {
     vertical-align: bottom;
-    border-bottom: 2px solid var(--code-bg);
+    border-bottom: 1.5px solid var(--g300);
+    background-color: var(--g100);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--g500);
+    padding: 10px 12px;
+}
+
+table td,
+table th {
+    vertical-align: top;
+    border-top: 1px solid var(--g200);
+    border-bottom: 1px solid var(--g200);
+    padding: 10px 12px;
+}
+
+.dark table thead th {
+    border-bottom: 1.5px solid var(--border);
     background-color: var(--code-bg);
-  }
-  & td,
-  & th {
-    vertical-align: top;
-    border-top: 1px solid var(--code-bg);
-    border-bottom: 1px solid var(--code-bg);
-
-  }
-
-  & tbody tr:hover {
-    /* background-color: var(--code-bg); */
-  }
-
-  & tr:last-of-type {
-    vertical-align: bottom;
-  }
 }
 
+.dark table td,
+.dark table th {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
 
 button,
 input,
@@ -170,4 +155,9 @@ textarea:-webkit-autofill {
 img {
     display: block;
     max-width: 100%;
+}
+
+::selection {
+    background: var(--oat);
+    color: var(--slate);
 }

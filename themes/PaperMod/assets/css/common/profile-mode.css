@@ -14,7 +14,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+}
+
+.profile .profile_inner h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    letter-spacing: -0.012em;
 }
 
 .profile img {
@@ -27,11 +33,19 @@
 }
 
 .button {
-    background: var(--tertiary);
-    border-radius: var(--radius);
+    background: var(--g100);
+    border: 1.5px solid var(--g300);
+    border-radius: 6px;
     margin: 8px;
     padding: 6px;
-    transition: transform 0.1s;
+    font-family: var(--sans);
+    font-size: 14px;
+    transition: border-color 150ms ease, color 150ms ease;
+}
+
+.button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 .button-inner {
@@ -39,5 +53,5 @@
 }
 
 .button:active {
-    transform: scale(0.96);
+    transform: scale(0.97);
 }

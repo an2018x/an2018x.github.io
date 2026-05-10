@@ -1,4 +1,3 @@
-/* from reset */
 ::-webkit-scrollbar-track {
     background: 0 0;
 }
@@ -8,9 +7,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--tertiary);
+    background: var(--g300);
     border: 5px solid var(--theme);
-    border-radius: var(--radius);
+    border-radius: 999px;
 }
 
 .list:not(.dark)::-webkit-scrollbar-thumb {
@@ -18,46 +17,43 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary);
+    background: var(--g500);
 }
 
 ::-webkit-scrollbar:not(.highlighttable, .highlight table, .gist .highlight) {
     background: var(--theme);
 }
 
-/* from post-single */
 .post-content .highlighttable td .highlight pre code::-webkit-scrollbar {
     display: none;
 }
 
 .post-content :not(table) ::-webkit-scrollbar-thumb {
     border: 2px solid var(--code-block-bg);
-    background: rgb(113, 113, 117);
+    background: var(--g300);
+    border-radius: 999px;
 }
 
 .post-content :not(table) ::-webkit-scrollbar-thumb:hover {
-    background: rgb(163, 163, 165);
+    background: var(--g500);
 }
 
 .gist table::-webkit-scrollbar-thumb {
-    border: 2px solid rgb(255, 255, 255);
-    background: rgb(173, 173, 173);
+    border: 2px solid var(--paper);
+    background: var(--g300);
 }
 
 .gist table::-webkit-scrollbar-thumb:hover {
-    background: rgb(112, 112, 112);
+    background: var(--g500);
 }
 
 .post-content table::-webkit-scrollbar-thumb {
     border-width: 2px;
 }
 
-/* from zmedia */
 @media screen and (min-width: 768px) {
-
-    /* reset */
     ::-webkit-scrollbar {
-        width: 19px;
+        width: 16px;
         height: 0px;
     }
 }
