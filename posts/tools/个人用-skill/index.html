@@ -1,0 +1,1224 @@
+<!doctype html><html lang="zh" dir="auto"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="robots" content="index, follow"><title>个人用 SKILLS | 安橙的博客</title><meta name="keywords" content="Claude Code"><meta name="description" content='绘图 SKILL
+
+
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+
+
+# Paper-tone Diagram
+
+学术克制 × 手工纸感 × 编辑设计。回避现代 SaaS 风(饱和蓝、纯白底、阴影泛滥、圆角滥用),把"信息"当作"印刷品"来呈现。适用流程图 / 架构图 / pipeline 示意图,中文友好,可输出 HTML、Excalidraw、SVG。
+
+气质关键词:**安静、考究、可读、不喧哗**。
+
+---
+
+## 1 · Color Tokens(固定不可改)
+
+```
+--ivory:  #FAF9F5   主背景(代替纯白)
+--paper:  #FFFFFF   卡片背景
+--slate:  #141413   主文字(几乎黑但偏暖)
+--clay:   #D97757   唯一强调色 — 关键路径 / 序号 / 斜体
+--clay-d: #B85C3E   强调暗色,备用
+--oat:    #E3DACC   暖灰 — hover / 下划线
+--olive:  #788C5D   第二色,用量 ≈ clay 的 1/5
+--g100:   #F0EEE6   最浅灰 — 徽章背景
+--g200:   #E6E3DA   边框 / 分隔
+--g300:   #D1CFC5   标准描边
+--g500:   #87867F   次要文字、Mono 标签
+--g700:   #3D3D3A   正文次级
+```
+
+调色法则:**没有冷灰**(所有灰带土黄底);全页只有 clay 一种亮色,占比 < 20%;不用纯黑纯白;olive 仅作分类区分,用量约 clay 的 1/5。
+
+---
+
+## 2 · Typography(固定)
+
+```
+--serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+--sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+--mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+```
+
+| 用途 | 字体 | 字号 | 字重 | 字距 |
+|---|---|---|---|---|
+| H1 | serif | clamp(38, 5.4vw, 62)px | **500** | -0.018em |
+| H2 章节 | serif | 27px | 500 | -0.012em |
+| 卡片标题 | serif | 19px | 500 | -0.008em |
+| 正文 lede | sans | 16.5px | 400 | — |
+| 卡片描述 | sans | 13.5px | 400 | — |
+| Mono 标签 | mono | 10–13px | 400/600 | 0.08–0.12em |
+
+铁律:serif 标题字重统一 **500**(不要 600/700);H1 用负字距 -0.018em + `max-width:17ch`;斜体词用 `<em>` + clay 色,是页面唯一的"装饰修辞"。
+
+---
+
+## 3 · Layout
+
+```
+.wrap { max-width:1120px; margin:0 auto; padding:0 32px 140px; }
+```
+
+- 章节间距 **72px**;header 顶部 80px / 底部 56px;footer 顶部 100px
+- **50px 悬挂缩进** — 章节标题不缩,介绍与卡片网格 `margin-left:50px`
+- 卡片网格 `grid-template-columns: repeat(auto-fill, minmax(316px, 1fr)); gap:20px`
+
+---
+
+## 4 · Borders / Radius / Motion
+
+- 描边 **1.5px**(HTML) / **1px**(Excalidraw,无 1.5 选项)
+- 圆角:5px(SVG 内)、6px(tag)、10–14px(卡片)、999px(胶囊)
+- 动效时长 **120–150ms**(纸面回弹感)
+- 只用 transform + 颜色 + 阴影,**不缩放、不旋转、不淡入**
+- 默认 ease,不用 cubic-bezier
+
+---
+
+## 5 · 通用结构 — Vertical Pipeline 流程图
+
+每张图按这个骨架组织:
+
+1. **masthead** — eyebrow(▬ + Mono 大写)+ H1(serif 500,带 `<em>` 斜体)+ lede(sans 16.5)+ meta strip(Mono 横条罗列关键技术栈)
+2. **section header** — 序号(Mono / clay / 34px 宽)+ 标题(serif 27)+ count(灰胶囊)
+3. **节点垂直流** — 每节点 = mono tag + serif title + sans sub
+4. **节点间 vertical arrow** — strokeWidth=1, color=g500, 长度 ~42px
+5. **右侧 mono 注释** — 前置 24×1.5px clay 短横线 + Mono 11px 灰字
+6. **大型节点用 panel** — slate border,内嵌 4 列子模块网格,关键子模块用 clay border;子模块再下沉到深层硬件栈(深色块用 slate 背景 + ivory 文字)
+7. **底部 legend** — 色彩与符号说明
+8. **footer** — 衬线斜体格言 + 仓库链接
+
+节点状态 mapping:
+- `entry` — bg=g100, border=slate
+- 普通 service — bg=transparent, border=slate
+- `accent`(关键路径) — border=clay
+- `exit` — bg=oat, border=clay
+- `dark`(硬件层) — bg=slate, 文字=ivory, 副=oat
+
+---
+
+## 6 · Variant A — HTML 单文件
+
+CSS 起手必备:
+
+```css
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, serif;
+  --sans:  system-ui, -apple-system, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, monospace;
+}
+body{ background:var(--ivory); color:var(--slate);
+      font-family:var(--sans); line-height:1.55; }
+.wrap{ max-width:1120px; margin:0 auto; padding:0 32px 140px; }
+
+.eyebrow{ font-family:var(--mono); font-size:12px;
+          letter-spacing:.12em; text-transform:uppercase;
+          color:var(--g500); }
+.eyebrow::before{ content:""; display:inline-block;
+          width:24px; height:1.5px; background:var(--clay);
+          margin-right:12px; vertical-align:middle; }
+
+h1{ font-family:var(--serif); font-weight:500;
+    font-size:clamp(38px, 5.4vw, 62px);
+    letter-spacing:-0.018em; line-height:1.06; max-width:17ch; }
+h1 em{ font-style:italic; color:var(--clay); }
+```
+
+节点卡片:
+
+```css
+.node{ background:var(--paper); border:1.5px solid var(--g300);
+       border-radius:14px; padding:18px 22px;
+       transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease; }
+.node:hover{ transform:translateY(-3px);
+       box-shadow:0 10px 30px rgba(20,20,19,.10);
+       border-color:var(--slate); }
+.node.accent{ border-color:var(--clay); }
+.node.entry { background:var(--g100); }
+.node.exit  { background:var(--oat); border-color:var(--clay); }
+
+.annot{ font-family:var(--mono); font-size:11.5px; color:var(--g500);
+        display:flex; align-items:center; }
+.annot::before{ content:""; width:32px; height:1.5px;
+        background:var(--clay); margin-right:12px; }
+```
+
+垂直箭头(SVG):
+
+```html
+<svg width="14" height="46" viewBox="0 0 14 46">
+  <line x1="7" y1="2" x2="7" y2="34" stroke="#87867F" stroke-width="2.5" stroke-linecap="round"/>
+  <polyline points="2,32 7,42 12,32" fill="none"
+            stroke="#87867F" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+```
+
+---
+
+## 7 · Variant B — Excalidraw (.excalidraw)
+
+JSON 文件骨架:
+
+```json
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [...],
+  "appState": { "gridSize": null, "viewBackgroundColor": "#FAF9F5" },
+  "files": {}
+}
+```
+
+每个 element 必备字段:`id, type, x, y, width, height, angle, strokeColor, backgroundColor, fillStyle, strokeWidth, strokeStyle, roughness, opacity, groupIds, frameId, roundness, seed, version, versionNonce, isDeleted, boundElements, updatedAt, link, locked`
+
+铁律:
+- **`roughness: 0`** 全画布禁用手绘抖动(学术风核心)
+- `strokeWidth: 1`(Excalidraw 没有 1.5)
+- 圆角矩形:`"roundness": {"type": 3}`
+- `fillStyle: "solid"`(不用 hachure 斜线填充)
+- 字体: 统一使用 Comic Shanns 字体，font-family: 8
+
+推荐用 Python 脚本生成,因为 JSON 重复字段多。最小工厂:
+
+```python
+import json, time, random
+random.seed(42)
+elements = []
+
+def base():
+    return {
+        "id": f"id-{random.randint(10**8, 10**12)}",
+        "angle": 0, "strokeColor": "#141413", "backgroundColor": "transparent",
+        "fillStyle": "solid", "strokeWidth": 1, "strokeStyle": "solid",
+        "roughness": 0, "opacity": 100, "groupIds": [], "frameId": None,
+        "roundness": None, "seed": random.randint(1, 10**9),
+        "version": 1, "versionNonce": random.randint(1, 10**9),
+        "isDeleted": False, "boundElements": None,
+        "updatedAt": int(time.time() * 1000), "link": None, "locked": False,
+    }
+
+def rect(x, y, w, h, *, stroke="#141413", bg="transparent", sw=1, rounded=True):
+    el = base(); el.update({"type":"rectangle", "x":x, "y":y, "width":w, "height":h,
+        "strokeColor":stroke, "backgroundColor":bg, "strokeWidth":sw,
+        "roundness": {"type":3} if rounded else None})
+    elements.append(el); return el
+
+def text(x, y, content, *, size=14, font=2, color="#141413", w=None, align="left"):
+    if w is None:
+        cn = sum(1 for c in content if ord(c) > 127)
+        w = int(cn*size + (len(content)-cn)*size*0.55) + 6
+    el = base(); el.update({"type":"text", "x":x, "y":y,
+        "width":w, "height":int(size*1.25),
+        "text":content, "fontSize":size, "fontFamily":font,
+        "textAlign":align, "verticalAlign":"top",
+        "containerId":None, "originalText":content,
+        "lineHeight":1.25, "baseline":int(size*0.9), "strokeColor":color})
+    elements.append(el); return el
+
+def arrow(x1, y1, x2, y2, *, color="#87867F", sw=1):
+    dx, dy = x2-x1, y2-y1
+    el = base(); el.update({"type":"arrow", "x":x1, "y":y1,
+        "width":max(abs(dx),1), "height":max(abs(dy),1),
+        "points":[[0,0],[dx,dy]], "lastCommittedPoint":None,
+        "startBinding":None, "endBinding":None,
+        "startArrowhead":None, "endArrowhead":"arrow",
+        "strokeColor":color, "strokeWidth":sw})
+    elements.append(el); return el
+
+def line(x1, y1, x2, y2, *, color="#87867F", sw=1, dashed=False):
+    dx, dy = x2-x1, y2-y1
+    el = base(); el.update({"type":"line", "x":x1, "y":y1,
+        "width":max(abs(dx),1), "height":max(abs(dy),1),
+        "points":[[0,0],[dx,dy]], "lastCommittedPoint":None,
+        "startBinding":None, "endBinding":None,
+        "startArrowhead":None, "endArrowhead":None,
+        "strokeColor":color, "strokeWidth":sw,
+        "strokeStyle": "dashed" if dashed else "solid"})
+    elements.append(el); return el
+
+# ... 调用 rect/text/arrow 组装画布,最后:
+data = {"type":"excalidraw", "version":2, "source":"https://excalidraw.com",
+        "elements":elements,
+        "appState":{"gridSize":None, "viewBackgroundColor":"#FAF9F5"},
+        "files":{}}
+json.dump(data, open("out.excalidraw","w"), ensure_ascii=False, indent=2)
+```
+
+布局参考(垂直流程图):
+
+- 主轴中心 X = 700,卡片宽 380,普通节点高 78
+- 节点之间 arrow 长度 42
+- 大面板宽 540~560,内嵌 4 列子模块(每个 ~120 宽,gap 12)
+- 大面板的"04 · ENGINE"标签:在 border 上浮一个 IVORY 背景的小矩形 + clay Mono 文字
+- 右侧详细注释面板 X = 主面板右边缘 + 60,宽 320
+- 注释条目格式:Mono clay 小标题(`§ NN · 主题`)+ sans g700 多行正文
+
+---
+
+## 8 · Variant C — SVG 缩略图
+
+放在卡片缩略图区(.thumb,132px 高,灰底)。
+
+约定:
+- `stroke-width: 2.5`
+- `stroke-linecap: round`
+- 圆角 `rx="4"` 或 `5`
+- 一张图只用 3–5 个色阶,clay 占比 < 20%
+- 几何元素:`<rect>`、`<circle>`、`<line>`,**不画曲线**
+
+class 命名:
+- `.st` 描边 (g500) / `.fl` 填充 (g300) / `.cl` clay 填充 / `.ol` olive 填充
+- `.oa` oat 填充 + g500 描边 / `.sl` slate 填充 / `.wh` 白填充 + g500 描边
+- `.ln` 灰线 / `.lc` clay 线 / `.da` 虚线 (dasharray 4 4)
+
+---
+
+## 9 · 输出前自检 Checklist
+
+每张图都必须满足:
+
+1. ☐ 背景 `#FAF9F5` 米白,**不用纯白**
+2. ☐ 强调色只有 `#D97757` 粘土橙,占比 < 20%,无第二亮色
+3. ☐ 大标题用 serif(Excalidraw 例外:Helvetica 大字号 字重 500)
+4. ☐ Mono 标签全部大写 + 宽字距(eyebrow / 序号 / 文件名 / 注释)
+5. ☐ 章节缩进 50px(标题不缩,正文与卡片缩)
+6. ☐ 描边 1.5px(HTML)/ 1px(Excalidraw),圆角 10–14px
+7. ☐ 没有阴影泛滥(只在 hover 时柔和阴影)
+8. ☐ 没有冷灰(灰一律带土黄底)
+9. ☐ Hover 只动 150ms(translateY(-3px) + 颜色 + 阴影)
+10. ☐ 大量留白(下边距 ≥ 100px,章节间距 72px)
+11. ☐ Excalidraw 必须 `roughness: 0`
+12. ☐ 大量中文标注时,字号略放大,行高 ≥ 1.5,留白略多
+
+---
+
+## 10 · 命名与产物建议
+
+- HTML:`{topic}-pipeline.html` / `{topic}-architecture.html`
+- Excalidraw:`{topic}.excalidraw`(中文文件名也支持)
+- 生成脚本:`gen_{topic}.py`,参数化坐标 / 文字 / 配色,便于反复调整
+
+> 这套设计的精神:把"信息"当作"印刷品",而不是"界面"。少即是多,但少不是空 — 是经过裁剪的丰富。
+
+
+'><meta name="author" content="map[name:An]"><link rel="canonical" href="https://blog.ans20xx.com/posts/tools/%E4%B8%AA%E4%BA%BA%E7%94%A8-skill/"><link crossorigin="anonymous" href="/assets/css/stylesheet.4b3da2922621b81dd64b17820184ac191b932919ae1859c69e806805e0db02ed.css" integrity="sha256-Sz2ikiYhuB3WSxeCAYSsGRuTKRmuGFnGnoBoBeDbAu0=" rel="preload stylesheet" as="style"><link rel="icon" href="https://blog.ans20xx.com/img/ancheng-favicon.svg"><link rel="apple-touch-icon" href="https://blog.ans20xx.com/apple-touch-icon.png"><link rel="mask-icon" href="https://blog.ans20xx.com/safari-pinned-tab.svg"><meta name="theme-color" content="#2e2e33"><meta name="msapplication-TileColor" content="#2e2e33"><link rel="alternate" hreflang="zh" href="https://blog.ans20xx.com/posts/tools/%E4%B8%AA%E4%BA%BA%E7%94%A8-skill/"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:#eee8d5;--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel="dns-prefetch" href="//cdn.jsdmirror.com"><link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin><link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com"><link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin><script>/Macintosh/.test(navigator.userAgent)||["https://cdn.jsdmirror.com/npm/charter-webfont@4/charter.min.css","https://cdn.jsdmirror.com/npm/@fontsource/noto-serif-sc@latest/400.css"].forEach(function(e){var t=document.createElement("link");t.rel="stylesheet",t.href=e,document.head.appendChild(t)})</script><style>.post-content .highlight{overflow-x:auto}.post-content pre code{word-break:normal}</style></head><body id="top"><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a><div class="logo-switches"><button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/" title="博文"><span>博文</span></a></li><li><a href="https://blog.ans20xx.com/docs/" title="文档"><span>文档</span></a></li><li><a href="https://blog.ans20xx.com/tags/" title="标签"><span>标签</span></a></li><li><a href="https://blog.ans20xx.com/search/" title="搜索"><span>搜索</span></a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title entry-hint-parent">个人用 SKILLS</h1><div class="post-meta"><span title='2026-05-10 00:00:00 +0000 UTC'>五月 10, 2026</span></div></header><aside id="toc-container" class="toc-container"><button id="toc-trigger" aria-label="目录">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg></button><div class="toc"><div class="toc-header"><span class="toc-title">目录</span>
+<button id="toc-close" aria-label="关闭目录">&#215;</button></div><div class="inner"><ul><li><a href="#%e7%bb%98%e5%9b%be-skill" aria-label="绘图 SKILL">绘图 SKILL</a></li></ul></div></div></aside><script>(function(){var t,n,s,e=document.getElementById("toc-container"),o=document.getElementById("toc-trigger"),a=document.getElementById("toc-close");if(!e||!o)return;function c(){e.classList.add("toc-open")}function i(){e.classList.remove("toc-open")}function r(){e.classList.toggle("toc-open")}o.addEventListener("click",function(e){e.stopPropagation(),r()}),a.addEventListener("click",function(e){e.stopPropagation(),i()}),document.addEventListener("click",function(t){e.classList.contains("toc-open")&&!e.querySelector(".toc").contains(t.target)&&i()}),n=!1,document.addEventListener("mousemove",function(t){var s=window.innerWidth-48;t.clientX>s&&!e.classList.contains("toc-open")?n||(o.classList.add("toc-trigger-visible"),n=!0):e.classList.contains("toc-open")||n&&(o.classList.remove("toc-trigger-visible"),n=!1)}),e.querySelectorAll('.inner a[href^="#"]').forEach(function(e){e.addEventListener("click",function(){setTimeout(i,150)})}),document.addEventListener("DOMContentLoaded",function(){if(t=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),t.length>0){s=t[0];var e,o=encodeURI(s.getAttribute("id")).toLowerCase(),n=document.querySelector('.inner ul li a[href="#'+o+'"]');n&&n.classList.add("active")}e=document.getElementById("top-link"),e&&e.addEventListener("click",function(e){e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("scroll",function(){var e=window.pageYOffset||document.documentElement.scrollTop;if(e===0||!t||t.length===0)return;s=Array.from(t).find(function(t){var n=t.getBoundingClientRect().top+window.pageYOffset-e;return n>0&&n<window.innerHeight/2})||s,t.forEach(function(e){var n,o,i,a=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector('.inner ul li a[href="#'+a+'"]');if(!t)return;e===s?(t.classList.add("active"),n=document.querySelector(".toc .inner"),o=t.offsetTop,i=n.clientHeight,n.scrollTo({top:o-i/2+t.clientHeight/2,behavior:"smooth"})):t.classList.remove("active")})},!1),document.querySelectorAll(".toc .inner li").forEach(function(e){var t,n,s=e.querySelector(":scope > ul");if(!s)return;t=document.createElement("button"),t.className="toc-toggle",t.setAttribute("aria-label","折叠"),t.textContent="▾",t.addEventListener("click",function(e){e.preventDefault(),e.stopPropagation();var n=s.classList.toggle("toc-collapsed");t.textContent=n?"▸":"▾",t.setAttribute("aria-label",n?"展开":"折叠")}),n=e.querySelector(":scope > a"),n&&n.after(t)})})()</script><div class="post-content"><h1 id="绘图-skill">绘图 SKILL<a hidden class="anchor" aria-hidden="true" href="#绘图-skill">#</a></h1><div class="highlight"><div style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">100
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">101
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">102
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">103
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">104
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">105
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">106
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">107
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">108
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">109
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">110
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">111
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">112
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">113
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">114
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">115
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">116
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">117
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">118
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">119
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">120
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">121
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">122
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">123
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">124
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">125
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">126
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">127
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">128
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">129
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">130
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">131
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">132
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">133
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">134
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">135
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">136
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">137
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">138
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">139
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">140
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">141
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">142
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">143
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">144
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">145
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">146
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">147
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">148
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">149
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">150
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">151
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">152
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">153
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">154
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">155
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">156
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">157
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">158
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">159
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">160
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">161
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">162
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">163
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">164
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">165
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">166
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">167
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">168
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">169
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">170
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">171
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">172
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">173
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">174
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">175
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">176
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">177
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">178
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">179
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">180
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">181
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">182
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">183
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">184
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">185
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">186
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">187
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">188
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">189
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">190
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">191
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">192
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">193
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">194
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">195
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">196
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">197
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">198
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">199
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">200
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">201
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">202
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">203
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">204
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">205
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">206
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">207
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">208
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">209
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">210
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">211
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">212
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">213
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">214
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">215
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">216
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">217
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">218
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">219
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">220
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">221
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">222
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">223
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">224
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">225
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">226
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">227
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">228
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">229
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">230
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">231
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">232
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">233
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">234
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">235
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">236
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">237
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">238
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">239
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">240
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">241
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">242
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">243
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">244
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">245
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">246
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">247
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">248
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">249
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">250
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">251
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">252
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">253
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">254
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">255
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">256
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">257
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">258
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">259
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">260
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">261
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">262
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">263
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">264
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">265
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">266
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">267
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">268
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">269
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">270
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">271
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">272
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">273
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">274
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">275
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">276
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">277
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">278
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">279
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">280
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">281
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">282
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">283
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">284
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">285
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">286
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">287
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">288
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">289
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">290
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">291
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">292
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">293
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">294
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">295
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">296
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">297
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">298
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">299
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">300
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">301
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">302
+</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-md" data-lang="md"><span style="display:flex"><span><span style="color:#d33682"># Paper-tone Diagram
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>学术克制 × 手工纸感 × 编辑设计。回避现代 SaaS 风(饱和蓝、纯白底、阴影泛滥、圆角滥用),把&#34;信息&#34;当作&#34;印刷品&#34;来呈现。适用流程图 / 架构图 / pipeline 示意图,中文友好,可输出 HTML、Excalidraw、SVG。
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>气质关键词:**安静、考究、可读、不喧哗**。
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 1 · Color Tokens(固定不可改)
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```
+</span></span></span><span style="display:flex"><span>--ivory:  #FAF9F5   主背景(代替纯白)
+</span></span><span style="display:flex"><span>--paper:  #FFFFFF   卡片背景
+</span></span><span style="display:flex"><span>--slate:  #141413   主文字(几乎黑但偏暖)
+</span></span><span style="display:flex"><span>--clay:   #D97757   唯一强调色 — 关键路径 / 序号 / 斜体
+</span></span><span style="display:flex"><span>--clay-d: #B85C3E   强调暗色,备用
+</span></span><span style="display:flex"><span>--oat:    #E3DACC   暖灰 — hover / 下划线
+</span></span><span style="display:flex"><span>--olive:  #788C5D   第二色,用量 ≈ clay 的 1/5
+</span></span><span style="display:flex"><span>--g100:   #F0EEE6   最浅灰 — 徽章背景
+</span></span><span style="display:flex"><span>--g200:   #E6E3DA   边框 / 分隔
+</span></span><span style="display:flex"><span>--g300:   #D1CFC5   标准描边
+</span></span><span style="display:flex"><span>--g500:   #87867F   次要文字、Mono 标签
+</span></span><span style="display:flex"><span>--g700:   #3D3D3A   正文次级
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>调色法则:**没有冷灰**(所有灰带土黄底);全页只有 clay 一种亮色,占比 &lt; 20%;不用纯黑纯白;olive 仅作分类区分,用量约 clay 的 1/5。
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 2 · Typography(固定)
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```
+</span></span></span><span style="display:flex"><span>--serif: ui-serif, Georgia, &#34;Times New Roman&#34;, Times, serif;
+</span></span><span style="display:flex"><span>--sans:  system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif;
+</span></span><span style="display:flex"><span>--mono:  ui-monospace, &#34;SF Mono&#34;, Menlo, Monaco, Consolas, monospace;
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>| 用途 | 字体 | 字号 | 字重 | 字距 |
+</span></span><span style="display:flex"><span>|---|---|---|---|---|
+</span></span><span style="display:flex"><span>| H1 | serif | clamp(38, 5.4vw, 62)px | <span style="color:#d33682">**500**</span> | -0.018em |
+</span></span><span style="display:flex"><span>| H2 章节 | serif | 27px | 500 | -0.012em |
+</span></span><span style="display:flex"><span>| 卡片标题 | serif | 19px | 500 | -0.008em |
+</span></span><span style="display:flex"><span>| 正文 lede | sans | 16.5px | 400 | — |
+</span></span><span style="display:flex"><span>| 卡片描述 | sans | 13.5px | 400 | — |
+</span></span><span style="display:flex"><span>| Mono 标签 | mono | 10–13px | 400/600 | 0.08–0.12em |
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>铁律:serif 标题字重统一 <span style="color:#d33682">**500**</span>(不要 600/700);H1 用负字距 -0.018em + <span style="color:#2aa198">`max-width:17ch`</span>;斜体词用 <span style="color:#2aa198">`&lt;em&gt;`</span> + clay 色,是页面唯一的&#34;装饰修辞&#34;。
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 3 · Layout
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```
+</span></span></span><span style="display:flex"><span>.wrap { max-width:1120px; margin:0 auto; padding:0 32px 140px; }
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 章节间距 <span style="color:#d33682">**72px**</span>;header 顶部 80px / 底部 56px;footer 顶部 100px
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> **50px 悬挂缩进** — 章节标题不缩,介绍与卡片网格 <span style="color:#2aa198">`margin-left:50px`</span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 卡片网格 <span style="color:#2aa198">`grid-template-columns: repeat(auto-fill, minmax(316px, 1fr)); gap:20px`</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 4 · Borders / Radius / Motion
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 描边 <span style="color:#d33682">**1.5px**</span>(HTML) / <span style="color:#d33682">**1px**</span>(Excalidraw,无 1.5 选项)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 圆角:5px(SVG 内)、6px(tag)、10–14px(卡片)、999px(胶囊)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 动效时长 <span style="color:#d33682">**120–150ms**</span>(纸面回弹感)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 只用 transform + 颜色 + 阴影,**不缩放、不旋转、不淡入**
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 默认 ease,不用 cubic-bezier
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 5 · 通用结构 — Vertical Pipeline 流程图
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>每张图按这个骨架组织:
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">1.</span> <span style="color:#d33682">**masthead**</span> — eyebrow(▬ + Mono 大写)+ H1(serif 500,带 <span style="color:#2aa198">`&lt;em&gt;`</span> 斜体)+ lede(sans 16.5)+ meta strip(Mono 横条罗列关键技术栈)
+</span></span><span style="display:flex"><span><span style="color:#859900">2.</span> <span style="color:#d33682">**section header**</span> — 序号(Mono / clay / 34px 宽)+ 标题(serif 27)+ count(灰胶囊)
+</span></span><span style="display:flex"><span><span style="color:#859900">3.</span> <span style="color:#d33682">**节点垂直流**</span> — 每节点 = mono tag + serif title + sans sub
+</span></span><span style="display:flex"><span><span style="color:#859900">4.</span> <span style="color:#d33682">**节点间 vertical arrow**</span> — strokeWidth=1, color=g500, 长度 ~42px
+</span></span><span style="display:flex"><span><span style="color:#859900">5.</span> <span style="color:#d33682">**右侧 mono 注释**</span> — 前置 24×1.5px clay 短横线 + Mono 11px 灰字
+</span></span><span style="display:flex"><span><span style="color:#859900">6.</span> <span style="color:#d33682">**大型节点用 panel**</span> — slate border,内嵌 4 列子模块网格,关键子模块用 clay border;子模块再下沉到深层硬件栈(深色块用 slate 背景 + ivory 文字)
+</span></span><span style="display:flex"><span><span style="color:#859900">7.</span> <span style="color:#d33682">**底部 legend**</span> — 色彩与符号说明
+</span></span><span style="display:flex"><span><span style="color:#859900">8.</span> <span style="color:#d33682">**footer**</span> — 衬线斜体格言 + 仓库链接
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>节点状态 mapping:
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`entry`</span> — bg=g100, border=slate
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 普通 service — bg=transparent, border=slate
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`accent`</span>(关键路径) — border=clay
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`exit`</span> — bg=oat, border=clay
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`dark`</span>(硬件层) — bg=slate, 文字=ivory, 副=oat
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 6 · Variant A — HTML 单文件
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>CSS 起手必备:
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```css
+</span></span></span><span style="display:flex"><span>:<span style="color:#268bd2">root</span>{
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2">--ivory</span>:<span style="color:#2aa198;font-weight:700">#FAF9F5</span>; <span style="color:#268bd2">--paper</span>:<span style="color:#2aa198;font-weight:700">#FFFFFF</span>; <span style="color:#268bd2">--slate</span>:<span style="color:#2aa198;font-weight:700">#141413</span>;
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2">--clay</span>:<span style="color:#2aa198;font-weight:700">#D97757</span>; <span style="color:#268bd2">--clay-d</span>:<span style="color:#2aa198;font-weight:700">#B85C3E</span>; <span style="color:#268bd2">--oat</span>:<span style="color:#2aa198;font-weight:700">#E3DACC</span>; <span style="color:#268bd2">--olive</span>:<span style="color:#2aa198;font-weight:700">#788C5D</span>;
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2">--g100</span>:<span style="color:#2aa198;font-weight:700">#F0EEE6</span>; <span style="color:#268bd2">--g200</span>:<span style="color:#2aa198;font-weight:700">#E6E3DA</span>; <span style="color:#268bd2">--g300</span>:<span style="color:#2aa198;font-weight:700">#D1CFC5</span>;
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2">--g500</span>:<span style="color:#2aa198;font-weight:700">#87867F</span>; <span style="color:#268bd2">--g700</span>:<span style="color:#2aa198;font-weight:700">#3D3D3A</span>;
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2">--serif</span>: <span style="color:#268bd2">ui-serif</span>, <span style="color:#268bd2">Georgia</span>, <span style="color:#859900;font-weight:700">serif</span>;
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2">--sans</span>:  <span style="color:#268bd2">system-ui</span>, -<span style="color:#268bd2">apple-system</span>, <span style="color:#859900;font-weight:700">sans-serif</span>;
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2">--mono</span>:  <span style="color:#268bd2">ui-monospace</span>, <span style="color:#2aa198">&#34;SF Mono&#34;</span>, <span style="color:#268bd2">Menlo</span>, <span style="color:#859900;font-weight:700">monospace</span>;
+</span></span><span style="display:flex"><span>}
+</span></span><span style="display:flex"><span><span style="color:#268bd2;font-weight:700">body</span>{ <span style="color:#859900">background</span>:<span style="color:#268bd2">var</span>(--<span style="color:#859900;font-weight:700">ivory</span>); <span style="color:#859900">color</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">slate</span>);
+</span></span><span style="display:flex"><span>      <span style="color:#859900">font-family</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">sans</span>); <span style="color:#859900">line-height</span>:<span style="color:#2aa198;font-weight:700">1.55</span>; }
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">wrap</span>{ <span style="color:#859900">max-width</span>:<span style="color:#2aa198;font-weight:700">1120</span><span style="color:#859900;font-weight:700">px</span>; <span style="color:#859900">margin</span>:<span style="color:#2aa198;font-weight:700">0</span> <span style="color:#859900;font-weight:700">auto</span>; <span style="color:#859900">padding</span>:<span style="color:#2aa198;font-weight:700">0</span> <span style="color:#2aa198;font-weight:700">32</span><span style="color:#859900;font-weight:700">px</span> <span style="color:#2aa198;font-weight:700">140</span><span style="color:#859900;font-weight:700">px</span>; }
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">eyebrow</span>{ <span style="color:#859900">font-family</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">mono</span>); <span style="color:#859900">font-size</span>:<span style="color:#2aa198;font-weight:700">12</span><span style="color:#859900;font-weight:700">px</span>;
+</span></span><span style="display:flex"><span>          <span style="color:#859900">letter-spacing</span>:<span style="color:#2aa198;font-weight:700">.12</span><span style="color:#859900;font-weight:700">em</span>; <span style="color:#859900">text-transform</span>:<span style="color:#859900;font-weight:700">uppercase</span>;
+</span></span><span style="display:flex"><span>          <span style="color:#859900">color</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">g500</span>); }
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">eyebrow</span>::<span style="color:#268bd2">before</span>{ <span style="color:#859900">content</span>:<span style="color:#2aa198">&#34;&#34;</span>; <span style="color:#859900">display</span>:<span style="color:#859900;font-weight:700">inline-block</span>;
+</span></span><span style="display:flex"><span>          <span style="color:#859900">width</span>:<span style="color:#2aa198;font-weight:700">24</span><span style="color:#859900;font-weight:700">px</span>; <span style="color:#859900">height</span>:<span style="color:#2aa198;font-weight:700">1.5</span><span style="color:#859900;font-weight:700">px</span>; <span style="color:#859900">background</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">clay</span>);
+</span></span><span style="display:flex"><span>          <span style="color:#859900">margin-right</span>:<span style="color:#2aa198;font-weight:700">12</span><span style="color:#859900;font-weight:700">px</span>; <span style="color:#859900">vertical-align</span>:<span style="color:#859900;font-weight:700">middle</span>; }
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#268bd2;font-weight:700">h1</span>{ <span style="color:#859900">font-family</span>:<span style="color:#268bd2">var</span>(--<span style="color:#859900;font-weight:700">serif</span>); <span style="color:#859900">font-weight</span>:<span style="color:#2aa198;font-weight:700">500</span>;
+</span></span><span style="display:flex"><span>    <span style="color:#859900">font-size</span>:<span style="color:#268bd2">clamp</span>(<span style="color:#2aa198;font-weight:700">38</span><span style="color:#859900;font-weight:700">px</span>, <span style="color:#2aa198;font-weight:700">5.4</span><span style="color:#859900;font-weight:700">vw</span>, <span style="color:#2aa198;font-weight:700">62</span><span style="color:#859900;font-weight:700">px</span>);
+</span></span><span style="display:flex"><span>    <span style="color:#859900">letter-spacing</span>:<span style="color:#2aa198;font-weight:700">-0.018</span><span style="color:#859900;font-weight:700">em</span>; <span style="color:#859900">line-height</span>:<span style="color:#2aa198;font-weight:700">1.06</span>; <span style="color:#859900">max-width</span>:<span style="color:#2aa198;font-weight:700">17</span><span style="color:#859900;font-weight:700">ch</span>; }
+</span></span><span style="display:flex"><span><span style="color:#268bd2;font-weight:700">h1</span> <span style="color:#268bd2;font-weight:700">em</span>{ <span style="color:#859900">font-style</span>:<span style="color:#859900;font-weight:700">italic</span>; <span style="color:#859900">color</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">clay</span>); }
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>节点卡片:
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```css
+</span></span></span><span style="display:flex"><span>.<span style="color:#cb4b16">node</span>{ <span style="color:#859900">background</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">paper</span>); <span style="color:#859900">border</span>:<span style="color:#2aa198;font-weight:700">1.5</span><span style="color:#859900;font-weight:700">px</span> <span style="color:#859900;font-weight:700">solid</span> <span style="color:#268bd2">var</span>(--<span style="color:#268bd2">g300</span>);
+</span></span><span style="display:flex"><span>       <span style="color:#859900">border-radius</span>:<span style="color:#2aa198;font-weight:700">14</span><span style="color:#859900;font-weight:700">px</span>; <span style="color:#859900">padding</span>:<span style="color:#2aa198;font-weight:700">18</span><span style="color:#859900;font-weight:700">px</span> <span style="color:#2aa198;font-weight:700">22</span><span style="color:#859900;font-weight:700">px</span>;
+</span></span><span style="display:flex"><span>       <span style="color:#859900">transition</span>: <span style="color:#859900">transform</span> <span style="color:#2aa198;font-weight:700">150</span><span style="color:#859900;font-weight:700">ms</span> <span style="color:#859900;font-weight:700">ease</span>, <span style="color:#859900">box-shadow</span> <span style="color:#2aa198;font-weight:700">150</span><span style="color:#859900;font-weight:700">ms</span> <span style="color:#859900;font-weight:700">ease</span>, <span style="color:#859900">border-color</span> <span style="color:#2aa198;font-weight:700">150</span><span style="color:#859900;font-weight:700">ms</span> <span style="color:#859900;font-weight:700">ease</span>; }
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">node</span>:<span style="color:#268bd2">hover</span>{ <span style="color:#859900">transform</span>:<span style="color:#cb4b16">translateY</span>(<span style="color:#2aa198;font-weight:700">-3</span><span style="color:#859900;font-weight:700">px</span>);
+</span></span><span style="display:flex"><span>       <span style="color:#859900">box-shadow</span>:<span style="color:#2aa198;font-weight:700">0</span> <span style="color:#2aa198;font-weight:700">10</span><span style="color:#859900;font-weight:700">px</span> <span style="color:#2aa198;font-weight:700">30</span><span style="color:#859900;font-weight:700">px</span> <span style="color:#cb4b16">rgba</span>(<span style="color:#2aa198;font-weight:700">20</span>,<span style="color:#2aa198;font-weight:700">20</span>,<span style="color:#2aa198;font-weight:700">19</span>,<span style="color:#2aa198;font-weight:700">.10</span>);
+</span></span><span style="display:flex"><span>       <span style="color:#859900">border-color</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">slate</span>); }
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">node</span>.<span style="color:#cb4b16">accent</span>{ <span style="color:#859900">border-color</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">clay</span>); }
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">node</span>.<span style="color:#cb4b16">entry</span> { <span style="color:#859900">background</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">g100</span>); }
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">node</span>.<span style="color:#cb4b16">exit</span>  { <span style="color:#859900">background</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">oat</span>); <span style="color:#859900">border-color</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">clay</span>); }
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">annot</span>{ <span style="color:#859900">font-family</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">mono</span>); <span style="color:#859900">font-size</span>:<span style="color:#2aa198;font-weight:700">11.5</span><span style="color:#859900;font-weight:700">px</span>; <span style="color:#859900">color</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">g500</span>);
+</span></span><span style="display:flex"><span>        <span style="color:#859900">display</span>:<span style="color:#859900;font-weight:700">flex</span>; <span style="color:#859900">align-items</span>:<span style="color:#859900;font-weight:700">center</span>; }
+</span></span><span style="display:flex"><span>.<span style="color:#cb4b16">annot</span>::<span style="color:#268bd2">before</span>{ <span style="color:#859900">content</span>:<span style="color:#2aa198">&#34;&#34;</span>; <span style="color:#859900">width</span>:<span style="color:#2aa198;font-weight:700">32</span><span style="color:#859900;font-weight:700">px</span>; <span style="color:#859900">height</span>:<span style="color:#2aa198;font-weight:700">1.5</span><span style="color:#859900;font-weight:700">px</span>;
+</span></span><span style="display:flex"><span>        <span style="color:#859900">background</span>:<span style="color:#268bd2">var</span>(--<span style="color:#268bd2">clay</span>); <span style="color:#859900">margin-right</span>:<span style="color:#2aa198;font-weight:700">12</span><span style="color:#859900;font-weight:700">px</span>; }
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>垂直箭头(SVG):
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```html
+</span></span></span><span style="display:flex"><span>&lt;<span style="color:#268bd2;font-weight:700">svg</span> <span style="color:#268bd2">width</span>=<span style="color:#2aa198">&#34;14&#34;</span> <span style="color:#268bd2">height</span>=<span style="color:#2aa198">&#34;46&#34;</span> <span style="color:#268bd2">viewBox</span>=<span style="color:#2aa198">&#34;0 0 14 46&#34;</span>&gt;
+</span></span><span style="display:flex"><span>  &lt;<span style="color:#268bd2;font-weight:700">line</span> <span style="color:#268bd2">x1</span>=<span style="color:#2aa198">&#34;7&#34;</span> <span style="color:#268bd2">y1</span>=<span style="color:#2aa198">&#34;2&#34;</span> <span style="color:#268bd2">x2</span>=<span style="color:#2aa198">&#34;7&#34;</span> <span style="color:#268bd2">y2</span>=<span style="color:#2aa198">&#34;34&#34;</span> <span style="color:#268bd2">stroke</span>=<span style="color:#2aa198">&#34;#87867F&#34;</span> <span style="color:#268bd2">stroke-width</span>=<span style="color:#2aa198">&#34;2.5&#34;</span> <span style="color:#268bd2">stroke-linecap</span>=<span style="color:#2aa198">&#34;round&#34;</span>/&gt;
+</span></span><span style="display:flex"><span>  &lt;<span style="color:#268bd2;font-weight:700">polyline</span> <span style="color:#268bd2">points</span>=<span style="color:#2aa198">&#34;2,32 7,42 12,32&#34;</span> <span style="color:#268bd2">fill</span>=<span style="color:#2aa198">&#34;none&#34;</span>
+</span></span><span style="display:flex"><span>            <span style="color:#268bd2">stroke</span>=<span style="color:#2aa198">&#34;#87867F&#34;</span> <span style="color:#268bd2">stroke-width</span>=<span style="color:#2aa198">&#34;2.5&#34;</span>
+</span></span><span style="display:flex"><span>            <span style="color:#268bd2">stroke-linecap</span>=<span style="color:#2aa198">&#34;round&#34;</span> <span style="color:#268bd2">stroke-linejoin</span>=<span style="color:#2aa198">&#34;round&#34;</span>/&gt;
+</span></span><span style="display:flex"><span>&lt;/<span style="color:#268bd2;font-weight:700">svg</span>&gt;
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 7 · Variant B — Excalidraw (.excalidraw)
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>JSON 文件骨架:
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```json
+</span></span></span><span style="display:flex"><span>{
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2;font-weight:700">&#34;type&#34;</span>: <span style="color:#2aa198">&#34;excalidraw&#34;</span>,
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2;font-weight:700">&#34;version&#34;</span>: <span style="color:#2aa198;font-weight:700">2</span>,
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2;font-weight:700">&#34;source&#34;</span>: <span style="color:#2aa198">&#34;https://excalidraw.com&#34;</span>,
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2;font-weight:700">&#34;elements&#34;</span>: [...],
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2;font-weight:700">&#34;appState&#34;</span>: { <span style="color:#268bd2;font-weight:700">&#34;gridSize&#34;</span>: <span style="color:#859900;font-weight:700">null</span>, <span style="color:#268bd2;font-weight:700">&#34;viewBackgroundColor&#34;</span>: <span style="color:#2aa198">&#34;#FAF9F5&#34;</span> },
+</span></span><span style="display:flex"><span>  <span style="color:#268bd2;font-weight:700">&#34;files&#34;</span>: {}
+</span></span><span style="display:flex"><span>}
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>每个 element 必备字段:<span style="color:#2aa198">`id, type, x, y, width, height, angle, strokeColor, backgroundColor, fillStyle, strokeWidth, strokeStyle, roughness, opacity, groupIds, frameId, roundness, seed, version, versionNonce, isDeleted, boundElements, updatedAt, link, locked`</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>铁律:
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> **<span style="color:#2aa198">`roughness: 0`</span>** 全画布禁用手绘抖动(学术风核心)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`strokeWidth: 1`</span>(Excalidraw 没有 1.5)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 圆角矩形:<span style="color:#2aa198">`&#34;roundness&#34;: {&#34;type&#34;: 3}`</span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`fillStyle: &#34;solid&#34;`</span>(不用 hachure 斜线填充)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 字体: 统一使用 Comic Shanns 字体，font-family: 8
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>推荐用 Python 脚本生成,因为 JSON 重复字段多。最小工厂:
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```python
+</span></span></span><span style="display:flex"><span><span style="color:#dc322f;font-weight:700">import</span> <span style="color:#268bd2">json</span>, <span style="color:#268bd2">time</span>, <span style="color:#268bd2">random</span>
+</span></span><span style="display:flex"><span><span style="color:#268bd2">random</span>.<span style="color:#268bd2">seed</span>(<span style="color:#2aa198;font-weight:700">42</span>)
+</span></span><span style="display:flex"><span><span style="color:#268bd2">elements</span> = []
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">def</span> <span style="color:#268bd2">base</span>():
+</span></span><span style="display:flex"><span>    <span style="color:#859900">return</span> {
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;id&#34;</span>: <span style="color:#2aa198">f</span><span style="color:#2aa198">&#34;id-</span><span style="color:#2aa198">{</span><span style="color:#268bd2">random</span>.<span style="color:#268bd2">randint</span>(<span style="color:#2aa198;font-weight:700">10</span>**<span style="color:#2aa198;font-weight:700">8</span>, <span style="color:#2aa198;font-weight:700">10</span>**<span style="color:#2aa198;font-weight:700">12</span>)<span style="color:#2aa198">}</span><span style="color:#2aa198">&#34;</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;angle&#34;</span>: <span style="color:#2aa198;font-weight:700">0</span>, <span style="color:#2aa198">&#34;strokeColor&#34;</span>: <span style="color:#2aa198">&#34;#141413&#34;</span>, <span style="color:#2aa198">&#34;backgroundColor&#34;</span>: <span style="color:#2aa198">&#34;transparent&#34;</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;fillStyle&#34;</span>: <span style="color:#2aa198">&#34;solid&#34;</span>, <span style="color:#2aa198">&#34;strokeWidth&#34;</span>: <span style="color:#2aa198;font-weight:700">1</span>, <span style="color:#2aa198">&#34;strokeStyle&#34;</span>: <span style="color:#2aa198">&#34;solid&#34;</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;roughness&#34;</span>: <span style="color:#2aa198;font-weight:700">0</span>, <span style="color:#2aa198">&#34;opacity&#34;</span>: <span style="color:#2aa198;font-weight:700">100</span>, <span style="color:#2aa198">&#34;groupIds&#34;</span>: [], <span style="color:#2aa198">&#34;frameId&#34;</span>: <span style="color:#859900;font-weight:700">None</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;roundness&#34;</span>: <span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;seed&#34;</span>: <span style="color:#268bd2">random</span>.<span style="color:#268bd2">randint</span>(<span style="color:#2aa198;font-weight:700">1</span>, <span style="color:#2aa198;font-weight:700">10</span>**<span style="color:#2aa198;font-weight:700">9</span>),
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;version&#34;</span>: <span style="color:#2aa198;font-weight:700">1</span>, <span style="color:#2aa198">&#34;versionNonce&#34;</span>: <span style="color:#268bd2">random</span>.<span style="color:#268bd2">randint</span>(<span style="color:#2aa198;font-weight:700">1</span>, <span style="color:#2aa198;font-weight:700">10</span>**<span style="color:#2aa198;font-weight:700">9</span>),
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;isDeleted&#34;</span>: <span style="color:#859900;font-weight:700">False</span>, <span style="color:#2aa198">&#34;boundElements&#34;</span>: <span style="color:#859900;font-weight:700">None</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;updatedAt&#34;</span>: <span style="color:#cb4b16">int</span>(<span style="color:#268bd2">time</span>.<span style="color:#268bd2">time</span>() * <span style="color:#2aa198;font-weight:700">1000</span>), <span style="color:#2aa198">&#34;link&#34;</span>: <span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;locked&#34;</span>: <span style="color:#859900;font-weight:700">False</span>,
+</span></span><span style="display:flex"><span>    }
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">def</span> <span style="color:#268bd2">rect</span>(<span style="color:#268bd2">x</span>, <span style="color:#268bd2">y</span>, <span style="color:#268bd2">w</span>, <span style="color:#268bd2">h</span>, *, <span style="color:#268bd2">stroke</span>=<span style="color:#2aa198">&#34;#141413&#34;</span>, <span style="color:#268bd2">bg</span>=<span style="color:#2aa198">&#34;transparent&#34;</span>, <span style="color:#268bd2">sw</span>=<span style="color:#2aa198;font-weight:700">1</span>, <span style="color:#268bd2">rounded</span>=<span style="color:#859900;font-weight:700">True</span>):
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">el</span> = <span style="color:#268bd2">base</span>(); <span style="color:#268bd2">el</span>.<span style="color:#268bd2">update</span>({<span style="color:#2aa198">&#34;type&#34;</span>:<span style="color:#2aa198">&#34;rectangle&#34;</span>, <span style="color:#2aa198">&#34;x&#34;</span>:<span style="color:#268bd2">x</span>, <span style="color:#2aa198">&#34;y&#34;</span>:<span style="color:#268bd2">y</span>, <span style="color:#2aa198">&#34;width&#34;</span>:<span style="color:#268bd2">w</span>, <span style="color:#2aa198">&#34;height&#34;</span>:<span style="color:#268bd2">h</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;strokeColor&#34;</span>:<span style="color:#268bd2">stroke</span>, <span style="color:#2aa198">&#34;backgroundColor&#34;</span>:<span style="color:#268bd2">bg</span>, <span style="color:#2aa198">&#34;strokeWidth&#34;</span>:<span style="color:#268bd2">sw</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;roundness&#34;</span>: {<span style="color:#2aa198">&#34;type&#34;</span>:<span style="color:#2aa198;font-weight:700">3</span>} <span style="color:#859900">if</span> <span style="color:#268bd2">rounded</span> <span style="color:#859900">else</span> <span style="color:#859900;font-weight:700">None</span>})
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">elements</span>.<span style="color:#268bd2">append</span>(<span style="color:#268bd2">el</span>); <span style="color:#859900">return</span> <span style="color:#268bd2">el</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">def</span> <span style="color:#268bd2">text</span>(<span style="color:#268bd2">x</span>, <span style="color:#268bd2">y</span>, <span style="color:#268bd2">content</span>, *, <span style="color:#268bd2">size</span>=<span style="color:#2aa198;font-weight:700">14</span>, <span style="color:#268bd2">font</span>=<span style="color:#2aa198;font-weight:700">2</span>, <span style="color:#268bd2">color</span>=<span style="color:#2aa198">&#34;#141413&#34;</span>, <span style="color:#268bd2">w</span>=<span style="color:#859900;font-weight:700">None</span>, <span style="color:#268bd2">align</span>=<span style="color:#2aa198">&#34;left&#34;</span>):
+</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> <span style="color:#268bd2">w</span> <span style="color:#859900">is</span> <span style="color:#859900;font-weight:700">None</span>:
+</span></span><span style="display:flex"><span>        <span style="color:#268bd2">cn</span> = <span style="color:#cb4b16">sum</span>(<span style="color:#2aa198;font-weight:700">1</span> <span style="color:#859900">for</span> <span style="color:#268bd2">c</span> <span style="color:#859900">in</span> <span style="color:#268bd2">content</span> <span style="color:#859900">if</span> <span style="color:#cb4b16">ord</span>(<span style="color:#268bd2">c</span>) &gt; <span style="color:#2aa198;font-weight:700">127</span>)
+</span></span><span style="display:flex"><span>        <span style="color:#268bd2">w</span> = <span style="color:#cb4b16">int</span>(<span style="color:#268bd2">cn</span>*<span style="color:#268bd2">size</span> + (<span style="color:#cb4b16">len</span>(<span style="color:#268bd2">content</span>)-<span style="color:#268bd2">cn</span>)*<span style="color:#268bd2">size</span>*<span style="color:#2aa198;font-weight:700">0.55</span>) + <span style="color:#2aa198;font-weight:700">6</span>
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">el</span> = <span style="color:#268bd2">base</span>(); <span style="color:#268bd2">el</span>.<span style="color:#268bd2">update</span>({<span style="color:#2aa198">&#34;type&#34;</span>:<span style="color:#2aa198">&#34;text&#34;</span>, <span style="color:#2aa198">&#34;x&#34;</span>:<span style="color:#268bd2">x</span>, <span style="color:#2aa198">&#34;y&#34;</span>:<span style="color:#268bd2">y</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;width&#34;</span>:<span style="color:#268bd2">w</span>, <span style="color:#2aa198">&#34;height&#34;</span>:<span style="color:#cb4b16">int</span>(<span style="color:#268bd2">size</span>*<span style="color:#2aa198;font-weight:700">1.25</span>),
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;text&#34;</span>:<span style="color:#268bd2">content</span>, <span style="color:#2aa198">&#34;fontSize&#34;</span>:<span style="color:#268bd2">size</span>, <span style="color:#2aa198">&#34;fontFamily&#34;</span>:<span style="color:#268bd2">font</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;textAlign&#34;</span>:<span style="color:#268bd2">align</span>, <span style="color:#2aa198">&#34;verticalAlign&#34;</span>:<span style="color:#2aa198">&#34;top&#34;</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;containerId&#34;</span>:<span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;originalText&#34;</span>:<span style="color:#268bd2">content</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;lineHeight&#34;</span>:<span style="color:#2aa198;font-weight:700">1.25</span>, <span style="color:#2aa198">&#34;baseline&#34;</span>:<span style="color:#cb4b16">int</span>(<span style="color:#268bd2">size</span>*<span style="color:#2aa198;font-weight:700">0.9</span>), <span style="color:#2aa198">&#34;strokeColor&#34;</span>:<span style="color:#268bd2">color</span>})
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">elements</span>.<span style="color:#268bd2">append</span>(<span style="color:#268bd2">el</span>); <span style="color:#859900">return</span> <span style="color:#268bd2">el</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">def</span> <span style="color:#268bd2">arrow</span>(<span style="color:#268bd2">x1</span>, <span style="color:#268bd2">y1</span>, <span style="color:#268bd2">x2</span>, <span style="color:#268bd2">y2</span>, *, <span style="color:#268bd2">color</span>=<span style="color:#2aa198">&#34;#87867F&#34;</span>, <span style="color:#268bd2">sw</span>=<span style="color:#2aa198;font-weight:700">1</span>):
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">dx</span>, <span style="color:#268bd2">dy</span> = <span style="color:#268bd2">x2</span>-<span style="color:#268bd2">x1</span>, <span style="color:#268bd2">y2</span>-<span style="color:#268bd2">y1</span>
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">el</span> = <span style="color:#268bd2">base</span>(); <span style="color:#268bd2">el</span>.<span style="color:#268bd2">update</span>({<span style="color:#2aa198">&#34;type&#34;</span>:<span style="color:#2aa198">&#34;arrow&#34;</span>, <span style="color:#2aa198">&#34;x&#34;</span>:<span style="color:#268bd2">x1</span>, <span style="color:#2aa198">&#34;y&#34;</span>:<span style="color:#268bd2">y1</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;width&#34;</span>:<span style="color:#cb4b16">max</span>(<span style="color:#cb4b16">abs</span>(<span style="color:#268bd2">dx</span>),<span style="color:#2aa198;font-weight:700">1</span>), <span style="color:#2aa198">&#34;height&#34;</span>:<span style="color:#cb4b16">max</span>(<span style="color:#cb4b16">abs</span>(<span style="color:#268bd2">dy</span>),<span style="color:#2aa198;font-weight:700">1</span>),
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;points&#34;</span>:[[<span style="color:#2aa198;font-weight:700">0</span>,<span style="color:#2aa198;font-weight:700">0</span>],[<span style="color:#268bd2">dx</span>,<span style="color:#268bd2">dy</span>]], <span style="color:#2aa198">&#34;lastCommittedPoint&#34;</span>:<span style="color:#859900;font-weight:700">None</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;startBinding&#34;</span>:<span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;endBinding&#34;</span>:<span style="color:#859900;font-weight:700">None</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;startArrowhead&#34;</span>:<span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;endArrowhead&#34;</span>:<span style="color:#2aa198">&#34;arrow&#34;</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;strokeColor&#34;</span>:<span style="color:#268bd2">color</span>, <span style="color:#2aa198">&#34;strokeWidth&#34;</span>:<span style="color:#268bd2">sw</span>})
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">elements</span>.<span style="color:#268bd2">append</span>(<span style="color:#268bd2">el</span>); <span style="color:#859900">return</span> <span style="color:#268bd2">el</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">def</span> <span style="color:#268bd2">line</span>(<span style="color:#268bd2">x1</span>, <span style="color:#268bd2">y1</span>, <span style="color:#268bd2">x2</span>, <span style="color:#268bd2">y2</span>, *, <span style="color:#268bd2">color</span>=<span style="color:#2aa198">&#34;#87867F&#34;</span>, <span style="color:#268bd2">sw</span>=<span style="color:#2aa198;font-weight:700">1</span>, <span style="color:#268bd2">dashed</span>=<span style="color:#859900;font-weight:700">False</span>):
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">dx</span>, <span style="color:#268bd2">dy</span> = <span style="color:#268bd2">x2</span>-<span style="color:#268bd2">x1</span>, <span style="color:#268bd2">y2</span>-<span style="color:#268bd2">y1</span>
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">el</span> = <span style="color:#268bd2">base</span>(); <span style="color:#268bd2">el</span>.<span style="color:#268bd2">update</span>({<span style="color:#2aa198">&#34;type&#34;</span>:<span style="color:#2aa198">&#34;line&#34;</span>, <span style="color:#2aa198">&#34;x&#34;</span>:<span style="color:#268bd2">x1</span>, <span style="color:#2aa198">&#34;y&#34;</span>:<span style="color:#268bd2">y1</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;width&#34;</span>:<span style="color:#cb4b16">max</span>(<span style="color:#cb4b16">abs</span>(<span style="color:#268bd2">dx</span>),<span style="color:#2aa198;font-weight:700">1</span>), <span style="color:#2aa198">&#34;height&#34;</span>:<span style="color:#cb4b16">max</span>(<span style="color:#cb4b16">abs</span>(<span style="color:#268bd2">dy</span>),<span style="color:#2aa198;font-weight:700">1</span>),
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;points&#34;</span>:[[<span style="color:#2aa198;font-weight:700">0</span>,<span style="color:#2aa198;font-weight:700">0</span>],[<span style="color:#268bd2">dx</span>,<span style="color:#268bd2">dy</span>]], <span style="color:#2aa198">&#34;lastCommittedPoint&#34;</span>:<span style="color:#859900;font-weight:700">None</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;startBinding&#34;</span>:<span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;endBinding&#34;</span>:<span style="color:#859900;font-weight:700">None</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;startArrowhead&#34;</span>:<span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;endArrowhead&#34;</span>:<span style="color:#859900;font-weight:700">None</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;strokeColor&#34;</span>:<span style="color:#268bd2">color</span>, <span style="color:#2aa198">&#34;strokeWidth&#34;</span>:<span style="color:#268bd2">sw</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;strokeStyle&#34;</span>: <span style="color:#2aa198">&#34;dashed&#34;</span> <span style="color:#859900">if</span> <span style="color:#268bd2">dashed</span> <span style="color:#859900">else</span> <span style="color:#2aa198">&#34;solid&#34;</span>})
+</span></span><span style="display:flex"><span>    <span style="color:#268bd2">elements</span>.<span style="color:#268bd2">append</span>(<span style="color:#268bd2">el</span>); <span style="color:#859900">return</span> <span style="color:#268bd2">el</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"># ... 调用 rect/text/arrow 组装画布,最后:</span>
+</span></span><span style="display:flex"><span><span style="color:#268bd2">data</span> = {<span style="color:#2aa198">&#34;type&#34;</span>:<span style="color:#2aa198">&#34;excalidraw&#34;</span>, <span style="color:#2aa198">&#34;version&#34;</span>:<span style="color:#2aa198;font-weight:700">2</span>, <span style="color:#2aa198">&#34;source&#34;</span>:<span style="color:#2aa198">&#34;https://excalidraw.com&#34;</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;elements&#34;</span>:<span style="color:#268bd2">elements</span>,
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;appState&#34;</span>:{<span style="color:#2aa198">&#34;gridSize&#34;</span>:<span style="color:#859900;font-weight:700">None</span>, <span style="color:#2aa198">&#34;viewBackgroundColor&#34;</span>:<span style="color:#2aa198">&#34;#FAF9F5&#34;</span>},
+</span></span><span style="display:flex"><span>        <span style="color:#2aa198">&#34;files&#34;</span>:{}}
+</span></span><span style="display:flex"><span><span style="color:#268bd2">json</span>.<span style="color:#268bd2">dump</span>(<span style="color:#268bd2">data</span>, <span style="color:#cb4b16">open</span>(<span style="color:#2aa198">&#34;out.excalidraw&#34;</span>,<span style="color:#2aa198">&#34;w&#34;</span>), <span style="color:#268bd2">ensure_ascii</span>=<span style="color:#859900;font-weight:700">False</span>, <span style="color:#268bd2">indent</span>=<span style="color:#2aa198;font-weight:700">2</span>)
+</span></span><span style="display:flex"><span><span style="color:#2aa198">```</span>
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>布局参考(垂直流程图):
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 主轴中心 X = 700,卡片宽 380,普通节点高 78
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 节点之间 arrow 长度 42
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 大面板宽 540~560,内嵌 4 列子模块(每个 ~120 宽,gap 12)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 大面板的&#34;04 · ENGINE&#34;标签:在 border 上浮一个 IVORY 背景的小矩形 + clay Mono 文字
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 右侧详细注释面板 X = 主面板右边缘 + 60,宽 320
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 注释条目格式:Mono clay 小标题(<span style="color:#2aa198">`§ NN · 主题`</span>)+ sans g700 多行正文
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 8 · Variant C — SVG 缩略图
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>放在卡片缩略图区(.thumb,132px 高,灰底)。
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>约定:
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`stroke-width: 2.5`</span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`stroke-linecap: round`</span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 圆角 <span style="color:#2aa198">`rx=&#34;4&#34;`</span> 或 <span style="color:#2aa198">`5`</span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 一张图只用 3–5 个色阶,clay 占比 &lt; 20%
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 几何元素:<span style="color:#2aa198">`&lt;rect&gt;`</span>、<span style="color:#2aa198">`&lt;circle&gt;`</span>、<span style="color:#2aa198">`&lt;line&gt;`</span>,**不画曲线**
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>class 命名:
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`.st`</span> 描边 (g500) / <span style="color:#2aa198">`.fl`</span> 填充 (g300) / <span style="color:#2aa198">`.cl`</span> clay 填充 / <span style="color:#2aa198">`.ol`</span> olive 填充
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`.oa`</span> oat 填充 + g500 描边 / <span style="color:#2aa198">`.sl`</span> slate 填充 / <span style="color:#2aa198">`.wh`</span> 白填充 + g500 描边
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> <span style="color:#2aa198">`.ln`</span> 灰线 / <span style="color:#2aa198">`.lc`</span> clay 线 / <span style="color:#2aa198">`.da`</span> 虚线 (dasharray 4 4)
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 9 · 输出前自检 Checklist
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>每张图都必须满足:
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">1.</span> ☐ 背景 <span style="color:#2aa198">`#FAF9F5`</span> 米白,**不用纯白**
+</span></span><span style="display:flex"><span><span style="color:#859900">2.</span> ☐ 强调色只有 <span style="color:#2aa198">`#D97757`</span> 粘土橙,占比 &lt; 20%,无第二亮色
+</span></span><span style="display:flex"><span><span style="color:#859900">3.</span> ☐ 大标题用 serif(Excalidraw 例外:Helvetica 大字号 字重 500)
+</span></span><span style="display:flex"><span><span style="color:#859900">4.</span> ☐ Mono 标签全部大写 + 宽字距(eyebrow / 序号 / 文件名 / 注释)
+</span></span><span style="display:flex"><span><span style="color:#859900">5.</span> ☐ 章节缩进 50px(标题不缩,正文与卡片缩)
+</span></span><span style="display:flex"><span><span style="color:#859900">6.</span> ☐ 描边 1.5px(HTML)/ 1px(Excalidraw),圆角 10–14px
+</span></span><span style="display:flex"><span><span style="color:#859900">7.</span> ☐ 没有阴影泛滥(只在 hover 时柔和阴影)
+</span></span><span style="display:flex"><span><span style="color:#859900">8.</span> ☐ 没有冷灰(灰一律带土黄底)
+</span></span><span style="display:flex"><span><span style="color:#859900">9.</span> ☐ Hover 只动 150ms(translateY(-3px) + 颜色 + 阴影)
+</span></span><span style="display:flex"><span><span style="color:#859900">10.</span> ☐ 大量留白(下边距 ≥ 100px,章节间距 72px)
+</span></span><span style="display:flex"><span><span style="color:#859900">11.</span> ☐ Excalidraw 必须 <span style="color:#2aa198">`roughness: 0`</span>
+</span></span><span style="display:flex"><span><span style="color:#859900">12.</span> ☐ 大量中文标注时,字号略放大,行高 ≥ 1.5,留白略多
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>---
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#d33682">## 10 · 命名与产物建议
+</span></span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> HTML:<span style="color:#2aa198">`{topic}-pipeline.html`</span> / <span style="color:#2aa198">`{topic}-architecture.html`</span>
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> Excalidraw:<span style="color:#2aa198">`{topic}.excalidraw`</span>(中文文件名也支持)
+</span></span><span style="display:flex"><span><span style="color:#859900">-</span> 生成脚本:<span style="color:#2aa198">`gen_{topic}.py`</span>,参数化坐标 / 文字 / 配色,便于反复调整
+</span></span><span style="display:flex"><span><span style="color:#859900">
+</span></span></span><span style="display:flex"><span><span style="color:#859900">&gt; </span><span style="color:#d33682">这套设计的精神:把&#34;信息&#34;当作&#34;印刷品&#34;,而不是&#34;界面&#34;。少即是多,但少不是空 — 是经过裁剪的丰富。
+</span></span></span></code></pre></td></tr></table></div></div></div><footer class="post-footer"><ul class="post-tags"><li><a href="https://blog.ans20xx.com/tags/claude-code/">Claude Code</a></li></ul></footer></article></main><footer class="footer"><span>&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span></footer><a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g"><span class="topInner"><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+<span id="read_progress"></span>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script><div id="site-toast" class="site-toast"></div><script>window.showToast=function(e,t=2e3){const n=document.getElementById("site-toast");if(!n)return;n.textContent=e,n.classList.add("show"),clearTimeout(window.__toastTimer),window.__toastTimer=setTimeout(()=>{n.classList.remove("show")},t)}</script></body></html>
