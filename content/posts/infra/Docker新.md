@@ -1,0 +1,157 @@
+---
+title: "Docker复习"
+date: '2026-02-06'
+draft: false
+description:  
+toc: true
+tags:
+  - Docker
+  - 容器
+---
+
+
+{{< mind height="960px" >}}
+- Docker
+    - mac 安装 -> https://www.docker.com
+    - Container 容器 
+        - 运行代码的隔离环境，是被隔离的进程
+            - 文件系统被隔离
+            - 网络被隔离
+            - 进程空间被限制
+            - 资源被限制
+            - 共享宿主机内核
+            - 启动速度≈启动一个进程(速度快)
+        - 是镜像的运行实例
+        - 包含内容
+            - 主进程
+            - 可写层
+            - 网络接口
+            - 挂载点
+        - 容器应该是单一职责进程
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205220658623.png,340,170)
+        - 打开端口
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/05/20260205221048513.png,300,60)
+    - NetWork 网络
+        - Docker 默认创建虚拟网络
+        - 容器间可以用容器名互相访问，Docker 自动做服务发现
+    - Volumn 持久化数据
+        - volumnes (数据卷)
+            - 是本地文件系统的一个由 docker 管理的位置
+            - 可以在容器被删除后仍然保留数据
+            - 容器的默认文件系统是临时、可销毁的，删除容器 = 数据丢失
+            - 容器内路径 <-> 宿主机目录
+            - 数据库容器一定要用 volumn
+    - Image 镜像
+        - 不是压缩包，是只读的文件系统模板
+        - 包含内容
+            - 程序
+            - 依赖
+            - 运行环境
+            - 配置
+        - 是程序快照
+        - 容器从镜像中创建出来
+    - 实验
+        - 拉取并运行第一个容器
+            - docker run hello-world
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206165323329.png,500,120)
+            - docker 自动执行步骤
+                - 拉镜像
+                - 创建容器
+                - 运行程序
+                - 退出容器
+        - 运行一个长期存活的容器
+            - docker run -it ubuntu bash
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206170740991.png,400,80)
+                - 进入容器 shell
+            - 执行 ps aux
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206171016883.png,100,30)
+                - 仅仅只有两个进程，说明不是完整的 linux 系统
+            - exit 退出
+            - 容器的主进程就是 bash, bash 退出，容器就结束
+            - 容器的生命周期 = 主进程生命周期
+        - 观察容器生命周期
+            - created -> running -> stopped -> removed
+            - docker run -d nginx (后台启动 Nginx)
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206172849914.png,400,250)
+            - 查看容器
+                - docker ps
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206172939496.png,400, 50)
+            - 停止容器
+                - docker stop <container_id>
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206173108853.png,400,150)
+                - 容器仍然存在，只是 stopped
+            - 删除容器
+                - docker rm <container_id>
+        - 删除容器 vs 删除镜像
+            - 查看镜像
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206173610615.png,400,150)
+            - 删除镜像
+                - docker rmi nginx
+        - 容器数据丢失实验
+            - docker run -it ubuntu bash
+            - echo "hello" > test.txt
+            - exit
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206173816171.png,400,80)
+            - 重新进入 docker run -it ubuntu bash
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206173901539.png,400,80)
+                - 文件消失，因为文件系统是临时层，删除容器后，数据就没了
+        - 使用 volume 持久化数据
+            - docker run -it -v mydata:/data ubuntu bash
+            - mydata 是 docker 管理的数据卷，数据存在容器外，容器销毁也不影响
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206174435990.png,400,150)
+        - 容器间通信
+            - 创建网络 docker network create mynet
+            - 运行数据库 docker run -d --name db --network mynet nginx
+            - 运行另外一个容器 docker run -it --network mynet ubuntu bash
+            - 访问 nginx
+                - apt update
+                - apt install curl
+                - curl db
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206175747288.png,500,200)
+        - dockerfile 部署项目
+            - 创建项目
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206180229486.png,800,350)
+            - 写一个 Dockerfile
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206201253617.png,400,300)
+                - FROM 指定基础镜像，alpine=极小体积 Linux
+                - WORKDIR /app 相当于 cd /app，后续所有操作都在这个目录，容器内工作目录标准写法
+                - COPY 把当前目录复制进镜像，左边宿主机，右边容器
+                - 打包的是代码 + 文件
+                - EXPOSE 声明端口，但是不开放，真正开放端口在 docker run
+                - CMD 容器启动时执行的命令，容器只运行这个进程
+            - 构建镜像
+                - docker build -t my-app .
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206205413049.png,400,300)
+            - 查看镜像
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206205442327.png,400,80)
+            - 运行容器
+                - docker run -p 3000:3000 my-app
+            - 镜像分层
+                - Docker 每一行 Dockerfile 都生成一个 layer
+                - 如果 RUN npm install 代码没变，Docker 会复用缓存
+                - 优化写法
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206205757131.png,400,300)
+            - .dockerignore
+                - 可以不把无关文件复制进镜像
+            - 停止并删除容器
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206205935054.png,500,100)
+                - 容器是消耗品，应该删了重建，才是 Docker 的正确用法
+        - multi-stage build
+            - 目标
+                - 让最终镜像只包含运行所需内容
+                - 不带编译工具、源码、构建缓存、开发垃圾
+            - 定义
+                - 在一个 Dockerfile 里面使用多个 FROM 阶段
+                - 前面阶段用来构建，最后阶段只保留运行产物
+            - 拆解
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206210549327.png,500,400)
+                - builder 阶段，专门用来编译、构建、打包
+                - COPY --from 从 builder 阶段复制文件，只会复制构建产物
+                - runtime 阶段，最终镜像只包含 dist 运行文件 + node runtime
+    - 国内镜像配置
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206153717824.png,500,200)
+        
+{{< /mind >}}
+
+
+# 容器原理

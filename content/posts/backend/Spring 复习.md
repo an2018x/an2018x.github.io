@@ -1,0 +1,589 @@
+---
+title: "Sping 复习"
+date: '2026-02-20'
+draft: false
+description:  
+toc: true
+tags:
+  - Java
+  - Spring
+---
+
+# Spring Core
+
+{{< mind height="560px" >}}
+- Spring Core（IoC/DI/Bean 生命周期）
+    - 概述
+        - Spring 的核心是 IoC 容器，它负责把对象 Bean 的创建、依赖装配、生命周期管理、扩展点回调统一托管
+        - 写的业务对象只关心需要什么，不关心怎么 new、怎么组装、什么时候初始化/销毁
+        - SpringIOC = 依赖反转+容器管理对象生命周期
+        - DI = 容器把依赖注入进来（构造器/Setter/字段）
+        - Spring 强大来自于：大量可插拔的扩展点（PostProcessor、Aware、Event...）
+    - 核心概念与组件
+        - Bean、BeanDefinition、Container
+            - Bean：被 Spring 容器管理的对象实例
+            - BeanDefinition：Bean 的配方/说明书，包括
+                - beanClass 类
+                - scope (singleton/prototype/...)
+                - dependsOn、lazyInit、autowireCandidate...
+                - initMethods/destroyMethod
+            - 容器(Container)=读取 BeanDefinition->创建 Bean->注入依赖->生命周期回调
+        - BeanFactory vs ApplicationContext
+            - BeanFactory: 最底层的 IoC 容器接口，延迟实例化为主（按需 getBean 才撞见）
+            - ApplicationContext：更企业级，在 BeanFactory 上提供
+                - 资源加载
+                - 国际化
+                - 事件发布(ApplicationEventPublisher)
+                - AOP/事务等更完整的生态整合
+                - 通常启动时预实例化单例（非 lazy 的 singletone）
+    - 装配方式与注入策略
+        - 常见装配来源
+            - @Component + @ComponentScan：扫描注册
+            - @Configuration + @Bean：显式配置注册（配置复杂时使用）
+            - @Import：导入配置/Selector/Registrar（Boot 自动配置常用）
+            - XML（旧系统常用）
+        - 注入方式对比
+            - 构造器注入（推荐）
+                - 依赖不可变，对象更健壮
+                - 便于测试
+                - 早失败：缺依赖无法启动
+                - 循环依赖无法解决，早暴露设计问题
+            - Setter 注入
+                - 优点：可选依赖，可后置设置
+                - 缺点：对象可能处于半初始化状态
+            - 字段注入
+                - 难测试
+                - 破坏封装
+                - 易隐藏循环依赖与设计问题
+    - Bean 生命周期全链路
+        - 生命周期流程
+            - 解析配置 -> 注册 BeanDefinition
+            - 实例化：反射/构造器创建对象
+            - 属性填充：进行依赖注入
+            - Aware 回调
+                - BeanNameAware/BeanFactoryAware/ApplicationContextAware 等
+            - BeanPostProcessor#postProcessBeforeInitialization
+            - 初始化
+                - @PostConstructor
+                - InitializingBean#afterPropertiesSet
+                - 自定义 initMethod
+            - BeanPostProcessor#postProcessAfterInitialization
+                - AOP 代理通常在这生成（返回代理对象替代原对象）
+            - 容器运行期使用
+            - 容器关闭，销毁回调
+                - @PreDestroy
+                - DisposableBean#destroy
+                - 自定义 destroyMethod
+        - 超级扩展点
+            - BeanFactoryPostProcessor(更早、更底层)
+                - 作用对象：BeanDefinition
+                - 执行时机：Bean 实例化之前
+                - 典型用途：
+                    - 修改 BeanDefinition
+                    - 解析配置占位符
+            - BeanPostProcessor（最常用，最关键）
+                - 作用对象：Bean 实例
+                - 执行时机：初始化前后（before/after init）
+                - 典型用途
+                    - AOP 代理创建
+                    - 注解处理，例如 @Autowired 的处理
+    - 作用域与懒加载
+        - singleton vs prototype
+            - singleton：容器内单例，默认
+            - prototype：每次 getBean 创建一个新对象，容器只负责创建与注入，不负责销毁
+        - @Lazy
+            - 对 singleton：延迟到第一次使用才创建
+            - 大量 Bean 时可以缩短启动，但是首次请求会变慢
+    - 依赖解析与注入规则
+        - @Autowired 的匹配策略
+            - 先按类型找候选 Bean
+            - 如果有多个
+                - @Primary 优先
+                - @Qualifier("name") 指定
+                - 再不行：按照字段名/参数名尝试匹配
+            - 找不到：默认报错，可以用 required=false 或 Optional<T> 表示可选
+        - @Resource vs @Autowired
+            - @Resource：默认按 name，再按照 type
+            - @Autowired(spring)：默认按 type，可以配合 @Qualifier
+    - 循环依赖
+        - 什么是循环依赖
+            - A 依赖 B，B 依赖 A，常在字段/Setter 注入中
+        - Spring 为什么能解决部分循环依赖
+            - 依赖注入发生在实例化之后
+            - 容器允许暴露一个早期引用给对方注入，从而打破死循环
+        - 三级缓存
+            - 一级缓存：完整初始化好的单例 Bean
+            - 二级缓存：早期单例 Bean（半成本引用，可能是原对象，也可能是代理的早期引用）
+            - 三级缓存：ObjectFactory（工厂），用于需要时才创建早期引用，并且能让 AOP 有机会在早期阶段接入
+        - 典型场景
+            - A 依赖 B，B 依赖 A，流程用容器创建 A 为起点
+            - 触发创建 A
+                - 调用 getBean("A")
+                - 以及缓存没有 A，进入 createBean("A")
+            - 实例化 A（还没有注入依赖）
+                - Spring 先 instantiate （反射/构造器）得到 A 的空壳对象 A_raw
+                - 提前暴露
+                    - 在进入属性注入之前，Spring 会做循环依赖防护的准备
+                        - 向三级缓存放入 singletonFactories["A"] = ObjectFactory
+                        - 这个 ObjectFactory 的职责是：别人需要 A 的早期引用时，能返回 A_raw 或 A_early_Proxy
+                    - 此时，A 还没被放入二级缓存，只是放了一个可生产早期引用的工厂到三级缓存
+            - 给 A 做属性填充
+                - A 需要注入 B -> 容器去 getBean("B")
+            - 创建 B
+                - getBean("B") 缓存都没有 -> createBean("B")
+                - 实例化得到 B_raw
+                - 为 B 做提前暴露准备
+                - 开始 B 注入依赖
+            - B 注入 A（触发早期引用获取）
+                - B 需要 A -> 容器调用 getBean("A")
+                - A 仍然在创建中
+                - 一级缓存 singletonObjects：没有
+                - 但容器发现 A "currently in creation" 会拿走 getSingleton("A", allowEarlyReference=true) 的分支，尝试拿 earlyreference（给 AOP 留入口）
+                - 拿到 earlyRef 后，放入二级缓存，移除三级缓存，返回 earlyRef 给 B 注入
+            - A 完成初始化，进入一级缓存
+                - A 继续完成初始化回调链/BPP afterInitialization
+        - 为什么一定要三级
+            - 如果只有二级，无法优雅处理什么时候生成代理/早期暴露代理问题
+            - 三级缓存工厂，让 Spring 能够在真正需要注入时再决定暴露原对象还是代理对象
+        - 哪些循环依赖 Spring 解决不了
+            - 构造器注入的循环依赖：实例化阶段就互相需要对方，无法先构造空壳
+            - prototype 的循环依赖：每次创建都新对象，不走单例缓存那套
+    - @Configuration 为什么特殊（CGLIB 增强）
+        - 同一个 @Bean 方法调用两次
+            - 普通类写 @Bean 方法，直接调用方法会 new 两次
+            - 在 @Configuration 类中，Spring 会用 CGLIB 增强它
+                - @Bean 方法被拦截
+                - 如果容器里已有该 Bean，就返回容器里的单例，而不是再次执行方法创建
+{{< /mind >}}
+
+# Spring AOP
+
+{{< mind height="560px" >}}
+- Spring AOP
+    - AOP 在 Spring 里解决什么问题
+        - 目标：把横切关注点从业务逻辑中剥离出来，日志，鉴权，事务，监控，限流，缓存，重试等
+        - Spring AOP 的定位：基于运行时代理，拦截方法调用，织入增强逻辑
+        - Spring AOP 只能对方法执行做增强
+    - 核心术语与对象模型
+        - Join Point/Pointcut/Advice/Aspect
+            - JoinPoint：可被拦截的位置。Spring AOP 里基本就是方法执行点。
+            - Pointcut：切点表达式，决定哪些 JoinPoint 被拦截。常见：execution/@annotation/within/this/target 等
+            - Advice：增强逻辑，要做什么
+            - Aspect：切面=Pointcut+Advice 的集合
+        - Advisor
+            - Advisor：把 Pointcut 和 Advice 打包成一个可应用单元
+            - Spring 内部处理的是 Advisor 列表，而不是直接处理注解切面
+            - 事务就是一个 Advisor
+            - @Aspect 最终会被解析成多个 Advisor，由容器在创建 Bean 时用这些 Advisor 决定是否生成代理以及代理链顺序
+    - 代理机制：JDK vs CGLIB
+        - JDK 动态代理
+            - 只能代理接口
+            - 通过 InvocationHandler 拦截接口方法调用
+            - 优点：标准 JDK 能力、生成快、类结构简单
+            - 缺点：无接口时不可用，对直接调用实现类方法这类场景不覆盖
+        - CGLIB 代理
+            - 通过生成目标类的子类并覆写方法拦截
+            - 适用于无接口的类
+            - final 类无法被继承 -> 不能代理
+            - final 方法、构造器逻辑、私有方法不能被增强
+        - Spring 如何选择代理方式
+            - 有接口优先 JDK，没接口用 CGLIB
+            - 强制开启 CGLIB @EnableAspectJAutoProxy(proxyTargetClass= true)/spring.aop.proxy-target-class=true
+    - Spring AOP 的工作流程
+        - Auto Proxy Creator
+            - AnnotationAwareAspectJAutoProxyCreator
+            - 本质是一个 BeanPostProcessor
+            - 介入时机：在 PostProcessAfterInitialization 决定是否为 Bean 创建代理
+        - 简化流程
+            - 容器启动：扫描到 @Aspect，解析成多个 Advisor
+            - 创建普通 BeanX 时
+                - AutoProxyCreator 收集可应用到 X 的 Advisor
+                - 如果存在匹配
+                    - 创建代理对象 Proxy(X)
+                    - 将 Advisor 转成 MethodInterceptor 链
+                    - 返回 Proxy 替换原对象放入单例池
+            - 调用 X.method() 时
+                - 进入代理 -> 执行 interceptor chain -> 最后调用目标方法
+    - 切点表达式
+        - execution
+            - execution(访问修饰符 返回类型 包名.类名.方法名(参数))
+            - execution(* com.demo.service..*(..))：service 包以及子包所有方法
+            - execution(* *..*Service.*(..))：所有以 Service 结尾类的方法
+            - execution(public * *(..))：所有 public 方法
+        - 注解切点（工程最常见）
+            - @annotation(com.demo.Loggable)：方法上标注注解才拦截
+            - @within(...)：类上注解
+            - @target(...)：目标对象类型带注解（与代理类型可能有差异
+        - within/this/target
+            - within(TypePattern)：按声明类型匹配
+            - this(Type)：按代理对象类型匹配
+            - target(Type)：按目标对象类型匹配
+    - Advice 类型与执行顺序
+        - 五种 Advice
+            - @Before：目标方法前
+            - @After：finally（无论是否异常）
+            - @AfterReturning：正常返回后
+            - @AfterThrowing：抛异常后
+            - @Around：最强，包裹整个调用
+        - 一个调用的典型顺序
+            - Around（进入）
+                - Before
+                    - method 执行
+                - AfterReturning/AfterThrowing (二选一)
+                - After
+            - Around 退出
+        - 多个切面怎么排序
+            - @Order 数字越小优先级越高（越外层，越先进入 Around）
+            - Ordered 接口同理
+            - 没有 order：可能按注册顺序
+            - 多个 Around 像洋葱圈，order 小的在最外层
+        - 代理链/拦截器链
+            - Spring 会把 Advisor 适配成一组 MethodInterceptor，形成链
+            - MethodInvocation.proceed() 是关键递归点
+            - 每个 interceptor 做一段逻辑，然后调用 process() 交给下一个
+            - 最后一个调用 invokeJoinPoint() 执行目标方法
+    - AOP 经典失效点
+        - 自调用失效（No proxy，no AOP）
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/21/20260221112533671.png,183,88)
+            - 调用 m1() 内部 m2() 是 this.m2()，不会经过代理 -> @Transactional/@Around 不生效
+            - 解决策略
+                - 拆分 Bean：把 m2 放到另一个 Spring Bean，通过注入调用
+                - 通过 AopContext.currentProxy()：获取当前代理再调用，需要 exposeProxy = true，侵入性强
+                - 注入自身代理
+        - 非 public 方法
+        - 直接 new 出来的对象没有 AOP
+{{< /mind >}}
+
+# Spring Transaction
+
+{{< mind height="560px" >}}
+- Spring Transaction
+    - 定义：Spring 事务本质是 AOP 拦截方法调用，在方法执行前后通过 TransactionManager 控制开启/加入事务、提交/回滚、资源绑定/解绑
+    - 事务体系的关键对象
+        - PlatformTransactionManager：事务管理器抽象
+            - DataSourceTransactionManager
+            - JpaTransactionManager
+        - TransactionDefinition：事务定义（传播、隔离、超时、只读）
+        - TransactionStatus：事务状态（是否新建、是否完成、是否回滚标记等）
+        - TransactionSynchronzationManager：线程级资源管理
+        - Spring 事务是线程绑定资源，所以跨线程（异步）默认不会继承事务上下文
+    - @Transactional 做了什么
+        - 发生在 AOP 的哪个位置
+            - @Transactional 会被解析为一个 Advisor
+            - 方法调用进入代理后由 TransactionInterceptor 拦截
+            - 会读取事务属性，决定
+                - 加入已有事务还是新开事务
+                - 方法结束时 commit 还是 rollback
+        - 时序
+            - 进入代理方法
+            - TransactionInterceptor 读取事务属性
+            - getTransaction()：根据传播行为决定新开/挂起/加入
+            - 执行目标方法
+            - 正常返回 -> commit()
+            - 抛异常 -> 根据回滚规则 rollback() 或者 commit()
+    - 传播行为
+        - 方法 A 调用方法 B 时，事务边界怎么处理
+        - REQUIRED 默认
+            - 规则：有事务就加入，没有就新建
+            - 典型：大多数业务方法
+        - REQUIRES_NEW
+            - 规则：总是新建事务，若外部已有事务，则挂起外部事务
+            - 典型：记录操作日志/发送消息/保存审计记录
+        - NESTED
+            - 规则：在外层事务存在时，使用 Savepoint 实现部分回滚
+            - 外层回滚：内层也回滚
+            - 内层回滚：回到保存点，外层可继续
+        - SUPPORTS：有事务就加入，没有就非事务执行
+        - NOT_SUPPORTED：总是非事务执行；若有事务则挂起
+        - NEVER：如果存在事务则抛异常
+        - MANDATORY：必须在事务中运行，否则抛异常
+    - 隔离级别
+        - Read Uncommitted：可能脏读
+        - Read Committed：防脏读
+        - Repeatable Read：防不可重复读
+        - Serializable：最强，吞吐最差
+    - 回滚规则
+        - 默认规则
+            - 默认只对 RuntimeException 和 Error 回滚
+            - 受检异常默认不回滚
+        - 配置回滚规则
+            - @Transactional(rollbackFor=Exception.class)：受检异常也回滚
+            - noRollbackFor = XxxException.class：指定异常不回滚
+    - 事务提交/回滚的关键机制：线程绑定资源
+        - TransactionSynchronizedManager (TSM)
+            - 开启事务时
+                - 从 DataSource 取 Connection
+                - Connection.setAutoCommit(false)
+                - 把 Connection 绑定到当前线程(TSM)
+            - 同一线程后续 DAO 操作会复用这个 Connection
+            - 提交/回滚后
+                - commit/rollback
+                - 解绑资源，释放连接，恢复 autoCommit 等
+{{< /mind >}}
+
+# Spring MVC
+
+{{< mind height="560px" >}}
+- SpringMVC(请求链路、参数绑定、异常处理)
+    - 总控思维模型
+        - Spring MVC 是一个基于 DispatcherServlet 的前端控制器框架，它把一次 HTTP 请求拆分
+        - 映射（找谁处理）-> 适配（怎么调用）-> 参数解析（怎么组装入参）-> 执行（调用 controller）-> 返回值处理（怎么写响应）-> 异常处理（失败怎么兜底）
+        - 核心入口是 DispatcherServlet#doDispatch：通过 HandlerMapping 找到 handler，再通过 HandlerAdapter 执行；执行前后分别由 ArgumentResolver 和 ReturnValueHandler 处理出参入参，异常交给 HandlerExceptionResolver 链
+    - 核心组件和职责
+        - DispatcherServlet（总入口）
+            - 接受请求
+            - 找 Handler（Controller 方法）
+            - 调 HandlerAdapter 执行
+            - 走视图解析/写回响应
+            - 捕获异常并交给异常解析器链
+        - HandlerMapping（找谁处理）
+            - RequestMappingHandlerMapping：处理 @RequestMapping/@GetMapping，它会维护映射表：URL+HTTP Method+consumers/produces+headers+params->HandlerMethod
+        - HandlerAdapter（怎么调用 Handler）
+            - RequestMappingHandlerAdapter：负责调用 @RequestMapping 方法
+            - 使用 HandlerMethodArgumentResolver 解析方法入参
+            - 使用 HandlerMethodReturnValueHandler 处理返回值
+        - ViewResolver（视图解析，前后端分离可选）
+            - 返回 String 视图名才需要（JSP/Thymeleaf）
+            - REST 场景通常直接 @ResponseBody/@RestController，通过 HttpMessageConverter 写响应
+        - HttpMessageConverter（对象<->报文）
+            - @RequestBody：把 JSON/XML/表单正文 -> Java 对象
+            - @ResponseBody：把 Java 对象 -> JSON/XML
+            - 常见 Jackson JSON converter
+    - 一次请求到完整链路
+        - 按 DispatcherServlet#doDispatch 的逻辑
+        - 接受请求（Servlet 容器调用 DiapatcherServlet#service）
+        - 拿 Handler：遍历 HandlerMapping，找到匹配的 Handler，通常是 HandlerMethod
+        - 拿 HandlerAdapter：选择能执行该 Handler 的适配器，通常是 RequestMappingHandlerAdapter
+        - 执行前置
+            - 绑定/转换：WebDataBinder（类型转换、校验）
+            - 参数解析：ArgumentResolver
+            - 拦截器 preHandler（HandlerInterceptor）
+        - 调用 Controller 方法
+        - 处理返回值
+            - REST：ReturnValueHandler -> HttpMessageConverter 写回 JSON
+            - 视图：返回 ModelAndView -> ViewResolver 渲染
+        - 执行后置：拦截器 postHandle/afterCompletion
+        - 异常处理：catch 异常 -> HandlerExceptionResolver 链处理->统一响应
+    - 请求映射匹配细节
+        - @RequestMapping 能参与匹配的额求
+            - path(含 Ant 风格、PathVariable)
+            - HTTP method (GET/POST/PUT/DELETE)
+            - params（必须带参数/参数值）
+            - headers （必须带 header）
+            - consumes（请求 content-type）
+            - produces（响应 Accept/Content-Type）
+    - 参数绑定
+        - 请求行/URL/Query/Form 类
+            - @PathVariable：从 URL 路径中取值
+            - @RequestParam：从 queryString 或表单中取值
+            - @RequestHeader：从 header 取值
+            - @CookieValue：从 cookie 取值
+            - HttpServletRequest/Response、Principal 等：直接注入
+            - 默认绑定
+                - 对简单类型：往往当做 @RequestParam
+                - 对复杂类型：走 @ModelAttribute 逻辑，把 query/form 参数按字段名绑定进去
+        - @RequestBody （正文序列化）
+            - 请求体 (JSON) 通过 HttpMessageConverter 反序列化成对象
+            - 常见错误
+                - Content-Type 不是 application/json
+                - 字段类型不匹配导致 HtppMessageNotReadableException
+                - 缺少无餐构造器/反序列化失败
+    - 类型转换与校验
+        - 类型转换链路
+            - ConversionService：负责类型转换
+            - Converter/Formatter：自定义转换规则
+        - 校验 JSR-303
+            - @Valid/@Validated
+            - 常见异常
+                - MethodArgumentNotValidException(@RequestBody + @Valid)
+                - BindException(@ModelAttribute 绑定错误)
+            - 配合 @ControllerAdvice 做统一错误响应
+    - 返回值处理
+        - 常见返回类型
+            - String：视图名
+            - ModelAndView：显式指定视图和模型
+            - ResponseEntity<T>：最推荐的 REST 返回方式之一，可控状态码/headers/body
+            - T + @ResponseBody：直接序列化成 JSON
+        - 返回值处理关键点
+            - @RestController = @Controller + @ResponseBody
+            - 选择哪个 converter 取决于
+                - 返回对象类型
+                - Accept 头
+                - produces 配置
+    - 异常处理体系
+        - HandlerExceptionResolver 链
+            - 按顺序尝试解析异常
+                - ExecptionHandlerExceptionResolver：处理 @ExceptionHandler/@ControllerAdvice
+                - ResponseStatusExceptionResolver：处理 @ResponseStatus
+                - DefaultHandlerExceptionResolver：处理框架内置异常
+        - @ControllerAdvice 正确用法
+            - 全局异常 -> 统一 error code + message + traceId
+            - 参数校验异常 -> 返回字段级错误列表
+            - 业务异常 -> 返回业务错误码
+            - 兜底异常 -> 返回 500 + 记录日志
+    - Filter vs Interceptor
+        - Filter（Servlet 规范）
+            - 发生在 Servlet 容器层面
+            - 能包裹整个请求响应链
+            - 用于：编码/CORS/鉴权/请求体包装/日志 traceId 注入
+        - Interceptor（Spring MVC）
+            - 发生在 Handler 执行前后，更靠近 Controller
+            - 包含三段内容
+                - preHandler（调用前）
+                - postHandler（方法返回后，视图渲染前）
+                - afterCompletion（整个请求完成后，用于清理资源/记录异常）
+            - Filter 是容器级，Interceptor 是框架级，能拿到 HandlerMethod，适合做与业务 Handler 相关的逻辑
+{{< /mind >}}
+
+# Spring boot （自动配置、启动过程、外部化配置）
+
+{{< mind height="560px" >}}
+- Spring boot
+    - 解决了什么问题
+        - Boot 的核心价值是：约定优于配置+自动配置+Starter依赖聚合
+        - Starter：把一组常用的依赖按照场景打包
+        - Auto-Configuration：根据 classpath、bean、配置项等条件自动创建 Bean
+        - Externalized Configuration：同一的多来源配置体系
+        - Production-ready：Actuator、metrics、health、logging 等
+    - @SpringBootApplication 注解做了什么
+        - @SpringBootConfiguration 本质就是 @Configuration
+        - @ComponentScan 默认扫描启动类所在包及其子包
+        - @EnableAutoConfiguration：开启自动配置导入
+    - 自动配置原理
+        - 概述
+            - Boot 会在启动阶段把候选自动配置类加载进容器，但是不是无脑全开，而是通过大量的 @Conditional 做条件装配
+                - 类路径上有没有哪个类
+                - 容器里有没有某个 Bean
+                - 配置属性是否存在且满足
+                - 是否 Web 环境、是否 Servlet/Reactive
+        - 自动配置类从哪里来
+            - 自动配置类的来源本质是声明式列表，Boot 在启动时读取他们并导入
+            - Boot 在启动阶段通过自动配置导入机制读取 classpath 上各个 starter 提供的自动配置声明，然后把这些自动配置类作为配置类导入容器；最终每个自动配置类再通过 @Conditional 决定是否生效
+        - 条件注解
+            - @ConditionalOnClass(A.class)：classpath 有 A 才启动
+            - @ConditionalOnMissingBean(X.class)：容器里没有 X 才创建默认实现
+            - @ConditionalOnBean(Y.class)：必须已存在 Y 才启用
+            - @ConditionalOnProperty(prefix="a", name="b)
+            - @ConditionalOnWebApplication
+        - 自动配置覆盖/接管机制
+            - Boot 默认提供一个 Bean，例如某个 DataSource
+            - 只要自己定义同类型 Bean，通常由于自动配置里用了 @ConditionalOnMissingBean，默认不会创建
+    - 启动过程
+        - 启动过程的分段
+            - 构建 SpringApplication
+                - 推断应用类型：Servlet/Reactive/None
+                - 加载初始化器/监听器（Initializers/Listeners）
+            - 准备 Environment
+                - 读取配置源：application.yml、环境变量、命令行参数、profile 等
+                - 绑定 spring.* 相关关键属性（例如 banner、log、profiles）
+            - 创建 ApplicationContext
+                - Servlet Web：AnnotationConfigStyleWebServletApplicationContext
+                - Reactive Web：对于 reactive context
+            - 准备 Context
+                - 注册启动类
+                - 执行 ApplicationContextInitializer
+            - 刷新 Context
+                - 进入 Spring Core  经典流程
+                - 自动配置也在这一阶段被导入并参与 Bean 创建
+            - 启动 WebServer
+            - 发布 ApplicationReadyEvent
+                - 应用可以对外提供服务
+    - 外部化配置
+        - 配置来源
+            - application.properties/application.yml
+            - profile 文件：application-dev.yml
+            - 环境变量 ENV
+            - JVM 系统属性（-Dkey=value）
+            - 命令行参数(--key=value)
+        - 优先级
+            - 越靠近运行时/越具体的优先级越高
+            - 命令行/系统属性/环境变量高于配置文件
+            - profile 配置文件会在激活 profile 后叠加
+        - Boot 会把多来源配置汇总成 Environment 的 PropertySources，按优先级从高到低解析；同名 key 取最高优先级来源的值
+        - Profile
+            - 激活方式
+                - spring.profiles.active=dev
+                - --spring.profiles.active=dev
+                - 环境变量
+            - 生效规则
+                - application.yml 的默认块+application-dev.yml 覆盖叠加
+    - 配置绑定 @ConfigurationProperties
+        - 对比 @Value
+            - @Value：零散，难管理，不支持复杂层级/校验/IDE提示弱
+            - @ConfigurationProperties：可以把一个前缀下的配置绑定到一个对象，支持嵌套、集合、校验
+{{< /mind >}}
+
+# 数据访问整合
+
+{{< mind height="560px" >}}
+- 数据访问整合
+    - 通用底座
+        - DataSource：连接的来源
+            - DataSource 是连接池的抽象
+            - Spring 从 DataSource 拿 Connection，但事务期间会把 Connection 绑定到线程，避免每次 DAO 都新拿连接
+        - 事务贯穿的关键：TransactionSynchronizationManager(TSM)
+            - 开启事务时：取连接->setAutoCommit(false)->bind 到线程
+            - DAO 执行时：通过 Spring 提供的工具从线程拿到同一连接
+            - 提交/回滚后：解绑并释放连接
+        - 同一异常体系：DataAccessException
+            - Spring 会把各类底层异常统一成 DataAccessException 体系
+            - 屏蔽不同驱动/框架的异常差异
+            - 让事务默认回滚更符合直觉
+    - JDBC: JdbcTemplate
+        - JdbcTemplate 的价值
+            - 封装样板代码：拿连接、创建 statement、执行、关闭资源、异常翻译
+            - 与 Spring 事务自然融合：事务内复用同一连接
+    - MyBatis 与 Spring 集成
+        - MyBatis 的核心对象
+            - SqlSessionFactory：会话工厂
+            - SqlSession：一次会话（执行 SQL 的入口）
+            - Mapper：接口代理，最终通过 SqlSession 执行
+            - Executor：执行器（缓存、批处理等）
+        - Spring-MyBatis 如何整合
+            - Spring 提供 SqlSessionTemplate
+            - 在事务中，通过 Spring 的事务同步机制把 SqlSession 与当前事务绑定
+            - 事务提交/回滚时，SqlSession 会随着事务一起 commit/rollback
+        - Mapper 扫描与处理
+            - @MapperScan 会注册 Mapper 接口代理 Bean
+            - 调用 Mapper 方法 -> 代理 -> SqlSessionTemplate -> 执行 SQL
+{{< /mind >}}
+
+# Spring Security
+
+{{< mind height="560px" >}}
+- Spring Security
+    - 核心概念
+        - SecurityContext：安全上下文，存当前请求/线程的认证信息
+        - Authentication：一次认证的结果对象
+            - principle：用户主体（UserDetail 或 userId）
+            - credentials：凭证（密码/token）
+            - authorities：权限集合（角色/权限点）
+            - authenticated：是否已认证
+        - SecurityContextHolder：存取 SecurityContext，默认 ThreadLocal
+        - 认证成功后，SecurityContextHolder 里面会有 Authentication，后续授权判断都基于它
+        - UserDetails 体系
+            - UserDetails：用户信息抽象（用户名、密码、权限、是否过期）
+            - UserDetailsService：按用户名加载用户
+            - PasswordEncoder：密码编码/校验
+    - 过滤器链：SecurityFilterChain
+        - 请求进入一堆 SecurityFilters 才会进入到 SpringMVC
+    - 认证机制
+        - AuthenticationManager/ProviderManager
+            - AuthenticationManager：认证入口
+            - 常用实现：ProviderManager 内部持有多个 AuthenticationProvider
+            - AuthenticationProvider：一种认证方式的具体实现
+        - 认证流程
+            - 过滤器拿到凭证，构造一个未认证的 Authentication
+            - 交给 AuthenticationManager
+            - ProviderManager 遍历 Providers，找到 supports 的 provider
+            - provider 校验成功 -> 返回已认证的 Authentication
+            - 写入 SecurityContexHolder
+            - 后续授权阶段使用
+    - 授权机制
+        - authorities/roles 的关系
+            - Spring Security 里面权限统一叫做 GrantedAuthority
+            - 角色以 ROLE_ 前缀表示
+                - hasRole("ADMIN") 等价于检查 authority ROLE_ADMIN
+                - hasAuthority("xxx:read") 检查精确权限点
+        - URL 级授权
+{{< /mind >}}

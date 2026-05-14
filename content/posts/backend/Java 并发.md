@@ -1,0 +1,579 @@
+---
+title: "Java 并发复习"
+date: '2026-02-20'
+draft: false
+description:  
+toc: true
+tags:
+  - Java
+  - 并发
+---
+
+# 并发基础与 JMM 入门
+
+{{< mind height="560px" >}}
+- 并发基础与 JMM 入门
+    - 并发三大问题
+        - 原子性
+            - 定义：一个操作要么全部完成，要么完全不完成，中间过程对其他线程不可见
+            - 典型反例：i++ 不是原子操作
+        - 可见性
+            - 定义：一个线程对共享变量的修改，能否及时被其他线程看到
+            - 根因
+                - CPU 缓存(L1/L2/L3) 与编译器/CPU 重排序
+                - 线程可能一直读到自己缓存中的旧值
+            - 解决方法
+                - volatile: 保证写入对其他线程可见
+                - synchronized/Lock：解锁前的写对之后加锁的读可见
+                - final：初始化安全
+        - 有序性
+            - 定义：代码执行顺序是否一定和你写的一样
+            - 根因
+                - 编译器优化：指令重排(JIT)
+                - CPU 乱序执行
+    - JMM(Java 内存模型)
+        - JMM 解决的问题
+            - JMM 的目标不是描述硬件，而是给 Java 程序提供一个跨平台一致的并发可见性与有序性规范
+            - 规范：
+                - 写的代码跑在不同 CPU 上，缓存协议，重排序规则不同
+                - JMM 通过 happens-before 规定：只要满足 HB，结果必须可见且有序；不满足 HB，结果运行不可预测
+                - HB = Java 并发正确性的法律条文
+        - happends-before (HB)
+            - HB 是可见性 + 有序性的保证关系
+            - A happens-before B
+                - A 的结果对 B 可见
+                - A 的执行顺序对 B 先行约束
+            - 没有 HB，就不保证可见/有序
+        - happends-before 规则
+            - 程序次序规则
+                - 同一个线程能，按程序顺序，前面的操作 HB 后面的操作
+            - 监视器锁规则
+                - 对同一把锁，unlock HB 之后对同一锁的 lock
+            - volatile 变量规则
+                - 对同一 volatile 变量，对 volatile 的写 HB 后续对该 volatile 的读
+            - 线程启动规则
+                - Thread.start() HB 该线程内的所有操作
+            - 线程终止规则
+                - 线程内所有操作 HB 其他线程成功从 Thread.join() 返回
+            - 中断规则
+                - 对线程调用 interrupt() HB 被中断线程检测到中断
+            - 传递性
+                - 若 A HB B，B HB C，则 A HB C
+    - volatile
+        - volatile 保证什么
+            - 可见性：写入会刷新到主内存，读取会从主内存获取
+            - 有序性：禁止 volatile 写/读周围的特定重排序（内存屏障）
+            - 建立 happens-before：写 HB 读
+        - volatile 不保证
+            - 不保证复合操作原子性
+            - 不保证所有代码不重拍：只约束与 volatile 相关的重排边界
+        - volatile 的经典使用场景
+            - 状态标志：停止线程 volatile boolean stop
+            - 单例的安全发布
+            - 读多写少的配置刷新
+    - DLC（双重检查锁）为什么必须加 volatile
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220165657231.png,292,241)
+        - new Singleton() 在底层上被视为三步：
+            - 分配内存
+            - 调用构造器初始化对象
+            - 把引用赋给 instance
+        - 如果发生重排序，可能变为
+            - 分配内存
+            - 赋引用给 instance
+            - 初始化对象
+        - 另一个线程看到 instance != null 就返回，但是拿到半初始化对象
+        - volatile 禁止这种关键重排并建立 HB，确保安全发布
+    - final 的初始化安全
+        - final 字段在构造完成后有更强的可见性保障
+{{< /mind >}}
+
+
+# 线程模型与线程安全
+
+{{< mind height="560px" >}}
+- 线程模型与线程安全
+    - Java 线程模型：Thread/Runnable/Callable/Future
+        - 四者关系与使用场景
+            - Thread: 线程载体+执行单元
+            - Runnable：无返回值、不能抛受检异常
+            - Callable<V>: 有返回值，可抛异常（配合 Future）
+            - Future<V>：异步结果句柄（拿结果、取消、超时）
+            - Thread 是执行容器，Runnable/Callable 是任务；Callable 比 Runnable 多返回值与异常；Future 是任务的控制面板
+        - Future API
+            - get()：阻塞拿结果
+            - get(timeout, unit)：超时等待
+            - cancel(true/false)：尝试取消
+                - true：会向线程发 interrupt
+                - false：不 interrupt，只是标记取消
+            - isDone()/isCancelled()
+    - 线程生命周期与状态
+        - Java Thread.State
+            - NEW：未 start
+            - RUNNABLE：可运行（包括运行中+就绪）
+            - BLOCKED：等待获取 monitor 锁（synchronized 竞争）
+            - WAITING：无限期等待（Object.wait()/Thread.join()/LockSupport.park()）
+            - TIME_WAITED：限时等待（sleep()/wait(timeout)/join(timeout)/parkNanos）
+            - TERMINATED：结束
+        - BLOCKED 和 WAITING 的区别
+            - BLOCKED：卡在 synchronized，等锁
+            - WAITING：已经拿到锁，主动等待某个条件
+        - 线程切换成本
+            - 上下文切换：保存恢复寄存器、栈、调度
+            - CPU cache 命中下降
+            - 线程越多，竞争越激烈，吞吐反而下降
+    - 中断机制：interrupt 不是杀进程
+        - 三个 API 的语义
+            - thread.interrupt()：给线程设置中断标志位
+            - thread.isInterrupted()：读取中断标志位（不清除）
+            - Thread.interrupted()：读取当前线程的中断标志位，并且清除
+        - 那些操作对中断敏感
+            - 会抛 InterruptedException （清除中断标志）
+                - Object.wait()
+                - Thread.sleep()
+                - Thread.join()
+                - BlockingQueue.put/take 等可中断阻塞
+            - Lock 的可中断
+                - lockInterruptibly()：阻塞等锁时可响应 interrupt
+                - lock()：等锁期间不相应 interrupt
+        - 优雅停线程
+            - 循环里检查中断标志
+            - 捕获 InterruptedException 后要么退出，要么重新设置中断标志位再退出/上抛
+                - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220171246171.png,387,319)
+    - 线程安全方法论
+        - 不变性
+            - 对象状态创建后不再改变
+            - 示例： String、Interger
+            - 业务做法：配置对象、DTO 用不可变 + 构造完成后安全发布
+            - 优点：天然线程安全、无锁高性能
+            - 缺点：需要复制，内存开销上升
+        - 线程封闭
+            - 数据只在一个线程访问
+            - 典型：方法栈内局部变量、线程私有变量
+            - 示例：每个线程一个 SimpleDateFormat
+        - 同步互斥
+            - 通过临界区序列化访问共享状态
+        - 无锁/低锁
+            - 原子类/CAS、分段化
+    - Synchronized
+        - Synchronized 锁的是什么
+            - synchronized(obj)：锁 obj 的 monitor
+            - synchronized 实例方法：锁 this
+            - static synchronized: 锁 Class 对象（xxx.class）
+            - 锁的是对象的 monitor，不是代码块本身
+        - synchornized 三大语义
+            - 互斥：同一时刻只有一个线程进入临界区
+            - 可见性：释放锁前的写，对之后获取同一锁的线程可见
+            - 可重入：同一线程可重复获得同一把锁
+        - 锁升级
+            - 目标：在无竞争/低竞争时，让 synchronzied 尽可能便宜；在竞争激烈时保证正确性与吞吐。
+            - 策略
+                - 无竞争：尽量不做原子指令/不进内核
+                - 少量竞争：用 CAS + 自旋解决（避免线程阻塞/唤醒成本）
+                - 激烈竞争：进入 monitor，阻塞/唤醒
+            - 对象头与 Mark Word：锁状态存在哪里
+                - 每个 Java 对象在 HotSpot 里都有对象头，核心是 Mark Word，用于存：
+                    - 哈希码
+                    - GC 分代/标记信息
+                    - 锁相关信息（锁标志位、线程 ID、指针等）
+                - synchronized 不单独存一个锁对象结构，优先把锁状态编码在对象头里；必要时才膨胀到 monitor(重量级)。
+            - 四种主要锁形态
+                - 无锁
+                    - 对象头处于可锁定但未加锁状态
+                    - 第一次进入 synchronized，会走向偏向/轻量的获取逻辑
+                - 偏向锁
+                    - 适用场景：几乎总是同一个线程反复进入同一把锁
+                    - 核心思想：预期每次都 CAS/自旋，不如直接偏向某个线程
+                    - MarkWord 记录偏向的线程 id
+                    - 同一线程再次进入，只需要快速检查是不是我，几乎零成本
+                    - 偏向锁的获取：
+                        - 第一次进入：尝试把对象头偏向当前线程（轻量 CAS 一次）
+                        - 再次进入：只做线程 ID 校验
+                    - 偏向锁的撤销
+                        - 另一个线程也来竞争这把锁
+                        - 偏向线程已经结束，且有其他线程来加锁
+                        - JVM 需要批量撤销/重偏向
+                - 轻量级锁
+                    - 适用场景：有短暂竞争，但竞争不激烈；临界区很短
+                    - 核心机制
+                        - 线程在栈上创建一个 Lock Record（锁记录）
+                        - 把对象头的 Mark Word 复制到 Lock Record（保存旧值）
+                        - 用 CAS 尝试把对象头替换为指向 Lock Record 的指针（同时设置轻量锁标志）
+                            - CAS 成功：拿到轻量锁
+                            - CAS 失败：说明有竞争 -> 可能自旋等待 -> 若仍失败/竞争升高 -> 膨胀为重量级锁
+                - 重量级锁
+                    - 使用场景：竞争激烈，自旋会浪费 CPU，或者线程阻塞更划算
+                    - 核心机制
+                        - 对象关联一个 ObjectMonitor
+                        - 竞争失败的线程进入 EntryList/WaitSet（不同状态的队列）
+                        - 由 OS 互斥/park-unpark 等机制进行阻塞与唤醒
+                    - 特点
+                        - 成本高：涉及线程挂起/唤醒、上下文切换
+                        - 高竞争下更稳定：避免大量线程空转自旋把 CPU 烧穿
+    - wait/notify：线程协作的基础
+        - wait/notify 使用规则
+            - 必须在 synchronized 内调用，否则抛 IllegalMonitorStateException
+            - wait() 会
+                - 释放当前 monitor
+                - 把线程放入该 monitor 的等待队列
+                - 被唤醒后需要重新竞争锁
+            - 永远用 while 检查条件，不用 if
+                - 防止虚假唤醒
+                - 防止被唤醒时条件已被其他线程改变
+            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220192817406.png,154,106)
+        - notify vs notifyAll
+            - notify(): 随机唤醒一个等待线程
+            - notifyAll(): 唤醒全部等待线程，让它们竞争并再次检查条件
+            - 多数条件 prefer notifyAll，除非非常确定只存在一种等待条件且不会误唤醒 
+        - wait/notify vs sleep
+            - sleep()：不释放锁，属于 Thread 方法，主要用于延时
+            - wait()：释放锁，属于 Object 方法；用于条件等待
+    - Condition 与 LockSupport：更现代的协作手段
+        - Condition 相对 wait/notify 的优势
+            - 可拥有多个条件队列
+            - API 更清晰 await/signal/singalAll
+            - 与 ReentrantLock 组合可实现更复杂的并发控制
+        - LockSupport
+            - park() 阻塞当前线程
+            - unpark(thread)：给某个线程发许可，让它从 park 返回
+            - unpark() 可以先于 park 发生，比 wait/notify 更灵活
+    - 可中断的生产者-消费者
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220194750850.png,375,460)
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220194816875.png,451,697)
+    - Condition 版本
+        - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220195331750.png,365,599)
+{{< /mind >}}
+
+# JUC 核心与 AQS
+
+{{< mind height="560px" >}}
+- JUC 核心与 AQS
+    - CAS 与原子类
+        - CAS 是什么
+            - CAS 本质是一个 CPU 原子指令
+            - 比较内存位置的值是否等于 expected
+            - 是则写入 update
+            - 返回成功/失败
+        - CAS 解决了什么
+            - 解决复合更新在并发下的原子性
+            - 避免锁的阻塞/唤醒，吞吐通常更高
+        - CAS 的代价
+            - 自旋重试：竞争大时空转，CPU 飙高
+            - 可能导致某些线程长期失败
+        - AtomicInteger/AtomicLong 的工作方式
+            - AtomicInteger.incrementAndGet()，本质是
+                - 循环：读旧值 -> 计算新值 -> CAS 尝试更新 -> 失败重试
+            - 原子类=CAS 自旋 + volatile 语义，失败重试直到成功
+        - ABA 问题
+            - 问题描述
+                - 线程 T1 看到值为 A，准备 CAS 成 B；期间 T2 把 A 改成 C 又改为 A。
+                - T1 CAS 会成功，它不知道中间发生过变化
+            - ABA 什么时候有害
+                - 关心的是值有没与变过，而不是当前值是不是 A
+            - 解决方案
+                - 版本号：AtomicStampedReference（值+stamp）
+                - 也有 AtomicMarkableReference（值+boolean 标记）
+            - LongAddr 为什么比 AtomicLong 快
+                - AtomicLong：所有线程竞争同一个 value，CAS 冲突高
+                - LongAdder：把热点拆分成多个 Cell，线程尽量更新自己的 Cell，最后 sum 时聚合
+    - AQS：JUC 的核心骨架
+        - AQS 最重要的三件东西
+            - state (volatile int)：同步状态
+            - CLH 变体 FIFO 队列：等待线程排队
+            - acquire/release 模板方法：统一的获取/释放流程
+            - AQS 用 state 表示资源，用队列管理竞争失败的线程，用 acquire/release 模板屏蔽排队、阻塞与唤醒细节，同步器只要实现 tryAquire/tryRelease
+        - AQS 的两种模式
+            - 独占：一次只允许一个线程获取
+                - ReentrantLock、ReentrantReadWriteLock 的写锁
+            - 共享：运行多个线程同时获取
+                - Semaphore、CountDownLatch、读锁
+        - acquire/release
+            - acquire
+                - tryAcquire() 尝试直接获取资源
+                - 失败：把当前线程包装成 Node 入队
+                - 自旋检查是否轮到自己（前驱是 head 且再 tryAquire）
+                - 若仍然失败，park 阻塞
+                - 被唤醒后继续循环
+                - 要点
+                    - 不是一直自旋：会 park
+                    - 唤醒不是广播，通常唤醒一个合适的后继节点，避免惊群
+            - release
+                - tryRelease() 修改 state（释放资源）
+                - 如果释放后资源可用，唤醒队列中的后继节点
+        - 为什么 AQS 用队列
+            - 避免一堆线程同时自旋抢锁造成 CPU 爆炸
+            - FIFO 队列提供基本公平性基础
+            - park/unpark 做阻塞唤醒，减少上下文切换次数（相对 monitor 更加可控）
+    - ReentrantLock
+        - ReentrantLock 相比 synchronized 的能力点
+            - 可中断：lockInterruptibly()
+            - 可超时：tryLock(timeout)
+            - 可选择公平/非公平
+            - 多 Condition（多个等待队列）
+            - 缺点：必须手动释放锁，代码更啰嗦
+        - 公平 vs 非公平
+            - 公平锁：大致按照队列先来先服务，吞吐更低
+            - 非公平锁：允许插队，先 CAS 抢一把，吞吐更高，可能造成某些线程等待更久
+        - 可中断锁为什么重要
+            - 线程在等锁时被取消/超时，希望立即退出而不是继续卡死
+            - lock()：等待锁期间不响应 interrupt
+            - lockInterruptibly()：能响应 interrupt，抛 interruptedException
+    - Condition：两个队列（同步队列+条件队列）
+        - Condition 的语义
+            - await()：释放锁+当前线程进入条件队列+park
+            - signal()：把条件队列头部线程转移到同步队列
+            - 线程真正执行
+                - 被 signal 转移到同步队列
+                - 重新竞争锁成功 (acquire)
+                - await 返回继续跑
+        - 常见同步工具类
+            - CountDownLatch（一次性门闩）
+                - state = count
+                - await()：共享获取，直到 count == 0 全部放行
+                - countDown()：释放，count--，到 0 唤醒所有等待者
+                - 适用场景
+                    - 主线程等待多个子任务完成
+                    - 服务启动前等待依赖就绪
+                - count 到 0 后不能重置
+            - Semaphore（信号量：限流/资源池）
+                - state = permits
+                - acquire()：permits--，不够则排队阻塞
+                - release()：permits++，唤醒等待者
+                - 适用场景
+                    - 限制并发数
+                    - 连接池/令牌桶
+            - CyclicBarrier（客服用栅栏，非 AQS 典型）
+                - 让一组线程在栅栏处互相等待，达到数量后一起继续
+                - 可复用
+                - 用于并行计算分段后汇总
+{{< /mind >}}
+
+# 线程池与并发工程实战
+
+{{< mind height="560px" >}}
+- 线程池与并发工程实战
+    - 不用线程池的问题
+        - 线程创建/销毁成本高（栈、TLAB、调度）
+        - 不可控：并发暴涨会把机器压垮
+        - 缺乏治理能力：无法统一命名，监控、拒绝、限流、隔离
+    - ThreadPoolExecutor
+        - 七大参数
+            - corePoolSize（核心线程数）
+                - 默认不会受
+                - 任务来时优先创建核心线程直到达到 core
+            - maximumPoolSize（最大线程数）
+                - 队列慢后，才会创建非核心线程，直到 max
+                - 超过 max 再来任务 -> 触发拒绝策略
+            - keepAliveTime（空闲存活时间）
+                - 非核心线程空闲超时会回收
+                - 若允许核心线程超时，则核心线程也会回收
+            - workQueue （任务队列）
+                - 决定任务是排队还是扩线程的关键
+            - threadFactory（线程工厂）
+                - 线程命名，daemon、优先级、UncaughtExceptionHandler
+                - 工程强制：必须设置可读名称
+            - handler（拒绝策略）
+                - 线程数到 max 且队列满->触发拒绝
+            - unit（时间单位）
+        - 线程池执行流程
+            - 若 workerCount < corePoolSize
+                - 创建核心线程执行 task
+            - 否则尝试入队 workQueue.offer(task)
+                - 入队成功：等待线程从队列取任务
+            - 入队失败，且 workerCount < maximumPoolSize
+                - 创建非核心线程执行 task
+            - 否则，拒绝策略 handler.rejectExecution(task, executor)
+        - workQueue 选型
+            - LinkedBlockingQueue(无界/大容量队列)
+                - 特点
+                    - 极容易入队成功，导致线程数通常停在 core，不会扩到 max
+                    - 如果队列无界：任务堆积 -> 内存膨胀/延迟飙升，最终 OOM 或雪崩
+                - 适用：任务流量可控，任务执行稳定，且能接受排队延迟
+            - ArrayBlockingQueue(有界队列)
+                - 特点
+                    - 队列有界，能把系统压力显式化
+                    - 延迟更可控，便于做背压与降级
+                - 线上服务强烈推荐：有界队列+明确拒绝策略
+            - SynchronousQueue(不存任务，直接提交)
+                - 特点
+                    - 没容量，offer 必须被 worker 立即 take 才算成功
+                    - 适合快速扩线程，直到 max，然后拒绝
+                    - newCachedThreadPool 就是它，风险是线程数可能飙升
+    - 拒绝策略
+        - 四种内置策略
+            - AbortPolicy（默认）：抛 RejectedExecutionException
+                - 适合你希望调用方显式失败，触发降级/重试逻辑
+            - CallerRunsPolicy：调用方自己执行任务
+                - 适合给上游施加背压（请求线程被拖慢，QPS 自然下降）
+            - DiscardPolicy：静默丢弃
+                - 适合：允许丢数据的场景（采样、非关键日志）
+            - DiscardOldestPolicy：丢弃队列最老任务，再尝试入队
+                - 适合：追求新任务更重要的场景
+        - 工程化拒绝策略（建议自定义 handler）
+            - 记录指标（reject count、queue size、active count）
+            - 打点日志
+            - 触发降级
+            - 投递到补偿通道
+    - Executors 工厂的问题
+        - newFixedThreadPool
+            - 默认用无界 LinkedBlockingQueue：堆积导致 OOM/延迟失控
+        - newCachedThreadPool
+            - 默认 SynchronousQueue + max=IntegerMAX_VALUE：线程数可以无限膨胀
+        - newSingleThreadExecutor
+            - 无界队列，同样堆积危险
+        - 生产环境建议显式 new ThreadPoolExecutor：有界队列、合理 max、明确拒绝策略、线程命名与监控
+    - 线程数怎么配置
+        - CPU 密集型
+            - 线程数 = CPU 核心数
+            - 目标：减少上下文切换
+        - IO 密集型
+            - 线程数 = 核心数 * (1+等待时间/计算时间)
+            - 工程上推荐压测（不同线程数）-> 看吞吐/延迟/CPU/上下文切换->找拐点
+    - CompletableFuture
+        - 解决的问题
+            - 传统 Future 的痛点
+                - 只能 get() 阻塞拿结果，组合多个异步任务很痛苦
+                - 异常处理分散，超时与取消不优雅
+                - 任务依赖关系需要手写线程/回调
+            - CompletableFuture 的定位
+                - 提供声明式的异步流水线
+                - 支持任务依赖、并行、聚合、异常处理、完成回调
+        - 核心心智模型
+            - Stage（阶段）
+                - 每个 thenXX 都是在构建一个新阶段
+                - 上一个阶段完成后触发下一个阶段
+                - 每个阶段都可能
+                    - 产出一个值
+                    - 抛异常
+                    - 被取消
+            - Completion（完成态）
+                - Completable 可能以三种方式结束
+                    - 正常完成（有结果）
+                    - 异常完成（exceptionally completed）
+                    - 被取消（cancelled）
+            - Executor
+                - 必须管理在哪个线程执行阶段
+        - 线程池与执行线程
+            - 默认线程池
+                - supplyAsync/runAsync：不传 executor 时，默认走 ForkJoinPool.commonPool
+                - commonPool 是全局共享池：你的业务、第三方库、框架都可能在用
+                - 工程风险
+                    - 隔离性差
+                    - 阻塞任务不友好
+                    - 排障难
+            - thenApply vs thenApplyAsync
+                - thenApply(fn)：默认在完成上游阶段的线程里执行
+                - thenApplyAsync(fn)：异步执行
+                    - 不传 executor：用 commonPool
+                    - 传 executor：用指定的线程池
+        - 常用 API 分组
+            - 创建与启动
+                - completableFuture(value)：已完成（同步值包装）
+                - runAsync(Runnable, executor?)：无返回值任务
+                - supplyAsync(Supplier<T>, executor?)：有返回值任务
+                - new CompletableFuture<>() + complete/completeExceptionally：手动控制完成
+            - 转换 map 与消费 consume
+                - thenApply(fn): T->U
+                - thenAccept(consume): 消费结果（无返回）
+                - thenRun(runnable)：不关心结果，只做后续动作
+            - 串联
+                - thenCompose(fn): T->CompletableFuture<U>，扁平化
+                    - 用于上一个异步结果决定下一个异步请求
+            - 并行组合
+                - thenCombine(other, (a,b)->c)：两个都完成后合并
+                - allOf(f1,f2,...)：全部完成
+                - anyOf(f1,f2,...)：任意一个完成
+                - applyToEither(other, fn)：谁先完成用谁的结果
+                - acceptEither：谁先完成就消费
+            - 异常处理
+                - exceptionally(ex -> fallback)：异常时给兜底值
+                - handle((res, ex) -> ...)：无论成功失败都处理
+                - whenComplete((res, ex) -> ...)：做副作用，不改变结果
+            - 最佳实践
+                - 主链用 handler 或 exceptionally 做兜底
+                - whenComplete 做日志与 metrics
+{{< /mind >}}
+
+# 并发容器、阻塞队列、并发设计
+
+{{< mind height="560px" >}}
+- 并发容器、阻塞队列、并发设计
+    - 并发容器解决的问题
+        - 线程安全访问：多线程读写不会破坏结构、不丢数据
+        - 性能：比 Collections.synchronizedXxx/Hashtable 更高吞吐
+        - 语义更强：有些容器提供阻塞、延时、优先级等能力
+    - 选型
+        - Map -> ConcurrentHashMap
+        - List -> 读多血少用 CopyOnWriteArrayList
+        - Queue -> 无界非阻塞 ConcurrentLinkedQueue，有界阻塞用 ArrayBlockingQueue/LinkedBlockingQueue
+        - Set -> ConcurrentHashMap.newKeySet()/CopyOnWriteArraySet
+        - Deque -> ConcurrentLinkedDeque/LinkedBlockingDeque
+    - ConcurrentHashMap
+        - CHM 为什么比 Hashtable 快
+            - Hashtable：方法级 sychornized，所有操作串行
+            - CHM：更细粒度控制
+                - 大部分读操作无锁
+                - 写操作只锁定桶/节点，并结合 CAS
+        - CHM 的核心结构
+            - 底层是 Node<K,V>[] table（桶数组）
+            - 桶内结构：链表(node)或红黑树
+            - 当链表过长且 table 足够大时，会树化降级查找复杂度
+        - put 的并发控制逻辑
+            - table 未初始化：先初始化
+            - 根据 hash 找桶下标 i
+            - 如果桶为空：尝试 CAS 放入新 Node
+            - 若桶非空
+                - 若桶是迁移中：帮助扩容
+                - 否则对桶头做 synchronzied 局部锁，在桶内插入/更新
+            - 插入后可能触发 size 技术更新与扩容检查
+    - CopyOnWriteArrayList(COW)：读多写少
+        - 核心机制
+            - 写操作会
+                - 加锁
+                - 复制底层数组
+                - 在新数组上修改
+                - 用引用替换发布新数组
+            - 读操作直接读数组快照，无损
+        - 适用与不适用
+            - 适用
+                - 读远多于写
+            - 不适用
+                - 写频繁
+                - 数组很大
+    - 并发队列：非阻塞 vs 阻塞
+        - ConcurrentLinkedQueue(CLQ)：非阻塞队列
+            - 基于 CAS 的链表队列
+            - 适合：高并发无界、低延迟、允许忙等/自旋语义的场景
+            - 特点
+                - offer/poll 非阻塞
+                - size() 可能是线性复杂度
+        - BlockingQueue：核心语义
+            - BlockingQueue 的关键是两种阻塞语义
+                - 当队列为空：take() 阻塞直到有元素
+                - 当队列满：put() 阻塞直到有空间
+                - offer/poll 返回特殊值
+    - 三大常用阻塞队列
+        - ArrayBlockingQueue(ABQ)-有界数组队列
+            - 底层数组环形缓冲区
+            - 一般用一把锁 + 两个 condition
+            - 特点
+                - 有界：最重要的工程优势
+                - 内存局部性好
+                - 吞吐稳定，适合线程池工作队列
+            - 生成服务最常用的稳健默认
+        - LinkedBlockingQueue(LBQ)-链表队列(可无界/大容量)
+            - 链表节点存储，内存分配频繁（节点对象）
+            - 常见实现会用两把锁来提高并行度
+            - 风险：堆积导致 OOM 与延迟失控
+        - SynchronousQueue(SQ)-不存储元素的移交队列
+            - 容量为 0，put 必须等待 take 直接接手
+            - 特点：几乎不用排队，延迟低
+    - DelayQueue/PriorityBlockingQueue：定时与优先级
+        - DelayQueue 延时队列
+            - 元素实现 Delayed，按到期时间排序
+            - take() 会阻塞直到最近到期元素到期
+            - 适用：超时重试、订单超时关闭、缓存过期处理（小规模）
+            - 工程上：大量定时任务用时间论/调度框架
+        - PriorityBlockingQueue(优先级队列)
+            - 无界优先级堆
+            - 高优先级先出队
+{{< /mind >}}
