@@ -1,40 +1,4 @@
-/*
-This is just a placeholder blank stylesheet so as to support adding custom styles budled with theme's default styles
-
-Read https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#bundling-custom-css-with-themes-assets for more info
-*/
-
-/* ========== Claude 主题：链接与强调色 ========== */
-.post-content a {
-    color: var(--accent);
-}
-
-.post-content a:hover {
-    text-decoration: underline;
-}
-
-.post-tags a {
-    color: var(--accent);
-}
-
-.paginav a:hover {
-    color: var(--accent);
-}
-
-.terms-tags a:hover {
-    color: var(--accent);
-}
-
-#menu .active {
-    color: var(--accent);
-}
-
-/* ========== 正文字体 ========== */
-body {
-    font-family: Charter, Georgia, serif !important;
-}
-
-/* ========== 代码字体：JetBrains Mono ========== */
+/* ========== JetBrains Mono for code ========== */
 code {
     font-family: "JetBrains Mono", "Consolas", monospace;
 }
@@ -44,28 +8,55 @@ code {
     font-family: Charter, Georgia, serif !important;
 }
 
+/* ========== 列表页文章标签 ========== */
+.entry-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: .3rem;
+    position: relative;
+    z-index: 1;
+    margin-left: .4rem;
+}
 
+.entry-tags a {
+    padding: .1rem .5rem;
+    border-radius: .75rem;
+    border: 1px solid var(--border);
+    color: var(--secondary);
+    font-size: .7rem;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: all .2s;
+    white-space: nowrap;
+}
+
+.entry-tags a:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ========== Toast 通知 ========== */
 .site-toast {
-  position: fixed;
-  left: 50%;
-  top: 32px;
-  transform: translateX(-50%) translateY(20px);
-  background: rgba(32, 32, 32, 0.92);
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 1.4;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  max-width: min(80vw, 420px);
-  text-align: center;
+    position: fixed;
+    left: 50%;
+    top: 32px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(32, 32, 32, 0.92);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    max-width: min(80vw, 420px);
+    text-align: center;
 }
 
 .site-toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }

@@ -3,9 +3,40 @@
     left: 0;
     right: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 80%;
-    font-size: 160px;
+    gap: 12px;
+}
+
+.not-found-code {
+    font-family: var(--serif);
+    font-size: clamp(100px, 20vw, 180px);
     font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.25;
+}
+
+.not-found-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--secondary);
+}
+
+.not-found-link {
+    margin-top: 8px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--oat);
+    transition: border-color 150ms ease;
+}
+
+.not-found-link:hover {
+    border-bottom-color: var(--accent);
 }
