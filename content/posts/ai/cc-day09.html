@@ -1,0 +1,1213 @@
+---
+title: "Day 09 · 非交互模式 — Headless 执行 · CI/CD 集成 · 管道化"
+date: '2026-05-16'
+draft: false
+description: "让 Claude Code 脱离终端——用 -p 标志进行无人值守执行、在 GitHub Actions 中自动修复代码、用管道串联多步工作流、用 Agent SDK 将 Claude 嵌入你的自动化系统。"
+toc: false
+tags:
+  - AI
+  - Claude Code
+  - Tooling
+  - Tutorial
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.ccday09-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.ccday09-wrap .eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.ccday09-wrap .eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:24px; height:1.5px;
+  background:var(--clay);
+  margin-right:12px;
+  vertical-align:middle;
+}
+.ccday09-wrap h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(36px, 5.2vw, 58px);
+  letter-spacing:-0.018em;
+  line-height:1.08;
+  max-width:18ch;
+  margin: 22px 0 30px;
+  color:var(--slate);
+}
+.ccday09-wrap h1 em{ font-style:italic; color:var(--clay); }
+.ccday09-wrap h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:27px;
+  letter-spacing:-0.012em;
+  margin: 0;
+  color:var(--slate);
+}
+.ccday09-wrap h3{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:19px;
+  letter-spacing:-0.008em;
+  margin: 0 0 10px;
+  color:var(--slate);
+}
+.ccday09-wrap .lede{
+  font-size:16.5px;
+  color:var(--g700);
+  max-width:62ch;
+  margin:0 0 32px;
+  line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.ccday09-wrap header.masthead{ padding: 80px 0 56px; }
+.ccday09-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.ccday09-wrap .meta-strip strong{
+  color:var(--slate); font-weight:600; margin-right:6px;
+}
+
+/* ========== Section ========== */
+.ccday09-wrap section{ margin-top:72px; }
+.ccday09-wrap .indent{ margin-left:50px; }
+.ccday09-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px;
+  margin-bottom:28px;
+}
+.ccday09-wrap .sec-head .num{
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.12em; font-weight:600; width:38px; flex-shrink:0;
+}
+.ccday09-wrap .sec-head .count{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  padding:3px 12px; background:var(--g100); border-radius:999px;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ========== Mind Map ========== */
+.ccday09-wrap .mindmap{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+  margin: 0;
+}
+.ccday09-wrap .mindmap svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.ccday09-wrap .mindmap-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Card Grid ========== */
+.ccday09-wrap .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.ccday09-wrap .grid-2{ grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.ccday09-wrap .grid-3{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* ========== Node Card ========== */
+.ccday09-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.ccday09-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.ccday09-wrap .node.accent{ border-color:var(--clay); }
+.ccday09-wrap .node.entry { background:var(--g100); }
+.ccday09-wrap .node.exit  { background:var(--oat); border-color:var(--clay); }
+.ccday09-wrap .node.dark  {
+  background:var(--slate); border-color:var(--slate); color:var(--ivory);
+}
+.ccday09-wrap .node.dark .tag{ color:var(--oat); }
+.ccday09-wrap .node.dark p{ color:var(--oat); }
+.ccday09-wrap .node.dark h3{ color:var(--ivory); }
+.ccday09-wrap .node .tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:10px; font-weight:600;
+}
+.ccday09-wrap .node .tag.clay{ color:var(--clay); }
+.ccday09-wrap .node p{
+  font-size:13.5px; color:var(--g700); margin:6px 0 0; line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.ccday09-wrap .annot{
+  font-family:var(--mono); font-size:11.5px; color:var(--g500);
+  display:flex; align-items:flex-start; margin-top:14px; letter-spacing:.04em;
+}
+.ccday09-wrap .annot::before{
+  content:""; width:32px; height:1.5px; background:var(--clay);
+  margin-right:12px; margin-top:8px; flex-shrink:0;
+}
+
+/* ========== Table ========== */
+.ccday09-wrap .table-wrap{ overflow-x:auto; }
+.ccday09-wrap table.compare{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+}
+.ccday09-wrap table.compare th,
+.ccday09-wrap table.compare td{
+  text-align:left; padding:14px 20px;
+  border-bottom:1px solid var(--g200); vertical-align:top;
+}
+.ccday09-wrap table.compare th{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+  background:var(--g100); border-bottom:1.5px solid var(--slate);
+}
+.ccday09-wrap table.compare td:first-child{
+  font-family:var(--serif); font-weight:500; font-size:15px;
+  width:22%; color:var(--slate);
+}
+.ccday09-wrap table.compare tr:last-child td{ border-bottom:none; }
+.ccday09-wrap table.compare .clay{ color:var(--clay-d); }
+
+/* ========== Code ========== */
+.ccday09-wrap pre.code{
+  background:var(--slate); color:var(--ivory);
+  font-family:var(--mono); font-size:12.5px;
+  padding:20px 24px; border-radius:10px;
+  overflow-x:auto; line-height:1.65; margin:18px 0;
+}
+.ccday09-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.ccday09-wrap pre.code .k{ color:var(--clay); }
+.ccday09-wrap pre.code .s{ color:var(--olive); }
+.ccday09-wrap pre.code .t{ color:#7EC8E3; }
+.ccday09-wrap pre.code .n{ color:#C4B28A; }
+.ccday09-wrap pre.code .prompt{ color:var(--olive); }
+.ccday09-wrap pre.code .flag{ color:var(--clay); }
+.ccday09-wrap pre.code .comment{ color:var(--g500); font-style:italic; }
+.ccday09-wrap pre.code .output{ color:var(--oat); }
+
+.ccday09-wrap code.inline{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Architecture Diagram ========== */
+.ccday09-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 28px;
+  margin: 0;
+}
+.ccday09-wrap .archdiag svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.ccday09-wrap .archdiag-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Checklist ========== */
+.ccday09-wrap .check{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; padding:8px 24px;
+}
+.ccday09-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.ccday09-wrap .check li{
+  padding:14px 0 14px 36px; border-bottom:1px solid var(--g200);
+  position:relative; font-size:14.5px; color:var(--slate);
+}
+.ccday09-wrap .check li:last-child{ border-bottom:none; }
+.ccday09-wrap .check li::before{
+  content:""; position:absolute; left:0; top:16px;
+  width:18px; height:18px; border:1.5px solid var(--g300);
+  border-radius:4px; background:var(--paper);
+}
+
+/* ========== Review Questions ========== */
+.ccday09-wrap .review-list{
+  counter-reset: q; margin:0; padding:0; list-style:none;
+}
+.ccday09-wrap .review-list li{
+  counter-increment: q; position:relative;
+  padding:18px 0 18px 56px; border-bottom:1px solid var(--g200);
+  font-size:15px; color:var(--g700);
+}
+.ccday09-wrap .review-list li:last-child{ border-bottom:none; }
+.ccday09-wrap .review-list li::before{
+  content: counter(q, decimal-leading-zero);
+  position:absolute; left:0; top:18px;
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.06em; font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.ccday09-wrap .qa-grid{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.ccday09-wrap .qa-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden; transition: border-color 150ms ease;
+}
+.ccday09-wrap .qa-card[open]{ border-color:var(--slate); }
+.ccday09-wrap .qa-card summary{
+  list-style:none; cursor:pointer; padding:18px 24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition: background 150ms ease;
+}
+.ccday09-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.ccday09-wrap .qa-card summary::marker{ display:none; }
+.ccday09-wrap .qa-card summary:hover{ background:var(--g100); }
+.ccday09-wrap .qa-card[open] summary{
+  background:var(--g100); border-bottom:1px dashed var(--g300);
+}
+.ccday09-wrap .qa-num{
+  font-family:var(--mono); font-size:12px; color:var(--clay);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:3px;
+}
+.ccday09-wrap .qa-q{
+  font-family:var(--serif); font-size:16px; font-weight:500;
+  color:var(--slate); line-height:1.5; flex:1;
+}
+.ccday09-wrap .qa-toggle{
+  font-family:var(--mono); font-size:18px; color:var(--g500);
+  flex-shrink:0; font-weight:300; line-height:1; margin-top:2px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+.ccday09-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg); color:var(--clay);
+}
+.ccday09-wrap .qa-a{
+  padding:20px 24px 22px; display:flex; align-items:flex-start; gap:18px;
+}
+.ccday09-wrap .qa-a-label{
+  font-family:var(--mono); font-size:12px; color:var(--olive);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:2px;
+}
+.ccday09-wrap .qa-a-body{
+  flex:1; font-family:var(--sans); font-size:14.5px;
+  color:var(--g700); line-height:1.7;
+}
+.ccday09-wrap .qa-a-body p{ margin:0 0 10px; }
+.ccday09-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.ccday09-wrap .qa-a-body strong{
+  font-family:var(--serif); font-style:italic; font-weight:500; color:var(--slate);
+}
+.ccday09-wrap .qa-a-body code{
+  font-family:var(--mono); font-size:13px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 5px; color:var(--clay-d);
+}
+
+/* ========== Footer ========== */
+.ccday09-wrap footer{
+  margin-top:100px; padding-top:40px;
+  border-top:1px solid var(--g200); text-align:center;
+}
+.ccday09-wrap footer .quote{
+  font-family:var(--serif); font-style:italic; font-size:18px;
+  color:var(--g700); max-width:42ch; margin:0 auto; line-height:1.55;
+}
+.ccday09-wrap footer .meta{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px){
+  .ccday09-wrap{ padding:0 22px 90px; }
+  .ccday09-wrap .indent{ margin-left:0; }
+  .ccday09-wrap header.masthead{ padding:56px 0 40px; }
+  .ccday09-wrap section{ margin-top:56px; }
+  .ccday09-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .ccday09-wrap .archdiag{ padding:20px 12px; }
+  .ccday09-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .ccday09-wrap .qa-q{ font-size:14.5px; }
+  .ccday09-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="ccday09-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 09 · CLAUDE CODE ROADMAP · 20 DAYS</div>
+  <h1>让 Claude Code<em>无人值守地运行</em></h1>
+  <p class="lede">
+    前八天你一直坐在终端前与 Claude 对话——今天你将学会<em style="font-style:italic;color:#B85C3E;">放开双手</em>。
+    用 <code class="inline">-p</code> 标志让 Claude 在脚本中静默执行，
+    在 GitHub Actions 中自动审查 PR、修复 lint 错误、生成变更描述，
+    用管道串联多步工作流，用 Agent SDK 把 Claude 嵌入你的自动化系统。
+    Claude Code 从此是 7×24 小时运转的自动化引擎。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 70–80 min</span>
+    <span><strong>THEORY</strong> 30 min</span>
+    <span><strong>HANDS-ON</strong> 35 min</span>
+    <span><strong>REVIEW</strong> 10 min</span>
+    <span><strong>SECTIONS</strong> 5</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">M ·</div>
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 09 思维导图">
+        <!-- 根节点 -->
+        <rect x="265" y="20" width="450" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 09 · 非交互模式</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">HEADLESS · CI/CD · PIPELINE · SDK</text>
+
+        <!-- 主竖线 + 横干线 -->
+        <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="858" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四条分支竖线 -->
+        <line x1="122" y1="106" x2="122" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="106" x2="367" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="106" x2="613" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="106" x2="858" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四个主题节点 -->
+        <rect x="32" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="122" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">01 · HEADLESS</text>
+        <text x="122" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">无头模式</text>
+
+        <rect x="277" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · PERMISSION</text>
+        <text x="367" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">权限与安全</text>
+
+        <rect x="523" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · CI/CD</text>
+        <text x="613" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">持续集成</text>
+
+        <rect x="768" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="858" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">04 · SDK</text>
+        <text x="858" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">编程化集成</text>
+
+        <!-- 子节点 — HEADLESS -->
+        <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">-p / --print 标志</text>
+        <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--output-format 格式</text>
+        <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">stdin 管道输入</text>
+        <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--bare 纯净模式</text>
+
+        <!-- 子节点 — PERMISSION -->
+        <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--allowedTools 白名单</text>
+        <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--permission-mode</text>
+        <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">前缀匹配规则</text>
+        <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">安全最佳实践</text>
+
+        <!-- 子节点 — CI/CD -->
+        <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">GitHub Actions</text>
+        <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">claude-code-action</text>
+        <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">自动 PR 审查</text>
+        <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">自动修复 + 提交</text>
+
+        <!-- 子节点 — SDK -->
+        <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">TypeScript SDK</text>
+        <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Python SDK</text>
+        <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">query() 流式 API</text>
+        <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">会话管理</text>
+
+        <!-- 底部标注 -->
+        <line x1="200" y1="370" x2="780" y2="370" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="6,4"/>
+        <text x="490" y="400" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-style="italic" font-size="14"
+              fill="#87867F">从交互终端到自动化流水线——脚本 × CI × SDK</text>
+
+        <!-- 底部关键词 -->
+        <rect x="140" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="210" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">claude -p</text>
+
+        <rect x="310" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="380" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">GITHUB ACTIONS</text>
+
+        <rect x="480" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="550" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">PIPE + JSON</text>
+
+        <rect x="650" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="720" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">AGENT SDK</text>
+      </svg>
+      <p class="mindmap-cap">FIG M — DAY 09 KNOWLEDGE MAP · NON-INTERACTIVE AUTOMATION</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 01 · Headless 模式 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">01 ·</div>
+    <h2>Headless 模式</h2>
+    <div class="count">CORE FLAGS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      <code class="inline">-p</code> 是非交互模式的钥匙——它让 Claude Code 从交互式 REPL 变成
+      可以嵌入脚本、管道、CI 任务的命令行工具。
+    </p>
+
+    <h3>核心标志一览</h3>
+    <div class="table-wrap" style="margin-top:18px;">
+      <table class="compare">
+        <thead><tr>
+          <th>标志</th><th>作用</th><th>示例</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">-p</code></td>
+            <td>非交互模式——接受 prompt，输出结果到 stdout，然后退出</td>
+            <td><code class="inline">claude -p "解释这段代码"</code></td>
+          </tr>
+          <tr>
+            <td><code class="inline">--output-format</code></td>
+            <td>控制输出格式：<span class="clay">text</span>（默认）、<span class="clay">json</span>（结构化）、<span class="clay">stream-json</span>（流式）</td>
+            <td><code class="inline">claude -p "..." --output-format json</code></td>
+          </tr>
+          <tr>
+            <td><code class="inline">--bare</code></td>
+            <td>跳过 Hooks、Skills、MCP、CLAUDE.md 自动发现——<span class="clay">CI 推荐</span></td>
+            <td><code class="inline">claude -p "..." --bare</code></td>
+          </tr>
+          <tr>
+            <td><code class="inline">--max-turns</code></td>
+            <td>限制对话轮次，防止 Agent 循环失控</td>
+            <td><code class="inline">claude -p "..." --max-turns 5</code></td>
+          </tr>
+          <tr>
+            <td><code class="inline">--model</code></td>
+            <td>指定模型版本</td>
+            <td><code class="inline">claude -p "..." --model claude-sonnet-4-6</code></td>
+          </tr>
+          <tr>
+            <td><code class="inline">--json-schema</code></td>
+            <td>约束输出为指定 JSON Schema，结果在 <span class="clay">structured_output</span> 字段</td>
+            <td><code class="inline">claude -p "..." --json-schema '{...}'</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">基础用法</h3>
+<pre class="code"><span class="comment"># 最简单的 headless 调用</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"用一句话解释什么是 React Server Components"</span>
+
+<span class="comment"># 管道输入：把文件内容传给 Claude</span>
+<span class="prompt">$</span> cat src/auth.ts | claude <span class="flag">-p</span> <span class="s">"找出这段代码中的安全漏洞"</span>
+
+<span class="comment"># 管道输出：把 Claude 的回答写入文件</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"为 src/utils.ts 中所有导出函数生成 JSDoc"</span> > docs.md
+
+<span class="comment"># 结构化输出：JSON 格式便于程序消费</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"列出项目中所有 TODO 注释"</span> <span class="flag">--output-format</span> json \
+    | jq <span class="s">'.result'</span></pre>
+
+    <div class="annot">--bare 在 CI 中至关重要——跳过自动发现让执行更快、更确定、更安全</div>
+
+    <h3 style="margin-top:32px;">输出格式对比</h3>
+    <div class="grid grid-3" style="margin-top:16px;">
+      <div class="node accent">
+        <div class="tag clay">TEXT</div>
+        <h3>纯文本</h3>
+        <p>默认格式。适合人类阅读和简单的管道操作。直接输出 Claude 的回复文本，无包装。</p>
+      </div>
+      <div class="node">
+        <div class="tag">JSON</div>
+        <h3>结构化 JSON</h3>
+        <p>包含 <code class="inline">session_id</code>、<code class="inline">result</code>、<code class="inline">total_cost_usd</code> 等字段。适合程序消费和成本追踪。</p>
+      </div>
+      <div class="node">
+        <div class="tag">STREAM-JSON</div>
+        <h3>流式 JSON</h3>
+        <p>每行一个 JSON 事件（NDJSON）。适合实时显示进度和中间结果。每个事件带时间戳和类型。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 02 · 权限与安全 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">02 ·</div>
+    <h2>权限与安全</h2>
+    <div class="count">PERMISSION MODEL</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      无人值守 ≠ 无限制。Headless 模式有严格的权限控制——
+      你必须显式声明 Claude 可以使用哪些工具、可以执行哪些命令。
+    </p>
+
+    <h3>--allowedTools 工具白名单</h3>
+    <p style="font-size:14px;color:var(--g700);line-height:1.65;">
+      在 <code class="inline">-p</code> 模式下，Claude 默认只能读取文件。
+      通过 <code class="inline">--allowedTools</code> 显式授权更多能力：
+    </p>
+<pre class="code"><span class="comment"># 只允许读取和编辑文件</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"修复 auth.ts 中的 bug"</span> \
+    <span class="flag">--allowedTools</span> <span class="s">"Read,Edit"</span>
+
+<span class="comment"># 允许执行特定命令（前缀匹配）</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"运行测试并修复失败用例"</span> \
+    <span class="flag">--allowedTools</span> <span class="s">"Read,Edit,Bash(npm test *),Bash(npx tsc *)"</span>
+
+<span class="comment"># 允许 git 操作</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"提交所有变更"</span> \
+    <span class="flag">--allowedTools</span> <span class="s">"Bash(git diff *),Bash(git add *),Bash(git commit *)"</span></pre>
+
+    <div class="annot">前缀匹配语法 Bash(git diff *) 意味着任何以 "git diff " 开头的命令都会被允许</div>
+
+    <h3 style="margin-top:32px;">权限模式</h3>
+    <div class="table-wrap" style="margin-top:18px;">
+      <table class="compare">
+        <thead><tr>
+          <th>模式</th><th>行为</th><th>适用场景</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>默认</td>
+            <td>只允许 <code class="inline">--allowedTools</code> 声明的工具和 <code class="inline">permissions.allow</code> 中的规则</td>
+            <td>CI/CD 管道 — <span class="clay">推荐</span></td>
+          </tr>
+          <tr>
+            <td><code class="inline">acceptEdits</code></td>
+            <td>自动允许文件编辑 + 常见文件系统操作（mkdir、mv、cp）</td>
+            <td>自动修复脚本、代码生成</td>
+          </tr>
+          <tr>
+            <td><code class="inline">bypassPermissions</code></td>
+            <td>跳过所有权限检查——<span class="clay">极度危险</span></td>
+            <td>仅限受信沙箱环境</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">安全清单</h3>
+    <div class="grid grid-2" style="margin-top:16px;">
+      <div class="node dark">
+        <div class="tag">NEVER DO</div>
+        <h3>绝对不要</h3>
+        <p>在 CI 中使用 <code style="color:var(--clay);background:rgba(217,119,87,.15);border-color:rgba(217,119,87,.3);">bypassPermissions</code>。不要把 <code style="color:var(--clay);background:rgba(217,119,87,.15);border-color:rgba(217,119,87,.3);">ANTHROPIC_API_KEY</code> 硬编码到代码中。不要给 Claude 不必要的 Bash 权限。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">ALWAYS DO</div>
+        <h3>必须做到</h3>
+        <p>用 GitHub Secrets 存储 API Key。用 <code class="inline">--allowedTools</code> 最小化权限。用 <code class="inline">--max-turns</code> 限制循环。用 <code class="inline">--bare</code> 排除不可控因素。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 03 · CI/CD 集成 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">03 ·</div>
+    <h2>CI/CD 集成</h2>
+    <div class="count">GITHUB ACTIONS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Anthropic 官方提供的 <code class="inline">claude-code-action</code> 可以在 GitHub Actions 中
+      直接调用 Claude Code——自动审查 PR、修复问题、生成文档。
+    </p>
+
+    <h3>GitHub Actions 工作流</h3>
+    <div class="archdiag" style="margin-top:18px;">
+      <svg viewBox="0 0 840 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CI/CD 工作流">
+        <defs>
+          <marker id="arrow09" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#87867F"/>
+          </marker>
+        </defs>
+        <!-- Trigger -->
+        <rect x="20" y="40" width="150" height="80" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="95" y="68" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">TRIGGER</text>
+        <text x="95" y="92" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">PR 创建</text>
+        <text x="95" y="108" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">@claude 提及</text>
+
+        <line x1="170" y1="80" x2="210" y2="80" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09)"/>
+
+        <!-- Claude Code Action -->
+        <rect x="210" y="30" width="200" height="100" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="310" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">CLAUDE CODE</text>
+        <text x="310" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">分析代码变更</text>
+        <text x="310" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">读取 CLAUDE.md 规则</text>
+        <text x="310" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">执行工具调用</text>
+
+        <line x1="410" y1="80" x2="450" y2="60" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09)"/>
+        <line x1="410" y1="80" x2="450" y2="120" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09)"/>
+
+        <!-- Output A -->
+        <rect x="450" y="20" width="170" height="60" rx="5" fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
+        <text x="535" y="45" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#788C5D" font-weight="600" letter-spacing="1">OUTPUT A</text>
+        <text x="535" y="68" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">PR 评论 / Review</text>
+
+        <!-- Output B -->
+        <rect x="450" y="100" width="170" height="60" rx="5" fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
+        <text x="535" y="125" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#788C5D" font-weight="600" letter-spacing="1">OUTPUT B</text>
+        <text x="535" y="148" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">自动修复提交</text>
+
+        <!-- 环境标注 -->
+        <rect x="670" y="40" width="150" height="80" rx="5" fill="#141413"/>
+        <text x="745" y="68" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC" font-weight="600" letter-spacing="1">ENVIRONMENT</text>
+        <text x="745" y="90" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#FAF9F5">API Key → Secrets</text>
+        <text x="745" y="108" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#FAF9F5">CLAUDE.md → Repo</text>
+      </svg>
+      <p class="archdiag-cap">FIG 03 — GITHUB ACTIONS WORKFLOW · TRIGGER → CLAUDE → OUTPUT</p>
+    </div>
+
+    <h3 style="margin-top:32px;">实战：PR 自动审查</h3>
+<pre class="code"><span class="comment"># .github/workflows/claude-review.yml</span>
+<span class="k">name</span>: Claude Code Review
+
+<span class="k">on</span>:
+  <span class="s">pull_request</span>:
+    types: [opened, synchronize]
+  <span class="s">issue_comment</span>:
+    types: [created]
+
+<span class="k">jobs</span>:
+  <span class="s">review</span>:
+    runs-on: ubuntu-latest
+    <span class="comment"># 仅在 PR 评论中 @claude 被提及时触发</span>
+    if: |
+      github.event_name == 'pull_request' ||
+      contains(github.event.comment.body, '@claude')
+    steps:
+      - uses: <span class="s">anthropics/claude-code-action@v1</span>
+        with:
+          <span class="k">prompt</span>: |
+            审查这个 PR 的代码变更：
+            1. 检查是否有安全漏洞
+            2. 检查是否有性能问题
+            3. 检查代码风格是否符合项目规范
+            4. 给出改进建议
+          <span class="k">anthropic_api_key</span>: ${{ secrets.ANTHROPIC_API_KEY }}
+          <span class="k">claude_args</span>: <span class="s">"--max-turns 5 --model claude-sonnet-4-6"</span></pre>
+
+    <h3 style="margin-top:32px;">CI 用例速览</h3>
+    <div class="grid grid-3" style="margin-top:16px;">
+      <div class="node">
+        <div class="tag clay">USE CASE 1</div>
+        <h3>自动修复 Lint</h3>
+        <p>CI 检测到 lint 错误时自动触发 Claude 修复并提交。适合格式化、import 排序等机械性修复。</p>
+      </div>
+      <div class="node">
+        <div class="tag clay">USE CASE 2</div>
+        <h3>PR 描述生成</h3>
+        <p>读取 git diff 自动生成结构化的 PR 描述：变更摘要、影响范围、测试计划。</p>
+      </div>
+      <div class="node">
+        <div class="tag clay">USE CASE 3</div>
+        <h3>代码审计</h3>
+        <p>定时 cron 任务扫描代码库，检查安全漏洞、过期依赖、TODO 积压。生成审计报告。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 04 · 管道与脚本 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 ·</div>
+    <h2>管道与脚本</h2>
+    <div class="count">PIPELINE PATTERNS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Headless 模式的真正威力在于组合——用 Unix 管道把多个 Claude 调用串联成完整的自动化流水线。
+    </p>
+
+    <h3>会话管理：多步工作流</h3>
+<pre class="code"><span class="comment"># Step 1 — 启动分析，捕获 session_id</span>
+<span class="prompt">$</span> session_id=$(claude <span class="flag">-p</span> <span class="s">"分析 src/api/ 目录的架构"</span> \
+    <span class="flag">--output-format</span> json | jq <span class="flag">-r</span> <span class="s">'.session_id'</span>)
+
+<span class="comment"># Step 2 — 基于上一步的上下文继续</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"基于刚才的分析，找出最需要重构的三个文件"</span> \
+    <span class="flag">--resume</span> <span class="s">"$session_id"</span>
+
+<span class="comment"># 或者直接继续最近的会话</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"继续，开始重构第一个文件"</span> <span class="flag">--continue</span></pre>
+
+    <div class="annot">--resume 通过 session_id 恢复完整对话上下文——Claude 记住之前分析的所有信息</div>
+
+    <h3 style="margin-top:32px;">管道组合模式</h3>
+    <div class="archdiag" style="margin-top:18px;">
+      <svg viewBox="0 0 840 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="管道组合模式">
+        <defs>
+          <marker id="arrow09b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+          </marker>
+        </defs>
+        <!-- pipe 1 -->
+        <rect x="20" y="30" width="160" height="80" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="100" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">STDIN</text>
+        <text x="100" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">git diff HEAD~1</text>
+        <text x="100" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#87867F">变更内容</text>
+
+        <text x="195" y="75" font-family="ui-monospace, Menlo, monospace" font-size="16" fill="#D97757" font-weight="700">|</text>
+
+        <!-- pipe 2 -->
+        <rect x="210" y="30" width="180" height="80" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="300" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">CLAUDE -P</text>
+        <text x="300" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">"生成 commit msg"</text>
+        <text x="300" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#87867F">AI 分析 + 生成</text>
+
+        <text x="405" y="75" font-family="ui-monospace, Menlo, monospace" font-size="16" fill="#D97757" font-weight="700">|</text>
+
+        <!-- pipe 3 -->
+        <rect x="420" y="30" width="180" height="80" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="510" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">GIT COMMIT</text>
+        <text x="510" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">git commit -F -</text>
+        <text x="510" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#87867F">读取 stdin 作为消息</text>
+
+        <line x1="600" y1="70" x2="640" y2="70" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09b)"/>
+
+        <!-- result -->
+        <rect x="640" y="35" width="180" height="70" rx="5" fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
+        <text x="730" y="62" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#788C5D" font-weight="600" letter-spacing="1">DONE</text>
+        <text x="730" y="86" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">AI 生成的 commit</text>
+      </svg>
+      <p class="archdiag-cap">FIG 04 — UNIX PIPE PATTERN · GIT DIFF | CLAUDE | GIT COMMIT</p>
+    </div>
+
+<pre class="code" style="margin-top:24px;"><span class="comment"># 完整示例：AI 生成 commit message</span>
+<span class="prompt">$</span> git diff <span class="flag">--staged</span> | claude <span class="flag">-p</span> \
+    <span class="s">"根据这个 diff 生成简洁的 commit message，只输出消息文本"</span> \
+    <span class="flag">--bare</span> | git commit <span class="flag">-F</span> -
+
+<span class="comment"># 批量代码审查：扫描所有变更文件</span>
+<span class="prompt">$</span> git diff <span class="flag">--name-only</span> HEAD~5 | while read f; do
+    echo <span class="s">"=== $f ==="</span>
+    claude <span class="flag">-p</span> <span class="s">"审查这个文件中最近的变更，发现潜在问题"</span> \
+        <span class="flag">--allowedTools</span> <span class="s">"Read,Bash(git diff *)"</span> <span class="flag">--bare</span>
+  done > review-report.md
+
+<span class="comment"># 结构化输出 + jq 提取</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"列出所有 API 端点"</span> \
+    <span class="flag">--output-format</span> json \
+    <span class="flag">--json-schema</span> <span class="s">'{"type":"object","properties":{"endpoints":{"type":"array","items":{"type":"object","properties":{"method":{"type":"string"},"path":{"type":"string"}}}}}}'</span> \
+    | jq <span class="s">'.result.structured_output.endpoints[]'</span></pre>
+  </div>
+</section>
+
+
+<!-- ========== 05 · Agent SDK ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">05 ·</div>
+    <h2>Agent SDK</h2>
+    <div class="count">PROGRAMMATIC</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      当 Shell 管道不够用时——用 Agent SDK 在 TypeScript 或 Python 中嵌入 Claude Code，
+      构建完全定制的自动化系统。
+    </p>
+
+    <h3>TypeScript SDK</h3>
+<pre class="code"><span class="k">import</span> { query } <span class="k">from</span> <span class="s">"@anthropic-ai/claude-code"</span>;
+
+<span class="comment">// 基础调用：流式获取结果</span>
+<span class="k">for await</span> (<span class="k">const</span> message <span class="k">of</span> query({
+  <span class="n">prompt</span>: <span class="s">"找出 src/api/ 中所有未处理的异常"</span>,
+  <span class="n">options</span>: {
+    <span class="n">allowedTools</span>: [<span class="s">"Read"</span>, <span class="s">"Bash"</span>],
+    <span class="n">permissionMode</span>: <span class="s">"dontAsk"</span>,
+    <span class="n">maxTurns</span>: <span class="t">10</span>,
+  }
+})) {
+  <span class="k">if</span> (<span class="s">"result"</span> <span class="k">in</span> message) {
+    console.log(message.<span class="n">result</span>);  <span class="comment">// 最终结果</span>
+  }
+}</pre>
+
+    <h3 style="margin-top:32px;">Python SDK</h3>
+<pre class="code"><span class="k">from</span> claude_code <span class="k">import</span> query, ClaudeCodeOptions
+
+<span class="comment"># 异步流式调用</span>
+<span class="k">async for</span> message <span class="k">in</span> query(
+    <span class="n">prompt</span>=<span class="s">"分析 tests/ 目录的覆盖率盲区"</span>,
+    <span class="n">options</span>=ClaudeCodeOptions(
+        <span class="n">allowed_tools</span>=[<span class="s">"Read"</span>, <span class="s">"Bash(npm test *)"</span>],
+        <span class="n">permission_mode</span>=<span class="s">"dontAsk"</span>,
+        <span class="n">max_turns</span>=<span class="t">10</span>,
+    )
+):
+    <span class="k">if</span> <span class="n">hasattr</span>(message, <span class="s">"result"</span>):
+        <span class="n">print</span>(message.<span class="n">result</span>)</pre>
+
+    <div class="annot">SDK 的核心优势：可以在你的 Node.js / Python 应用中嵌入 Claude 的全部能力——包括文件编辑、命令执行和工具调用</div>
+
+    <h3 style="margin-top:32px;">SDK vs CLI 对比</h3>
+    <div class="table-wrap" style="margin-top:18px;">
+      <table class="compare">
+        <thead><tr>
+          <th>维度</th><th>CLI（claude -p）</th><th>Agent SDK</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>集成方式</td>
+            <td>Shell 脚本 / CI YAML</td>
+            <td>TypeScript / Python 代码</td>
+          </tr>
+          <tr>
+            <td>输出处理</td>
+            <td>文本 / JSON，需 jq 解析</td>
+            <td>原生对象，类型安全</td>
+          </tr>
+          <tr>
+            <td>流式控制</td>
+            <td>stream-json + 管道</td>
+            <td>async iterator，可精确控制每条消息</td>
+          </tr>
+          <tr>
+            <td>会话管理</td>
+            <td>--resume session_id</td>
+            <td>原生 resume 参数 + AbortController 取消</td>
+          </tr>
+          <tr>
+            <td>适用场景</td>
+            <td>CI/CD、简单脚本、一次性任务</td>
+            <td><span class="clay">自定义工具平台、复杂多步 Agent、产品集成</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 06 · LABS ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">06 ·</div>
+    <h2>Labs</h2>
+    <div class="count">4 EXERCISES</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node entry">
+        <div class="tag clay">LAB 01 · HEADLESS 基础</div>
+        <h3>管道驱动的代码分析</h3>
+        <p>
+          用 <code class="inline">cat package.json | claude -p "列出所有过期的依赖" --bare</code> 分析项目依赖。
+          然后用 <code class="inline">--output-format json</code> 获取结构化结果并用 <code class="inline">jq</code> 提取。
+        </p>
+      </div>
+      <div class="node entry">
+        <div class="tag clay">LAB 02 · CI 集成</div>
+        <h3>搭建 PR 自动审查</h3>
+        <p>
+          创建一个 GitHub Actions 工作流，使用 <code class="inline">claude-code-action</code>
+          在每个 PR 创建时自动生成代码审查评论。
+          配置 <code class="inline">ANTHROPIC_API_KEY</code> 到 Repository Secrets。
+        </p>
+      </div>
+      <div class="node entry">
+        <div class="tag clay">LAB 03 · 多步管道</div>
+        <h3>AI 驱动的 commit 工作流</h3>
+        <p>
+          写一个 Shell 脚本，自动完成：
+          <code class="inline">git diff --staged</code> → Claude 生成 commit message → 确认 → 提交。
+          用 <code class="inline">--resume</code> 让第二步可以追问修改。
+        </p>
+      </div>
+      <div class="node entry">
+        <div class="tag clay">LAB 04 · SDK 集成</div>
+        <h3>构建代码审计工具</h3>
+        <p>
+          用 TypeScript SDK 写一个小脚本：遍历 <code class="inline">src/</code> 下所有 <code class="inline">.ts</code> 文件，
+          对每个文件调用 Claude 检查安全问题，最终输出一份汇总报告。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== Q · FAQ ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">Q ·</div>
+    <h2>常见问题</h2>
+    <div class="count">5 Q&amp;A</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">-p 模式和交互模式的 Claude 能力一样吗？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A</span>
+          <div class="qa-a-body">
+            <p>底层模型能力完全一致。区别在于<strong>权限模型</strong>：交互模式下 Claude 可以请求用户批准新工具，而 <code>-p</code> 模式必须通过 <code>--allowedTools</code> 预先声明。加上 <code>--bare</code> 还会跳过 Hooks、Skills 和 MCP 的自动发现。本质上 <code>-p</code> 是一个权限更严格、环境更纯净的执行模式。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">CI 中使用 Claude Code 的费用怎么控制？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A</span>
+          <div class="qa-a-body">
+            <p>三层控制：① 用 <code>--max-turns</code> 限制每次调用的对话轮次（建议 CI 中设为 3-5）；② 用 <code>--model claude-sonnet-4-6</code> 选择更经济的模型；③ 用 <code>--output-format json</code> 的 <code>total_cost_usd</code> 字段监控每次调用的实际费用。还可以在 CI 配置中设置条件触发——不是每个 commit 都需要审查，只在 PR 创建时触发即可。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">--resume 和 --continue 有什么区别？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A</span>
+          <div class="qa-a-body">
+            <p><code>--continue</code> 自动恢复<strong>最近一次</strong>会话，不需要指定 ID——适合连续操作。<code>--resume SESSION_ID</code> 恢复<strong>指定</strong>会话——适合脚本中精确控制。在多步管道中，先用 <code>--output-format json</code> 捕获 <code>session_id</code>，再用 <code>--resume</code> 引用，这样即使中间步骤失败也能准确恢复。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">SDK 需要单独安装吗？和 claude CLI 是什么关系？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A</span>
+          <div class="qa-a-body">
+            <p>SDK 包名为 <code>@anthropic-ai/claude-code</code>（TypeScript）和 <code>claude-code</code>（Python），需要独立安装。SDK 底层会启动 Claude Code CLI 进程并与之通信——所以<strong>机器上必须先安装 claude CLI</strong>。SDK 的价值是提供原生语言的类型安全 API、流式控制和 AbortController 支持，比解析 CLI 的 JSON 输出更可靠。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">在 CI 中 Claude 能访问私有仓库的代码吗？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A</span>
+          <div class="qa-a-body">
+            <p>是的。GitHub Actions 的 <code>actions/checkout</code> 步骤已经将代码克隆到运行器上，Claude Code 可以像本地一样读取所有文件。但要注意：Claude 的工具调用（Read、Edit、Bash）都在运行器本地执行，<strong>代码本身不会发送到 Anthropic 服务器</strong>——只有 Claude 的 prompt 和工具调用结果会经过 API。如果安全策略要求完全隔离，可以使用 AWS Bedrock 或 Google Vertex AI 作为后端。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== R · REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">R ·</div>
+    <h2>复习题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review-list">
+      <li><code class="inline">-p</code> 标志的作用是什么？它和交互模式在权限上有什么核心区别？</li>
+      <li><code class="inline">--bare</code> 标志在 CI 中为什么是推荐的？它跳过了哪些自动发现过程？</li>
+      <li><code class="inline">--allowedTools</code> 的前缀匹配语法如何工作？给出一个只允许 git 和 npm 命令的示例。</li>
+      <li>在 GitHub Actions 中使用 <code class="inline">claude-code-action</code> 时，API Key 应该存储在哪里？为什么？</li>
+      <li>Agent SDK 的 <code class="inline">query()</code> 函数返回的是什么类型？如何获取最终结果？</li>
+    </ol>
+  </div>
+</section>
+
+
+<!-- ========== ✓ · CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">✓ ·</div>
+    <h2>自检清单</h2>
+    <div class="count">7 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>能用 <code class="inline">claude -p</code> 在脚本中执行非交互式查询</li>
+        <li>理解 text / json / stream-json 三种输出格式的适用场景</li>
+        <li>能用 <code class="inline">--allowedTools</code> 配置最小权限白名单</li>
+        <li>能编写 GitHub Actions 工作流集成 <code class="inline">claude-code-action</code></li>
+        <li>能用 <code class="inline">--resume</code> 和管道构建多步自动化工作流</li>
+        <li>了解 Agent SDK 的基本用法（TypeScript 或 Python）</li>
+        <li>理解 CI 环境中的安全最佳实践（Secrets、--bare、--max-turns）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">☞ ·</div>
+    <h2>延伸阅读</h2>
+    <div class="count">3 LINKS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-3">
+      <div class="node">
+        <div class="tag">DOCS</div>
+        <h3>Claude Code — CLI Reference</h3>
+        <p>所有命令行标志的完整文档：-p、--output-format、--allowedTools、--model 等。</p>
+      </div>
+      <div class="node">
+        <div class="tag">GUIDE</div>
+        <h3>Claude Code — GitHub Actions</h3>
+        <p>官方 GitHub Actions 集成指南：claude-code-action 配置、触发条件、权限设置。</p>
+      </div>
+      <div class="node">
+        <div class="tag">SDK</div>
+        <h3>Claude Agent SDK</h3>
+        <p>TypeScript / Python SDK 文档：query() API、流式处理、会话管理、AbortController。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">☛ ·</div>
+    <h2>Day 10 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">COMING NEXT</div>
+      <h3>多模态能力 — 截图分析 · 图片理解 · 前端可视化调试</h3>
+      <p>前九天你一直在和 Claude 交换文本——明天你将学会让它看见。把截图粘贴进终端让 Claude 分析 UI 布局、用 Read 工具直接读取图片获取视觉信息、对着错误截图调试前端 CSS 问题。Claude Code 不只是代码助手——它是能看懂画面的全栈搭档。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"The best way to predict the future is to invent it."</p>
+  <p class="meta">DAY 09 · CLAUDE CODE 20-DAY ROADMAP · ALAN KAY</p>
+</footer>
+
+</div>
