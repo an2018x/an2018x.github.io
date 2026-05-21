@@ -1,0 +1,1385 @@
+---
+title: "Day 11 · 自定义 Skills — 参数化模板 · 嵌套资源 · 跨项目分发"
+date: '2026-05-19'
+draft: false
+description: "把 Day 07 的 Skill 入门带到生产级——掌握完整 frontmatter、$ARGUMENTS 参数化、嵌套 scripts/templates 资源结构、三层分发位置和团队级跨项目复用，让团队的「祖传手艺」一键可调用。"
+toc: false
+tags:
+  - AI
+  - Claude Code
+  - Skills
+  - Automation
+  - Tutorial
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.ccday11-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.ccday11-wrap .eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.ccday11-wrap .eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:24px; height:1.5px;
+  background:var(--clay);
+  margin-right:12px;
+  vertical-align:middle;
+}
+.ccday11-wrap h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(36px, 5.2vw, 58px);
+  letter-spacing:-0.018em;
+  line-height:1.08;
+  max-width:18ch;
+  margin: 22px 0 30px;
+  color:var(--slate);
+}
+.ccday11-wrap h1 em{ font-style:italic; color:var(--clay); }
+.ccday11-wrap h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:27px;
+  letter-spacing:-0.012em;
+  margin: 0;
+  color:var(--slate);
+}
+.ccday11-wrap h3{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:19px;
+  letter-spacing:-0.008em;
+  margin: 0 0 10px;
+  color:var(--slate);
+}
+.ccday11-wrap .lede{
+  font-size:16.5px;
+  color:var(--g700);
+  max-width:62ch;
+  margin:0 0 32px;
+  line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.ccday11-wrap header.masthead{ padding: 80px 0 56px; }
+.ccday11-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.ccday11-wrap .meta-strip strong{
+  color:var(--slate); font-weight:600; margin-right:6px;
+}
+
+/* ========== Section ========== */
+.ccday11-wrap section{ margin-top:72px; }
+.ccday11-wrap .indent{ margin-left:50px; }
+.ccday11-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px;
+  margin-bottom:28px;
+}
+.ccday11-wrap .sec-head .num{
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.12em; font-weight:600; width:38px; flex-shrink:0;
+}
+.ccday11-wrap .sec-head .count{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  padding:3px 12px; background:var(--g100); border-radius:999px;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ========== Mind Map ========== */
+.ccday11-wrap .mindmap{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+  margin: 0;
+}
+.ccday11-wrap .mindmap svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.ccday11-wrap .mindmap-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Card Grid ========== */
+.ccday11-wrap .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.ccday11-wrap .grid-2{ grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.ccday11-wrap .grid-3{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* ========== Node Card ========== */
+.ccday11-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.ccday11-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.ccday11-wrap .node.accent{ border-color:var(--clay); }
+.ccday11-wrap .node.entry { background:var(--g100); }
+.ccday11-wrap .node.exit  { background:var(--oat); border-color:var(--clay); }
+.ccday11-wrap .node.dark  {
+  background:var(--slate); border-color:var(--slate); color:var(--ivory);
+}
+.ccday11-wrap .node.dark .tag{ color:var(--oat); }
+.ccday11-wrap .node.dark p{ color:var(--oat); }
+.ccday11-wrap .node.dark h3{ color:var(--ivory); }
+.ccday11-wrap .node .tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:10px; font-weight:600;
+}
+.ccday11-wrap .node .tag.clay{ color:var(--clay); }
+.ccday11-wrap .node p{
+  font-size:13.5px; color:var(--g700); margin:6px 0 0; line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.ccday11-wrap .annot{
+  font-family:var(--mono); font-size:11.5px; color:var(--g500);
+  display:flex; align-items:flex-start; margin-top:14px; letter-spacing:.04em;
+}
+.ccday11-wrap .annot::before{
+  content:""; width:32px; height:1.5px; background:var(--clay);
+  margin-right:12px; margin-top:8px; flex-shrink:0;
+}
+
+/* ========== Table ========== */
+.ccday11-wrap .table-wrap{ overflow-x:auto; }
+.ccday11-wrap table.compare{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+}
+.ccday11-wrap table.compare th,
+.ccday11-wrap table.compare td{
+  text-align:left; padding:14px 20px;
+  border-bottom:1px solid var(--g200); vertical-align:top;
+}
+.ccday11-wrap table.compare th{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+  background:var(--g100); border-bottom:1.5px solid var(--slate);
+}
+.ccday11-wrap table.compare td:first-child{
+  font-family:var(--mono); font-weight:600; font-size:13px;
+  width:22%; color:var(--clay-d); letter-spacing:.04em;
+}
+.ccday11-wrap table.compare tr:last-child td{ border-bottom:none; }
+.ccday11-wrap table.compare .clay{ color:var(--clay-d); }
+
+/* ========== Code ========== */
+.ccday11-wrap pre.code{
+  background:var(--slate); color:var(--ivory);
+  font-family:var(--mono); font-size:12.5px;
+  padding:20px 24px; border-radius:10px;
+  overflow-x:auto; line-height:1.65; margin:18px 0;
+}
+.ccday11-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.ccday11-wrap pre.code .k{ color:var(--clay); }
+.ccday11-wrap pre.code .s{ color:var(--olive); }
+.ccday11-wrap pre.code .t{ color:#7EC8E3; }
+.ccday11-wrap pre.code .n{ color:#C4B28A; }
+.ccday11-wrap pre.code .prompt{ color:var(--olive); }
+.ccday11-wrap pre.code .flag{ color:var(--clay); }
+.ccday11-wrap pre.code .comment{ color:var(--g500); font-style:italic; }
+.ccday11-wrap pre.code .output{ color:var(--oat); }
+
+.ccday11-wrap code.inline{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Architecture Diagram ========== */
+.ccday11-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 28px;
+  margin: 0;
+}
+.ccday11-wrap .archdiag svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.ccday11-wrap .archdiag-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Checklist ========== */
+.ccday11-wrap .check{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; padding:8px 24px;
+}
+.ccday11-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.ccday11-wrap .check li{
+  padding:14px 0 14px 36px; border-bottom:1px solid var(--g200);
+  position:relative; font-size:14.5px; color:var(--slate);
+}
+.ccday11-wrap .check li:last-child{ border-bottom:none; }
+.ccday11-wrap .check li::before{
+  content:""; position:absolute; left:0; top:16px;
+  width:18px; height:18px; border:1.5px solid var(--g300);
+  border-radius:4px; background:var(--paper);
+}
+
+/* ========== Review Questions ========== */
+.ccday11-wrap .review-list{
+  counter-reset: q; margin:0; padding:0; list-style:none;
+}
+.ccday11-wrap .review-list li{
+  counter-increment: q; position:relative;
+  padding:18px 0 18px 56px; border-bottom:1px solid var(--g200);
+  font-size:15px; color:var(--g700);
+}
+.ccday11-wrap .review-list li:last-child{ border-bottom:none; }
+.ccday11-wrap .review-list li::before{
+  content: counter(q, decimal-leading-zero);
+  position:absolute; left:0; top:18px;
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.06em; font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.ccday11-wrap .qa-grid{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.ccday11-wrap .qa-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden; transition: border-color 150ms ease;
+}
+.ccday11-wrap .qa-card[open]{ border-color:var(--slate); }
+.ccday11-wrap .qa-card summary{
+  list-style:none; cursor:pointer; padding:18px 24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition: background 150ms ease;
+}
+.ccday11-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.ccday11-wrap .qa-card summary::marker{ display:none; }
+.ccday11-wrap .qa-card summary:hover{ background:var(--g100); }
+.ccday11-wrap .qa-card[open] summary{
+  background:var(--g100); border-bottom:1px dashed var(--g300);
+}
+.ccday11-wrap .qa-num{
+  font-family:var(--mono); font-size:12px; color:var(--clay);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:3px;
+}
+.ccday11-wrap .qa-q{
+  font-family:var(--serif); font-size:16px; font-weight:500;
+  color:var(--slate); line-height:1.5; flex:1;
+}
+.ccday11-wrap .qa-toggle{
+  font-family:var(--mono); font-size:18px; color:var(--g500);
+  flex-shrink:0; font-weight:300; line-height:1; margin-top:2px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+.ccday11-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg); color:var(--clay);
+}
+.ccday11-wrap .qa-a{
+  padding:20px 24px 22px; display:flex; align-items:flex-start; gap:18px;
+}
+.ccday11-wrap .qa-a-label{
+  font-family:var(--mono); font-size:12px; color:var(--olive);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:2px;
+}
+.ccday11-wrap .qa-a-body{
+  flex:1; font-family:var(--sans); font-size:14.5px;
+  color:var(--g700); line-height:1.7;
+}
+.ccday11-wrap .qa-a-body p{ margin:0 0 10px; }
+.ccday11-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.ccday11-wrap .qa-a-body strong{
+  font-family:var(--serif); font-style:italic; font-weight:500; color:var(--slate);
+}
+.ccday11-wrap .qa-a-body code{
+  font-family:var(--mono); font-size:13px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 5px; color:var(--clay-d);
+}
+
+/* ========== Footer ========== */
+.ccday11-wrap footer{
+  margin-top:100px; padding-top:40px;
+  border-top:1px solid var(--g200); text-align:center;
+}
+.ccday11-wrap footer .quote{
+  font-family:var(--serif); font-style:italic; font-size:18px;
+  color:var(--g700); max-width:42ch; margin:0 auto; line-height:1.55;
+}
+.ccday11-wrap footer .meta{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px){
+  .ccday11-wrap{ padding:0 22px 90px; }
+  .ccday11-wrap .indent{ margin-left:0; }
+  .ccday11-wrap header.masthead{ padding:56px 0 40px; }
+  .ccday11-wrap section{ margin-top:56px; }
+  .ccday11-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .ccday11-wrap .archdiag{ padding:20px 12px; }
+  .ccday11-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .ccday11-wrap .qa-q{ font-size:14.5px; }
+  .ccday11-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="ccday11-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 11 · CLAUDE CODE ROADMAP · 20 DAYS</div>
+  <h1>Skills<em>把团队工艺封装成命令</em></h1>
+  <p class="lede">
+    Day 07 你写了第一个 Skill——今天把它推到<em style="font-style:italic;color:#B85C3E;">团队级</em>。
+    用 frontmatter 精确控制模型、agent、上下文；用 <code class="inline">$ARGUMENTS</code> 让命令接受参数；
+    把脚本 / 模板 / 示例组织成 <em style="font-style:italic;color:#B85C3E;">资源包</em>；
+    通过 git / plugin marketplace 让"祖传手艺"在团队和项目间一键复用。
+    一个 <code class="inline">/deploy staging</code> 背后，是整个团队的工程经验。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 75–90 min</span>
+    <span><strong>THEORY</strong> 25 min</span>
+    <span><strong>HANDS-ON</strong> 45 min</span>
+    <span><strong>REVIEW</strong> 15 min</span>
+    <span><strong>SECTIONS</strong> 5</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">M ·</div>
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 11 思维导图">
+        <!-- 根节点 -->
+        <rect x="265" y="20" width="450" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 11 · 自定义 Skills</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">ANATOMY · ARGS · RESOURCES · DISTRIBUTE</text>
+
+        <!-- 主竖线 + 横干线 -->
+        <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="858" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四条分支竖线 -->
+        <line x1="122" y1="106" x2="122" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="106" x2="367" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="106" x2="613" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="106" x2="858" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四个主题节点 -->
+        <rect x="32" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="122" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">01 · ANATOMY</text>
+        <text x="122" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">Skill 解剖</text>
+
+        <rect x="277" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · ARGUMENTS</text>
+        <text x="367" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">参数化模板</text>
+
+        <rect x="523" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · RESOURCES</text>
+        <text x="613" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">嵌套资源</text>
+
+        <rect x="768" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="858" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">04 · DISTRIBUTE</text>
+        <text x="858" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">跨项目分发</text>
+
+        <!-- 子节点 — ANATOMY -->
+        <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">frontmatter 字段全表</text>
+        <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">model / agent / context</text>
+        <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">allowed-tools 白名单</text>
+        <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">触发模式选择</text>
+
+        <!-- 子节点 — ARGUMENTS -->
+        <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">$ARGUMENTS 全文</text>
+        <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">位置参数 $1 $2</text>
+        <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">命名参数与默认</text>
+        <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">!`cmd` 动态注入</text>
+
+        <!-- 子节点 — RESOURCES -->
+        <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">scripts/ 辅助脚本</text>
+        <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">templates/ 模板</text>
+        <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">examples/ 范例</text>
+        <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">README / VERSION</text>
+
+        <!-- 子节点 — DISTRIBUTE -->
+        <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">三层位置优先级</text>
+        <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">git submodule</text>
+        <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">plugin marketplace</text>
+        <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">版本管理与升级</text>
+
+        <!-- 底部标注 -->
+        <line x1="200" y1="370" x2="780" y2="370" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="6,4"/>
+        <text x="490" y="400" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-style="italic" font-size="14"
+              fill="#87867F">一个 / 命令背后——是整个团队的工程经验</text>
+
+        <!-- 底部关键词 -->
+        <rect x="140" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="210" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">SKILL.MD</text>
+
+        <rect x="310" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="380" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">$ARGUMENTS</text>
+
+        <rect x="480" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="550" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">CONTEXT FORK</text>
+
+        <rect x="650" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
+        <text x="720" y="462" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" font-weight="600" letter-spacing="1">PLUGIN</text>
+      </svg>
+      <p class="mindmap-cap">FIG M — DAY 11 KNOWLEDGE MAP · SKILLS PRODUCTION GUIDE</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 01 · Skill 完整解剖 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">01 ·</div>
+    <h2>Skill 完整解剖</h2>
+    <div class="count">FRONTMATTER</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Day 07 写了一个最小 Skill——三行 frontmatter + 一段 prompt。
+      生产级 Skill 的 frontmatter 远不止这些。下面这张表把<em style="font-style:italic;color:#B85C3E;">所有可用字段</em>
+      列清楚，每一个都对应一种行为控制能力。
+    </p>
+
+    <h3>frontmatter 字段全表</h3>
+    <div class="table-wrap" style="margin-top:18px;">
+      <table class="compare">
+        <thead><tr>
+          <th>字段</th><th>类型 / 取值</th><th>作用</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>name</td>
+            <td>string（kebab-case）</td>
+            <td>命令名——决定 <code>/name</code> 怎么调用。必填。</td>
+          </tr>
+          <tr>
+            <td>description</td>
+            <td>string（一句话）</td>
+            <td>给 Claude 看的"什么场景下用"——决定自动调用是否触发。</td>
+          </tr>
+          <tr>
+            <td>model</td>
+            <td>opus / sonnet / haiku / inherit</td>
+            <td>该 Skill 强制使用的模型。<code>inherit</code> 跟随主会话。</td>
+          </tr>
+          <tr>
+            <td>agent</td>
+            <td>string（agent 名）</td>
+            <td>在指定子代理中执行——避免污染主会话上下文。</td>
+          </tr>
+          <tr>
+            <td>context</td>
+            <td>inherit / fork / fresh</td>
+            <td><code>fork</code> 复制主会话上下文；<code>fresh</code> 全新无历史。</td>
+          </tr>
+          <tr>
+            <td>allowed-tools</td>
+            <td>string[] 工具白名单</td>
+            <td>该 Skill 只能调用这些工具——天然的安全沙箱。</td>
+          </tr>
+          <tr>
+            <td>disable-model-invocation</td>
+            <td>boolean</td>
+            <td><code>true</code> 时 Claude 不会自动调用，只能手动 <code>/cmd</code>。</td>
+          </tr>
+          <tr>
+            <td>user-invocable</td>
+            <td>boolean（默认 true）</td>
+            <td><code>false</code> 时不出现在 <code>/</code> 菜单——只供其他流程内部调用。</td>
+          </tr>
+          <tr>
+            <td class="clay">argument-hint</td>
+            <td>string</td>
+            <td>显示给用户看的"该命令需要什么参数"提示——出现在补全菜单里。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">最常用的是 name / description / argument-hint，其他字段按需启用</div>
+
+    <h3 style="margin-top:36px;">生产级 Skill 模板</h3>
+    <pre class="code"><span class="comment"># .claude/skills/pr-review/SKILL.md</span>
+<span class="comment">---</span>
+<span class="k">name</span>: pr-review
+<span class="k">description</span>: 对当前 PR 做一轮自动评审——查 diff、读相关文件、给出建议
+<span class="k">argument-hint</span>: <span class="s">[severity: blocker | nit | optional]</span>
+<span class="k">model</span>: sonnet
+<span class="k">context</span>: fork
+<span class="k">allowed-tools</span>:
+  - Bash
+  - Read
+  - Grep
+  - Edit
+<span class="k">disable-model-invocation</span>: false
+<span class="comment">---</span>
+
+请对当前 PR 做一轮代码评审：
+
+1. <span class="k">分析变更</span>：
+   - 运行 !`git diff origin/main...HEAD --stat`
+   - 列出改动的文件和大致目的
+
+2. <span class="k">读取关键文件</span>：使用 Read 工具读取改动量最大的 3 个文件
+
+3. <span class="k">评审输出</span>：按以下格式给出建议
+   - 🔴 BLOCKER: 必须修复才能合并
+   - 🟡 NIT: 风格 / 命名 / 小问题
+   - 🟢 OPTIONAL: 改进建议
+
+4. <span class="k">严重程度过滤</span>：用户传入了 $ARGUMENTS——
+   只展示 ≥ 该级别的问题（blocker > nit > optional）</pre>
+
+    <h3 style="margin-top:36px;">触发模式三选一</h3>
+    <div class="grid grid-3" style="margin-top:18px;">
+      <div class="node">
+        <div class="tag">MODE · 双向</div>
+        <h3>默认（推荐）</h3>
+        <p>既可以 <code class="inline">/pr-review</code> 手动调用，也允许 Claude 在合适场景自动调用。description 写得越清楚，自动调用越准。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">MODE · 仅手动</div>
+        <h3>disable-model-invocation</h3>
+        <p>设为 <code class="inline">true</code>——Claude 永远不会自己调用。适合"破坏性操作"，例如 <code class="inline">/deploy production</code>。</p>
+      </div>
+      <div class="node">
+        <div class="tag">MODE · 内部</div>
+        <h3>user-invocable: false</h3>
+        <p>不在 <code class="inline">/</code> 菜单里出现——只能被其他 Skill 内部调用。适合组件化复用。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 02 · 参数化模板 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">02 ·</div>
+    <h2>参数化模板</h2>
+    <div class="count">DYNAMIC INPUT</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      硬编码的 Skill 只能做一件事——<code class="inline">/deploy</code> 永远只能部署到 staging。
+      用参数化把同一个 Skill 变成<em style="font-style:italic;color:#B85C3E;">一族命令</em>——
+      <code class="inline">/deploy staging</code>、<code class="inline">/deploy production</code>、
+      <code class="inline">/deploy preview --skip-tests</code>。
+    </p>
+
+    <h3>三种参数语法</h3>
+    <div class="table-wrap" style="margin-top:18px;">
+      <table class="compare">
+        <thead><tr>
+          <th>语法</th><th>含义</th><th>示例</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>$ARGUMENTS</td>
+            <td>用户在 <code>/cmd</code> 之后输入的<strong>所有内容（原文）</strong></td>
+            <td><code>/explain useState 用法</code> → $ARGUMENTS = "useState 用法"</td>
+          </tr>
+          <tr>
+            <td>$1 / $2 / $N</td>
+            <td><strong>位置参数</strong>——按空格分隔的第 N 个 token</td>
+            <td><code>/deploy staging --skip</code> → $1=staging, $2=--skip</td>
+          </tr>
+          <tr>
+            <td>!`shell cmd`</td>
+            <td>Skill 加载时<strong>执行 shell</strong>，结果注入</td>
+            <td><code>!`git branch --show-current`</code> → 当前分支名</td>
+          </tr>
+          <tr>
+            <td class="clay">组合用法</td>
+            <td>三种可以混用——参数填进 shell 命令、再注入回 prompt</td>
+            <td><code>!`gh issue view $1 --json title,body`</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:36px;">$ARGUMENTS 实战</h3>
+    <pre class="code"><span class="comment"># .claude/skills/explain/SKILL.md</span>
+<span class="comment">---</span>
+<span class="k">name</span>: explain
+<span class="k">description</span>: 用大白话解释一个函数 / 概念 / 报错
+<span class="k">argument-hint</span>: <span class="s">&lt;函数路径 | 概念名 | 报错信息&gt;</span>
+<span class="comment">---</span>
+
+用户想知道：<span class="n">$ARGUMENTS</span>
+
+请按以下方式回答：
+1. <span class="k">一句话总结</span>：先用一句口语化的话讲清楚
+2. <span class="k">展开</span>：分 3-5 个要点详细说明
+3. <span class="k">实例</span>：给一个最小可运行的代码示例
+4. <span class="k">类比</span>：用一个生活中的类比帮助理解
+
+如果 $ARGUMENTS 看起来是文件路径，请先用 Read 读取该文件。</pre>
+
+    <h3 style="margin-top:36px;">位置参数 + 动态注入</h3>
+    <pre class="code"><span class="comment"># .claude/skills/deploy/SKILL.md</span>
+<span class="comment">---</span>
+<span class="k">name</span>: deploy
+<span class="k">description</span>: 部署到指定环境(staging / production)
+<span class="k">argument-hint</span>: <span class="s">&lt;env&gt; [--skip-tests] [--dry-run]</span>
+<span class="k">allowed-tools</span>: [Bash, Read]
+<span class="k">disable-model-invocation</span>: true   <span class="comment"># 部署是破坏性操作,仅手动</span>
+<span class="comment">---</span>
+
+<span class="comment">## 部署到 $1 环境</span>
+
+<span class="k">当前状态</span>：
+- 分支：!`git branch --show-current`
+- 最近 commit：!`git log -1 --format='%h %s'`
+- 已修改文件：!`git status --short | wc -l`
+
+<span class="k">部署目标</span>：$1
+<span class="k">额外参数</span>：$2 $3
+
+请按以下流程执行：
+
+1. <span class="k">前置检查</span>：
+   - 确认 $1 是 staging 或 production
+   - 如果 $1 == production，要求用户二次确认
+   - 检查所有测试是否通过（除非传了 --skip-tests）
+
+2. <span class="k">构建</span>：运行 npm run build
+
+3. <span class="k">部署</span>：
+   - staging → npm run deploy:staging
+   - production → npm run deploy:prod
+
+4. <span class="k">验证</span>：等 30 秒后 curl 健康检查端点</pre>
+    <div class="annot">位置参数适合"模式固定、参数有限"的命令；$ARGUMENTS 适合自由文本</div>
+
+    <h3 style="margin-top:36px;">参数验证与默认值</h3>
+    <pre class="code"><span class="comment"># .claude/skills/test-coverage/SKILL.md</span>
+<span class="comment">---</span>
+<span class="k">name</span>: test-coverage
+<span class="k">description</span>: 检查指定模块的测试覆盖率
+<span class="k">argument-hint</span>: <span class="s">[模块路径,默认 src/]</span>
+<span class="comment">---</span>
+
+<span class="comment"># 如果用户没传参,默认为 src/</span>
+<span class="k">module</span>=${1:-src/}
+
+请检查 $module 的测试覆盖率：
+
+1. 运行 !`npx vitest run --coverage $module 2&gt;&amp;1 | tail -30`
+2. 列出覆盖率 &lt; 80% 的文件
+3. 对前 3 个文件给出补充测试建议</pre>
+  </div>
+</section>
+
+
+<!-- ========== 03 · 嵌套资源 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">03 ·</div>
+    <h2>嵌套资源结构</h2>
+    <div class="count">FILE LAYOUT</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      复杂的 Skill 不只是一个 <code class="inline">SKILL.md</code>——
+      它可以是一整个<em style="font-style:italic;color:#B85C3E;">资源目录</em>：
+      模板文件、辅助脚本、参考示例、README 文档。
+      Claude 在执行时可以引用这些资源，让 Skill 变成可携带的"工程包"。
+    </p>
+
+    <h3>典型目录结构</h3>
+    <pre class="code"><span class="comment"># .claude/skills/scaffold-component/</span>
+scaffold-component/
+├── SKILL.md              <span class="comment"># 主入口（必需）</span>
+├── README.md             <span class="comment"># 给人看的使用说明</span>
+├── VERSION               <span class="comment"># 版本号(可选,便于追踪)</span>
+├── templates/            <span class="comment"># 模板文件</span>
+│   ├── Component.tsx.tpl
+│   ├── Component.test.tsx.tpl
+│   └── Component.stories.tsx.tpl
+├── scripts/              <span class="comment"># 辅助脚本</span>
+│   ├── render.sh         <span class="comment"># 渲染模板</span>
+│   └── validate-name.sh  <span class="comment"># 校验组件名</span>
+├── examples/             <span class="comment"># 输入输出示例</span>
+│   ├── input.md
+│   └── output/
+└── docs/                 <span class="comment"># Skill 内部参考文档</span>
+    └── conventions.md</pre>
+
+    <h3 style="margin-top:36px;">资源引用方式</h3>
+    <div class="archdiag" style="margin-top:18px;">
+      <svg viewBox="0 0 960 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Skill 资源引用">
+        <!-- SKILL.md 中心 -->
+        <rect x="380" y="80" width="200" height="64" rx="10"
+              fill="#E3DACC" stroke="#D97757" stroke-width="1.5"/>
+        <text x="480" y="106" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">SKILL.MD</text>
+        <text x="480" y="128" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="14"
+              fill="#141413">主入口</text>
+
+        <!-- templates/ -->
+        <rect x="80" y="20" width="180" height="56" rx="10"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="170" y="44" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#141413" letter-spacing="1" font-weight="600">TEMPLATES/</text>
+        <text x="170" y="62" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11"
+              fill="#87867F">Read templates/x.tpl</text>
+
+        <!-- scripts/ -->
+        <rect x="80" y="148" width="180" height="56" rx="10"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="170" y="172" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#141413" letter-spacing="1" font-weight="600">SCRIPTS/</text>
+        <text x="170" y="190" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11"
+              fill="#87867F">!`./scripts/x.sh`</text>
+
+        <!-- examples/ -->
+        <rect x="700" y="20" width="180" height="56" rx="10"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="790" y="44" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#141413" letter-spacing="1" font-weight="600">EXAMPLES/</text>
+        <text x="790" y="62" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11"
+              fill="#87867F">Few-shot 提示</text>
+
+        <!-- docs/ -->
+        <rect x="700" y="148" width="180" height="56" rx="10"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="790" y="172" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#141413" letter-spacing="1" font-weight="600">DOCS/</text>
+        <text x="790" y="190" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11"
+              fill="#87867F">人/Claude 参考</text>
+
+        <!-- 连线 -->
+        <line x1="270" y1="48"  x2="378" y2="92"  stroke="#87867F" stroke-width="1.5"/>
+        <line x1="270" y1="176" x2="378" y2="132" stroke="#87867F" stroke-width="1.5"/>
+        <line x1="582" y1="92"  x2="694" y2="48"  stroke="#87867F" stroke-width="1.5"/>
+        <line x1="582" y1="132" x2="694" y2="176" stroke="#87867F" stroke-width="1.5"/>
+      </svg>
+      <p class="archdiag-cap">FIG 03 · SKILL RESOURCE LAYOUT — TEMPLATES · SCRIPTS · EXAMPLES · DOCS</p>
+    </div>
+
+    <h3 style="margin-top:36px;">引用规则</h3>
+    <div class="grid grid-2" style="margin-top:18px;">
+      <div class="node">
+        <div class="tag">RULE · 01</div>
+        <h3>模板用 Read 读取</h3>
+        <p>SKILL.md 里写 <code class="inline">请用 Read 读取 templates/Component.tsx.tpl 作为基础模板</code>——Claude 会进入 skill 目录解析相对路径。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">RULE · 02</div>
+        <h3>脚本用 ! 反引号</h3>
+        <p>用 <code class="inline">!`./scripts/render.sh $1 $2`</code> 把脚本输出注入 prompt。脚本必须有可执行权限。</p>
+      </div>
+      <div class="node">
+        <div class="tag">RULE · 03</div>
+        <h3>examples/ 是 few-shot</h3>
+        <p>在 SKILL.md 里 <code class="inline">参考 examples/input.md → examples/output/ 的对应关系</code>，让 Claude 学到风格。</p>
+      </div>
+      <div class="node">
+        <div class="tag">RULE · 04</div>
+        <h3>VERSION 与 README 给人看</h3>
+        <p>VERSION 一行版本号便于升级追踪；README 写给团队成员看，不会被 Claude 自动读取，但 <code class="inline">/cmd --help</code> 可以输出。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px;">scaffold-component 完整示例</h3>
+    <pre class="code"><span class="comment"># .claude/skills/scaffold-component/SKILL.md</span>
+<span class="comment">---</span>
+<span class="k">name</span>: scaffold-component
+<span class="k">description</span>: 根据组件名生成 React 组件 + 测试 + Storybook 三件套
+<span class="k">argument-hint</span>: <span class="s">&lt;ComponentName&gt; [--with-story]</span>
+<span class="k">allowed-tools</span>: [Read, Write, Bash]
+<span class="comment">---</span>
+
+请为组件 <span class="n">$1</span> 生成三件套：
+
+1. <span class="k">校验组件名</span>：
+   !`./scripts/validate-name.sh $1`
+
+2. <span class="k">读取三个模板</span>：
+   - Read templates/Component.tsx.tpl
+   - Read templates/Component.test.tsx.tpl
+   - Read templates/Component.stories.tsx.tpl
+
+3. <span class="k">替换占位符</span>：把 <span class="n">__NAME__</span> 替换成 $1，
+   <span class="n">__name__</span> 替换成 camelCase 形式
+
+4. <span class="k">写入文件</span>：
+   - src/components/$1/$1.tsx
+   - src/components/$1/$1.test.tsx
+   - src/components/$1/$1.stories.tsx（仅当参数含 --with-story）
+
+5. <span class="k">参考</span>：examples/Card/ 是一个完整的输出样例,可以对照风格</pre>
+  </div>
+</section>
+
+
+<!-- ========== 04 · 跨项目分发 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 ·</div>
+    <h2>跨项目分发与复用</h2>
+    <div class="count">DISTRIBUTION</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Skill 的真正价值在<em style="font-style:italic;color:#B85C3E;">复用</em>——
+      你写的 <code class="inline">/pr-review</code> 应该所有项目都能用、整个团队都能用、
+      甚至社区其他人也能用。Claude Code 提供了三层分发位置 + 三种分发方式，覆盖从个人到企业的所有场景。
+    </p>
+
+    <h3>三层位置（优先级从高到低）</h3>
+    <div class="table-wrap" style="margin-top:18px;">
+      <table class="compare">
+        <thead><tr>
+          <th>位置</th><th>路径</th><th>适合什么</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>项目级</td>
+            <td><code>.claude/skills/</code>（git 内）</td>
+            <td>团队统一工作流：/pr-review、/deploy、/migrate</td>
+          </tr>
+          <tr>
+            <td>个人级</td>
+            <td><code>~/.claude/skills/</code></td>
+            <td>个人偏好：/explain、/standup、/refactor</td>
+          </tr>
+          <tr>
+            <td>插件级</td>
+            <td>plugin/<code>skills/</code>（marketplace 安装）</td>
+            <td>社区共享：/security-review、/i18n-extract</td>
+          </tr>
+          <tr>
+            <td class="clay">优先级</td>
+            <td>项目 &gt; 个人 &gt; 插件</td>
+            <td>同名时项目级覆盖——便于团队定制社区 skill</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:36px;">三种分发方式</h3>
+    <div class="grid grid-3" style="margin-top:18px;">
+      <div class="node entry">
+        <div class="tag clay">WAY · 01</div>
+        <h3>Git 直接共享</h3>
+        <p>Skills 放在 <code class="inline">.claude/skills/</code> 跟随项目仓库——团队成员 clone 后立即获得所有命令。最简单、最常用。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">WAY · 02</div>
+        <h3>Git Submodule</h3>
+        <p>把组织级共享 skills 仓库作为 submodule 引入 <code class="inline">.claude/skills/shared/</code>——多个项目共享一套基础命令，独立升级。</p>
+      </div>
+      <div class="node">
+        <div class="tag">WAY · 03</div>
+        <h3>Plugin Marketplace</h3>
+        <p>把 Skill 包装成 plugin 发布到 marketplace——任何人 <code class="inline">/plugin install</code> 即可使用，自带版本管理。Day 19 详解。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px;">Git Submodule 模式</h3>
+    <pre class="code"><span class="comment"># 组织内有一个共享 skills 仓库:</span>
+<span class="comment">#   github.com/acme/claude-skills</span>
+<span class="comment"># 包含 /pr-review, /deploy, /security-check 等</span>
+
+<span class="comment"># 在新项目中引入:</span>
+<span class="prompt">$</span> git submodule add git@github.com:acme/claude-skills.git \
+    .claude/skills/shared
+
+<span class="comment"># 项目内同时保留特有 skill:</span>
+<span class="comment">#   .claude/skills/shared/    ← submodule(团队共享)</span>
+<span class="comment">#   .claude/skills/my-deploy/ ← 项目特有</span>
+
+<span class="comment"># 升级共享 skill:</span>
+<span class="prompt">$</span> cd .claude/skills/shared &amp;&amp; git pull &amp;&amp; cd -
+<span class="prompt">$</span> git add .claude/skills/shared
+<span class="prompt">$</span> git commit -m <span class="s">"升级共享 skills 到 v2.3"</span></pre>
+    <div class="annot">所有项目共享一份基线，各自有特化空间——平衡复用与灵活</div>
+
+    <h3 style="margin-top:36px;">版本管理</h3>
+    <div class="grid grid-2" style="margin-top:18px;">
+      <div class="node">
+        <div class="tag">VERSION · 01</div>
+        <h3>VERSION 文件</h3>
+        <p>每个 Skill 目录放一个 <code class="inline">VERSION</code> 文件（一行 SemVer），便于追踪是谁、什么时候、用哪个版本的 Skill 出了问题。</p>
+      </div>
+      <div class="node">
+        <div class="tag">VERSION · 02</div>
+        <h3>CHANGELOG.md</h3>
+        <p>团队共享的 skill 必备——记录每次 prompt 改动、新增字段、行为变化。读 changelog 能让别人无痛升级。</p>
+      </div>
+      <div class="node">
+        <div class="tag">VERSION · 03</div>
+        <h3>语义化 git tag</h3>
+        <p>共享 skills 仓库用 <code class="inline">v1.2.3</code> 打 tag——下游项目可以 pin 到具体版本，不被上游 breaking change 拖累。</p>
+      </div>
+      <div class="node">
+        <div class="tag">VERSION · 04</div>
+        <h3>兼容性测试</h3>
+        <p>在 examples/ 里放固定输入 → 固定输出对——CI 跑 <code class="inline">claude -p</code> 验证 Skill 行为没变。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 05 · 高级模式 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">05 ·</div>
+    <h2>高级模式</h2>
+    <div class="count">PRODUCTION CRAFT</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Skill 不只是"命令"——配合 context fork、agent 隔离、与 Hook 组合，
+      可以构建出复杂的工程系统。下面是几个最有效的高级模式。
+    </p>
+
+    <h3>Pattern A · context: fork 子代理隔离</h3>
+    <p style="margin-top:8px;">
+      默认 Skill 在主会话里执行，会消耗主会话的上下文窗口。
+      对于"长任务"（如全项目重构、深度搜索）应该用 <code class="inline">context: fork</code>——
+      在独立子会话里执行，<strong>只把最终摘要</strong>返回主会话。
+    </p>
+    <pre class="code"><span class="comment">---</span>
+<span class="k">name</span>: deep-search
+<span class="k">description</span>: 在大型代码库里深度搜索某个 API 的所有用法
+<span class="k">context</span>: fork   <span class="comment"># ← 关键</span>
+<span class="k">model</span>: haiku    <span class="comment"># 子代理用便宜模型</span>
+<span class="comment">---</span>
+
+请深度搜索 $ARGUMENTS 这个 API：
+
+1. 用 Grep / Glob 找出所有调用点
+2. 对每个调用点读 5 行上下文
+3. 分类：测试 / 生产 / 文档 / deprecated
+
+最终只返回 markdown 表格摘要，不要返回完整列表。</pre>
+    <div class="annot">主会话上下文不被污染——子代理跑完只回一个摘要</div>
+
+    <h3 style="margin-top:36px;">Pattern B · Skill 调用 Skill</h3>
+    <pre class="code"><span class="comment"># .claude/skills/release/SKILL.md</span>
+<span class="comment">---</span>
+<span class="k">name</span>: release
+<span class="k">description</span>: 完整发版流程
+<span class="comment">---</span>
+
+请按以下步骤发版：
+
+1. <span class="k">先调用</span> /pr-review 做一轮自检
+2. <span class="k">如果无 BLOCKER</span>:
+   - 运行 npm version $1
+   - 调用 /deploy production
+3. <span class="k">最后调用</span> /changelog 生成发布说明</pre>
+    <div class="annot">Skill 内部可以引用其他 Skill ——组合出复杂流程</div>
+
+    <h3 style="margin-top:36px;">Pattern C · Hook + Skill 共生</h3>
+    <div class="grid grid-2" style="margin-top:18px;">
+      <div class="node">
+        <div class="tag">SCENE · 01</div>
+        <h3>Hook 自动调用 Skill</h3>
+        <p>在 <code class="inline">Stop</code> Hook 里 <code class="inline">claude -p "/pr-review nit"</code>——Claude 每完成一轮就自动 PR 自检。两者职责清晰：Hook 触发、Skill 执行。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">SCENE · 02</div>
+        <h3>Skill 内部依赖 Hook</h3>
+        <p><code class="inline">/deploy</code> Skill 假设 PreToolUse Hook 已经把"禁推 main"规则编码进去——Skill 只关心流程，Hook 只关心规则。</p>
+      </div>
+      <div class="node">
+        <div class="tag">SCENE · 03</div>
+        <h3>Skill 触发 Hook 链</h3>
+        <p><code class="inline">/migrate</code> 调用 Write 工具→触发 PostToolUse 格式化 Hook→再触发自动测试 Hook——单个 Skill 启动整条自动化链。</p>
+      </div>
+      <div class="node">
+        <div class="tag">SCENE · 04</div>
+        <h3>Hook 注入 Skill 上下文</h3>
+        <p>UserPromptSubmit Hook 检测到用户输入 <code class="inline">/help</code>，自动调用 <code class="inline">/list-skills</code> 列出可用命令——把 help 也做成 Skill。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px;">调试与热重载</h3>
+    <pre class="code"><span class="comment"># 列出所有可用 Skill 及其位置:</span>
+<span class="prompt">$</span> ls .claude/skills/ ~/.claude/skills/
+
+<span class="comment"># Skill 修改后立即生效 —— 无需重启会话</span>
+<span class="comment"># 但 frontmatter 改了需要重新执行命令才会读取新值</span>
+
+<span class="comment"># 在 Claude Code 内查看 skill 加载详情:</span>
+<span class="prompt">$</span> claude --debug
+<span class="prompt">&gt;</span> /pr-review blocker
+<span class="comment"># stderr 会打印: 加载 .claude/skills/pr-review/SKILL.md, frontmatter 解析结果...</span>
+
+<span class="comment"># 手动测试 Skill prompt 渲染结果:</span>
+<span class="prompt">$</span> claude -p --bare <span class="s">"/explain useState"</span> --dry-run
+<span class="comment"># 输出 Skill 渲染后的完整 prompt,不真正调用 LLM</span></pre>
+  </div>
+</section>
+
+
+<!-- ========== 06 · LABS ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">06 ·</div>
+    <h2>Labs</h2>
+    <div class="count">4 HANDS-ON</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      四个递进的动手实验——从带参数的基础 Skill 到完整资源包。
+      预计 45 分钟，每个 Lab 完成后用 <code class="inline">/skill-name &lt;参数&gt;</code> 实际跑一次。
+    </p>
+
+    <div class="grid grid-2">
+      <div class="node entry">
+        <div class="tag clay">LAB · 01 · 10 MIN</div>
+        <h3>带参数的 /explain</h3>
+        <p>创建 <code class="inline">~/.claude/skills/explain/SKILL.md</code>，加上 <code class="inline">argument-hint</code> 和 <code class="inline">$ARGUMENTS</code> 占位符。试运行 <code class="inline">/explain useState</code> 和 <code class="inline">/explain ./src/utils/parseCSV.ts</code>，对比两种输入下的行为。</p>
+        <div class="annot">目标：掌握 $ARGUMENTS 与 frontmatter 基础</div>
+      </div>
+      <div class="node">
+        <div class="tag">LAB · 02 · 12 MIN</div>
+        <h3>位置参数 + 动态注入的 /deploy</h3>
+        <p>写一个 <code class="inline">/deploy &lt;env&gt;</code>，用 <code class="inline">$1</code> 接收环境名、<code class="inline">!`git ...`</code> 注入当前分支和 commit。<code class="inline">disable-model-invocation: true</code> 保证只能手动调用。试 <code class="inline">/deploy staging</code> 与 <code class="inline">/deploy production</code> 对比行为。</p>
+        <div class="annot">目标：组合位置参数、shell 注入、手动模式</div>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">LAB · 03 · 13 MIN</div>
+        <h3>资源包 /scaffold</h3>
+        <p>创建一个完整的 scaffold 目录：SKILL.md + templates/Component.tsx.tpl + scripts/validate-name.sh + examples/Card/。让它能从模板生成新组件 + 测试 + Storybook 三件套。</p>
+        <div class="annot">目标：理解 Skill 作为"工程包"的组织方式</div>
+      </div>
+      <div class="node exit">
+        <div class="tag clay">LAB · 04 · 10 MIN</div>
+        <h3>Git Submodule 团队共享</h3>
+        <p>创建一个新 git 仓库 <code class="inline">my-claude-skills</code>，放进至少 2 个 skill；在另一个项目里用 <code class="inline">git submodule add</code> 引入到 <code class="inline">.claude/skills/shared/</code>，验证两个项目都能调用。</p>
+        <div class="annot">目标：跑通跨项目共享 + 版本固定模式</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== Q · FAQ ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">Q ·</div>
+    <h2>常见问题</h2>
+    <div class="count">6 FAQS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q · 01</span>
+          <span class="qa-q">同名 Skill 在不同层级都存在时，哪个生效？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A ·</span>
+          <div class="qa-a-body">
+            <p>优先级是：<strong>项目级 &gt; 个人级 &gt; 插件级</strong>。这个顺序是<strong>故意</strong>这样设计的——它允许团队"覆盖"个人或社区的同名 Skill。</p>
+            <p>典型场景：插件 <code>acme-skills</code> 提供了一个 <code>/deploy</code>，但你们项目有特殊的部署逻辑——直接在 <code>.claude/skills/deploy/</code> 写一个同名 Skill，它会覆盖插件版本，团队成员不需要做任何配置。用 <code>/skills</code> 命令可以查看每个命令最终从哪里加载。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q · 02</span>
+          <span class="qa-q">$ARGUMENTS 和 $1 $2 $3 区别在哪？什么时候用哪个？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A ·</span>
+          <div class="qa-a-body">
+            <p><code>$ARGUMENTS</code> 是<strong>原文整体</strong>——用户输入什么、它就是什么字符串。适合"自由文本"场景，比如 <code>/explain 一段说明文字</code>。</p>
+            <p><code>$1 $2 $N</code> 是<strong>按空格拆出来的位置参数</strong>——适合"模式固定"的命令，比如 <code>/deploy staging --skip-tests</code> 里 $1=staging, $2=--skip-tests。可以混用：用 $1 拿环境，用 $ARGUMENTS 拿完整原始输入。注意带空格的参数需要引号包裹，否则会被拆开。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q · 03</span>
+          <span class="qa-q">为什么 Claude 不自动调用我写的 Skill？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A ·</span>
+          <div class="qa-a-body">
+            <p>三个常见原因，按概率从高到低：(1) <strong><code>description</code> 写得太模糊</strong>——Claude 不知道什么场景下用。改成"<strong>当用户 X 时使用此 Skill</strong>"这种明确的触发提示；(2) 设了 <code>disable-model-invocation: true</code>——这就是关闭自动调用的开关；(3) Skill 加载失败但 Claude Code 没报错——用 <code>claude --debug</code> 看 stderr。</p>
+            <p>提升自动调用准确率的最佳实践：在 description 里写"<strong>触发词：…</strong>"和"<strong>当以下情况时使用此 Skill：…</strong>"，列举具体场景。Claude 的工具选择本质上是 LLM 的 zero-shot 分类——描述越具体越准。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q · 04</span>
+          <span class="qa-q">Skill 里的 !`shell` 注入安全吗？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A ·</span>
+          <div class="qa-a-body">
+            <p>取决于<strong>谁能修改 Skill 文件</strong>。Skill 加载时会执行 frontmatter 之后的所有 <code>!`...`</code>——如果攻击者能往你的 <code>.claude/skills/</code> 写文件，他就能在你启动 Claude 时执行任意命令。</p>
+            <p>三条防线：(1) Skill 目录走 <strong>Code Review</strong>，跟代码一样审；(2) submodule 引入第三方 skill 时<strong>pin 到具体 commit</strong>，不要跟 master；(3) 把传入参数<strong>当不可信</strong>——绝对不要在 shell 里写 <code>!`rm $1`</code>，用 <code>!`./scripts/validate-and-run.sh "$1"</code> 包一层校验。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q · 05</span>
+          <span class="qa-q">context: fork 真的能省 token 吗？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A ·</span>
+          <div class="qa-a-body">
+            <p>能——但要看 Skill 设计得对不对。<code>fork</code> 的真正价值是<strong>主会话不被子任务的中间过程污染</strong>——子代理可能 Read 几百个文件来搜索，但只把"找到了 12 个用法、列表如下"返回主会话。主会话的窗口里只多了一行结果。</p>
+            <p>误用 <code>fork</code> 的两个坑：(1) 短任务也 fork——子会话冷启动反而多 1-2 秒；(2) 主任务严重依赖子任务的中间细节——结果用户还得追问"你都搜了哪些文件"，子会话已经销毁了。判断标准：<strong>任务是否能用一段 ≤200 字摘要交付</strong>。能就 fork，不能就 inherit。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q · 06</span>
+          <span class="qa-q">写好的 Skill 怎么分享给社区？要做 plugin 吗？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">A ·</span>
+          <div class="qa-a-body">
+            <p>分三档：(1) <strong>小范围共享</strong>——直接发 git 仓库链接，让别人 clone 进 <code>~/.claude/skills/</code>；(2) <strong>中等规模</strong>——做成 git submodule 模板，别人 add 即可；(3) <strong>面向广泛社区</strong>——包装成 plugin 发到 marketplace（Day 19 详解），自带版本管理、依赖声明、安装提示。</p>
+            <p>判断要不要走 plugin：如果你的 Skill 只是几个 SKILL.md，git 仓库就够；如果包含多个 Skill + Hook + agent 还有版本依赖，plugin 会让用户体验好得多。看自己的 Skill 是"工具"还是"产品"。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== R · REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">R ·</div>
+    <h2>复习题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review-list">
+      <li>请列出至少 6 个 Skill frontmatter 字段，并说明各自的作用。</li>
+      <li><code class="inline">$ARGUMENTS</code> 与 <code class="inline">$1 $2</code> 的区别是什么？分别在什么场景下首选？</li>
+      <li>Skill 资源目录中 templates/ / scripts/ / examples/ 三种子目录分别如何被引用？</li>
+      <li>跨项目复用 Skill 的三种方式（git / submodule / plugin）各有什么权衡？</li>
+      <li><code class="inline">context: fork</code> 解决了什么问题？什么场景下不应该用？</li>
+    </ol>
+  </div>
+</section>
+
+
+<!-- ========== ✓ · CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">✓ ·</div>
+    <h2>自检清单</h2>
+    <div class="count">8 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>能熟练写出 Skill frontmatter 的核心字段（name / description / model / allowed-tools / argument-hint）</li>
+        <li>掌握 <code class="inline">$ARGUMENTS</code> / <code class="inline">$1..$N</code> / <code class="inline">!`cmd`</code> 三种参数化语法</li>
+        <li>能给 Skill 加 <code class="inline">argument-hint</code> 让补全菜单显示提示</li>
+        <li>能用 <code class="inline">disable-model-invocation</code> / <code class="inline">user-invocable</code> 控制触发模式</li>
+        <li>能组织 templates/ / scripts/ / examples/ 多文件资源包</li>
+        <li>理解项目级 / 个人级 / 插件级三层优先级</li>
+        <li>能用 git submodule 在多个项目共享一套 skill 基线</li>
+        <li>知道何时用 <code class="inline">context: fork</code> 避免污染主会话</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">☞ ·</div>
+    <h2>延伸阅读</h2>
+    <div class="count">3 LINKS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-3">
+      <div class="node">
+        <div class="tag">DOCS</div>
+        <h3>Claude Code — Skills Reference</h3>
+        <p>官方 Skills 完整文档：frontmatter 字段全表、参数语法、context 模式、与 agent / hook 的集成方式。</p>
+      </div>
+      <div class="node">
+        <div class="tag">EXAMPLE</div>
+        <h3>awesome-claude-skills</h3>
+        <p>社区维护的 Skill 模板集合：scaffold-component、pr-review、changelog 生成、i18n 提取等开箱即用。</p>
+      </div>
+      <div class="node">
+        <div class="tag">GUIDE</div>
+        <h3>Plugin Marketplace 发布指南</h3>
+        <p>把 Skill 包装成 plugin 的完整流程：plugin.json 配置、依赖声明、版本管理、上架审核（Day 19 详解）。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">☛ ·</div>
+    <h2>Day 12 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">COMING NEXT</div>
+      <h3>Memory 记忆系统 — 让偏好与上下文跨会话持久化</h3>
+      <p>今天你封装了团队的工艺——明天将让 Claude 记住<em style="font-style:italic;color:#B85C3E;">你这个人</em>。
+      用 <code class="inline">/memory</code> 命令、MEMORY.md 索引、user / feedback / project / reference 四种记忆类型，
+      让 Claude 跨会话记得你的角色、偏好、纠正历史、项目背景。从此每次开会话不再从零开始——
+      Claude 像一个有记忆的同事。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"The best abstractions don't hide details — they let you forget them."</p>
+  <p class="meta">DAY 11 · CLAUDE CODE 20-DAY ROADMAP · AFTER ALFRED N. WHITEHEAD</p>
+</footer>
+
+</div>

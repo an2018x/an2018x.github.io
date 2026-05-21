@@ -1044,6 +1044,502 @@ response.<span class="t">usage</span>.<span class="t">output_tokens</span>
     </div>
 
     <div class="sub-gap"></div>
+    <h3>Usage 字段全览对照</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>语义</th>
+            <th>OpenAI 字段</th>
+            <th>Anthropic 字段</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>输入 token 总数</td>
+            <td><code class="inline">usage.prompt_tokens</code></td>
+            <td><code class="inline">usage.input_tokens</code></td>
+          </tr>
+          <tr>
+            <td>输出 token 总数</td>
+            <td><code class="inline">usage.completion_tokens</code></td>
+            <td><code class="inline">usage.output_tokens</code></td>
+          </tr>
+          <tr>
+            <td>总 token</td>
+            <td><code class="inline">usage.total_tokens</code>（API 给出）</td>
+            <td>—（需 input + output + cache_* 自行相加）</td>
+          </tr>
+          <tr>
+            <td>缓存命中</td>
+            <td><code class="inline">usage.prompt_tokens_details.cached_tokens</code></td>
+            <td><code class="inline">usage.cache_read_input_tokens</code></td>
+          </tr>
+          <tr>
+            <td>缓存写入</td>
+            <td>—（自动，不单独计量）</td>
+            <td><code class="inline">usage.cache_creation_input_tokens</code></td>
+          </tr>
+          <tr>
+            <td>缓存细分（多 TTL）</td>
+            <td>—</td>
+            <td><code class="inline">usage.cache_creation.ephemeral_5m_input_tokens</code><br><code class="inline">usage.cache_creation.ephemeral_1h_input_tokens</code></td>
+          </tr>
+          <tr>
+            <td>推理 token</td>
+            <td><code class="inline">usage.completion_tokens_details.reasoning_tokens</code></td>
+            <td>计入 <code class="inline">output_tokens</code>（thinking block 部分）</td>
+          </tr>
+          <tr>
+            <td>接受的预测 token</td>
+            <td><code class="inline">usage.completion_tokens_details.accepted_prediction_tokens</code></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>拒绝的预测 token</td>
+            <td><code class="inline">usage.completion_tokens_details.rejected_prediction_tokens</code></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>音频输入 token</td>
+            <td><code class="inline">usage.prompt_tokens_details.audio_tokens</code></td>
+            <td>—（暂不支持音频输入）</td>
+          </tr>
+          <tr>
+            <td>音频输出 token</td>
+            <td><code class="inline">usage.completion_tokens_details.audio_tokens</code></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Web 搜索请求数</td>
+            <td>—</td>
+            <td><code class="inline">usage.server_tool_use.web_search_requests</code></td>
+          </tr>
+          <tr>
+            <td>服务层级</td>
+            <td>—（请求体 <code class="inline">service_tier</code> 控制）</td>
+            <td><code class="inline">usage.service_tier</code>（<code class="inline">"standard" | "priority" | "batch"</code>）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <strong>计费基本规则：</strong>OpenAI 的 <code class="inline">prompt_tokens</code> 已经包含缓存命中部分（<code class="inline">cached_tokens</code> 是其子集），按"原价 × (prompt − cached) + 折扣价 × cached"计费。
+      Anthropic 的 <code class="inline">input_tokens</code> 只统计<strong>未命中缓存且未触发写缓存</strong>的部分，三类 token（input / cache_creation / cache_read）<strong>互不重叠</strong>，需分别按不同费率计费。<br><br>
+      <strong>常见踩坑：</strong>用 Anthropic 时若简单地 <code class="inline">input + output</code>，会漏算 <code class="inline">cache_creation_input_tokens</code>（缓存写入按 1.25× 或 2× 原价计费）和 <code class="inline">cache_read_input_tokens</code>（按 0.1× 原价计费）。
+    </div>
+
+    <div class="sub-gap"></div>
+    <h3>完整 usage 对象（含全部子字段）</h3>
+    <div class="dual-code">
+      <div>
+        <div class="col-label openai">OpenAI usage — 全字段示例</div>
+<pre class="code"><span class="s">"usage"</span>: {
+  <span class="s">"prompt_tokens"</span>: <span class="n">2048</span>,        <span class="comment">← 含 cached_tokens</span>
+  <span class="s">"completion_tokens"</span>: <span class="n">512</span>,     <span class="comment">← 含 reasoning_tokens</span>
+  <span class="s">"total_tokens"</span>: <span class="n">2560</span>,
+
+  <span class="s">"prompt_tokens_details"</span>: {
+    <span class="s">"cached_tokens"</span>: <span class="n">1024</span>,      <span class="comment">← 自动命中缓存</span>
+    <span class="s">"audio_tokens"</span>: <span class="n">0</span>            <span class="comment">← 音频输入(GPT-4o-audio)</span>
+  },
+
+  <span class="s">"completion_tokens_details"</span>: {
+    <span class="s">"reasoning_tokens"</span>: <span class="n">256</span>,    <span class="comment">← o1/o3/o4 思考</span>
+    <span class="s">"audio_tokens"</span>: <span class="n">0</span>,           <span class="comment">← 音频输出</span>
+    <span class="s">"accepted_prediction_tokens"</span>: <span class="n">0</span>,
+    <span class="s">"rejected_prediction_tokens"</span>: <span class="n">0</span>
+  }
+}
+
+<span class="comment">// 计费示例（GPT-4o，价格仅示意）：</span>
+<span class="comment">// 普通输入: (2048 - 1024) × $2.50/M = ...</span>
+<span class="comment">// 缓存输入: 1024 × $1.25/M = ...</span>
+<span class="comment">// 输出: 512 × $10.00/M = ...</span>
+<span class="comment">// (reasoning_tokens 已在 completion_tokens 中)</span></pre>
+      </div>
+      <div>
+        <div class="col-label anthropic">Anthropic usage — 全字段示例</div>
+<pre class="code"><span class="s">"usage"</span>: {
+  <span class="s">"input_tokens"</span>: <span class="n">512</span>,             <span class="comment">← 未命中也未写缓存</span>
+  <span class="s">"cache_creation_input_tokens"</span>: <span class="n">1024</span>,
+  <span class="s">"cache_read_input_tokens"</span>: <span class="n">2048</span>,
+
+  <span class="s">"cache_creation"</span>: {              <span class="comment">← 缓存写入按 TTL 拆分</span>
+    <span class="s">"ephemeral_5m_input_tokens"</span>: <span class="n">512</span>,
+    <span class="s">"ephemeral_1h_input_tokens"</span>: <span class="n">512</span>
+  },
+
+  <span class="s">"output_tokens"</span>: <span class="n">768</span>,            <span class="comment">← thinking + 正文</span>
+  <span class="s">"server_tool_use"</span>: {              <span class="comment">← 服务端工具计量</span>
+    <span class="s">"web_search_requests"</span>: <span class="n">2</span>
+  },
+  <span class="s">"service_tier"</span>: <span class="s">"standard"</span>      <span class="comment">← standard/priority/batch</span>
+}
+
+<span class="comment">// 计费示例（Claude Sonnet 4，价格仅示意）：</span>
+<span class="comment">// 普通输入: 512 × $3.00/M = ...</span>
+<span class="comment">// 缓存写入(5m): 512 × $3.75/M (1.25×) = ...</span>
+<span class="comment">// 缓存写入(1h): 512 × $6.00/M (2.00×) = ...</span>
+<span class="comment">// 缓存读取: 2048 × $0.30/M (0.10×) = ...</span>
+<span class="comment">// 输出: 768 × $15.00/M = ...</span></pre>
+      </div>
+    </div>
+    <div class="annot">OpenAI 的 cached_tokens 是 prompt_tokens 的子集（重叠）；Anthropic 三类输入字段相互独立（不重叠），合计才是实际处理的输入总量</div>
+
+    <div class="sub-gap"></div>
+    <h3>Prompt Caching 计费机制对比</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>OpenAI</th>
+            <th>Anthropic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>触发方式</td>
+            <td>自动（prefix ≥ 1024 token 时）</td>
+            <td>显式，在请求体加 <code class="inline">cache_control: {type: "ephemeral"}</code></td>
+          </tr>
+          <tr>
+            <td>缓存最小粒度</td>
+            <td>1024 token（不足不缓存）</td>
+            <td>取决于模型：Sonnet/Opus 1024、Haiku 2048</td>
+          </tr>
+          <tr>
+            <td>缓存写入费用</td>
+            <td>免费（不额外计费）</td>
+            <td>5m TTL: 1.25× 原价；1h TTL: 2.00× 原价</td>
+          </tr>
+          <tr>
+            <td>缓存读取费用</td>
+            <td>0.5× 原价（约 50% 折扣）</td>
+            <td>0.1× 原价（约 90% 折扣）</td>
+          </tr>
+          <tr>
+            <td>TTL 默认</td>
+            <td>~5–10 分钟（不可调整）</td>
+            <td>5 分钟（默认）或 1 小时（<code class="inline">ttl: "1h"</code>）</td>
+          </tr>
+          <tr>
+            <td>断点数量</td>
+            <td>—（自动 prefix）</td>
+            <td>最多 4 个 <code class="inline">cache_control</code> 断点（system + tools + messages）</td>
+          </tr>
+          <tr>
+            <td>响应中的命中量</td>
+            <td><code class="inline">prompt_tokens_details.cached_tokens</code></td>
+            <td><code class="inline">cache_read_input_tokens</code></td>
+          </tr>
+          <tr>
+            <td>响应中的写入量</td>
+            <td>不区分（已含在 prompt_tokens 内）</td>
+            <td><code class="inline">cache_creation_input_tokens</code> + <code class="inline">cache_creation.ephemeral_{5m,1h}_input_tokens</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <strong>缓存计费公式：</strong><br>
+      ▸ <strong>OpenAI</strong>：<code class="inline">cost = input × full_price − cached × 0.5 × full_price + output × out_price</code><br>
+      ▸ <strong>Anthropic</strong>：<code class="inline">cost = input × full + cache_creation × {1.25 or 2.00} × full + cache_read × 0.10 × full + output × out_price</code><br><br>
+      由于 Anthropic 的三类输入<strong>不重叠</strong>，统计实际处理的 prompt 总 token 时需 <code class="inline">total_input = input_tokens + cache_creation_input_tokens + cache_read_input_tokens</code>。
+    </div>
+
+    <div class="sub-gap"></div>
+    <h3>Reasoning / Thinking Token 计费</h3>
+    <div class="dual-code">
+      <div>
+        <div class="col-label openai">OpenAI — reasoning_tokens（o1/o3/o4 系列）</div>
+<pre class="code"><span class="comment">// 思考 token 是 completion 的子集，不可读</span>
+<span class="s">"usage"</span>: {
+  <span class="s">"prompt_tokens"</span>: <span class="n">100</span>,
+  <span class="s">"completion_tokens"</span>: <span class="n">1500</span>,
+  <span class="s">"completion_tokens_details"</span>: {
+    <span class="s">"reasoning_tokens"</span>: <span class="n">1200</span>  <span class="comment">← 隐式思考</span>
+  }
+}
+
+<span class="comment">// 关键点：</span>
+<span class="comment">// 1. reasoning_tokens 已包含在 completion_tokens 中</span>
+<span class="comment">// 2. 计费时按 output 价计算 (整个 completion)</span>
+<span class="comment">// 3. 思考内容对用户不可见（仅返回 summary）</span>
+<span class="comment">// 4. max_completion_tokens 需要预留思考预算</span>
+<span class="comment">//    （而非旧的 max_tokens，o-系列已弃用）</span>
+<span class="comment">// 5. 通过 reasoning_effort: "low/medium/high"</span>
+<span class="comment">//    控制思考深度</span></pre>
+      </div>
+      <div>
+        <div class="col-label anthropic">Anthropic — thinking block（Claude 3.7+ / 4.x）</div>
+<pre class="code"><span class="comment">// 思考 token 计入 output_tokens，但内容可见</span>
+<span class="s">"usage"</span>: {
+  <span class="s">"input_tokens"</span>: <span class="n">100</span>,
+  <span class="s">"output_tokens"</span>: <span class="n">1500</span>  <span class="comment">← thinking + 正文</span>
+}
+
+<span class="s">"content"</span>: [
+  {<span class="s">"type"</span>:<span class="s">"thinking"</span>,<span class="s">"thinking"</span>:<span class="s">"Let me ..."</span>,
+   <span class="s">"signature"</span>:<span class="s">"abc..."</span>},  <span class="comment">← 思考块（可见）</span>
+  {<span class="s">"type"</span>:<span class="s">"text"</span>,<span class="s">"text"</span>:<span class="s">"答案是 42"</span>}
+]
+
+<span class="comment">// 关键点：</span>
+<span class="comment">// 1. thinking 文本按 output 价计费</span>
+<span class="comment">// 2. 通过 thinking.budget_tokens 控制上限</span>
+<span class="comment">// 3. budget_tokens 必须 &lt; max_tokens</span>
+<span class="comment">// 4. 多轮回传时需要带回 signature 才会被采信</span>
+<span class="comment">// 5. 工具调用循环中必须回传 thinking block</span></pre>
+      </div>
+    </div>
+
+    <div class="sub-gap"></div>
+    <h3>多模态 Token 计算（图片 / 音频）</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>OpenAI 计费规则</th>
+            <th>Anthropic 计费规则</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>图片（low detail）</td>
+            <td>固定 85 tokens / 张</td>
+            <td>—（不区分 detail，按尺寸折算）</td>
+          </tr>
+          <tr>
+            <td>图片（high detail）</td>
+            <td>85 + 170 × tile 数（每 tile = 512×512）</td>
+            <td><code class="inline">tokens ≈ (width × height) / 750</code></td>
+          </tr>
+          <tr>
+            <td>图片建议尺寸上限</td>
+            <td>≤ 2000×768 或 768×2000（自动缩放）</td>
+            <td>≤ 1568 px 长边（超出会缩放）</td>
+          </tr>
+          <tr>
+            <td>图片 token 归属</td>
+            <td><code class="inline">prompt_tokens</code>（不单列）</td>
+            <td><code class="inline">input_tokens</code>（不单列）</td>
+          </tr>
+          <tr>
+            <td>音频输入</td>
+            <td><code class="inline">prompt_tokens_details.audio_tokens</code><br>（约 25 tokens/秒，gpt-4o-audio）</td>
+            <td>—（暂不支持）</td>
+          </tr>
+          <tr>
+            <td>音频输出</td>
+            <td><code class="inline">completion_tokens_details.audio_tokens</code></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>PDF / 文档</td>
+            <td>通常先转图片，按图片计费</td>
+            <td>直接传 PDF，按页转 token（约 1500–3000 / 页）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <strong>图片 token 估算示例：</strong>一张 1024×768 的图片，OpenAI（high detail）需 <code class="inline">85 + 170 × 6 = 1105</code> tokens；
+      Anthropic 约 <code class="inline">(1024 × 768) / 750 ≈ 1049</code> tokens。两者数量级接近，但实际请求可能因预处理差异略有不同。
+    </div>
+
+    <div class="sub-gap"></div>
+    <h3>流式（Streaming）中获取 usage</h3>
+    <div class="dual-code">
+      <div>
+        <div class="col-label openai">OpenAI — 需显式开启</div>
+<pre class="code"><span class="comment">// 请求体必须加 stream_options</span>
+{
+  <span class="s">"model"</span>: <span class="s">"gpt-4o"</span>,
+  <span class="s">"messages"</span>: [...],
+  <span class="s">"stream"</span>: <span class="k">true</span>,
+  <span class="s">"stream_options"</span>: {<span class="s">"include_usage"</span>: <span class="k">true</span>}
+}
+
+<span class="comment">// 中间事件 usage 字段为 null</span>
+data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{...}}],
+       <span class="s">"usage"</span>: <span class="k">null</span>}
+
+<span class="comment">// 倒数第二个 chunk（choices 为空）携带 usage</span>
+data: {<span class="s">"choices"</span>: [],
+       <span class="s">"usage"</span>: {
+         <span class="s">"prompt_tokens"</span>: <span class="n">12</span>,
+         <span class="s">"completion_tokens"</span>: <span class="n">8</span>,
+         <span class="s">"total_tokens"</span>: <span class="n">20</span>
+       }}
+
+data: [DONE]
+
+<span class="comment">// 不加 include_usage 时整个流没有 usage 字段</span></pre>
+      </div>
+      <div>
+        <div class="col-label anthropic">Anthropic — 默认包含，分两次返回</div>
+<pre class="code"><span class="comment">// 无需任何额外配置</span>
+
+<span class="comment">// 首个事件 message_start 含 input_tokens</span>
+event: message_start
+data: {<span class="s">"type"</span>:<span class="s">"message_start"</span>,<span class="s">"message"</span>:{
+  ...,
+  <span class="s">"usage"</span>:{
+    <span class="s">"input_tokens"</span>: <span class="n">12</span>,
+    <span class="s">"cache_creation_input_tokens"</span>: <span class="n">0</span>,
+    <span class="s">"cache_read_input_tokens"</span>: <span class="n">0</span>,
+    <span class="s">"output_tokens"</span>: <span class="n">1</span>  <span class="comment">← 仅占位</span>
+  }}}
+
+<span class="comment">// 末尾事件 message_delta 含 output_tokens</span>
+event: message_delta
+data: {<span class="s">"type"</span>:<span class="s">"message_delta"</span>,
+  <span class="s">"delta"</span>:{<span class="s">"stop_reason"</span>:<span class="s">"end_turn"</span>},
+  <span class="s">"usage"</span>:{<span class="s">"output_tokens"</span>: <span class="n">8</span>}}
+
+<span class="comment">// 需要合并 message_start.usage + message_delta.usage</span>
+<span class="comment">// 才能拿到完整的 usage 对象</span></pre>
+      </div>
+    </div>
+    <div class="annot">OpenAI 在最后一个非 [DONE] 的 chunk 一次性返回完整 usage；Anthropic 把输入和输出 usage 拆到流的两端，需要客户端做合并</div>
+
+    <div class="sub-gap"></div>
+    <h3>服务层级（Service Tier）对 usage 的影响</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>层级</th>
+            <th>OpenAI</th>
+            <th>Anthropic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>标准</td>
+            <td>请求体 <code class="inline">"service_tier": "auto"</code>（默认）</td>
+            <td><code class="inline">usage.service_tier: "standard"</code></td>
+          </tr>
+          <tr>
+            <td>优先 / Flex</td>
+            <td><code class="inline">"service_tier": "flex"</code>（折扣价、更慢）<br><code class="inline">"service_tier": "priority"</code>（部分模型，溢价、更快）</td>
+            <td><code class="inline">usage.service_tier: "priority"</code><br>（请求体加 <code class="inline">"service_tier": "auto"</code> 或调用 Priority Tier endpoint）</td>
+          </tr>
+          <tr>
+            <td>批处理</td>
+            <td>独立 <code class="inline">/v1/batches</code> 接口，约 0.5× 原价、24h 内完成</td>
+            <td>独立 <code class="inline">/v1/messages/batches</code>，0.5× 原价；<code class="inline">usage.service_tier: "batch"</code></td>
+          </tr>
+          <tr>
+            <td>用量字段差异</td>
+            <td>响应里没有 <code class="inline">service_tier</code>，请求体里指定</td>
+            <td>响应 <code class="inline">usage.service_tier</code> 明示实际处理层级（可能与请求不一致）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-gap"></div>
+    <h3>典型场景下的 Token 计算示例</h3>
+    <div class="dual-code">
+      <div>
+        <div class="col-label openai">OpenAI — 多轮 + 缓存 + 推理</div>
+<pre class="code"><span class="comment">// 场景：o3 模型 + 长 system + 多轮对话</span>
+<span class="s">"usage"</span>: {
+  <span class="s">"prompt_tokens"</span>: <span class="n">5200</span>,        <span class="comment">← system + 历史</span>
+  <span class="s">"completion_tokens"</span>: <span class="n">800</span>,
+  <span class="s">"total_tokens"</span>: <span class="n">6000</span>,
+  <span class="s">"prompt_tokens_details"</span>: {
+    <span class="s">"cached_tokens"</span>: <span class="n">4800</span>      <span class="comment">← 92% 命中</span>
+  },
+  <span class="s">"completion_tokens_details"</span>: {
+    <span class="s">"reasoning_tokens"</span>: <span class="n">600</span>    <span class="comment">← 75% 用于推理</span>
+  }
+}
+
+<span class="comment">// 计算（假设 $2/M 输入, $1/M 缓存, $8/M 输出）：</span>
+<span class="comment">// 非缓存输入: (5200 - 4800) × $2/M = $0.0008</span>
+<span class="comment">// 缓存输入:   4800 × $1/M = $0.0048</span>
+<span class="comment">// 输出(含推理): 800 × $8/M = $0.0064</span>
+<span class="comment">// 合计: ≈ $0.012</span></pre>
+      </div>
+      <div>
+        <div class="col-label anthropic">Anthropic — 多轮 + 缓存 + thinking + 工具</div>
+<pre class="code"><span class="comment">// 场景：Sonnet 4 + cache + thinking + 工具调用</span>
+<span class="s">"usage"</span>: {
+  <span class="s">"input_tokens"</span>: <span class="n">120</span>,            <span class="comment">← 仅本轮新增</span>
+  <span class="s">"cache_creation_input_tokens"</span>: <span class="n">800</span>,
+  <span class="s">"cache_read_input_tokens"</span>: <span class="n">4280</span>,  <span class="comment">← 83% 复用</span>
+  <span class="s">"cache_creation"</span>: {
+    <span class="s">"ephemeral_5m_input_tokens"</span>: <span class="n">800</span>
+  },
+  <span class="s">"output_tokens"</span>: <span class="n">900</span>,            <span class="comment">← thinking + tool_use + text</span>
+  <span class="s">"server_tool_use"</span>: {<span class="s">"web_search_requests"</span>: <span class="n">1</span>},
+  <span class="s">"service_tier"</span>: <span class="s">"standard"</span>
+}
+
+<span class="comment">// 计算（假设 $3/M 输入, $15/M 输出）：</span>
+<span class="comment">// 普通输入: 120 × $3/M = $0.00036</span>
+<span class="comment">// 缓存写入: 800 × $3.75/M (1.25×) = $0.003</span>
+<span class="comment">// 缓存读取: 4280 × $0.30/M (0.10×) = $0.00128</span>
+<span class="comment">// 输出: 900 × $15/M = $0.0135</span>
+<span class="comment">// Web 搜索: 1 × $10/1000 = $0.01</span>
+<span class="comment">// 合计: ≈ $0.028</span>
+<span class="comment">// 实际处理输入 = 120 + 800 + 4280 = 5200 tokens</span></pre>
+      </div>
+    </div>
+
+    <div class="sub-gap"></div>
+    <h3>用量追踪与会话级聚合</h3>
+    <div class="dual-code">
+      <div>
+        <div class="col-label openai">OpenAI — 追踪用户与会话</div>
+<pre class="code"><span class="comment">// 请求体加 user 字段，便于在 Dashboard / 风控里聚合</span>
+{
+  <span class="s">"model"</span>: <span class="s">"gpt-4o"</span>,
+  <span class="s">"messages"</span>: [...],
+  <span class="s">"user"</span>: <span class="s">"user_8a3f..."</span>     <span class="comment">← 字符串，自由格式</span>
+}
+
+<span class="comment">// 响应中没有 user 回显，但可在用量报告中按 user 切片</span>
+<span class="comment">// 项目 / 组织维度通过 OpenAI-Project / OpenAI-Organization</span>
+<span class="comment">// 请求头自动归类</span>
+
+<span class="comment">// 多轮 token 聚合 = 每次响应的 total_tokens 累加</span>
+<span class="comment">// （已含 cached_tokens，不会重复计费）</span></pre>
+      </div>
+      <div>
+        <div class="col-label anthropic">Anthropic — metadata.user_id</div>
+<pre class="code"><span class="comment">// 请求体加 metadata.user_id 用于滥用检测和报表</span>
+{
+  <span class="s">"model"</span>: <span class="s">"claude-sonnet-4-20250514"</span>,
+  <span class="s">"max_tokens"</span>: <span class="n">1024</span>,
+  <span class="s">"messages"</span>: [...],
+  <span class="s">"metadata"</span>: {
+    <span class="s">"user_id"</span>: <span class="s">"user_8a3f..."</span>  <span class="comment">← 建议哈希化</span>
+  }
+}
+
+<span class="comment">// 多轮 token 聚合需要分别累加：</span>
+<span class="comment">//   total_input = Σ (input + cache_creation + cache_read)</span>
+<span class="comment">//   total_output = Σ output_tokens</span>
+<span class="comment">// 否则会漏掉缓存读写的两类输入 token</span>
+
+<span class="comment">// 注意：metadata.user_id 不会出现在响应中，</span>
+<span class="comment">// 仅用于服务端聚合和滥用检测</span></pre>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>会话级累加易错点：</strong><br>
+      ▸ OpenAI：直接累加 <code class="inline">total_tokens</code> 即可（缓存命中已折算在 prompt_tokens 中，但 dashboard 计费按实际付费 token）。<br>
+      ▸ Anthropic：必须三类输入字段都参与累加，否则统计的"实际处理 prompt 长度"会严重偏低（典型场景下可能只统计到真实值的 10–20%）。<br>
+      ▸ Streaming：OpenAI 不开 <code class="inline">include_usage</code> 时 usage 全程缺失；Anthropic 必须合并 <code class="inline">message_start.usage</code> 与 <code class="inline">message_delta.usage</code>。
+    </div>
+
+    <div class="sub-gap"></div>
     <h3>停止原因值对照</h3>
     <div class="table-wrap">
       <table class="compare">
