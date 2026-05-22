@@ -1,13 +1,14 @@
 ---
-title: "Day 09 · 非交互模式 — Headless 执行 · CI/CD 集成 · 管道化"
+title: "Day 09 · 权限与安全 — 四档信任阶梯 · 工具白名单 · 敏感文件保护"
 date: '2026-05-16'
 draft: false
-description: "让 Claude Code 脱离终端——用 -p 标志进行无人值守执行、在 GitHub Actions 中自动修复代码、用管道串联多步工作流、用 Agent SDK 将 Claude 嵌入你的自动化系统。"
+description: "把 Claude Code 的能力锁在你想给的范围里——理解 default / acceptEdits / plan / bypassPermissions 四档权限模式的取舍,用 allow / deny 规则做白名单与黑名单,用 Hooks 兜底拦截危险命令和敏感文件读取。一句 rm -rf 和一个泄漏的 .env,可能让你和 Claude 的全部信任崩盘。"
 toc: false
 tags:
   - AI
   - Claude Code
-  - Tooling
+  - Permission
+  - Security
   - Tutorial
 ---
 
@@ -149,6 +150,7 @@ body{
 }
 .ccday09-wrap .grid-2{ grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
 .ccday09-wrap .grid-3{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.ccday09-wrap .grid-4{ grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 
 /* ========== Node Card ========== */
 .ccday09-wrap .node{
@@ -214,6 +216,7 @@ body{
 }
 .ccday09-wrap table.compare tr:last-child td{ border-bottom:none; }
 .ccday09-wrap table.compare .clay{ color:var(--clay-d); }
+.ccday09-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
 
 /* ========== Code ========== */
 .ccday09-wrap pre.code{
@@ -378,19 +381,21 @@ body{
 <!-- ========== MASTHEAD ========== -->
 <header class="masthead">
   <div class="eyebrow">DAY 09 · CLAUDE CODE ROADMAP · 20 DAYS</div>
-  <h1>让 Claude Code<em>无人值守地运行</em></h1>
+  <h1>把 Claude 的权力锁在<em>你想给的范围里</em></h1>
   <p class="lede">
-    前八天你一直坐在终端前与 Claude 对话——今天你将学会<em style="font-style:italic;color:#B85C3E;">放开双手</em>。
-    用 <code class="inline">-p</code> 标志让 Claude 在脚本中静默执行，
-    在 GitHub Actions 中自动审查 PR、修复 lint 错误、生成变更描述，
-    用管道串联多步工作流，用 Agent SDK 把 Claude 嵌入你的自动化系统。
-    Claude Code 从此是 7×24 小时运转的自动化引擎。
+    Claude Code 默认是<em style="font-style:italic;color:#B85C3E;">克制</em>的——
+    每个会改文件、跑命令的操作都会先问你一句。
+    但只要你说一次"全部允许",这层防线就消失了。
+    今天我们把权限系统拆开看:四档信任阶梯之间到底差在哪、
+    <code class="inline">allowedTools</code> 与 <code class="inline">deny</code> 规则该怎么搭、
+    敏感文件怎么从 <code class="inline">Read</code> 视野里彻底拿掉、
+    最后用 <code class="inline">Hooks</code> 给所有规则上一道兜底防线。
   </p>
   <div class="meta-strip">
-    <span><strong>DURATION</strong> 70–80 min</span>
-    <span><strong>THEORY</strong> 30 min</span>
-    <span><strong>HANDS-ON</strong> 35 min</span>
-    <span><strong>REVIEW</strong> 10 min</span>
+    <span><strong>DURATION</strong> 70–85 min</span>
+    <span><strong>THEORY</strong> 25 min</span>
+    <span><strong>HANDS-ON</strong> 45 min</span>
+    <span><strong>REVIEW</strong> 15 min</span>
     <span><strong>SECTIONS</strong> 5</span>
   </div>
 </header>
@@ -410,10 +415,10 @@ body{
               fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
         <text x="490" y="46" text-anchor="middle"
               font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
-              fill="#141413">DAY 09 · 非交互模式</text>
+              fill="#141413">DAY 09 · 权限与安全</text>
         <text x="490" y="68" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="10.5"
-              fill="#87867F" letter-spacing="2">HEADLESS · CI/CD · PIPELINE · SDK</text>
+              fill="#87867F" letter-spacing="2">MODES · ALLOW · DENY · HOOKS</text>
 
         <!-- 主竖线 + 横干线 -->
         <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
@@ -430,561 +435,803 @@ body{
               fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
         <text x="122" y="155" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="10.5"
-              fill="#B85C3E" letter-spacing="2" font-weight="600">01 · HEADLESS</text>
+              fill="#B85C3E" letter-spacing="2" font-weight="600">01 · MODES</text>
         <text x="122" y="176" text-anchor="middle"
               font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
-              fill="#141413">无头模式</text>
+              fill="#141413">四档信任阶梯</text>
 
         <rect x="277" y="132" width="180" height="56" rx="5"
               fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
         <text x="367" y="155" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="10.5"
-              fill="#D97757" letter-spacing="2" font-weight="600">02 · PERMISSION</text>
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · ALLOW</text>
         <text x="367" y="176" text-anchor="middle"
               font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
-              fill="#141413">权限与安全</text>
+              fill="#141413">工具白名单</text>
 
         <rect x="523" y="132" width="180" height="56" rx="5"
               fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
         <text x="613" y="155" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="10.5"
-              fill="#D97757" letter-spacing="2" font-weight="600">03 · CI/CD</text>
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · DENY</text>
         <text x="613" y="176" text-anchor="middle"
               font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
-              fill="#141413">持续集成</text>
+              fill="#141413">敏感文件保护</text>
 
         <rect x="768" y="132" width="180" height="56" rx="5"
               fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
         <text x="858" y="155" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="10.5"
-              fill="#D97757" letter-spacing="2" font-weight="600">04 · SDK</text>
+              fill="#D97757" letter-spacing="2" font-weight="600">04 · HOOKS</text>
         <text x="858" y="176" text-anchor="middle"
               font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
-              fill="#141413">编程化集成</text>
+              fill="#141413">兜底防线</text>
 
-        <!-- 子节点 — HEADLESS -->
+        <!-- 子节点 — MODES -->
         <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">-p / --print 标志</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">default · 每次询问</text>
         <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--output-format 格式</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">acceptEdits · 自动改</text>
         <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">stdin 管道输入</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">plan · 只读规划</text>
         <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--bare 纯净模式</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">bypass · 关闭防线</text>
 
-        <!-- 子节点 — PERMISSION -->
+        <!-- 子节点 — ALLOW -->
         <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--allowedTools 白名单</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">allowedTools 列表</text>
         <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">--permission-mode</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Bash 前缀匹配</text>
         <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">前缀匹配规则</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">三层 settings 配置</text>
         <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">安全最佳实践</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">最小授权原则</text>
 
-        <!-- 子节点 — CI/CD -->
+        <!-- 子节点 — DENY -->
         <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">GitHub Actions</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">.env / .pem / id_rsa</text>
         <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">claude-code-action</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">deny 高于 allow</text>
         <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">自动 PR 审查</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Read 也被阻断</text>
         <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">自动修复 + 提交</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">危险命令清单</text>
 
-        <!-- 子节点 — SDK -->
+        <!-- 子节点 — HOOKS -->
         <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">TypeScript SDK</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">PreToolUse 拦截</text>
         <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Python SDK</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">exit 2 阻断工具</text>
         <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">query() 流式 API</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">审计与日志</text>
         <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
-        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">会话管理</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">规则被绕过时兜底</text>
 
         <!-- 底部标注 -->
         <line x1="200" y1="370" x2="780" y2="370" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="6,4"/>
         <text x="490" y="400" text-anchor="middle"
               font-family="ui-serif, Georgia, serif" font-style="italic" font-size="14"
-              fill="#87867F">从交互终端到自动化流水线——脚本 × CI × SDK</text>
+              fill="#87867F">最小授权 · 默认拒绝 · 显式允许 · 兜底审计</text>
 
         <!-- 底部关键词 -->
         <rect x="140" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
         <text x="210" y="462" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="11"
-              fill="#B85C3E" font-weight="600" letter-spacing="1">claude -p</text>
+              fill="#B85C3E" font-weight="600" letter-spacing="1">SHIFT+TAB</text>
 
         <rect x="310" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
         <text x="380" y="462" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="11"
-              fill="#B85C3E" font-weight="600" letter-spacing="1">GITHUB ACTIONS</text>
+              fill="#B85C3E" font-weight="600" letter-spacing="1">ALLOW LIST</text>
 
         <rect x="480" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
         <text x="550" y="462" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="11"
-              fill="#B85C3E" font-weight="600" letter-spacing="1">PIPE + JSON</text>
+              fill="#B85C3E" font-weight="600" letter-spacing="1">DENY *.ENV</text>
 
         <rect x="650" y="440" width="140" height="34" rx="17" fill="none" stroke="#D97757" stroke-width="1.5"/>
         <text x="720" y="462" text-anchor="middle"
               font-family="ui-monospace, Menlo, monospace" font-size="11"
-              fill="#B85C3E" font-weight="600" letter-spacing="1">AGENT SDK</text>
+              fill="#B85C3E" font-weight="600" letter-spacing="1">PRETOOLUSE</text>
       </svg>
-      <p class="mindmap-cap">FIG M — DAY 09 KNOWLEDGE MAP · NON-INTERACTIVE AUTOMATION</p>
+      <p class="mindmap-cap">FIG M — DAY 09 KNOWLEDGE MAP · PERMISSION &amp; SAFETY MODEL</p>
     </div>
   </div>
 </section>
 
 
-<!-- ========== 01 · Headless 模式 ========== -->
+<!-- ========== 01 · 权限模式 ========== -->
 <section>
   <div class="sec-head">
     <div class="num">01 ·</div>
-    <h2>Headless 模式</h2>
-    <div class="count">CORE FLAGS</div>
+    <h2>权限模式 — 四档信任阶梯</h2>
+    <div class="count">FOUR TIERS</div>
   </div>
   <div class="indent">
     <p class="lede">
-      <code class="inline">-p</code> 是非交互模式的钥匙——它让 Claude Code 从交互式 REPL 变成
-      可以嵌入脚本、管道、CI 任务的命令行工具。
+      Claude Code 把"我有多信任这一段工作"建模成<strong>四档可切换的模式</strong>。
+      默认这一档最克制——任何会改文件、跑命令的工具调用都先停下来问你。
+      你可以随时往上爬一格(更宽松、更省事)或往下退一格(更严、更安全)。
+      理解这四档之间的<em style="font-style:italic;color:#B85C3E;">实际差异</em>,是后面所有配置的前提。
     </p>
 
-    <h3>核心标志一览</h3>
+    <h3>四档对照表</h3>
     <div class="table-wrap" style="margin-top:18px;">
       <table class="compare">
         <thead><tr>
-          <th>标志</th><th>作用</th><th>示例</th>
+          <th>模式</th><th>读文件</th><th>改文件</th><th>跑命令</th><th>推荐场景</th>
         </tr></thead>
         <tbody>
           <tr>
-            <td><code class="inline">-p</code></td>
-            <td>非交互模式——接受 prompt，输出结果到 stdout，然后退出</td>
-            <td><code class="inline">claude -p "解释这段代码"</code></td>
+            <td>plan</td>
+            <td>✓ 自由</td>
+            <td>✗ 全禁</td>
+            <td>✗ 全禁</td>
+            <td>大型重构前先出方案 · 高风险变更评审</td>
           </tr>
           <tr>
-            <td><code class="inline">--output-format</code></td>
-            <td>控制输出格式：<span class="clay">text</span>（默认）、<span class="clay">json</span>（结构化）、<span class="clay">stream-json</span>（流式）</td>
-            <td><code class="inline">claude -p "..." --output-format json</code></td>
+            <td>default</td>
+            <td>✓ 自由</td>
+            <td>需逐条批准</td>
+            <td>需逐条批准</td>
+            <td>日常开发 · 陌生项目 · 团队 CI <span class="clay">推荐</span></td>
           </tr>
           <tr>
-            <td><code class="inline">--bare</code></td>
-            <td>跳过 Hooks、Skills、MCP、CLAUDE.md 自动发现——<span class="clay">CI 推荐</span></td>
-            <td><code class="inline">claude -p "..." --bare</code></td>
+            <td>acceptEdits</td>
+            <td>✓ 自由</td>
+            <td>✓ 自动</td>
+            <td>仍逐条批准</td>
+            <td>大量改文件 · 已规划好的批量重构</td>
           </tr>
           <tr>
-            <td><code class="inline">--max-turns</code></td>
-            <td>限制对话轮次，防止 Agent 循环失控</td>
-            <td><code class="inline">claude -p "..." --max-turns 5</code></td>
-          </tr>
-          <tr>
-            <td><code class="inline">--model</code></td>
-            <td>指定模型版本</td>
-            <td><code class="inline">claude -p "..." --model claude-sonnet-4-6</code></td>
-          </tr>
-          <tr>
-            <td><code class="inline">--json-schema</code></td>
-            <td>约束输出为指定 JSON Schema，结果在 <span class="clay">structured_output</span> 字段</td>
-            <td><code class="inline">claude -p "..." --json-schema '{...}'</code></td>
+            <td class="clay">bypassPermissions</td>
+            <td>✓ 自由</td>
+            <td>✓ 自动</td>
+            <td>✓ 自动</td>
+            <td><span class="clay">仅限隔离沙箱</span> · YOLO 模式</td>
           </tr>
         </tbody>
       </table>
     </div>
+    <div class="annot">关键直觉:每往上一格,你换到的是"省按 Enter"·失去的是"反悔机会"</div>
 
-    <h3 style="margin-top:32px;">基础用法</h3>
-<pre class="code"><span class="comment"># 最简单的 headless 调用</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"用一句话解释什么是 React Server Components"</span>
+    <h3 style="margin-top:36px;">四档之间的升降路径</h3>
+    <div class="archdiag" style="margin-top:18px;">
+      <svg viewBox="0 0 980 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="权限四档升降路径">
+        <!-- 水平时间轴 -->
+        <line x1="80" y1="170" x2="900" y2="170" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="4,4"/>
 
-<span class="comment"># 管道输入：把文件内容传给 Claude</span>
-<span class="prompt">$</span> cat src/auth.ts | claude <span class="flag">-p</span> <span class="s">"找出这段代码中的安全漏洞"</span>
+        <!-- plan -->
+        <rect x="80" y="80" width="180" height="100" rx="10"
+              fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+        <text x="170" y="106" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#788C5D" letter-spacing="2" font-weight="600">TIER · 01</text>
+        <text x="170" y="134" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">plan</text>
+        <text x="170" y="158" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11.5"
+              fill="#87867F">只读 · 出方案</text>
 
-<span class="comment"># 管道输出：把 Claude 的回答写入文件</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"为 src/utils.ts 中所有导出函数生成 JSDoc"</span> > docs.md
+        <line x1="263" y1="130" x2="297" y2="130" stroke="#87867F" stroke-width="1.5"/>
+        <polyline points="291,124 301,130 291,136" fill="none"
+                  stroke="#87867F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-<span class="comment"># 结构化输出：JSON 格式便于程序消费</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"列出项目中所有 TODO 注释"</span> <span class="flag">--output-format</span> json \
-    | jq <span class="s">'.result'</span></pre>
+        <!-- default -->
+        <rect x="300" y="80" width="180" height="100" rx="10"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="390" y="106" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">TIER · 02 · 默认</text>
+        <text x="390" y="134" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">default</text>
+        <text x="390" y="158" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11.5"
+              fill="#87867F">每个操作问一句</text>
 
-    <div class="annot">--bare 在 CI 中至关重要——跳过自动发现让执行更快、更确定、更安全</div>
+        <line x1="483" y1="130" x2="517" y2="130" stroke="#87867F" stroke-width="1.5"/>
+        <polyline points="511,124 521,130 511,136" fill="none"
+                  stroke="#87867F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-    <h3 style="margin-top:32px;">输出格式对比</h3>
-    <div class="grid grid-3" style="margin-top:16px;">
+        <!-- acceptEdits -->
+        <rect x="520" y="80" width="180" height="100" rx="10"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="610" y="106" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">TIER · 03</text>
+        <text x="610" y="134" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">acceptEdits</text>
+        <text x="610" y="158" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11.5"
+              fill="#87867F">编辑放行 · 命令仍问</text>
+
+        <line x1="703" y1="130" x2="737" y2="130" stroke="#D97757" stroke-width="1.5"/>
+        <polyline points="731,124 741,130 731,136" fill="none"
+                  stroke="#D97757" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- bypassPermissions -->
+        <rect x="740" y="80" width="180" height="100" rx="10"
+              fill="#141413" stroke="#141413" stroke-width="2"/>
+        <text x="830" y="106" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#E3DACC" letter-spacing="2" font-weight="600">TIER · 04 · 危险</text>
+        <text x="830" y="134" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#FAF9F5">bypassPermissions</text>
+        <text x="830" y="158" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11.5"
+              fill="#D1CFC5">不再问任何事</text>
+
+        <!-- 底部图注 -->
+        <text x="490" y="220" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13"
+              fill="#87867F">⇧ Tab 在前三档间循环 · bypass 必须用 --dangerously-skip-permissions 显式启用</text>
+        <text x="490" y="244" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">默认拒绝 → 显式允许 → 永远可降级</text>
+      </svg>
+      <p class="archdiag-cap">FIG 01 · PERMISSION ESCALATION LADDER — PLAN → DEFAULT → ACCEPTEDITS → BYPASS</p>
+    </div>
+
+    <h3 style="margin-top:36px;">三种切换方式</h3>
+    <pre class="code"><span class="comment"># 1. 交互中 ⇧ Tab — 在 plan / default / acceptEdits 间循环</span>
+<span class="comment">#    底部状态栏会显示当前模式</span>
+
+<span class="comment"># 2. 启动时指定 (适合脚本)</span>
+<span class="prompt">$</span> claude <span class="flag">--permission-mode</span> plan
+<span class="prompt">$</span> claude <span class="flag">--permission-mode</span> acceptEdits
+
+<span class="comment"># 3. 危险档 — 不允许通过 ⇧ Tab 进入,必须显式标志</span>
+<span class="prompt">$</span> claude <span class="flag">--dangerously-skip-permissions</span>
+<span class="comment">#    ↑ 标志名本身就是警告 — 一旦开启,所有工具直通</span>
+
+<span class="comment"># 4. SDK / -p 模式默认更严 — 工具必须在 allowedTools 里</span>
+<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"修复 lint"</span> <span class="flag">--allowedTools</span> <span class="s">"Read,Edit,Bash(npm run lint *)"</span></pre>
+
+    <div class="annot">交互式开发用 ⇧ Tab · 自动化脚本用 --permission-mode · 不要让 bypass 进入团队配置</div>
+
+    <h3 style="margin-top:36px;">什么时候用哪一档</h3>
+    <div class="grid grid-4" style="margin-top:18px;">
+      <div class="node">
+        <div class="tag">PLAN</div>
+        <h3>陌生 / 高风险</h3>
+        <p>大型重构、跨模块变更、生产事故响应。先让 Claude 出方案,再切回 default 落地。</p>
+      </div>
       <div class="node accent">
-        <div class="tag clay">TEXT</div>
-        <h3>纯文本</h3>
-        <p>默认格式。适合人类阅读和简单的管道操作。直接输出 Claude 的回复文本，无包装。</p>
+        <div class="tag clay">DEFAULT</div>
+        <h3>日常默认</h3>
+        <p>未知项目、不熟环境、共享机器。每条命令都看一眼,慢但不会翻车。</p>
       </div>
       <div class="node">
-        <div class="tag">JSON</div>
-        <h3>结构化 JSON</h3>
-        <p>包含 <code class="inline">session_id</code>、<code class="inline">result</code>、<code class="inline">total_cost_usd</code> 等字段。适合程序消费和成本追踪。</p>
+        <div class="tag">ACCEPTEDITS</div>
+        <h3>批量改文件</h3>
+        <p>大批量改样式 / 重命名 / 模板替换。改对错都看得见,命令仍会拦住。</p>
       </div>
-      <div class="node">
-        <div class="tag">STREAM-JSON</div>
-        <h3>流式 JSON</h3>
-        <p>每行一个 JSON 事件（NDJSON）。适合实时显示进度和中间结果。每个事件带时间戳和类型。</p>
+      <div class="node dark">
+        <div class="tag">BYPASS</div>
+        <h3>隔离沙箱</h3>
+        <p>仅在 Docker / VM / 一次性 worktree 里使用。日常机器开 bypass 等于裸奔。</p>
       </div>
     </div>
   </div>
 </section>
 
 
-<!-- ========== 02 · 权限与安全 ========== -->
+<!-- ========== 02 · 白名单 ========== -->
 <section>
   <div class="sec-head">
     <div class="num">02 ·</div>
-    <h2>权限与安全</h2>
-    <div class="count">PERMISSION MODEL</div>
+    <h2>白名单 — allowedTools 与前缀匹配</h2>
+    <div class="count">ALLOW LIST</div>
   </div>
   <div class="indent">
     <p class="lede">
-      无人值守 ≠ 无限制。Headless 模式有严格的权限控制——
-      你必须显式声明 Claude 可以使用哪些工具、可以执行哪些命令。
+      模式决定<em style="font-style:italic;color:#B85C3E;">"问不问"</em>,白名单决定<em style="font-style:italic;color:#B85C3E;">"哪些根本不用问"</em>。
+      声明在白名单里的工具或命令前缀,Claude 直接放行——不弹窗、不打断、不拖你 Enter 键的后腿。
+      关键是写得<strong>足够窄</strong>:窄到误差范围内出错也只能伤到你想让它能伤到的东西。
     </p>
 
-    <h3>--allowedTools 工具白名单</h3>
-    <p style="font-size:14px;color:var(--g700);line-height:1.65;">
-      在 <code class="inline">-p</code> 模式下，Claude 默认只能读取文件。
-      通过 <code class="inline">--allowedTools</code> 显式授权更多能力：
-    </p>
-<pre class="code"><span class="comment"># 只允许读取和编辑文件</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"修复 auth.ts 中的 bug"</span> \
-    <span class="flag">--allowedTools</span> <span class="s">"Read,Edit"</span>
-
-<span class="comment"># 允许执行特定命令（前缀匹配）</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"运行测试并修复失败用例"</span> \
-    <span class="flag">--allowedTools</span> <span class="s">"Read,Edit,Bash(npm test *),Bash(npx tsc *)"</span>
-
-<span class="comment"># 允许 git 操作</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"提交所有变更"</span> \
-    <span class="flag">--allowedTools</span> <span class="s">"Bash(git diff *),Bash(git add *),Bash(git commit *)"</span></pre>
-
-    <div class="annot">前缀匹配语法 Bash(git diff *) 意味着任何以 "git diff " 开头的命令都会被允许</div>
-
-    <h3 style="margin-top:32px;">权限模式</h3>
+    <h3>三种工具表达式</h3>
     <div class="table-wrap" style="margin-top:18px;">
       <table class="compare">
         <thead><tr>
-          <th>模式</th><th>行为</th><th>适用场景</th>
+          <th>表达式</th><th>含义</th><th>典型用法</th>
         </tr></thead>
         <tbody>
           <tr>
-            <td>默认</td>
-            <td>只允许 <code class="inline">--allowedTools</code> 声明的工具和 <code class="inline">permissions.allow</code> 中的规则</td>
-            <td>CI/CD 管道 — <span class="clay">推荐</span></td>
+            <td class="mono">Read</td>
+            <td>整个工具放行 —— 任何路径任何参数都允许</td>
+            <td>读文件几乎从不出事 · 全放行可接受</td>
           </tr>
           <tr>
-            <td><code class="inline">acceptEdits</code></td>
-            <td>自动允许文件编辑 + 常见文件系统操作（mkdir、mv、cp）</td>
-            <td>自动修复脚本、代码生成</td>
+            <td class="mono">Edit</td>
+            <td>编辑文件全放行 —— 不区分文件路径</td>
+            <td>开发循环里高频用,acceptEdits 已覆盖</td>
           </tr>
           <tr>
-            <td><code class="inline">bypassPermissions</code></td>
-            <td>跳过所有权限检查——<span class="clay">极度危险</span></td>
-            <td>仅限受信沙箱环境</td>
+            <td class="mono">Bash(git diff *)</td>
+            <td>带<strong>前缀匹配</strong>的 Bash 命令 —— 只允许特定前缀</td>
+            <td>窄授权的核心 · 见下方示例</td>
+          </tr>
+          <tr>
+            <td class="mono">Read(./src/**)</td>
+            <td>带<strong>路径匹配</strong>的文件工具 —— 限定到子树</td>
+            <td>多仓库工作区时锁定到当前项目</td>
+          </tr>
+          <tr>
+            <td class="mono">mcp__<em>name</em>__<em>tool</em></td>
+            <td>MCP 工具 —— 按服务器和工具名授权</td>
+            <td>Day 13 详谈,这里先认识形态</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <h3 style="margin-top:32px;">安全清单</h3>
-    <div class="grid grid-2" style="margin-top:16px;">
-      <div class="node dark">
-        <div class="tag">NEVER DO</div>
-        <h3>绝对不要</h3>
-        <p>在 CI 中使用 <code style="color:var(--clay);background:rgba(217,119,87,.15);border-color:rgba(217,119,87,.3);">bypassPermissions</code>。不要把 <code style="color:var(--clay);background:rgba(217,119,87,.15);border-color:rgba(217,119,87,.3);">ANTHROPIC_API_KEY</code> 硬编码到代码中。不要给 Claude 不必要的 Bash 权限。</p>
-      </div>
-      <div class="node accent">
-        <div class="tag clay">ALWAYS DO</div>
-        <h3>必须做到</h3>
-        <p>用 GitHub Secrets 存储 API Key。用 <code class="inline">--allowedTools</code> 最小化权限。用 <code class="inline">--max-turns</code> 限制循环。用 <code class="inline">--bare</code> 排除不可控因素。</p>
-      </div>
-    </div>
+    <h3 style="margin-top:36px;">Bash 前缀匹配的陷阱</h3>
+    <pre class="code"><span class="comment"># ✓ 窄 — 明确边界</span>
+<span class="s">"Bash(npm test *)"</span>          <span class="comment"># 只允许 npm test...</span>
+<span class="s">"Bash(git diff *)"</span>          <span class="comment"># 只允许 git diff...</span>
+<span class="s">"Bash(npx tsc --noEmit)"</span>    <span class="comment"># 精确到完整命令</span>
+
+<span class="comment"># ✗ 过宽 — 几乎等于放弃白名单</span>
+<span class="s">"Bash(*)"</span>                   <span class="comment"># 等于 bypass 一半</span>
+<span class="s">"Bash(npm *)"</span>               <span class="comment"># npm publish / npm uninstall 都进来了</span>
+<span class="s">"Bash(git *)"</span>               <span class="comment"># git push --force 也算 git</span>
+
+<span class="comment"># ⚠ 看似窄、其实可绕过 — 一定记得对应的 deny</span>
+<span class="s">"Bash(rm *.log)"</span>             <span class="comment"># Claude 可改为 rm *.log; rm -rf /</span>
+<span class="comment"># ↑ shell 注入风险,前缀匹配只看开头,后面的恶意 ; && | 全放行</span></pre>
+    <div class="annot">原则:能写完整命令就不留 * · 凡是用了 * 的,必须有对应 deny 规则封堵尾巴</div>
+
+    <h3 style="margin-top:36px;">settings.json 的 permissions 字段</h3>
+    <p style="margin-top:12px;">
+      命令行 <code class="inline">--allowedTools</code> 只对当前会话生效——团队、项目级的常驻规则要写到
+      <code class="inline">.claude/settings.json</code> 的 <code class="inline">permissions</code> 字段里。
+    </p>
+<pre class="code"><span class="comment">// .claude/settings.json</span>
+{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"allow"</span>: [
+      <span class="s">"Read"</span>,
+      <span class="s">"Edit"</span>,
+      <span class="s">"Bash(npm test *)"</span>,
+      <span class="s">"Bash(npm run lint *)"</span>,
+      <span class="s">"Bash(npx tsc --noEmit)"</span>,
+      <span class="s">"Bash(git diff *)"</span>,
+      <span class="s">"Bash(git status)"</span>,
+      <span class="s">"Bash(git log *)"</span>
+    ],
+    <span class="s">"deny"</span>: [
+      <span class="s">"Bash(rm -rf *)"</span>,
+      <span class="s">"Bash(sudo *)"</span>,
+      <span class="s">"Bash(curl * | sh)"</span>,
+      <span class="s">"Read(./.env)"</span>,
+      <span class="s">"Read(./.env.*)"</span>,
+      <span class="s">"Read(./**/*.pem)"</span>,
+      <span class="s">"Read(./**/id_rsa)"</span>
+    ],
+    <span class="s">"ask"</span>: [
+      <span class="s">"Bash(git push *)"</span>,
+      <span class="s">"Bash(npm publish *)"</span>
+    ]
+  }
+}</pre>
+    <div class="annot">三段语义 — allow 自动允许 · deny 永远阻断 · ask 强制弹窗(即便在 acceptEdits)</div>
+
+    <h3 style="margin-top:36px;">最小授权工作流</h3>
+    <ol style="padding-left:24px;color:var(--g700);font-size:14.5px;line-height:1.85;margin:14px 0 0;">
+      <li>第一天:用 <code class="inline">default</code> 模式裸跑——看 Claude 真正会用到哪些命令。</li>
+      <li>第二天:把高频出现、明显无害的命令(<code class="inline">git diff</code>、<code class="inline">npm test</code>)加到 <code class="inline">allow</code>。</li>
+      <li>第三天:把<strong>本来就不该跑</strong>的命令(<code class="inline">rm -rf</code>、<code class="inline">sudo</code>、远程拉脚本)加到 <code class="inline">deny</code>。</li>
+      <li>第四天:把<strong>偶尔需要但要慎用</strong>的(<code class="inline">git push</code>、<code class="inline">npm publish</code>)加到 <code class="inline">ask</code>。</li>
+      <li>每周复盘一次:看哪些命令被你按了 100 次 yes——它们是 allow 的下一个候选。</li>
+    </ol>
   </div>
 </section>
 
 
-<!-- ========== 03 · CI/CD 集成 ========== -->
+<!-- ========== 03 · 拒绝规则与敏感文件 ========== -->
 <section>
   <div class="sec-head">
     <div class="num">03 ·</div>
-    <h2>CI/CD 集成</h2>
-    <div class="count">GITHUB ACTIONS</div>
+    <h2>拒绝规则与敏感文件保护</h2>
+    <div class="count">DENY RULES</div>
   </div>
   <div class="indent">
     <p class="lede">
-      Anthropic 官方提供的 <code class="inline">claude-code-action</code> 可以在 GitHub Actions 中
-      直接调用 Claude Code——自动审查 PR、修复问题、生成文档。
+      "Claude 怎么把 <code class="inline">.env</code> 里的 OpenAI Key 复读到日志里了?"——
+      绝大多数 Claude 引发的<em style="font-style:italic;color:#B85C3E;">真实事故</em>不是它跑了一条危险命令,
+      而是它<strong>读了不该读的文件</strong>。
+      <code class="inline">deny</code> 规则的优先级永远高于 <code class="inline">allow</code>,
+      它也是唯一能把"全工具放行"和"敏感文件不可见"<strong>同时成立</strong>的机制。
     </p>
 
-    <h3>GitHub Actions 工作流</h3>
-    <div class="archdiag" style="margin-top:18px;">
-      <svg viewBox="0 0 840 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CI/CD 工作流">
-        <defs>
-          <marker id="arrow09" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#87867F"/>
-          </marker>
-        </defs>
-        <!-- Trigger -->
-        <rect x="20" y="40" width="150" height="80" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
-        <text x="95" y="68" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">TRIGGER</text>
-        <text x="95" y="92" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">PR 创建</text>
-        <text x="95" y="108" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">@claude 提及</text>
-
-        <line x1="170" y1="80" x2="210" y2="80" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09)"/>
-
-        <!-- Claude Code Action -->
-        <rect x="210" y="30" width="200" height="100" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
-        <text x="310" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">CLAUDE CODE</text>
-        <text x="310" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">分析代码变更</text>
-        <text x="310" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">读取 CLAUDE.md 规则</text>
-        <text x="310" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">执行工具调用</text>
-
-        <line x1="410" y1="80" x2="450" y2="60" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09)"/>
-        <line x1="410" y1="80" x2="450" y2="120" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09)"/>
-
-        <!-- Output A -->
-        <rect x="450" y="20" width="170" height="60" rx="5" fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
-        <text x="535" y="45" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#788C5D" font-weight="600" letter-spacing="1">OUTPUT A</text>
-        <text x="535" y="68" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">PR 评论 / Review</text>
-
-        <!-- Output B -->
-        <rect x="450" y="100" width="170" height="60" rx="5" fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
-        <text x="535" y="125" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#788C5D" font-weight="600" letter-spacing="1">OUTPUT B</text>
-        <text x="535" y="148" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">自动修复提交</text>
-
-        <!-- 环境标注 -->
-        <rect x="670" y="40" width="150" height="80" rx="5" fill="#141413"/>
-        <text x="745" y="68" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC" font-weight="600" letter-spacing="1">ENVIRONMENT</text>
-        <text x="745" y="90" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#FAF9F5">API Key → Secrets</text>
-        <text x="745" y="108" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#FAF9F5">CLAUDE.md → Repo</text>
-      </svg>
-      <p class="archdiag-cap">FIG 03 — GITHUB ACTIONS WORKFLOW · TRIGGER → CLAUDE → OUTPUT</p>
-    </div>
-
-    <h3 style="margin-top:32px;">实战：PR 自动审查</h3>
-<pre class="code"><span class="comment"># .github/workflows/claude-review.yml</span>
-<span class="k">name</span>: Claude Code Review
-
-<span class="k">on</span>:
-  <span class="s">pull_request</span>:
-    types: [opened, synchronize]
-  <span class="s">issue_comment</span>:
-    types: [created]
-
-<span class="k">jobs</span>:
-  <span class="s">review</span>:
-    runs-on: ubuntu-latest
-    <span class="comment"># 仅在 PR 评论中 @claude 被提及时触发</span>
-    if: |
-      github.event_name == 'pull_request' ||
-      contains(github.event.comment.body, '@claude')
-    steps:
-      - uses: <span class="s">anthropics/claude-code-action@v1</span>
-        with:
-          <span class="k">prompt</span>: |
-            审查这个 PR 的代码变更：
-            1. 检查是否有安全漏洞
-            2. 检查是否有性能问题
-            3. 检查代码风格是否符合项目规范
-            4. 给出改进建议
-          <span class="k">anthropic_api_key</span>: ${{ secrets.ANTHROPIC_API_KEY }}
-          <span class="k">claude_args</span>: <span class="s">"--max-turns 5 --model claude-sonnet-4-6"</span></pre>
-
-    <h3 style="margin-top:32px;">CI 用例速览</h3>
-    <div class="grid grid-3" style="margin-top:16px;">
-      <div class="node">
-        <div class="tag clay">USE CASE 1</div>
-        <h3>自动修复 Lint</h3>
-        <p>CI 检测到 lint 错误时自动触发 Claude 修复并提交。适合格式化、import 排序等机械性修复。</p>
-      </div>
-      <div class="node">
-        <div class="tag clay">USE CASE 2</div>
-        <h3>PR 描述生成</h3>
-        <p>读取 git diff 自动生成结构化的 PR 描述：变更摘要、影响范围、测试计划。</p>
-      </div>
-      <div class="node">
-        <div class="tag clay">USE CASE 3</div>
-        <h3>代码审计</h3>
-        <p>定时 cron 任务扫描代码库，检查安全漏洞、过期依赖、TODO 积压。生成审计报告。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ========== 04 · 管道与脚本 ========== -->
-<section>
-  <div class="sec-head">
-    <div class="num">04 ·</div>
-    <h2>管道与脚本</h2>
-    <div class="count">PIPELINE PATTERNS</div>
-  </div>
-  <div class="indent">
-    <p class="lede">
-      Headless 模式的真正威力在于组合——用 Unix 管道把多个 Claude 调用串联成完整的自动化流水线。
-    </p>
-
-    <h3>会话管理：多步工作流</h3>
-<pre class="code"><span class="comment"># Step 1 — 启动分析，捕获 session_id</span>
-<span class="prompt">$</span> session_id=$(claude <span class="flag">-p</span> <span class="s">"分析 src/api/ 目录的架构"</span> \
-    <span class="flag">--output-format</span> json | jq <span class="flag">-r</span> <span class="s">'.session_id'</span>)
-
-<span class="comment"># Step 2 — 基于上一步的上下文继续</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"基于刚才的分析，找出最需要重构的三个文件"</span> \
-    <span class="flag">--resume</span> <span class="s">"$session_id"</span>
-
-<span class="comment"># 或者直接继续最近的会话</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"继续，开始重构第一个文件"</span> <span class="flag">--continue</span></pre>
-
-    <div class="annot">--resume 通过 session_id 恢复完整对话上下文——Claude 记住之前分析的所有信息</div>
-
-    <h3 style="margin-top:32px;">管道组合模式</h3>
-    <div class="archdiag" style="margin-top:18px;">
-      <svg viewBox="0 0 840 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="管道组合模式">
-        <defs>
-          <marker id="arrow09b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
-          </marker>
-        </defs>
-        <!-- pipe 1 -->
-        <rect x="20" y="30" width="160" height="80" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
-        <text x="100" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">STDIN</text>
-        <text x="100" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">git diff HEAD~1</text>
-        <text x="100" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#87867F">变更内容</text>
-
-        <text x="195" y="75" font-family="ui-monospace, Menlo, monospace" font-size="16" fill="#D97757" font-weight="700">|</text>
-
-        <!-- pipe 2 -->
-        <rect x="210" y="30" width="180" height="80" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
-        <text x="300" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">CLAUDE -P</text>
-        <text x="300" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">"生成 commit msg"</text>
-        <text x="300" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#87867F">AI 分析 + 生成</text>
-
-        <text x="405" y="75" font-family="ui-monospace, Menlo, monospace" font-size="16" fill="#D97757" font-weight="700">|</text>
-
-        <!-- pipe 3 -->
-        <rect x="420" y="30" width="180" height="80" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
-        <text x="510" y="58" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600" letter-spacing="1">GIT COMMIT</text>
-        <text x="510" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">git commit -F -</text>
-        <text x="510" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#87867F">读取 stdin 作为消息</text>
-
-        <line x1="600" y1="70" x2="640" y2="70" stroke="#87867F" stroke-width="2" marker-end="url(#arrow09b)"/>
-
-        <!-- result -->
-        <rect x="640" y="35" width="180" height="70" rx="5" fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
-        <text x="730" y="62" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#788C5D" font-weight="600" letter-spacing="1">DONE</text>
-        <text x="730" y="86" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413" font-weight="500">AI 生成的 commit</text>
-      </svg>
-      <p class="archdiag-cap">FIG 04 — UNIX PIPE PATTERN · GIT DIFF | CLAUDE | GIT COMMIT</p>
-    </div>
-
-<pre class="code" style="margin-top:24px;"><span class="comment"># 完整示例：AI 生成 commit message</span>
-<span class="prompt">$</span> git diff <span class="flag">--staged</span> | claude <span class="flag">-p</span> \
-    <span class="s">"根据这个 diff 生成简洁的 commit message，只输出消息文本"</span> \
-    <span class="flag">--bare</span> | git commit <span class="flag">-F</span> -
-
-<span class="comment"># 批量代码审查：扫描所有变更文件</span>
-<span class="prompt">$</span> git diff <span class="flag">--name-only</span> HEAD~5 | while read f; do
-    echo <span class="s">"=== $f ==="</span>
-    claude <span class="flag">-p</span> <span class="s">"审查这个文件中最近的变更，发现潜在问题"</span> \
-        <span class="flag">--allowedTools</span> <span class="s">"Read,Bash(git diff *)"</span> <span class="flag">--bare</span>
-  done > review-report.md
-
-<span class="comment"># 结构化输出 + jq 提取</span>
-<span class="prompt">$</span> claude <span class="flag">-p</span> <span class="s">"列出所有 API 端点"</span> \
-    <span class="flag">--output-format</span> json \
-    <span class="flag">--json-schema</span> <span class="s">'{"type":"object","properties":{"endpoints":{"type":"array","items":{"type":"object","properties":{"method":{"type":"string"},"path":{"type":"string"}}}}}}'</span> \
-    | jq <span class="s">'.result.structured_output.endpoints[]'</span></pre>
-  </div>
-</section>
-
-
-<!-- ========== 05 · Agent SDK ========== -->
-<section>
-  <div class="sec-head">
-    <div class="num">05 ·</div>
-    <h2>Agent SDK</h2>
-    <div class="count">PROGRAMMATIC</div>
-  </div>
-  <div class="indent">
-    <p class="lede">
-      当 Shell 管道不够用时——用 Agent SDK 在 TypeScript 或 Python 中嵌入 Claude Code，
-      构建完全定制的自动化系统。
-    </p>
-
-    <h3>TypeScript SDK</h3>
-<pre class="code"><span class="k">import</span> { query } <span class="k">from</span> <span class="s">"@anthropic-ai/claude-code"</span>;
-
-<span class="comment">// 基础调用：流式获取结果</span>
-<span class="k">for await</span> (<span class="k">const</span> message <span class="k">of</span> query({
-  <span class="n">prompt</span>: <span class="s">"找出 src/api/ 中所有未处理的异常"</span>,
-  <span class="n">options</span>: {
-    <span class="n">allowedTools</span>: [<span class="s">"Read"</span>, <span class="s">"Bash"</span>],
-    <span class="n">permissionMode</span>: <span class="s">"dontAsk"</span>,
-    <span class="n">maxTurns</span>: <span class="t">10</span>,
-  }
-})) {
-  <span class="k">if</span> (<span class="s">"result"</span> <span class="k">in</span> message) {
-    console.log(message.<span class="n">result</span>);  <span class="comment">// 最终结果</span>
-  }
-}</pre>
-
-    <h3 style="margin-top:32px;">Python SDK</h3>
-<pre class="code"><span class="k">from</span> claude_code <span class="k">import</span> query, ClaudeCodeOptions
-
-<span class="comment"># 异步流式调用</span>
-<span class="k">async for</span> message <span class="k">in</span> query(
-    <span class="n">prompt</span>=<span class="s">"分析 tests/ 目录的覆盖率盲区"</span>,
-    <span class="n">options</span>=ClaudeCodeOptions(
-        <span class="n">allowed_tools</span>=[<span class="s">"Read"</span>, <span class="s">"Bash(npm test *)"</span>],
-        <span class="n">permission_mode</span>=<span class="s">"dontAsk"</span>,
-        <span class="n">max_turns</span>=<span class="t">10</span>,
-    )
-):
-    <span class="k">if</span> <span class="n">hasattr</span>(message, <span class="s">"result"</span>):
-        <span class="n">print</span>(message.<span class="n">result</span>)</pre>
-
-    <div class="annot">SDK 的核心优势：可以在你的 Node.js / Python 应用中嵌入 Claude 的全部能力——包括文件编辑、命令执行和工具调用</div>
-
-    <h3 style="margin-top:32px;">SDK vs CLI 对比</h3>
+    <h3>必须 deny 的七类资源</h3>
     <div class="table-wrap" style="margin-top:18px;">
       <table class="compare">
         <thead><tr>
-          <th>维度</th><th>CLI（claude -p）</th><th>Agent SDK</th>
+          <th>类别</th><th>典型路径</th><th>推荐 deny 规则</th>
         </tr></thead>
         <tbody>
           <tr>
-            <td>集成方式</td>
-            <td>Shell 脚本 / CI YAML</td>
-            <td>TypeScript / Python 代码</td>
+            <td>环境变量文件</td>
+            <td><code>.env</code> · <code>.env.local</code> · <code>.env.production</code></td>
+            <td class="mono">Read(./.env*) · Read(./**/.env*)</td>
           </tr>
           <tr>
-            <td>输出处理</td>
-            <td>文本 / JSON，需 jq 解析</td>
-            <td>原生对象，类型安全</td>
+            <td>密钥与证书</td>
+            <td><code>*.pem</code> · <code>*.key</code> · <code>id_rsa</code> · <code>*.p12</code></td>
+            <td class="mono">Read(./**/*.pem) · Read(./**/id_rsa)</td>
           </tr>
           <tr>
-            <td>流式控制</td>
-            <td>stream-json + 管道</td>
-            <td>async iterator，可精确控制每条消息</td>
+            <td>云厂商凭证</td>
+            <td><code>~/.aws/credentials</code> · <code>~/.config/gcloud/</code></td>
+            <td class="mono">Read(~/.aws/**) · Read(~/.config/gcloud/**)</td>
           </tr>
           <tr>
-            <td>会话管理</td>
-            <td>--resume session_id</td>
-            <td>原生 resume 参数 + AbortController 取消</td>
+            <td>本地数据库</td>
+            <td><code>*.sqlite</code> · <code>*.db</code> · <code>dump.sql</code></td>
+            <td class="mono">Read(./**/*.sqlite) · Read(./dump*.sql)</td>
           </tr>
           <tr>
-            <td>适用场景</td>
-            <td>CI/CD、简单脚本、一次性任务</td>
-            <td><span class="clay">自定义工具平台、复杂多步 Agent、产品集成</span></td>
+            <td>构建产物 / lock</td>
+            <td><code>node_modules/</code> · <code>dist/</code> · <code>build/</code></td>
+            <td class="mono">Read(./node_modules/**)</td>
+          </tr>
+          <tr>
+            <td>外部脚本执行</td>
+            <td>从网上 curl 下来直接管道执行</td>
+            <td class="mono">Bash(curl * | sh) · Bash(wget * | bash)</td>
+          </tr>
+          <tr>
+            <td class="clay">破坏性命令</td>
+            <td><code>rm -rf</code> · <code>sudo</code> · <code>chmod 777</code> · 强推 git</td>
+            <td class="mono">Bash(rm -rf *) · Bash(sudo *) · Bash(git push *--force*)</td>
           </tr>
         </tbody>
       </table>
     </div>
+    <div class="annot">deny 一旦命中,弹窗都不会出现 · Claude 会在自己的会话里看到"该工具被拒绝"的错误然后另寻它路</div>
+
+    <h3 style="margin-top:36px;">deny 比 allow 优先 — 优先级流程</h3>
+    <div class="archdiag" style="margin-top:18px;">
+      <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="权限优先级流程">
+        <!-- 起点 -->
+        <rect x="40" y="120" width="160" height="60" rx="8"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="120" y="148" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="1" font-weight="600">TOOL CALL</text>
+        <text x="120" y="168" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="13"
+              fill="#141413">Edit / Bash / Read</text>
+
+        <line x1="200" y1="150" x2="238" y2="150" stroke="#87867F" stroke-width="1.5"/>
+        <polyline points="232,144 242,150 232,156" fill="none"
+                  stroke="#87867F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- 决策 1: deny -->
+        <polygon points="245,150 320,110 395,150 320,190"
+                 fill="#FFFFFF" stroke="#B85C3E" stroke-width="1.5"/>
+        <text x="320" y="146" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="13"
+              fill="#141413">匹配 deny?</text>
+        <text x="320" y="162" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10"
+              fill="#87867F">step 1</text>
+
+        <!-- deny YES → reject -->
+        <line x1="320" y1="190" x2="320" y2="232" stroke="#B85C3E" stroke-width="1.5"/>
+        <polyline points="314,226 320,236 326,226" fill="none"
+                  stroke="#B85C3E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="335" y="216" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">YES</text>
+        <rect x="260" y="238" width="120" height="44" rx="6"
+              fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="320" y="264" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#FAF9F5" letter-spacing="1" font-weight="600">REJECTED</text>
+
+        <!-- deny NO → 决策 2: allow -->
+        <line x1="395" y1="150" x2="433" y2="150" stroke="#87867F" stroke-width="1.5"/>
+        <polyline points="427,144 437,150 427,156" fill="none"
+                  stroke="#87867F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="403" y="142" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">NO</text>
+
+        <polygon points="440,150 515,110 590,150 515,190"
+                 fill="#FFFFFF" stroke="#141413" stroke-width="1.5"/>
+        <text x="515" y="146" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="13"
+              fill="#141413">匹配 allow?</text>
+        <text x="515" y="162" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10"
+              fill="#87867F">step 2</text>
+
+        <!-- allow YES → run -->
+        <line x1="590" y1="150" x2="628" y2="150" stroke="#788C5D" stroke-width="1.5"/>
+        <polyline points="622,144 632,150 622,156" fill="none"
+                  stroke="#788C5D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="598" y="142" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#788C5D">YES</text>
+        <rect x="635" y="128" width="120" height="44" rx="6"
+              fill="#E3DACC" stroke="#788C5D" stroke-width="1.5"/>
+        <text x="695" y="154" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#3D3D3A" letter-spacing="1" font-weight="600">EXECUTE</text>
+
+        <!-- allow NO → ask -->
+        <line x1="515" y1="190" x2="515" y2="232" stroke="#87867F" stroke-width="1.5"/>
+        <polyline points="509,226 515,236 521,226" fill="none"
+                  stroke="#87867F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="530" y="216" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">NO</text>
+        <rect x="445" y="238" width="140" height="44" rx="6"
+              fill="#F0EEE6" stroke="#D97757" stroke-width="1.5"/>
+        <text x="515" y="264" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" letter-spacing="1" font-weight="600">ASK USER</text>
+
+        <!-- 右侧旁注 -->
+        <text x="820" y="100" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F" letter-spacing="1" font-weight="600">PRIORITY</text>
+        <text x="820" y="124" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">① deny  阻断</text>
+        <text x="820" y="146" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">② allow 放行</text>
+        <text x="820" y="168" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">③ ask   弹窗</text>
+        <text x="820" y="190" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">④ 模式  兜底</text>
+      </svg>
+      <p class="archdiag-cap">FIG 03 · PERMISSION RESOLUTION FLOW — DENY OVERRIDES ALLOW</p>
+    </div>
+
+    <h3 style="margin-top:36px;">实战:把 .env 从 Claude 的视野里彻底拿掉</h3>
+<pre class="code"><span class="comment"># 1. 在 .claude/settings.json 里加 deny</span>
+{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"deny"</span>: [
+      <span class="s">"Read(./.env)"</span>,
+      <span class="s">"Read(./.env.*)"</span>,
+      <span class="s">"Read(./**/.env)"</span>,
+      <span class="s">"Read(./**/.env.*)"</span>,
+      <span class="s">"Bash(cat .env*)"</span>,
+      <span class="s">"Bash(less .env*)"</span>,
+      <span class="s">"Bash(head .env*)"</span>,
+      <span class="s">"Bash(tail .env*)"</span>
+    ]
+  }
+}
+
+<span class="comment"># 2. 验证 — 让 Claude 试着读它</span>
+<span class="prompt">&gt;</span> 把 .env 的内容打印给我看
+<span class="output">Claude: 我无法读取 .env 文件——它被项目权限规则阻断了。
+        如果你需要查看,请在终端直接 cat。</span>
+
+<span class="comment"># 3. 即便 Claude 用 Bash 也试不出来</span>
+<span class="prompt">&gt;</span> 用 cat 也试一下
+<span class="output">Claude: cat .env 同样被 deny 规则阻断,我没办法绕过。</span>
+
+<span class="comment"># 4. 但环境变量本身可以读 — 因为 process.env 不经过工具</span>
+<span class="comment">#    所以你要么用 .env.example 让 Claude 看模板,要么把真值放到 ~/.zshrc</span></pre>
+
+    <div class="annot">边界:deny 只能管 Claude 工具调用 · 拦不住 node -e "console.log(process.env)" 这种自身就拿环境变量的代码</div>
   </div>
 </section>
 
 
-<!-- ========== 06 · LABS ========== -->
+<!-- ========== 04 · Hooks 兜底防线 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 ·</div>
+    <h2>Hooks — 权限的最后一道防线</h2>
+    <div class="count">SAFETY NET</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      <code class="inline">allow</code> / <code class="inline">deny</code> 是<em style="font-style:italic;color:#B85C3E;">声明式</em>的——
+      规则写错或漏写,Claude 就放行。
+      <code class="inline">Hooks</code> 是<em style="font-style:italic;color:#B85C3E;">命令式</em>的——
+      每次工具调用前都跑你给的脚本,你说阻断就阻断,
+      就算是 <code class="inline">bypassPermissions</code> 都拦得住。
+      (Day 10 会展开整个 Hooks 系统,今天只用<strong>安全场景</strong>那一支。)
+    </p>
+
+    <h3>PreToolUse — 工具运行前的最后关口</h3>
+<pre class="code"><span class="comment"># .claude/settings.json 中注册一个 PreToolUse 钩子</span>
+{
+  <span class="s">"hooks"</span>: {
+    <span class="s">"PreToolUse"</span>: [
+      {
+        <span class="s">"matcher"</span>: <span class="s">"Bash"</span>,
+        <span class="s">"hooks"</span>: [
+          {
+            <span class="s">"type"</span>: <span class="s">"command"</span>,
+            <span class="s">"command"</span>: <span class="s">".claude/hooks/block-dangerous.sh"</span>
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+
+<pre class="code"><span class="comment">#!/usr/bin/env bash</span>
+<span class="comment"># .claude/hooks/block-dangerous.sh</span>
+<span class="comment"># 读 stdin 的 JSON,解析出 Bash 命令,匹配危险模式就 exit 2 阻断</span>
+
+<span class="k">set</span> -euo pipefail
+<span class="k">cmd</span>=$(jq -r <span class="s">'.tool_input.command // ""'</span>)
+
+<span class="comment"># 危险模式列表 — 任何命中都阻断</span>
+<span class="k">declare</span> -a PATTERNS=(
+  <span class="s">'rm -rf /'</span>
+  <span class="s">'rm -rf ~'</span>
+  <span class="s">'rm -rf \*'</span>
+  <span class="s">':\(\)\{.*\}'</span>             <span class="comment"># fork bomb</span>
+  <span class="s">'mkfs\.'</span>                   <span class="comment"># 格式化磁盘</span>
+  <span class="s">'dd if=.* of=/dev/'</span>        <span class="comment"># 写裸设备</span>
+  <span class="s">'> /dev/sd'</span>
+  <span class="s">'curl .* \| sh'</span>            <span class="comment"># 远程脚本直接执行</span>
+  <span class="s">'wget .* \| bash'</span>
+)
+
+<span class="k">for</span> pat <span class="k">in</span> <span class="s">"${PATTERNS[@]}"</span>; <span class="k">do</span>
+  <span class="k">if</span> [[ <span class="s">"$cmd"</span> =~ $pat ]]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"BLOCKED: 命令命中危险模式 '$pat'"</span> &gt;&amp;2
+    <span class="k">exit</span> 2   <span class="comment"># exit 2 = 阻断该工具调用,把 stderr 内容反馈给 Claude</span>
+  <span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="k">exit</span> 0       <span class="comment"># 放行</span></pre>
+    <div class="annot">exit 码语义 — 0:放行 · 1:出错(Claude 看到但不阻断) · 2:阻断(Claude 看到 stderr 后另寻它法)</div>
+
+    <h3 style="margin-top:36px;">Hooks vs deny — 各自的强项</h3>
+    <div class="grid grid-2" style="margin-top:18px;">
+      <div class="node">
+        <div class="tag">DENY 规则</div>
+        <h3>简单 · 声明式 · 快</h3>
+        <p>写一行就完事,不用维护脚本。适合静态规则(<code class="inline">.env</code>、<code class="inline">rm -rf</code>)。配置即文档——别人 review 一眼就懂。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">HOOK 脚本</div>
+        <h3>灵活 · 可审计 · 可绕不开</h3>
+        <p>能写复杂条件(组合判断、查表、调外部服务)、能写审计日志、能彻底拦截 — <strong>即便 bypassPermissions 也跑</strong>。适合企业级安全策略。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px;">三个安全 Hook 模板</h3>
+    <div class="grid grid-3" style="margin-top:18px;">
+      <div class="node">
+        <div class="tag">TEMPLATE · 01</div>
+        <h3>命令审计日志</h3>
+        <p>PreToolUse 在 Bash 调用前把命令、时间、cwd 追加到 <code class="inline">~/.claude/audit.log</code>。事后追溯"那条 rm 是谁让跑的"。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">TEMPLATE · 02</div>
+        <h3>分支保护</h3>
+        <p>检测 <code class="inline">git checkout main</code> / <code class="inline">git push origin main</code>,直接 exit 2 阻断,要求 Claude 切到 feature 分支。</p>
+      </div>
+      <div class="node">
+        <div class="tag">TEMPLATE · 03</div>
+        <h3>敏感关键词扫描</h3>
+        <p>PostToolUse 扫描刚写入的文件,出现 <code class="inline">API_KEY=</code> / <code class="inline">PRIVATE_KEY</code> 等明文就 exit 2,要求 Claude 撤回。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========== 05 · 三层配置 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">05 ·</div>
+    <h2>三层配置 — 谁覆盖谁</h2>
+    <div class="count">CONFIG LAYERS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      同一条 <code class="inline">allow</code> / <code class="inline">deny</code> 可以写在三个地方:
+      <strong>用户级</strong>(全机器生效)、<strong>项目级</strong>(团队共享)、<strong>本地级</strong>(只你自己)。
+      搞清楚谁覆盖谁,才不会发生"我加了规则怎么没生效"的玄学。
+    </p>
+
+    <h3>三层文件 · 优先级从高到低</h3>
+    <div class="table-wrap" style="margin-top:18px;">
+      <table class="compare">
+        <thead><tr>
+          <th>层级</th><th>文件路径</th><th>纳入 git?</th><th>典型用途</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>命令行</td>
+            <td class="mono">--allowedTools / --permission-mode</td>
+            <td>—</td>
+            <td>临时覆盖 · 仅本次会话 <span class="clay">最高优先级</span></td>
+          </tr>
+          <tr>
+            <td>本地</td>
+            <td class="mono">.claude/settings.local.json</td>
+            <td>✗ gitignore</td>
+            <td>个人偏好 · 实验性放行 · 不希望污染队友配置</td>
+          </tr>
+          <tr>
+            <td>项目</td>
+            <td class="mono">.claude/settings.json</td>
+            <td>✓ 提交</td>
+            <td>团队共享规则 · 项目级 deny · 大家一致的 allow</td>
+          </tr>
+          <tr>
+            <td>用户</td>
+            <td class="mono">~/.claude/settings.json</td>
+            <td>—</td>
+            <td>个人通用偏好 · 跨项目的 deny(防 rm -rf 之类)</td>
+          </tr>
+          <tr>
+            <td class="clay">企业</td>
+            <td class="mono">/etc/claude-code/managed-settings.json</td>
+            <td>—</td>
+            <td>组织强制策略 · <span class="clay">不可被覆盖</span> · 管理员部署</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">合并语义 — allow / deny 数组是<strong>并集</strong>,不是覆盖 · 子层不能"撤销"父层的规则 · 但本地 deny 可以加在已有 allow 之上</div>
+
+    <h3 style="margin-top:36px;">团队配置 vs 个人配置的分工</h3>
+    <div class="grid grid-2" style="margin-top:18px;">
+      <div class="node accent">
+        <div class="tag clay">提交到仓库 · settings.json</div>
+        <h3>团队级规则</h3>
+        <p>
+          ① 项目相关的 allow(<code class="inline">Bash(npm test *)</code>、<code class="inline">Bash(npm run lint *)</code>)<br>
+          ② 项目敏感文件的 deny(<code class="inline">Read(./.env*)</code>、<code class="inline">Read(./secrets/**)</code>)<br>
+          ③ 必装的 PreToolUse hook(分支保护、审计)<br>
+          <br>
+          <em style="font-style:italic;color:var(--g500);">谁 clone 项目都自动受这些规则保护。</em>
+        </p>
+      </div>
+      <div class="node">
+        <div class="tag">gitignore · settings.local.json</div>
+        <h3>个人级规则</h3>
+        <p>
+          ① 个人开发偏好的 allow(只你信任的命令)<br>
+          ② 实验性放行(临时打开某个工具试试)<br>
+          ③ 你自己的 hook 路径(本地审计日志)<br>
+          ④ 个人 ANTHROPIC_API_KEY 环境变量<br>
+          <br>
+          <em style="font-style:italic;color:var(--g500);">不会污染队友,也不会被 review。</em>
+        </p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px;">合并示例</h3>
+<pre class="code"><span class="comment"># 用户级 ~/.claude/settings.json — 跨所有项目生效</span>
+{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"deny"</span>: [<span class="s">"Bash(rm -rf *)"</span>, <span class="s">"Bash(sudo *)"</span>]
+  }
+}
+
+<span class="comment"># 项目级 .claude/settings.json — 当前项目生效,提交到 git</span>
+{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"allow"</span>: [<span class="s">"Read"</span>, <span class="s">"Edit"</span>, <span class="s">"Bash(npm test *)"</span>],
+    <span class="s">"deny"</span>: [<span class="s">"Read(./.env*)"</span>]
+  }
+}
+
+<span class="comment"># 个人级 .claude/settings.local.json — 仅自己,gitignore</span>
+{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"allow"</span>: [<span class="s">"Bash(git diff *)"</span>, <span class="s">"Bash(git status)"</span>]
+  }
+}
+
+<span class="comment"># 合并后 Claude 看到的实际规则:</span>
+<span class="comment">#   allow: Read, Edit, Bash(npm test *), Bash(git diff *), Bash(git status)</span>
+<span class="comment">#   deny:  Bash(rm -rf *), Bash(sudo *), Read(./.env*)</span></pre>
+
+    <div class="annot">无法在 local 里"取消"项目级的 deny — 想绕开必须在项目级显式调整规则,这是设计上的安全保证</div>
+  </div>
+</section>
+
+
+<!-- ========== 06 · Labs ========== -->
 <section>
   <div class="sec-head">
     <div class="num">06 ·</div>
@@ -994,37 +1241,41 @@ body{
   <div class="indent">
     <div class="grid grid-2">
       <div class="node entry">
-        <div class="tag clay">LAB 01 · HEADLESS 基础</div>
-        <h3>管道驱动的代码分析</h3>
+        <div class="tag clay">LAB 01 · 模式切换</div>
+        <h3>给自己装一个安全的 plan → default 工作流</h3>
         <p>
-          用 <code class="inline">cat package.json | claude -p "列出所有过期的依赖" --bare</code> 分析项目依赖。
-          然后用 <code class="inline">--output-format json</code> 获取结构化结果并用 <code class="inline">jq</code> 提取。
+          在一个你不熟的开源项目里:先用 <code class="inline">claude --permission-mode plan</code> 让 Claude 出方案,
+          切回 default 让它落地,中途用 <code class="inline">⇧ Tab</code> 在 default 和 acceptEdits 之间切换,
+          感受三档模式各自的"问的频率"。<strong>不要试 bypass。</strong>
         </p>
       </div>
       <div class="node entry">
-        <div class="tag clay">LAB 02 · CI 集成</div>
-        <h3>搭建 PR 自动审查</h3>
+        <div class="tag clay">LAB 02 · 最小授权</div>
+        <h3>为你的项目写一份合格的 permissions 块</h3>
         <p>
-          创建一个 GitHub Actions 工作流，使用 <code class="inline">claude-code-action</code>
-          在每个 PR 创建时自动生成代码审查评论。
-          配置 <code class="inline">ANTHROPIC_API_KEY</code> 到 Repository Secrets。
+          创建 <code class="inline">.claude/settings.json</code>,
+          根据项目用到的命令写至少 5 条 <code class="inline">allow</code>(<code class="inline">Bash(npm test *)</code> 等)、
+          5 条 <code class="inline">deny</code>(<code class="inline">Bash(rm -rf *)</code>、<code class="inline">Bash(sudo *)</code> 等),
+          2 条 <code class="inline">ask</code>(<code class="inline">git push *</code> 等)。提交到仓库。
         </p>
       </div>
       <div class="node entry">
-        <div class="tag clay">LAB 03 · 多步管道</div>
-        <h3>AI 驱动的 commit 工作流</h3>
+        <div class="tag clay">LAB 03 · 敏感文件</div>
+        <h3>把 .env 从 Claude 的视野里彻底抹掉</h3>
         <p>
-          写一个 Shell 脚本，自动完成：
-          <code class="inline">git diff --staged</code> → Claude 生成 commit message → 确认 → 提交。
-          用 <code class="inline">--resume</code> 让第二步可以追问修改。
+          在你的项目里加 <code class="inline">deny</code> 规则(<code class="inline">Read(./.env*)</code>、<code class="inline">Bash(cat .env*)</code> 等),
+          然后<strong>主动让 Claude 试着读 .env</strong>——确认它返回的是"被规则阻断",而不是文件内容。
+          再尝试用 <code class="inline">cat</code> / <code class="inline">head</code> / 拼接 shell 等方式让它绕,直到完全拦死为止。
         </p>
       </div>
       <div class="node entry">
-        <div class="tag clay">LAB 04 · SDK 集成</div>
-        <h3>构建代码审计工具</h3>
+        <div class="tag clay">LAB 04 · Hook 兜底</div>
+        <h3>写一个 PreToolUse hook 拦截危险命令</h3>
         <p>
-          用 TypeScript SDK 写一个小脚本：遍历 <code class="inline">src/</code> 下所有 <code class="inline">.ts</code> 文件，
-          对每个文件调用 Claude 检查安全问题，最终输出一份汇总报告。
+          写一个 Bash 脚本(参考 §04 模板),从 stdin 读取工具调用的 JSON,
+          匹配 <code class="inline">rm -rf /</code>、<code class="inline">mkfs</code>、<code class="inline">curl | sh</code> 等模式就 exit 2 阻断。
+          注册到 <code class="inline">.claude/settings.json</code> 的 hooks 字段。
+          然后<strong>故意</strong>让 Claude 跑一条 <code class="inline">rm -rf ./tmp_test</code>——确认 hook 工作。
         </p>
       </div>
     </div>
@@ -1045,13 +1296,14 @@ body{
       <details class="qa-card">
         <summary>
           <span class="qa-num">Q1</span>
-          <span class="qa-q">-p 模式和交互模式的 Claude 能力一样吗？</span>
+          <span class="qa-q">acceptEdits 和 bypassPermissions 在实操上到底差多少?</span>
           <span class="qa-toggle">+</span>
         </summary>
         <div class="qa-a">
           <span class="qa-a-label">A</span>
           <div class="qa-a-body">
-            <p>底层模型能力完全一致。区别在于<strong>权限模型</strong>：交互模式下 Claude 可以请求用户批准新工具，而 <code>-p</code> 模式必须通过 <code>--allowedTools</code> 预先声明。加上 <code>--bare</code> 还会跳过 Hooks、Skills 和 MCP 的自动发现。本质上 <code>-p</code> 是一个权限更严格、环境更纯净的执行模式。</p>
+            <p>差一个数量级。<strong>acceptEdits</strong> 只放行 <code>Edit</code> / <code>Write</code> 这类"动文件"的工具,任何 <code>Bash</code> 调用——哪怕是 <code>ls</code>——依然会弹窗等你按 yes。<strong>bypassPermissions</strong> 是把所有工具全放行,包括 <code>Bash(rm -rf /)</code>。</p>
+            <p>更关键的区别:acceptEdits 改错文件你能 <code>git diff</code> / <code>git restore</code> 救回来;bypass 让 Claude 跑了 <code>rm</code> 之后,文件在硬盘上就真的没了。<strong>除非你在隔离沙箱(Docker、一次性 VM、临时 worktree),否则永远不要用 bypass。</strong></p>
           </div>
         </div>
       </details>
@@ -1059,13 +1311,15 @@ body{
       <details class="qa-card">
         <summary>
           <span class="qa-num">Q2</span>
-          <span class="qa-q">CI 中使用 Claude Code 的费用怎么控制？</span>
+          <span class="qa-q">--allowedTools 命令行参数和 settings.json 的 permissions.allow 该用哪个?</span>
           <span class="qa-toggle">+</span>
         </summary>
         <div class="qa-a">
           <span class="qa-a-label">A</span>
           <div class="qa-a-body">
-            <p>三层控制：① 用 <code>--max-turns</code> 限制每次调用的对话轮次（建议 CI 中设为 3-5）；② 用 <code>--model claude-sonnet-4-6</code> 选择更经济的模型；③ 用 <code>--output-format json</code> 的 <code>total_cost_usd</code> 字段监控每次调用的实际费用。还可以在 CI 配置中设置条件触发——不是每个 commit 都需要审查，只在 PR 创建时触发即可。</p>
+            <p>原则上:<strong>临时用命令行,长期用 settings.json</strong>。</p>
+            <p>命令行 <code>--allowedTools</code> 只对当前会话生效,适合一次性脚本、CI 任务、<code>-p</code> 模式下精确控制权限边界。settings.json 适合写常驻规则——团队都能受益、commit 进 git 后下次启动 Claude 也自动加载。</p>
+            <p>反模式:把 settings.json 写得很宽,然后期待用 <code>--disallowedTools</code> 在 CI 里收紧——容易遗漏。正确做法是 settings.json 里就写最小集,有特殊场景再 <code>--allowedTools</code> 加点。</p>
           </div>
         </div>
       </details>
@@ -1073,13 +1327,14 @@ body{
       <details class="qa-card">
         <summary>
           <span class="qa-num">Q3</span>
-          <span class="qa-q">--resume 和 --continue 有什么区别？</span>
+          <span class="qa-q">plan 模式真的不会修改任何文件吗?会不会有边界情况?</span>
           <span class="qa-toggle">+</span>
         </summary>
         <div class="qa-a">
           <span class="qa-a-label">A</span>
           <div class="qa-a-body">
-            <p><code>--continue</code> 自动恢复<strong>最近一次</strong>会话，不需要指定 ID——适合连续操作。<code>--resume SESSION_ID</code> 恢复<strong>指定</strong>会话——适合脚本中精确控制。在多步管道中，先用 <code>--output-format json</code> 捕获 <code>session_id</code>，再用 <code>--resume</code> 引用，这样即使中间步骤失败也能准确恢复。</p>
+            <p>plan 模式下 Claude 收到的工具集是被裁剪过的——<code>Edit</code> / <code>Write</code> / <code>Bash</code> 等写操作的工具<strong>根本不会出现在它的可调用列表里</strong>。所以即便它"想"改文件,也找不到对应工具调用。</p>
+            <p>边界情况:如果你装了 MCP 服务器,plan 模式不会自动限制 MCP 工具——某些 MCP 工具可能间接造成副作用(向数据库写、调远程 API 等)。<strong>关键 MCP 工具该在项目 settings 里另外配 deny,不要指望 plan 模式自动拦。</strong></p>
           </div>
         </div>
       </details>
@@ -1087,13 +1342,15 @@ body{
       <details class="qa-card">
         <summary>
           <span class="qa-num">Q4</span>
-          <span class="qa-q">SDK 需要单独安装吗？和 claude CLI 是什么关系？</span>
+          <span class="qa-q">deny 规则能 100% 防止 Claude 读到 .env 吗?</span>
           <span class="qa-toggle">+</span>
         </summary>
         <div class="qa-a">
           <span class="qa-a-label">A</span>
           <div class="qa-a-body">
-            <p>SDK 包名为 <code>@anthropic-ai/claude-code</code>（TypeScript）和 <code>claude-code</code>（Python），需要独立安装。SDK 底层会启动 Claude Code CLI 进程并与之通信——所以<strong>机器上必须先安装 claude CLI</strong>。SDK 的价值是提供原生语言的类型安全 API、流式控制和 AbortController 支持，比解析 CLI 的 JSON 输出更可靠。</p>
+            <p>能拦住 <strong>Claude 自己的工具调用</strong>(<code>Read</code>、<code>Bash(cat .env)</code> 等)。<strong>拦不住</strong>三种情况:</p>
+            <p>① 你让 Claude 写代码,代码运行时读 <code>process.env</code>——这是程序自身,不经过工具系统;② 你执行 <code>npm run dev</code>,dev server 启动时加载 .env——同样是程序行为;③ Claude 让你帮忙执行 <code>echo $OPENAI_KEY</code> 然后把输出贴给它——这是你自己泄漏的。</p>
+            <p>所以真正安全的做法:① 项目 <code>.gitignore</code> 排除 .env;② settings.json 的 deny 防 Claude 主动读;③ 写 PreToolUse hook 扫描即将写入的代码里有没有出现真实密钥模式(如 <code>sk-[A-Za-z0-9]{20,}</code>);④ 重要密钥用密钥管理服务而不是 .env。四层叠起来才是合格的防御。</p>
           </div>
         </div>
       </details>
@@ -1101,13 +1358,17 @@ body{
       <details class="qa-card">
         <summary>
           <span class="qa-num">Q5</span>
-          <span class="qa-q">在 CI 中 Claude 能访问私有仓库的代码吗？</span>
+          <span class="qa-q">团队成员的权限配置怎么共享,又怎么允许个人差异?</span>
           <span class="qa-toggle">+</span>
         </summary>
         <div class="qa-a">
           <span class="qa-a-label">A</span>
           <div class="qa-a-body">
-            <p>是的。GitHub Actions 的 <code>actions/checkout</code> 步骤已经将代码克隆到运行器上，Claude Code 可以像本地一样读取所有文件。但要注意：Claude 的工具调用（Read、Edit、Bash）都在运行器本地执行，<strong>代码本身不会发送到 Anthropic 服务器</strong>——只有 Claude 的 prompt 和工具调用结果会经过 API。如果安全策略要求完全隔离，可以使用 AWS Bedrock 或 Google Vertex AI 作为后端。</p>
+            <p>三层分工各司其职:</p>
+            <p><strong>项目 settings.json(commit)</strong>:全队共用的最小集——项目相关的命令 allow、敏感文件 deny、必装的 hook。这是<strong>底线</strong>,任何 clone 项目的人都自动受保护。</p>
+            <p><strong>个人 settings.local.json(gitignore)</strong>:每人的个性化偏好——你信任的额外 allow、你的本地 hook 路径、个人 API Key 环境变量。这部分别人看不到也用不到。</p>
+            <p><strong>用户 ~/.claude/settings.json</strong>:跨项目通用——比如永远 deny <code>rm -rf</code> / <code>sudo</code>,无论在哪个项目都生效。</p>
+            <p>反模式:把团队规则写到 settings.local.json——结果新同事 clone 项目后没有,得手动配,体验很差。"该全员有的规则一定要进 commit"是底线。</p>
           </div>
         </div>
       </details>
@@ -1126,11 +1387,11 @@ body{
   </div>
   <div class="indent">
     <ol class="review-list">
-      <li><code class="inline">-p</code> 标志的作用是什么？它和交互模式在权限上有什么核心区别？</li>
-      <li><code class="inline">--bare</code> 标志在 CI 中为什么是推荐的？它跳过了哪些自动发现过程？</li>
-      <li><code class="inline">--allowedTools</code> 的前缀匹配语法如何工作？给出一个只允许 git 和 npm 命令的示例。</li>
-      <li>在 GitHub Actions 中使用 <code class="inline">claude-code-action</code> 时，API Key 应该存储在哪里？为什么？</li>
-      <li>Agent SDK 的 <code class="inline">query()</code> 函数返回的是什么类型？如何获取最终结果？</li>
+      <li>四档权限模式按"会允许 Claude 做什么"从最少到最多排序,并说出每一档的典型场景。</li>
+      <li><code class="inline">Bash(git diff *)</code> 这种前缀匹配会匹配到 <code class="inline">git diff &amp;&amp; rm -rf /</code> 吗?为什么这种通配符要慎用?</li>
+      <li>当一条工具调用同时匹配 <code class="inline">allow</code> 和 <code class="inline">deny</code>,Claude Code 会怎么处理?</li>
+      <li>项目级 <code class="inline">.claude/settings.json</code>、个人级 <code class="inline">settings.local.json</code>、用户级 <code class="inline">~/.claude/settings.json</code> 的 <code class="inline">allow</code> 数组是覆盖关系还是合并关系?</li>
+      <li>PreToolUse hook 用什么 exit code 阻断工具调用?Claude 收到阻断后会做什么?</li>
     </ol>
   </div>
 </section>
@@ -1141,18 +1402,19 @@ body{
   <div class="sec-head">
     <div class="num">✓ ·</div>
     <h2>自检清单</h2>
-    <div class="count">7 ITEMS</div>
+    <div class="count">8 ITEMS</div>
   </div>
   <div class="indent">
     <div class="check">
       <ul>
-        <li>能用 <code class="inline">claude -p</code> 在脚本中执行非交互式查询</li>
-        <li>理解 text / json / stream-json 三种输出格式的适用场景</li>
-        <li>能用 <code class="inline">--allowedTools</code> 配置最小权限白名单</li>
-        <li>能编写 GitHub Actions 工作流集成 <code class="inline">claude-code-action</code></li>
-        <li>能用 <code class="inline">--resume</code> 和管道构建多步自动化工作流</li>
-        <li>了解 Agent SDK 的基本用法（TypeScript 或 Python）</li>
-        <li>理解 CI 环境中的安全最佳实践（Secrets、--bare、--max-turns）</li>
+        <li>能脱口说出 plan / default / acceptEdits / bypassPermissions 四档的差异</li>
+        <li>能用 <code class="inline">⇧ Tab</code> 在交互中切换前三档,知道 bypass 必须用 <code class="inline">--dangerously-skip-permissions</code></li>
+        <li>能在 <code class="inline">.claude/settings.json</code> 写至少 5 条精确的 <code class="inline">allow</code> 规则(含 Bash 前缀匹配)</li>
+        <li>能写至少 5 条 <code class="inline">deny</code> 规则覆盖危险命令和敏感文件</li>
+        <li>理解 deny &gt; allow &gt; ask &gt; 模式 的优先级顺序</li>
+        <li>能区分项目 settings.json(团队共享)和 settings.local.json(个人)的使用边界</li>
+        <li>能写一个 PreToolUse hook 拦截危险 Bash 命令并用 exit 2 阻断</li>
+        <li>清楚 deny 拦不住"运行时读 process.env"这类边界情况,知道补救措施</li>
       </ul>
     </div>
   </div>
@@ -1170,18 +1432,18 @@ body{
     <div class="grid grid-3">
       <div class="node">
         <div class="tag">DOCS</div>
-        <h3>Claude Code — CLI Reference</h3>
-        <p>所有命令行标志的完整文档：-p、--output-format、--allowedTools、--model 等。</p>
+        <h3>Claude Code — Permissions</h3>
+        <p>官方权限文档:四档模式语义、permissions 字段全字段、allow/deny/ask 表达式语法。Day 09 的根参考。</p>
+      </div>
+      <div class="node">
+        <div class="tag">REFERENCE</div>
+        <h3>Settings Schema</h3>
+        <p><code class="inline">.claude/settings.json</code> 的完整 schema:三层文件位置、合并规则、企业级 managed settings 字段定义。</p>
       </div>
       <div class="node">
         <div class="tag">GUIDE</div>
-        <h3>Claude Code — GitHub Actions</h3>
-        <p>官方 GitHub Actions 集成指南：claude-code-action 配置、触发条件、权限设置。</p>
-      </div>
-      <div class="node">
-        <div class="tag">SDK</div>
-        <h3>Claude Agent SDK</h3>
-        <p>TypeScript / Python SDK 文档：query() API、流式处理、会话管理、AbortController。</p>
+        <h3>Hooks 安全模板</h3>
+        <p>Day 10 的前置阅读:PreToolUse / PostToolUse 事件列表、stdin JSON schema、exit code 语义、社区安全 hook 仓库。</p>
       </div>
     </div>
   </div>
@@ -1198,16 +1460,16 @@ body{
   <div class="indent">
     <div class="node exit">
       <div class="tag clay">COMING NEXT</div>
-      <h3>多模态能力 — 截图分析 · 图片理解 · 前端可视化调试</h3>
-      <p>前九天你一直在和 Claude 交换文本——明天你将学会让它看见。把截图粘贴进终端让 Claude 分析 UI 布局、用 Read 工具直接读取图片获取视觉信息、对着错误截图调试前端 CSS 问题。Claude Code 不只是代码助手——它是能看懂画面的全栈搭档。</p>
+      <h3>Hooks 钩子系统 — 完整事件 · 自动格式化 · 自动测试 · Shell &amp; HTTP</h3>
+      <p>今天我们只用了 Hooks 的安全那一支——明天把它整个翻开。9 种钩子事件各自在什么时候触发、Shell 与 HTTP 两种处理器各自的取舍、自动 lint / 自动测试 / 自动 commit 怎么落地、hook 跑挂了怎么调试、阻断与撤销机制如何与 Claude 协作。规则一旦写好,记忆这件事就交还给机器。</p>
     </div>
   </div>
 </section>
 
 <!-- ========== FOOTER ========== -->
 <footer>
-  <p class="quote">"The best way to predict the future is to invent it."</p>
-  <p class="meta">DAY 09 · CLAUDE CODE 20-DAY ROADMAP · ALAN KAY</p>
+  <p class="quote">"Least privilege is not paranoia — it's how you keep trust earnable."</p>
+  <p class="meta">DAY 09 · CLAUDE CODE 20-DAY ROADMAP · PERMISSION &amp; SAFETY</p>
 </footer>
 
 </div>

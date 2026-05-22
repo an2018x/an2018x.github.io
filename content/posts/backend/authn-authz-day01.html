@@ -1,0 +1,1366 @@
+---
+title: "Day 01 · AuthN vs AuthZ · HTTP 认证与 Session 模型"
+date: '2026-05-22'
+draft: false
+description: "认证授权 30 天 Day 01：辨析 AuthN/AuthZ/Accounting 三个 A，理解 HTTP Basic / Digest 的挑战-应答模型，掌握 Cookie/Session 的工作原理与三大安全属性,并用 Go 实现最小可运行的登录系统。"
+toc: false
+tags:
+  - Backend
+  - Security
+  - Authentication
+  - Session
+  - Cookie
+  - HTTP
+  - Go
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.azd01-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.azd01-wrap .eyebrow{
+  font-family:var(--mono); font-size:12px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+}
+.azd01-wrap .eyebrow::before{
+  content:""; display:inline-block;
+  width:24px; height:1.5px; background:var(--clay);
+  margin-right:12px; vertical-align:middle;
+}
+.azd01-wrap h1{
+  font-family:var(--serif); font-weight:500;
+  font-size:clamp(36px, 5.2vw, 56px);
+  letter-spacing:-0.018em; line-height:1.08;
+  max-width:22ch; margin: 22px 0 30px; color:var(--slate);
+}
+.azd01-wrap h1 em{ font-style:italic; color:var(--clay); }
+
+.azd01-wrap h2{
+  font-family:var(--serif); font-weight:500;
+  font-size:27px; letter-spacing:-0.012em;
+  margin: 0; color:var(--slate);
+}
+.azd01-wrap h3{
+  font-family:var(--serif); font-weight:500;
+  font-size:19px; letter-spacing:-0.008em;
+  margin: 0 0 10px; color:var(--slate);
+}
+.azd01-wrap .lede{
+  font-size:16.5px; color:var(--g700);
+  max-width:64ch; margin:0 0 32px; line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.azd01-wrap header.masthead{ padding: 80px 0 56px; }
+.azd01-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono); font-size:11.5px;
+  color:var(--g500); letter-spacing:.06em; text-transform:uppercase;
+}
+.azd01-wrap .meta-strip strong{
+  color:var(--slate); font-weight:600; margin-right:6px;
+}
+
+/* ========== Section ========== */
+.azd01-wrap section{ margin-top:72px; }
+.azd01-wrap .indent{ margin-left:50px; }
+
+.azd01-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px; margin-bottom:28px;
+}
+.azd01-wrap .sec-head .num{
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.12em; font-weight:600; width:46px; flex-shrink:0;
+}
+.azd01-wrap .sec-head .count{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  padding:3px 12px; background:var(--g100); border-radius:999px;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ========== Mind Map ========== */
+.azd01-wrap .mindmap{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+}
+.azd01-wrap .mindmap svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.azd01-wrap .mindmap-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Card Grid ========== */
+.azd01-wrap .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.azd01-wrap .grid-2{ grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.azd01-wrap .grid-3{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* ========== Node Card ========== */
+.azd01-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.azd01-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.azd01-wrap .node.accent{ border-color:var(--clay); }
+.azd01-wrap .node.entry { background:var(--g100); }
+.azd01-wrap .node.exit  { background:var(--oat); border-color:var(--clay); }
+.azd01-wrap .node.dark  {
+  background:var(--slate); border-color:var(--slate); color:var(--ivory);
+}
+.azd01-wrap .node.dark .tag{ color:var(--oat); }
+.azd01-wrap .node.dark p{ color:var(--oat); }
+.azd01-wrap .node.dark h3{ color:var(--ivory); }
+
+.azd01-wrap .node .tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:10px; font-weight:600;
+}
+.azd01-wrap .node .tag.clay{ color:var(--clay); }
+.azd01-wrap .node p{
+  font-size:13.5px; color:var(--g700); margin:6px 0 0; line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.azd01-wrap .annot{
+  font-family:var(--mono); font-size:11.5px; color:var(--g500);
+  display:flex; align-items:flex-start; margin-top:14px; letter-spacing:.04em;
+}
+.azd01-wrap .annot::before{
+  content:""; width:32px; height:1.5px; background:var(--clay);
+  margin-right:12px; margin-top:8px; flex-shrink:0;
+}
+
+/* ========== Table ========== */
+.azd01-wrap .table-wrap{ overflow-x:auto; }
+.azd01-wrap table.compare{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+}
+.azd01-wrap table.compare th,
+.azd01-wrap table.compare td{
+  text-align:left; padding:14px 20px;
+  border-bottom:1px solid var(--g200); vertical-align:top;
+}
+.azd01-wrap table.compare th{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+  background:var(--g100); border-bottom:1.5px solid var(--slate);
+}
+.azd01-wrap table.compare td:first-child{
+  font-family:var(--serif); font-weight:500; font-size:15px;
+  width:22%; color:var(--slate);
+}
+.azd01-wrap table.compare tr:last-child td{ border-bottom:none; }
+.azd01-wrap table.compare .clay{ color:var(--clay-d); }
+.azd01-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+
+/* ========== Code ========== */
+.azd01-wrap pre.code{
+  background:var(--slate); color:var(--ivory);
+  font-family:var(--mono); font-size:12.5px;
+  padding:20px 24px; border-radius:10px;
+  overflow-x:auto; line-height:1.65; margin:18px 0;
+}
+.azd01-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.azd01-wrap pre.code .k{ color:var(--clay); }
+.azd01-wrap pre.code .s{ color:var(--olive); }
+.azd01-wrap pre.code .t{ color:#7EC8E3; }
+.azd01-wrap pre.code .n{ color:#C4B28A; }
+.azd01-wrap pre.code .prompt{ color:var(--olive); }
+.azd01-wrap pre.code .flag{ color:var(--clay); }
+.azd01-wrap pre.code .comment{ color:var(--g500); font-style:italic; }
+.azd01-wrap pre.code .output{ color:var(--oat); }
+.azd01-wrap pre.code .hl{ color:#F5B97A; }
+
+.azd01-wrap code.inline{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Diagram Wrap ========== */
+.azd01-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 28px; margin: 0;
+}
+.azd01-wrap .archdiag svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.azd01-wrap .archdiag-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Checklist ========== */
+.azd01-wrap .check{ background:var(--paper);
+  border:1.5px solid var(--g300); border-radius:14px;
+  padding:8px 24px; }
+.azd01-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.azd01-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative; font-size:14.5px; color:var(--slate);
+}
+.azd01-wrap .check li:last-child{ border-bottom:none; }
+.azd01-wrap .check li::before{
+  content:""; position:absolute;
+  left:0; top:16px; width:18px; height:18px;
+  border:1.5px solid var(--g300); border-radius:4px; background:var(--paper);
+}
+
+/* ========== Review Questions ========== */
+.azd01-wrap .review-list{
+  counter-reset: q; margin:0; padding:0; list-style:none;
+}
+.azd01-wrap .review-list li{
+  counter-increment: q; position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px; color:var(--g700);
+}
+.azd01-wrap .review-list li:last-child{ border-bottom:none; }
+.azd01-wrap .review-list li::before{
+  content: counter(q, decimal-leading-zero);
+  position:absolute; left:0; top:18px;
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.06em; font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.azd01-wrap .qa-grid{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.azd01-wrap .qa-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+  transition: border-color 150ms ease;
+}
+.azd01-wrap .qa-card[open]{ border-color:var(--slate); }
+.azd01-wrap .qa-card summary{
+  list-style:none; cursor:pointer;
+  padding:18px 24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition: background 150ms ease;
+}
+.azd01-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.azd01-wrap .qa-card summary::marker{ display:none; }
+.azd01-wrap .qa-card summary:hover{ background:var(--g100); }
+.azd01-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.azd01-wrap .qa-num{
+  font-family:var(--mono); font-size:12px; color:var(--clay);
+  letter-spacing:.1em; font-weight:600;
+  flex-shrink:0; margin-top:3px;
+}
+.azd01-wrap .qa-q{
+  font-family:var(--serif); font-size:16px; font-weight:500;
+  color:var(--slate); line-height:1.5; flex:1;
+}
+.azd01-wrap .qa-toggle{
+  font-family:var(--mono); font-size:18px; color:var(--g500);
+  flex-shrink:0; font-weight:300; line-height:1; margin-top:2px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+.azd01-wrap .qa-card[open] .qa-toggle{ transform:rotate(45deg); color:var(--clay); }
+.azd01-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex; align-items:flex-start; gap:18px;
+}
+.azd01-wrap .qa-a-label{
+  font-family:var(--mono); font-size:12px; color:var(--olive);
+  letter-spacing:.1em; font-weight:600;
+  flex-shrink:0; margin-top:2px;
+}
+.azd01-wrap .qa-a-body{ flex:1; }
+.azd01-wrap .qa-a-body p{
+  margin:0 0 12px; font-size:14.5px;
+  color:var(--g700); line-height:1.65;
+}
+.azd01-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.azd01-wrap .qa-a-body strong{ color:var(--slate); font-weight:600; }
+.azd01-wrap .qa-a-body code{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Spec Box ========== */
+.azd01-wrap .specbox{
+  background:var(--g100); border-left:3px solid var(--clay);
+  padding:14px 18px; margin:18px 0;
+  font-size:13.5px; color:var(--g700); line-height:1.6;
+  border-radius:0 6px 6px 0;
+}
+.azd01-wrap .specbox strong{
+  font-family:var(--mono); font-size:11.5px; color:var(--clay-d);
+  letter-spacing:.08em; text-transform:uppercase;
+  display:block; margin-bottom:4px;
+}
+
+/* ========== Footer ========== */
+.azd01-wrap footer{
+  margin-top:100px; padding-top:40px;
+  border-top:1px solid var(--g200); text-align:center;
+}
+.azd01-wrap footer .quote{
+  font-family:var(--serif); font-style:italic; font-size:18px;
+  color:var(--g700); max-width:54ch; margin:0 auto; line-height:1.55;
+}
+.azd01-wrap footer .meta{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px){
+  .azd01-wrap{ padding:0 22px 90px; }
+  .azd01-wrap .indent{ margin-left:0; }
+  .azd01-wrap header.masthead{ padding:56px 0 40px; }
+  .azd01-wrap section{ margin-top:56px; }
+  .azd01-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .azd01-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .azd01-wrap .qa-q{ font-size:14.5px; }
+  .azd01-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="azd01-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 01 · AUTHN / AUTHZ ROADMAP · 30 DAYS</div>
+  <h1>三个 A 与一只 <em>Cookie</em></h1>
+  <p class="lede">
+    第一天的目标是把后面 29 天的"地基"打牢——
+    辨清 Authentication / Authorization / Accounting 三个 A 各自的责任，
+    从 HTTP 这一层理解最早的认证方案 Basic / Digest，
+    再从 Cookie / Session 看懂"无状态协议如何支撑有状态登录"，
+    最后用 Go 写出一个 50 行就能跑通的最小登录系统。
+    跳过这一天，后面 OAuth / JWT 的所有"为什么这样设计"都会失去参照系。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 60–90 min</span>
+    <span><strong>READ</strong> 30 min</span>
+    <span><strong>HANDS-ON</strong> 30 min</span>
+    <span><strong>REVIEW</strong> 20 min</span>
+    <span><strong>STACK</strong> Go · net/http · curl · Chrome DevTools</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">M ·</div>
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 01 思维导图">
+        <!-- 根节点 -->
+        <rect x="290" y="20" width="400" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 01 · 概念 · HTTP 认证 · Session</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">CONCEPT · HTTP-AUTH · COOKIE · GO-LAB</text>
+
+        <!-- 主竖线 + 横干线 -->
+        <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="858" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四条分支竖线 -->
+        <line x1="122" y1="106" x2="122" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="106" x2="367" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="106" x2="613" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="106" x2="858" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四个主题节点 -->
+        <rect x="32" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="122" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">01 · CONCEPT</text>
+        <text x="122" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">三个 A 辨析</text>
+
+        <rect x="277" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · HTTP-AUTH</text>
+        <text x="367" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">Basic / Digest</text>
+
+        <rect x="523" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · COOKIE</text>
+        <text x="613" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">Cookie / Session</text>
+
+        <rect x="768" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="858" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">04 · GO LAB</text>
+        <text x="858" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">动手实战</text>
+
+        <!-- 子节点列表 -->
+        <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Authentication (你是谁)</text>
+        <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Authorization (能做啥)</text>
+        <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Accounting (做了啥)</text>
+        <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">机场登机类比</text>
+
+        <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">RFC 7617 / 7616</text>
+        <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Challenge-Response 模型</text>
+        <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">WWW-Authenticate / 401</text>
+        <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">为何 Basic 必须配 HTTPS</text>
+
+        <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">RFC 6265 (Cookie)</text>
+        <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Server-side Session</text>
+        <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">HttpOnly / Secure / SameSite</text>
+        <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Session 存储选型</text>
+
+        <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Go Basic Auth 解析</text>
+        <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">手写 Session 存储</text>
+        <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">用 scs 写正经版本</text>
+        <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">用 DevTools 观察 Cookie</text>
+
+        <!-- 底部 deliverables -->
+        <line x1="32" y1="358" x2="948" y2="358" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="32" y="385" font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+
+        <rect x="32"  y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="142" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">能讲清三个 A 的差别</text>
+
+        <rect x="268" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="378" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">手算 Basic 头部 base64</text>
+
+        <rect x="504" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="614" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">跑通 Go Session demo</text>
+
+        <rect x="740" y="398" width="200" height="34" rx="5"
+              fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="840" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">画出登录时序图</text>
+      </svg>
+      <div class="mindmap-cap">FIG · Day 01 全景: 概念 → HTTP 认证 → Cookie/Session → Go 实战</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 01. 三个 A 辨析 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">01 ·</div>
+    <h2>AuthN / AuthZ / Accounting 三个 A</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      做开放平台最容易踩的第一个坑，就是把"认证"和"授权"混为一谈——
+      新人写代码经常在登录中间件里直接判断"这个用户能不能访问这个 API"，
+      把两件事揉在一起，三个月后只能推倒重来。
+      所以第一天，先把这三个英文单字母都以 A 开头的概念彻底分开。
+    </p>
+
+    <h3 style="margin-top:24px;">定义与区分</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>概念</th>
+          <th>回答的问题</th>
+          <th>典型机制</th>
+          <th>失败的代价</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Authentication (AuthN)</td>
+            <td><em>你是谁?</em></td>
+            <td>密码 · 短信验证码 · TOTP · 证书 · WebAuthn</td>
+            <td class="clay">冒名登录(账号被盗)</td>
+          </tr>
+          <tr>
+            <td>Authorization (AuthZ)</td>
+            <td><em>你能做什么?</em></td>
+            <td>RBAC · ABAC · OAuth Scope · 资源所有权检查</td>
+            <td class="clay">越权访问(看到别人的数据)</td>
+          </tr>
+          <tr>
+            <td>Accounting / Audit</td>
+            <td><em>你做了什么?</em></td>
+            <td>操作日志 · 审计流水 · 计量计费 · SIEM</td>
+            <td class="clay">事后无法追溯/取证失败</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="specbox">
+      <strong>AAA 框架</strong>
+      最早系统性提出 "Authentication / Authorization / Accounting" 三件套的是网络设备领域的
+      RADIUS (RFC 2865) 与 Diameter (RFC 6733) 协议——
+      它们把这三件事拆成独立的接口，告诉我们：<strong>这三件事在工程上必须解耦,否则无法独立演进</strong>。
+      在 Web 应用里我们一般把 Accounting 拆成"应用日志 / 安全审计 / 计量计费"三种不同的东西,
+      但本质仍然是"事后可追溯"。
+    </div>
+
+    <h3 style="margin-top:32px;">机场登机类比</h3>
+    <p style="color:var(--g700); font-size:14.5px; max-width:62ch;">
+      把这三件事映射到一次飞行体验:
+    </p>
+    <div class="grid grid-3" style="margin-top:12px;">
+      <div class="node">
+        <div class="tag clay">AUTHN · 你是谁</div>
+        <h3>护照查验</h3>
+        <p>到机场先在边检窗口出示护照——这是<strong>认证</strong>。系统只确认"持有这本护照的人就是 Cheng An"，不关心你今天要去哪里。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">AUTHZ · 能干啥</div>
+        <h3>登机牌检验</h3>
+        <p>到登机口出示登机牌——这是<strong>授权</strong>。系统确认你能上 CA1234 这趟航班的某个座位。同一本护照,没有这张登机牌就上不去。</p>
+      </div>
+      <div class="node">
+        <div class="tag clay">ACCT · 干过啥</div>
+        <h3>登机扫描记录</h3>
+        <p>登机口扫码后留下时间戳——这是<strong>审计</strong>。即使你已经上飞机,系统仍然知道"5 月 22 日 14:03 谁登了哪个航班"。</p>
+      </div>
+    </div>
+    <div class="annot">关键洞察: 护照本身不告诉你"能上哪趟飞机";登机牌也不验证"你是不是这个人"。两件事各管各的,中间用一次"姓名比对"来联系——开放平台的 OAuth 授权码 / Access Token 流程就是这个模型的延伸。</div>
+
+    <h3 style="margin-top:32px;">为什么必须分开</h3>
+    <ol class="review-list">
+      <li><strong>演进节奏不同。</strong> 认证方式可能 5 年一变(从密码到 Passkey),授权策略可能每天都在调整。耦合在一起,改任何一边都要回归测试另一边。</li>
+      <li><strong>外包与委托能力不同。</strong> 你可以把认证外包给"Sign in with Google"(OIDC),但授权(谁能调你哪个 API)必须自己控制——这是开放平台最基本的边界。</li>
+      <li><strong>故障影响面不同。</strong> 认证挂了所有人登不上来;授权挂了可能"什么都能干"——后者通常更危险,需要不同等级的灰度与回滚机制。</li>
+      <li><strong>审计要求不同。</strong> 认证关注"是不是本人",审计关注"做了哪些事"——前者是登录瞬间的快照,后者是连续的流水。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== 02. HTTP 认证 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">02 ·</div>
+    <h2>HTTP 认证: Basic 与 Digest</h2>
+    <div class="count">25 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      HTTP 协议自己就内置了一套认证框架,叫 <em style="font-style:italic;color:#B85C3E;">HTTP Authentication</em>。
+      虽然今天 SaaS 应用很少直接用 Basic / Digest 登录,
+      但这两个老协议留下来的"Challenge-Response 模型"和 <code class="inline">Authorization</code> 请求头,
+      被后来的 Bearer Token / OAuth / Hawk 全部继承——理解它们就是理解一切 HTTP 鉴权的起点。
+    </p>
+
+    <h3>Challenge-Response 时序</h3>
+    <div class="archdiag" style="margin-top:12px;">
+      <svg viewBox="0 0 920 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HTTP Basic Auth 时序图">
+        <!-- 主体两个泳道 -->
+        <text x="180" y="30" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">CLIENT (Browser / curl)</text>
+        <text x="740" y="30" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">SERVER (Origin)</text>
+
+        <line x1="180" y1="42" x2="180" y2="330" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="740" y1="42" x2="740" y2="330" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+        <!-- 1. 初次请求 -->
+        <line x1="180" y1="78" x2="740" y2="78" stroke="#141413" stroke-width="2"/>
+        <polygon points="740,72 752,78 740,84" fill="#141413"/>
+        <text x="460" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#141413">① GET /admin · 不带 Authorization 头</text>
+
+        <!-- 2. 401 + WWW-Authenticate -->
+        <line x1="740" y1="120" x2="180" y2="120" stroke="#D97757" stroke-width="2"/>
+        <polygon points="180,114 168,120 180,126" fill="#D97757"/>
+        <text x="460" y="110" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#B85C3E" font-weight="600">② 401 Unauthorized</text>
+        <text x="460" y="138" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">WWW-Authenticate: Basic realm="ops"</text>
+
+        <!-- 中间一段说明 -->
+        <rect x="260" y="158" width="400" height="42" rx="5"
+              fill="#F0EEE6" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="460" y="178" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13"
+              fill="#3D3D3A">客户端弹出登录框 · 用户输入账号密码</text>
+        <text x="460" y="194" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">credentials = base64("alice:s3cr3t")</text>
+
+        <!-- 3. 带 Authorization 重发 -->
+        <line x1="180" y1="232" x2="740" y2="232" stroke="#141413" stroke-width="2"/>
+        <polygon points="740,226 752,232 740,238" fill="#141413"/>
+        <text x="460" y="222" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#141413">③ GET /admin</text>
+        <text x="460" y="250" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">Authorization: Basic YWxpY2U6czNjcjN0</text>
+
+        <!-- 4. 200 OK -->
+        <line x1="740" y1="296" x2="180" y2="296" stroke="#788C5D" stroke-width="2"/>
+        <polygon points="180,290 168,296 180,302" fill="#788C5D"/>
+        <text x="460" y="286" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#788C5D" font-weight="600">④ 200 OK · 返回内容</text>
+        <text x="460" y="314" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">后续每个请求都要重新带 Authorization 头</text>
+      </svg>
+      <div class="archdiag-cap">FIG · HTTP Basic 的四步: 试探 → 挑战 → 应答 → 通过</div>
+    </div>
+
+    <h3 style="margin-top:32px;">Basic 认证(RFC 7617)</h3>
+    <p style="color:var(--g700); font-size:14.5px;">
+      最简单粗暴的方案: 把用户名和密码用冒号拼接、Base64 编码,放进 <code class="inline">Authorization</code> 请求头。
+    </p>
+
+<pre class="code"><span class="comment"># 客户端手动构造</span>
+<span class="prompt">$</span> echo -n <span class="s">"alice:s3cr3t"</span> | base64
+<span class="output">YWxpY2U6czNjcjN0</span>
+
+<span class="comment"># 浏览器 / curl 会自动加这一行</span>
+GET /admin HTTP/1.1
+Host: api.example.com
+<span class="hl">Authorization: Basic YWxpY2U6czNjcjN0</span>
+
+<span class="comment"># curl 一行测试</span>
+<span class="prompt">$</span> curl <span class="flag">-u</span> alice:s3cr3t https://api.example.com/admin
+<span class="prompt">$</span> curl <span class="flag">-H</span> <span class="s">"Authorization: Basic YWxpY2U6czNjcjN0"</span> https://api.example.com/admin</pre>
+
+    <div class="grid grid-2" style="margin-top:20px;">
+      <div class="node entry">
+        <div class="tag">✓ 优点</div>
+        <h3>简单到极致</h3>
+        <p>所有 HTTP 客户端、所有服务器框架原生支持; 无需 Cookie / Session, 调试方便, 适合内网工具、CI 调用、Webhook 推送等"机器对机器"场景。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">✗ 致命缺陷</div>
+        <h3>密码每次都在路上</h3>
+        <p>Base64 <strong>不是加密</strong>, 任何中间人都能立刻解码。所以 Basic <strong>必须配 HTTPS</strong>; 没有 TLS 的 Basic Auth 等于把密码贴在公告栏。即使有 HTTPS, 也意味着每个请求都把"原始密码"送出去——一旦服务端日志记错, 立刻泄露。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">Digest 认证(RFC 7616)</h3>
+    <p style="color:var(--g700); font-size:14.5px;">
+      为了让密码"不再上路", HTTP 设计了 Digest 方案:
+      服务端发一个一次性 nonce, 客户端用 nonce + 密码 + 请求方法 + URI 做哈希再回传。
+      这样服务端能验证, 但中间人拿到响应也复用不了(nonce 用完作废)。
+    </p>
+
+<pre class="code"><span class="comment"># 服务端 challenge</span>
+WWW-Authenticate: Digest
+  realm=<span class="s">"api"</span>,
+  qop=<span class="s">"auth"</span>,
+  nonce=<span class="s">"dcd98b7102dd2f0e8b11d0f600bfb0c093"</span>,
+  opaque=<span class="s">"5ccc069c403ebaf9f0171e9517f40e41"</span>
+
+<span class="comment"># 客户端用 H(A1) + H(A2) + nonce 哈希后响应</span>
+<span class="comment"># H(A1) = MD5(user:realm:password)</span>
+<span class="comment"># H(A2) = MD5(method:uri)</span>
+<span class="comment"># response = MD5( H(A1) : nonce : nc : cnonce : qop : H(A2) )</span>
+
+Authorization: Digest username=<span class="s">"alice"</span>,
+  realm=<span class="s">"api"</span>,
+  nonce=<span class="s">"dcd98b71..."</span>,
+  uri=<span class="s">"/admin"</span>,
+  qop=auth, nc=00000001, cnonce=<span class="s">"0a4f113b"</span>,
+  response=<span class="s">"6629fae49393a05397450978507c4ef1"</span></pre>
+
+    <div class="specbox">
+      <strong>现状: 几乎被淘汰</strong>
+      Digest 在 1999 年(RFC 2617)就出现,2015 年由 RFC 7616 升级支持 SHA-256。
+      但它从未真正流行——原因是: <em>(1)</em> 服务端必须能拿到密码明文或可逆形式才能计算 H(A1),
+      与"密码必须 bcrypt 哈希存储"的最佳实践冲突;
+      <em>(2)</em> HTTPS 普及后,Basic 的"密码上路"问题不再是大问题;
+      <em>(3)</em> 现代场景已经全面转向 Bearer Token / OAuth / mTLS。
+      所以了解 Digest 即可,不必深入。
+    </div>
+
+    <h3 style="margin-top:32px;">Authorization 头的家族</h3>
+    <p style="color:var(--g700); font-size:14.5px;">
+      虽然 Basic 退场了,但 <code class="inline">Authorization: &lt;scheme&gt; &lt;credentials&gt;</code> 这个语法被沿用至今。
+      你后面会反复见到这一族:
+    </p>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>Scheme</th>
+          <th>形态示例</th>
+          <th>规范</th>
+          <th>典型用途</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Basic</td><td class="mono">Basic YWxpY2U6czNjcjN0</td><td class="clay">RFC 7617</td><td>内网工具 · CI · Webhook 调用</td></tr>
+          <tr><td>Digest</td><td class="mono">Digest username="...", ...</td><td class="clay">RFC 7616</td><td>历史遗留 · 已不推荐</td></tr>
+          <tr><td>Bearer</td><td class="mono">Bearer eyJhbGciOiJSUzI1NiI...</td><td class="clay">RFC 6750</td><td>OAuth 2.0 / JWT 访问令牌</td></tr>
+          <tr><td>DPoP</td><td class="mono">DPoP eyJ0eXAiOiJkcG9w...</td><td class="clay">RFC 9449</td><td>绑定密钥的 OAuth 访问令牌</td></tr>
+          <tr><td>Hawk / AWS4-HMAC</td><td class="mono">AWS4-HMAC-SHA256 Credential=...</td><td>厂商规范</td><td>云厂商签名认证(AWS / 阿里云)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">写法约定: 注意 scheme 名后面是空格,然后是与该 scheme 相关的凭证串。后面 OAuth / DPoP 都遵循这同一个语法,只是凭证形式不同</div>
+  </div>
+</section>
+
+<!-- ========== 03. Cookie 与 Session ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">03 ·</div>
+    <h2>Cookie 与 Session 模型</h2>
+    <div class="count">25 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      HTTP 是<em style="font-style:italic;color:#B85C3E;">无状态</em>的——每个请求对服务器都是陌生人。
+      可登录后我们需要"被记住",这就要在协议之上叠一层"状态"。
+      Cookie 是这一层的载体(RFC 6265),Session 是其上的应用模式。
+      所有现代 Web 登录,本质都是这两个东西的变体。
+    </p>
+
+    <h3>登录的标准时序</h3>
+    <div class="archdiag" style="margin-top:12px;">
+      <svg viewBox="0 0 920 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cookie Session 登录时序图">
+        <text x="180" y="30" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">BROWSER</text>
+        <text x="740" y="30" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">SERVER + SESSION STORE</text>
+
+        <line x1="180" y1="42" x2="180" y2="330" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="740" y1="42" x2="740" y2="330" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+        <!-- 1. POST /login -->
+        <line x1="180" y1="78" x2="740" y2="78" stroke="#141413" stroke-width="2"/>
+        <polygon points="740,72 752,78 740,84" fill="#141413"/>
+        <text x="460" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#141413">① POST /login · username + password</text>
+
+        <!-- 2. Set-Cookie -->
+        <line x1="740" y1="130" x2="180" y2="130" stroke="#788C5D" stroke-width="2"/>
+        <polygon points="180,124 168,130 180,136" fill="#788C5D"/>
+        <text x="460" y="106" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#788C5D" font-weight="600">② 200 OK · 服务端生成 session 并存储</text>
+        <text x="460" y="124" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">Set-Cookie: SID=abc123; HttpOnly; Secure; SameSite=Lax</text>
+
+        <!-- 浏览器内部存储说明 -->
+        <rect x="60" y="160" width="240" height="42" rx="5"
+              fill="#F0EEE6" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="180" y="180" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13"
+              fill="#3D3D3A">浏览器 Cookie Jar</text>
+        <text x="180" y="196" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">SID=abc123 · 自动随后续请求带上</text>
+
+        <rect x="620" y="160" width="240" height="42" rx="5"
+              fill="#F0EEE6" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="740" y="180" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13"
+              fill="#3D3D3A">Session Store (Redis 等)</text>
+        <text x="740" y="196" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">abc123 → {uid:42, exp:...}</text>
+
+        <!-- 3. 后续请求带 Cookie -->
+        <line x1="180" y1="240" x2="740" y2="240" stroke="#141413" stroke-width="2"/>
+        <polygon points="740,234 752,240 740,246" fill="#141413"/>
+        <text x="460" y="230" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#141413">③ GET /me</text>
+        <text x="460" y="258" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">Cookie: SID=abc123</text>
+
+        <!-- 4. 返回用户数据 -->
+        <line x1="740" y1="300" x2="180" y2="300" stroke="#788C5D" stroke-width="2"/>
+        <polygon points="180,294 168,300 180,306" fill="#788C5D"/>
+        <text x="460" y="290" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#788C5D" font-weight="600">④ 200 OK · {id:42, name:"alice"}</text>
+        <text x="460" y="318" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F">服务端用 SID 查 Session Store, 拿到 uid=42</text>
+      </svg>
+      <div class="archdiag-cap">FIG · Session 模型: 服务端存数据,客户端只存索引(SID)</div>
+    </div>
+
+    <h3 style="margin-top:32px;">Cookie 的关键属性(必背)</h3>
+    <p style="color:var(--g700); font-size:14.5px;">
+      Cookie 上的属性远比"键值对"重要——大多数线上事故都来自这几个属性没设对:
+    </p>
+    <div class="grid">
+      <div class="node accent">
+        <div class="tag clay">SECURITY · 防 XSS</div>
+        <h3>HttpOnly</h3>
+        <p>禁止 JavaScript 通过 <code class="inline">document.cookie</code> 读取。攻击者通过 XSS 注入脚本时拿不到 Session ID。<strong>会话 Cookie 必须设。</strong></p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">SECURITY · 防嗅探</div>
+        <h3>Secure</h3>
+        <p>只在 HTTPS 上传输。HTTP 请求里不带这个 Cookie——避免明文链路上被嗅探。生产环境一律设。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">SECURITY · 防 CSRF</div>
+        <h3>SameSite</h3>
+        <p>限制跨站请求是否带 Cookie。<code class="inline">Strict</code> 完全不跨站; <code class="inline">Lax</code> 跨站 GET 跳转会带(默认值); <code class="inline">None</code> 必须配 Secure。</p>
+      </div>
+      <div class="node">
+        <div class="tag">SCOPE · 作用域</div>
+        <h3>Domain / Path</h3>
+        <p>控制 Cookie 在哪些子域、哪些路径下生效。<code class="inline">Domain=.example.com</code> 让二级域名共享; 不写则只对当前域生效(更安全)。</p>
+      </div>
+      <div class="node">
+        <div class="tag">LIFETIME · 生命周期</div>
+        <h3>Expires / Max-Age</h3>
+        <p>不设这两个就是会话 Cookie(关浏览器消失); 设了就是持久 Cookie。"记住我"功能本质就是这两个属性。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">2023+ · 隐私加固</div>
+        <h3>__Host- 前缀</h3>
+        <p>名字以 <code class="inline">__Host-</code> 开头的 Cookie 强制要求 Secure + Path=/ + 不带 Domain——一种"显式声明这是绑死本域的关键 Cookie"的写法。</p>
+      </div>
+    </div>
+
+    <div class="specbox" style="margin-top:24px;">
+      <strong>RFC 6265bis 与现代浏览器</strong>
+      Chrome 在 2020 年开始把 SameSite 默认值改为 <code class="inline">Lax</code>(原来是 None)——
+      这一个改动让全行业大量"未显式设置 SameSite"的跨站登录失效。
+      要点: <em>SameSite=None 必须同时设 Secure</em>,否则浏览器直接拒绝。
+      这是 Cookie 规范现代化的一个里程碑,也是 CSRF 防御的"系统级"加固。
+    </div>
+
+    <h3 style="margin-top:32px;">Session 存储选型</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>方案</th>
+          <th>读写速度</th>
+          <th>横向扩展</th>
+          <th>掉电是否丢</th>
+          <th>典型场景</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>内存(Map)</td>
+            <td class="clay">极快</td>
+            <td>不行 · 单机</td>
+            <td>丢</td>
+            <td>本地 demo · 单机小工具</td>
+          </tr>
+          <tr>
+            <td>Redis</td>
+            <td>快(网络一跳)</td>
+            <td>可分片 / 主从</td>
+            <td>看持久化策略</td>
+            <td class="clay">生产首选 · 大多数 Web 系统</td>
+          </tr>
+          <tr>
+            <td>关系数据库</td>
+            <td>慢(磁盘 + 索引)</td>
+            <td>可主从</td>
+            <td>不丢</td>
+            <td>低频登录 · 与业务表共库</td>
+          </tr>
+          <tr>
+            <td>签名 Cookie</td>
+            <td>无网络</td>
+            <td>无状态 · 天然分布式</td>
+            <td>不存在</td>
+            <td>JWT / scs+sealed cookie · 无中心存储</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">取舍要点: "服务端存 Session" 易于吊销但难以横向扩展; "Cookie 自带数据" 天然分布式但难以吊销——这是 Day 06-09 JWT 那一阶段会反复出现的根本矛盾</div>
+  </div>
+</section>
+
+<!-- ========== 04. Go 实战 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 ·</div>
+    <h2>Go 实战: 三段最小代码</h2>
+    <div class="count">30 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      理论看完三遍不如自己跑一遍。三个 lab 由浅入深:
+      先用 <code class="inline">net/http</code> 内置能力实现 Basic Auth(看清 Authorization 头怎么解析);
+      再手写一个 50 行的内存 Session(看清 SID 与服务端存储的关系);
+      最后换上社区库 <code class="inline">scs</code> 写"生产规格"版本。
+    </p>
+
+    <h3>Lab 1 · 标准库实现 Basic Auth</h3>
+<pre class="code"><span class="comment">// basic_auth.go · 一段就跑通的 Basic Auth Demo</span>
+<span class="k">package</span> main
+
+<span class="k">import</span> (
+    <span class="s">"crypto/subtle"</span>
+    <span class="s">"net/http"</span>
+)
+
+<span class="k">func</span> requireAuth(w http.ResponseWriter) {
+    w.Header().Set(<span class="s">"WWW-Authenticate"</span>, <span class="s">`Basic realm="ops", charset="UTF-8"`</span>)
+    http.Error(w, <span class="s">"unauthorized"</span>, http.StatusUnauthorized) <span class="comment">// 401</span>
+}
+
+<span class="k">func</span> main() {
+    http.HandleFunc(<span class="s">"/admin"</span>, <span class="k">func</span>(w http.ResponseWriter, r *http.Request) {
+        user, pass, ok := r.BasicAuth()  <span class="comment">// 自动解 base64</span>
+        <span class="k">if</span> !ok {
+            requireAuth(w); <span class="k">return</span>
+        }
+        <span class="comment">// 用 constant time 比较, 防止时序侧信道泄露用户名/密码</span>
+        userOK := subtle.ConstantTimeCompare([]<span class="k">byte</span>(user), []<span class="k">byte</span>(<span class="s">"alice"</span>)) == 1
+        passOK := subtle.ConstantTimeCompare([]<span class="k">byte</span>(pass), []<span class="k">byte</span>(<span class="s">"s3cr3t"</span>)) == 1
+        <span class="k">if</span> !(userOK &amp;&amp; passOK) {
+            requireAuth(w); <span class="k">return</span>
+        }
+        w.Write([]<span class="k">byte</span>(<span class="s">"hello, "</span> + user + <span class="s">"\n"</span>))
+    })
+    _ = http.ListenAndServe(<span class="s">":8080"</span>, <span class="k">nil</span>)
+}</pre>
+
+<pre class="code"><span class="comment"># 跑起来 + 验证</span>
+<span class="prompt">$</span> go run basic_auth.go &amp;
+<span class="prompt">$</span> curl <span class="flag">-i</span> http://localhost:8080/admin
+<span class="output">HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Basic realm="ops", charset="UTF-8"</span>
+
+<span class="prompt">$</span> curl <span class="flag">-i -u</span> alice:s3cr3t http://localhost:8080/admin
+<span class="output">HTTP/1.1 200 OK
+hello, alice</span></pre>
+
+    <div class="specbox">
+      <strong>为什么要用 subtle.ConstantTimeCompare</strong>
+      普通字符串比较 <code class="inline">==</code> 会在第一个不同字符就提前返回——
+      攻击者可以通过测量响应时间, 逐字节猜出正确的用户名/密码。
+      <code class="inline">crypto/subtle</code> 的常量时间比较确保比较耗时与输入相同, 杜绝这种时序侧信道。
+      <em>所有"敏感字符串比较"都应该用它,不限于 Basic Auth。</em>
+    </div>
+
+    <h3 style="margin-top:32px;">Lab 2 · 手写一个内存 Session(理解原理用)</h3>
+<pre class="code"><span class="comment">// session_demo.go · 不要把这个用到生产 — 只为理解原理</span>
+<span class="k">package</span> main
+
+<span class="k">import</span> (
+    <span class="s">"crypto/rand"</span>
+    <span class="s">"encoding/hex"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+)
+
+<span class="k">type</span> session <span class="k">struct</span> {
+    userID  <span class="k">int</span>
+    expires time.Time
+}
+
+<span class="k">var</span> (
+    store = <span class="k">map</span>[<span class="k">string</span>]session{}
+    mu    sync.Mutex
+)
+
+<span class="k">func</span> newSID() <span class="k">string</span> {
+    b := <span class="k">make</span>([]<span class="k">byte</span>, 32)
+    _, _ = rand.Read(b)
+    <span class="k">return</span> hex.EncodeToString(b)  <span class="comment">// 64 字符的随机 ID</span>
+}
+
+<span class="k">func</span> login(w http.ResponseWriter, r *http.Request) {
+    <span class="comment">// 略: 校验账号密码 → 假设是用户 42</span>
+    sid := newSID()
+    mu.Lock()
+    store[sid] = session{userID: 42, expires: time.Now().Add(2 * time.Hour)}
+    mu.Unlock()
+
+    http.SetCookie(w, &amp;http.Cookie{
+        Name:     <span class="s">"SID"</span>,
+        Value:    sid,
+        Path:     <span class="s">"/"</span>,
+        HttpOnly: <span class="k">true</span>,       <span class="comment">// JS 拿不到</span>
+        Secure:   <span class="k">true</span>,       <span class="comment">// 仅 HTTPS</span>
+        SameSite: http.SameSiteLaxMode,
+        MaxAge:   60 * 60 * 2, <span class="comment">// 2 小时</span>
+    })
+    w.Write([]<span class="k">byte</span>(<span class="s">"logged in\n"</span>))
+}
+
+<span class="k">func</span> me(w http.ResponseWriter, r *http.Request) {
+    c, err := r.Cookie(<span class="s">"SID"</span>)
+    <span class="k">if</span> err != <span class="k">nil</span> {
+        http.Error(w, <span class="s">"no session"</span>, 401); <span class="k">return</span>
+    }
+    mu.Lock(); s, ok := store[c.Value]; mu.Unlock()
+    <span class="k">if</span> !ok || time.Now().After(s.expires) {
+        http.Error(w, <span class="s">"session expired"</span>, 401); <span class="k">return</span>
+    }
+    w.Write([]<span class="k">byte</span>(<span class="hl">"user="</span> + <span class="hl">"42"</span> + <span class="s">"\n"</span>))
+}
+
+<span class="k">func</span> main() {
+    http.HandleFunc(<span class="s">"/login"</span>, login)
+    http.HandleFunc(<span class="s">"/me"</span>, me)
+    _ = http.ListenAndServe(<span class="s">":8080"</span>, <span class="k">nil</span>)
+}</pre>
+
+    <div class="grid grid-2" style="margin-top:20px;">
+      <div class="node">
+        <div class="tag clay">看清这件事</div>
+        <h3>SID 是钥匙, store 是仓库</h3>
+        <p>客户端只保存一串 64 字符的随机数; 用户数据全在服务端 <code class="inline">store</code>。这就是"服务端 Session"模型的全部内核。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">为什么不要用到生产</div>
+        <h3>掉电就丢 · 单机不能扩</h3>
+        <p>这个 demo 没考虑: 进程重启 Session 全没了; 多实例之间不共享; 没有清理过期项的协程。生产请用下面的 scs + Redis。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">Lab 3 · 用 scs 写生产规格的 Session</h3>
+<pre class="code"><span class="comment"># scs 是 Go 生态里最干净的 Session Manager,支持 Redis/Postgres/Memcached 等多种后端</span>
+<span class="prompt">$</span> go get github.com/alexedwards/scs/v2
+<span class="prompt">$</span> go get github.com/alexedwards/scs/redisstore
+<span class="prompt">$</span> go get github.com/gomodule/redigo/redis</pre>
+
+<pre class="code"><span class="k">package</span> main
+
+<span class="k">import</span> (
+    <span class="s">"net/http"</span>
+    <span class="s">"time"</span>
+
+    <span class="s">"github.com/alexedwards/scs/redisstore"</span>
+    <span class="s">"github.com/alexedwards/scs/v2"</span>
+    <span class="s">"github.com/gomodule/redigo/redis"</span>
+)
+
+<span class="k">var</span> sm *scs.SessionManager
+
+<span class="k">func</span> main() {
+    pool := &amp;redis.Pool{
+        Dial: <span class="k">func</span>() (redis.Conn, <span class="k">error</span>) { <span class="k">return</span> redis.Dial(<span class="s">"tcp"</span>, <span class="s">"localhost:6379"</span>) },
+    }
+
+    sm = scs.New()
+    sm.Store = redisstore.New(pool)
+    sm.Lifetime = 24 * time.Hour
+    sm.Cookie.Name = <span class="s">"SID"</span>
+    sm.Cookie.HttpOnly = <span class="k">true</span>
+    sm.Cookie.Secure = <span class="k">true</span>
+    sm.Cookie.SameSite = http.SameSiteLaxMode
+
+    mux := http.NewServeMux()
+    mux.HandleFunc(<span class="s">"/login"</span>, <span class="k">func</span>(w http.ResponseWriter, r *http.Request) {
+        sm.Put(r.Context(), <span class="s">"uid"</span>, 42)
+        w.Write([]<span class="k">byte</span>(<span class="s">"ok"</span>))
+    })
+    mux.HandleFunc(<span class="s">"/me"</span>, <span class="k">func</span>(w http.ResponseWriter, r *http.Request) {
+        uid := sm.GetInt(r.Context(), <span class="s">"uid"</span>)
+        <span class="k">if</span> uid == 0 {
+            http.Error(w, <span class="s">"no session"</span>, 401); <span class="k">return</span>
+        }
+        w.Write([]<span class="k">byte</span>(<span class="s">"uid="</span>))
+    })
+
+    _ = http.ListenAndServe(<span class="s">":8080"</span>, sm.LoadAndSave(mux))
+}</pre>
+
+    <div class="annot">观察任务: 跑起来后, 在 Chrome DevTools → Application → Cookies 里找到 SID, 看它的 HttpOnly / Secure / SameSite 是不是 true; 再去 redis-cli 里 KEYS "*", 找到对应的服务端 Session 数据</div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">Q ·</div>
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">Session 和 JWT 选哪个? 听说"现在都用 JWT 了"是真的吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p><strong>不是。</strong>"全员转 JWT"是 2015 年前后的话术,2020 年开始风向已经回来了。本质区别只有一个:<strong>状态放在哪里</strong>。</p>
+            <p>Session: 状态在服务端, 客户端只持有 ID。<em>优点</em>: 随时吊销, 改权限立即生效, 不暴露任何内部信息。<em>缺点</em>: 需要中心存储(Redis 等), 横向扩展要考虑亲和。</p>
+            <p>JWT: 状态在客户端 token 里。<em>优点</em>: 无状态, 任何节点都能校验。<em>缺点</em>: 颁出去就吊销不掉(只能等过期 / 加黑名单—— 黑名单就把"无状态"破了)。</p>
+            <p><strong>开放平台经验法则</strong>: 浏览器登录态用 Session(用户体验更可控); 给三方应用调 API 的 Access Token 用 JWT(对方无法共享你的 Redis)。两者并存而非互斥, 这是 Day 06-09 会展开的话题。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">Basic Auth 在 HTTPS 下足够安全吗? 为什么开放平台基本不用它?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>HTTPS 解决了"线路上被嗅探"问题, 但 Basic 还有更深的缺陷:</p>
+            <p>(1) <strong>密码每次都上路。</strong> 服务端日志、CDN、WAF、网关——任何一环把请求头记下来, 都会把原始密码留底。生产事故里"密码被日志泄露"比"被中间人嗅探"常见得多。</p>
+            <p>(2) <strong>无法颗粒授权。</strong> Basic 的凭证只有 user/pass, 没法表达"这个 token 只能调读接口、不能调写接口"。开放平台的核心需求是 scope, Basic 无法承载。</p>
+            <p>(3) <strong>无法吊销单次会话。</strong> 想"把某个第三方应用踢下线"时, Basic 必须改密码——这样所有人都被踢下线。OAuth Token 可以一刀切单个客户端。</p>
+            <p>所以 Basic 现在的位置是: <em>内网工具的便捷登录</em>、<em>Webhook 接收方做最小校验</em>、<em>CI / 脚本里的临时调试</em>。开放对外的 API 一律走 OAuth / 签名认证。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">Cookie 会被 CSRF 攻击, 是不是 JWT(放在 Authorization 头)就更安全?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>这是个常见误解。"放在 Authorization 头"不天然安全, 它只是把<strong>攻击面从 CSRF 换成了 XSS</strong>。</p>
+            <p>Cookie 易受 CSRF, 是因为<em>浏览器自动带</em>; 但 Cookie 设了 HttpOnly + SameSite=Lax 之后, CSRF 大部分场景都被堵死, 而 JS 也偷不到。</p>
+            <p>JWT 放在 <code>Authorization</code> 头要靠 JS 把它带上, 也就意味着 JS 必须能读到它——一旦页面被 XSS 注入, token 立刻被盗。<strong>没有 HttpOnly 这层保护</strong>。</p>
+            <p>所以现代最佳实践: <em>浏览器登录态走 Cookie + HttpOnly + SameSite=Lax + CSRF Token</em>, <em>移动 App / 后端调用走 Bearer Token</em>——按场景选, 不存在"哪个更安全"的笼统结论。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">SameSite=Lax 和 Strict 实际差别在哪? 应该选哪个?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p><strong>Strict</strong>: 任何跨站请求都不带 Cookie——包括从外部链接点进来。结果就是: 用户从微信 / 邮件点链接进你的网站, 第一次会"显示未登录", 需要再刷新一次才行。体验很差。</p>
+            <p><strong>Lax</strong>(浏览器默认): 跨站的<em>顶级导航 GET</em>会带 Cookie(点链接、跳转), 跨站的 POST / fetch / iframe 不带。既保留了"从外部链接进来已登录"的体验, 又堵住了表单提交型 CSRF。</p>
+            <p><strong>None</strong>: 任何请求都带, 必须同时设 <code>Secure</code>。仅用于需要真正跨站读取 Cookie 的场景(嵌入式小程序、三方支付 callback 等)。</p>
+            <p><em>经验</em>: 99% 的网站选 <strong>Lax</strong> 就对了。需要 Strict 的多半是后台管理系统(用户从外部链接进来本来就应该重新登录)。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">如果前端先把密码 SHA-256 一遍再传, 是不是就不用 HTTPS 了?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p><strong>没用, 反而更糟。</strong>原因: 一旦中间人能截到请求, 他截到的"hashed 密码"对服务端来说就等于密码——重发就能登录(<em>pass-the-hash</em> 攻击)。</p>
+            <p>更糟的是: 服务端为了能验证, 数据库里只能存原始 hash; 这样数据库被脱库, 攻击者拿到 hash 就能直接登录, 连"破解密码"这一步都省了。</p>
+            <p>密码安全的正确思路: <em>(1) HTTPS 保证传输</em>; <em>(2) 服务端用 bcrypt / argon2 加盐哈希后存储</em>。前端做哈希在 99% 的场景下毫无必要——这是 Day 02 密码学基础会重点讲的内容。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">R ·</div>
+    <h2>复盘问题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review-list">
+      <li>用一句话分别说清 Authentication / Authorization / Accounting 的责任。<em>(提示: 你是谁 / 能干啥 / 干过啥)</em></li>
+      <li>HTTP Basic 的完整流程是哪四步? 中间为什么需要服务端先返回 401 + WWW-Authenticate?</li>
+      <li>Cookie 的 HttpOnly / Secure / SameSite 三个属性分别防什么攻击? 不设的话最坏会怎样?</li>
+      <li>"Session 存内存"和"Session 存 Redis"在生产环境分别有什么风险? 你会怎么选?</li>
+      <li>动手写一段 Go 代码: 接收 <code class="inline">Authorization: Basic xxx</code>, 解析出 user/pass 并打印——不要用 <code class="inline">r.BasicAuth()</code>, 用 <code class="inline">encoding/base64</code> 手动解。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">✓ ·</div>
+    <h2>今日检查清单</h2>
+    <div class="count">7 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>能给同事用三句话讲清 AuthN / AuthZ / Accounting 的差别</li>
+        <li>能手算 <code class="inline">Basic YWxpY2U6czNjcjN0</code> 解出来是什么</li>
+        <li>能完整画出"登录 → Set-Cookie → 后续请求带 Cookie → 服务端查 Session"四步时序图</li>
+        <li>能说出 HttpOnly / Secure / SameSite 三个 Cookie 属性各自防的攻击类型</li>
+        <li>跑通 Lab 1: 标准库的 Basic Auth 例子, 能用 curl 看到 401 → 200 的转换</li>
+        <li>跑通 Lab 2 或 Lab 3: 至少有一个版本的 Session 登录能跑, 并在 DevTools 里看到 SID Cookie</li>
+        <li>读完 RFC 7617 (Basic Auth, 仅 10 页) 和 RFC 6265 第 4-5 节(Cookie 处理规则)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">📖 ·</div>
+    <h2>推荐阅读</h2>
+    <div class="count">5 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">MUST READ · 10 PAGES</div>
+        <h3>RFC 7617 · HTTP Basic Authentication</h3>
+        <p>整个 RFC 只有 10 页, 半小时读完。是后面所有 Authorization 头规范的"开山之作"。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">MUST READ · 第 4-5 节</div>
+        <h3>RFC 6265 · HTTP State Management Mechanism</h3>
+        <p>Cookie 规范。重点看第 4 节(Set-Cookie 处理)和第 5 节(Cookie 存储/发送模型)。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">OWASP · 实战</div>
+        <h3>OWASP Session Management Cheat Sheet</h3>
+        <p>OWASP 的 Session 管理最佳实践清单。生产前必读, 涵盖了所有 Cookie 属性的推荐设置。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">MDN · 入门</div>
+        <h3>MDN: HTTP Cookies / HTTP Authentication</h3>
+        <p>规范读完后看 MDN 的两篇文档做收尾。配图清楚, 例子直观, 帮助巩固理解。</p>
+      </div>
+      <div class="node">
+        <div class="tag">GO LIB · 源码</div>
+        <h3>alexedwards/scs 源码</h3>
+        <p>Go 生态最干净的 Session Manager。读它的 <code class="inline">session.go</code> + <code class="inline">store.go</code>, 200 行左右就能看完, 是最好的"原理→工程"参考。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">» ·</div>
+    <h2>Day 02 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">TOMORROW · DAY 02</div>
+      <h3>密码学基础</h3>
+      <p>有了"密码上路 / 服务端存密码"这两件事的概念, 第二天开始解决"密码到底怎么存才安全"——
+      哈希函数(SHA-256 / Blake3)、专用密码哈希(bcrypt / scrypt / argon2)、
+      对称 vs 非对称加密、HMAC 的设计动机、数字签名的几条经典坑。
+      看完 Day 02 后, 你应该再也不会写出 <code class="inline">MD5(password)</code> 存数据库这种代码。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"认证告诉服务器你是谁, 授权告诉服务器你能做什么, 其余一切——日志、审计、计费——都从这两件事派生而来。"</p>
+  <p class="meta">DAY 01 · AUTHN / AUTHZ 30-DAY ROADMAP · OPEN PLATFORM</p>
+</footer>
+
+</div>

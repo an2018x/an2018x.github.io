@@ -25,7 +25,7 @@
 
 
 {{/* 放在 </body> 之前 */}}
-{{ if findRE "mindmap" .Content }}
+{{ if findRE "mindmap-container" .Content }}
   {{ $js := resources.Get "js/mindmap.js" | js.Build (dict "format" "iife" "minify" true)}}
   <script src="{{ $js.RelPermalink }}" defer></script>
   {{ $hljscss := resources.Get "css/includes/atom-one-dark.min.css" | minify }}

@@ -18,7 +18,7 @@ if(!/Macintosh/.test(navigator.userAgent)){
 .post-content pre code{word-break:normal}
 </style>
 
-{{ if or (in .Content "img") }}
+{{ if findRE "data-fancybox" .Content }}
 {{- $fancybox_css := (resources.Get "css/includes/fancybox.css") }}
 {{- $fancyboxcss := (slice $fancybox_css) | resources.Concat "assets/css/fancyboxcss.css" | resources.Minify }}
 <link crossorigin="anonymous" href="{{ $fancyboxcss.RelPermalink }}" integrity="{{ $fancyboxcss.Data.Integrity }}" rel="stylesheet">
@@ -30,12 +30,12 @@ if(!/Macintosh/.test(navigator.userAgent)){
 {{ end }}
 
 
-{{ if findRE "mindmap" .Content }}
+{{ if findRE "mindmap-container" .Content }}
   {{ $css := resources.Get "css/includes/mind-elixir.css" | minify }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 {{ end }}
 
-{{ if or (findRE "mindmap" .Content) .Params.math }}
+{{ if .Params.math }}
   {{ $katexcss := resources.Get "css/includes/katex.min.css" | minify }}
   <link rel="stylesheet" href="{{ $katexcss.RelPermalink }}">
 {{ end }}

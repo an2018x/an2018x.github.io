@@ -1,0 +1,1321 @@
+---
+title: "Day 04 · 会话管理与 Web 安全 · Session / CSRF / XSS"
+date: '2026-05-23'
+draft: false
+description: "认证授权 30 天 Day 04：理解 Session 完整生命周期与 Session Fixation 攻击，对比 CSRF 的四种防御方案，区分 Stored/Reflected/DOM 三种 XSS，并用 Go 实现安全的 Cookie / CSRF Token / CSP 中间件。"
+toc: false
+tags:
+  - Backend
+  - Security
+  - Session
+  - CSRF
+  - XSS
+  - Cookie
+  - Go
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.azd04-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.azd04-wrap .eyebrow{
+  font-family:var(--mono); font-size:12px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+}
+.azd04-wrap .eyebrow::before{
+  content:""; display:inline-block;
+  width:24px; height:1.5px; background:var(--clay);
+  margin-right:12px; vertical-align:middle;
+}
+.azd04-wrap h1{
+  font-family:var(--serif); font-weight:500;
+  font-size:clamp(36px, 5.2vw, 56px);
+  letter-spacing:-0.018em; line-height:1.08;
+  max-width:22ch; margin: 22px 0 30px; color:var(--slate);
+}
+.azd04-wrap h1 em{ font-style:italic; color:var(--clay); }
+
+.azd04-wrap h2{
+  font-family:var(--serif); font-weight:500;
+  font-size:27px; letter-spacing:-0.012em;
+  margin: 0; color:var(--slate);
+}
+.azd04-wrap h3{
+  font-family:var(--serif); font-weight:500;
+  font-size:19px; letter-spacing:-0.008em;
+  margin: 0 0 10px; color:var(--slate);
+}
+.azd04-wrap .lede{
+  font-size:16.5px; color:var(--g700);
+  max-width:64ch; margin:0 0 32px; line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.azd04-wrap header.masthead{ padding: 80px 0 56px; }
+.azd04-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono); font-size:11.5px;
+  color:var(--g500); letter-spacing:.06em; text-transform:uppercase;
+}
+.azd04-wrap .meta-strip strong{
+  color:var(--slate); font-weight:600; margin-right:6px;
+}
+
+/* ========== Section ========== */
+.azd04-wrap section{ margin-top:72px; }
+.azd04-wrap .indent{ margin-left:50px; }
+
+.azd04-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px; margin-bottom:28px;
+}
+.azd04-wrap .sec-head .num{
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.12em; font-weight:600; width:46px; flex-shrink:0;
+}
+.azd04-wrap .sec-head .count{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  padding:3px 12px; background:var(--g100); border-radius:999px;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ========== Mind Map ========== */
+.azd04-wrap .mindmap{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+}
+.azd04-wrap .mindmap svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.azd04-wrap .mindmap-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Card Grid ========== */
+.azd04-wrap .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.azd04-wrap .grid-2{ grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.azd04-wrap .grid-3{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* ========== Node Card ========== */
+.azd04-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.azd04-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.azd04-wrap .node.accent{ border-color:var(--clay); }
+.azd04-wrap .node.entry { background:var(--g100); }
+.azd04-wrap .node.exit  { background:var(--oat); border-color:var(--clay); }
+.azd04-wrap .node.dark  {
+  background:var(--slate); border-color:var(--slate); color:var(--ivory);
+}
+.azd04-wrap .node.dark .tag{ color:var(--oat); }
+.azd04-wrap .node.dark p{ color:var(--oat); }
+.azd04-wrap .node.dark h3{ color:var(--ivory); }
+
+.azd04-wrap .node .tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:10px; font-weight:600;
+}
+.azd04-wrap .node .tag.clay{ color:var(--clay); }
+.azd04-wrap .node p{
+  font-size:13.5px; color:var(--g700); margin:6px 0 0; line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.azd04-wrap .annot{
+  font-family:var(--mono); font-size:11.5px; color:var(--g500);
+  display:flex; align-items:flex-start; margin-top:14px; letter-spacing:.04em;
+}
+.azd04-wrap .annot::before{
+  content:""; width:32px; height:1.5px; background:var(--clay);
+  margin-right:12px; margin-top:8px; flex-shrink:0;
+}
+
+/* ========== Table ========== */
+.azd04-wrap .table-wrap{ overflow-x:auto; }
+.azd04-wrap table.compare{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+}
+.azd04-wrap table.compare th,
+.azd04-wrap table.compare td{
+  text-align:left; padding:14px 20px;
+  border-bottom:1px solid var(--g200); vertical-align:top;
+}
+.azd04-wrap table.compare th{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+  background:var(--g100); border-bottom:1.5px solid var(--slate);
+}
+.azd04-wrap table.compare td:first-child{
+  font-family:var(--serif); font-weight:500; font-size:15px;
+  width:22%; color:var(--slate);
+}
+.azd04-wrap table.compare tr:last-child td{ border-bottom:none; }
+.azd04-wrap table.compare .clay{ color:var(--clay-d); }
+.azd04-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+.azd04-wrap table.compare .bad{ color:#B85C3E; font-weight:600; }
+.azd04-wrap table.compare .ok{ color:#5C7444; font-weight:600; }
+
+/* ========== Code ========== */
+.azd04-wrap pre.code{
+  background:var(--slate); color:var(--ivory);
+  font-family:var(--mono); font-size:12.5px;
+  padding:20px 24px; border-radius:10px;
+  overflow-x:auto; line-height:1.65; margin:18px 0;
+}
+.azd04-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.azd04-wrap pre.code .k{ color:var(--clay); }
+.azd04-wrap pre.code .s{ color:var(--olive); }
+.azd04-wrap pre.code .t{ color:#7EC8E3; }
+.azd04-wrap pre.code .n{ color:#C4B28A; }
+.azd04-wrap pre.code .prompt{ color:var(--olive); }
+.azd04-wrap pre.code .flag{ color:var(--clay); }
+.azd04-wrap pre.code .comment{ color:var(--g500); font-style:italic; }
+.azd04-wrap pre.code .output{ color:var(--oat); }
+.azd04-wrap pre.code .hl{ color:#F5B97A; }
+
+.azd04-wrap code.inline{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Diagram Wrap ========== */
+.azd04-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 28px; margin: 0;
+}
+.azd04-wrap .archdiag svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.azd04-wrap .archdiag-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Checklist ========== */
+.azd04-wrap .check{ background:var(--paper);
+  border:1.5px solid var(--g300); border-radius:14px;
+  padding:8px 24px; }
+.azd04-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.azd04-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative; font-size:14.5px; color:var(--slate);
+}
+.azd04-wrap .check li:last-child{ border-bottom:none; }
+.azd04-wrap .check li::before{
+  content:""; position:absolute;
+  left:0; top:16px; width:18px; height:18px;
+  border:1.5px solid var(--g300); border-radius:4px; background:var(--paper);
+}
+
+/* ========== Review Questions ========== */
+.azd04-wrap .review-list{
+  counter-reset: q; margin:0; padding:0; list-style:none;
+}
+.azd04-wrap .review-list li{
+  counter-increment: q; position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px; color:var(--g700);
+}
+.azd04-wrap .review-list li:last-child{ border-bottom:none; }
+.azd04-wrap .review-list li::before{
+  content: counter(q, decimal-leading-zero);
+  position:absolute; left:0; top:18px;
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.06em; font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.azd04-wrap .qa-grid{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.azd04-wrap .qa-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+  transition: border-color 150ms ease;
+}
+.azd04-wrap .qa-card[open]{ border-color:var(--slate); }
+.azd04-wrap .qa-card summary{
+  list-style:none; cursor:pointer;
+  padding:18px 24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition: background 150ms ease;
+}
+.azd04-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.azd04-wrap .qa-card summary::marker{ display:none; }
+.azd04-wrap .qa-card summary:hover{ background:var(--g100); }
+.azd04-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.azd04-wrap .qa-num{
+  font-family:var(--mono); font-size:12px; color:var(--clay);
+  letter-spacing:.1em; font-weight:600;
+  flex-shrink:0; margin-top:3px;
+}
+.azd04-wrap .qa-q{
+  font-family:var(--serif); font-size:16px; font-weight:500;
+  color:var(--slate); line-height:1.5; flex:1;
+}
+.azd04-wrap .qa-toggle{
+  font-family:var(--mono); font-size:18px; color:var(--g500);
+  flex-shrink:0; font-weight:300; line-height:1; margin-top:2px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+.azd04-wrap .qa-card[open] .qa-toggle{ transform:rotate(45deg); color:var(--clay); }
+.azd04-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex; align-items:flex-start; gap:18px;
+}
+.azd04-wrap .qa-a-label{
+  font-family:var(--mono); font-size:12px; color:var(--olive);
+  letter-spacing:.1em; font-weight:600;
+  flex-shrink:0; margin-top:2px;
+}
+.azd04-wrap .qa-a-body{ flex:1; }
+.azd04-wrap .qa-a-body p{
+  margin:0 0 12px; font-size:14.5px;
+  color:var(--g700); line-height:1.65;
+}
+.azd04-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.azd04-wrap .qa-a-body strong{ color:var(--slate); font-weight:600; }
+.azd04-wrap .qa-a-body code{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Spec Box ========== */
+.azd04-wrap .specbox{
+  background:var(--g100); border-left:3px solid var(--clay);
+  padding:14px 18px; margin:18px 0;
+  font-size:13.5px; color:var(--g700); line-height:1.6;
+  border-radius:0 6px 6px 0;
+}
+.azd04-wrap .specbox strong{
+  font-family:var(--mono); font-size:11.5px; color:var(--clay-d);
+  letter-spacing:.08em; text-transform:uppercase;
+  display:block; margin-bottom:4px;
+}
+
+/* ========== Footer ========== */
+.azd04-wrap footer{
+  margin-top:100px; padding-top:40px;
+  border-top:1px solid var(--g200); text-align:center;
+}
+.azd04-wrap footer .quote{
+  font-family:var(--serif); font-style:italic; font-size:18px;
+  color:var(--g700); max-width:54ch; margin:0 auto; line-height:1.55;
+}
+.azd04-wrap footer .meta{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px){
+  .azd04-wrap{ padding:0 22px 90px; }
+  .azd04-wrap .indent{ margin-left:0; }
+  .azd04-wrap header.masthead{ padding:56px 0 40px; }
+  .azd04-wrap section{ margin-top:56px; }
+  .azd04-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .azd04-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .azd04-wrap .qa-q{ font-size:14.5px; }
+  .azd04-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="azd04-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 04 · AUTHN / AUTHZ ROADMAP · 30 DAYS</div>
+  <h1>会话管理与 Web 安全 <em>三件套</em></h1>
+  <p class="lede">
+    前三天打完了密码学、协议、传输层的地基,
+    Day 04 回到<em style="font-style:italic;color:#B85C3E;">应用层</em>——
+    Web 工程师每天都在处理却经常踩坑的三件事:
+    <strong>Session Fixation</strong>(为什么登录之后必须换 SID)、
+    <strong>CSRF</strong>(浏览器为我们带 Cookie 这件好事如何被利用)、
+    <strong>XSS</strong>(攻击者用一段 &lt;script&gt; 把整个登录态偷走)。
+    这一天的目标是: 看完之后, 你能审 Cookie 配置 / 审 CSRF 中间件 / 一眼识破 XSS 注入点。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 75–105 min</span>
+    <span><strong>READ</strong> 40 min</span>
+    <span><strong>HANDS-ON</strong> 35 min</span>
+    <span><strong>REVIEW</strong> 20 min</span>
+    <span><strong>STACK</strong> Go · gorilla/csrf · html/template · CSP</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">M ·</div>
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 04 思维导图">
+        <!-- 根节点 -->
+        <rect x="290" y="20" width="400" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 04 · 会话与 Web 安全</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">SESSION · CSRF · XSS · HARDENING</text>
+
+        <!-- 主竖线 + 横干线 -->
+        <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="858" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四条分支竖线 -->
+        <line x1="122" y1="106" x2="122" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="106" x2="367" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="106" x2="613" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="106" x2="858" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四个主题节点 -->
+        <rect x="32" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="122" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">01 · SESSION</text>
+        <text x="122" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">生命周期 / Fixation</text>
+
+        <rect x="277" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · CSRF</text>
+        <text x="367" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">跨站请求伪造</text>
+
+        <rect x="523" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · XSS</text>
+        <text x="613" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">跨站脚本注入</text>
+
+        <rect x="768" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="858" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">04 · HARDEN</text>
+        <text x="858" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">安全头与 Go 实战</text>
+
+        <!-- 子节点列表 -->
+        <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">登录前/后 SID 切换</text>
+        <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Idle / Absolute Timeout</text>
+        <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Session Hijack</text>
+        <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">登出 = 服务端失效</text>
+
+        <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">攻击原理 (Cookie 自动带)</text>
+        <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Synchronizer Token</text>
+        <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Double Submit Cookie</text>
+        <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">SameSite + Origin 校验</text>
+
+        <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Stored XSS (最危险)</text>
+        <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Reflected XSS</text>
+        <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">DOM-based XSS</text>
+        <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">输出编码 + CSP</text>
+
+        <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">CSP / nonce</text>
+        <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">HSTS / X-Frame</text>
+        <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">安全 Cookie 中间件</text>
+        <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">gorilla/csrf 实战</text>
+
+        <!-- 底部 deliverables -->
+        <line x1="32" y1="358" x2="948" y2="358" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="32" y="385" font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+
+        <rect x="32"  y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="142" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">能讲清 Fixation 攻击链</text>
+
+        <rect x="268" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="378" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">列出 CSRF 四种防御</text>
+
+        <rect x="504" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="614" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">区分三种 XSS</text>
+
+        <rect x="740" y="398" width="200" height="34" rx="5"
+              fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="840" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">写全套安全中间件</text>
+      </svg>
+      <div class="mindmap-cap">FIG · Day 04 全景: Session 生命周期 → CSRF → XSS → 综合加固</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 01. Session 生命周期 & Fixation ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">01 ·</div>
+    <h2>Session 生命周期与 Fixation</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Day 01 我们建了一个能跑的 Session 系统, 但当时没讲它的<em>生命周期管理</em>。
+      "什么时候发新 SID、什么时候失效、什么时候要换"——
+      这些时机一旦做错, 会出现一个经典攻击: <strong>Session Fixation</strong>。
+      理解它的攻击链, 你就懂了为什么"登录后必须 regenerate session id"是写在所有安全清单第一条的铁律。
+    </p>
+
+    <h3>Session Fixation 攻击</h3>
+    <div class="archdiag" style="margin-top:12px;">
+      <svg viewBox="0 0 920 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Session Fixation 攻击流程">
+        <text x="100" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#B85C3E" font-weight="600">ATTACKER</text>
+        <text x="460" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600">VICTIM</text>
+        <text x="820" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600">SERVER</text>
+
+        <line x1="100" y1="46" x2="100" y2="330" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="460" y1="46" x2="460" y2="330" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="820" y1="46" x2="820" y2="330" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+        <!-- 1) 攻击者拿到一个 SID -->
+        <line x1="100" y1="80" x2="820" y2="80" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="820,76 832,80 820,84" fill="#141413"/>
+        <text x="460" y="72" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">① 攻击者访问站点, 服务端发给他 SID=abc</text>
+
+        <!-- 2) 攻击者把链接发给受害者 -->
+        <line x1="100" y1="130" x2="460" y2="130" stroke="#B85C3E" stroke-width="2"/>
+        <polygon points="460,124 472,130 460,136" fill="#B85C3E"/>
+        <text x="280" y="122" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E" font-weight="600">② 钓鱼: https://site.com/?SID=abc</text>
+
+        <!-- 3) 受害者点开 + 登录 -->
+        <line x1="460" y1="180" x2="820" y2="180" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="820,176 832,180 820,184" fill="#141413"/>
+        <text x="640" y="172" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">③ 受害者带 SID=abc 登录, 输入账号密码</text>
+
+        <!-- 4) 服务端把 SID=abc 关联到用户 (漏洞所在) -->
+        <rect x="700" y="200" width="200" height="42" rx="5"
+              fill="#FAF9F5" stroke="#B85C3E" stroke-width="2"/>
+        <text x="800" y="217" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="12" fill="#B85C3E">登录成功, 但 SID 没换</text>
+        <text x="800" y="234" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">SID=abc ↔ user_id=victim</text>
+
+        <!-- 5) 攻击者用 abc 直接进入受害者账号 -->
+        <line x1="100" y1="290" x2="820" y2="290" stroke="#B85C3E" stroke-width="2"/>
+        <polygon points="820,284 832,290 820,296" fill="#B85C3E"/>
+        <text x="460" y="282" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E" font-weight="600">④ 攻击者带 SID=abc 访问, 已是登录态</text>
+      </svg>
+      <div class="archdiag-cap">FIG · Fixation 的关键漏洞: 登录前后 SID 没变, 攻击者预先持有的 SID 因此"继承"了用户身份</div>
+    </div>
+
+    <div class="specbox">
+      <strong>核心防御</strong>
+      <em>登录成功后, 必须立即生成新 SID, 并废弃旧 SID。</em>
+      这是 OWASP Session Management Cheat Sheet 第一条规则。
+      一行代码的事: scs 用 <code class="inline">sm.RenewToken(ctx)</code>, gorilla/sessions 用
+      <code class="inline">session.ID = ""</code> 让其重新生成。
+      <strong>权限提升也要换</strong>——从普通用户提升为管理员时同样要 regen, 防止"低权限上下文换到高权限"被劫持。
+    </div>
+
+    <h3 style="margin-top:32px;">Session 完整生命周期</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>阶段</th>
+          <th>动作</th>
+          <th>典型时机</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>匿名 SID</td><td>第一次访问时分配 (可选 · 用于购物车等)</td><td>访问首页</td></tr>
+          <tr><td>登录提升</td><td class="clay"><strong>生成全新 SID</strong>, 废弃旧的</td><td>账号密码 / OAuth 回调成功</td></tr>
+          <tr><td>权限变化</td><td class="clay">再生成一次 SID</td><td>切换租户 / 提升为管理员 / 切换角色</td></tr>
+          <tr><td>空闲超时</td><td>N 分钟没活动 → 失效</td><td>idle = 15 - 30 min (敏感系统)</td></tr>
+          <tr><td>绝对超时</td><td>登录后 N 小时无论如何失效</td><td>absolute = 8 - 24 h</td></tr>
+          <tr><td>登出</td><td class="clay">服务端 store 立即删除该 SID</td><td>用户主动点退出</td></tr>
+          <tr><td>全局踢出</td><td>账号被盗时按 user_id 批量删除该用户全部 SID</td><td>风控触发 / 用户改密</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="annot">关键区分: "前端清 Cookie"≠ "登出"。必须在服务端 Store 里把 SID 删掉——只清前端 Cookie 的话,攻击者拿到的 SID 仍然在服务端有效</div>
+
+    <h3 style="margin-top:32px;">Go 实战: 登录后 regenerate SID</h3>
+<pre class="code"><span class="comment">// 用 alexedwards/scs · 沿用 Day 01 的设置</span>
+<span class="k">func</span> login(w http.ResponseWriter, r *http.Request) {
+    user, ok := verifyCredentials(r)
+    <span class="k">if</span> !ok {
+        http.Error(w, <span class="s">"bad credentials"</span>, 401); <span class="k">return</span>
+    }
+
+    <span class="hl">if</span> <span class="hl">err := sm.RenewToken(r.Context()); err != nil {</span>      <span class="comment">// 关键一行</span>
+        http.Error(w, <span class="s">"renew failed"</span>, 500); <span class="k">return</span>
+    }
+
+    sm.Put(r.Context(), <span class="s">"uid"</span>, user.ID)
+    sm.Put(r.Context(), <span class="s">"login_at"</span>, time.Now().Unix())
+    w.Write([]<span class="k">byte</span>(<span class="s">"ok"</span>))
+}
+
+<span class="k">func</span> logout(w http.ResponseWriter, r *http.Request) {
+    <span class="comment">// 服务端 Store 删 + 客户端 Cookie 过期</span>
+    _ = sm.Destroy(r.Context())
+    w.Write([]<span class="k">byte</span>(<span class="s">"bye"</span>))
+}</pre>
+  </div>
+</section>
+
+<!-- ========== 02. CSRF ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">02 ·</div>
+    <h2>CSRF: 跨站请求伪造</h2>
+    <div class="count">25 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      CSRF 把"浏览器自动带 Cookie"这件设计原本是好事的特性,变成攻击面——
+      只要受害者还登录着 your-bank.com, 攻击者在 evil.com 放一段
+      <code class="inline">&lt;img src="your-bank.com/transfer?to=attacker"&gt;</code>,
+      浏览器就会自动带上 your-bank 的 Cookie 去发起请求。
+      防御不靠"加密 Cookie", 靠让<em style="font-style:italic;color:#B85C3E;">伪造者无法构造完整请求</em>。
+    </p>
+
+    <h3>CSRF 攻击流程</h3>
+    <div class="archdiag" style="margin-top:12px;">
+      <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CSRF 攻击流程">
+        <text x="100" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600">VICTIM 浏览器</text>
+        <text x="460" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#B85C3E" font-weight="600">EVIL.COM</text>
+        <text x="820" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600">BANK.COM</text>
+
+        <line x1="100" y1="46" x2="100" y2="290" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="460" y1="46" x2="460" y2="290" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="820" y1="46" x2="820" y2="290" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+        <!-- 1) 受害者已登录 bank -->
+        <rect x="700" y="60" width="200" height="36" rx="5" fill="#F0EEE6" stroke="#788C5D" stroke-width="1.5"/>
+        <text x="800" y="82" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="11" fill="#5C7444">已登录 · Cookie: SID=xxx</text>
+
+        <!-- 2) 访问 evil.com -->
+        <line x1="100" y1="130" x2="460" y2="130" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="460,126 472,130 460,134" fill="#141413"/>
+        <text x="280" y="122" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">① 访问 evil.com</text>
+
+        <!-- 3) evil.com 返回带恶意 form 的 HTML -->
+        <line x1="460" y1="170" x2="100" y2="170" stroke="#B85C3E" stroke-width="2"/>
+        <polygon points="100,164 88,170 100,176" fill="#B85C3E"/>
+        <text x="280" y="162" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E" font-weight="600">② &lt;form action="bank.com/transfer" method="POST"&gt;</text>
+
+        <!-- 4) 浏览器自动发请求到 bank, 带上 SID -->
+        <line x1="100" y1="230" x2="820" y2="230" stroke="#B85C3E" stroke-width="2"/>
+        <polygon points="820,224 832,230 820,236" fill="#B85C3E"/>
+        <text x="460" y="222" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E" font-weight="600">③ POST bank.com/transfer · Cookie: SID=xxx 自动带上</text>
+
+        <!-- 5) bank 看见登录态, 执行转账 -->
+        <rect x="700" y="248" width="200" height="36" rx="5" fill="#FAF9F5" stroke="#B85C3E" stroke-width="2"/>
+        <text x="800" y="270" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="11" fill="#B85C3E">"用户授权了, 转吧"</text>
+      </svg>
+      <div class="archdiag-cap">FIG · 关键问题: 浏览器无法区分"用户主动操作 bank"和"被 evil.com 引导发起请求"</div>
+    </div>
+
+    <h3 style="margin-top:32px;">四种防御方案</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>方案</th>
+          <th>原理</th>
+          <th>优势</th>
+          <th>限制</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>SameSite Cookie</td>
+            <td>浏览器不让跨站请求带这个 Cookie</td>
+            <td class="ok">零代码, Chrome 默认 Lax</td>
+            <td>老浏览器不支持(已基本忽略)</td>
+          </tr>
+          <tr>
+            <td>Synchronizer Token</td>
+            <td>服务端为每个会话生成 token, 放表单隐藏域, 提交时校验</td>
+            <td class="ok">最强 · 推荐 · 适合服务端渲染</td>
+            <td>需要在每个 form / AJAX 里塞 token</td>
+          </tr>
+          <tr>
+            <td>Double Submit Cookie</td>
+            <td>服务端发 Cookie + JS 把同值放到 Header, 服务端比对</td>
+            <td>无状态 · 适合 SPA</td>
+            <td>实现稍复杂; 必须配 SameSite</td>
+          </tr>
+          <tr>
+            <td>Origin / Referer 校验</td>
+            <td>检查请求 Header 的 Origin 是不是本站</td>
+            <td class="ok">额外一层兜底</td>
+            <td>不能单独依赖(老客户端可能不发)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="specbox">
+      <strong>2024 实战推荐组合</strong>
+      <em>(1) Cookie 全部 SameSite=Lax + HttpOnly + Secure</em>(基础底线);
+      <em>(2) 关键写操作再叠加 Synchronizer Token</em>(服务端渲染) 或 <em>Double Submit Cookie</em>(SPA);
+      <em>(3) 服务端额外校验 Origin / Referer Header</em>(便宜的额外保险)。
+      三层叠加, 任何一层失效都还有另外两层兜底。
+    </div>
+
+    <h3 style="margin-top:32px;">Go 实战: gorilla/csrf 中间件</h3>
+<pre class="code"><span class="comment">// go get github.com/gorilla/csrf</span>
+<span class="k">package</span> main
+
+<span class="k">import</span> (
+    <span class="s">"net/http"</span>
+
+    <span class="s">"github.com/gorilla/csrf"</span>
+)
+
+<span class="k">func</span> main() {
+    mux := http.NewServeMux()
+    mux.HandleFunc(<span class="s">"/transfer"</span>, transferHandler)
+
+    <span class="comment">// CSRF 中间件包一层</span>
+    csrfMW := csrf.Protect(
+        []<span class="k">byte</span>(<span class="s">"32-byte-long-auth-key-from-env!!"</span>),
+        csrf.Secure(<span class="k">true</span>),                  <span class="comment">// 生产必开</span>
+        csrf.HttpOnly(<span class="k">true</span>),
+        csrf.SameSite(csrf.SameSiteLaxMode),
+        csrf.Path(<span class="s">"/"</span>),
+    )
+
+    _ = http.ListenAndServe(<span class="s">":8080"</span>, csrfMW(mux))
+}
+
+<span class="k">func</span> transferHandler(w http.ResponseWriter, r *http.Request) {
+    <span class="k">if</span> r.Method == <span class="s">"GET"</span> {
+        <span class="comment">// 把 token 塞进 form, 用户提交时浏览器会带回来</span>
+        token := csrf.Token(r)
+        fmt.Fprintf(w, <span class="s">`&lt;form method="POST"&gt;
+            &lt;input type="hidden" name="gorilla.csrf.Token" value="%s"&gt;
+            &lt;input name="to"&gt; &lt;input name="amt"&gt;
+            &lt;button&gt;Transfer&lt;/button&gt;&lt;/form&gt;`</span>, token)
+        <span class="k">return</span>
+    }
+    <span class="comment">// POST 走到这里, token 已经被中间件校验过</span>
+    w.Write([]<span class="k">byte</span>(<span class="s">"transfer ok"</span>))
+}</pre>
+
+<pre class="code"><span class="comment">// SPA 场景 · Double Submit Cookie · 自己实现</span>
+<span class="k">func</span> csrfMiddleware(next http.Handler) http.Handler {
+    <span class="k">return</span> http.HandlerFunc(<span class="k">func</span>(w http.ResponseWriter, r *http.Request) {
+        <span class="comment">// 写操作才校验</span>
+        <span class="k">if</span> r.Method == <span class="s">"GET"</span> || r.Method == <span class="s">"HEAD"</span> {
+            ensureCSRFCookie(w, r)
+            next.ServeHTTP(w, r); <span class="k">return</span>
+        }
+
+        <span class="comment">// 取 Cookie 与 Header, 常量时间比较</span>
+        c, err := r.Cookie(<span class="s">"csrf_token"</span>)
+        h := r.Header.Get(<span class="s">"X-CSRF-Token"</span>)
+        <span class="k">if</span> err != <span class="k">nil</span> || h == <span class="s">""</span> ||
+           <span class="hl">subtle.ConstantTimeCompare([]byte(c.Value), []byte(h)) != 1</span> {
+            http.Error(w, <span class="s">"csrf invalid"</span>, 403); <span class="k">return</span>
+        }
+
+        <span class="comment">// 兜底: Origin 校验</span>
+        origin := r.Header.Get(<span class="s">"Origin"</span>)
+        <span class="k">if</span> origin != <span class="s">""</span> &amp;&amp; origin != <span class="s">"https://app.example.com"</span> {
+            http.Error(w, <span class="s">"bad origin"</span>, 403); <span class="k">return</span>
+        }
+
+        next.ServeHTTP(w, r)
+    })
+}</pre>
+
+    <div class="annot">关键: 比较 token 必须用 <code class="inline">subtle.ConstantTimeCompare</code> (Day 01 / Day 02 反复出现的常量时间比较),防时序侧信道</div>
+  </div>
+</section>
+
+<!-- ========== 03. XSS ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">03 ·</div>
+    <h2>XSS: 跨站脚本注入</h2>
+    <div class="count">25 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      XSS 的本质是<strong>把数据当成代码执行</strong>——
+      用户输入的字符串没有被正确转义就放进了 HTML,
+      浏览器把它当作 &lt;script&gt; 标签解析, 攻击者的代码因此在受害者的浏览器上下文中运行。
+      一旦得手, 攻击者能干<em>HttpOnly 都防不住</em>的事:
+      偷 token、操作 DOM、伪造点击、键盘记录,
+      因为他的脚本就在受害者的页面里——已经"成了"受害者本人。
+    </p>
+
+    <h3>三种 XSS 类型</h3>
+    <div class="archdiag" style="margin-top:12px;">
+      <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三种 XSS 类型对比">
+        <!-- Stored XSS -->
+        <text x="153" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">STORED · 最危险</text>
+        <rect x="30" y="48" width="246" height="220" rx="6"
+              fill="#FAF9F5" stroke="#B85C3E" stroke-width="2"/>
+
+        <text x="153" y="76" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">① 攻击者发评论</text>
+        <text x="153" y="96" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">&lt;script&gt;steal()&lt;/script&gt;</text>
+        <line x1="153" y1="108" x2="153" y2="130" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="148,126 153,138 158,126" fill="#141413"/>
+
+        <text x="153" y="150" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">② 写入数据库</text>
+        <line x1="153" y1="162" x2="153" y2="184" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="148,180 153,192 158,180" fill="#141413"/>
+
+        <text x="153" y="208" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">③ 任何访客打开页面</text>
+        <text x="153" y="228" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">脚本就在他的浏览器跑</text>
+        <text x="153" y="254" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F" font-style="italic">范围: 所有看过的人</text>
+
+        <!-- Reflected XSS -->
+        <text x="460" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#D97757" letter-spacing="2" font-weight="600">REFLECTED · 钓鱼用</text>
+        <rect x="337" y="48" width="246" height="220" rx="6"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+
+        <text x="460" y="76" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">① 构造恶意 URL</text>
+        <text x="460" y="96" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">/?q=&lt;script&gt;...&lt;/script&gt;</text>
+        <line x1="460" y1="108" x2="460" y2="130" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="455,126 460,138 465,126" fill="#141413"/>
+
+        <text x="460" y="150" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">② 把链接发给受害者</text>
+        <line x1="460" y1="162" x2="460" y2="184" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="455,180 460,192 465,180" fill="#141413"/>
+
+        <text x="460" y="208" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">③ 服务端把 q 反射到 HTML</text>
+        <text x="460" y="228" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#D97757">浏览器执行脚本</text>
+        <text x="460" y="254" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F" font-style="italic">范围: 点链接的人</text>
+
+        <!-- DOM XSS -->
+        <text x="767" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#D97757" letter-spacing="2" font-weight="600">DOM-BASED · 前端坑</text>
+        <rect x="644" y="48" width="246" height="220" rx="6"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+
+        <text x="767" y="76" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">① 同样恶意 URL</text>
+        <text x="767" y="96" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">/#name=&lt;img onerror...&gt;</text>
+        <line x1="767" y1="108" x2="767" y2="130" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="762,126 767,138 772,126" fill="#141413"/>
+
+        <text x="767" y="150" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">② 服务端响应正常</text>
+        <line x1="767" y1="162" x2="767" y2="184" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="762,180 767,192 772,180" fill="#141413"/>
+
+        <text x="767" y="208" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">③ 前端 JS innerHTML 渲染</text>
+        <text x="767" y="228" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#D97757">完全在浏览器侧触发</text>
+        <text x="767" y="254" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F" font-style="italic">范围: 服务端日志看不到</text>
+      </svg>
+      <div class="archdiag-cap">FIG · Stored 持久化 / Reflected 一次性 / DOM 完全在前端</div>
+    </div>
+
+    <h3 style="margin-top:32px;">防御层级</h3>
+    <ol class="review-list">
+      <li><strong>输出编码 (第一道闸门)。</strong> 任何用户数据写进 HTML / JS / URL / CSS 时, 必须做对应上下文的转义。Go 用 <code class="inline">html/template</code> 自动转义, <em>不要</em>用 <code class="inline">text/template</code> 输出 HTML。</li>
+      <li><strong>输入验证 (兜底)。</strong> 上传 / 注册的字段做白名单校验——比如手机号只允许数字, 用户名限制字符集。不要试图"黑名单过滤 &lt;script&gt;"——绕过方式太多。</li>
+      <li><strong>CSP (现代护城河)。</strong> Content Security Policy 在响应头里告诉浏览器"只允许从 https://example.com 加载脚本", 即使 XSS 注入了 &lt;script&gt;, 也被浏览器拒绝执行。</li>
+      <li><strong>Cookie HttpOnly (止损)。</strong> Day 01 强调过, 加这个属性 JS 偷不到 Cookie——XSS 即使得手, 至少 Session ID 拿不走。</li>
+    </ol>
+
+    <h3 style="margin-top:32px;">Go html/template 自动转义</h3>
+<pre class="code"><span class="comment">// Go 的 html/template 默认就是安全的, 关键是不要绕过它</span>
+<span class="k">package</span> main
+
+<span class="k">import</span> (
+    <span class="s">"html/template"</span>
+    <span class="s">"net/http"</span>
+)
+
+<span class="k">var</span> tpl = template.Must(template.New(<span class="s">"x"</span>).Parse(`
+&lt;h1&gt;Hello, {{.Name}}&lt;/h1&gt;
+&lt;p&gt;Your bio: {{.Bio}}&lt;/p&gt;
+&lt;a href=<span class="s">"/profile?id={{.ID}}"</span>&gt;Edit&lt;/a&gt;
+&lt;script&gt;<span class="k">var</span> user = {{.JSData}};&lt;/script&gt;
+`))
+
+<span class="k">func</span> handler(w http.ResponseWriter, r *http.Request) {
+    <span class="comment">// 即使用户名是 &lt;script&gt;alert(1)&lt;/script&gt;</span>
+    <span class="comment">// html/template 会按上下文自动转义:</span>
+    <span class="comment">//   - 在 HTML body  → &amp;lt;script&amp;gt;</span>
+    <span class="comment">//   - 在 href 属性  → URL 编码</span>
+    <span class="comment">//   - 在 &lt;script&gt; 内 → JSON 安全的字符串字面量</span>
+    _ = tpl.Execute(w, <span class="k">map</span>[<span class="k">string</span>]<span class="k">any</span>{
+        <span class="s">"Name"</span>:   r.URL.Query().Get(<span class="s">"name"</span>),
+        <span class="s">"Bio"</span>:    r.URL.Query().Get(<span class="s">"bio"</span>),
+        <span class="s">"ID"</span>:     r.URL.Query().Get(<span class="s">"id"</span>),
+        <span class="s">"JSData"</span>: <span class="k">map</span>[<span class="k">string</span>]<span class="k">string</span>{<span class="s">"name"</span>: <span class="s">"alice"</span>},
+    })
+}</pre>
+
+    <div class="specbox">
+      <strong>常见误用</strong>
+      <em>(1) 把 <code>template.HTML(x)</code> 包在用户输入上</em>——
+      这是显式告诉模板"这段是可信 HTML, 别转义", 用户输入永远不能这么做。
+      <em>(2) 拼接 SQL 风格的拼接 HTML 字符串</em>:
+      <code>"&lt;div&gt;" + userInput + "&lt;/div&gt;"</code>, 绕过了模板的安全机制。
+      <em>(3) 前端 <code>element.innerHTML = userInput</code></em>: DOM XSS 的最常见入口, 应该用 <code>textContent</code>。
+    </div>
+
+    <h3 style="margin-top:32px;">CSP 入门</h3>
+<pre class="code"><span class="comment"># 最严格的 CSP — 只允许同源 + 显式列出的资源</span>
+Content-Security-Policy:
+  default-src <span class="s">'self'</span>;
+  script-src <span class="s">'self'</span> <span class="s">'nonce-{随机值}'</span>;
+  style-src <span class="s">'self'</span> <span class="s">'unsafe-inline'</span>;
+  img-src <span class="s">'self'</span> data: https:;
+  connect-src <span class="s">'self'</span> https://api.example.com;
+  font-src <span class="s">'self'</span> https://fonts.gstatic.com;
+  frame-ancestors <span class="s">'none'</span>;
+  base-uri <span class="s">'self'</span>;
+  form-action <span class="s">'self'</span>;
+  upgrade-insecure-requests;
+  report-uri /csp-report
+
+<span class="comment"># 把 nonce 塞进 &lt;script&gt;: 只有带正确 nonce 的脚本能跑</span>
+<span class="comment"># &lt;script nonce="rA8s..."&gt; ... &lt;/script&gt;</span>
+<span class="comment"># 注入的 &lt;script&gt; 没有 nonce → 浏览器拒绝执行</span></pre>
+
+    <div class="annot">迁移建议: 先用 <code class="inline">Content-Security-Policy-Report-Only</code> 上线一周, 收集 report-uri 的告警, 修完所有兼容性问题再切到强制模式</div>
+  </div>
+</section>
+
+<!-- ========== 04. 综合加固 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 ·</div>
+    <h2>安全头与 Go 综合中间件</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      把前三节的所有点合并成一个 Go 中间件——
+      安全 Cookie / CSRF / CSP / 浏览器加固头, 一次写好, 全站受益。
+      这一节也是 30 天里第一次给出"<em>可以直接 copy 到生产</em>"的样板代码。
+    </p>
+
+    <h3>必备的安全响应头</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>Header</th>
+          <th>作用</th>
+          <th>推荐值</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Strict-Transport-Security</td>
+            <td>强制 HTTPS, 防降级</td>
+            <td class="mono">max-age=31536000; includeSubDomains; preload</td>
+          </tr>
+          <tr>
+            <td>Content-Security-Policy</td>
+            <td>限制脚本 / 资源加载源, 防 XSS</td>
+            <td class="mono">default-src 'self'; script-src 'self' 'nonce-...'</td>
+          </tr>
+          <tr>
+            <td>X-Frame-Options</td>
+            <td>禁止被嵌入 iframe, 防点击劫持</td>
+            <td class="mono">DENY</td>
+          </tr>
+          <tr>
+            <td>X-Content-Type-Options</td>
+            <td>禁止浏览器 MIME sniffing</td>
+            <td class="mono">nosniff</td>
+          </tr>
+          <tr>
+            <td>Referrer-Policy</td>
+            <td>限制 Referer 头泄露</td>
+            <td class="mono">strict-origin-when-cross-origin</td>
+          </tr>
+          <tr>
+            <td>Permissions-Policy</td>
+            <td>禁用不需要的浏览器 API (摄像头 / 麦克风)</td>
+            <td class="mono">camera=(), microphone=(), geolocation=()</td>
+          </tr>
+          <tr>
+            <td>Cross-Origin-Opener-Policy</td>
+            <td>隔离窗口, 防 Spectre 跨源攻击</td>
+            <td class="mono">same-origin</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">Go 综合安全中间件</h3>
+<pre class="code"><span class="comment">// security.go · 一个 middleware 把所有头打齐</span>
+<span class="k">package</span> middleware
+
+<span class="k">import</span> (
+    <span class="s">"crypto/rand"</span>
+    <span class="s">"encoding/base64"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"net/http"</span>
+)
+
+<span class="k">func</span> SecurityHeaders(next http.Handler) http.Handler {
+    <span class="k">return</span> http.HandlerFunc(<span class="k">func</span>(w http.ResponseWriter, r *http.Request) {
+        <span class="comment">// 1) 每请求生成一个 CSP nonce, 放进 context 供模板使用</span>
+        b := <span class="k">make</span>([]<span class="k">byte</span>, 16)
+        _, _ = rand.Read(b)
+        nonce := base64.RawStdEncoding.EncodeToString(b)
+        ctx := context.WithValue(r.Context(), <span class="s">"csp_nonce"</span>, nonce)
+
+        h := w.Header()
+        h.Set(<span class="s">"Strict-Transport-Security"</span>, <span class="s">"max-age=31536000; includeSubDomains; preload"</span>)
+        h.Set(<span class="s">"Content-Security-Policy"</span>, fmt.Sprintf(
+            <span class="s">"default-src 'self'; script-src 'self' 'nonce-%s'; "</span> +
+            <span class="s">"style-src 'self' 'unsafe-inline'; "</span> +
+            <span class="s">"img-src 'self' data: https:; "</span> +
+            <span class="s">"frame-ancestors 'none'; base-uri 'self'; form-action 'self'"</span>, nonce))
+        h.Set(<span class="s">"X-Frame-Options"</span>, <span class="s">"DENY"</span>)
+        h.Set(<span class="s">"X-Content-Type-Options"</span>, <span class="s">"nosniff"</span>)
+        h.Set(<span class="s">"Referrer-Policy"</span>, <span class="s">"strict-origin-when-cross-origin"</span>)
+        h.Set(<span class="s">"Permissions-Policy"</span>, <span class="s">"camera=(), microphone=(), geolocation=()"</span>)
+        h.Set(<span class="s">"Cross-Origin-Opener-Policy"</span>, <span class="s">"same-origin"</span>)
+
+        next.ServeHTTP(w, r.WithContext(ctx))
+    })
+}
+
+<span class="comment">// 安全 Cookie helper · 一次写好不再思考</span>
+<span class="k">func</span> SecureCookie(name, value <span class="k">string</span>, maxAge <span class="k">int</span>) *http.Cookie {
+    <span class="k">return</span> &amp;http.Cookie{
+        Name:     name,
+        Value:    value,
+        Path:     <span class="s">"/"</span>,
+        MaxAge:   maxAge,
+        <span class="hl">HttpOnly: true,</span>                  <span class="comment">// 防 XSS 偷 Cookie</span>
+        <span class="hl">Secure:   true,</span>                  <span class="comment">// 仅 HTTPS</span>
+        <span class="hl">SameSite: http.SameSiteLaxMode,</span>  <span class="comment">// 防 CSRF</span>
+    }
+}</pre>
+
+<pre class="code"><span class="comment">// main.go · 串起来用</span>
+<span class="k">func</span> main() {
+    mux := http.NewServeMux()
+    mux.HandleFunc(<span class="s">"/login"</span>, login)
+    mux.HandleFunc(<span class="s">"/me"</span>, me)
+
+    <span class="comment">// 中间件栈: 安全头 → CSRF → Session → 业务</span>
+    handler := middleware.SecurityHeaders(
+        csrf.Protect(secret, csrf.Secure(<span class="k">true</span>))(
+            sm.LoadAndSave(mux),
+        ),
+    )
+
+    _ = http.ListenAndServeTLS(<span class="s">":443"</span>, <span class="s">"server.crt"</span>, <span class="s">"server.key"</span>, handler)
+}</pre>
+
+    <div class="grid grid-2" style="margin-top:20px;">
+      <div class="node accent">
+        <div class="tag clay">VERIFY</div>
+        <h3>用 securityheaders.com 体检</h3>
+        <p>上线后访问 <code class="inline">securityheaders.com/?q=your-site.com</code>, 自动评分。目标拿 A+。</p>
+      </div>
+      <div class="node">
+        <div class="tag clay">CHROME DEVTOOLS</div>
+        <h3>看 Security 标签页</h3>
+        <p>Chrome DevTools → Security 标签查看证书 / TLS 版本 / 主源是否安全; Application → Cookies 查看每个 Cookie 的实际属性。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">Q ·</div>
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">SPA + JWT 时代, CSRF 还是真实威胁吗? 我看不少团队完全不做 CSRF 防御。</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>分两种情况:</p>
+            <p><strong>JWT 放在 Authorization 头</strong> · 不带 Cookie 调用 API: 这种纯前端体系下 CSRF 不存在——浏览器不会自动给 evil.com 发起的请求加上 <code>Authorization: Bearer ...</code>(只有 JS 主动加才会)。代价是 JWT 必须存在 localStorage / 内存里, <em>暴露 XSS 风险</em>(Day 01 / 09 反复提及)。</p>
+            <p><strong>JWT 放在 Cookie 里</strong> 或<strong>仍然用 Session</strong>: 浏览器会自动带, CSRF 风险完全存在。SameSite=Lax 帮你挡了大部分场景, 但<em>关键写操作仍建议加 CSRF Token</em>——SameSite 在某些跨域链接、子域名信任、老浏览器场景下并不可靠。</p>
+            <p>真实的开放平台后台一般是<em>Session + Cookie 体系</em>, CSRF 防御必须做。如果你的团队完全不做, 很可能只是<em>还没出过事</em>。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">SameSite=Lax 默认就开了, 还需要专门做 CSRF Token 吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>"Lax 够了"的论点在 90% 场景成立, 但<strong>关键写操作不能只靠它</strong>。原因:</p>
+            <p>(1) <strong>Lax 允许跨站 GET 跳转</strong>: 攻击者从 evil.com 点链接跳到 your-site.com, Cookie 依然会带。如果你的"删除资源"接口接受 GET 请求(RESTful 反模式但很常见), Lax 完全挡不住。</p>
+            <p>(2) <strong>子域名互信</strong>: SameSite 看的是 site(eTLD+1), 不是 origin。如果攻击者控制了 <em>blog.example.com</em>(比如博客平台用户上传内容), 他可以发请求到 <em>api.example.com</em>, Cookie 照样带。</p>
+            <p>(3) <strong>SameSite=None 场景</strong>: 某些跨域嵌入(支付 / OAuth callback)必须用 None, 那一刻 CSRF 防护就完全失效。</p>
+            <p>结论: SameSite 是基础底线, <em>关键写操作再叠加 CSRF Token + Origin 校验</em>, 不要二选一。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">CSP 配好了是不是就能完全防住 XSS? 还要不要继续做输出转义?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>CSP <strong>不是替代转义, 而是叠加防护</strong>。两者关系:</p>
+            <p><em>转义 / 编码</em> 是第一道闸门——做对了, XSS 注入压根进不来。</p>
+            <p><em>CSP</em> 是兜底——万一某个开发漏了转义, CSP 让"已注入的脚本"也跑不起来(因为没有正确 nonce)。</p>
+            <p>真实场景 CSP 经常被绕过的姿势: <em>(1)</em> 配置了 <code>'unsafe-inline'</code> 等于禁用了 CSP 主要防线; <em>(2)</em> 信任了过多 CDN, 攻击者上传 JS 到信任的 CDN 就绕过; <em>(3)</em> JSONP 端点暴露在白名单内, 可被用来绕过。</p>
+            <p><strong>规则</strong>: 转义必做; CSP 是降低事故影响面的护城河, 但不能替代基本功。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">JWT 体系下还存在 Session Fixation 吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>名字不叫 Fixation, 但<strong>类似的攻击仍然存在</strong>。攻击模式略有不同:</p>
+            <p>JWT 是<em>新签发</em>的, 攻击者无法预先持有"将被分配给受害者的 token"——所以经典 Fixation 不直接成立。</p>
+            <p>但有变体: <strong>登录后没换 refresh token</strong>——如果攻击者通过其他方式拿到了用户的 refresh token(XSS / 中间人 / 日志泄露), 用它去刷出新 access token 就能持续登录。所以登录 / 改密 / 重要权限变化时, 应当 <em>主动作废所有旧 refresh token</em>, 重新签发——这就是 JWT 体系的"Fixation 防御"。</p>
+            <p>另一个常见坑: <em>Refresh Token Rotation 没做</em>——每次用 refresh 换 access 都该同时换发新的 refresh, 旧的立即作废。Day 09 实战会展开。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">为什么 X-XSS-Protection 不在你的安全头清单里? 它名字听起来是为这个设计的。</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>因为它<strong>已经被现代浏览器废弃</strong>, 应该<em>不要</em>设置, 设了反而有风险。</p>
+            <p>X-XSS-Protection 是早期 IE / 老 Chrome 的 XSS Auditor 开关。后来研究发现, 这个 Auditor 本身可以被滥用(用攻击 payload 触发它把页面里合法的脚本"关掉", 从而绕过其他防御)——Chrome 在 2019 年完全移除了这个特性, Firefox / Edge 也都不再支持。</p>
+            <p>2024 年的正确清单是: 用 CSP 替代它, 然后明确<em>不要设</em> X-XSS-Protection。很多老教程还在推荐 <code>X-XSS-Protection: 1; mode=block</code>——已经过时, 跟着抄会被 securityheaders.com 扣分。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">R ·</div>
+    <h2>复盘问题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review-list">
+      <li>用 60 秒讲清 Session Fixation 完整攻击链——攻击者预先做了什么 / 受害者做了什么 / 服务端漏了什么。</li>
+      <li>列出 CSRF 的四种防御方案及它们的相对优缺点。2024 年的实战推荐组合是什么?</li>
+      <li>区分 Stored / Reflected / DOM-based XSS——攻击位置、触发位置、传播范围各有什么不同?</li>
+      <li>写一段 Go 代码: 实现一个安全的 Cookie helper, 接收 name/value/maxAge, 返回带全部安全属性的 <code class="inline">*http.Cookie</code>。</li>
+      <li>CSP 的 nonce 机制怎么工作? 为什么 <code class="inline">'unsafe-inline'</code> 几乎等于关闭了 CSP?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">✓ ·</div>
+    <h2>今日检查清单</h2>
+    <div class="count">8 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>能讲清 Session Fixation 的完整攻击链, 以及防御只需要一行代码 (RenewToken)</li>
+        <li>能解释 Session 完整生命周期的 7 个阶段, 知道什么时候必须换 SID</li>
+        <li>能列出 CSRF 的 4 种防御方案以及在 SPA / SSR 中各自的取舍</li>
+        <li>能区分 Stored / Reflected / DOM-based XSS 三种类型</li>
+        <li>跑通 gorilla/csrf 或自己实现的 Double Submit Cookie 中间件</li>
+        <li>能用 Go html/template 写一个会自动转义的页面, 故意输入 <code class="inline">&lt;script&gt;</code> 验证不会执行</li>
+        <li>给自己的 Demo 服务加上 7 个安全响应头, 用 securityheaders.com 测试拿 A 以上</li>
+        <li>读完 OWASP Session / CSRF / XSS 三份 Cheat Sheet</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">📖 ·</div>
+    <h2>推荐阅读</h2>
+    <div class="count">5 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">MUST READ · 入门</div>
+        <h3>OWASP Top 10 (2021)</h3>
+        <p>整个 Web 安全圈的"宪法"。Day 04 的三件套(A01 Broken Access / A03 Injection / A07 Auth Failures)在里面都有专项。每 3-4 年更新一次, 2025 版即将发布。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">MUST READ · 实操</div>
+        <h3>OWASP Cheat Sheet Series</h3>
+        <p>Session / CSRF / XSS / Cookie 各一份, 每份 5-10 页。比 OWASP Top 10 更细, 是"看完直接能照做"的工程清单。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">SPEC · 关键节</div>
+        <h3>RFC 6265bis · Cookie 现状</h3>
+        <p>2024 年活跃 IETF draft, SameSite 默认值变化、__Host- 前缀、Partitioned Cookie 等现代 Cookie 行为的权威来源。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">SOURCE · 实战参考</div>
+        <h3>gorilla/csrf 源码</h3>
+        <p>Go 圈最被广泛使用的 CSRF 中间件, 不到 1000 行。读完你能写出生产级的 token 校验中间件。</p>
+      </div>
+      <div class="node">
+        <div class="tag">TOOL · 检测</div>
+        <h3>securityheaders.com · csp-evaluator</h3>
+        <p>前者 5 秒给你的站点一个安全头评分; 后者(Google 出品) 帮你评估 CSP 是否真的安全, 还是写了个看着唬人的 unsafe-inline。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">» ·</div>
+    <h2>Day 05 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">TOMORROW · DAY 05</div>
+      <h3>多因素认证: TOTP / Passkey / WebAuthn</h3>
+      <p>Phase 1 的收官——账号密码这个"你知道什么"的因素已经不够用了, 现代登录系统都在叠加"你拥有什么"(手机 / 安全密钥)。
+      Day 05 看 TOTP 是怎么用一个 30 秒变化的 6 位数字证明"手机在你手上";
+      看 WebAuthn / Passkey 怎么用公私钥彻底干掉密码,
+      让钓鱼网站<em>从原理上</em>无法骗到凭证。
+      看完 Day 05, 你应该能给自己的服务接入 TOTP, 并理解为什么 Apple / Google / 微软都在 All-in Passkey。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"Web 安全的本质是边界——服务端永远不要相信任何来自客户端的输入, 即使它看起来是你刚刚发出去的。"</p>
+  <p class="meta">DAY 04 · AUTHN / AUTHZ 30-DAY ROADMAP · OPEN PLATFORM</p>
+</footer>
+
+</div>

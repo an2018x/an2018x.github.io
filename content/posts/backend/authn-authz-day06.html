@@ -1,0 +1,1357 @@
+---
+title: "Day 06 · JWT 深入 · JWS / JWE / JWK / JWA 全家族"
+date: '2026-05-27'
+draft: false
+description: "认证授权 30 天 Day 06：拆开 JWT 的 Header.Payload.Signature 三段结构,理解 JWS/JWE/JWK/JWA 四条 RFC 的分工,辨析 HS256/RS256/PS256/ES256/EdDSA 五大算法的选型,掌握 iss/sub/aud/exp/nbf/iat/jti 七个标准声明。Phase 2 开篇。"
+toc: false
+tags:
+  - Backend
+  - Security
+  - JWT
+  - JWS
+  - JWE
+  - JWK
+  - Go
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.azd06-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.azd06-wrap .eyebrow{
+  font-family:var(--mono); font-size:12px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+}
+.azd06-wrap .eyebrow::before{
+  content:""; display:inline-block;
+  width:24px; height:1.5px; background:var(--clay);
+  margin-right:12px; vertical-align:middle;
+}
+.azd06-wrap h1{
+  font-family:var(--serif); font-weight:500;
+  font-size:clamp(36px, 5.2vw, 56px);
+  letter-spacing:-0.018em; line-height:1.08;
+  max-width:22ch; margin: 22px 0 30px; color:var(--slate);
+}
+.azd06-wrap h1 em{ font-style:italic; color:var(--clay); }
+
+.azd06-wrap h2{
+  font-family:var(--serif); font-weight:500;
+  font-size:27px; letter-spacing:-0.012em;
+  margin: 0; color:var(--slate);
+}
+.azd06-wrap h3{
+  font-family:var(--serif); font-weight:500;
+  font-size:19px; letter-spacing:-0.008em;
+  margin: 0 0 10px; color:var(--slate);
+}
+.azd06-wrap .lede{
+  font-size:16.5px; color:var(--g700);
+  max-width:64ch; margin:0 0 32px; line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.azd06-wrap header.masthead{ padding: 80px 0 56px; }
+.azd06-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono); font-size:11.5px;
+  color:var(--g500); letter-spacing:.06em; text-transform:uppercase;
+}
+.azd06-wrap .meta-strip strong{
+  color:var(--slate); font-weight:600; margin-right:6px;
+}
+
+/* ========== Section ========== */
+.azd06-wrap section{ margin-top:72px; }
+.azd06-wrap .indent{ margin-left:50px; }
+
+.azd06-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px; margin-bottom:28px;
+}
+.azd06-wrap .sec-head .num{
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.12em; font-weight:600; width:46px; flex-shrink:0;
+}
+.azd06-wrap .sec-head .count{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  padding:3px 12px; background:var(--g100); border-radius:999px;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ========== Mind Map ========== */
+.azd06-wrap .mindmap{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+}
+.azd06-wrap .mindmap svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.azd06-wrap .mindmap-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Card Grid ========== */
+.azd06-wrap .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.azd06-wrap .grid-2{ grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.azd06-wrap .grid-3{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* ========== Node Card ========== */
+.azd06-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.azd06-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.azd06-wrap .node.accent{ border-color:var(--clay); }
+.azd06-wrap .node.entry { background:var(--g100); }
+.azd06-wrap .node.exit  { background:var(--oat); border-color:var(--clay); }
+.azd06-wrap .node.dark  {
+  background:var(--slate); border-color:var(--slate); color:var(--ivory);
+}
+.azd06-wrap .node.dark .tag{ color:var(--oat); }
+.azd06-wrap .node.dark p{ color:var(--oat); }
+.azd06-wrap .node.dark h3{ color:var(--ivory); }
+
+.azd06-wrap .node .tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:10px; font-weight:600;
+}
+.azd06-wrap .node .tag.clay{ color:var(--clay); }
+.azd06-wrap .node p{
+  font-size:13.5px; color:var(--g700); margin:6px 0 0; line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.azd06-wrap .annot{
+  font-family:var(--mono); font-size:11.5px; color:var(--g500);
+  display:flex; align-items:flex-start; margin-top:14px; letter-spacing:.04em;
+}
+.azd06-wrap .annot::before{
+  content:""; width:32px; height:1.5px; background:var(--clay);
+  margin-right:12px; margin-top:8px; flex-shrink:0;
+}
+
+/* ========== Table ========== */
+.azd06-wrap .table-wrap{ overflow-x:auto; }
+.azd06-wrap table.compare{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+}
+.azd06-wrap table.compare th,
+.azd06-wrap table.compare td{
+  text-align:left; padding:14px 20px;
+  border-bottom:1px solid var(--g200); vertical-align:top;
+}
+.azd06-wrap table.compare th{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+  background:var(--g100); border-bottom:1.5px solid var(--slate);
+}
+.azd06-wrap table.compare td:first-child{
+  font-family:var(--serif); font-weight:500; font-size:15px;
+  width:22%; color:var(--slate);
+}
+.azd06-wrap table.compare tr:last-child td{ border-bottom:none; }
+.azd06-wrap table.compare .clay{ color:var(--clay-d); }
+.azd06-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+.azd06-wrap table.compare .bad{ color:#B85C3E; font-weight:600; }
+.azd06-wrap table.compare .ok{ color:#5C7444; font-weight:600; }
+
+/* ========== Code ========== */
+.azd06-wrap pre.code{
+  background:var(--slate); color:var(--ivory);
+  font-family:var(--mono); font-size:12.5px;
+  padding:20px 24px; border-radius:10px;
+  overflow-x:auto; line-height:1.65; margin:18px 0;
+}
+.azd06-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.azd06-wrap pre.code .k{ color:var(--clay); }
+.azd06-wrap pre.code .s{ color:var(--olive); }
+.azd06-wrap pre.code .t{ color:#7EC8E3; }
+.azd06-wrap pre.code .n{ color:#C4B28A; }
+.azd06-wrap pre.code .prompt{ color:var(--olive); }
+.azd06-wrap pre.code .flag{ color:var(--clay); }
+.azd06-wrap pre.code .comment{ color:var(--g500); font-style:italic; }
+.azd06-wrap pre.code .output{ color:var(--oat); }
+.azd06-wrap pre.code .hl{ color:#F5B97A; }
+
+.azd06-wrap code.inline{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Diagram Wrap ========== */
+.azd06-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 28px; margin: 0;
+}
+.azd06-wrap .archdiag svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+.azd06-wrap .archdiag-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Checklist ========== */
+.azd06-wrap .check{ background:var(--paper);
+  border:1.5px solid var(--g300); border-radius:14px;
+  padding:8px 24px; }
+.azd06-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.azd06-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative; font-size:14.5px; color:var(--slate);
+}
+.azd06-wrap .check li:last-child{ border-bottom:none; }
+.azd06-wrap .check li::before{
+  content:""; position:absolute;
+  left:0; top:16px; width:18px; height:18px;
+  border:1.5px solid var(--g300); border-radius:4px; background:var(--paper);
+}
+
+/* ========== Review Questions ========== */
+.azd06-wrap .review-list{
+  counter-reset: q; margin:0; padding:0; list-style:none;
+}
+.azd06-wrap .review-list li{
+  counter-increment: q; position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px; color:var(--g700);
+}
+.azd06-wrap .review-list li:last-child{ border-bottom:none; }
+.azd06-wrap .review-list li::before{
+  content: counter(q, decimal-leading-zero);
+  position:absolute; left:0; top:18px;
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.06em; font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.azd06-wrap .qa-grid{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.azd06-wrap .qa-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+  transition: border-color 150ms ease;
+}
+.azd06-wrap .qa-card[open]{ border-color:var(--slate); }
+.azd06-wrap .qa-card summary{
+  list-style:none; cursor:pointer;
+  padding:18px 24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition: background 150ms ease;
+}
+.azd06-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.azd06-wrap .qa-card summary::marker{ display:none; }
+.azd06-wrap .qa-card summary:hover{ background:var(--g100); }
+.azd06-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.azd06-wrap .qa-num{
+  font-family:var(--mono); font-size:12px; color:var(--clay);
+  letter-spacing:.1em; font-weight:600;
+  flex-shrink:0; margin-top:3px;
+}
+.azd06-wrap .qa-q{
+  font-family:var(--serif); font-size:16px; font-weight:500;
+  color:var(--slate); line-height:1.5; flex:1;
+}
+.azd06-wrap .qa-toggle{
+  font-family:var(--mono); font-size:18px; color:var(--g500);
+  flex-shrink:0; font-weight:300; line-height:1; margin-top:2px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+.azd06-wrap .qa-card[open] .qa-toggle{ transform:rotate(45deg); color:var(--clay); }
+.azd06-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex; align-items:flex-start; gap:18px;
+}
+.azd06-wrap .qa-a-label{
+  font-family:var(--mono); font-size:12px; color:var(--olive);
+  letter-spacing:.1em; font-weight:600;
+  flex-shrink:0; margin-top:2px;
+}
+.azd06-wrap .qa-a-body{ flex:1; }
+.azd06-wrap .qa-a-body p{
+  margin:0 0 12px; font-size:14.5px;
+  color:var(--g700); line-height:1.65;
+}
+.azd06-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.azd06-wrap .qa-a-body strong{ color:var(--slate); font-weight:600; }
+.azd06-wrap .qa-a-body code{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Spec Box ========== */
+.azd06-wrap .specbox{
+  background:var(--g100); border-left:3px solid var(--clay);
+  padding:14px 18px; margin:18px 0;
+  font-size:13.5px; color:var(--g700); line-height:1.6;
+  border-radius:0 6px 6px 0;
+}
+.azd06-wrap .specbox strong{
+  font-family:var(--mono); font-size:11.5px; color:var(--clay-d);
+  letter-spacing:.08em; text-transform:uppercase;
+  display:block; margin-bottom:4px;
+}
+
+/* ========== Footer ========== */
+.azd06-wrap footer{
+  margin-top:100px; padding-top:40px;
+  border-top:1px solid var(--g200); text-align:center;
+}
+.azd06-wrap footer .quote{
+  font-family:var(--serif); font-style:italic; font-size:18px;
+  color:var(--g700); max-width:54ch; margin:0 auto; line-height:1.55;
+}
+.azd06-wrap footer .meta{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px){
+  .azd06-wrap{ padding:0 22px 90px; }
+  .azd06-wrap .indent{ margin-left:0; }
+  .azd06-wrap header.masthead{ padding:56px 0 40px; }
+  .azd06-wrap section{ margin-top:56px; }
+  .azd06-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .azd06-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .azd06-wrap .qa-q{ font-size:14.5px; }
+  .azd06-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="azd06-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 06 · AUTHN / AUTHZ ROADMAP · 30 DAYS · PHASE 2 开篇</div>
+  <h1>JWT 三段论 <em>与四条 RFC</em></h1>
+  <p class="lede">
+    Phase 2 开篇。JWT 是 OAuth / OIDC 时代的事实载荷格式——
+    几乎所有"换 token"的协议最后都把数据塞进一个 JWT。
+    可它远不止"一串 base64"——背后是四条互相啮合的 RFC:
+    <strong>JWS</strong>(签名)、<strong>JWE</strong>(加密)、
+    <strong>JWK</strong>(密钥分发)、<strong>JWA</strong>(算法集)。
+    Day 06 不讲攻击 (那是 Day 07 的事), 而是把这四个零件全部认清:
+    Header.Payload.Signature 的物理结构 / 五大签名算法的选型 / 七个标准声明的语义。
+    看完 Day 06, 你能 <em style="font-style:italic;color:#B85C3E;">手撕</em>一个 HS256 JWT。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 75–105 min</span>
+    <span><strong>READ</strong> 35 min</span>
+    <span><strong>HANDS-ON</strong> 40 min</span>
+    <span><strong>REVIEW</strong> 20 min</span>
+    <span><strong>STACK</strong> Go · golang-jwt/jwt · openssl · jwt.io</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">M ·</div>
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 06 思维导图">
+        <!-- 根节点 -->
+        <rect x="290" y="20" width="400" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 06 · JWT 深入</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">STRUCTURE · FAMILY · ALG · CLAIMS</text>
+
+        <!-- 主竖线 + 横干线 -->
+        <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="858" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四条分支竖线 -->
+        <line x1="122" y1="106" x2="122" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="106" x2="367" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="106" x2="613" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="106" x2="858" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四个主题节点 -->
+        <rect x="32" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="122" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">01 · STRUCTURE</text>
+        <text x="122" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">三段结构</text>
+
+        <rect x="277" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · FAMILY</text>
+        <text x="367" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">JWS / JWE / JWK</text>
+
+        <rect x="523" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · ALG</text>
+        <text x="613" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">算法选型</text>
+
+        <rect x="768" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="858" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">04 · CLAIMS</text>
+        <text x="858" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">声明与 Go 实战</text>
+
+        <!-- 子节点列表 -->
+        <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Header . Payload . Sig</text>
+        <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">base64url 编码</text>
+        <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">紧凑 / JSON 序列化</text>
+        <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">RFC 7519 · §3</text>
+
+        <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">JWS = 签名 (默认)</text>
+        <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">JWE = 加密 (少用)</text>
+        <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">JWK = 密钥格式</text>
+        <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">JWA = 算法名约定</text>
+
+        <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">HS256 / 384 / 512</text>
+        <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">RS256 / PS256</text>
+        <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">ES256 / ES384</text>
+        <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">EdDSA (Ed25519)</text>
+
+        <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">iss / sub / aud</text>
+        <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">exp / nbf / iat</text>
+        <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">jti · 私有声明</text>
+        <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">手撕 + golang-jwt</text>
+
+        <!-- 底部 deliverables -->
+        <line x1="32" y1="358" x2="948" y2="358" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="32" y="385" font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+
+        <rect x="32"  y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="142" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">能裸眼解码 JWT 三段</text>
+
+        <rect x="268" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="378" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">辨清四 RFC 分工</text>
+
+        <rect x="504" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="614" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">能为场景挑算法</text>
+
+        <rect x="740" y="398" width="200" height="34" rx="5"
+              fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="840" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">手撕一个 HS256 JWT</text>
+      </svg>
+      <div class="mindmap-cap">FIG · Day 06 全景: 结构 → 家族 → 算法 → 声明 + 实战</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 01. JWT 三段结构 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">01 ·</div>
+    <h2>JWT 三段结构</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      JWT (RFC 7519) 之所以能成为事实标准, 一半功劳归于它的<strong>形状极其简单</strong>——
+      三段 base64url 用 <code class="inline">.</code> 拼起来, 一行字符串能传 HTTP Header 也能塞 Cookie。
+      理解 JWT 的第一件事不是密码学, 而是"<em style="font-style:italic;color:#B85C3E;">这串字符到底是什么</em>"。
+    </p>
+
+    <h3>真实例子拆解</h3>
+    <div class="archdiag" style="margin-top:12px;">
+      <svg viewBox="0 0 920 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="JWT 三段结构">
+        <!-- 完整 JWT -->
+        <text x="460" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">JWT = HEADER · PAYLOAD · SIGNATURE</text>
+
+        <rect x="60" y="56" width="220" height="36" rx="4" fill="#FAF9F5" stroke="#D97757" stroke-width="1.5"/>
+        <text x="170" y="78" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">eyJhbGciOiJIUzI1NiJ9</text>
+
+        <text x="298" y="78" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="16" fill="#B85C3E" font-weight="600">.</text>
+
+        <rect x="316" y="56" width="320" height="36" rx="4" fill="#FAF9F5" stroke="#788C5D" stroke-width="1.5"/>
+        <text x="476" y="78" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">eyJzdWIiOiI0MiIsImV4cCI6MTcyNzM0MDgwMH0</text>
+
+        <text x="654" y="78" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="16" fill="#B85C3E" font-weight="600">.</text>
+
+        <rect x="672" y="56" width="220" height="36" rx="4" fill="#FAF9F5" stroke="#141413" stroke-width="1.5"/>
+        <text x="782" y="78" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">PoF2J3K7p9...mZx_GwAQ</text>
+
+        <line x1="170" y1="100" x2="170" y2="130" stroke="#D97757" stroke-width="1.5"/>
+        <line x1="476" y1="100" x2="476" y2="130" stroke="#788C5D" stroke-width="1.5"/>
+        <line x1="782" y1="100" x2="782" y2="130" stroke="#141413" stroke-width="1.5"/>
+
+        <!-- HEADER 解码 -->
+        <rect x="60" y="140" width="220" height="120" rx="6" fill="#F0EEE6" stroke="#D97757" stroke-width="1.5"/>
+        <text x="170" y="162" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">HEADER (base64url 解码)</text>
+        <text x="80"  y="186" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">{</text>
+        <text x="92"  y="206" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">  "alg": "HS256",</text>
+        <text x="92"  y="226" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">  "typ": "JWT"</text>
+        <text x="80"  y="246" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">}</text>
+
+        <!-- PAYLOAD 解码 -->
+        <rect x="316" y="140" width="320" height="120" rx="6" fill="#F0EEE6" stroke="#788C5D" stroke-width="1.5"/>
+        <text x="476" y="162" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#5C7444" letter-spacing="2" font-weight="600">PAYLOAD (base64url 解码)</text>
+        <text x="336" y="186" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">{</text>
+        <text x="348" y="206" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">  "sub": "42",</text>
+        <text x="348" y="226" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">  "exp": 1727340800</text>
+        <text x="336" y="246" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">}</text>
+
+        <!-- SIGNATURE 解码 -->
+        <rect x="672" y="140" width="220" height="120" rx="6" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="782" y="162" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#FAF9F5" letter-spacing="2" font-weight="600">SIGNATURE (32 字节原始)</text>
+        <text x="782" y="194" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">HMAC-SHA256(</text>
+        <text x="782" y="212" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">  key,</text>
+        <text x="782" y="230" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">  H_b64 + "." + P_b64</text>
+        <text x="782" y="248" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">)</text>
+
+        <!-- 关键说明 -->
+        <line x1="60" y1="290" x2="900" y2="290" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="60" y="316" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13" fill="#3D3D3A">
+          · Header / Payload <strong>只是 base64url</strong>, 任何人都能解开看见明文 — 不要往里放秘密
+        </text>
+        <text x="60" y="338" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13" fill="#3D3D3A">
+          · Signature 是对 <code>H_b64 + "." + P_b64</code> 整段的签名 — 改一个字节就验不过
+        </text>
+        <text x="60" y="360" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13" fill="#3D3D3A">
+          · "签名"和"加密"是两件事 · 默认 JWT 只签名不加密
+        </text>
+      </svg>
+      <div class="archdiag-cap">FIG · 一个完整的 JWT 在 jwt.io 拖进去就是这个样子</div>
+    </div>
+
+    <div class="specbox">
+      <strong>base64url vs base64</strong>
+      JWT 用的不是标准 base64, 而是 <em>base64url</em> (RFC 4648 §5)——
+      把 <code class="inline">+</code> 换成 <code class="inline">-</code>,
+      <code class="inline">/</code> 换成 <code class="inline">_</code>, 并<em>去掉末尾的 = 填充</em>。
+      原因: 这套字符可以直接放进 URL / Cookie / HTTP Header 而不需要再次编码。
+      Go 里用 <code class="inline">base64.RawURLEncoding</code>("Raw"代表去掉 = 填充)。
+    </div>
+
+    <h3 style="margin-top:32px;">两种序列化形式</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>形式</th>
+          <th>样子</th>
+          <th>适用</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Compact</td>
+            <td class="mono">eyJ.....eyJ.....xxx</td>
+            <td class="ok">默认 · HTTP Header / Cookie / URL · 99% 场景用这个</td>
+          </tr>
+          <tr>
+            <td>JSON Serialization</td>
+            <td class="mono">{"protected":"...","payload":"...","signature":"..."}</td>
+            <td>需要<strong>多个签名</strong>或<strong>未保护头</strong>时 · 罕见</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">手撕一个 JWT (不用任何库)</h3>
+<pre class="code"><span class="comment">// 30 行用标准库手撕 HS256 — 看清"签名前签名后"</span>
+<span class="k">package</span> main
+
+<span class="k">import</span> (
+    <span class="s">"crypto/hmac"</span>
+    <span class="s">"crypto/sha256"</span>
+    <span class="s">"encoding/base64"</span>
+    <span class="s">"encoding/json"</span>
+    <span class="s">"fmt"</span>
+)
+
+<span class="k">func</span> main() {
+    key := []<span class="k">byte</span>(<span class="s">"my-secret-key-at-least-32-bytes!!"</span>)
+
+    <span class="comment">// 1) 构造 Header 和 Payload (任何 JSON 对象都行)</span>
+    header  := <span class="k">map</span>[<span class="k">string</span>]<span class="k">any</span>{<span class="s">"alg"</span>: <span class="s">"HS256"</span>, <span class="s">"typ"</span>: <span class="s">"JWT"</span>}
+    payload := <span class="k">map</span>[<span class="k">string</span>]<span class="k">any</span>{<span class="s">"sub"</span>: <span class="s">"42"</span>, <span class="s">"exp"</span>: 1727340800}
+
+    hJSON, _ := json.Marshal(header)
+    pJSON, _ := json.Marshal(payload)
+
+    <span class="comment">// 2) base64url 编码 — RawURLEncoding 去掉 = 填充</span>
+    h64 := base64.RawURLEncoding.EncodeToString(hJSON)
+    p64 := base64.RawURLEncoding.EncodeToString(pJSON)
+
+    <span class="comment">// 3) 签名: 对 "H64.P64" 整段做 HMAC-SHA256</span>
+    signingInput := h64 + <span class="s">"."</span> + p64
+    mac := hmac.New(sha256.New, key)
+    mac.Write([]<span class="k">byte</span>(signingInput))
+    s64 := base64.RawURLEncoding.EncodeToString(mac.Sum(<span class="k">nil</span>))
+
+    <span class="comment">// 4) 拼起来就是 JWT</span>
+    token := signingInput + <span class="s">"."</span> + s64
+    fmt.Println(token)
+    <span class="comment">// → eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjczNDA4MDAsInN1YiI6IjQyIn0.xxx</span>
+}</pre>
+
+    <div class="annot">把输出拖到 <code class="inline">jwt.io</code>, 它能解出 Header / Payload, 但<strong>签名验证</strong>需要你填入相同的 secret</div>
+  </div>
+</section>
+
+<!-- ========== 02. JWS / JWE / JWK / JWA 全家族 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">02 ·</div>
+    <h2>JWS / JWE / JWK / JWA 全家族</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      "JWT"这个词其实是个<em>容器</em>——
+      它真正的实质是 <strong>JWS</strong>(签名形态)或 <strong>JWE</strong>(加密形态)。
+      绝大多数我们日常说的 JWT, 都是 JWS;
+      另外两条 RFC <strong>JWK / JWKS</strong>(密钥分发)和 <strong>JWA</strong>(算法标识)
+      是它们的支撑设施。这四条 RFC 一起构成 "JOSE" (JavaScript Object Signing and Encryption)。
+    </p>
+
+    <h3>JWS vs JWE</h3>
+    <div class="archdiag" style="margin-top:12px;">
+      <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="JWS vs JWE 对比">
+        <!-- 左侧 JWS -->
+        <text x="220" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">JWS · 签名 (默认 99% JWT)</text>
+
+        <rect x="40" y="56" width="360" height="48" rx="5"
+              fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
+        <text x="220" y="78" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">明文 Payload</text>
+        <text x="220" y="94" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">{"sub":"42","exp":...}</text>
+
+        <line x1="220" y1="104" x2="220" y2="130" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="215,126 220,138 225,126" fill="#141413"/>
+
+        <rect x="40" y="140" width="360" height="48" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="220" y="162" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">加上签名 → 三段式</text>
+        <text x="220" y="178" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">H.P.<strong>Signature</strong></text>
+
+        <text x="220" y="218" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13" fill="#5C7444">
+          保证: 完整性 + 来源可证
+        </text>
+        <text x="220" y="240" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13" fill="#B85C3E">
+          ✗ 不保证: 机密 (Payload 明文)
+        </text>
+        <text x="220" y="280" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#3D3D3A">
+          RFC 7515 · 用 HS / RS / PS / ES / EdDSA
+        </text>
+
+        <!-- 分隔线 -->
+        <line x1="460" y1="50" x2="460" y2="290" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <!-- 右侧 JWE -->
+        <text x="700" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">JWE · 加密 (少用 · 复杂)</text>
+
+        <rect x="520" y="56" width="360" height="48" rx="5"
+              fill="#FAF9F5" stroke="#788C5D" stroke-width="2"/>
+        <text x="700" y="78" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">明文 Payload</text>
+        <text x="700" y="94" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">{"sub":"42","exp":...}</text>
+
+        <line x1="700" y1="104" x2="700" y2="130" stroke="#141413" stroke-width="1.5"/>
+        <polygon points="695,126 700,138 705,126" fill="#141413"/>
+
+        <rect x="520" y="140" width="360" height="48" rx="5"
+              fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="700" y="162" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#FAF9F5">五段式 · 全程密文</text>
+        <text x="700" y="178" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">H.EncKey.IV.<strong>CT</strong>.Tag</text>
+
+        <text x="700" y="218" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13" fill="#5C7444">
+          保证: 完整性 + 机密 + 认证 (AEAD)
+        </text>
+        <text x="700" y="240" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="13" fill="#B85C3E">
+          ✗ 代价: 实现复杂 · 算法选错易塌
+        </text>
+        <text x="700" y="280" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#3D3D3A">
+          RFC 7516 · AES-GCM / ECDH-ES
+        </text>
+      </svg>
+      <div class="archdiag-cap">FIG · 99% 场景 JWS 就够; 只有"Token 中需要保密信息"才上 JWE</div>
+    </div>
+
+    <h3 style="margin-top:32px;">四条 RFC 的分工</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>RFC</th>
+          <th>名字</th>
+          <th>定义了什么</th>
+          <th>实战意义</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="mono">RFC 7515</td><td>JWS</td><td>JSON Web Signature 的结构与处理</td><td>"签名版 JWT"</td></tr>
+          <tr><td class="mono">RFC 7516</td><td>JWE</td><td>JSON Web Encryption 的结构与处理</td><td>"加密版 JWT"</td></tr>
+          <tr><td class="mono">RFC 7517</td><td>JWK</td><td>把公钥 / 私钥表达为 JSON</td><td>OIDC <code class="inline">jwks_uri</code> 用它分发公钥</td></tr>
+          <tr><td class="mono">RFC 7518</td><td>JWA</td><td>规定算法标识符 (HS256 / RS256...)</td><td>Header 里 alg 字段的字典</td></tr>
+          <tr><td class="mono">RFC 7519</td><td>JWT</td><td>定义"装在 JWS/JWE 里的 Claims 集合"</td><td>俗称 "JWT" 的来源</td></tr>
+          <tr><td class="mono">RFC 7520</td><td>Cookbook</td><td>各种使用样例 / 测试向量</td><td>调试用</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="specbox">
+      <strong>易混的命名</strong>
+      "<em>JWT</em>" 严格说指 <strong>携带 Claims 的 JWS 或 JWE</strong>。
+      但日常工程师互相说"JWT"几乎总指<em>JWS 形态</em>(三段, 签名)。
+      面试 / 文档里看到对方说"JWT", 默认理解成 JWS 即可。
+    </div>
+
+    <h3 style="margin-top:32px;">JWK 与 JWKS</h3>
+    <p style="color:var(--g700); font-size:14.5px;">
+      JWK (JSON Web Key) 是一种 <em>用 JSON 表达密钥</em> 的格式;
+      JWKS (JWK Set) 是 JWK 的数组——OIDC / OAuth 服务器在 <code class="inline">/.well-known/jwks.json</code> 暴露这个,
+      客户端拉过来就能用对应 <code class="inline">kid</code> 验证 JWT 签名。Day 18 OIDC Discovery 会展开。
+    </p>
+
+<pre class="code"><span class="comment"># 一个公开的 RSA 公钥 (JWK 形态)</span>
+{
+  <span class="s">"kty"</span>: <span class="s">"RSA"</span>,                <span class="comment">// 密钥类型: RSA / EC / OKP</span>
+  <span class="s">"use"</span>: <span class="s">"sig"</span>,                <span class="comment">// 用途: sig 签名 / enc 加密</span>
+  <span class="s">"alg"</span>: <span class="s">"RS256"</span>,              <span class="comment">// 使用的 JWA 算法</span>
+  <span class="s">"kid"</span>: <span class="s">"2024-01-rsa-key"</span>,    <span class="comment">// key id — JWT Header 通过这个找钥匙</span>
+  <span class="s">"n"</span>:   <span class="s">"sXch...(modulus)..."</span>,
+  <span class="s">"e"</span>:   <span class="s">"AQAB"</span>                <span class="comment">// 公钥指数 (65537)</span>
+}
+
+<span class="comment"># JWKS = JWK 的数组, 一个端点里可以同时有"当前 key"和"上一把 key"</span>
+{
+  <span class="s">"keys"</span>: [
+    { <span class="s">"kid"</span>: <span class="s">"2024-01"</span>, <span class="s">"kty"</span>: <span class="s">"RSA"</span>, <span class="s">"alg"</span>: <span class="s">"RS256"</span>, ... },
+    { <span class="s">"kid"</span>: <span class="s">"2023-12"</span>, <span class="s">"kty"</span>: <span class="s">"RSA"</span>, <span class="s">"alg"</span>: <span class="s">"RS256"</span>, ... }
+  ]
+}</pre>
+
+    <div class="annot">关键: JWT Header 一定要带 <code class="inline">kid</code>, 验证方按 kid 在 JWKS 里查公钥——这是密钥轮换的基础设施</div>
+  </div>
+</section>
+
+<!-- ========== 03. 算法选型 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">03 ·</div>
+    <h2>算法选型: HS / RS / PS / ES / EdDSA</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Day 02 已经讲过 HMAC、RSA、ECDSA、Ed25519 各自的底层取舍。
+      这一节专门看这些算法在 JWT 里怎么命名、怎么挑——
+      <strong>不同算法的安全模型完全不同, 选错一个比不签名还危险</strong>。
+    </p>
+
+    <h3>JWA 算法标识对照</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>alg 值</th>
+          <th>类型</th>
+          <th>底层</th>
+          <th>密钥模型</th>
+          <th>典型用途</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>HS256 / 384 / 512</td>
+            <td>对称 MAC</td>
+            <td>HMAC-SHA-2</td>
+            <td>双方<strong>共享同一密钥</strong></td>
+            <td>单服务自签自验 · 简单场景</td>
+          </tr>
+          <tr>
+            <td>RS256 / 384 / 512</td>
+            <td>非对称签名</td>
+            <td>RSA + PKCS#1 v1.5</td>
+            <td>私钥签 / 公钥验</td>
+            <td class="ok">OIDC / OAuth 默认 · 兼容性最好</td>
+          </tr>
+          <tr>
+            <td>PS256 / 384 / 512</td>
+            <td>非对称签名</td>
+            <td>RSA-PSS</td>
+            <td>私钥签 / 公钥验</td>
+            <td>新项目优先于 RS · 概率性签名更安全</td>
+          </tr>
+          <tr>
+            <td>ES256 / 384 / 512</td>
+            <td>非对称签名</td>
+            <td>ECDSA (P-256/384/521)</td>
+            <td>私钥签 / 公钥验</td>
+            <td class="ok">空间敏感场景 · 签名只有 64 字节</td>
+          </tr>
+          <tr>
+            <td>EdDSA</td>
+            <td>非对称签名</td>
+            <td>Ed25519 (默认)</td>
+            <td>私钥签 / 公钥验</td>
+            <td class="ok">新建私有协议首选 · 难误用 · 最快</td>
+          </tr>
+          <tr>
+            <td class="bad">none</td>
+            <td>无</td>
+            <td>不签名</td>
+            <td>无</td>
+            <td class="bad">不许在生产出现 · Day 07 会讲攻击</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">五种算法的体积与速度</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>算法</th>
+          <th>密钥大小</th>
+          <th>签名大小</th>
+          <th>签名速度</th>
+          <th>验证速度</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>HS256</td><td>≥ 32 字节</td><td>32 字节</td><td class="ok">极快</td><td class="ok">极快</td></tr>
+          <tr><td>RS256 (2048)</td><td>~270 字节 (pub)</td><td>256 字节</td><td>慢</td><td>较快</td></tr>
+          <tr><td>PS256 (2048)</td><td>~270 字节 (pub)</td><td>256 字节</td><td>慢</td><td>较快</td></tr>
+          <tr><td>ES256 (P-256)</td><td>~65 字节 (pub)</td><td>64 字节</td><td class="ok">中等</td><td class="ok">中等</td></tr>
+          <tr><td>EdDSA (Ed25519)</td><td>32 字节 (pub)</td><td>64 字节</td><td class="ok">很快</td><td class="ok">很快</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="specbox">
+      <strong>选型决策树</strong>
+      <em>(1)</em> 单服务自己签自己验 (Session 替代品)? — 用 <code class="inline">HS256</code>, 简单足够;
+      <em>(2)</em> 需要分发公钥给三方验证 (OIDC ID Token / OAuth Access Token)? — 用 <code class="inline">RS256</code> 兼容性最好, 新项目推 <code class="inline">PS256</code> 或 <code class="inline">ES256</code>;
+      <em>(3)</em> 完全自有协议 + 想要现代化? — 用 <code class="inline">EdDSA</code>(Ed25519), 又快又难误用;
+      <em>(4)</em> JWT 经常在 HTTP Header 里跑, 在意体积? — 优先 <code class="inline">ES256</code> 或 <code class="inline">EdDSA</code>,
+      RS256 签名 256 字节, JWT 总长可能突破 1KB。
+    </div>
+
+    <h3 style="margin-top:32px;">Go 实战 · 用 golang-jwt 签发与验证</h3>
+<pre class="code"><span class="comment">// HS256 — 自签自验</span>
+<span class="prompt">$</span> go get github.com/golang-jwt/jwt/v5
+
+<span class="k">import</span> <span class="s">"github.com/golang-jwt/jwt/v5"</span>
+
+<span class="k">var</span> secret = []<span class="k">byte</span>(<span class="s">"my-secret-at-least-32-bytes-long!!"</span>)
+
+<span class="k">func</span> signHS256() <span class="k">string</span> {
+    claims := jwt.MapClaims{
+        <span class="s">"iss"</span>: <span class="s">"my-service"</span>,
+        <span class="s">"sub"</span>: <span class="s">"42"</span>,
+        <span class="s">"aud"</span>: <span class="s">"api.example.com"</span>,
+        <span class="s">"exp"</span>: time.Now().Add(15 * time.Minute).Unix(),
+        <span class="s">"iat"</span>: time.Now().Unix(),
+        <span class="s">"jti"</span>: uuid.NewString(),
+    }
+    tok := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    signed, _ := tok.SignedString(secret)
+    <span class="k">return</span> signed
+}
+
+<span class="k">func</span> verifyHS256(s <span class="k">string</span>) (jwt.MapClaims, <span class="k">error</span>) {
+    tok, err := jwt.Parse(s, <span class="k">func</span>(t *jwt.Token) (<span class="k">any</span>, <span class="k">error</span>) {
+        <span class="comment">// 关键: 显式锁死算法, 不要"兼容多算法"</span>
+        <span class="hl">if t.Method.Alg() != "HS256" {</span>
+            <span class="k">return</span> <span class="k">nil</span>, errors.New(<span class="s">"unexpected alg"</span>)
+        }
+        <span class="k">return</span> secret, <span class="k">nil</span>
+    },
+        jwt.WithIssuer(<span class="s">"my-service"</span>),
+        jwt.WithAudience(<span class="s">"api.example.com"</span>),
+        jwt.WithExpirationRequired(),
+    )
+    <span class="k">if</span> err != <span class="k">nil</span> || !tok.Valid {
+        <span class="k">return</span> <span class="k">nil</span>, err
+    }
+    <span class="k">return</span> tok.Claims.(jwt.MapClaims), <span class="k">nil</span>
+}</pre>
+
+<pre class="code"><span class="comment">// RS256 — 私钥签发 / 公钥验证</span>
+<span class="k">import</span> (
+    <span class="s">"crypto/rsa"</span>
+    <span class="s">"github.com/golang-jwt/jwt/v5"</span>
+)
+
+<span class="k">var</span> (
+    privateKey *rsa.PrivateKey  <span class="comment">// 从 PEM 加载, openssl genrsa -out k.pem 2048</span>
+    publicKey  *rsa.PublicKey   <span class="comment">// 同一密钥对的公钥</span>
+)
+
+<span class="k">func</span> signRS256() <span class="k">string</span> {
+    claims := jwt.MapClaims{<span class="s">"sub"</span>: <span class="s">"42"</span>, <span class="s">"exp"</span>: time.Now().Add(1 * time.Hour).Unix()}
+    tok := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+    <span class="comment">// 加 kid, 验证方据此到 JWKS 里查公钥</span>
+    tok.Header[<span class="s">"kid"</span>] = <span class="s">"2026-05-key"</span>
+    signed, _ := tok.SignedString(privateKey)
+    <span class="k">return</span> signed
+}
+
+<span class="k">func</span> verifyRS256(s <span class="k">string</span>) (jwt.MapClaims, <span class="k">error</span>) {
+    tok, err := jwt.Parse(s, <span class="k">func</span>(t *jwt.Token) (<span class="k">any</span>, <span class="k">error</span>) {
+        <span class="hl">if _, ok := t.Method.(*jwt.SigningMethodRSA); !ok {</span>
+            <span class="k">return</span> <span class="k">nil</span>, errors.New(<span class="s">"unexpected alg"</span>)
+        }
+        <span class="comment">// 实际场景: 根据 t.Header["kid"] 从 JWKS 里取对应公钥</span>
+        <span class="k">return</span> publicKey, <span class="k">nil</span>
+    })
+    <span class="k">if</span> err != <span class="k">nil</span> || !tok.Valid {
+        <span class="k">return</span> <span class="k">nil</span>, err
+    }
+    <span class="k">return</span> tok.Claims.(jwt.MapClaims), <span class="k">nil</span>
+}</pre>
+
+    <div class="annot">关键防御: <code class="inline">jwt.Parse</code> 的 keyFunc 里必须<strong>显式校验</strong> <code class="inline">t.Method.Alg()</code>——这是防 Day 07 alg 混淆攻击的第一道闸门</div>
+  </div>
+</section>
+
+<!-- ========== 04. 标准声明 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 ·</div>
+    <h2>标准声明: iss / sub / aud / exp / nbf / iat / jti</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      JWT 的 Payload 是 <em>任意 JSON</em>, 但 RFC 7519 §4.1 预定义了 <strong>七个"标准声明"</strong>——
+      这些字段被业界一致约定语义, 库和服务都默认认得。
+      用对它们, 你的 JWT 跟全世界互通; 用错或不用, 验证时各种边界 case 自己重新发明轮子。
+    </p>
+
+    <h3>七个标准声明</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>声明</th>
+          <th>全名</th>
+          <th>类型</th>
+          <th>含义 / 用法</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">iss</td>
+            <td>Issuer</td>
+            <td>string</td>
+            <td><strong>谁签发的</strong> · 通常是 AS 的 URL (如 <code class="inline">https://auth.example.com</code>) · 验证方 must match</td>
+          </tr>
+          <tr>
+            <td class="mono">sub</td>
+            <td>Subject</td>
+            <td>string</td>
+            <td><strong>这个 token 代表谁</strong> · 通常是 user_id · 在 iss 范围内必须唯一</td>
+          </tr>
+          <tr>
+            <td class="mono">aud</td>
+            <td>Audience</td>
+            <td>string 或 string[]</td>
+            <td class="clay"><strong>给谁用的</strong> · 资源服务器拿到必须检查 aud 包含自己 · 错过会导致 token 串用</td>
+          </tr>
+          <tr>
+            <td class="mono">exp</td>
+            <td>Expiration Time</td>
+            <td>NumericDate (秒)</td>
+            <td><strong>过期时间</strong> · 必填 · 验证方拒绝 now &gt; exp</td>
+          </tr>
+          <tr>
+            <td class="mono">nbf</td>
+            <td>Not Before</td>
+            <td>NumericDate</td>
+            <td>不早于此时间生效 · 可选 · 用于"延后激活"场景</td>
+          </tr>
+          <tr>
+            <td class="mono">iat</td>
+            <td>Issued At</td>
+            <td>NumericDate</td>
+            <td>签发时间 · 可选 · 审计 / "强制重新认证"判断用</td>
+          </tr>
+          <tr>
+            <td class="mono">jti</td>
+            <td>JWT ID</td>
+            <td>string</td>
+            <td>唯一 ID (UUID) · 用于<strong>防重放</strong> · 或加入吊销黑名单的 key</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="specbox">
+      <strong>aud 是最容易踩坑的字段</strong>
+      想象你有两个 API: <code class="inline">api.example.com</code> 和 <code class="inline">admin.example.com</code>,
+      都接受同一个 AS 签发的 JWT。
+      如果资源方不检查 <code class="inline">aud</code> ——
+      普通用户的 token (aud=api) 直接调 admin 也会被认成功!
+      <strong>每个资源服务器必须断言: 这张票的 aud 包含我自己</strong>。
+      OIDC ID Token 的 aud 是 client_id, OAuth Access Token 的 aud 是 RS 标识符——含义不同, 但都必须验。
+    </div>
+
+    <h3 style="margin-top:32px;">完整 Payload 范例</h3>
+<pre class="code">{
+  <span class="comment">// === 七个标准声明 ===</span>
+  <span class="s">"iss"</span>: <span class="s">"https://auth.example.com"</span>,
+  <span class="s">"sub"</span>: <span class="s">"user_42"</span>,
+  <span class="s">"aud"</span>: [<span class="s">"api.example.com"</span>, <span class="s">"open-api.example.com"</span>],  <span class="comment">// 可以多值</span>
+  <span class="s">"exp"</span>: 1727340800,
+  <span class="s">"nbf"</span>: 1727340000,
+  <span class="s">"iat"</span>: 1727340000,
+  <span class="s">"jti"</span>: <span class="s">"7f3c4a98-9b3a-4a32-9..."</span>,
+
+  <span class="comment">// === OIDC / OAuth 常见扩展 ===</span>
+  <span class="s">"scope"</span>: <span class="s">"openid profile contact:read"</span>,
+  <span class="s">"client_id"</span>: <span class="s">"app_3rd_party_abc"</span>,
+  <span class="s">"acr"</span>: <span class="s">"urn:mace:incommon:iap:silver"</span>,    <span class="comment">// MFA 强度等级 (Day 05)</span>
+  <span class="s">"amr"</span>: [<span class="s">"pwd"</span>, <span class="s">"otp"</span>],                     <span class="comment">// 用了哪些认证方法</span>
+
+  <span class="comment">// === 私有声明 — 业务自定义 ===</span>
+  <span class="s">"tenant"</span>: <span class="s">"acme-corp"</span>,
+  <span class="s">"plan"</span>: <span class="s">"pro"</span>
+}</pre>
+
+    <h3 style="margin-top:32px;">私有声明的命名约定</h3>
+    <p style="color:var(--g700); font-size:14.5px;">
+      Payload 是任意 JSON, 但 <strong>不要</strong> 用 <code class="inline">user_id</code> /
+      <code class="inline">email</code> 这种"裸名"——可能与未来标准化的声明冲突。
+      RFC 7519 §4.3 推荐用<em>命名空间式 URI</em> 作 key, 避免碰撞:
+    </p>
+
+<pre class="code">{
+  <span class="comment">// ✗ 反例 — 裸名易冲突</span>
+  <span class="s">"role"</span>: <span class="s">"admin"</span>,
+  <span class="s">"team"</span>: <span class="s">"backend"</span>,
+
+  <span class="comment">// ✓ 推荐 — URL 命名空间</span>
+  <span class="s">"https://example.com/role"</span>: <span class="s">"admin"</span>,
+  <span class="s">"https://example.com/team"</span>: <span class="s">"backend"</span>,
+
+  <span class="comment">// ✓ 简化 — 命名空间前缀</span>
+  <span class="s">"ex:role"</span>: <span class="s">"admin"</span>,
+  <span class="s">"ex:team"</span>: <span class="s">"backend"</span>
+}</pre>
+
+    <h3 style="margin-top:32px;">验证时机清单</h3>
+    <p style="color:var(--g700); font-size:14.5px;">
+      拿到一个 JWT 后, "验证"远不止"签名对不对"——以下七步缺一不可:
+    </p>
+    <ol class="review-list">
+      <li><strong>解析 Header</strong>, 取出 <code class="inline">alg</code> 和 <code class="inline">kid</code>。</li>
+      <li><strong>校验 alg</strong> 在允许的白名单内(<em>显式列出</em>, 不要"接受任何算法")。</li>
+      <li><strong>根据 kid 取对应公钥 / 密钥</strong>, 验证签名——签名错了立刻 reject。</li>
+      <li><strong>校验 exp</strong>: <code class="inline">now &lt; exp</code>(允许 30-60 秒时钟偏移)。</li>
+      <li><strong>校验 nbf</strong>(如果有): <code class="inline">now &gt;= nbf</code>。</li>
+      <li><strong>校验 iss</strong>: 必须匹配预期的签发者。</li>
+      <li><strong>校验 aud</strong>: 必须包含本服务的标识。</li>
+    </ol>
+
+    <div class="annot">golang-jwt v5 通过 <code class="inline">jwt.WithIssuer</code> / <code class="inline">WithAudience</code> / <code class="inline">WithExpirationRequired</code> 等选项把这些断言自动做掉; 但 <code class="inline">alg</code> 的白名单仍需要你在 keyFunc 里手写</div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">Q ·</div>
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">网上人云亦云"JWT 取代 Session", 我新项目应该用哪个?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>Day 01 Q1 已经给过答案, 这里再补一层"<strong>为什么场景决定选择</strong>":</p>
+            <p><strong>Session 适合</strong> · 浏览器登录态——你能完全控制服务端 + Redis, 可以即时吊销、随时改权限、踢出账号。用户登录后服务端发个 SID Cookie, 简单且最安全。</p>
+            <p><strong>JWT 适合</strong> · 跨服务的<em>授权凭证</em>——你签发的 token 要让其他服务 (甚至别的公司) 验证, 它们没法访问你的 Session Store。OAuth Access Token / OIDC ID Token 是典型场景, 必须用 JWT。</p>
+            <p>反过来想: 如果你的 token <em>只在自己服务里用</em>, 用 Session 几乎一定更好——吊销容易、不暴露 Claims、不用密钥轮换。如果 token <em>要给三方应用 / 跨服务用</em>, 才发挥 JWT 的价值。</p>
+            <p>开放平台的现实组合: <em>用户控制台</em>走 Session, <em>给三方应用的 Access Token</em>走 JWT。两者并存而非互斥。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">HS256 用一个共享密钥就能跑, 比 RS256 简单多了, 是不是用它就行?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>分场景:</p>
+            <p><strong>单服务自签自验</strong> · HS256 完全 OK · 速度快、密钥就放在配置里, 没必要为了"高级"用 RS256。</p>
+            <p><strong>多服务都要验</strong> · <strong>必须</strong> 用 RS / PS / ES / EdDSA。HMAC 是对称的, 验证方需要密钥 = 也能伪造 token。把签发权和验证权耦合在一起, 任何一个服务被攻破就等于全网沦陷。</p>
+            <p>典型反例: 后端服务签 HS256, 然后把密钥分发给前端 / SDK 让它"验证 token"。这等于<em>把签发权送出去</em>, 攻击者拿到 SDK 就能伪造任意 token。这种代码在新人代码里出现概率极高, code review 要警觉。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">Payload 里能不能放敏感信息, 比如手机号 / 邮箱 / 身份证?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p><strong>不能。</strong>JWS (普通 JWT) 的 Payload 是 base64url, 不是加密——任何持有 token 的人都能裸眼解码看到所有字段。</p>
+            <p>所以原则: Payload 里只放<em>不介意被对方看到的、用来做授权决策的</em>信息——user_id、role、scope、exp 这些。<strong>不要</strong> 放手机号、邮箱、身份证、内部 user 系统的隐私字段。</p>
+            <p>需要这些字段时的正确做法: <em>(1)</em> JWT 里只放 user_id, 资源服务器拿到后回查自己的 DB 取详情; <em>(2)</em> OIDC 的 UserInfo 端点 (Day 17) 就是这个模式——ID Token 里只有基本 claims, 详细 profile 走另外的 API。</p>
+            <p>实在需要加密 JWT 的少数场景才用 JWE——但实现复杂、容易选错算法 · OWASP JWT Cheat Sheet 明确建议"能不用就不用 JWE"。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">exp 设多长合适? 5 分钟太短用户老掉线, 24 小时又怕泄露危险。</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>这正是<strong>双 token 模式</strong>要解决的问题:</p>
+            <p><em>Access Token</em> · 短命 (5-15 分钟), 用于实际调 API · 泄露窗口很小。</p>
+            <p><em>Refresh Token</em> · 长命 (7-30 天), 仅用于换发新 Access Token · 永不进入 API 调用, 只跟 AS 通信。</p>
+            <p>Day 09 实战会展开。基本经验数:</p>
+            <p>· <strong>高安全场景</strong> (银行 / 管理后台): Access 5 分钟, Refresh 1-2 天</p>
+            <p>· <strong>普通 SaaS</strong>: Access 15 分钟, Refresh 7-14 天</p>
+            <p>· <strong>开放平台三方应用</strong>: Access 1-2 小时, Refresh 30-90 天</p>
+            <p>关键点: <em>无论多长, Refresh Token 都要 Rotation</em>——每次刷新都签发新 Refresh 并废弃旧的, 这样旧 token 被攻击者偷走也只有一次性的窗口。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">同一个 JWT 同时给多个服务用, aud 写多值可以吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p><strong>规范允许, 但工程上建议<em>不</em>这么做</strong>。</p>
+            <p>RFC 7519 §4.1.3 明确说 aud 可以是 string 或 string array, 每个资源方校验时只需检查"我的标识符在 aud 列表里"。从协议上没有问题。</p>
+            <p>但实战上, "一张 token 多服务用"违反<strong>最小权限原则</strong>: API A 拿到的 token 同样能调 API B, 一旦 A 被攻破就同时丢失对 B 的访问控制。</p>
+            <p>更好的模式: <em>(1)</em> 用 OAuth 2.0 的 <strong>Token Exchange (RFC 8693)</strong>——拿一个总 token 去换不同 aud 的子 token; <em>(2)</em> 或者各 RS 各自获取独立 token, 通过 scope 区分。Day 13 会展开 Token Exchange 的细节。</p>
+            <p>aud 多值的合法用途主要是: <em>OIDC 场景里 ID Token 同时被前端和后端用</em>, 此时多值确实是最简单的选择。其他场景能避免就避免。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">R ·</div>
+    <h2>复盘问题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review-list">
+      <li>用 30 秒讲清 JWT 三段结构, 以及为什么用 base64url 而不是标准 base64。</li>
+      <li>RFC 7515 / 7516 / 7517 / 7518 / 7519 各自定义什么? "JOSE" 是什么意思?</li>
+      <li>HS256 / RS256 / ES256 / EdDSA 四种算法的关键区别——密钥模型、体积、何时该选?</li>
+      <li>七个标准声明分别是什么? 资源服务器收到 JWT 必须校验哪几个?</li>
+      <li>动手用标准库 (不要用 golang-jwt) 写一段代码: 输入 header / payload / secret, 输出一个合法的 HS256 JWT。验证: 用 <code class="inline">jwt.io</code> 能解码成功。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">✓ ·</div>
+    <h2>今日检查清单</h2>
+    <div class="count">8 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>能拿一个真实 JWT, 用 <code class="inline">base64url</code> 解码出 Header / Payload 的内容</li>
+        <li>能讲清 base64url 与标准 base64 的差异 (字符替换 + 去填充)</li>
+        <li>能给同事画出 JWS / JWE / JWK / JWA / JWT 的关系图</li>
+        <li>能为"单服务 / 跨服务 / 体积敏感 / 现代化新建" 4 种场景各推荐一个签名算法</li>
+        <li>能列出七个标准声明的全名与含义, 并讲清 aud 错过会出什么事</li>
+        <li>跑通 Lab: 用标准库手撕一个 HS256 JWT, 在 jwt.io 验证签名通过</li>
+        <li>跑通 Lab: 用 golang-jwt 签发 + 验证 RS256 JWT, keyFunc 里显式锁死算法</li>
+        <li>读完 RFC 7519 §4 (Claims) 与 RFC 7515 §3 (JWS Compact Serialization)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">📖 ·</div>
+    <h2>推荐阅读</h2>
+    <div class="count">5 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">MUST READ · §4 + §7</div>
+        <h3>RFC 7519 · JSON Web Token</h3>
+        <p>JWT 的总规范, 30 页。§4 标准声明 + §7 验证流程是工程师每隔半年应该重读的两节, 比任何博客都准确。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">MUST READ · §3</div>
+        <h3>RFC 7515 · JSON Web Signature</h3>
+        <p>JWS 的细节规范。§3 Compact Serialization 解释了三段结构的精确格式; §10 是安全考虑, 列出常见误用。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">RFC · 算法字典</div>
+        <h3>RFC 7518 · JSON Web Algorithms</h3>
+        <p>所有 alg 值的官方定义 (HS256 / RS256 / ES256 / EdDSA...) · 想知道某个算法标识的精确含义, 来这里查。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">TOOL · 调试必备</div>
+        <h3>jwt.io · Debugger</h3>
+        <p>JWT 调试器的事实标准, Auth0 维护。可以粘贴 token 解出 Header / Payload, 输入 secret 验证签名。<strong>慎用线上 token</strong>——粘进去等于发给 Auth0。</p>
+      </div>
+      <div class="node">
+        <div class="tag">CHEAT SHEET</div>
+        <h3>OWASP JWT Cheat Sheet</h3>
+        <p>OWASP 出品, 1 页讲完 JWT 安全要点。Day 07 会大量引用——提前看一遍, Day 07 学攻击时会更顺。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">» ·</div>
+    <h2>Day 07 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">TOMORROW · DAY 07</div>
+      <h3>JWT 安全攻击与防御</h3>
+      <p>今天讲完了 JWT 的"正常用法", 明天专门讲它的"<strong>事故现场</strong>"——
+      <code class="inline">alg=none</code> 漏洞为什么让一行配置能让你的服务<em>接受任意未签名 token</em>;
+      <strong>alg 混淆攻击</strong>怎么让攻击者用你的<em>RSA 公钥</em>伪造出 HS256 签名;
+      <strong>kid 注入</strong>如何利用宽松的 keyFunc 把验证密钥指向攻击者控制的资源;
+      以及如何<em>真正</em>实现 JWT 吊销 (黑名单 vs 短期 + Rotation)。
+      看完 Day 07, 你能审阅团队的 JWT 中间件, 找出大概率存在的隐患。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"JWT 不是密码学的胜利, 是 base64url + 几条短小 RFC 的胜利——简单到极致的设计才能被全行业采用, 哪怕代价是 Day 07 那一长串的攻击面。"</p>
+  <p class="meta">DAY 06 · AUTHN / AUTHZ 30-DAY ROADMAP · PHASE 2 开篇</p>
+</footer>
+
+</div>
