@@ -1,0 +1,1270 @@
+---
+title: "Day 02 · 界面骨架与命令面板"
+date: '2026-05-24'
+draft: false
+description: "拆解 VSCode 的「五大件」—— Activity Bar / Side Bar / Editor / Panel / Status Bar 的边界与协作，以及命令面板 ⌘⇧P 的四种模式（> / @ / # / :）—— 老司机的唯一菜单。"
+toc: false
+tags:
+  - VSCode
+  - Tools
+  - Tutorial
+  - Day 02
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory); color:var(--slate);
+  font-family:var(--sans); font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.vscode-day02-wrap{
+  max-width:1120px; margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.vscode-day02-wrap .eyebrow{
+  font-family:var(--mono); font-size:12px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+}
+.vscode-day02-wrap .eyebrow::before{
+  content:""; display:inline-block;
+  width:24px; height:1.5px; background:var(--clay);
+  margin-right:12px; vertical-align:middle;
+}
+.vscode-day02-wrap h1{
+  font-family:var(--serif); font-weight:500;
+  font-size:clamp(36px, 5.2vw, 58px);
+  letter-spacing:-0.018em; line-height:1.08;
+  max-width:18ch; margin: 22px 0 30px; color:var(--slate);
+}
+.vscode-day02-wrap h1 em{ font-style:italic; color:var(--clay); }
+.vscode-day02-wrap h2{
+  font-family:var(--serif); font-weight:500;
+  font-size:27px; letter-spacing:-0.012em;
+  margin:0; color:var(--slate);
+}
+.vscode-day02-wrap h3{
+  font-family:var(--serif); font-weight:500;
+  font-size:19px; letter-spacing:-0.008em;
+  margin:0 0 10px; color:var(--slate);
+}
+.vscode-day02-wrap .lede{
+  font-size:16.5px; color:var(--g700);
+  max-width:62ch; margin:0 0 32px; line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.vscode-day02-wrap header.masthead{ padding: 80px 0 56px; }
+.vscode-day02-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono); font-size:11.5px;
+  color:var(--g500); letter-spacing:.06em; text-transform:uppercase;
+}
+.vscode-day02-wrap .meta-strip strong{
+  color:var(--slate); font-weight:600; margin-right:6px;
+}
+
+/* ========== Section ========== */
+.vscode-day02-wrap section{ margin-top:72px; }
+.vscode-day02-wrap .indent{ margin-left:50px; }
+
+.vscode-day02-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px; margin-bottom:28px;
+}
+.vscode-day02-wrap .sec-head .num{
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.12em; font-weight:600; width:38px; flex-shrink:0;
+}
+.vscode-day02-wrap .sec-head .count{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  padding:3px 12px; background:var(--g100); border-radius:999px;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ========== Mind Map / Arch Diagram ========== */
+.vscode-day02-wrap .mindmap,
+.vscode-day02-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+}
+.vscode-day02-wrap .mindmap svg,
+.vscode-day02-wrap .archdiag svg{
+  display:block; margin:0 auto; max-width:100%; height:auto;
+}
+.vscode-day02-wrap .mindmap-cap,
+.vscode-day02-wrap .archdiag-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Card Grid ========== */
+.vscode-day02-wrap .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.vscode-day02-wrap .grid-2{ grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.vscode-day02-wrap .grid-3{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* ========== Node Card ========== */
+.vscode-day02-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.vscode-day02-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.vscode-day02-wrap .node.accent{ border-color:var(--clay); }
+.vscode-day02-wrap .node.entry { background:var(--g100); }
+.vscode-day02-wrap .node.exit  { background:var(--oat); border-color:var(--clay); }
+.vscode-day02-wrap .node.dark  {
+  background:var(--slate); border-color:var(--slate); color:var(--ivory);
+}
+.vscode-day02-wrap .node.dark .tag{ color:var(--oat); }
+.vscode-day02-wrap .node.dark p{ color:var(--oat); }
+.vscode-day02-wrap .node.dark h3{ color:var(--ivory); }
+
+.vscode-day02-wrap .node .tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase;
+  margin-bottom:10px; font-weight:600;
+}
+.vscode-day02-wrap .node .tag.clay{ color:var(--clay); }
+.vscode-day02-wrap .node p{
+  font-size:13.5px; color:var(--g700); margin:6px 0 0; line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.vscode-day02-wrap .annot{
+  font-family:var(--mono); font-size:11.5px; color:var(--g500);
+  display:flex; align-items:flex-start;
+  margin-top:14px; letter-spacing:.04em;
+}
+.vscode-day02-wrap .annot::before{
+  content:""; width:32px; height:1.5px; background:var(--clay);
+  margin-right:12px; margin-top:8px; flex-shrink:0;
+}
+
+/* ========== Table ========== */
+.vscode-day02-wrap .table-wrap{ overflow-x:auto; }
+.vscode-day02-wrap table.compare{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+}
+.vscode-day02-wrap table.compare th,
+.vscode-day02-wrap table.compare td{
+  text-align:left; padding:14px 20px;
+  border-bottom:1px solid var(--g200); vertical-align:top;
+}
+.vscode-day02-wrap table.compare th{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--g500); background:var(--g100);
+  border-bottom:1.5px solid var(--slate);
+}
+.vscode-day02-wrap table.compare td:first-child{
+  font-family:var(--serif); font-weight:500;
+  font-size:15px; width:22%; color:var(--slate);
+}
+.vscode-day02-wrap table.compare tr:last-child td{ border-bottom:none; }
+.vscode-day02-wrap table.compare .clay{ color:var(--clay-d); }
+
+/* ========== Code ========== */
+.vscode-day02-wrap pre.code{
+  background:var(--slate); color:var(--ivory);
+  font-family:var(--mono); font-size:12.5px;
+  padding:20px 24px; border-radius:10px;
+  overflow-x:auto; line-height:1.65; margin:18px 0;
+}
+.vscode-day02-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.vscode-day02-wrap pre.code .k{ color:var(--clay); }
+.vscode-day02-wrap pre.code .s{ color:var(--olive); }
+.vscode-day02-wrap pre.code .t{ color:#7EC8E3; }
+.vscode-day02-wrap pre.code .n{ color:#C4B28A; }
+.vscode-day02-wrap pre.code .prompt{ color:var(--olive); }
+.vscode-day02-wrap pre.code .flag{ color:var(--clay); }
+.vscode-day02-wrap pre.code .comment{ color:var(--g500); font-style:italic; }
+.vscode-day02-wrap pre.code .output{ color:var(--oat); }
+
+.vscode-day02-wrap code.inline{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Checklist ========== */
+.vscode-day02-wrap .check{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px; padding:8px 24px;
+}
+.vscode-day02-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.vscode-day02-wrap .check li{
+  padding:14px 0 14px 36px; border-bottom:1px solid var(--g200);
+  position:relative; font-size:14.5px; color:var(--slate);
+}
+.vscode-day02-wrap .check li:last-child{ border-bottom:none; }
+.vscode-day02-wrap .check li::before{
+  content:""; position:absolute;
+  left:0; top:16px; width:18px; height:18px;
+  border:1.5px solid var(--g300); border-radius:4px; background:var(--paper);
+}
+
+/* ========== Review ========== */
+.vscode-day02-wrap .review-list{
+  counter-reset: q; margin:0; padding:0; list-style:none;
+}
+.vscode-day02-wrap .review-list li{
+  counter-increment: q; position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px; color:var(--g700);
+}
+.vscode-day02-wrap .review-list li:last-child{ border-bottom:none; }
+.vscode-day02-wrap .review-list li::before{
+  content: counter(q, decimal-leading-zero);
+  position:absolute; left:0; top:18px;
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.06em; font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.vscode-day02-wrap .qa-grid{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.vscode-day02-wrap .qa-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+  transition: border-color 150ms ease;
+}
+.vscode-day02-wrap .qa-card[open]{ border-color:var(--slate); }
+.vscode-day02-wrap .qa-card summary{
+  list-style:none; cursor:pointer;
+  padding:18px 24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition: background 150ms ease;
+}
+.vscode-day02-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.vscode-day02-wrap .qa-card summary::marker{ display:none; }
+.vscode-day02-wrap .qa-card summary:hover{ background:var(--g100); }
+.vscode-day02-wrap .qa-card[open] summary{
+  background:var(--g100); border-bottom:1px dashed var(--g300);
+}
+.vscode-day02-wrap .qa-num{
+  font-family:var(--mono); font-size:12px; color:var(--clay);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:3px;
+}
+.vscode-day02-wrap .qa-q{
+  font-family:var(--serif); font-size:16px; font-weight:500;
+  color:var(--slate); line-height:1.5; flex:1;
+}
+.vscode-day02-wrap .qa-toggle{
+  font-family:var(--mono); font-size:18px; color:var(--g500);
+  flex-shrink:0; font-weight:300; line-height:1; margin-top:2px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+.vscode-day02-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg); color:var(--clay);
+}
+.vscode-day02-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex; align-items:flex-start; gap:18px;
+}
+.vscode-day02-wrap .qa-a-label{
+  font-family:var(--mono); font-size:12px; color:var(--olive);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:2px;
+}
+.vscode-day02-wrap .qa-a-body{
+  flex:1; font-family:var(--sans); font-size:14.5px;
+  color:var(--g700); line-height:1.7;
+}
+.vscode-day02-wrap .qa-a-body p{ margin:0 0 10px; }
+.vscode-day02-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.vscode-day02-wrap .qa-a-body strong{
+  font-family:var(--serif); font-style:italic;
+  font-weight:500; color:var(--slate);
+}
+.vscode-day02-wrap .qa-a-body code{
+  font-family:var(--mono); font-size:13px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 5px; color:var(--clay-d);
+}
+
+/* ========== Keyboard ========== */
+.vscode-day02-wrap kbd{
+  font-family:var(--mono); font-size:11px; font-weight:600;
+  padding:2px 7px; border:1px solid var(--g300); border-bottom-width:2px;
+  border-radius:5px; background:var(--paper); color:var(--slate);
+  letter-spacing:.02em; vertical-align:1px;
+}
+
+/* ========== Mode Cards (命令面板四模式) ========== */
+.vscode-day02-wrap .mode-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; padding:24px 26px;
+  position:relative;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+.vscode-day02-wrap .mode-card:hover{
+  transform:translateY(-3px); border-color:var(--slate);
+}
+.vscode-day02-wrap .mode-card.accent{ border-color:var(--clay); }
+.vscode-day02-wrap .mode-card .mode-sigil{
+  font-family:var(--mono); font-weight:600;
+  font-size:32px; color:var(--clay);
+  line-height:1; margin-bottom:8px;
+  letter-spacing:-0.02em;
+}
+.vscode-day02-wrap .mode-card .mode-name{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; font-weight:600;
+  margin-bottom:14px;
+}
+.vscode-day02-wrap .mode-card h3{
+  font-size:17px; margin-bottom:8px;
+}
+.vscode-day02-wrap .mode-card .mode-eg{
+  font-family:var(--mono); font-size:12px;
+  background:var(--g100); border-radius:6px;
+  padding:8px 12px; margin-top:14px;
+  color:var(--clay-d);
+}
+
+/* ========== Footer ========== */
+.vscode-day02-wrap footer{
+  margin-top:100px; padding-top:40px;
+  border-top:1px solid var(--g200); text-align:center;
+}
+.vscode-day02-wrap footer .quote{
+  font-family:var(--serif); font-style:italic;
+  font-size:18px; color:var(--g700);
+  max-width:42ch; margin:0 auto; line-height:1.55;
+}
+.vscode-day02-wrap footer .meta{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px){
+  .vscode-day02-wrap{ padding:0 22px 90px; }
+  .vscode-day02-wrap .indent{ margin-left:0; }
+  .vscode-day02-wrap header.masthead{ padding:56px 0 40px; }
+  .vscode-day02-wrap section{ margin-top:56px; }
+  .vscode-day02-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .vscode-day02-wrap .archdiag{ padding:20px 12px; }
+  .vscode-day02-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .vscode-day02-wrap .qa-q{ font-size:14.5px; }
+  .vscode-day02-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="vscode-day02-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 02 · VSCODE ROADMAP · 21 DAYS</div>
+  <h1><em>五大件</em> 与一把万能钥匙</h1>
+  <p class="lede">
+    很多人用了一年 VSCode，还在用鼠标点菜单——这是「永远停在 60 分」的根本原因。
+    今天的目标是搞清两件事：
+    一是 VSCode 的<em style="font-style:italic;color:#B85C3E;">五大界面区域</em>各自的职责，让你不再「找不到面板」；
+    二是<em style="font-style:italic;color:#B85C3E;">命令面板的四种模式</em>，让你以后再也不打开菜单。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 60 min</span>
+    <span><strong>THEORY</strong> 25 min</span>
+    <span><strong>HANDS-ON</strong> 25 min</span>
+    <span><strong>REVIEW</strong> 10 min</span>
+    <span><strong>KEY HOTKEY</strong> ⌘⇧P</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">M ·</div>
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 02 思维导图">
+        <!-- 根节点 -->
+        <rect x="290" y="20" width="400" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 02 · 界面骨架 + 命令面板</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">ANATOMY · COMMAND · VIEW · PRACTICE</text>
+
+        <!-- 干线 -->
+        <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="858" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="122" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="106" x2="367" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="106" x2="613" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="106" x2="858" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- 四主题 -->
+        <rect x="32" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="122" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">01 · ANATOMY</text>
+        <text x="122" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">五大界面区域</text>
+
+        <rect x="277" y="132" width="180" height="56" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+        <text x="367" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · COMMAND</text>
+        <text x="367" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">命令面板四模式</text>
+
+        <rect x="523" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · VIEW</text>
+        <text x="613" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">视图切换与 Zen</text>
+
+        <rect x="768" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="858" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">04 · PRACTICE</text>
+        <text x="858" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">动手练习</text>
+
+        <!-- 子项 -->
+        <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Activity Bar</text>
+        <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Side Bar (Primary/Secondary)</text>
+        <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Editor Group</text>
+        <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Panel · Status Bar</text>
+
+        <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">&gt; 命令搜索</text>
+        <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">@ 当前文件符号</text>
+        <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A"># 工作区符号</text>
+        <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">: 跳行 / 空 = 文件</text>
+
+        <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">⌘B · ⌘J Side/Panel</text>
+        <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">⌘⇧E/F/G/D/X 视图</text>
+        <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Zen Mode</text>
+        <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">布局重排与还原</text>
+
+        <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">无鼠标 5 分钟</text>
+        <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">四模式速查</text>
+        <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">布局重排</text>
+        <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">绑定自定义快捷键</text>
+
+        <!-- deliverables -->
+        <line x1="32" y1="358" x2="948" y2="358" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="32" y="385" font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+
+        <rect x="32"  y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="142" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">界面五区域命名清楚</text>
+
+        <rect x="268" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="378" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">四种前缀肌肉记忆</text>
+
+        <rect x="504" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="614" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">自己的布局方案</text>
+
+        <rect x="740" y="398" width="200" height="34" rx="5"
+              fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="840" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">5 分钟无鼠标完成</text>
+      </svg>
+      <div class="mindmap-cap">FIG · Day 02 全景：解剖界面 → 学命令面板 → 玩视图切换 → 全键盘实操</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 01. 五大界面区域 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">01 ·</div>
+    <h2>界面解剖：五大区域</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      不管你用 VSCode 多少年，它的窗口永远由<em style="font-style:italic;color:#B85C3E;">五个区域</em>组成。
+      看似简单，但每一块都有自己的边界与最佳实践——
+      搞清「文件应该放哪、终端应该放哪、信息应该放哪」，工作流才不会乱。
+    </p>
+
+    <!-- 界面解剖 SVG -->
+    <div class="archdiag">
+      <svg viewBox="0 0 940 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VSCode 界面五区域示意">
+        <text x="470" y="28" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F" letter-spacing="2" font-weight="600">VSCODE WINDOW ANATOMY</text>
+
+        <!-- 窗口外框 -->
+        <rect x="40" y="50" width="860" height="380" rx="8"
+              fill="#FFFFFF" stroke="#141413" stroke-width="2"/>
+
+        <!-- 1. Activity Bar (最左窄条) -->
+        <rect x="40" y="50" width="48" height="380" rx="0"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="64" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#141413">📁</text>
+        <text x="64" y="110" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#141413">🔍</text>
+        <text x="64" y="140" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#141413">⎇</text>
+        <text x="64" y="170" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#141413">▶</text>
+        <text x="64" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#141413">⬚</text>
+
+        <!-- Activity Bar 标注 -->
+        <line x1="20" y1="125" x2="40" y2="125" stroke="#D97757" stroke-width="1.5"/>
+        <text x="18" y="129" text-anchor="end"
+              font-family="ui-monospace, Menlo, monospace" font-size="10"
+              fill="#D97757" letter-spacing="1" font-weight="600">①</text>
+        <text x="18" y="143" text-anchor="end"
+              font-family="ui-monospace, Menlo, monospace" font-size="9"
+              fill="#87867F" letter-spacing="1">ACTIVITY</text>
+
+        <!-- 2. Primary Side Bar -->
+        <rect x="88" y="50" width="180" height="380" rx="0"
+              fill="#FAF9F5" stroke="#141413" stroke-width="1.5"/>
+        <text x="100" y="78" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#87867F" letter-spacing="1" font-weight="600">EXPLORER</text>
+        <text x="100" y="100" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">▾ src</text>
+        <text x="112" y="118" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">▸ components</text>
+        <text x="112" y="136" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">▸ pages</text>
+        <text x="112" y="154" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">index.ts</text>
+        <text x="100" y="178" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">package.json</text>
+        <text x="100" y="196" font-family="system-ui, sans-serif" font-size="11" fill="#3D3D3A">README.md</text>
+
+        <!-- Side Bar 标注 -->
+        <line x1="178" y1="40" x2="178" y2="50" stroke="#D97757" stroke-width="1.5"/>
+        <text x="178" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10"
+              fill="#D97757" letter-spacing="1" font-weight="600">②</text>
+        <text x="178" y="20" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="9"
+              fill="#87867F" letter-spacing="1">SIDE BAR</text>
+
+        <!-- 3. Editor Group -->
+        <rect x="268" y="50" width="500" height="280" rx="0"
+              fill="#FFFFFF" stroke="#141413" stroke-width="1.5"/>
+        <!-- Editor tabs -->
+        <rect x="268" y="50" width="100" height="22" fill="#FAF9F5" stroke="#141413" stroke-width="1"/>
+        <text x="318" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#141413">index.ts ●</text>
+        <rect x="368" y="50" width="100" height="22" fill="#F0EEE6" stroke="#141413" stroke-width="1"/>
+        <text x="418" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#87867F">utils.ts</text>
+        <!-- Editor content -->
+        <text x="284" y="100" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#788C5D">// edit code here</text>
+        <text x="284" y="124" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#D97757">function</text>
+        <text x="350" y="124" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">main() {</text>
+        <text x="296" y="148" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">return </text>
+        <text x="350" y="148" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#788C5D">"hello"</text>
+        <text x="284" y="172" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">}</text>
+
+        <!-- Editor 标注 -->
+        <line x1="518" y1="40" x2="518" y2="50" stroke="#D97757" stroke-width="1.5"/>
+        <text x="518" y="32" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10"
+              fill="#D97757" letter-spacing="1" font-weight="600">③</text>
+        <text x="518" y="20" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="9"
+              fill="#87867F" letter-spacing="1">EDITOR GROUP</text>
+
+        <!-- 4. Panel (底部) -->
+        <rect x="268" y="330" width="500" height="80" rx="0"
+              fill="#F0EEE6" stroke="#141413" stroke-width="1.5"/>
+        <text x="284" y="350" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#D97757" letter-spacing="1" font-weight="600">TERMINAL · PROBLEMS · OUTPUT · DEBUG CONSOLE</text>
+        <text x="284" y="372" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#788C5D">$</text>
+        <text x="296" y="372" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">npm run dev</text>
+        <text x="284" y="390" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">▸ ready in 312ms</text>
+
+        <!-- Panel 标注 -->
+        <line x1="788" y1="370" x2="768" y2="370" stroke="#D97757" stroke-width="1.5"/>
+        <text x="800" y="365" font-family="ui-monospace, Menlo, monospace" font-size="10"
+              fill="#D97757" letter-spacing="1" font-weight="600">④</text>
+        <text x="800" y="383" font-family="ui-monospace, Menlo, monospace" font-size="9"
+              fill="#87867F" letter-spacing="1">PANEL</text>
+
+        <!-- 5. Secondary Side Bar (右侧可选) -->
+        <rect x="768" y="50" width="132" height="380" rx="0"
+              fill="#FAF9F5" stroke="#141413" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="834" y="78" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="9"
+              fill="#87867F" letter-spacing="1" font-weight="600">SECONDARY</text>
+        <text x="834" y="92" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="10" fill="#87867F">(可选 · 默认隐藏)</text>
+        <text x="834" y="124" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="10" fill="#87867F">用于放</text>
+        <text x="834" y="140" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="10" fill="#87867F">AI Chat / Outline</text>
+        <text x="834" y="156" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="10" fill="#87867F">第二份 Explorer</text>
+
+        <!-- 6. Status Bar (最下) -->
+        <rect x="40" y="410" width="860" height="20" rx="0"
+              fill="#E3DACC" stroke="#141413" stroke-width="1.5"/>
+        <text x="56" y="424" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#3D3D3A">⎇ main ↑1↓0</text>
+        <text x="160" y="424" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#3D3D3A">⚠ 0 ⓘ 0</text>
+        <text x="700" y="424" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#3D3D3A">Ln 12, Col 4</text>
+        <text x="780" y="424" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#3D3D3A">TypeScript</text>
+        <text x="860" y="424" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#3D3D3A">UTF-8</text>
+
+        <!-- Status 标注 -->
+        <line x1="470" y1="450" x2="470" y2="430" stroke="#D97757" stroke-width="1.5"/>
+        <text x="470" y="465" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10"
+              fill="#D97757" letter-spacing="1" font-weight="600">⑤ STATUS BAR</text>
+      </svg>
+      <div class="archdiag-cap">FIG · VSCode 窗口由五个区域组成（Secondary Side Bar 默认隐藏）</div>
+    </div>
+
+    <!-- 区域职责表 -->
+    <h3 style="margin-top:32px;">五区域职责对照</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>区域</th>
+          <th>职责</th>
+          <th>切换快捷键</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>① Activity Bar</td>
+            <td>视图切换条 — 文件、搜索、Git、调试、扩展、Account、Settings</td>
+            <td><code class="inline">⌘B</code> 显隐 Side Bar 时一起隐</td>
+          </tr>
+          <tr>
+            <td>② Side Bar</td>
+            <td>视图本体 — 显示 Activity Bar 选中那个图标对应的内容</td>
+            <td class="clay"><kbd>⌘B</kbd> 切显隐</td>
+          </tr>
+          <tr>
+            <td>③ Editor Group</td>
+            <td>核心 — 你 95% 的时间在这里。可分屏、可分组、可拖拽 tab</td>
+            <td><kbd>⌘1/2/3</kbd> 切组</td>
+          </tr>
+          <tr>
+            <td>④ Panel</td>
+            <td>横向工具区 — 终端、问题、输出、调试控制台</td>
+            <td class="clay"><kbd>⌘J</kbd> 切显隐 / <kbd>⌃`</kbd> 终端</td>
+          </tr>
+          <tr>
+            <td>⑤ Status Bar</td>
+            <td>状态条 — git 分支、错误数、行列、语言、编码、Sync 状态</td>
+            <td>点击任意项可触发对应命令</td>
+          </tr>
+          <tr>
+            <td>⑥ Secondary Side Bar</td>
+            <td>右侧副边栏 — 放 AI Chat / Outline / Timeline 等次级视图</td>
+            <td><kbd>⌘⌥B</kbd> 切显隐</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Activity Bar 五大视图快捷键 -->
+    <h3 style="margin-top:32px;">Activity Bar 五大视图快捷键</h3>
+    <div class="grid grid-3">
+      <div class="node entry">
+        <div class="tag">EXPLORER · ⌘⇧E</div>
+        <h3>文件浏览器</h3>
+        <p>最常驻视图。展示工作区目录树、打开的编辑器、Outline、Timeline。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">SEARCH · ⌘⇧F</div>
+        <h3>全文搜索</h3>
+        <p>跨整个工作区搜索 / 替换。支持正则、include / exclude glob。Day 06 详讲。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">SOURCE CONTROL · ⌘⇧G</div>
+        <h3>Git 源代码控制</h3>
+        <p>stage / commit / push、diff、blame、merge editor 都在这里。Day 11 详讲。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">RUN AND DEBUG · ⌘⇧D</div>
+        <h3>运行与调试</h3>
+        <p>断点列表、变量、调用栈、watch。配 launch.json 用。Day 14 详讲。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">EXTENSIONS · ⌘⇧X</div>
+        <h3>扩展市场</h3>
+        <p>装扩展、管理扩展、查推荐。命令行用 <code class="inline">code --install-extension</code> 也行。Day 16 详讲。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">REMOTE · 可选</div>
+        <h3>远程资源管理器</h3>
+        <p>装了 Remote-SSH / Containers 才会出现。Day 17 详讲。</p>
+      </div>
+    </div>
+    <div class="annot">规律：<kbd>⌘⇧</kbd> + 视图首字母 — Explorer/Find/Git/Debug/eXtensions</div>
+  </div>
+</section>
+
+<!-- ========== 02. 命令面板 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">02 ·</div>
+    <h2>命令面板：四模式速查</h2>
+    <div class="count">20 MIN · MOST IMPORTANT</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      <kbd>⌘⇧P</kbd>（Win/Linux：<kbd>Ctrl⇧P</kbd>）是 VSCode 的<em style="font-style:italic;color:#B85C3E;">唯一菜单</em>——
+      所有功能、所有扩展命令、所有设置入口都能通过它找到。
+      它能识别<em style="font-style:italic;color:#B85C3E;">四个前缀字符</em>，每个字符切换到一种搜索模式。
+      记住这四个前缀，你就再也不需要鼠标。
+    </p>
+
+    <!-- 四模式卡片 -->
+    <div class="grid grid-2">
+      <div class="mode-card accent">
+        <div class="mode-sigil">&gt;</div>
+        <div class="mode-name">COMMAND · 默认模式</div>
+        <h3>命令搜索</h3>
+        <p style="font-size:13.5px;color:var(--g700);margin:0;line-height:1.6;">
+          <kbd>⌘⇧P</kbd> 直接打开就是这个模式。模糊搜索任意命令——"Format Document"、"Toggle Word Wrap"、"Reload Window"……所有菜单项 + 所有扩展命令都在这里。
+        </p>
+        <div class="mode-eg">&gt; format document<br/>&gt; reload window<br/>&gt; preferences open user settings</div>
+      </div>
+
+      <div class="mode-card">
+        <div class="mode-sigil">（空）</div>
+        <div class="mode-name">QUICK OPEN · ⌘P</div>
+        <h3>文件搜索</h3>
+        <p style="font-size:13.5px;color:var(--g700);margin:0;line-height:1.6;">
+          没有前缀时（或直接按 <kbd>⌘P</kbd>），模糊搜索工作区内所有文件名。比鼠标点目录树快十倍。支持驼峰首字母匹配。
+        </p>
+        <div class="mode-eg">index<br/>UC ← 匹配 UserController.ts<br/>src/utils ← 路径片段也行</div>
+      </div>
+
+      <div class="mode-card">
+        <div class="mode-sigil">@</div>
+        <div class="mode-name">SYMBOL IN FILE · ⌘⇧O</div>
+        <h3>当前文件的符号</h3>
+        <p style="font-size:13.5px;color:var(--g700);margin:0;line-height:1.6;">
+          在当前文件内跳转到任意函数 / 类 / 变量。加 <code class="inline">:</code> 可以按类别分组（class、function、property……）。
+        </p>
+        <div class="mode-eg">@handleClick<br/>@: ← 按类别分组浏览</div>
+      </div>
+
+      <div class="mode-card">
+        <div class="mode-sigil">#</div>
+        <div class="mode-name">SYMBOL IN WORKSPACE · ⌘T</div>
+        <h3>整个工作区的符号</h3>
+        <p style="font-size:13.5px;color:var(--g700);margin:0;line-height:1.6;">
+          跨文件搜索符号。要求该语言安装了语言服务器（TypeScript / Python / Go 等都自带）。
+        </p>
+        <div class="mode-eg">#UserService<br/>#calculateTax</div>
+      </div>
+
+      <div class="mode-card">
+        <div class="mode-sigil">:</div>
+        <div class="mode-name">GO TO LINE · ⌃G</div>
+        <h3>跳到指定行</h3>
+        <p style="font-size:13.5px;color:var(--g700);margin:0;line-height:1.6;">
+          冒号 + 数字直接跳行。报错信息里的 "line 142" 可以一键定位。也可写 <code class="inline">:142:5</code> 跳到行列。
+        </p>
+        <div class="mode-eg">:142<br/>:142:5 ← 行 142 列 5</div>
+      </div>
+
+      <div class="mode-card">
+        <div class="mode-sigil">?</div>
+        <div class="mode-name">HELP</div>
+        <h3>查看所有前缀</h3>
+        <p style="font-size:13.5px;color:var(--g700);margin:0;line-height:1.6;">
+          忘了前缀？输入 <code class="inline">?</code>，VSCode 会列出所有可用的搜索模式与前缀。
+        </p>
+        <div class="mode-eg">? ← 显示全部前缀</div>
+      </div>
+    </div>
+
+    <!-- 命令面板进阶用法 -->
+    <h3 style="margin-top:36px;">三个进阶技巧</h3>
+    <div class="grid grid-3">
+      <div class="node">
+        <div class="tag">TIP 01</div>
+        <h3>查看命令对应的快捷键</h3>
+        <p>命令面板中每条命令右侧显示对应快捷键。看到一个常用命令没绑定？右侧齿轮直接绑。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">TIP 02</div>
+        <h3>最近用过的命令置顶</h3>
+        <p>VSCode 自动记住你最近的命令，下次 <kbd>⌘⇧P</kbd> 时优先显示——前几次用面板慢，越用越快。</p>
+      </div>
+      <div class="node">
+        <div class="tag">TIP 03</div>
+        <h3>当前位置 ⌘⇧P 不丢上下文</h3>
+        <p>面板里的命令作用于当前光标位置。例如先点光标到函数内 → <kbd>⌘⇧P</kbd> → "Go to Definition"。</p>
+      </div>
+    </div>
+
+    <!-- 五个最常用的命令 -->
+    <h3 style="margin-top:32px;">前 30 天最常用的 10 个命令</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>命令</th>
+          <th>用途</th>
+          <th>建议快捷键</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Reload Window</td>
+            <td>VSCode 卡了 / 扩展异常 / 设置不生效</td>
+            <td>已默认 <kbd>⌘⇧P</kbd> 后输入</td>
+          </tr>
+          <tr>
+            <td>Format Document</td>
+            <td>用 Prettier 等格式化整个文件</td>
+            <td class="clay"><kbd>⌥⇧F</kbd></td>
+          </tr>
+          <tr>
+            <td>Toggle Word Wrap</td>
+            <td>开关自动换行</td>
+            <td><kbd>⌥Z</kbd></td>
+          </tr>
+          <tr>
+            <td>Preferences: Open User Settings (JSON)</td>
+            <td>直接编辑 settings.json</td>
+            <td>无 — 记住名字即可</td>
+          </tr>
+          <tr>
+            <td>Preferences: Open Keyboard Shortcuts (JSON)</td>
+            <td>编辑 keybindings.json</td>
+            <td>无</td>
+          </tr>
+          <tr>
+            <td>Developer: Toggle Developer Tools</td>
+            <td>VSCode 本身是 Electron，能开 DevTools 调试扩展</td>
+            <td>无</td>
+          </tr>
+          <tr>
+            <td>Change Language Mode</td>
+            <td>当前文件按某语言高亮（无后缀文件常用）</td>
+            <td>点 Status Bar 右侧语言名也行</td>
+          </tr>
+          <tr>
+            <td>Toggle Zen Mode</td>
+            <td>全屏专注模式</td>
+            <td><kbd>⌘K Z</kbd></td>
+          </tr>
+          <tr>
+            <td>Workbench: Toggle Centered Layout</td>
+            <td>编辑器居中（外接大屏写文档舒服）</td>
+            <td>无</td>
+          </tr>
+          <tr>
+            <td>View: Open View</td>
+            <td>显示任意视图（包括扩展自带的）</td>
+            <td>无</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 03. 视图切换与 Zen ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">03 ·</div>
+    <h2>视图切换与布局</h2>
+    <div class="count">10 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      命令面板解决「找命令」，快捷键解决「频繁切换」。
+      下面这一小组快捷键值得花 5 分钟死记——之后每天都会用到几十次。
+    </p>
+
+    <h3>显隐切换三件套</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr>
+          <th>区域</th>
+          <th>快捷键</th>
+          <th>使用场景</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Primary Side Bar</td>
+            <td class="clay"><kbd>⌘B</kbd></td>
+            <td>专注写代码时收起，给 Editor 让位</td>
+          </tr>
+          <tr>
+            <td>Secondary Side Bar</td>
+            <td><kbd>⌘⌥B</kbd></td>
+            <td>需要 AI Chat / Outline 时打开</td>
+          </tr>
+          <tr>
+            <td>Panel（底部）</td>
+            <td class="clay"><kbd>⌘J</kbd></td>
+            <td>需要终端 / 看错误时打开</td>
+          </tr>
+          <tr>
+            <td>Terminal（直接打开）</td>
+            <td class="clay"><kbd>⌃`</kbd></td>
+            <td>一键开终端（不论 Panel 当前是哪个 tab）</td>
+          </tr>
+          <tr>
+            <td>Maximize Editor Group</td>
+            <td><kbd>⌘K Z</kbd></td>
+            <td>当前编辑器最大化（Zen Mode）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">布局重排（不用碰鼠标）</h3>
+<pre class="code"><span class="comment"># 命令面板常用布局命令</span>
+<span class="prompt">&gt;</span> View: Move Primary Side Bar Right     <span class="comment"># Side Bar 挪到右边</span>
+<span class="prompt">&gt;</span> View: Move Panel Left / Right / Bottom <span class="comment"># Panel 挪到任意一边</span>
+<span class="prompt">&gt;</span> View: Toggle Activity Bar Visibility   <span class="comment"># 隐藏左侧最窄的图标条</span>
+<span class="prompt">&gt;</span> View: Toggle Centered Layout           <span class="comment"># 编辑器居中（大屏写文档）</span>
+<span class="prompt">&gt;</span> View: Reset View Locations             <span class="comment"># 还原默认布局（手抖救星）</span>
+<span class="prompt">&gt;</span> Workbench: Customize Layout            <span class="comment"># 图形化布局调整向导</span></pre>
+
+    <h3 style="margin-top:32px;">编辑器分屏</h3>
+    <div class="grid grid-3">
+      <div class="node entry">
+        <div class="tag">⌘\</div>
+        <h3>右侧分屏</h3>
+        <p>当前文件复制到右侧组。对比两段代码、文档与代码并排时常用。</p>
+      </div>
+      <div class="node">
+        <div class="tag">⌘K ⌘\</div>
+        <h3>下方分屏</h3>
+        <p>纵向分屏。终端在底部时，编辑器上下分两块写。</p>
+      </div>
+      <div class="node">
+        <div class="tag">⌘1 / 2 / 3</div>
+        <h3>切换组</h3>
+        <p>有多个编辑器组时，按数字切换焦点。配合 <kbd>⌘P</kbd> 在不同组里打开不同文件。</p>
+      </div>
+      <div class="node">
+        <div class="tag">⌘W</div>
+        <h3>关闭当前编辑器</h3>
+        <p>关闭一个 tab（不是窗口）。配合 <kbd>⌘⇧T</kbd> 撤回最近关闭的 tab。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">⌘K W</div>
+        <h3>关闭组内所有 tab</h3>
+        <p>清空当前编辑器组的所有 tab。开多了想重新组织时用。</p>
+      </div>
+      <div class="node">
+        <div class="tag">⌘⇧T</div>
+        <h3>恢复关闭的 tab</h3>
+        <p>类似浏览器 <kbd>⌘⇧T</kbd>。手滑关错文件时的救命快捷键。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 04. 动手练习 ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 ·</div>
+    <h2>动手练习</h2>
+    <div class="count">25 MIN · 3 LABS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      今天的练习<em style="font-style:italic;color:#B85C3E;">完全禁用鼠标</em>（除非快捷键找不到）——
+      逼自己把今天讲的快捷键全用一遍。三个 Lab 各对应一个目标：命令面板、布局重排、快捷键绑定。
+    </p>
+
+    <h3>Lab 1 — 5 分钟无鼠标挑战</h3>
+    <p style="color:var(--g700);">
+      在 Day 01 创建的 <code class="inline">~/vscode-day01</code> 目录里，完全用键盘完成下面 8 件事。计时 5 分钟。
+    </p>
+<pre class="code"><span class="comment"># 在终端里准备好</span>
+<span class="prompt">$</span> <span class="k">cd</span> ~/vscode-day01 <span class="flag">&amp;&amp;</span> code .
+
+<span class="comment"># 接下来全程键盘 ↓</span></pre>
+    <ol style="color:var(--g700); line-height:1.85;">
+      <li>用 <kbd>⌘P</kbd> 打开 <code class="inline">src/index.js</code></li>
+      <li>用 <kbd>⌘⇧O</kbd> 看当前文件有哪些符号</li>
+      <li>用 <kbd>:5</kbd>（即在 Quick Open 输入 <code class="inline">:5</code>）跳到第 5 行</li>
+      <li>用 <kbd>⌘B</kbd> 收起 Side Bar，再 <kbd>⌘B</kbd> 展开</li>
+      <li>用 <kbd>⌃`</kbd> 开终端，执行 <code class="inline">node src/index.js</code>，看到输出</li>
+      <li>用 <kbd>⌘J</kbd> 收起 Panel</li>
+      <li>用 <kbd>⌘\</kbd> 把当前文件复制到右侧分屏</li>
+      <li>用 <kbd>⌘K Z</kbd> 进 Zen Mode，再按 Esc Esc 退出</li>
+    </ol>
+    <div class="annot">能在 3 分钟内完成 = 良好；5 分钟 = 合格；超过 = 明天再练一次</div>
+
+    <h3 style="margin-top:32px;">Lab 2 — 设计你的布局</h3>
+    <p style="color:var(--g700);">
+      默认布局是给 99 分人设计的。你是那个 1 分——花 5 分钟摆一个属于自己的。
+    </p>
+    <ol style="color:var(--g700); line-height:1.85;">
+      <li>命令面板 → <code class="inline">View: Move Primary Side Bar Right</code> — 文件树挪到右边（左撇子或大屏党会喜欢）</li>
+      <li>命令面板 → <code class="inline">View: Move Panel Right</code> — 终端挪到右侧（外接超宽屏时巨爽）</li>
+      <li>命令面板 → <code class="inline">View: Toggle Activity Bar Visibility</code> — 隐藏最左侧图标条（用 <kbd>⌘⇧E/F/G/D/X</kbd> 切视图代替）</li>
+      <li>命令面板 → <code class="inline">View: Toggle Centered Layout</code> — 编辑器居中（写 Markdown / 看代码时舒服）</li>
+      <li>觉得不对 → <code class="inline">View: Reset View Locations</code> 一键还原</li>
+    </ol>
+    <p style="color:var(--g700); margin-top:12px;"><strong>预期观察：</strong>你会发现自己原本默认接受的"默认"其实并不是唯一选择。挑一个你觉得最顺手的留下来。</p>
+
+    <h3 style="margin-top:32px;">Lab 3 — 给「Reveal in File Explorer」绑快捷键</h3>
+    <p style="color:var(--g700);">
+      "Reveal in File Explorer/Finder" 是个高频但默认没绑快捷键的命令——把当前文件在系统文件管理器里打开。今天学的命令面板就是为了让你能 1 分钟内给它绑上。
+    </p>
+    <ol style="color:var(--g700); line-height:1.85;">
+      <li><kbd>⌘⇧P</kbd> → 输入 <code class="inline">Preferences: Open Keyboard Shortcuts</code>（不是 JSON 版）</li>
+      <li>在搜索框输入 <code class="inline">reveal in</code></li>
+      <li>找到 <strong>Reveal in Finder</strong>（macOS）/ <strong>Reveal in File Explorer</strong>（Win/Linux）</li>
+      <li>双击该行（或点左侧 + 图标）</li>
+      <li>按下你想绑的快捷键，比如 <kbd>⌘⌥R</kbd>，回车保存</li>
+      <li>打开任意文件，按你绑的快捷键 → 系统文件管理器应该打开并定位到该文件</li>
+    </ol>
+    <div class="annot">这是「命令面板 → 快捷键」工作流的核心——遇到任何高频命令都可以走这条链路</div>
+
+    <div class="grid grid-2" style="margin-top:24px;">
+      <div class="node entry">
+        <div class="tag">REFLECTION</div>
+        <h3>三个 Lab 的共性</h3>
+        <p>都在用<strong>键盘 + 命令面板</strong>替代鼠标 + 菜单。一旦养成习惯，你会发现 VSCode 的「界面」其实只是「快捷键的可视化提示」。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">CHALLENGE</div>
+        <h3>附加挑战</h3>
+        <p>把 <code class="inline">View: Toggle Centered Layout</code> 也绑一个快捷键（比如 <kbd>⌘K L</kbd>）。这是 chord 快捷键的写法，明天的 Day 03 会详细讲多键组合。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">Q ·</div>
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">命令面板（⌘⇧P）和 Quick Open（⌘P）到底有什么区别？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>本质是<strong>同一个</strong>对话框，只是<strong>默认前缀不同</strong>。<code>⌘P</code> 打开时输入框是空的，相当于「文件搜索」模式；<code>⌘⇧P</code> 打开时输入框预填了 <code>&gt;</code>，相当于「命令搜索」模式。所以打开后手动改前缀，两个快捷键能互相切换。记住一个 <code>⌘⇧P</code> 也够用——打开后输入 <code>?</code> 看所有可用前缀。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">怎么把 Side Bar 永久挪到右边？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>命令面板 → <code>View: Move Primary Side Bar Right</code>。VSCode 会记住这个布局，下次启动还在右边。如果你想用 settings.json 持久化，对应键是 <code>"workbench.sideBar.location": "right"</code>。<strong>建议这么做的人</strong>：大屏右利手——因为眼睛重心在左，左眼角余光看文件树会分散注意力。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">能完全隐藏 Activity Bar 吗？我嫌它占地方。</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>能。命令面板 → <code>View: Toggle Activity Bar Visibility</code>，或在 settings.json 加 <code>"workbench.activityBar.location": "hidden"</code>。<strong>前提是你已经记熟视图快捷键</strong>——Explorer <kbd>⌘⇧E</kbd>、Search <kbd>⌘⇧F</kbd>、Git <kbd>⌘⇧G</kbd>、Debug <kbd>⌘⇧D</kbd>、Extensions <kbd>⌘⇧X</kbd>。否则隐藏后你连入口都找不到。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">想找一个功能，但又不知道它叫什么命令，怎么办？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>这正是命令面板模糊搜索擅长的——<strong>用英文关键词</strong>多试几个。比如想要"自动换行"，搜 <code>wrap</code> 能找到 <strong>Toggle Word Wrap</strong>；想要"启动开发服务器"，搜 <code>task</code> 或 <code>run</code>。VSCode 命令名遵循 <code>类别: 动作</code> 格式（如 <code>View: Toggle ...</code>、<code>Preferences: Open ...</code>），熟悉这个规律后猜中率会越来越高。还是猜不到？官方文档有 <strong>Default Keybindings JSON</strong> 列出全部命令名，可以浏览一遍。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">Quick Open（⌘P）能搜文件夹吗？为什么我搜目录名不出来？</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>Quick Open 默认只搜<strong>文件</strong>。但你可以输入<strong>路径片段</strong>—— 比如想找 <code>src/components/Button/index.tsx</code>，可以输入 <code>components/index</code> 同时匹配「目录名片段 + 文件名片段」。如果真的想列出某个目录的所有文件，更直接的做法是用 <kbd>⌘⇧E</kbd> 打开 Explorer，用方向键浏览；或者在 Search 视图（<kbd>⌘⇧F</kbd>）里用 <strong>files to include</strong> glob 限定目录。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">R ·</div>
+    <h2>复盘问题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review-list">
+      <li>说出 VSCode 五大界面区域的名字与它们各自的核心职责。</li>
+      <li>命令面板的四个前缀 <code class="inline">&gt;</code> / <code class="inline">@</code> / <code class="inline">#</code> / <code class="inline">:</code> 分别对应什么搜索模式？空前缀又是什么？</li>
+      <li><kbd>⌘P</kbd> 和 <kbd>⌘⇧P</kbd> 的本质区别是什么？只记一个的话该记哪个？</li>
+      <li>如何在不点鼠标的情况下，把当前文件复制到右侧分屏，再切回左边？</li>
+      <li>"Reveal in Finder" 这个命令你绑了什么快捷键？为什么是它？</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">✓ ·</div>
+    <h2>今日检查清单</h2>
+    <div class="count">8 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>能说出 Activity Bar / Side Bar / Editor Group / Panel / Status Bar 的中文与英文名</li>
+        <li>知道 <kbd>⌘B</kbd> 切 Side Bar、<kbd>⌘J</kbd> 切 Panel、<kbd>⌃`</kbd> 直接开终端</li>
+        <li>能用 <kbd>⌘⇧E/F/G/D/X</kbd> 切到五大视图</li>
+        <li>记熟命令面板的 4 个前缀（<code class="inline">&gt; @ # :</code>）+ 空前缀（文件搜索）</li>
+        <li>完成 Lab 1：5 分钟无鼠标完成 8 个动作</li>
+        <li>完成 Lab 2：调整了至少一项布局（Side Bar 位置 / Panel 位置 / Centered Layout）</li>
+        <li>完成 Lab 3：给 "Reveal in Finder/File Explorer" 绑了快捷键</li>
+        <li>能在不查文档的情况下答出复盘 5 问</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">📖 ·</div>
+    <h2>推荐阅读</h2>
+    <div class="count">3 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-3">
+      <div class="node entry">
+        <div class="tag">OFFICIAL</div>
+        <h3>User Interface</h3>
+        <p>官方界面文档。今天讲的五大件名字与所有可调位置都来自这里。建议作为词汇表收藏。</p>
+      </div>
+      <div class="node">
+        <div class="tag">OFFICIAL</div>
+        <h3>Quick Open · Command Palette</h3>
+        <p>命令面板的官方权威说明。包括所有前缀、扩展可注册命令的机制等。</p>
+      </div>
+      <div class="node">
+        <div class="tag">CHEATSHEET</div>
+        <h3>Keyboard Shortcuts Reference (PDF)</h3>
+        <p>官方 macOS / Windows / Linux 三套 PDF。打印贴在显示器旁，21 天后大半你都背得出来。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <div class="num">» ·</div>
+    <h2>Day 03 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">COMING NEXT</div>
+      <h3>设置三层与 Settings Sync — User · Workspace · Folder 的优先级</h3>
+      <p>明天会讲 VSCode 配置的「三层架构」：User 全局设置、Workspace 工作区设置、Folder 文件夹设置——以及它们如何按优先级覆盖。会教你直接编辑 <code class="inline">settings.json</code> 而不是用 UI、把项目特化的设置放进 <code class="inline">.vscode/settings.json</code> commit 给团队、以及怎么用 <code class="inline">@modified</code> 过滤器审视自己改过的所有设置。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"老司机和新手最大的区别 —— 不是会的命令多，而是从来不用鼠标点菜单。"</p>
+  <p class="meta">DAY 02 · VSCODE 21-DAY ROADMAP</p>
+</footer>
+
+</div>
