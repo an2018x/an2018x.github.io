@@ -8,9 +8,14 @@
 
 .page-header h1 {
     font-family: var(--serif);
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 500;
-    letter-spacing: -0.016em;
+    letter-spacing: -0.012em;
+    line-height: 1.2;
+    /* kami section-title signature: 2.5pt ink-blue left bar */
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 12pt;
 }
 
 .pagination {
@@ -37,35 +42,41 @@
 
 .pagination a {
     font-family: var(--mono);
-    color: var(--theme);
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    line-height: 36px;
-    background: var(--primary);
-    border-radius: calc(36px / 2);
-    padding: 0 16px;
+    color: var(--ivory);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    line-height: 32px;
+    background: var(--brand);
+    border-radius: 6px;
+    padding: 0 14px;
 }
 
 .pagination-link,
 .pagination-prev,
 .pagination-next {
     display: inline-block;
-    padding: 0.5rem 1rem;
-    border: 1.5px solid var(--g300);
+    padding: 0.4rem 0.9rem;
+    border: 1.5px solid var(--border);
     border-radius: 6px;
     text-decoration: none;
     font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--g500);
-    transition: border-color 150ms ease, color 150ms ease;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--stone);
+    background: var(--ivory);
+    transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
 }
 
 .pagination-link:hover,
 .pagination-prev:hover,
 .pagination-next:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--brand);
+    color: var(--brand);
+    background: var(--brand-tint);
 }
 
 @media (max-width: 768px) {
@@ -80,9 +91,9 @@
 }
 
 .pagination-link.active {
-    background-color: var(--g100);
-    color: var(--primary);
-    border-color: var(--primary);
+    background: var(--brand-tint);
+    color: var(--brand);
+    border-color: var(--brand);
 }
 
 .pagination .next {
@@ -93,17 +104,17 @@
 .social-icons a {
     display: inline-flex;
     padding: 10px;
-    color: var(--g500);
+    color: var(--stone);
     transition: color 150ms ease;
 }
 
 .social-icons a:hover {
-    color: var(--accent);
+    color: var(--brand);
 }
 
 .social-icons a svg {
-    height: 24px;
-    width: 24px;
+    height: 22px;
+    width: 22px;
 }
 
 code {
@@ -118,14 +129,17 @@ pre {
 .copy-code {
     display: none;
     position: absolute;
-    top: 4px;
-    right: 4px;
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(78, 78, 78, 0.8);
-    border-radius: 6px;
-    padding: 0 5px;
+    top: 6px;
+    right: 6px;
+    color: var(--ivory);
+    background: var(--brand);
+    border-radius: 4px;
+    padding: 2px 8px;
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
     user-select: none;
 }
 
@@ -141,7 +155,7 @@ iframe {
     border: none;
 }
 
-/* Ordered list — clay-accented circled numbers */
+/* ===== Ordered list — kami circled numerals (ink-blue tint, not solid clay) ===== */
 ol {
     list-style-type: none;
     counter-reset: circle-counter;
@@ -151,8 +165,8 @@ ol {
 ol > li {
     position: relative;
     margin-bottom: 0.5rem;
-    margin-left: 1rem;
-    padding: 0.5rem 0;
+    margin-left: 0.75rem;
+    padding: 0.4rem 0;
 }
 
 ol > li:before {
@@ -160,17 +174,18 @@ ol > li:before {
     content: counter(circle-counter);
     position: absolute;
     left: -2.5rem;
-    width: 1.7rem;
-    height: 1.7rem;
-    background-color: var(--accent);
-    color: var(--paper);
+    width: 1.6rem;
+    height: 1.6rem;
+    background: var(--brand-tint);
+    color: var(--brand);
+    border: 1px solid var(--brand);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     letter-spacing: 0;
 }
 
@@ -180,13 +195,13 @@ ol > li:before {
     }
 
     ol li:before {
-        width: 1.6em;
-        height: 1.6em;
-        font-size: 0.7rem;
+        width: 1.5em;
+        height: 1.5em;
+        font-size: 0.68rem;
         left: -2.2em;
     }
 
     ol {
-        line-height: 1.5;
+        line-height: 1.55;
     }
 }

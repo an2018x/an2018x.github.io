@@ -5,59 +5,101 @@
     --main-width: 840px;
     --header-height: 60px;
     --footer-height: 60px;
-    --radius: 12px;
+    --radius: 10px;
 
-    /* Paper-tone color tokens */
-    --ivory:  #F0EEE6;
-    --paper:  #FFFFFF;
-    --slate:  #141413;
-    --clay:   #D97757;
-    --clay-d: #B85C3E;
-    --oat:    #E3DACC;
-    --olive:  #788C5D;
-    --g100:   #F0EEE6;
-    --g200:   #E6E3DA;
-    --g300:   #D1CFC5;
-    --g500:   #87867F;
-    --g700:   #3D3D3A;
+    /* ===== kami design tokens — warm parchment + ink-blue ===== */
 
-    /* PaperMod variable mapping */
-    --theme: var(--ivory);
-    --entry: var(--paper);
-    --primary: var(--slate);
-    --secondary: var(--g500);
-    --tertiary: var(--g200);
-    --content: var(--g700);
-    --code-block-bg: var(--g100);
-    --code-bg: var(--g100);
-    --border: var(--g300);
-    --li-bg: var(--slate);
-    --accent: var(--clay);
+    /* Surface — warm neutral, never cool gray */
+    --parchment:    #f5f4ed;   /* page background */
+    --ivory:        #faf9f5;   /* card / elevated */
+    --warm-sand:    #e8e6dc;   /* button / interactive */
+    --dark-surface: #30302e;   /* dark container */
+    --deep-dark:    #141413;   /* dark page bg */
 
-    /* Typography stacks */
-    --serif: ui-serif, Charter, 'Songti SC', 'Noto Serif SC', Georgia, 'Times New Roman', serif;
-    --sans:  system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --mono:  ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+    /* Brand — ink blue, single accent */
+    --brand:             #1B365D;
+    --brand-light:       #2D5A8A;
+    --brand-tint:        #EEF2F7;   /* 0.08 solid */
+    --brand-tint-strong: #E4ECF5;   /* 0.18 solid */
+
+    /* Text — 4 levels (all warm, R≈G>B) */
+    --near-black: #141413;   /* primary text */
+    --dark-warm:  #3d3d3a;   /* secondary / heading */
+    --olive:      #504e49;   /* subtext / description */
+    --stone:      #6b6a64;   /* tertiary / meta */
+
+    /* Border — warm */
+    --border:      #e8e6dc;
+    --border-soft: #e5e3d8;
+
+    /* ===== PaperMod variable mapping (do not rename — used across theme) ===== */
+    --theme: var(--parchment);
+    --entry: var(--ivory);
+    --primary: var(--near-black);
+    --secondary: var(--stone);
+    --tertiary: var(--border);
+    --content: var(--dark-warm);
+    --code-block-bg: var(--warm-sand);
+    --code-bg: var(--brand-tint);
+    --border-color: var(--border);
+    --li-bg: var(--brand);
+    --accent: var(--brand);
+
+    /* Legacy aliases (still referenced by extended CSS) — remap to kami tokens */
+    --paper:  var(--ivory);
+    --slate:  var(--near-black);
+    --clay:   var(--brand);
+    --clay-d: var(--brand);
+    --oat:    var(--warm-sand);
+    --g100:   var(--brand-tint);
+    --g200:   var(--border);
+    --g300:   var(--border-soft);
+    --g500:   var(--stone);
+    --g700:   var(--dark-warm);
+
+    /* ===== Typography stacks ===== */
+    --serif: Charter, Georgia, Palatino, "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "Times New Roman", serif;
+    --sans:  var(--serif);    /* sans is a serif alias — kami is serif-led */
+    --mono:  "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, "Source Han Serif SC", monospace;
 }
 
-.dark {
-    --li-bg: var(--oat);
-    --theme: #1C1917;
-    --entry: #292524;
-    --primary: #F0EEE6;
-    --secondary: #A8A29E;
-    --tertiary: #3D3835;
-    --content: #E7E0D8;
-    --code-block-bg: #2C2826;
-    --code-bg: #2C2826;
-    --border: #3D3835;
-    --accent: #D4845A;
+/* ===== Global rendering hygiene ===== */
+html {
+    text-spacing-trim: space-all;
+}
+
+body {
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular numerals for tables / counters */
+.post-content table,
+.post-content ol,
+.post-meta,
+.entry-footer,
+.paginav {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Focus ring — ink-blue */
+:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Reduced motion — required by kami a11y */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 1ms !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 .list {
-    background: var(--theme);
-}
-
-.dark.list {
     background: var(--theme);
 }

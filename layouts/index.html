@@ -1,0 +1,138 @@
+{{- define "main" }}
+
+{{/* ========== editorial header ========== */}}
+{{- $allPosts := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $allPosts = where $allPosts "Params.hiddenInHomeList" "!=" "true" }}
+
+{{- $totalPosts := len $allPosts }}
+{{- $allSections := slice }}
+{{- range $allPosts }}
+  {{- $rel := .File.Path }}
+  {{- $parts := split $rel "/" }}
+  {{- if ge (len $parts) 2 }}
+    {{- $section := index $parts 1 }}
+    {{- $allSections = $allSections | append $section }}
+  {{- end }}
+{{- end }}
+{{- $sectionList := $allSections | uniq }}
+{{- $sectionCount := len $sectionList }}
+
+{{- $years := slice }}
+{{- range $allPosts }}
+  {{- $years = $years | append (.Date.Format "2006") }}
+{{- end }}
+{{- $yearCount := len ($years | uniq) }}
+
+{{- $latest := index (first 1 $allPosts) 0 }}
+
+<header class="home-masthead">
+  <div class="home-eyebrow">
+    <span class="dot" aria-hidden="true"></span>
+    <span>Essays · Notes · Field Reports</span>
+  </div>
+  <h1 class="home-title">{{ site.Params.homeInfoParams.Title | markdownify }}</h1>
+  <p class="home-lede">
+    {{ site.Params.homeInfoParams.Content | markdownify }}
+  </p>
+  <div class="home-meta-strip" aria-label="site metrics">
+    <div class="meta-cell">
+      <span class="meta-num">{{ printf "%03d" $totalPosts }}</span>
+      <span class="meta-label">Posts</span>
+    </div>
+    <div class="meta-cell">
+      <span class="meta-num">{{ printf "%02d" $sectionCount }}</span>
+      <span class="meta-label">Topics</span>
+    </div>
+    <div class="meta-cell">
+      <span class="meta-num">{{ $yearCount }}</span>
+      <span class="meta-label">Years</span>
+    </div>
+    <div class="meta-cell">
+      <span class="meta-num">{{ $latest.Date.Format "01.02" }}</span>
+      <span class="meta-label">Updated · {{ $latest.Date.Format "2006" }}</span>
+    </div>
+  </div>
+</header>
+
+{{/* ========== Section grouping ========== */}}
+{{/* Map machine name -> display title (CN), keeps token registry small. Add new sections here. */}}
+{{- $sectionTitles := dict
+  "ai" "AI · LLM"
+  "architecture" "架构 · 设计"
+  "backend" "后端"
+  "career" "成长 · 业务"
+  "database" "数据库"
+  "frontend" "前端"
+  "infra" "基础设施"
+  "leetcode" "算法"
+  "life" "生活"
+  "tools" "工具"
+  "hugo-examples" "Hugo 示例"
+}}
+
+{{/* Group posts by their first-level subdirectory under content/posts/.    */}}
+{{/* Sort sections by latest post date desc.                                 */}}
+{{- $byKey := dict }}
+{{- range $allPosts }}
+  {{- $rel := .File.Path }}
+  {{- $parts := split $rel "/" }}
+  {{- if ge (len $parts) 2 }}
+    {{- $key := index $parts 1 }}
+    {{- $bucket := index $byKey $key | default slice }}
+    {{- $bucket = $bucket | append . }}
+    {{- $byKey = merge $byKey (dict $key $bucket) }}
+  {{- end }}
+{{- end }}
+
+{{- $sectionMeta := slice }}
+{{- range $key, $posts := $byKey }}
+  {{- $sorted := sort $posts "Date" "desc" }}
+  {{- $latest := index (first 1 $sorted) 0 }}
+  {{- $sectionMeta = $sectionMeta | append (dict
+      "key" $key
+      "title" (index $sectionTitles $key | default $key)
+      "posts" $sorted
+      "count" (len $sorted)
+      "latest" $latest.Date) }}
+{{- end }}
+{{- $sectionMeta = sort $sectionMeta "latest" "desc" }}
+
+<div class="home-sections">
+{{- range $i, $sec := $sectionMeta }}
+  {{- $idx := printf "%02d" (add $i 1) }}
+  <section class="home-section">
+    <header class="section-head">
+      <span class="section-num">{{ $idx }}</span>
+      <h2 class="section-title">{{ $sec.title }}</h2>
+      <span class="section-count">{{ $sec.count }} {{ if eq $sec.count 1 }}post{{ else }}posts{{ end }}</span>
+      <a class="section-all" href="/posts/">查看全部 →</a>
+    </header>
+
+    <div class="section-grid">
+      {{- range first 4 $sec.posts }}
+      <article class="post-card">
+        <header class="card-header">
+          <h3 class="card-title">{{ .Title }}</h3>
+        </header>
+        {{- if (ne (.Param "hideSummary") true) }}
+        <div class="card-summary">
+          <p>{{ if .Description }}{{ .Description | markdownify | plainify }}{{ else }}{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}…{{ end }}{{ end }}</p>
+        </div>
+        {{- end }}
+        <footer class="card-footer">
+          <span class="card-date">{{ .Date.Format "2006.01.02" }}</span>
+          {{- with .GetTerms "tags" }}
+          <span class="card-tags">
+            {{- range first 2 . }}<a href="{{ .Permalink }}">{{ .LinkTitle }}</a>{{- end }}
+          </span>
+          {{- end }}
+        </footer>
+        <a class="card-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+{{- end }}
+</div>
+
+{{- end }}{{- /* end main */ -}}
