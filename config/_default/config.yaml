@@ -37,12 +37,23 @@ markup:
 minify:
   tdewolff:
     css:
-      keepCSS2: true
+      version: 2
     html:
       keepQuotes: true
 
 build:
   useResourceCacheWhen: always
+
+# Hugo 0.155+ tightened security: the default `security.allowContent`
+# whitelist contains `! ^text/html$`, which DENIES raw HTML files in
+# content/. This site keeps many .html pages under content/posts/ that
+# carry full front matter (cc-day*.html, vscode-day*.html, day*.html),
+# so we override the whitelist to permit every text/* content format
+# without the deny rule.
+security:
+  allowContent:
+    - "^application/(javascript|json|octet-stream|toml|yaml|x-pandoc)$"
+    - "^text/(asciidoc|html|markdown|org|rst|x-pandoc|yaml)$"
 
 params:
   assets:
