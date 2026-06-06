@@ -131,24 +131,66 @@
         }
     });
 
-    // Close on link click (navigate to section)
-    container.querySelectorAll('.inner a[href^="#"]').forEach(function(a) {
-        a.addEventListener('click', function() {
-            setTimeout(closeToc, 150);
-        });
-    });
-
-    // Scroll active tracking
     var activeElement;
-    var elements;
+    var elements = [];
+    var tocLinks = [];
+
+    function makeSlug(text, index, used) {
+        var slug = (text || "")
+            .trim()
+            .toLowerCase()
+            .replace(/[\/\\?#\[\]@!$&'()*+,;=:。·—–"“”‘’、，：；（）]/g, "-")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "");
+        if (!slug) slug = "section-" + (index + 1);
+
+        var base = slug;
+        var n = 2;
+        while (used[slug] || document.getElementById(slug)) {
+            slug = base + "-" + n;
+            n += 1;
+        }
+        used[slug] = true;
+        return slug;
+    }
+
+    function prepareTocLinks() {
+        var used = {};
+        elements = Array.from(document.querySelectorAll('.post-content h1,.post-content h2,.post-content h3,.post-content h4,.post-content h5,.post-content h6'));
+        tocLinks = Array.from(container.querySelectorAll('.inner a[href^="#"]'));
+
+        elements.forEach(function(el, index) {
+            if (!el.id) el.id = makeSlug(el.textContent, index, used);
+            else used[el.id] = true;
+        });
+
+        tocLinks.forEach(function(link, index) {
+            var target = elements[index];
+            if (!target) return;
+            link.setAttribute('href', '#' + target.id);
+            link.dataset.targetId = target.id;
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (history.pushState) history.pushState(null, '', '#' + target.id);
+                else location.hash = target.id;
+                setTimeout(closeToc, 150);
+            });
+        });
+    }
+
+    function setActiveLink(target) {
+        tocLinks.forEach(function(link) {
+            link.classList.toggle('active', link.dataset.targetId === target.id);
+        });
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        prepareTocLinks();
         if (elements.length > 0) {
             activeElement = elements[0];
-            var id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            var link = document.querySelector('.inner ul li a[href="#' + id + '"]');
-            if (link) link.classList.add('active');
+            setActiveLink(activeElement);
         }
 
         // Back to top
@@ -170,20 +212,14 @@
             return offset > 0 && offset < window.innerHeight / 2;
         }) || activeElement;
 
-        elements.forEach(function(el) {
-            var id = encodeURI(el.getAttribute('id')).toLowerCase();
-            var tocLink = document.querySelector('.inner ul li a[href="#' + id + '"]');
-            if (!tocLink) return;
-            if (el === activeElement) {
-                tocLink.classList.add('active');
-                var tocInner = document.querySelector('.toc .inner');
-                var linkTop = tocLink.offsetTop;
-                var ch = tocInner.clientHeight;
-                tocInner.scrollTo({ top: linkTop - ch / 2 + tocLink.clientHeight / 2, behavior: 'smooth' });
-            } else {
-                tocLink.classList.remove('active');
-            }
-        });
+        setActiveLink(activeElement);
+        var tocLink = container.querySelector('.inner a[data-target-id="' + activeElement.id + '"]');
+        var tocInner = container.querySelector('.toc .inner');
+        if (tocLink && tocInner && container.classList.contains('toc-open')) {
+            var linkTop = tocLink.offsetTop;
+            var ch = tocInner.clientHeight;
+            tocInner.scrollTo({ top: linkTop - ch / 2 + tocLink.clientHeight / 2, behavior: 'smooth' });
+        }
     }, false);
 
     // Fold/unfold buttons for sub-levels
