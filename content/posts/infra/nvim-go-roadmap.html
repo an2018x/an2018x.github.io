@@ -1,0 +1,1002 @@
+---
+title: "Nvim + Go 30 天系统学习路线"
+date: '2026-06-07'
+draft: false
+description: "从 Vim 心智、Lua 配置到 gopls、Delve、测试、调试与真实 Go 项目交付的 30 天 Nvim Go 开发学习路线。"
+toc: false
+tags:
+  - Go
+  - Neovim
+  - Tooling
+  - Roadmap
+---
+
+<style>
+:root{
+  --ng-parchment:#f5f4ed;
+  --ng-ivory:#faf9f5;
+  --ng-paper:#ffffff;
+  --ng-brand:#1B365D;
+  --ng-brand-light:#2D5A8A;
+  --ng-ink:#141413;
+  --ng-dark:#30302e;
+  --ng-warm:#3d3d3a;
+  --ng-olive:#504e49;
+  --ng-stone:#6b6a64;
+  --ng-border:#e8e6dc;
+  --ng-border-soft:#e5e3d8;
+  --ng-sand:#e8e6dc;
+  --ng-tag:#EEF2F7;
+  --ng-serif:"TsangerJinKai02","Source Han Serif SC","Noto Serif CJK SC","Songti SC","STSong",Georgia,serif;
+  --ng-sans:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ng-mono:"JetBrains Mono","SF Mono",Consolas,"TsangerJinKai02","Source Han Serif SC",monospace;
+}
+
+*{ box-sizing:border-box; }
+body{
+  background:var(--ng-parchment);
+  color:var(--ng-ink);
+}
+
+.ng-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 128px;
+  color:var(--ng-ink);
+  font-family:var(--ng-sans);
+  font-size:15px;
+  line-height:1.6;
+}
+
+.ng-wrap a{
+  color:var(--ng-brand);
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+}
+
+.ng-wrap strong{ font-weight:600; }
+
+.ng-wrap .eyebrow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-family:var(--ng-mono);
+  font-size:12px;
+  letter-spacing:0;
+  text-transform:uppercase;
+  color:var(--ng-stone);
+}
+.ng-wrap .eyebrow::before{
+  content:"";
+  display:block;
+  width:28px;
+  height:2px;
+  background:var(--ng-brand);
+  border-radius:2px;
+}
+
+.ng-wrap h1,
+.ng-wrap h2,
+.ng-wrap h3{
+  font-family:var(--ng-serif);
+  font-weight:500;
+  color:var(--ng-ink);
+  letter-spacing:0;
+}
+
+.ng-wrap h1{
+  font-size:56px;
+  line-height:1.12;
+  max-width:18ch;
+  margin:22px 0 28px;
+}
+.ng-wrap h1 span{ color:var(--ng-brand); }
+
+.ng-wrap h2{
+  font-size:28px;
+  line-height:1.25;
+  margin:0;
+}
+
+.ng-wrap h3{
+  font-size:20px;
+  line-height:1.3;
+  margin:0 0 10px;
+}
+
+.ng-wrap .lede{
+  max-width:68ch;
+  margin:0 0 28px;
+  color:var(--ng-warm);
+  font-size:16px;
+  line-height:1.7;
+}
+
+.ng-wrap .masthead{
+  padding:78px 0 52px;
+}
+
+.ng-wrap .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  padding:14px 0;
+  border-top:1px solid var(--ng-border);
+  border-bottom:1px solid var(--ng-border);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  color:var(--ng-stone);
+}
+.ng-wrap .meta-strip span{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:26px;
+}
+.ng-wrap .meta-strip strong{
+  color:var(--ng-ink);
+  font-weight:600;
+}
+
+.ng-wrap section{
+  margin-top:72px;
+}
+
+.ng-wrap .indent{
+  margin-left:50px;
+}
+
+.ng-wrap .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:28px;
+}
+
+
+.ng-wrap .count{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:3px 10px;
+  border-radius:6px;
+  background:var(--ng-tag);
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-size:11px;
+}
+
+.ng-wrap .overview{
+  background:var(--ng-ivory);
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  padding:28px;
+}
+.ng-wrap .overview svg{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.ng-wrap .figure-cap{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px dashed var(--ng-border-soft);
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  text-align:center;
+}
+
+.ng-wrap .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+.ng-wrap .grid-2{
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+}
+
+.ng-wrap .node{
+  background:var(--ng-ivory);
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  padding:20px 22px;
+  transition:border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+.ng-wrap .node:hover{
+  border-color:var(--ng-brand);
+  box-shadow:0 8px 26px rgba(20,20,19,.08);
+  transform:translateY(-2px);
+}
+.ng-wrap .node.accent{
+  border-left:4px solid var(--ng-brand);
+}
+.ng-wrap .node.dark{
+  background:var(--ng-dark);
+  border-color:var(--ng-dark);
+  color:var(--ng-ivory);
+}
+.ng-wrap .node.dark h3{ color:var(--ng-ivory); }
+.ng-wrap .node.dark p,
+.ng-wrap .node.dark .tag{ color:var(--ng-sand); }
+.ng-wrap .node.exit{
+  background:var(--ng-sand);
+  border-color:var(--ng-brand);
+}
+.ng-wrap .tag{
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  margin-bottom:10px;
+  padding:2px 7px;
+  border-radius:4px;
+  background:var(--ng-tag);
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-size:11px;
+  font-weight:600;
+}
+.ng-wrap .node p{
+  margin:6px 0 0;
+  color:var(--ng-olive);
+  font-size:14px;
+  line-height:1.6;
+}
+
+.ng-wrap .day-list{
+  background:var(--ng-ivory);
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  padding:0 22px;
+}
+.ng-wrap .day-item{
+  display:grid;
+  grid-template-columns:72px minmax(160px,1fr) minmax(300px,1.35fr);
+  gap:18px;
+  align-items:start;
+  padding:17px 0;
+  border-bottom:1px solid var(--ng-border-soft);
+}
+.ng-wrap .day-item:last-child{
+  border-bottom:none;
+}
+.ng-wrap .day-item.highlight{
+  margin:0 -22px;
+  padding:17px 22px;
+  background:#EEF2F7;
+}
+.ng-wrap .day-item.review{
+  margin:0 -22px;
+  padding:17px 22px;
+  background:var(--ng-sand);
+  border-bottom-color:var(--ng-brand);
+}
+.ng-wrap .day-num{
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.ng-wrap .day-title{
+  color:var(--ng-ink);
+  font-family:var(--ng-serif);
+  font-size:17px;
+  font-weight:500;
+  line-height:1.35;
+}
+.ng-wrap .day-desc{
+  color:var(--ng-olive);
+  font-size:13.5px;
+  line-height:1.6;
+}
+
+.ng-wrap .annot{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  margin-top:16px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  line-height:1.6;
+}
+.ng-wrap .annot::before{
+  content:"";
+  display:block;
+  width:34px;
+  height:2px;
+  margin-top:8px;
+  flex:0 0 34px;
+  background:var(--ng-brand);
+  border-radius:2px;
+}
+
+.ng-wrap code.inline{
+  display:inline-block;
+  padding:1px 6px;
+  border-radius:4px;
+  background:#EEF2F7;
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.ng-wrap .cmd-block{
+  margin:12px 0 0;
+  padding:18px 20px;
+  overflow-x:auto;
+  border-radius:8px;
+  background:var(--ng-dark);
+  color:var(--ng-ivory);
+  font-family:var(--ng-mono);
+  font-size:13px;
+  line-height:1.8;
+}
+.ng-wrap .cmd-block .prompt{ color:#B8B6AA; }
+.ng-wrap .cmd-block .flag{ color:#9FB7D4; }
+.ng-wrap .cmd-block .comment{ color:#B8B6AA; }
+.ng-wrap .cmd-block .string{ color:#E8E6DC; }
+
+.ng-wrap .table-wrap{
+  overflow-x:auto;
+}
+.ng-wrap table.compare{
+  width:100%;
+  border-collapse:collapse;
+  overflow:hidden;
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  background:var(--ng-ivory);
+  font-size:14px;
+}
+.ng-wrap table.compare th,
+.ng-wrap table.compare td{
+  padding:13px 16px;
+  border-bottom:1px solid var(--ng-border-soft);
+  text-align:left;
+  vertical-align:top;
+}
+.ng-wrap table.compare th{
+  background:var(--ng-sand);
+  color:var(--ng-warm);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  font-weight:600;
+}
+.ng-wrap table.compare td:first-child{
+  color:var(--ng-ink);
+  font-family:var(--ng-serif);
+  font-weight:500;
+}
+.ng-wrap table.compare tr:last-child td{
+  border-bottom:none;
+}
+
+.ng-wrap .checklist{
+  list-style:none;
+  margin:0;
+  padding:0;
+  counter-reset:check;
+}
+.ng-wrap .checklist li{
+  position:relative;
+  counter-increment:check;
+  padding:14px 0 14px 52px;
+  border-bottom:1px solid var(--ng-border-soft);
+  color:var(--ng-olive);
+  font-size:14px;
+  line-height:1.6;
+}
+.ng-wrap .checklist li:last-child{
+  border-bottom:none;
+}
+.ng-wrap .checklist li::before{
+  content:counter(check,decimal-leading-zero);
+  position:absolute;
+  left:0;
+  top:14px;
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-size:13px;
+  font-weight:600;
+}
+
+.ng-wrap .chip-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:10px;
+}
+.ng-wrap .chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:5px 12px;
+  border:1px solid var(--ng-border);
+  border-radius:6px;
+  background:var(--ng-ivory);
+  color:var(--ng-warm);
+  font-family:var(--ng-mono);
+  font-size:12px;
+}
+.ng-wrap .chip.accent{
+  border-color:var(--ng-brand);
+  background:#EEF2F7;
+  color:var(--ng-brand);
+}
+
+.ng-wrap footer{
+  margin-top:96px;
+  padding-top:36px;
+  border-top:1px solid var(--ng-border);
+  text-align:center;
+}
+.ng-wrap footer .quote{
+  max-width:48ch;
+  margin:0 auto;
+  color:var(--ng-warm);
+  font-family:var(--ng-serif);
+  font-size:18px;
+  line-height:1.55;
+}
+.ng-wrap footer .meta{
+  margin-top:20px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+}
+
+@media (max-width: 860px){
+  .ng-wrap{
+    padding:0 22px 90px;
+  }
+  .ng-wrap h1{
+    font-size:42px;
+  }
+  .ng-wrap .indent{
+    margin-left:0;
+  }
+  .ng-wrap .sec-head{
+    align-items:flex-start;
+  }
+  .ng-wrap .day-item{
+    grid-template-columns:1fr;
+    gap:5px;
+  }
+}
+
+@media (max-width: 520px){
+  .ng-wrap{
+    padding:0 18px 80px;
+  }
+  .ng-wrap .masthead{
+    padding:54px 0 38px;
+  }
+  .ng-wrap h1{
+    font-size:34px;
+  }
+  .ng-wrap section{
+    margin-top:54px;
+  }
+  .ng-wrap .sec-head{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 10px;
+  }
+  .ng-wrap .count{
+    justify-self:start;
+  }
+  .ng-wrap .overview{
+    padding:18px 12px;
+  }
+  .ng-wrap .grid,
+  .ng-wrap .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+<div class="ng-wrap">
+
+<header class="masthead">
+  <div class="eyebrow">NEOVIM · GO · 30-DAY ROADMAP</div>
+  <h1>三十天把 <span>Nvim</span> 变成 Go 开发主力环境</h1>
+  <p class="lede">
+    这条路线不是插件清单，而是一个可验收的训练计划：先建立 Vim 编辑心智，再用 Lua 组织配置，
+    接入 gopls 与 Go 工具链，最后用真实项目打磨测试、调试、重构和交付流程。
+    每天 45–75 分钟，原则是 <strong>少装插件，多跑项目；先能解释，再能自动化。</strong>
+  </p>
+  <div class="meta-strip">
+    <span><strong>TOTAL</strong> 30 Days</span>
+    <span><strong>PACE</strong> 45–75 min / day</span>
+    <span><strong>PHASES</strong> 6</span>
+    <span><strong>TARGET</strong> Go IDE 工作台</span>
+    <span><strong>OUTPUT</strong> 配置仓库 + 真实项目</span>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head">
+    <h2>阶段总览</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="overview">
+      <svg viewBox="0 0 980 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nvim Go 30 天学习路线阶段总览">
+        <text x="490" y="30" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#6b6a64">NVIM + GO 30-DAY ROADMAP</text>
+        <line x1="58" y1="82" x2="922" y2="82" stroke="#e8e6dc" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="58" cy="82" r="6" fill="#1B365D"/>
+        <polygon points="922,76 936,82 922,88" fill="#141413"/>
+
+        <g>
+          <line x1="120" y1="68" x2="120" y2="96" stroke="#141413" stroke-width="2"/>
+          <rect x="50" y="106" width="140" height="78" rx="6" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/>
+          <text x="120" y="128" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#1B365D">PHASE 1</text>
+          <text x="120" y="149" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" font-weight="500" fill="#141413">编辑器根基</text>
+          <text x="120" y="169" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#6b6a64">Day 1 - 5</text>
+        </g>
+        <g>
+          <line x1="280" y1="68" x2="280" y2="96" stroke="#141413" stroke-width="2"/>
+          <rect x="210" y="106" width="140" height="78" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="2"/>
+          <text x="280" y="128" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#1B365D">PHASE 2</text>
+          <text x="280" y="149" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" font-weight="500" fill="#141413">IDE 能力</text>
+          <text x="280" y="169" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#6b6a64">Day 6 - 10</text>
+        </g>
+        <g>
+          <line x1="440" y1="68" x2="440" y2="96" stroke="#141413" stroke-width="2"/>
+          <rect x="370" y="106" width="140" height="78" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="2"/>
+          <text x="440" y="128" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#1B365D">PHASE 3</text>
+          <text x="440" y="149" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" font-weight="500" fill="#141413">Go 工作流</text>
+          <text x="440" y="169" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#6b6a64">Day 11 - 15</text>
+        </g>
+        <g>
+          <line x1="600" y1="68" x2="600" y2="96" stroke="#141413" stroke-width="2"/>
+          <rect x="530" y="106" width="140" height="78" rx="6" fill="#faf9f5" stroke="#1B365D" stroke-width="2"/>
+          <text x="600" y="128" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#1B365D">PHASE 4</text>
+          <text x="600" y="149" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" font-weight="500" fill="#141413">调试与质量</text>
+          <text x="600" y="169" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#6b6a64">Day 16 - 20</text>
+        </g>
+        <g>
+          <line x1="760" y1="68" x2="760" y2="96" stroke="#141413" stroke-width="2"/>
+          <rect x="690" y="106" width="140" height="78" rx="6" fill="#faf9f5" stroke="#1B365D" stroke-width="2"/>
+          <text x="760" y="128" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#1B365D">PHASE 5</text>
+          <text x="760" y="149" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" font-weight="500" fill="#141413">真实项目</text>
+          <text x="760" y="169" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#6b6a64">Day 21 - 26</text>
+        </g>
+        <g>
+          <line x1="900" y1="68" x2="900" y2="96" stroke="#141413" stroke-width="2"/>
+          <rect x="832" y="106" width="136" height="78" rx="6" fill="#30302e" stroke="#30302e" stroke-width="2"/>
+          <text x="900" y="128" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#e8e6dc">PHASE 6</text>
+          <text x="900" y="149" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" font-weight="500" fill="#faf9f5">个人工作台</text>
+          <text x="900" y="169" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#e8e6dc">Day 27 - 30</text>
+        </g>
+
+        <line x1="42" y1="224" x2="938" y2="224" stroke="#e5e3d8" stroke-width="1" stroke-dasharray="5 5"/>
+        <text x="42" y="250" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#6b6a64">SKILLS ACQUIRED</text>
+
+        <rect x="42" y="270" width="108" height="36" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="1.5"/>
+        <text x="96" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">Vim Motions</text>
+        <rect x="162" y="270" width="92" height="36" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="1.5"/>
+        <text x="208" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">Lua Config</text>
+        <rect x="266" y="270" width="86" height="36" rx="6" fill="#EEF2F7" stroke="#1B365D" stroke-width="1.5"/>
+        <text x="309" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1B365D">gopls</text>
+        <rect x="364" y="270" width="86" height="36" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="1.5"/>
+        <text x="407" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">Testing</text>
+        <rect x="462" y="270" width="78" height="36" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="1.5"/>
+        <text x="501" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">Delve</text>
+        <rect x="552" y="270" width="88" height="36" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="1.5"/>
+        <text x="596" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">nvim-dap</text>
+        <rect x="652" y="270" width="92" height="36" rx="6" fill="#EEF2F7" stroke="#1B365D" stroke-width="1.5"/>
+        <text x="698" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1B365D">Refactor</text>
+        <rect x="756" y="270" width="86" height="36" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="1.5"/>
+        <text x="799" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">pprof</text>
+        <rect x="854" y="270" width="84" height="36" rx="6" fill="#30302e" stroke="#30302e" stroke-width="1.5"/>
+        <text x="896" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#faf9f5">CI Flow</text>
+
+        <text x="42" y="348" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#6b6a64">FINAL OUTPUTS</text>
+        <rect x="42" y="364" width="190" height="36" rx="6" fill="#faf9f5" stroke="#1B365D" stroke-width="1.5"/>
+        <text x="137" y="387" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1B365D">dotfiles / init.lua</text>
+        <rect x="248" y="364" width="190" height="36" rx="6" fill="#faf9f5" stroke="#1B365D" stroke-width="1.5"/>
+        <text x="343" y="387" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1B365D">Go service project</text>
+        <rect x="454" y="364" width="210" height="36" rx="6" fill="#faf9f5" stroke="#e8e6dc" stroke-width="1.5"/>
+        <text x="559" y="387" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">test / debug workflow</text>
+        <rect x="680" y="364" width="258" height="36" rx="6" fill="#30302e" stroke="#30302e" stroke-width="1.5"/>
+        <text x="809" y="387" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#faf9f5">one-command Go workspace</text>
+      </svg>
+      <div class="figure-cap">FIG · 从编辑器心智到 Go 项目交付的 30 天路径</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>每日节奏</h2>
+    <div class="count">TRAINING LOOP</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag">45 - 75 MIN</div>
+        <h3>固定训练循环</h3>
+        <p>10 分钟复盘昨天的快捷键和配置；25 分钟学习一个新能力；25 分钟在 Go 项目中使用它；最后 5 分钟写日志，记录一个有效动作和一个卡点。</p>
+      </div>
+      <div class="node">
+        <div class="tag">RULE</div>
+        <h3>每天只让一个变量变复杂</h3>
+        <p>学 Vim 动作时别折腾插件；学 LSP 时别重构业务；学调试时别同时换主题。复杂度分开，进步会更稳。</p>
+      </div>
+    </div>
+    <div class="annot">建议从一个真实但不大的 Go 项目开始：CLI 工具、HTTP API、脚本服务都可以，代码量 500–2000 行最合适。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>编辑器根基</h2>
+    <div class="count">DAY 1 - 5</div>
+  </div>
+  <div class="indent">
+    <p class="lede">前五天只解决一件事：让你不再把 Nvim 当“缺少鼠标的 VS Code”，而是理解它自己的编辑模型。配置只做最少，重点是能稳定打开 Go 项目、移动、编辑、保存和恢复。</p>
+    <div class="day-list">
+      <div class="day-item">
+        <span class="day-num">DAY 01</span>
+        <span class="day-title">安装与健康检查</span>
+        <span class="day-desc">安装 Neovim、Go、ripgrep、fd；运行 <code class="inline">:checkhealth</code> 与 <code class="inline">go version</code>；建立专门的 dotfiles 仓库。</span>
+      </div>
+      <div class="day-item highlight">
+        <span class="day-num">DAY 02</span>
+        <span class="day-title">Vim 移动心智</span>
+        <span class="day-desc">练习 normal / insert / visual 三种模式；掌握 <code class="inline">hjkl</code>、word、line、paragraph、search 移动；输出一张个人快捷键纸。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 03</span>
+        <span class="day-title">文本对象与批量编辑</span>
+        <span class="day-desc">练习 <code class="inline">ciw</code>、<code class="inline">di(</code>、<code class="inline">ya&quot;</code>、宏录制、点命令；用 Go 文件完成变量名、函数参数、注释的批量编辑。</span>
+      </div>
+      <div class="day-item highlight">
+        <span class="day-num">DAY 04</span>
+        <span class="day-title">Lua 配置结构</span>
+        <span class="day-desc">把 <code class="inline">init.lua</code> 拆成 options、keymaps、plugins、lsp；理解 <code class="inline">require</code> 和模块加载顺序。</span>
+      </div>
+      <div class="day-item review">
+        <span class="day-num">DAY 05</span>
+        <span class="day-title">Go 工具链入门</span>
+        <span class="day-desc">创建 <code class="inline">go mod init</code> 项目；跑通 <code class="inline">go fmt</code>、<code class="inline">go test</code>、<code class="inline">go run</code>；写一个小 CLI 作为后续练习项目。</span>
+      </div>
+    </div>
+    <div class="annot">阶段验收：你能不离开 Nvim 完成新建 Go 文件、快速移动、修改函数、保存、运行测试。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>Go IDE 能力</h2>
+    <div class="count">DAY 6 - 10</div>
+  </div>
+  <div class="indent">
+    <p class="lede">这一阶段把 Nvim 接上 Go 的语言服务。目标不是“装很多插件”，而是知道 LSP、completion、diagnostics、formatting 各自解决什么问题，坏掉时该查哪里。</p>
+    <div class="day-list">
+      <div class="day-item highlight">
+        <span class="day-num">DAY 06</span>
+        <span class="day-title">接入 gopls</span>
+        <span class="day-desc">安装 <code class="inline">gopls</code>；用 Neovim LSP 连接 Go 项目；配置 attach 后 keymap：定义、引用、悬浮说明、重命名。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 07</span>
+        <span class="day-title">代码导航与项目搜索</span>
+        <span class="day-desc">配置 fuzzy finder；练习文件、buffer、symbol、grep 搜索；用 <code class="inline">:lua vim.lsp.buf.definition()</code> 理解 LSP 请求。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 08</span>
+        <span class="day-title">补全与片段</span>
+        <span class="day-desc">接入补全插件或使用内置补全；只保留 Go 常用片段：函数、测试、表驱动测试、error return；避免把补全菜单调得过重。</span>
+      </div>
+      <div class="day-item highlight">
+        <span class="day-num">DAY 09</span>
+        <span class="day-title">格式化与导入整理</span>
+        <span class="day-desc">绑定保存时 <code class="inline">gofmt</code> / <code class="inline">goimports</code> / <code class="inline">gofumpt</code>；确认格式化来自 LSP 还是外部 formatter。</span>
+      </div>
+      <div class="day-item review">
+        <span class="day-num">DAY 10</span>
+        <span class="day-title">诊断、quickfix 与 trouble list</span>
+        <span class="day-desc">学习 diagnostics 浮窗、跳转、quickfix 列表；把编译错误、LSP 诊断、grep 结果放进同一个处理习惯里。</span>
+      </div>
+    </div>
+    <div class="annot">阶段验收：打开任意 Go 项目后，能完成定义跳转、引用追踪、重命名、保存格式化、定位诊断。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>Go 开发工作流</h2>
+    <div class="count">DAY 11 - 15</div>
+  </div>
+  <div class="indent">
+    <p class="lede">现在开始把编辑器能力嵌进 Go 的日常开发：包结构、模块管理、测试、覆盖率和惯用写法。Nvim 只是入口，真正要形成的是“读代码、改代码、验证代码”的闭环。</p>
+    <div class="day-list">
+      <div class="day-item">
+        <span class="day-num">DAY 11</span>
+        <span class="day-title">包结构与模块边界</span>
+        <span class="day-desc">梳理 <code class="inline">cmd/</code>、<code class="inline">internal/</code>、package 命名、import path；用文件树和搜索建立项目地图。</span>
+      </div>
+      <div class="day-item highlight">
+        <span class="day-num">DAY 12</span>
+        <span class="day-title">表驱动测试</span>
+        <span class="day-desc">写 5 组 table-driven tests；配置快捷键运行当前文件、当前包、全部测试；学会从失败输出跳回代码。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 13</span>
+        <span class="day-title">覆盖率与 benchmark</span>
+        <span class="day-desc">跑 <code class="inline">go test -cover</code>、<code class="inline">go test -bench</code>；在 Nvim 中查看慢路径；避免只为覆盖率补空测试。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 14</span>
+        <span class="day-title">依赖与 go mod</span>
+        <span class="day-desc">练习 <code class="inline">go get</code>、<code class="inline">go mod tidy</code>、replace、workspace；学会读 <code class="inline">go.sum</code> 变化。</span>
+      </div>
+      <div class="day-item review">
+        <span class="day-num">DAY 15</span>
+        <span class="day-title">Go 惯用写法复盘</span>
+        <span class="day-desc">围绕 error、interface、defer、context、receiver 做一次代码审查；把 8 条个人 Go 规范写进 dotfiles 文档。</span>
+      </div>
+    </div>
+    <div class="annot">阶段验收：你能在 Nvim 内完成一个 Go package 的新增功能、测试、覆盖率检查和依赖整理。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>调试与代码质量</h2>
+    <div class="count">DAY 16 - 20</div>
+  </div>
+  <div class="indent">
+    <p class="lede">第五周前要补上专业开发的硬能力：断点调试、日志定位、lint、安全扫描和构建条件。真正的主力环境不是好看，而是在出问题时能让你更快恢复判断。</p>
+    <div class="day-list">
+      <div class="day-item highlight">
+        <span class="day-num">DAY 16</span>
+        <span class="day-title">Delve CLI 调试</span>
+        <span class="day-desc">安装 <code class="inline">dlv</code>；先在终端跑 <code class="inline">dlv debug</code>、break、continue、next、print；理解调试器不是 Nvim 插件的附属品。</span>
+      </div>
+      <div class="day-item highlight">
+        <span class="day-num">DAY 17</span>
+        <span class="day-title">nvim-dap 调试界面</span>
+        <span class="day-desc">接入 DAP；配置 launch / attach；绑定断点、单步、变量查看；用真实 bug 完成一次从断点到修复。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 18</span>
+        <span class="day-title">日志、panic 与错误路径</span>
+        <span class="day-desc">练习从 stack trace 跳到源码；用 quickfix 收集错误；把常见 panic、nil、context timeout 写成调试卡片。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 19</span>
+        <span class="day-title">lint、vet 与安全扫描</span>
+        <span class="day-desc">跑 <code class="inline">go vet</code>、staticcheck、govulncheck；区分编译错误、风格建议、安全风险；只把稳定规则放进自动化。</span>
+      </div>
+      <div class="day-item review">
+        <span class="day-num">DAY 20</span>
+        <span class="day-title">构建标签与运行环境</span>
+        <span class="day-desc">学习 build tags、环境变量、测试 fixture；在 Nvim terminal 中管理本地服务、测试命令和运行参数。</span>
+      </div>
+    </div>
+    <div class="annot">阶段验收：面对一个失败测试或线上风格 bug，你能用日志、断点、诊断和 lint 找到原因，而不是靠猜。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>真实项目实战</h2>
+    <div class="count">DAY 21 - 26</div>
+  </div>
+  <div class="indent">
+    <p class="lede">接下来六天只围绕一个项目推进。推荐做一个“小而完整”的 HTTP 服务：有配置、有路由、有存储、有并发、有测试、有性能观察。不要再为插件而插件。</p>
+    <div class="day-list">
+      <div class="day-item highlight">
+        <span class="day-num">DAY 21</span>
+        <span class="day-title">项目骨架与任务入口</span>
+        <span class="day-desc">创建 <code class="inline">cmd/</code>、<code class="inline">internal/</code>、Makefile 或 taskfile；在 Nvim 里绑定 build、test、run 三个入口。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 22</span>
+        <span class="day-title">HTTP API 与路由</span>
+        <span class="day-desc">实现 2–3 个 handler；用跳转、引用、重命名维护结构；写 handler 单测和集成测试。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 23</span>
+        <span class="day-title">配置、存储与边界</span>
+        <span class="day-desc">加入配置读取和简单存储层；练习 interface 边界；用 mock 或 fake 写测试，不让测试依赖真实外部系统。</span>
+      </div>
+      <div class="day-item highlight">
+        <span class="day-num">DAY 24</span>
+        <span class="day-title">并发与 context</span>
+        <span class="day-desc">实现一个带超时的后台任务；理解 goroutine、channel、context cancel；用测试验证取消路径。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 25</span>
+        <span class="day-title">性能观察与 pprof</span>
+        <span class="day-desc">跑 benchmark，打开 pprof；定位一个慢函数；记录“观察证据 → 修改 → 再测”的过程。</span>
+      </div>
+      <div class="day-item review">
+        <span class="day-num">DAY 26</span>
+        <span class="day-title">一次完整重构</span>
+        <span class="day-desc">选择一个真实坏味道：函数过长、依赖方向错、测试难写；用 LSP 重命名、引用、诊断完成重构。</span>
+      </div>
+    </div>
+    <div class="annot">阶段验收：项目能一条命令跑起来，测试可重复，核心功能有覆盖，调试和性能记录能追溯。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>个人 Go 工作台</h2>
+    <div class="count">DAY 27 - 30</div>
+  </div>
+  <div class="indent">
+    <p class="lede">最后四天把学习成果固化。一个好的 Nvim Go 环境应该可复制、可解释、可回滚；你要能在新机器上恢复，也能向同事说明每个插件为什么存在。</p>
+    <div class="day-list">
+      <div class="day-item">
+        <span class="day-num">DAY 27</span>
+        <span class="day-title">配置模块化与文档化</span>
+        <span class="day-desc">拆分 lsp、dap、formatter、keymaps、ui；给每个模块写一句用途说明；删除 30 天里没实际用过的插件。</span>
+      </div>
+      <div class="day-item highlight">
+        <span class="day-num">DAY 28</span>
+        <span class="day-title">插件更新与回滚策略</span>
+        <span class="day-desc">理解 lockfile；建立每周更新节奏；更新后跑 <code class="inline">:checkhealth</code>、打开 Go 项目、跑测试、试一次 debug。</span>
+      </div>
+      <div class="day-item">
+        <span class="day-num">DAY 29</span>
+        <span class="day-title">Git、CI 与团队协作</span>
+        <span class="day-desc">把 gofmt、go test、go vet、govulncheck 放进 CI；用 Nvim 完成一次 issue → branch → commit → review 的闭环。</span>
+      </div>
+      <div class="day-item review">
+        <span class="day-num">DAY 30</span>
+        <span class="day-title">毕业项目与个人手册</span>
+        <span class="day-desc">从零开一个 Go 项目，30 分钟内完成初始化、LSP、测试、调试、提交；写下你的 Nvim Go 开发 SOP。</span>
+      </div>
+    </div>
+    <div class="annot">最终验收：新项目启动后一小时内，你能完成从编码到测试、调试、重构、提交的完整开发循环。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>关键配置速查</h2>
+    <div class="count">COMMANDS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag">INSTALL</div>
+        <h3>基础工具</h3>
+        <div class="cmd-block">
+          <span class="prompt">$</span> brew install neovim go ripgrep fd tree-sitter<br>
+          <span class="prompt">$</span> go install <span class="string">golang.org/x/tools/gopls@latest</span><br>
+          <span class="prompt">$</span> go install <span class="string">github.com/go-delve/delve/cmd/dlv@latest</span><br>
+          <span class="prompt">$</span> go install <span class="string">golang.org/x/vuln/cmd/govulncheck@latest</span>
+        </div>
+      </div>
+      <div class="node">
+        <div class="tag">NVIM</div>
+        <h3>日常检查</h3>
+        <div class="cmd-block">
+          <span class="prompt">:</span>checkhealth<br>
+          <span class="prompt">:</span>LspInfo<br>
+          <span class="prompt">:</span>InspectTree<br>
+          <span class="prompt">:</span>lua vim.print(vim.lsp.get_clients())<br>
+          <span class="prompt">:</span>copen
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:40px;">核心映射建议</h3>
+    <div class="table-wrap" style="margin-top:12px;">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>能力</th>
+            <th>建议快捷键</th>
+            <th>验收动作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>定义跳转</td>
+            <td><code class="inline">gd</code></td>
+            <td>从 handler 跳到 service、repo、类型定义，并能快速跳回。</td>
+          </tr>
+          <tr>
+            <td>引用查找</td>
+            <td><code class="inline">gr</code></td>
+            <td>重构前确认函数被哪些包使用。</td>
+          </tr>
+          <tr>
+            <td>重命名</td>
+            <td><code class="inline">&lt;leader&gt;rn</code></td>
+            <td>跨文件重命名结构体字段，测试仍然通过。</td>
+          </tr>
+          <tr>
+            <td>运行当前包测试</td>
+            <td><code class="inline">&lt;leader&gt;tp</code></td>
+            <td>改完函数后不离开 Nvim 就能验证当前 package。</td>
+          </tr>
+          <tr>
+            <td>调试启动</td>
+            <td><code class="inline">&lt;leader&gt;dc</code></td>
+            <td>设置断点，进入 handler，查看变量，继续执行。</td>
+          </tr>
+          <tr>
+            <td>诊断列表</td>
+            <td><code class="inline">&lt;leader&gt;xx</code></td>
+            <td>把 LSP 诊断、测试失败、grep 结果统一收敛到列表里。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>参考资料</h2>
+    <div class="count">PRIMARY SOURCES</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node">
+        <div class="tag">NEOVIM</div>
+        <h3>Neovim LSP 与配置</h3>
+        <p><a href="https://neovim.io/doc/user/lsp.html">Neovim LSP 文档</a> 解释了内置 LSP 客户端；<a href="https://github.com/neovim/nvim-lspconfig">nvim-lspconfig</a> 提供常见语言服务器配置入口。</p>
+      </div>
+      <div class="node">
+        <div class="tag">GO</div>
+        <h3>Go 官方学习材料</h3>
+        <p><a href="https://go.dev/doc/tutorial/getting-started">Go 入门教程</a>、<a href="https://go.dev/doc/effective_go">Effective Go</a>、<a href="https://go.dev/doc/modules/managing-dependencies">模块依赖管理</a> 是学习 Go 工作流的主线资料。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag">GOPLS</div>
+        <h3>Go 语言服务器</h3>
+        <p><a href="https://go.dev/gopls/">gopls</a> 是 Go 官方语言服务器，是 Nvim 中跳转、诊断、重命名和代码动作的核心来源。</p>
+      </div>
+      <div class="node">
+        <div class="tag">DEBUG</div>
+        <h3>Delve 与 DAP</h3>
+        <p><a href="https://github.com/go-delve/delve">Delve</a> 是 Go 调试器；<a href="https://github.com/mfussenegger/nvim-dap">nvim-dap</a> 把 Debug Adapter Protocol 接入 Neovim。</p>
+      </div>
+    </div>
+    <div class="chip-list">
+      <span class="chip accent">neovim.io</span>
+      <span class="chip accent">go.dev</span>
+      <span class="chip">gopls</span>
+      <span class="chip">Delve</span>
+      <span class="chip">nvim-dap</span>
+      <span class="chip">govulncheck</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>不要踩的坑</h2>
+    <div class="count">CHECKLIST</div>
+  </div>
+  <div class="indent">
+    <div class="node">
+      <ol class="checklist">
+        <li><strong>先插件后能力。</strong> 看到插件就装，最后只会得到一份不可解释的配置。每个插件必须回答：它替代了哪个动作，失败时如何降级。</li>
+        <li><strong>只改配置，不写 Go。</strong> Nvim 是开发环境，不是学习终点。每天至少在真实 Go 文件里完成一个可运行改动。</li>
+        <li><strong>把 LSP、formatter、lint 混为一谈。</strong> gopls 负责语言理解，formatter 负责格式，lint 负责规则。问题定位时先拆清来源。</li>
+        <li><strong>忽略调试器 CLI。</strong> nvim-dap 坏了时，能不能用 <code class="inline">dlv</code> 独立复现，是判断你是否真正理解调试的分水岭。</li>
+        <li><strong>过早追求团队级配置。</strong> 第一个月先做个人工作台；等你能稳定解释每个设置，再考虑抽象成团队模板。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="quote">少装一个没用过的插件，多完成一次真实的编码、测试、调试和提交。</p>
+  <p class="meta">NVIM + GO 30-DAY ROADMAP · EDITOR TO DELIVERY</p>
+</footer>
+
+</div>
