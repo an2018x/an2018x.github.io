@@ -120,11 +120,11 @@
         }
     });
 
-    // Edge hover: show trigger when mouse near right edge
+    // Edge hover: show trigger when mouse near left edge
     var triggerVisible = false;
     document.addEventListener('mousemove', function(e) {
-        var threshold = window.innerWidth - 48;
-        if (e.clientX > threshold && !container.classList.contains('toc-open')) {
+        var threshold = 48;
+        if (e.clientX < threshold && !container.classList.contains('toc-open')) {
             if (!triggerVisible) { trigger.classList.add('toc-trigger-visible'); triggerVisible = true; }
         } else if (!container.classList.contains('toc-open')) {
             if (triggerVisible) { trigger.classList.remove('toc-trigger-visible'); triggerVisible = false; }

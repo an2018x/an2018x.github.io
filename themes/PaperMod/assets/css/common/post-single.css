@@ -355,7 +355,7 @@
 /* ===== TOC Sidebar — kami panel ===== */
 .toc-container {
     position: fixed;
-    right: 0;
+    left: 0;
     top: 0;
     height: 100vh;
     z-index: 100;
@@ -364,7 +364,7 @@
 
 #toc-trigger {
     position: fixed;
-    right: 0;
+    left: 0;
     top: 50%;
     transform: translateY(-50%);
     width: 36px;
@@ -374,8 +374,8 @@
     justify-content: center;
     background: var(--ivory);
     border: 1.5px solid var(--border);
-    border-right: none;
-    border-radius: 8px 0 0 8px;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
     color: var(--stone);
     cursor: pointer;
     pointer-events: auto;
@@ -400,14 +400,14 @@
 
 .toc {
     position: fixed;
-    right: 0;
+    left: 0;
     top: 0;
     width: 300px;
     height: 100vh;
     background: var(--ivory);
-    border-left: 1.5px solid var(--border);
-    box-shadow: -4pt 0 24pt rgba(0, 0, 0, 0.05);
-    transform: translateX(100%);
+    border-right: 1.5px solid var(--border);
+    box-shadow: 4pt 0 24pt rgba(0, 0, 0, 0.05);
+    transform: translateX(-100%);
     transition: transform 200ms ease;
     pointer-events: auto;
     display: flex;
@@ -541,7 +541,7 @@
     #toc-trigger {
         top: auto;
         bottom: 80px;
-        right: 16px;
+        left: 16px;
         transform: none;
         width: 44px;
         height: 44px;
