@@ -335,16 +335,19 @@ body{
   font-family:var(--mono);
   font-size:11.5px;
   color:var(--g500);
-  display:flex; align-items:flex-start;
+  position:relative;
   margin-top:14px;
+  padding-left:44px;
   letter-spacing:.04em;
 }
 .timewrap .annot::before{
   content:"";
-  width:32px; height:1.5px;
+  position:absolute;
+  left:0;
+  top:8px;
+  width:32px;
+  height:1.5px;
   background:var(--clay);
-  margin-right:12px; margin-top:8px;
-  flex-shrink:0;
 }
 
 /* ========== Table ========== */

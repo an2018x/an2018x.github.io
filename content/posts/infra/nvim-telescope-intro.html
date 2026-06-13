@@ -1,0 +1,701 @@
+---
+title: "什么是 Telescope：Nvim 里的模糊查找中枢"
+date: '2026-06-13'
+draft: false
+description: "一篇面向 Nvim + Go 学习者的 Telescope 入门说明：理解 picker、finder、sorter、previewer，配置文件搜索、全文搜索、buffer、LSP 引用和当前文件函数列表。"
+toc: false
+tags:
+  - Neovim
+  - Telescope
+  - Search
+  - LSP
+  - Go
+---
+
+<style>
+:root{
+  --ng-parchment:#f5f4ed;
+  --ng-ivory:#faf9f5;
+  --ng-brand:#1B365D;
+  --ng-ink:#141413;
+  --ng-dark:#30302e;
+  --ng-warm:#3d3d3a;
+  --ng-olive:#504e49;
+  --ng-stone:#6b6a64;
+  --ng-border:#e8e6dc;
+  --ng-border-soft:#e5e3d8;
+  --ng-sand:#e8e6dc;
+  --ng-tag:#EEF2F7;
+  --ng-serif:"TsangerJinKai02","Source Han Serif SC","Noto Serif CJK SC","Songti SC","STSong",Georgia,serif;
+  --ng-sans:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ng-mono:"JetBrains Mono","SF Mono",Consolas,"TsangerJinKai02","Source Han Serif SC",monospace;
+}
+
+*{ box-sizing:border-box; }
+body{
+  background:var(--ng-parchment);
+  color:var(--ng-ink);
+}
+
+.ng-day{
+  max-width:1060px;
+  margin:0 auto;
+  padding:0 32px 120px;
+  color:var(--ng-ink);
+  font-family:var(--ng-sans);
+  font-size:15px;
+  line-height:1.6;
+}
+.ng-day a{
+  color:var(--ng-brand);
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+}
+.ng-day strong{ font-weight:600; }
+
+.ng-day .masthead{
+  padding:76px 0 48px;
+}
+.ng-day .eyebrow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  letter-spacing:0;
+  text-transform:uppercase;
+}
+.ng-day .eyebrow::before{
+  content:"";
+  display:block;
+  width:28px;
+  height:2px;
+  background:var(--ng-brand);
+  border-radius:2px;
+}
+.ng-day h1,
+.ng-day h2,
+.ng-day h3{
+  font-family:var(--ng-serif);
+  font-weight:500;
+  color:var(--ng-ink);
+  letter-spacing:0;
+}
+.ng-day h1{
+  max-width:18ch;
+  margin:22px 0 26px;
+  font-size:54px;
+  line-height:1.12;
+}
+.ng-day h1 span{ color:var(--ng-brand); }
+.ng-day h2{
+  margin:0;
+  font-size:28px;
+  line-height:1.25;
+}
+.ng-day h3{
+  margin:0 0 10px;
+  font-size:20px;
+  line-height:1.3;
+}
+.ng-day .lede{
+  max-width:68ch;
+  margin:0 0 28px;
+  color:var(--ng-warm);
+  font-size:16px;
+  line-height:1.7;
+}
+.ng-day .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  padding:14px 0;
+  border-top:1px solid var(--ng-border);
+  border-bottom:1px solid var(--ng-border);
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+}
+.ng-day .meta-strip span{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:26px;
+}
+.ng-day .meta-strip strong{
+  color:var(--ng-ink);
+  font-weight:600;
+}
+
+.ng-day section{ margin-top:68px; }
+.ng-day .indent{ margin-left:50px; }
+.ng-day .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:26px;
+}
+.ng-day .count,
+.ng-day .tag{
+  display:inline-flex;
+  align-items:center;
+  border-radius:6px;
+  background:var(--ng-tag);
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-weight:600;
+}
+.ng-day .count{
+  min-height:24px;
+  padding:3px 10px;
+  font-size:11px;
+}
+.ng-day .tag{
+  min-height:22px;
+  margin-bottom:10px;
+  padding:2px 7px;
+  font-size:11px;
+}
+.ng-day .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+.ng-day .grid-2{
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+}
+.ng-day .node{
+  background:var(--ng-ivory);
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  padding:20px 22px;
+}
+.ng-day .node.accent{
+  border-left:4px solid var(--ng-brand);
+}
+.ng-day .node.exit{
+  background:var(--ng-sand);
+  border-color:var(--ng-brand);
+}
+.ng-day .node p{
+  margin:6px 0 0;
+  color:var(--ng-olive);
+  font-size:14px;
+  line-height:1.6;
+}
+.ng-day .annot{
+  position:relative;
+  margin-top:16px;
+  padding-left:46px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  line-height:1.6;
+}
+.ng-day .annot::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:9px;
+  width:34px;
+  height:2px;
+  background:var(--ng-brand);
+  border-radius:2px;
+}
+.ng-day code.inline{
+  display:inline-block;
+  padding:1px 6px;
+  border-radius:4px;
+  background:var(--ng-tag);
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  line-height:1.45;
+}
+.ng-day .cmd-block{
+  margin:12px 0 0;
+  padding:18px 20px;
+  overflow-x:auto;
+  border-radius:8px;
+  background:var(--ng-dark);
+  color:var(--ng-ivory);
+  font-family:var(--ng-mono);
+  font-size:13px;
+  line-height:1.8;
+}
+.ng-day .cmd-block .prompt{ color:#B8B6AA; }
+.ng-day .cmd-block .flag{ color:#9FB7D4; }
+.ng-day .cmd-block .string{ color:#E8E6DC; }
+.ng-day .table-wrap{
+  overflow-x:auto;
+}
+.ng-day table.compare{
+  width:100%;
+  border-collapse:collapse;
+  overflow:hidden;
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  background:var(--ng-ivory);
+  font-size:14px;
+}
+.ng-day table.compare th,
+.ng-day table.compare td{
+  padding:13px 16px;
+  border-bottom:1px solid var(--ng-border-soft);
+  text-align:left;
+  vertical-align:top;
+}
+.ng-day table.compare th{
+  background:var(--ng-sand);
+  color:var(--ng-warm);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  font-weight:600;
+}
+.ng-day table.compare td:first-child{
+  color:var(--ng-ink);
+  font-family:var(--ng-serif);
+  font-weight:500;
+}
+.ng-day table.compare tr:last-child td{
+  border-bottom:none;
+}
+.ng-day .nav-line{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:20px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+}
+
+@media (max-width: 860px){
+  .ng-day{
+    padding:0 22px 90px;
+  }
+  .ng-day h1{
+    font-size:42px;
+  }
+  .ng-day .indent{
+    margin-left:0;
+  }
+  .ng-day .sec-head{
+    align-items:flex-start;
+  }
+}
+@media (max-width: 520px){
+  .ng-day{
+    padding:0 18px 80px;
+  }
+  .ng-day .masthead{
+    padding:54px 0 38px;
+  }
+  .ng-day h1{
+    font-size:34px;
+  }
+  .ng-day section{
+    margin-top:54px;
+  }
+  .ng-day .sec-head{
+    flex-wrap:wrap;
+    gap:8px 10px;
+  }
+  .ng-day .grid,
+  .ng-day .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+<div class="ng-day">
+
+<header class="masthead">
+  <div class="eyebrow">NEOVIM · TELESCOPE · GUIDE</div>
+  <h1>什么是<span>Telescope</span></h1>
+  <p class="lede">
+    Telescope 是 Nvim 里的“模糊查找中枢”。它不是文件树，也不是语言服务器；它负责把文件、文本、buffer、Git、LSP 符号、引用列表这些东西收集起来，
+    放进一个可搜索、可预览、可跳转的弹窗里。
+  </p>
+  <div class="meta-strip">
+    <span><strong>TYPE</strong> Nvim plugin guide</span>
+    <span><strong>TIME</strong> 25 - 40 min</span>
+    <span><strong>OUTPUT</strong> Telescope mental model + config</span>
+    <span><strong>FOR</strong> Nvim + Go workflow</span>
+  </div>
+  <div class="nav-line">
+    <a href="/posts/infra/nvim-go-roadmap/">返回 Nvim + Go 30 天总路线</a>
+    <span>·</span>
+    <a href="/posts/infra/nvim-go-day07/">关联：Day07 代码导航与项目搜索</a>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head">
+    <h2>一句话理解</h2>
+    <div class="count">MENTAL MODEL</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag">WHAT</div>
+        <h3>它解决什么问题</h3>
+        <p>当你脑子里只有一点线索，比如文件名、函数名、错误文案、某个引用，Telescope 负责把候选项拉出来，让你边输入边过滤，最后跳到准确位置。</p>
+      </div>
+      <div class="node">
+        <div class="tag">NOT</div>
+        <h3>它不是什么</h3>
+        <p>它不是文件目录树，不负责长期展示项目结构；它也不是 gopls，不负责理解 Go 语义。它更像一个统一入口，把不同来源的列表变得好找。</p>
+      </div>
+    </div>
+    <div class="annot">你可以把 Telescope 想成 Nvim 里的搜索面板：文件搜索、全文搜索、函数列表、引用列表，都用同一种交互方式处理。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>1. Telescope 的四个部件</h2>
+    <div class="count">CORE</div>
+  </div>
+  <div class="indent">
+    <p class="lede">Telescope 官方把它设计成可扩展的 picker 系统。日常使用不需要写扩展，但理解这四个词会让配置清楚很多。</p>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>部件</th>
+            <th>它做什么</th>
+            <th>例子</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>picker</td>
+            <td>一次完整的查找界面。</td>
+            <td><code class="inline">find_files</code>、<code class="inline">live_grep</code>、<code class="inline">lsp_references</code>。</td>
+          </tr>
+          <tr>
+            <td>finder</td>
+            <td>负责拿到候选列表。</td>
+            <td>从 <code class="inline">fd</code> 拿文件，从 <code class="inline">rg</code> 拿文本，从 LSP 拿引用。</td>
+          </tr>
+          <tr>
+            <td>sorter</td>
+            <td>负责按输入内容排序候选项。</td>
+            <td>你输入 <code class="inline">tsk</code>，它把最像 <code class="inline">task.go</code> 的结果排前面。</td>
+          </tr>
+          <tr>
+            <td>previewer</td>
+            <td>负责右侧或下方预览内容。</td>
+            <td>预览文件内容、grep 命中行、LSP 引用上下文。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">真正让 Telescope 好用的不是“弹窗”，而是候选列表、模糊排序和预览被统一到了一个操作模型里。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>2. 安装最小配置</h2>
+    <div class="count">INSTALL</div>
+  </div>
+  <div class="indent">
+    <p class="lede">Telescope 依赖 <code class="inline">plenary.nvim</code>。如果你要高质量文件搜索和全文搜索，还应该安装 <code class="inline">fd</code> 和 <code class="inline">ripgrep</code>。</p>
+    <div class="cmd-block">
+      <span class="prompt">$</span> brew install ripgrep fd
+    </div>
+    <p class="lede" style="margin-top:24px;">把插件放进 <code class="inline">lua/plugins/init.lua</code>：</p>
+    <pre class="cmd-block">{
+  "nvim-telescope/telescope.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+  },
+  cmd = "Telescope",
+  keys = {
+    { "&lt;leader&gt;ff", "&lt;cmd&gt;Telescope find_files&lt;cr&gt;", desc = "Find files" },
+    { "&lt;leader&gt;fg", "&lt;cmd&gt;Telescope live_grep&lt;cr&gt;", desc = "Live grep" },
+    { "&lt;leader&gt;fb", "&lt;cmd&gt;Telescope buffers&lt;cr&gt;", desc = "Find buffers" },
+    { "&lt;leader&gt;fh", "&lt;cmd&gt;Telescope help_tags&lt;cr&gt;", desc = "Help tags" },
+  },
+  opts = {
+    defaults = {
+      path_display = { "smart" },
+      dynamic_preview_title = true,
+      layout_strategy = "horizontal",
+      layout_config = {
+        horizontal = {
+          width = 0.95,
+          height = 0.85,
+          preview_width = 0.6,
+        },
+      },
+    },
+  },
+}</pre>
+    <div class="annot">如果你按 <code class="inline">&lt;leader&gt;ff</code> 没反应，先确认 leader 是什么：<code class="inline">:echo mapleader</code>。常见配置里 leader 是空格。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>3. 最常用的入口</h2>
+    <div class="count">PICKERS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">初学时别记太多，先把这六个入口练熟。</p>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>入口</th>
+            <th>用来找什么</th>
+            <th>什么时候按</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">find_files</code></td>
+            <td>项目文件。</td>
+            <td>知道文件名一部分时。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">live_grep</code></td>
+            <td>项目全文内容。</td>
+            <td>记得某段字符串、错误文案、函数调用时。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">buffers</code></td>
+            <td>已打开文件。</td>
+            <td>在几个文件之间来回切换时。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">oldfiles</code></td>
+            <td>最近打开过的文件。</td>
+            <td>想回到刚才编辑过但已经关掉的文件。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">lsp_document_symbols</code></td>
+            <td>当前文件函数、方法、结构体。</td>
+            <td>长 Go 文件里找某个函数。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">lsp_references</code></td>
+            <td>当前符号的引用。</td>
+            <td>按 <code class="inline">gr</code> 查哪里调用了这个函数。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">Telescope 适合“我知道一点线索，想快速跳过去”。如果你要长期观察目录结构，用 Neo-tree；如果要逐条处理一组结果，用 quickfix 或 Trouble。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>4. 推荐快捷键</h2>
+    <div class="count">KEYMAPS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">把这些放进 <code class="inline">lua/config/keymaps.lua</code>。用 <code class="inline">pcall</code> 是为了 Telescope 未安装时不让整个 Nvim 配置报错。</p>
+    <pre class="cmd-block">local ok, builtin = pcall(require, "telescope.builtin")
+if ok then
+  vim.keymap.set("n", "&lt;leader&gt;ff", builtin.find_files, { desc = "Find files" })
+  vim.keymap.set("n", "&lt;leader&gt;fg", builtin.live_grep, { desc = "Live grep" })
+  vim.keymap.set("n", "&lt;leader&gt;fb", builtin.buffers, { desc = "Find buffers" })
+  vim.keymap.set("n", "&lt;leader&gt;fo", builtin.oldfiles, { desc = "Find old files" })
+  vim.keymap.set("n", "&lt;leader&gt;fh", builtin.help_tags, { desc = "Find help" })
+end</pre>
+    <p class="lede" style="margin-top:24px;">在 LSP attach 之后，再把语义相关入口放到 <code class="inline">lua/lsp/init.lua</code>：</p>
+    <pre class="cmd-block">local builtin = require("telescope.builtin")
+
+map("gr", function()
+  builtin.lsp_references({
+    include_declaration = false,
+    include_current_line = true,
+    show_line = true,
+    trim_text = false,
+    jump_type = "never",
+  })
+end, "References")
+
+map("&lt;leader&gt;sf", function()
+  builtin.lsp_document_symbols({
+    symbols = { "function", "method", "struct", "interface" },
+    show_line = true,
+    trim_text = false,
+  })
+end, "Search symbols in current file")</pre>
+    <div class="annot">文件搜索和全文搜索不需要 LSP；引用、定义、函数列表依赖 gopls attach。坏掉时要分层排查。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>5. Go 开发里的实际用法</h2>
+    <div class="count">GO FLOW</div>
+  </div>
+  <div class="indent">
+    <p class="lede">在 Go 项目里，Telescope 最大的价值是减少“我先去哪里找”的犹豫。</p>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>任务</th>
+            <th>入口</th>
+            <th>动作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>打开业务文件</td>
+            <td><code class="inline">&lt;leader&gt;ff</code></td>
+            <td>输入 <code class="inline">task</code>，选择 <code class="inline">internal/task/task.go</code>。</td>
+          </tr>
+          <tr>
+            <td>找错误文案</td>
+            <td><code class="inline">&lt;leader&gt;fg</code></td>
+            <td>搜索 <code class="inline">title is required</code>，从结果跳到定义。</td>
+          </tr>
+          <tr>
+            <td>找当前文件函数</td>
+            <td><code class="inline">&lt;leader&gt;sf</code></td>
+            <td>输入函数名片段，跳到目标函数。</td>
+          </tr>
+          <tr>
+            <td>查函数在哪里被调用</td>
+            <td><code class="inline">gr</code></td>
+            <td>查看引用列表，带预览确认上下文。</td>
+          </tr>
+          <tr>
+            <td>读文档</td>
+            <td><code class="inline">&lt;leader&gt;fh</code></td>
+            <td>搜索 <code class="inline">lsp</code>、<code class="inline">quickfix</code>、<code class="inline">diagnostic</code>。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">一个很稳的节奏是：文件名用 <code class="inline">ff</code>，文本内容用 <code class="inline">fg</code>，当前文件结构用 <code class="inline">sf</code>，语义引用用 <code class="inline">gr</code>。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>6. Telescope 和其他工具的边界</h2>
+    <div class="count">COMPARE</div>
+  </div>
+  <div class="indent">
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>工具</th>
+            <th>更适合</th>
+            <th>不适合</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Telescope</td>
+            <td>临时查找、快速过滤、带预览跳转。</td>
+            <td>长时间展示目录结构，逐条处理大量问题。</td>
+          </tr>
+          <tr>
+            <td>Neo-tree</td>
+            <td>看目录结构、创建文件、重命名、移动文件。</td>
+            <td>全文搜索和语义引用。</td>
+          </tr>
+          <tr>
+            <td>quickfix</td>
+            <td>逐条处理一组错误、grep 结果、测试失败。</td>
+            <td>临时模糊查找一个文件。</td>
+          </tr>
+          <tr>
+            <td>Trouble</td>
+            <td>更好地展示 diagnostics、quickfix、LSP 引用。</td>
+            <td>替代底层数据源。它展示列表，不产生语义。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">不要把所有事都塞给 Telescope。工具边界清楚，配置才不会越堆越乱。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>7. 常见问题</h2>
+    <div class="count">DEBUG</div>
+  </div>
+  <div class="indent">
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>现象</th>
+            <th>可能原因</th>
+            <th>排查命令</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">&lt;leader&gt;ff</code> 没反应</td>
+            <td>leader 不是空格，插件没安装，或 keymap 文件没 require。</td>
+            <td><code class="inline">:echo mapleader</code>，<code class="inline">:map &lt;leader&gt;ff</code>。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">live_grep</code> 报错</td>
+            <td>没有安装 <code class="inline">ripgrep</code>。</td>
+            <td><code class="inline">:echo executable("rg")</code>。</td>
+          </tr>
+          <tr>
+            <td>找不到被 gitignore 的文件</td>
+            <td>Telescope 默认遵循底层工具的忽略规则。</td>
+            <td>先确认终端里 <code class="inline">fd</code> 或 <code class="inline">rg</code> 是否能找到。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">gr</code> 没引用</td>
+            <td>gopls 没 attach，或当前符号没有引用。</td>
+            <td><code class="inline">:lua vim.print(vim.lsp.get_clients())</code>。</td>
+          </tr>
+          <tr>
+            <td>窗口太小</td>
+            <td>默认 layout 不适合当前屏幕。</td>
+            <td>调整 <code class="inline">layout_config.width</code>、<code class="inline">height</code> 和 <code class="inline">preview_width</code>。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">排查时先分清：文件搜索坏了通常是 Telescope 或 fd；全文搜索坏了通常是 rg；LSP 引用坏了通常是 gopls。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>参考资料</h2>
+    <div class="count">PRIMARY SOURCES</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node">
+        <div class="tag">TELESCOPE</div>
+        <h3>官方文档</h3>
+        <p><a href="https://github.com/nvim-telescope/telescope.nvim">telescope.nvim README</a> 介绍 picker、finder、sorter、previewer，以及内置 pickers；<a href="https://github.com/nvim-lua/plenary.nvim">plenary.nvim</a> 是 Telescope 依赖的 Lua 工具库。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag">TOOLS</div>
+        <h3>搜索工具</h3>
+        <p><a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> 负责高速全文搜索；<a href="https://github.com/sharkdp/fd">fd</a> 负责快速列文件，它们是 Telescope 搜索体验的重要底层能力。</p>
+      </div>
+    </div>
+    <div class="nav-line">
+      <a href="/posts/infra/nvim-go-roadmap/">返回 Nvim + Go 30 天系统学习路线</a>
+      <span>·</span>
+      <a href="/posts/infra/nvim-go-day07/">关联：Day07 代码导航与项目搜索</a>
+    </div>
+  </div>
+</section>
+
+</div>

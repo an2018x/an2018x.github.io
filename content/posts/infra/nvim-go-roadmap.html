@@ -292,10 +292,9 @@ body{
 }
 
 .ng-wrap .annot{
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
+  position:relative;
   margin-top:16px;
+  padding-left:46px;
   color:var(--ng-stone);
   font-family:var(--ng-mono);
   font-size:12px;
@@ -303,11 +302,11 @@ body{
 }
 .ng-wrap .annot::before{
   content:"";
-  display:block;
+  position:absolute;
+  left:0;
+  top:9px;
   width:34px;
   height:2px;
-  margin-top:8px;
-  flex:0 0 34px;
   background:var(--ng-brand);
   border-radius:2px;
 }
@@ -643,27 +642,27 @@ body{
       <div class="day-item">
         <span class="day-num">DAY 01</span>
         <span class="day-title">安装与健康检查</span>
-        <span class="day-desc">安装 Neovim、Go、ripgrep、fd；运行 <code class="inline">:checkhealth</code> 与 <code class="inline">go version</code>；建立专门的 dotfiles 仓库。</span>
+        <span class="day-desc">安装 Neovim、Go、ripgrep、fd；运行 <code class="inline">:checkhealth</code> 与 <code class="inline">go version</code>；建立专门的 dotfiles 仓库。<a href="/posts/infra/nvim-go-day01/">查看 Day01 详细训练</a>。</span>
       </div>
       <div class="day-item highlight">
         <span class="day-num">DAY 02</span>
         <span class="day-title">Vim 移动心智</span>
-        <span class="day-desc">练习 normal / insert / visual 三种模式；掌握 <code class="inline">hjkl</code>、word、line、paragraph、search 移动；输出一张个人快捷键纸。</span>
+        <span class="day-desc">练习 normal / insert / visual 三种模式；掌握 <code class="inline">hjkl</code>、word、line、paragraph、search 移动；输出一张个人快捷键纸。<a href="/posts/infra/nvim-go-day02/">查看 Day02 详细训练</a>。</span>
       </div>
       <div class="day-item">
         <span class="day-num">DAY 03</span>
         <span class="day-title">文本对象与批量编辑</span>
-        <span class="day-desc">练习 <code class="inline">ciw</code>、<code class="inline">di(</code>、<code class="inline">ya&quot;</code>、宏录制、点命令；用 Go 文件完成变量名、函数参数、注释的批量编辑。</span>
+        <span class="day-desc">练习 <code class="inline">ciw</code>、<code class="inline">di(</code>、<code class="inline">ya&quot;</code>、宏录制、点命令；用 Go 文件完成变量名、函数参数、注释的批量编辑。<a href="/posts/infra/nvim-go-day03/">查看 Day03 详细训练</a>。</span>
       </div>
       <div class="day-item highlight">
         <span class="day-num">DAY 04</span>
         <span class="day-title">Lua 配置结构</span>
-        <span class="day-desc">把 <code class="inline">init.lua</code> 拆成 options、keymaps、plugins、lsp；理解 <code class="inline">require</code> 和模块加载顺序。</span>
+        <span class="day-desc">把 <code class="inline">init.lua</code> 拆成 options、keymaps、plugins、lsp；理解 <code class="inline">require</code> 和模块加载顺序。<a href="/posts/infra/nvim-go-day04/">查看 Day04 详细训练</a>。</span>
       </div>
       <div class="day-item review">
         <span class="day-num">DAY 05</span>
         <span class="day-title">Go 工具链入门</span>
-        <span class="day-desc">创建 <code class="inline">go mod init</code> 项目；跑通 <code class="inline">go fmt</code>、<code class="inline">go test</code>、<code class="inline">go run</code>；写一个小 CLI 作为后续练习项目。</span>
+        <span class="day-desc">创建 <code class="inline">go mod init</code> 项目；跑通 <code class="inline">go fmt</code>、<code class="inline">go test</code>、<code class="inline">go run</code>；写一个小 CLI 作为后续练习项目。<a href="/posts/infra/nvim-go-day05/">查看 Day05 详细训练</a>。</span>
       </div>
     </div>
     <div class="annot">阶段验收：你能不离开 Nvim 完成新建 Go 文件、快速移动、修改函数、保存、运行测试。</div>
@@ -681,27 +680,27 @@ body{
       <div class="day-item highlight">
         <span class="day-num">DAY 06</span>
         <span class="day-title">接入 gopls</span>
-        <span class="day-desc">安装 <code class="inline">gopls</code>；用 Neovim LSP 连接 Go 项目；配置 attach 后 keymap：定义、引用、悬浮说明、重命名。</span>
+        <span class="day-desc">安装 <code class="inline">gopls</code>；用 Neovim LSP 连接 Go 项目；配置 attach 后 keymap：定义、引用、悬浮说明、重命名。<a href="/posts/infra/nvim-go-day06/">查看 Day06 详细训练</a>。</span>
       </div>
       <div class="day-item">
         <span class="day-num">DAY 07</span>
         <span class="day-title">代码导航与项目搜索</span>
-        <span class="day-desc">配置 fuzzy finder；练习文件、buffer、symbol、grep 搜索；用 <code class="inline">:lua vim.lsp.buf.definition()</code> 理解 LSP 请求。</span>
+        <span class="day-desc">配置 fuzzy finder；练习文件、buffer、symbol、grep 搜索；用 <code class="inline">:lua vim.lsp.buf.definition()</code> 理解 LSP 请求。<a href="/posts/infra/nvim-go-day07/">查看 Day07 详细训练</a>。</span>
       </div>
       <div class="day-item">
         <span class="day-num">DAY 08</span>
         <span class="day-title">补全与片段</span>
-        <span class="day-desc">接入补全插件或使用内置补全；只保留 Go 常用片段：函数、测试、表驱动测试、error return；避免把补全菜单调得过重。</span>
+        <span class="day-desc">接入补全插件或使用内置补全；只保留 Go 常用片段：函数、测试、表驱动测试、error return；避免把补全菜单调得过重。<a href="/posts/infra/nvim-go-day08/">查看 Day08 详细训练</a>。</span>
       </div>
       <div class="day-item highlight">
         <span class="day-num">DAY 09</span>
         <span class="day-title">格式化与导入整理</span>
-        <span class="day-desc">绑定保存时 <code class="inline">gofmt</code> / <code class="inline">goimports</code> / <code class="inline">gofumpt</code>；确认格式化来自 LSP 还是外部 formatter。</span>
+        <span class="day-desc">绑定保存时 <code class="inline">gofmt</code> / <code class="inline">goimports</code> / <code class="inline">gofumpt</code>；确认格式化来自 LSP 还是外部 formatter。<a href="/posts/infra/nvim-go-day09/">查看 Day09 详细训练</a>。</span>
       </div>
       <div class="day-item review">
         <span class="day-num">DAY 10</span>
         <span class="day-title">诊断、quickfix 与 trouble list</span>
-        <span class="day-desc">学习 diagnostics 浮窗、跳转、quickfix 列表；把编译错误、LSP 诊断、grep 结果放进同一个处理习惯里。</span>
+        <span class="day-desc">学习 diagnostics 浮窗、跳转、quickfix 列表；把编译错误、LSP 诊断、grep 结果放进同一个处理习惯里。<a href="/posts/infra/nvim-go-day10/">查看 Day10 详细训练</a>。</span>
       </div>
     </div>
     <div class="annot">阶段验收：打开任意 Go 项目后，能完成定义跳转、引用追踪、重命名、保存格式化、定位诊断。</div>
@@ -719,7 +718,7 @@ body{
       <div class="day-item">
         <span class="day-num">DAY 11</span>
         <span class="day-title">包结构与模块边界</span>
-        <span class="day-desc">梳理 <code class="inline">cmd/</code>、<code class="inline">internal/</code>、package 命名、import path；用文件树和搜索建立项目地图。</span>
+        <span class="day-desc">梳理 <code class="inline">cmd/</code>、<code class="inline">internal/</code>、package 命名、import path；用文件树和搜索建立项目地图。<a href="/posts/infra/nvim-go-day11/">查看 Day11 详细训练</a>。</span>
       </div>
       <div class="day-item highlight">
         <span class="day-num">DAY 12</span>
@@ -947,7 +946,7 @@ body{
       <div class="node">
         <div class="tag">NEOVIM</div>
         <h3>Neovim LSP 与配置</h3>
-        <p><a href="https://neovim.io/doc/user/lsp.html">Neovim LSP 文档</a> 解释了内置 LSP 客户端；<a href="https://github.com/neovim/nvim-lspconfig">nvim-lspconfig</a> 提供常见语言服务器配置入口。</p>
+        <p><a href="https://neovim.io/doc/user/health.html">Neovim health 文档</a> 解释了 <code class="inline">:checkhealth</code>；<a href="https://neovim.io/doc/user/lsp.html">Neovim LSP 文档</a> 解释了内置 LSP 客户端；<a href="https://github.com/neovim/nvim-lspconfig">nvim-lspconfig</a> 提供常见语言服务器配置入口。</p>
       </div>
       <div class="node">
         <div class="tag">GO</div>

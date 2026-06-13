@@ -1,0 +1,684 @@
+---
+title: "Day 09 · Nvim + Go 格式化与导入整理"
+date: '2026-06-13'
+draft: false
+description: "Nvim + Go 30 天系统学习路线 Day 09：绑定保存时 gofmt、goimports、gofumpt，确认格式化来自 LSP 还是外部 formatter，并建立可排错的保存格式化流程。"
+toc: false
+tags:
+  - Go
+  - Neovim
+  - Formatting
+  - LSP
+  - Roadmap
+  - Day 09
+---
+
+<style>
+:root{
+  --ng-parchment:#f5f4ed;
+  --ng-ivory:#faf9f5;
+  --ng-brand:#1B365D;
+  --ng-ink:#141413;
+  --ng-dark:#30302e;
+  --ng-warm:#3d3d3a;
+  --ng-olive:#504e49;
+  --ng-stone:#6b6a64;
+  --ng-border:#e8e6dc;
+  --ng-border-soft:#e5e3d8;
+  --ng-sand:#e8e6dc;
+  --ng-tag:#EEF2F7;
+  --ng-serif:"TsangerJinKai02","Source Han Serif SC","Noto Serif CJK SC","Songti SC","STSong",Georgia,serif;
+  --ng-sans:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ng-mono:"JetBrains Mono","SF Mono",Consolas,"TsangerJinKai02","Source Han Serif SC",monospace;
+}
+
+*{ box-sizing:border-box; }
+body{
+  background:var(--ng-parchment);
+  color:var(--ng-ink);
+}
+
+.ng-day{
+  max-width:1060px;
+  margin:0 auto;
+  padding:0 32px 120px;
+  color:var(--ng-ink);
+  font-family:var(--ng-sans);
+  font-size:15px;
+  line-height:1.6;
+}
+.ng-day a{
+  color:var(--ng-brand);
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+}
+.ng-day strong{ font-weight:600; }
+
+.ng-day .masthead{
+  padding:76px 0 48px;
+}
+.ng-day .eyebrow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  letter-spacing:0;
+  text-transform:uppercase;
+}
+.ng-day .eyebrow::before{
+  content:"";
+  display:block;
+  width:28px;
+  height:2px;
+  background:var(--ng-brand);
+  border-radius:2px;
+}
+.ng-day h1,
+.ng-day h2,
+.ng-day h3{
+  font-family:var(--ng-serif);
+  font-weight:500;
+  color:var(--ng-ink);
+  letter-spacing:0;
+}
+.ng-day h1{
+  max-width:18ch;
+  margin:22px 0 26px;
+  font-size:54px;
+  line-height:1.12;
+}
+.ng-day h1 span{ color:var(--ng-brand); }
+.ng-day h2{
+  margin:0;
+  font-size:28px;
+  line-height:1.25;
+}
+.ng-day h3{
+  margin:0 0 10px;
+  font-size:20px;
+  line-height:1.3;
+}
+.ng-day .lede{
+  max-width:68ch;
+  margin:0 0 28px;
+  color:var(--ng-warm);
+  font-size:16px;
+  line-height:1.7;
+}
+.ng-day .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  padding:14px 0;
+  border-top:1px solid var(--ng-border);
+  border-bottom:1px solid var(--ng-border);
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+}
+.ng-day .meta-strip span{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:26px;
+}
+.ng-day .meta-strip strong{
+  color:var(--ng-ink);
+  font-weight:600;
+}
+
+.ng-day section{ margin-top:68px; }
+.ng-day .indent{ margin-left:50px; }
+.ng-day .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:26px;
+}
+.ng-day .count,
+.ng-day .tag{
+  display:inline-flex;
+  align-items:center;
+  border-radius:6px;
+  background:var(--ng-tag);
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-weight:600;
+}
+.ng-day .count{
+  min-height:24px;
+  padding:3px 10px;
+  font-size:11px;
+}
+.ng-day .tag{
+  min-height:22px;
+  margin-bottom:10px;
+  padding:2px 7px;
+  font-size:11px;
+}
+.ng-day .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+.ng-day .grid-2{
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+}
+.ng-day .node{
+  background:var(--ng-ivory);
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  padding:20px 22px;
+}
+.ng-day .node.accent{
+  border-left:4px solid var(--ng-brand);
+}
+.ng-day .node.exit{
+  background:var(--ng-sand);
+  border-color:var(--ng-brand);
+}
+.ng-day .node p{
+  margin:6px 0 0;
+  color:var(--ng-olive);
+  font-size:14px;
+  line-height:1.6;
+}
+.ng-day .annot{
+  position:relative;
+  margin-top:16px;
+  padding-left:46px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  line-height:1.6;
+}
+.ng-day .annot::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:9px;
+  width:34px;
+  height:2px;
+  background:var(--ng-brand);
+  border-radius:2px;
+}
+.ng-day code.inline{
+  display:inline-block;
+  padding:1px 6px;
+  border-radius:4px;
+  background:var(--ng-tag);
+  color:var(--ng-brand);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  line-height:1.45;
+}
+.ng-day .cmd-block{
+  margin:12px 0 0;
+  padding:18px 20px;
+  overflow-x:auto;
+  border-radius:8px;
+  background:var(--ng-dark);
+  color:var(--ng-ivory);
+  font-family:var(--ng-mono);
+  font-size:13px;
+  line-height:1.8;
+}
+.ng-day .cmd-block .prompt{ color:#B8B6AA; }
+.ng-day .cmd-block .flag{ color:#9FB7D4; }
+.ng-day .cmd-block .string{ color:#E8E6DC; }
+.ng-day .table-wrap{
+  overflow-x:auto;
+}
+.ng-day table.compare{
+  width:100%;
+  border-collapse:collapse;
+  overflow:hidden;
+  border:1px solid var(--ng-border);
+  border-radius:8px;
+  background:var(--ng-ivory);
+  font-size:14px;
+}
+.ng-day table.compare th,
+.ng-day table.compare td{
+  padding:13px 16px;
+  border-bottom:1px solid var(--ng-border-soft);
+  text-align:left;
+  vertical-align:top;
+}
+.ng-day table.compare th{
+  background:var(--ng-sand);
+  color:var(--ng-warm);
+  font-family:var(--ng-mono);
+  font-size:12px;
+  font-weight:600;
+}
+.ng-day table.compare td:first-child{
+  color:var(--ng-ink);
+  font-family:var(--ng-serif);
+  font-weight:500;
+}
+.ng-day table.compare tr:last-child td{
+  border-bottom:none;
+}
+.ng-day .nav-line{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:20px;
+  color:var(--ng-stone);
+  font-family:var(--ng-mono);
+  font-size:12px;
+}
+
+@media (max-width: 860px){
+  .ng-day{
+    padding:0 22px 90px;
+  }
+  .ng-day h1{
+    font-size:42px;
+  }
+  .ng-day .indent{
+    margin-left:0;
+  }
+  .ng-day .sec-head{
+    align-items:flex-start;
+  }
+}
+@media (max-width: 520px){
+  .ng-day{
+    padding:0 18px 80px;
+  }
+  .ng-day .masthead{
+    padding:54px 0 38px;
+  }
+  .ng-day h1{
+    font-size:34px;
+  }
+  .ng-day section{
+    margin-top:54px;
+  }
+  .ng-day .sec-head{
+    flex-wrap:wrap;
+    gap:8px 10px;
+  }
+  .ng-day .grid,
+  .ng-day .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+<div class="ng-day">
+
+<header class="masthead">
+  <div class="eyebrow">NEOVIM · GO · DAY 09</div>
+  <h1>格式化与<span>导入整理</span></h1>
+  <p class="lede">
+    第九天把保存动作变成可靠的清理入口。Go 的格式化不只是缩进，它还包括导入排序、删除未使用 import、统一代码风格。
+    今天你要明确一件事：当前格式化到底来自 <code class="inline">gopls</code>，还是来自 <code class="inline">goimports</code> / <code class="inline">gofumpt</code> 这样的外部工具。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DAY</strong> 09 / 30</span>
+    <span><strong>TIME</strong> 60 - 90 min</span>
+    <span><strong>OUTPUT</strong> format-on-save + import cleanup</span>
+    <span><strong>CHECK</strong> gofmt + goimports + gopls source</span>
+  </div>
+  <div class="nav-line">
+    <a href="/posts/infra/nvim-go-day08/">上一天：补全与片段</a>
+    <span>·</span>
+    <a href="/posts/infra/nvim-go-roadmap/">返回 30 天总路线</a>
+    <span>·</span>
+    <a href="/posts/infra/nvim-go-day10/">下一天：诊断、quickfix 与 trouble list</a>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head">
+    <h2>今日验收</h2>
+    <div class="count">DONE MEANS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag">GOAL</div>
+        <h3>今日目标</h3>
+        <p>绑定保存时 <code class="inline">gofmt</code> / <code class="inline">goimports</code> / <code class="inline">gofumpt</code>；确认格式化来自 LSP 还是外部 formatter；建立可排错的保存格式化流程。</p>
+      </div>
+      <div class="node">
+        <div class="tag">CHECK</div>
+        <h3>完成标准</h3>
+        <p>故意写乱 import 和缩进后，保存 Go 文件会自动整理；<code class="inline">go test ./...</code> 通过；你能说出今天启用的是 <code class="inline">vim.lsp.buf.format</code> 还是外部命令。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>1. 先理解三个工具</h2>
+    <div class="count">TOOLS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">Go 格式化有层次。先知道每个工具负责什么，再决定保存时调用谁。</p>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>工具</th>
+            <th>负责什么</th>
+            <th>今天建议</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">gofmt</code></td>
+            <td>Go 官方标准格式化：缩进、换行、对齐。</td>
+            <td>永远可信，是最低基线。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">goimports</code></td>
+            <td>在 gofmt 基础上整理 import，添加缺失 import，删除未使用 import。</td>
+            <td>日常开发最实用，推荐作为外部 formatter。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">gofumpt</code></td>
+            <td>比 gofmt 更严格的一套格式规则。</td>
+            <td>团队明确采用时再开；个人学习期先知道它存在。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">gopls</code></td>
+            <td>通过 LSP 提供 format 和 organize imports code action。</td>
+            <td>适合统一走 LSP，但要清楚它背后仍依赖 Go 工具链能力。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cmd-block">
+      <span class="prompt">$</span> gofmt <span class="flag">-h</span><br>
+      <span class="prompt">$</span> go install <span class="string">golang.org/x/tools/cmd/goimports@latest</span><br>
+      <span class="prompt">$</span> go install <span class="string">mvdan.cc/gofumpt@latest</span><br>
+      <span class="prompt">$</span> goimports <span class="flag">-h</span><br>
+      <span class="prompt">$</span> gofumpt <span class="flag">-h</span>
+    </div>
+    <div class="annot">如果安装工具时遇到 Go 版本要求，优先升级 Go；临时学习也可以先只用系统自带的 <code class="inline">gofmt</code>。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>2. 路线 A：使用 LSP 格式化</h2>
+    <div class="count">LSP FORMAT</div>
+  </div>
+  <div class="indent">
+    <p class="lede">LSP 路线的优点是统一：格式化、诊断、代码动作都由 gopls 提供。先把按键放进 Day06 的 <code class="inline">on_attach</code>。</p>
+    <pre class="cmd-block">map("&lt;leader&gt;lf", function()
+  vim.lsp.buf.format({ async = false })
+end, "Format current buffer")</pre>
+    <p class="lede" style="margin-top:24px;">再加保存时自动格式化。把它放进 <code class="inline">lua/lsp/init.lua</code> 的 <code class="inline">on_attach</code> 内部，确保只在 LSP attach 后启用。</p>
+    <pre class="cmd-block">local group = vim.api.nvim_create_augroup("GoLspFormat", { clear = false })
+
+vim.api.nvim_clear_autocmds({ group = group, buffer = bufnr })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = group,
+  buffer = bufnr,
+  callback = function()
+    vim.lsp.buf.format({ async = false, bufnr = bufnr })
+  end,
+})</pre>
+    <div class="annot">保存前格式化要用 <code class="inline">async = false</code>。否则保存可能先发生，格式化结果晚一步回来，文件内容和磁盘内容会错位。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>3. 路线 B：使用外部 formatter</h2>
+    <div class="count">EXTERNAL</div>
+  </div>
+  <div class="indent">
+    <p class="lede">外部路线的优点是可解释：你明确知道保存时调用了哪个二进制。今天推荐先用 <code class="inline">goimports</code>，因为它会整理 import。</p>
+    <pre class="cmd-block">local function goimports()
+  local file = vim.api.nvim_buf_get_name(0)
+  if file == "" then
+    return
+  end
+
+  vim.cmd.write()
+  vim.system({ "goimports", "-w", file }, { text = true }, function(result)
+    vim.schedule(function()
+      if result.code ~= 0 then
+        vim.notify(result.stderr, vim.log.levels.ERROR)
+        return
+      end
+      vim.cmd.edit()
+    end)
+  end)
+end
+
+vim.keymap.set("n", "&lt;leader&gt;gf", goimports, { desc = "Format Go file with goimports" })</pre>
+    <div class="annot">这段是手动命令，不是保存自动触发。先手动跑通，再决定是否放进保存钩子。自动化之前，先让行为可解释。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>4. 推荐配置：LSP 格式化 + organize imports</h2>
+    <div class="count">RECOMMENDED</div>
+  </div>
+  <div class="indent">
+    <p class="lede">如果你已经在 Day06 接好了 gopls，推荐优先用 LSP：保存前先执行 organize imports，再 format。这样逻辑都留在 gopls 这条链路里。</p>
+    <pre class="cmd-block">local function organize_imports(bufnr)
+  local params = vim.lsp.util.make_range_params(nil, "utf-16")
+  params.context = { only = { "source.organizeImports" } }
+
+  local clients = vim.lsp.get_clients({ bufnr = bufnr, name = "gopls" })
+  for _, client in ipairs(clients) do
+    local result = client.request_sync("textDocument/codeAction", params, 1000, bufnr)
+    for _, action in ipairs(result and result.result or {}) do
+      if action.edit then
+        vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
+      end
+    end
+  end
+end
+
+local function format_go(bufnr)
+  organize_imports(bufnr)
+  vim.lsp.buf.format({
+    bufnr = bufnr,
+    async = false,
+    filter = function(client)
+      return client.name == "gopls"
+    end,
+  })
+end</pre>
+    <p class="lede" style="margin-top:24px;">然后在 <code class="inline">on_attach</code> 中绑定保存前动作：</p>
+    <pre class="cmd-block">local group = vim.api.nvim_create_augroup("GoLspFormat", { clear = false })
+
+vim.api.nvim_clear_autocmds({ group = group, buffer = bufnr })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = group,
+  buffer = bufnr,
+  callback = function()
+    format_go(bufnr)
+  end,
+})</pre>
+    <div class="annot">如果你同时装了多个 LSP 或 formatter，<code class="inline">filter</code> 很重要。它避免两个工具抢着格式化同一个 buffer。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>5. 制造一个需要整理的文件</h2>
+    <div class="count">DRILL</div>
+  </div>
+  <div class="indent">
+    <p class="lede">回到 <code class="inline">tasknote</code>，故意写乱 import、缩进和未使用包。保存时观察它们是否被整理。</p>
+    <pre class="cmd-block">package main
+
+import (
+  "fmt"
+  "strings"
+  "os"
+)
+
+func DebugTask(title string) string {
+task, err := NewTask(strings.TrimSpace(title))
+if err != nil {
+return fmt.Sprintf("error: %v", err)
+}
+return FormatTask(task)
+}</pre>
+    <div class="table-wrap" style="margin-top:16px;">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>问题</th>
+            <th>格式化后应该怎样</th>
+            <th>谁负责</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>缩进乱</td>
+            <td>函数体缩进恢复为 Go 标准格式。</td>
+            <td><code class="inline">gofmt</code> / LSP format。</td>
+          </tr>
+          <tr>
+            <td>import 顺序乱</td>
+            <td>标准库 import 按组和字母顺序整理。</td>
+            <td><code class="inline">goimports</code> 或 gopls organize imports。</td>
+          </tr>
+          <tr>
+            <td><code class="inline">os</code> 未使用</td>
+            <td>未使用 import 被删除。</td>
+            <td><code class="inline">goimports</code> 或 gopls organize imports。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cmd-block">
+      <span class="prompt">$</span> go test ./...<br>
+      <span class="prompt">$</span> gofmt <span class="flag">-w</span> *.go<br>
+      <span class="prompt">$</span> goimports <span class="flag">-w</span> *.go
+    </div>
+    <div class="annot">如果保存后 import 没变，但缩进变了，说明你只启用了 format，没有启用 organize imports。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>6. 确认格式化来源</h2>
+    <div class="count">SOURCE</div>
+  </div>
+  <div class="indent">
+    <p class="lede">不要只说“保存会格式化”。要能说出是哪条链路触发了格式化。</p>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>检查</th>
+            <th>命令</th>
+            <th>怎么看</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>有哪些保存钩子</td>
+            <td><code class="inline">:autocmd BufWritePre</code></td>
+            <td>看是否有 <code class="inline">GoLspFormat</code> 或你自己创建的 group。</td>
+          </tr>
+          <tr>
+            <td>LSP 是否支持格式化</td>
+            <td><code class="inline">:lua vim.print(vim.lsp.get_clients()[1].server_capabilities.documentFormattingProvider)</code></td>
+            <td>如果是 <code class="inline">true</code>，gopls 可以处理 format 请求。</td>
+          </tr>
+          <tr>
+            <td>当前客户端是谁</td>
+            <td><code class="inline">:lua vim.print(vim.lsp.get_clients())</code></td>
+            <td>确认是否只有 <code class="inline">gopls</code>，还是有多个客户端。</td>
+          </tr>
+          <tr>
+            <td>外部工具是否可用</td>
+            <td><code class="inline">:echo executable("goimports")</code></td>
+            <td>输出 <code class="inline">1</code> 表示 Nvim 能找到外部命令。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">格式化重复触发时，常见症状是保存变慢、光标跳动、文件反复变更。先查 autocmd，再查 LSP 客户端数量。</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>7. 写 Day09 日志并提交</h2>
+    <div class="count">COMMIT</div>
+  </div>
+  <div class="indent">
+    <p class="lede">今天的日志重点记录你选择了哪条格式化路线。以后团队项目里最容易争论的就是格式化来源。</p>
+    <pre class="cmd-block"># Day09 formatting and imports log
+
+## Tools
+- gofmt:
+- goimports:
+- gofumpt:
+
+## Format source
+- LSP or external:
+- BufWritePre group:
+- command used to inspect:
+
+## Import cleanup
+- broken file:
+- before save:
+- after save:
+
+## Decision
+- my default formatter:
+- when I would use gofumpt:</pre>
+    <div class="cmd-block">
+      <span class="prompt">$</span> cd ~/.config/nvim<br>
+      <span class="prompt">$</span> git add lua/lsp/init.lua<br>
+      <span class="prompt">$</span> git commit <span class="flag">-m</span> <span class="string">"day09 format go files on save"</span><br>
+      <span class="prompt">$</span> cd ~/code/lab/tasknote<br>
+      <span class="prompt">$</span> go test ./...
+    </div>
+    <div class="node exit" style="margin-top:16px;">
+      <div class="tag">EXIT CHECK</div>
+      <h3>离开前自测</h3>
+      <p>保存一个 Go 文件前，先说出会触发哪个 autocmd、调用哪个客户端或工具、是否整理 import。说得出来，配置才算可维护。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>参考资料</h2>
+    <div class="count">PRIMARY SOURCES</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node">
+        <div class="tag">GO</div>
+        <h3>格式化工具</h3>
+        <p><a href="https://pkg.go.dev/cmd/gofmt">gofmt 文档</a> 说明 Go 官方格式化工具；<a href="https://pkg.go.dev/golang.org/x/tools/cmd/goimports">goimports 文档</a> 说明 import 整理；<a href="https://github.com/mvdan/gofumpt">gofumpt</a> 提供更严格的格式化规则。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag">NEOVIM</div>
+        <h3>LSP 与自动命令</h3>
+        <p><a href="https://neovim.io/doc/user/lsp.html">Neovim LSP 文档</a> 解释 <code class="inline">vim.lsp.buf.format</code>；<a href="https://neovim.io/doc/user/autocmd.html">autocmd 文档</a> 解释 <code class="inline">BufWritePre</code> 与 augroup。</p>
+      </div>
+    </div>
+    <div class="nav-line">
+      <a href="/posts/infra/nvim-go-day08/">上一天：补全与片段</a>
+      <span>·</span>
+      <a href="/posts/infra/nvim-go-roadmap/">返回 Nvim + Go 30 天系统学习路线</a>
+      <span>·</span>
+      <a href="/posts/infra/nvim-go-day10/">下一天：诊断、quickfix 与 trouble list</a>
+    </div>
+  </div>
+</section>
+
+</div>
