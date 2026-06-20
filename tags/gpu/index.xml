@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>GPU on 安橙的博客</title><link>https://blog.ans20xx.com/tags/gpu/</link><description>Recent content in GPU on 安橙的博客</description><generator>Hugo -- 0.163.1</generator><language>zh</language><lastBuildDate>Sun, 17 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/tags/gpu/index.xml" rel="self" type="application/rss+xml"/><item><title>Day 06 · Profiling 工具链</title><link>https://blog.ans20xx.com/posts/ai/day06/</link><pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day06/</guid><description>系统学习 GPU profiling 工具链:nsys 看系统级 timeline、ncu 做 kernel 深度分析、py-spy 抓 Python 热点、torch.profiler 串起训练全链路,建立先测量再优化的工程习惯。</description></item><item><title>Day 04 · CUDA 编程入门 (1)</title><link>https://blog.ans20xx.com/posts/ai/day04/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day04/</guid><description>从 Host 到 Device：理解 kernel 启动、Grid/Block/Thread 线程层级与 Global/Shared Memory 存储模型，动手实现 vector add 与 naive GEMM。</description></item><item><title>Day 05 · CUDA 编程入门 (2)</title><link>https://blog.ans20xx.com/posts/ai/day05/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day05/</guid><description>用 Shared Memory Tiling 优化矩阵乘：理解 bank conflict 与 coalesced access，实现 tiled GEMM 并用 Nsight Compute 分析性能瓶颈。</description></item><item><title>Day 02 · Linux / 容器基础回顾</title><link>https://blog.ans20xx.com/posts/ai/day02/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day02/</guid><description>深入 Linux 隔离原语 cgroups 与 namespaces，掌握 Docker GPU 容器的启动链路，动手编写 CUDA Dockerfile 并运行第一个 GPU 容器。</description></item><item><title>Day 03 · GPU 硬件与体系结构</title><link>https://blog.ans20xx.com/posts/ai/day03/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day03/</guid><description>拆解 GPU 微架构：从 SM、Warp 调度到 Tensor Core，理解 HBM-L2-SMEM 存储层级与算术强度，对比 A100/H100/H20 代际演进。</description></item><item><title>AI Infra 60 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/roadmap/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/roadmap/</guid><description>从 GPU 编程入门到 LLM 训推一体平台：覆盖 CUDA、PyTorch 内部机制、分布式训练、推理引擎、平台调度的全栈 60 天学习路线图。</description></item><item><title>Day 01 · AI Infra 全景与学习环境</title><link>https://blog.ans20xx.com/posts/ai/day01/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day01/</guid><description>AI Infra 60 天学习计划的起点：梳理从用户 prompt 到 GPU kernel 的完整链路，搭建开发环境，理解推理与训练基础设施的全景图。</description></item><item><title>AIInfra 学习</title><link>https://blog.ans20xx.com/posts/ai/aiinfra-%E5%AD%A6%E4%B9%A0/</link><pubDate>Tue, 05 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/aiinfra-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="gpu-体系结构--cuda-入门--profiling"&gt;GPU 体系结构 + CUDA 入门 + Profiling&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>GPU on 安橙的博客</title><link>https://blog.ans20xx.com/tags/gpu/</link><description>Recent content in GPU on 安橙的博客</description><generator>Hugo -- 0.163.3</generator><language>zh</language><lastBuildDate>Sun, 17 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/tags/gpu/index.xml" rel="self" type="application/rss+xml"/><item><title>Day 06 · Profiling 工具链</title><link>https://blog.ans20xx.com/posts/ai/day06/</link><pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day06/</guid><description>系统学习 GPU profiling 工具链:nsys 看系统级 timeline、ncu 做 kernel 深度分析、py-spy 抓 Python 热点、torch.profiler 串起训练全链路,建立先测量再优化的工程习惯。</description></item><item><title>Day 04 · CUDA 编程入门 (1)</title><link>https://blog.ans20xx.com/posts/ai/day04/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day04/</guid><description>从 Host 到 Device：理解 kernel 启动、Grid/Block/Thread 线程层级与 Global/Shared Memory 存储模型，动手实现 vector add 与 naive GEMM。</description></item><item><title>Day 05 · CUDA 编程入门 (2)</title><link>https://blog.ans20xx.com/posts/ai/day05/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day05/</guid><description>用 Shared Memory Tiling 优化矩阵乘：理解 bank conflict 与 coalesced access，实现 tiled GEMM 并用 Nsight Compute 分析性能瓶颈。</description></item><item><title>Day 02 · Linux / 容器基础回顾</title><link>https://blog.ans20xx.com/posts/ai/day02/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day02/</guid><description>深入 Linux 隔离原语 cgroups 与 namespaces，掌握 Docker GPU 容器的启动链路，动手编写 CUDA Dockerfile 并运行第一个 GPU 容器。</description></item><item><title>Day 03 · GPU 硬件与体系结构</title><link>https://blog.ans20xx.com/posts/ai/day03/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day03/</guid><description>拆解 GPU 微架构：从 SM、Warp 调度到 Tensor Core，理解 HBM-L2-SMEM 存储层级与算术强度，对比 A100/H100/H20 代际演进。</description></item><item><title>AI Infra 60 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/roadmap/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/roadmap/</guid><description>从 GPU 编程入门到 LLM 训推一体平台：覆盖 CUDA、PyTorch 内部机制、分布式训练、推理引擎、平台调度的全栈 60 天学习路线图。</description></item><item><title>Day 01 · AI Infra 全景与学习环境</title><link>https://blog.ans20xx.com/posts/ai/day01/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day01/</guid><description>AI Infra 60 天学习计划的起点：梳理从用户 prompt 到 GPU kernel 的完整链路，搭建开发环境，理解推理与训练基础设施的全景图。</description></item><item><title>AIInfra 学习</title><link>https://blog.ans20xx.com/posts/ai/aiinfra-%E5%AD%A6%E4%B9%A0/</link><pubDate>Tue, 05 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/aiinfra-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="gpu-体系结构--cuda-入门--profiling"&gt;GPU 体系结构 + CUDA 入门 + Profiling&lt;/h1&gt;
 &lt;h2 id="aiinfra-全景--学习内容"&gt;AIInfra 全景 + 学习内容&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-67482315"
+id="mindmap-65472831"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-67482315" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65472831" style="display:none;"&gt;
 - AIInfra 全景 &amp; 学习内容
 - 理论部分
 - AIInfra 是什么
@@ -81,10 +81,10 @@ watch -n 0.5 nvidia-smi # 观察显存占用、SM 利用率
 &lt;h2 id="linux-容器回顾"&gt;Linux 容器回顾&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-12465837"
+id="mindmap-68357214"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-12465837" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-68357214" style="display:none;"&gt;
 - Linux/容器基础回顾
 - 理论部分
 - Linux 进程隔离三件套
@@ -202,10 +202,10 @@ python first_infer.py
 &lt;h2 id="gpu-硬件与体系结构"&gt;GPU 硬件与体系结构&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-28641375"
+id="mindmap-47362815"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-28641375" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-47362815" style="display:none;"&gt;
 - GPU 硬件与体系结构
 - 理论部分
 - 一张图看懂 GPU
