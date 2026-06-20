@@ -1,0 +1,1269 @@
+---
+title: "Day 07 · Snippets 与 Emmet"
+date: '2026-05-26'
+draft: false
+description: "VSCode Snippets 与 Emmet：用户 / 全局 / 项目三层模板、tab stops、placeholder、choice、变量、项目级 .code-snippets，以及 HTML/CSS/JSX 中的 Emmet abbreviation。把高频样板代码压缩成一次 Tab。"
+toc: false
+tags:
+  - VSCode
+  - Tools
+  - Tutorial
+  - Day 07
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory); color:var(--slate);
+  font-family:var(--sans); font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.vscode-day07-wrap{ max-width:1120px; margin:0 auto; padding:0 32px 140px; }
+
+/* ========== Typography ========== */
+.vscode-day07-wrap .eyebrow{
+  font-family:var(--mono); font-size:12px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--g500);
+}
+.vscode-day07-wrap .eyebrow::before{
+  content:""; display:inline-block;
+  width:24px; height:1.5px; background:var(--clay);
+  margin-right:12px; vertical-align:middle;
+}
+.vscode-day07-wrap h1{
+  font-family:var(--serif); font-weight:500;
+  font-size:clamp(36px, 5.2vw, 58px);
+  letter-spacing:-0.018em; line-height:1.08;
+  max-width:18ch; margin:22px 0 30px; color:var(--slate);
+}
+.vscode-day07-wrap h1 em{ font-style:italic; color:var(--clay); }
+.vscode-day07-wrap h2{
+  font-family:var(--serif); font-weight:500;
+  font-size:27px; letter-spacing:-0.012em; margin:0; color:var(--slate);
+}
+.vscode-day07-wrap h3{
+  font-family:var(--serif); font-weight:500;
+  font-size:19px; letter-spacing:-0.008em;
+  margin:0 0 10px; color:var(--slate);
+}
+.vscode-day07-wrap .lede{
+  font-size:16.5px; color:var(--g700);
+  max-width:62ch; margin:0 0 32px; line-height:1.65;
+}
+.vscode-day07-wrap p{ margin:0; }
+
+/* ========== Masthead ========== */
+.vscode-day07-wrap header.masthead{ padding:80px 0 56px; }
+.vscode-day07-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200); border-bottom:1px solid var(--g200);
+  font-family:var(--mono); font-size:11.5px;
+  color:var(--g500); letter-spacing:.06em; text-transform:uppercase;
+}
+.vscode-day07-wrap .meta-strip strong{
+  color:var(--slate); font-weight:600; margin-right:6px;
+}
+
+/* ========== Section ========== */
+.vscode-day07-wrap section{ margin-top:72px; }
+.vscode-day07-wrap .indent{ margin-left:50px; }
+.vscode-day07-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px; margin-bottom:28px;
+}
+.vscode-day07-wrap .sec-head .count{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  padding:3px 12px; background:var(--g100); border-radius:999px;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ========== Mind Map / Diagram ========== */
+.vscode-day07-wrap .mindmap,
+.vscode-day07-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+}
+.vscode-day07-wrap .mindmap svg,
+.vscode-day07-wrap .archdiag svg{
+  display:block; margin:0 auto; max-width:100%; height:auto;
+}
+.vscode-day07-wrap .mindmap-cap,
+.vscode-day07-wrap .archdiag-cap{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.1em; text-transform:uppercase; text-align:center;
+  margin-top:18px; padding-top:18px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Grid ========== */
+.vscode-day07-wrap .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.vscode-day07-wrap .grid-2{ grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); }
+.vscode-day07-wrap .grid-3{ grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); }
+.vscode-day07-wrap .grid-4{ grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); }
+
+/* ========== Node Card ========== */
+.vscode-day07-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.vscode-day07-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.vscode-day07-wrap .node.accent{ border-color:var(--clay); }
+.vscode-day07-wrap .node.entry{ background:var(--g100); }
+.vscode-day07-wrap .node.exit{ background:var(--oat); border-color:var(--clay); }
+.vscode-day07-wrap .node.dark{
+  background:var(--slate); border-color:var(--slate); color:var(--ivory);
+}
+.vscode-day07-wrap .node.dark .tag{ color:var(--oat); }
+.vscode-day07-wrap .node.dark p{ color:var(--oat); }
+.vscode-day07-wrap .node.dark h3{ color:var(--ivory); }
+.vscode-day07-wrap .node .tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase;
+  margin-bottom:10px; font-weight:600;
+}
+.vscode-day07-wrap .node .tag.clay{ color:var(--clay); }
+.vscode-day07-wrap .node p{
+  font-size:13.5px; color:var(--g700); margin:6px 0 0; line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.vscode-day07-wrap .annot{
+  font-family:var(--mono); font-size:11.5px; color:var(--g500);
+  position:relative; margin-top:14px; padding-left:44px;
+  letter-spacing:.04em;
+}
+.vscode-day07-wrap .annot::before{
+  content:""; position:absolute; left:0; top:8px;
+  width:32px; height:1.5px; background:var(--clay);
+}
+
+/* ========== Tables ========== */
+.vscode-day07-wrap .table-wrap{ overflow-x:auto; }
+.vscode-day07-wrap table.compare,
+.vscode-day07-wrap table.shortcut{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+}
+.vscode-day07-wrap table.compare th,
+.vscode-day07-wrap table.compare td,
+.vscode-day07-wrap table.shortcut th,
+.vscode-day07-wrap table.shortcut td{
+  text-align:left; padding:14px 20px;
+  border-bottom:1px solid var(--g200); vertical-align:top;
+}
+.vscode-day07-wrap table.compare th,
+.vscode-day07-wrap table.shortcut th{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--g500); background:var(--g100);
+  border-bottom:1.5px solid var(--slate);
+}
+.vscode-day07-wrap table.compare td:first-child,
+.vscode-day07-wrap table.shortcut td.act{
+  font-family:var(--serif); font-weight:500;
+  font-size:15px; color:var(--slate);
+}
+.vscode-day07-wrap table.compare tr:last-child td,
+.vscode-day07-wrap table.shortcut tr:last-child td{ border-bottom:none; }
+.vscode-day07-wrap table.compare .clay{ color:var(--clay-d); }
+.vscode-day07-wrap table.shortcut td.mac,
+.vscode-day07-wrap table.shortcut td.win{
+  font-family:var(--mono); font-size:12px; color:var(--g700);
+  white-space:nowrap;
+}
+.vscode-day07-wrap table.shortcut tr.hot td.act{ color:var(--clay-d); }
+.vscode-day07-wrap table.compare td code,
+.vscode-day07-wrap table.shortcut td code{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 5px; color:var(--clay-d);
+}
+
+/* ========== Code ========== */
+.vscode-day07-wrap pre.code{
+  background:var(--slate); color:var(--ivory);
+  font-family:var(--mono); font-size:12.5px;
+  padding:20px 24px; border-radius:10px;
+  overflow-x:auto; line-height:1.65; margin:18px 0;
+}
+.vscode-day07-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.vscode-day07-wrap pre.code .k{ color:var(--clay); }
+.vscode-day07-wrap pre.code .s{ color:var(--olive); }
+.vscode-day07-wrap pre.code .t{ color:#7EC8E3; }
+.vscode-day07-wrap pre.code .n{ color:#C4B28A; }
+.vscode-day07-wrap pre.code .comment{ color:var(--g500); font-style:italic; }
+.vscode-day07-wrap pre.code .cap{ color:#D97757; font-weight:600; }
+.vscode-day07-wrap pre.code .var{ color:#7EC8E3; }
+.vscode-day07-wrap code.inline{
+  font-family:var(--mono); font-size:12.5px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 6px; color:var(--clay-d);
+}
+
+/* ========== Pattern Cards ========== */
+.vscode-day07-wrap .pattern-grid{
+  display:grid; gap:18px;
+  grid-template-columns:repeat(auto-fill, minmax(420px, 1fr));
+}
+.vscode-day07-wrap .pattern{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; padding:22px 24px;
+}
+.vscode-day07-wrap .pattern.accent{ border-color:var(--clay); }
+.vscode-day07-wrap .pattern .pt-tag{
+  font-family:var(--mono); font-size:10.5px; color:var(--clay);
+  letter-spacing:.12em; text-transform:uppercase;
+  font-weight:600; margin-bottom:8px;
+}
+.vscode-day07-wrap .pattern h3{ font-size:17px; margin-bottom:10px; }
+.vscode-day07-wrap .pattern .abbr{
+  font-family:var(--mono); font-size:12px;
+  background:var(--g100); border-radius:6px;
+  padding:9px 12px; margin:8px 0;
+  color:var(--clay-d); word-break:break-all;
+}
+.vscode-day07-wrap .pattern .note{
+  font-size:12.5px; color:var(--g700); line-height:1.6;
+  margin-top:10px; padding-top:10px; border-top:1px dashed var(--g300);
+}
+
+/* ========== Checklist ========== */
+.vscode-day07-wrap .check{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px; padding:8px 24px;
+}
+.vscode-day07-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.vscode-day07-wrap .check li{
+  padding:14px 0 14px 36px; border-bottom:1px solid var(--g200);
+  position:relative; font-size:14.5px; color:var(--slate);
+}
+.vscode-day07-wrap .check li:last-child{ border-bottom:none; }
+.vscode-day07-wrap .check li::before{
+  content:""; position:absolute; left:0; top:16px;
+  width:18px; height:18px;
+  border:1.5px solid var(--g300); border-radius:4px; background:var(--paper);
+}
+
+/* ========== Review ========== */
+.vscode-day07-wrap .review-list{
+  counter-reset:q; margin:0; padding:0; list-style:none;
+}
+.vscode-day07-wrap .review-list li{
+  counter-increment:q; position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px; color:var(--g700);
+}
+.vscode-day07-wrap .review-list li:last-child{ border-bottom:none; }
+.vscode-day07-wrap .review-list li::before{
+  content:counter(q, decimal-leading-zero);
+  position:absolute; left:0; top:18px;
+  font-family:var(--mono); font-size:13px; color:var(--clay);
+  letter-spacing:.06em; font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.vscode-day07-wrap .qa-grid{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.vscode-day07-wrap .qa-card{
+  background:var(--paper); border:1.5px solid var(--g300);
+  border-radius:14px; overflow:hidden;
+  transition:border-color 150ms ease;
+}
+.vscode-day07-wrap .qa-card[open]{ border-color:var(--slate); }
+.vscode-day07-wrap .qa-card summary{
+  list-style:none; cursor:pointer;
+  padding:18px 24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition:background 150ms ease;
+}
+.vscode-day07-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.vscode-day07-wrap .qa-card summary::marker{ display:none; }
+.vscode-day07-wrap .qa-card summary:hover{ background:var(--g100); }
+.vscode-day07-wrap .qa-card[open] summary{
+  background:var(--g100); border-bottom:1px dashed var(--g300);
+}
+.vscode-day07-wrap .qa-num{
+  font-family:var(--mono); font-size:12px; color:var(--clay);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:3px;
+}
+.vscode-day07-wrap .qa-q{
+  font-family:var(--serif); font-size:16px; font-weight:500;
+  color:var(--slate); line-height:1.5; flex:1;
+}
+.vscode-day07-wrap .qa-toggle{
+  font-family:var(--mono); font-size:18px; color:var(--g500);
+  flex-shrink:0; font-weight:300; line-height:1; margin-top:2px;
+  transition:transform 150ms ease, color 150ms ease;
+}
+.vscode-day07-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg); color:var(--clay);
+}
+.vscode-day07-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex; align-items:flex-start; gap:18px;
+}
+.vscode-day07-wrap .qa-a-label{
+  font-family:var(--mono); font-size:12px; color:var(--olive);
+  letter-spacing:.1em; font-weight:600; flex-shrink:0; margin-top:2px;
+}
+.vscode-day07-wrap .qa-a-body{
+  flex:1; font-family:var(--sans); font-size:14.5px;
+  color:var(--g700); line-height:1.7;
+}
+.vscode-day07-wrap .qa-a-body p{ margin:0 0 10px; }
+.vscode-day07-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.vscode-day07-wrap .qa-a-body strong{
+  font-family:var(--serif); font-style:italic;
+  font-weight:500; color:var(--slate);
+}
+.vscode-day07-wrap .qa-a-body code{
+  font-family:var(--mono); font-size:13px;
+  background:var(--g100); border:1px solid var(--g200);
+  border-radius:4px; padding:1px 5px; color:var(--clay-d);
+}
+
+/* ========== Keyboard ========== */
+.vscode-day07-wrap kbd{
+  font-family:var(--mono); font-size:11px; font-weight:600;
+  padding:2px 7px; border:1px solid var(--g300); border-bottom-width:2px;
+  border-radius:5px; background:var(--paper); color:var(--slate);
+  letter-spacing:.02em; vertical-align:1px;
+  display:inline-block; margin:0 1px;
+}
+
+/* ========== Footer ========== */
+.vscode-day07-wrap footer{
+  margin-top:100px; padding-top:40px;
+  border-top:1px solid var(--g200); text-align:center;
+}
+.vscode-day07-wrap footer .quote{
+  font-family:var(--serif); font-style:italic;
+  font-size:18px; color:var(--g700);
+  max-width:42ch; margin:0 auto; line-height:1.55;
+}
+.vscode-day07-wrap footer .meta{
+  font-family:var(--mono); font-size:11px; color:var(--g500);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width:720px){
+  .vscode-day07-wrap{ padding:0 22px 90px; }
+  .vscode-day07-wrap .indent{ margin-left:0; }
+  .vscode-day07-wrap header.masthead{ padding:56px 0 40px; }
+  .vscode-day07-wrap section{ margin-top:56px; }
+  .vscode-day07-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .vscode-day07-wrap .mindmap,
+  .vscode-day07-wrap .archdiag{ padding:20px 12px; }
+  .vscode-day07-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .vscode-day07-wrap .qa-q{ font-size:14.5px; }
+  .vscode-day07-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+  .vscode-day07-wrap table.compare th,
+  .vscode-day07-wrap table.compare td,
+  .vscode-day07-wrap table.shortcut th,
+  .vscode-day07-wrap table.shortcut td{ padding:10px 12px; }
+}
+</style>
+
+<div class="vscode-day07-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 07 · VSCODE ROADMAP · 21 DAYS</div>
+  <h1>把样板代码压缩成 <em>一次 Tab</em></h1>
+  <p class="lede">
+    Day 04 练的是「快速抵达」,Day 05 练的是「批量编辑」,Day 06 练的是「搜索改造」。
+    今天进入编辑器内功的最后一块: <strong>Snippets 与 Emmet</strong>。
+    它们解决的不是「已经写出来的代码怎么改」,而是「<strong>重复出现的新代码,怎样一次生成到正确形状</strong>」。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 60 min</span>
+    <span><strong>THEORY</strong> 20 min</span>
+    <span><strong>HANDS-ON</strong> 30 min</span>
+    <span><strong>REVIEW</strong> 10 min</span>
+    <span><strong>POWER MOVE</strong> prefix + Tab</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 07 Snippets 与 Emmet 思维导图">
+        <rect x="290" y="20" width="400" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 07 · SNIPPETS · EMMET</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">TEMPLATE · TABSTOP · VARIABLE · ABBREVIATION</text>
+
+        <line x1="490" y1="82" x2="490" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="108" y1="108" x2="872" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="108" y1="108" x2="108" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="299" y1="108" x2="299" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="490" y1="108" x2="490" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="681" y1="108" x2="681" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="872" y1="108" x2="872" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <rect x="28" y="134" width="160" height="58" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="108" y="157" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">01 · ANATOMY</text>
+        <text x="108" y="178" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">prefix / body</text>
+
+        <rect x="219" y="134" width="160" height="58" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="299" y="157" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · CURSOR</text>
+        <text x="299" y="178" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">$1 / ${1:x}</text>
+
+        <rect x="410" y="134" width="160" height="58" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+        <text x="490" y="157" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · SCOPE</text>
+        <text x="490" y="178" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">User / Project</text>
+
+        <rect x="601" y="134" width="160" height="58" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+        <text x="681" y="157" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">04 · VARIABLES</text>
+        <text x="681" y="178" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">$TM_FILENAME</text>
+
+        <rect x="792" y="134" width="160" height="58" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="872" y="157" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">05 · EMMET</text>
+        <text x="872" y="178" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">DSL 展开</text>
+
+        <line x1="108" y1="192" x2="108" y2="226" stroke="#D1CFC5" stroke-width="2"/>
+        <line x1="299" y1="192" x2="299" y2="226" stroke="#D1CFC5" stroke-width="2"/>
+        <line x1="490" y1="192" x2="490" y2="226" stroke="#D1CFC5" stroke-width="2"/>
+        <line x1="681" y1="192" x2="681" y2="226" stroke="#D1CFC5" stroke-width="2"/>
+        <line x1="872" y1="192" x2="872" y2="226" stroke="#D1CFC5" stroke-width="2"/>
+
+        <rect x="22" y="226" width="172" height="90" rx="5"
+              fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="108" y="250" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">四个字段</text>
+        <text x="108" y="274" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">prefix</text>
+        <text x="108" y="294" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">body / desc / scope</text>
+
+        <rect x="213" y="226" width="172" height="90" rx="5"
+              fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="299" y="250" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">光标编排</text>
+        <text x="299" y="274" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">$1 → $2 → $0</text>
+        <text x="299" y="294" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">choice / placeholder</text>
+
+        <rect x="404" y="226" width="172" height="90" rx="5"
+              fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="490" y="250" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">三层模板</text>
+        <text x="490" y="274" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">language / global</text>
+        <text x="490" y="294" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">.vscode/*.code-snippets</text>
+
+        <rect x="595" y="226" width="172" height="90" rx="5"
+              fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="681" y="250" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">上下文变量</text>
+        <text x="681" y="274" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">file / date / clipboard</text>
+        <text x="681" y="294" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">selected text</text>
+
+        <rect x="786" y="226" width="172" height="90" rx="5"
+              fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="872" y="250" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">缩写语言</text>
+        <text x="872" y="274" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">ul&gt;li*3</text>
+        <text x="872" y="294" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">m10 / df / jc:c</text>
+
+        <rect x="185" y="370" width="610" height="70" rx="5"
+              fill="#141413" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="397" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="17"
+              fill="#FAF9F5">核心判断</text>
+        <text x="490" y="422" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#E3DACC" letter-spacing="1.2">固定结构用 SNIPPET · 层级结构用 EMMET · 团队约定用 PROJECT SNIPPET</text>
+      </svg>
+      <div class="mindmap-cap">SNIPPET IS A TEMPLATE · EMMET IS A SMALL LANGUAGE</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MENTAL MODEL ========== -->
+<section>
+  <div class="sec-head">
+    <h2>今天的心智模型</h2>
+    <div class="count">MODEL</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-3">
+      <div class="node dark">
+        <div class="tag">SNIPPET</div>
+        <h3>固定模板</h3>
+        <p>适合 React 组件、测试用例、日志格式、API 错误返回、团队统一注释。它的优势是<strong>结构稳定</strong>,且能安排多个光标依次填写。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">EMMET</div>
+        <h3>结构缩写</h3>
+        <p>适合 HTML / CSS / JSX 的层级结构。它不是保存好的模板,而是一套缩写语法:用 <code class="inline">&gt; + * $ {}</code> 描述树。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">PROJECT</div>
+        <h3>团队约定</h3>
+        <p>如果某段代码是团队规范,不要只存在你自己的 User Snippets 里。放进 <code class="inline">.vscode/*.code-snippets</code>,让整个项目共享。</p>
+      </div>
+    </div>
+    <div class="annot">一句话: Snippet 负责「可复用代码片段」,Emmet 负责「快速生成标签树」。</div>
+  </div>
+</section>
+
+<!-- ========== SETTINGS ========== -->
+<section>
+  <div class="sec-head">
+    <h2>先把开关调顺</h2>
+    <div class="count">SETTINGS</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Snippet 最常见的失败不是语法错,而是补全排序太靠后、Tab 不触发、Emmet 在 JSX 中不展开。
+      先把这组设置放进 User Settings,今天的练习会顺很多。
+    </p>
+<pre class="code">{
+  <span class="s">"editor.tabCompletion"</span>: <span class="s">"on"</span>,
+  <span class="s">"editor.snippetSuggestions"</span>: <span class="s">"top"</span>,
+  <span class="s">"emmet.triggerExpansionOnTab"</span>: <span class="k">true</span>,
+  <span class="s">"emmet.showSuggestionsAsSnippets"</span>: <span class="k">true</span>,
+  <span class="s">"emmet.includeLanguages"</span>: {
+    <span class="s">"javascript"</span>: <span class="s">"javascriptreact"</span>,
+    <span class="s">"typescript"</span>: <span class="s">"typescriptreact"</span>
+  }
+}</pre>
+    <div class="grid grid-2" style="margin-top:20px;">
+      <div class="node">
+        <div class="tag">WHY</div>
+        <h3>为什么把 snippet 放到 top?</h3>
+        <p>补全列表里 LSP、路径、单词、AI 建议会混在一起。把 snippet 提到上面,可以让短 prefix 更稳定地命中,减少「输入了 rfc 却补成别的东西」的摩擦。</p>
+      </div>
+      <div class="node">
+        <div class="tag">CAUTION</div>
+        <h3>Tab 展开冲突怎么办?</h3>
+        <p>如果 Tab 同时承担缩进、补全、Emmet 展开,偶尔会有冲突。稳妥方式是先看 Suggest 列表是否选中了正确项,或用命令 <code class="inline">Insert Snippet</code> / <code class="inline">Emmet: Expand Abbreviation</code> 明确触发。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ANATOMY ========== -->
+<section>
+  <div class="sec-head">
+    <h2>Snippet 语法拆解</h2>
+    <div class="count">ANATOMY</div>
+  </div>
+  <div class="indent">
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>字段 / 语法</th>
+            <th>含义</th>
+            <th>例子</th>
+            <th>注意点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>prefix</td>
+            <td>触发词。你输入它,再按 Tab 或 Enter 展开。</td>
+            <td><code>"prefix": "rfcx"</code></td>
+            <td>建议短但不和业务词冲突。个人可用 3-5 个字符。</td>
+          </tr>
+          <tr>
+            <td>body</td>
+            <td>真正插入编辑器的模板。可以是字符串或字符串数组。</td>
+            <td><code>"body": ["line1", "line2"]</code></td>
+            <td>数组每一项就是一行,比在字符串里写 <code>\n</code> 好维护。</td>
+          </tr>
+          <tr>
+            <td>description</td>
+            <td>补全列表里展示的解释。</td>
+            <td><code>"description": "React function component"</code></td>
+            <td>团队 snippet 一定要写,不然过两个月没人知道它干嘛。</td>
+          </tr>
+          <tr>
+            <td>scope</td>
+            <td>限制全局 / 项目 snippet 在哪些语言生效。</td>
+            <td><code>"scope": "typescriptreact,javascriptreact"</code></td>
+            <td>语言专属 snippet 文件本身已有 scope,一般不需要再写。</td>
+          </tr>
+          <tr>
+            <td>$1 / $2 / $0</td>
+            <td>Tab stop。展开后光标按编号跳转,<code>$0</code> 是最后停靠点。</td>
+            <td><code>"const $1 = $2;$0"</code></td>
+            <td>没有 <code>$0</code> 时,最后会停在模板末尾。</td>
+          </tr>
+          <tr>
+            <td>${1:default}</td>
+            <td>Placeholder。第 1 个光标位置带默认文本。</td>
+            <td><code>${1:ComponentName}</code></td>
+            <td>输入时默认文本会被整体替换。</td>
+          </tr>
+          <tr>
+            <td>${1|a,b,c|}</td>
+            <td>Choice。第 1 个光标位置给一个可选列表。</td>
+            <td><code>${1|GET,POST,PUT,DELETE|}</code></td>
+            <td>适合 HTTP method、log level、测试类型这类枚举。</td>
+          </tr>
+          <tr>
+            <td>$TM_SELECTED_TEXT</td>
+            <td>变量。展开时读取当前上下文。</td>
+            <td><code>${TM_SELECTED_TEXT}</code></td>
+            <td>常用于把选中文本包进函数、标签、try/catch。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SHORTCUTS ========== -->
+<section>
+  <div class="sec-head">
+    <h2>高频入口</h2>
+    <div class="count">SHORTCUTS</div>
+  </div>
+  <div class="indent">
+    <div class="table-wrap">
+      <table class="shortcut">
+        <thead>
+          <tr>
+            <th>动作</th>
+            <th>macOS</th>
+            <th>Windows / Linux</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hot">
+            <td class="act">命令面板</td>
+            <td class="mac"><kbd>⌘⇧P</kbd></td>
+            <td class="win"><kbd>Ctrl Shift P</kbd></td>
+            <td>搜索 Configure User Snippets、Insert Snippet、Emmet 命令。</td>
+          </tr>
+          <tr>
+            <td class="act">插入 Snippet</td>
+            <td class="mac"><kbd>⌘⇧P</kbd> → Insert Snippet</td>
+            <td class="win"><kbd>Ctrl Shift P</kbd> → Insert Snippet</td>
+            <td>不记得 prefix 时,从列表里找。</td>
+          </tr>
+          <tr class="hot">
+            <td class="act">展开补全项</td>
+            <td class="mac"><kbd>Tab</kbd> / <kbd>Enter</kbd></td>
+            <td class="win"><kbd>Tab</kbd> / <kbd>Enter</kbd></td>
+            <td>选中 snippet 或 Emmet suggestion 后展开。</td>
+          </tr>
+          <tr>
+            <td class="act">跳到下一个 tab stop</td>
+            <td class="mac"><kbd>Tab</kbd></td>
+            <td class="win"><kbd>Tab</kbd></td>
+            <td>Snippet 展开后,按编号依次填写。</td>
+          </tr>
+          <tr>
+            <td class="act">跳到上一个 tab stop</td>
+            <td class="mac"><kbd>⇧Tab</kbd></td>
+            <td class="win"><kbd>Shift Tab</kbd></td>
+            <td>填错上一处时回退。</td>
+          </tr>
+          <tr>
+            <td class="act">Emmet 明确展开</td>
+            <td class="mac"><kbd>⌘⇧P</kbd> → Emmet: Expand Abbreviation</td>
+            <td class="win"><kbd>Ctrl Shift P</kbd> → Emmet: Expand Abbreviation</td>
+            <td>当 Tab 被缩进或补全抢走时使用。</td>
+          </tr>
+          <tr>
+            <td class="act">环绕选区</td>
+            <td class="mac"><kbd>⌘⇧P</kbd> → Emmet: Wrap with Abbreviation</td>
+            <td class="win"><kbd>Ctrl Shift P</kbd> → Emmet: Wrap with Abbreviation</td>
+            <td>把已有文本包成标签结构。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LEVELS ========== -->
+<section>
+  <div class="sec-head">
+    <h2>三层 Snippet</h2>
+    <div class="count">SCOPE</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-3">
+      <div class="node">
+        <div class="tag">USER · LANGUAGE</div>
+        <h3>语言专属</h3>
+        <p>通过 <code class="inline">Configure User Snippets</code> 选择 <code class="inline">typescriptreact.json</code>、<code class="inline">go.json</code> 等。只在对应语言生效,适合个人长期习惯。</p>
+      </div>
+      <div class="node">
+        <div class="tag">USER · GLOBAL</div>
+        <h3>全局个人模板</h3>
+        <p>创建 <code class="inline">*.code-snippets</code> 全局文件,再用 <code class="inline">scope</code> 限制语言。适合跨语言通用的注释、debug、文档模板。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">WORKSPACE</div>
+        <h3>项目共享模板</h3>
+        <p>放在项目的 <code class="inline">.vscode/*.code-snippets</code>。适合团队统一的 API response、测试骨架、页面目录结构。这个最应该进 Git。</p>
+      </div>
+    </div>
+    <div class="annot">判断标准: 只服务你自己,放 User；服务这个项目所有人,放 Workspace。</div>
+  </div>
+</section>
+
+<!-- ========== SNIPPET EXAMPLES ========== -->
+<section>
+  <div class="sec-head">
+    <h2>三个可直接使用的 Snippet</h2>
+    <div class="count">RECIPES</div>
+  </div>
+  <div class="indent">
+    <h3>1. React 函数组件骨架</h3>
+    <p style="color:var(--g700);">适合放进 <code class="inline">typescriptreact.json</code>。输入 <code class="inline">rfcx</code> 后展开,光标先填组件名,再填 props 类型,最后停在 return 内。</p>
+<pre class="code">{
+  <span class="s">"React function component with props"</span>: {
+    <span class="s">"prefix"</span>: <span class="s">"rfcx"</span>,
+    <span class="s">"body"</span>: [
+      <span class="s">"type ${1:ComponentName}Props = {"</span>,
+      <span class="s">"  ${2:// props}"</span>,
+      <span class="s">"};"</span>,
+      <span class="s">""</span>,
+      <span class="s">"export function ${1:ComponentName}(props: ${1:ComponentName}Props) {"</span>,
+      <span class="s">"  return ("</span>,
+      <span class="s">"    &lt;${3:div}&gt;"</span>,
+      <span class="s">"      $0"</span>,
+      <span class="s">"    &lt;/${3:div}&gt;"</span>,
+      <span class="s">"  );"</span>,
+      <span class="s">"}"</span>
+    ],
+    <span class="s">"description"</span>: <span class="s">"React function component with typed props"</span>
+  }
+}</pre>
+
+    <h3 style="margin-top:32px;">2. 包裹选中文本的 try/catch</h3>
+    <p style="color:var(--g700);">先选中一段代码,再触发 <code class="inline">tryx</code>。如果没有选区,默认会在 try 块里留一个光标。</p>
+<pre class="code">{
+  <span class="s">"Wrap selection in try catch"</span>: {
+    <span class="s">"prefix"</span>: <span class="s">"tryx"</span>,
+    <span class="s">"body"</span>: [
+      <span class="s">"try {"</span>,
+      <span class="s">"  ${TM_SELECTED_TEXT:${1:// code}}"</span>,
+      <span class="s">"} catch (${2:error}) {"</span>,
+      <span class="s">"  console.error(${2:error});"</span>,
+      <span class="s">"  $0"</span>,
+      <span class="s">"}"</span>
+    ],
+    <span class="s">"description"</span>: <span class="s">"Wrap selected code in try/catch"</span>
+  }
+}</pre>
+
+    <h3 style="margin-top:32px;">3. 团队 API 错误返回</h3>
+    <p style="color:var(--g700);">适合放进 <code class="inline">.vscode/team.code-snippets</code>。用 choice 限定错误码,让团队返回结构保持一致。</p>
+<pre class="code">{
+  <span class="s">"API error response"</span>: {
+    <span class="s">"scope"</span>: <span class="s">"typescript,javascript,typescriptreact,javascriptreact"</span>,
+    <span class="s">"prefix"</span>: <span class="s">"apierr"</span>,
+    <span class="s">"body"</span>: [
+      <span class="s">"return {"</span>,
+      <span class="s">"  code: \"${1|BAD_REQUEST,UNAUTHORIZED,FORBIDDEN,NOT_FOUND,INTERNAL_ERROR|}\","</span>,
+      <span class="s">"  message: \"${2:message}\","</span>,
+      <span class="s">"  requestId: ${3:requestId},"</span>,
+      <span class="s">"};$0"</span>
+    ],
+    <span class="s">"description"</span>: <span class="s">"Standard API error response"</span>
+  }
+}</pre>
+  </div>
+</section>
+
+<!-- ========== VARIABLES ========== -->
+<section>
+  <div class="sec-head">
+    <h2>常用变量</h2>
+    <div class="count">VARIABLES</div>
+  </div>
+  <div class="indent">
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>变量</th>
+            <th>展开结果</th>
+            <th>适合场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>$TM_SELECTED_TEXT</code></td>
+            <td>当前选中文本</td>
+            <td>包 try/catch、包标签、包 Markdown 引用。</td>
+          </tr>
+          <tr>
+            <td><code>$TM_FILENAME</code></td>
+            <td>当前文件名,含扩展名</td>
+            <td>日志、注释、测试标题。</td>
+          </tr>
+          <tr>
+            <td><code>$TM_FILENAME_BASE</code></td>
+            <td>当前文件名,不含扩展名</td>
+            <td>组件名、类名、测试 suite 名。</td>
+          </tr>
+          <tr>
+            <td><code>$WORKSPACE_NAME</code></td>
+            <td>当前工作区名称</td>
+            <td>项目级注释、脚本输出。</td>
+          </tr>
+          <tr>
+            <td><code>$CLIPBOARD</code></td>
+            <td>剪贴板内容</td>
+            <td>把刚复制的 URL、变量名、错误信息塞进模板。</td>
+          </tr>
+          <tr>
+            <td><code>$CURRENT_YEAR</code> / <code>$CURRENT_MONTH</code> / <code>$CURRENT_DATE</code></td>
+            <td>当前日期片段</td>
+            <td>文件头、迁移脚本、记录类模板。</td>
+          </tr>
+          <tr>
+            <td><code>$UUID</code></td>
+            <td>随机 UUID</td>
+            <td>临时 ID、测试数据、demo 数据。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="annot">变量是 snippet 从「死模板」变成「有上下文的模板」的关键。</div>
+  </div>
+</section>
+
+<!-- ========== EMMET ========== -->
+<section>
+  <div class="sec-head">
+    <h2>Emmet 不是缩写表,是小语言</h2>
+    <div class="count">EMMET</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Emmet 的强大在于它能描述结构关系。你不是背 <code class="inline">div</code> 的补全,而是在写一个极短的 DOM/CSS 草图。
+      下面这些模式足够覆盖大多数日常页面。
+    </p>
+    <div class="pattern-grid">
+      <div class="pattern accent">
+        <div class="pt-tag">HTML TREE</div>
+        <h3>父子、兄弟、重复</h3>
+        <div class="abbr">ul.menu&gt;li.item$*4&gt;a[href="#"]{Item $}</div>
+        <div class="note">生成一个 <code class="inline">ul</code>,里面 4 个 <code class="inline">li</code>。<code class="inline">$</code> 是序号,<code class="inline">{}</code> 是文本。</div>
+      </div>
+      <div class="pattern">
+        <div class="pt-tag">CLASS / ID</div>
+        <h3>快速写类名与 id</h3>
+        <div class="abbr">section#profile.panel&gt;h2.title+p.desc</div>
+        <div class="note"><code class="inline">#</code> 表示 id,<code class="inline">.</code> 表示 class。没有显式标签时,<code class="inline">.card</code> 默认生成 <code class="inline">&lt;div class="card"&gt;</code>。</div>
+      </div>
+      <div class="pattern">
+        <div class="pt-tag">GROUP</div>
+        <h3>括号分组</h3>
+        <div class="abbr">main&gt;(section.hero&gt;h1+p)+(section.list&gt;ul&gt;li*3)</div>
+        <div class="note">当结构变复杂,用 <code class="inline">()</code> 明确分组,避免兄弟节点跑错层级。</div>
+      </div>
+      <div class="pattern accent">
+        <div class="pt-tag">CSS</div>
+        <h3>CSS 属性缩写</h3>
+        <div class="abbr">df + ai:c + jc:sb + gap16 + p24 + bgc#fff</div>
+        <div class="note">在 CSS 中输入 <code class="inline">df</code> 展开为 <code class="inline">display:flex</code>,<code class="inline">p24</code> 展开为 <code class="inline">padding:24px</code>。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== EMMET TABLE ========== -->
+<section>
+  <div class="sec-head">
+    <h2>Emmet 速查</h2>
+    <div class="count">CHEATSHEET</div>
+  </div>
+  <div class="indent">
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>写法</th>
+            <th>含义</th>
+            <th>例子</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>&gt;</code></td>
+            <td>子节点</td>
+            <td><code>nav&gt;a</code> → nav 里有 a</td>
+          </tr>
+          <tr>
+            <td><code>+</code></td>
+            <td>兄弟节点</td>
+            <td><code>h1+p</code> → h1 后面跟 p</td>
+          </tr>
+          <tr>
+            <td><code>*</code></td>
+            <td>重复</td>
+            <td><code>li*5</code> → 5 个 li</td>
+          </tr>
+          <tr>
+            <td><code>$</code></td>
+            <td>编号</td>
+            <td><code>.item$*3</code> → item1 / item2 / item3</td>
+          </tr>
+          <tr>
+            <td><code>{}</code></td>
+            <td>文本内容</td>
+            <td><code>button{Save}</code></td>
+          </tr>
+          <tr>
+            <td><code>[]</code></td>
+            <td>属性</td>
+            <td><code>a[href="/docs"]{Docs}</code></td>
+          </tr>
+          <tr>
+            <td><code>()</code></td>
+            <td>分组</td>
+            <td><code>(header&gt;nav)+(main&gt;section)</code></td>
+          </tr>
+          <tr>
+            <td><code>lorem</code></td>
+            <td>占位文本</td>
+            <td><code>p&gt;lorem20</code> → 20 词段落</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DECISION ========== -->
+<section>
+  <div class="sec-head">
+    <h2>什么时候用谁?</h2>
+    <div class="count">DECISION</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node">
+        <div class="tag">USE SNIPPET WHEN</div>
+        <h3>模板包含业务语义</h3>
+        <p>比如 API 返回结构、测试命名规则、React Hook 约定、日志格式、错误处理策略。这些不是纯结构,而是你的项目或团队选择。</p>
+      </div>
+      <div class="node">
+        <div class="tag">USE EMMET WHEN</div>
+        <h3>模板主要是标签层级</h3>
+        <p>比如一段表单、导航列表、卡片列表、CSS 布局属性。Emmet 临场生成最轻,不需要提前维护模板文件。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">USE PROJECT SNIPPET WHEN</div>
+        <h3>希望所有人写得一样</h3>
+        <p>只要它涉及代码规范和 review 成本,就放项目里。比如统一 <code class="inline">apierr</code>、<code class="inline">testcase</code>、<code class="inline">pagex</code>。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">AVOID</div>
+        <h3>不要把一切都 snippet 化</h3>
+        <p>低频模板会增加记忆负担。优秀的 snippet 库应该小而锋利:每天用、团队用、容易出错的东西优先。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LABS ========== -->
+<section>
+  <div class="sec-head">
+    <h2>动手实验</h2>
+    <div class="count">3 LABS</div>
+  </div>
+  <div class="indent">
+    <h3>Lab 1 — 创建第一个 User Snippet</h3>
+    <p style="color:var(--g700);">目标:在 TSX 文件中输入 <code class="inline">rfcx</code>,生成一个带 props 类型的 React 函数组件。</p>
+    <ol style="color:var(--g700); line-height:1.85;">
+      <li>打开命令面板 <kbd>⌘⇧P</kbd>(Win: <kbd>Ctrl Shift P</kbd>)</li>
+      <li>输入并选择 <code class="inline">Snippets: Configure User Snippets</code></li>
+      <li>选择 <code class="inline">typescriptreact.json</code></li>
+      <li>粘贴上面「React function component with props」snippet</li>
+      <li>新建 <code class="inline">Demo.tsx</code>,输入 <code class="inline">rfcx</code>,按 <kbd>Tab</kbd></li>
+      <li>连续按 <kbd>Tab</kbd> 观察光标如何在组件名、props、标签名、正文之间跳转</li>
+    </ol>
+
+    <h3 style="margin-top:32px;">Lab 2 — 把团队约定放进项目</h3>
+    <p style="color:var(--g700);">目标:创建项目级 snippet,让这个仓库的其他人也能用。</p>
+    <ol style="color:var(--g700); line-height:1.85;">
+      <li>在练习项目中创建目录 <code class="inline">.vscode</code></li>
+      <li>创建文件 <code class="inline">.vscode/team.code-snippets</code></li>
+      <li>粘贴「API error response」snippet</li>
+      <li>打开任意 <code class="inline">.ts</code> 文件,输入 <code class="inline">apierr</code> 并展开</li>
+      <li>在 choice 位置选择不同错误码,感受枚举模板带来的规范性</li>
+      <li>把这个文件提交到 Git,这就是团队共享的编辑器能力</li>
+    </ol>
+
+    <h3 style="margin-top:32px;">Lab 3 — Emmet 生成一个设置页骨架</h3>
+    <p style="color:var(--g700);">目标:不用手敲标签,用一个 abbreviation 生成页面结构。</p>
+<pre class="code">main.settings&gt;(header.page-head&gt;h1{Settings}+p{Manage account preferences})+(section.panel&gt;h2{Profile}+form&gt;label*3&gt;span{Field $}+input[name=field$])</pre>
+    <ol style="color:var(--g700); line-height:1.85;">
+      <li>新建 <code class="inline">settings.html</code> 或 <code class="inline">Settings.tsx</code></li>
+      <li>输入上面的 Emmet 缩写</li>
+      <li>按 <kbd>Tab</kbd> 或执行 <code class="inline">Emmet: Expand Abbreviation</code></li>
+      <li>观察 <code class="inline">&gt;</code>、<code class="inline">+</code>、<code class="inline">*</code>、<code class="inline">$</code>、<code class="inline">{}</code> 分别生成了什么</li>
+      <li>改写它:把 3 个字段改成 5 个,把 <code class="inline">input</code> 改成 <code class="inline">textarea</code></li>
+    </ol>
+
+    <div class="grid grid-2" style="margin-top:24px;">
+      <div class="node entry">
+        <div class="tag">REFLECTION</div>
+        <h3>实验的重点</h3>
+        <p>不是背三个模板,而是理解模板的三个核心能力:光标顺序、上下文变量、项目共享。只要这三个会了,你就能给任何技术栈造自己的模板。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">CHALLENGE</div>
+        <h3>附加挑战</h3>
+        <p>找一个你最近三天重复写过 3 次以上的代码结构,把它改成 snippet。要求:至少包含 2 个 tab stop、1 个 placeholder、1 个 description。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">为什么我的 snippet 不出现?明明已经写进 json 了。</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>优先排查四件事:(1) 当前文件语言模式是否匹配,看右下角是不是 TypeScript React / JavaScript React；(2) 如果是全局或项目 <code>.code-snippets</code>,检查 <code>scope</code> 是否包含当前语言；(3) JSON 是否有尾逗号、漏引号、括号不闭合；(4) 补全列表里 snippet 可能排得靠后,把 <code>editor.snippetSuggestions</code> 设置成 <code>top</code>。不确定时用命令 <code>Insert Snippet</code> 看它是否在列表里。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">User Snippet、Global Snippet、Workspace Snippet 到底怎么选?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p><strong>语言专属 User Snippet</strong> 用来沉淀个人习惯,比如你自己的 React 组件骨架。<strong>Global Snippet</strong> 用来跨语言复用,比如通用注释、console、todo。<strong>Workspace Snippet</strong> 用来固化项目约定,应该提交到 Git。经验规则:只提升你的效率,放 User；能减少团队 review 分歧,放 Workspace。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">Snippet 和 Copilot / AI 补全重复了吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>不重复。Snippet 是<strong>确定性模板</strong>:每次展开都一样,适合规范化和肌肉记忆。AI 补全是<strong>概率性建议</strong>:适合补全上下文相关逻辑。对于 API response、测试骨架、项目目录结构这类不希望漂移的内容,snippet 更可靠。对于业务分支、算法细节、调用组合,AI 更有用。两者最好搭配:snippet 先给稳定骨架,AI 再补局部逻辑。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">Emmet 在 JSX / TSX 里不展开怎么办?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>先确认右下角语言模式是 JavaScript React 或 TypeScript React。如果你在普通 <code>.js</code> / <code>.ts</code> 中写 JSX,需要配置 <code>emmet.includeLanguages</code>,把 <code>javascript</code> 映射到 <code>javascriptreact</code>,把 <code>typescript</code> 映射到 <code>typescriptreact</code>。如果 Tab 不触发,用命令 <code>Emmet: Expand Abbreviation</code> 试一次,可以判断是语法问题还是 Tab 快捷键冲突。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">一个 snippet 应该做得很通用,还是很具体?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>优先具体。太通用的 snippet 会塞满 placeholder,每次展开还要删改很多东西,最后不如手写。好 snippet 的标准是:展开后 80% 以上内容不需要改,只在少数关键位置填写。对于高度变化的代码,用 Emmet、AI 或普通补全更合适。你的 snippet 库应该像常用工具架,不是杂物仓库。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <h2>复盘问题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review-list">
+      <li>Snippet 的 <code class="inline">prefix</code>、<code class="inline">body</code>、<code class="inline">description</code>、<code class="inline">scope</code> 分别负责什么?</li>
+      <li><code class="inline">$1</code>、<code class="inline">${1:default}</code>、<code class="inline">${1|a,b,c|}</code>、<code class="inline">$0</code> 的区别是什么?</li>
+      <li>什么类型的模板应该放进 <code class="inline">.vscode/*.code-snippets</code> 并提交到 Git?</li>
+      <li>Emmet 中 <code class="inline">&gt;</code>、<code class="inline">+</code>、<code class="inline">*</code>、<code class="inline">$</code>、<code class="inline">{}</code> 分别表示什么?</li>
+      <li>当 Tab 不展开 snippet 或 Emmet 时,你会按什么顺序排查?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <h2>今日检查清单</h2>
+    <div class="count">8 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>已把 <code class="inline">editor.snippetSuggestions</code>、<code class="inline">editor.tabCompletion</code>、<code class="inline">emmet.triggerExpansionOnTab</code> 调顺</li>
+        <li>能通过 <code class="inline">Configure User Snippets</code> 找到语言专属 snippet 文件</li>
+        <li>能写出包含 tab stop、placeholder、choice 的 snippet</li>
+        <li>理解 <code class="inline">$TM_SELECTED_TEXT</code>、<code class="inline">$TM_FILENAME_BASE</code>、<code class="inline">$CLIPBOARD</code> 的用途</li>
+        <li>知道个人 snippet 与项目级 snippet 的边界</li>
+        <li>能在 HTML / JSX 中用 Emmet 生成多层结构</li>
+        <li>能用 Emmet 写出常见 CSS 属性缩写</li>
+        <li>完成 3 个 Lab,并把一个真实重复模板改造成 snippet</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <h2>推荐阅读</h2>
+    <div class="count">3 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-3">
+      <div class="node entry">
+        <div class="tag">OFFICIAL</div>
+        <h3>VSCode User Defined Snippets</h3>
+        <p>官方 snippet 语法说明。重点看 tabstop、placeholder、choice、variables、scope。</p>
+      </div>
+      <div class="node">
+        <div class="tag">OFFICIAL</div>
+        <h3>VSCode Emmet</h3>
+        <p>官方 Emmet 集成文档。重点看 includeLanguages、triggerExpansionOnTab、Wrap with Abbreviation。</p>
+      </div>
+      <div class="node">
+        <div class="tag">REFERENCE</div>
+        <h3>Emmet Cheat Sheet</h3>
+        <p>查 HTML 与 CSS 缩写最方便的速查表。练到能自然写出 <code class="inline">ul&gt;li.item$*5</code> 就够用了。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <h2>Day 08 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">COMING NEXT</div>
+      <h3>文件浏览器与多根工作区</h3>
+      <p>Day 04-07 解决的是编辑器内的速度。明天开始进入「工作区与终端」阶段:
+      <code class="inline">.code-workspace</code> 文件、多根目录、Explorer file nesting、breadcrumbs、工作区信任与项目视图整理。
+      学完后,VSCode 不只是打开一个文件夹,而是能作为复杂项目的控制台。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"Snippet 是把经验写成模板,Emmet 是把结构写成句子。"</p>
+  <p class="meta">DAY 07 · VSCODE 21-DAY ROADMAP</p>
+</footer>
+
+</div>

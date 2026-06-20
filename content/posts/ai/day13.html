@@ -1,0 +1,1445 @@
+---
+title: "Day 13 · torch.compile / TorchDynamo / Inductor"
+date: '2026-05-27'
+draft: false
+description: "进入 PyTorch 2.x 编译器栈: TorchDynamo 如何从 Python 代码捕获 FX 图, guards 如何决定复用/重编译/fallback, Inductor 如何融合算子并生成 Triton/C++ kernel;最后对一个小模型做 eager vs compile benchmark。"
+toc: false
+tags:
+  - AI
+  - PyTorch
+  - TorchDynamo
+  - TorchInductor
+  - Compiler
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+*{ box-sizing:border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.day13-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.day13-wrap .eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.day13-wrap .eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:24px;
+  height:1.5px;
+  background:var(--clay);
+  margin-right:12px;
+  vertical-align:middle;
+}
+.day13-wrap h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(36px, 5.2vw, 58px);
+  letter-spacing:-0.018em;
+  line-height:1.08;
+  max-width:18ch;
+  margin:22px 0 30px;
+  color:var(--slate);
+}
+.day13-wrap h1 em{ font-style:italic; color:var(--clay); }
+.day13-wrap h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:27px;
+  letter-spacing:-0.012em;
+  margin:0;
+  color:var(--slate);
+}
+.day13-wrap h3{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:19px;
+  letter-spacing:-0.008em;
+  margin:0 0 10px;
+  color:var(--slate);
+}
+.day13-wrap .lede{
+  font-size:16.5px;
+  color:var(--g700);
+  max-width:62ch;
+  margin:0 0 32px;
+  line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.day13-wrap header.masthead{ padding:80px 0 56px; }
+.day13-wrap .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.day13-wrap .meta-strip strong{
+  color:var(--slate);
+  font-weight:600;
+  margin-right:6px;
+}
+
+/* ========== Section ========== */
+.day13-wrap section{ margin-top:72px; }
+.day13-wrap .indent{ margin-left:50px; }
+.day13-wrap .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:18px;
+  margin-bottom:28px;
+}
+.day13-wrap .sec-head .count{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  padding:3px 12px;
+  background:var(--g100);
+  border-radius:999px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* ========== Cards / Diagram ========== */
+.day13-wrap .mindmap,
+.day13-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+  margin:0;
+}
+.day13-wrap .mindmap svg,
+.day13-wrap .archdiag svg{
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+}
+.day13-wrap .mindmap-cap,
+.day13-wrap .archdiag-cap{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px dashed var(--g300);
+}
+.day13-wrap .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.day13-wrap .grid-2{ grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); }
+.day13-wrap .grid-3{ grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); }
+.day13-wrap .grid-4{ grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); }
+.day13-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.day13-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.day13-wrap .node.accent{ border-color:var(--clay); }
+.day13-wrap .node.entry{ background:var(--g100); }
+.day13-wrap .node.exit{ background:var(--oat); border-color:var(--clay); }
+.day13-wrap .node.dark{
+  background:var(--slate);
+  border-color:var(--slate);
+  color:var(--ivory);
+}
+.day13-wrap .node.dark .tag{ color:var(--oat); }
+.day13-wrap .node.dark p{ color:var(--oat); }
+.day13-wrap .node.dark h3{ color:var(--ivory); }
+.day13-wrap .node .tag{
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  font-weight:600;
+}
+.day13-wrap .node .tag.clay{ color:var(--clay); }
+.day13-wrap .node p{
+  font-size:13.5px;
+  color:var(--g700);
+  margin:6px 0 0;
+  line-height:1.6;
+}
+
+/* ========== Annotation / Table / Code ========== */
+.day13-wrap .annot{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  position:relative;
+  margin-top:14px;
+  padding-left:44px;
+  letter-spacing:.04em;
+}
+.day13-wrap .annot::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:8px;
+  width:32px;
+  height:1.5px;
+  background:var(--clay);
+}
+.day13-wrap .table-wrap{ overflow-x:auto; }
+.day13-wrap table.compare{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  overflow:hidden;
+}
+.day13-wrap table.compare th,
+.day13-wrap table.compare td{
+  text-align:left;
+  padding:14px 20px;
+  border-bottom:1px solid var(--g200);
+  vertical-align:top;
+}
+.day13-wrap table.compare th{
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+  background:var(--g100);
+  border-bottom:1.5px solid var(--slate);
+}
+.day13-wrap table.compare td:first-child{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:15px;
+  width:20%;
+  color:var(--slate);
+}
+.day13-wrap table.compare tr:last-child td{ border-bottom:none; }
+.day13-wrap table.compare .clay{ color:var(--clay-d); }
+.day13-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+.day13-wrap pre.code{
+  background:var(--slate);
+  color:var(--ivory);
+  font-family:var(--mono);
+  font-size:12.5px;
+  padding:20px 24px;
+  border-radius:10px;
+  overflow-x:auto;
+  line-height:1.65;
+  margin:18px 0;
+}
+.day13-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.day13-wrap pre.code .k{ color:var(--clay); }
+.day13-wrap pre.code .s{ color:var(--olive); }
+.day13-wrap pre.code .t{ color:#7EC8E3; }
+.day13-wrap pre.code .n{ color:#C4B28A; }
+.day13-wrap code.inline{
+  font-family:var(--mono);
+  font-size:12.5px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 6px;
+  color:var(--clay-d);
+}
+
+/* ========== Checklist / Review / Q&A ========== */
+.day13-wrap .check{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:8px 24px;
+}
+.day13-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.day13-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative;
+  font-size:14.5px;
+  color:var(--slate);
+}
+.day13-wrap .check li:last-child{ border-bottom:none; }
+.day13-wrap .check li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:16px;
+  width:18px;
+  height:18px;
+  border:1.5px solid var(--g300);
+  border-radius:4px;
+  background:var(--paper);
+}
+.day13-wrap .review{
+  counter-reset:q;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.day13-wrap .review li{
+  counter-increment:q;
+  position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px;
+  color:var(--g700);
+}
+.day13-wrap .review li:last-child{ border-bottom:none; }
+.day13-wrap .review li::before{
+  content:counter(q, decimal-leading-zero);
+  position:absolute;
+  left:0;
+  top:18px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--clay);
+  letter-spacing:.06em;
+  font-weight:600;
+}
+.day13-wrap .qa-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-top:8px;
+}
+.day13-wrap .qa-card{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  overflow:hidden;
+  transition:border-color 150ms ease;
+}
+.day13-wrap .qa-card[open]{ border-color:var(--slate); }
+.day13-wrap .qa-card summary{
+  list-style:none;
+  cursor:pointer;
+  padding:18px 24px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  transition:background 150ms ease;
+}
+.day13-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.day13-wrap .qa-card summary::marker{ display:none; }
+.day13-wrap .qa-card summary:hover{ background:var(--g100); }
+.day13-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.day13-wrap .qa-num{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--clay);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:3px;
+}
+.day13-wrap .qa-q{
+  font-family:var(--serif);
+  font-size:16px;
+  font-weight:500;
+  color:var(--slate);
+  line-height:1.5;
+  flex:1;
+}
+.day13-wrap .qa-toggle{
+  font-family:var(--mono);
+  font-size:18px;
+  color:var(--g500);
+  flex-shrink:0;
+  font-weight:300;
+  line-height:1;
+  margin-top:2px;
+  transition:transform 150ms ease, color 150ms ease;
+}
+.day13-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg);
+  color:var(--clay);
+}
+.day13-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+}
+.day13-wrap .qa-a-label{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--olive);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.day13-wrap .qa-a-body{
+  flex:1;
+  font-size:14.5px;
+  color:var(--g700);
+  line-height:1.7;
+}
+.day13-wrap .qa-a-body p{ margin:0 0 10px; }
+.day13-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.day13-wrap .qa-a-body strong{
+  font-family:var(--serif);
+  font-style:italic;
+  font-weight:500;
+  color:var(--slate);
+}
+.day13-wrap .qa-a-body code{
+  font-family:var(--mono);
+  font-size:13px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 5px;
+  color:var(--clay-d);
+}
+
+/* ========== Footer ========== */
+.day13-wrap footer{
+  margin-top:100px;
+  padding-top:40px;
+  border-top:1px solid var(--g200);
+  text-align:center;
+}
+.day13-wrap footer .quote{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:18px;
+  color:var(--g700);
+  max-width:42ch;
+  margin:0 auto;
+  line-height:1.55;
+}
+.day13-wrap footer .meta{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-top:24px;
+}
+
+@media (max-width:720px){
+  .day13-wrap{ padding:0 22px 90px; }
+  .day13-wrap .indent{ margin-left:0; }
+  .day13-wrap header.masthead{ padding:56px 0 40px; }
+  .day13-wrap section{ margin-top:56px; }
+  .day13-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .day13-wrap .mindmap,
+  .day13-wrap .archdiag{ padding:20px 12px; }
+  .day13-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .day13-wrap .qa-q{ font-size:14.5px; }
+  .day13-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="day13-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 13 · AI INFRA ROADMAP · 60 DAYS</div>
+  <h1>从动态图到 <em>融合 kernel</em></h1>
+  <p class="lede">
+    前面几天我们拆过 PyTorch 的 Tensor、Dispatcher、Autograd、算子注册和显存管理。
+    今天开始把这些零件连成一条编译链路:
+    <code class="inline">torch.compile</code> 用 <strong>TorchDynamo</strong> 从 Python 执行中捕获
+    <strong>FX graph</strong>,用 <strong>guards</strong> 判断这张图什么时候还能复用,
+    再交给 <strong>AOTAutograd</strong> 和 <strong>TorchInductor</strong> 做 backward 捕获、算子分解、
+    融合和代码生成。目标不是背 API,而是能回答一个工程问题:
+    <em style="font-style:italic;color:#B85C3E;">为什么同一段模型代码,有时 compile 变快,有时反而变慢?</em>
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 3 h</span>
+    <span><strong>THEORY</strong> 1.4 h</span>
+    <span><strong>HANDS-ON</strong> 1.2 h</span>
+    <span><strong>REVIEW</strong> 0.4 h</span>
+    <span><strong>STACK</strong> PyTorch 2.x · Dynamo · FX · Inductor · Triton</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 13 思维导图">
+        <rect x="285" y="22" width="410" height="62" rx="5" fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="48" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16" fill="#141413">DAY 13 · torch.compile</text>
+        <text x="490" y="70" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F" letter-spacing="2">DYNAMO · FX · GUARDS · INDUCTOR · BENCHMARK</text>
+
+        <line x1="490" y1="84" x2="490" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="108" x2="858" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="108" x2="122" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="108" x2="367" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="108" x2="613" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="108" x2="858" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <rect x="32" y="134" width="180" height="56" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="122" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" letter-spacing="2" font-weight="600">01 · CAPTURE</text>
+        <text x="122" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">FX 图捕获</text>
+
+        <rect x="277" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#D97757" letter-spacing="2" font-weight="600">02 · GUARD</text>
+        <text x="367" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">复用 / 重编译</text>
+
+        <rect x="523" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#D97757" letter-spacing="2" font-weight="600">03 · LOWER</text>
+        <text x="613" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">Inductor 代码生成</text>
+
+        <rect x="768" y="134" width="180" height="56" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="858" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" letter-spacing="2" font-weight="600">04 · MEASURE</text>
+        <text x="858" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">eager vs compile</text>
+
+        <text x="42" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Python frame eval</text>
+        <text x="42" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">FX GraphModule</text>
+        <text x="42" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">graph break</text>
+        <text x="42" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">fullgraph=True</text>
+
+        <text x="287" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">shape / dtype / device</text>
+        <text x="287" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">object id / constants</text>
+        <text x="287" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">recompile_limit</text>
+        <text x="287" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">eager fallback</text>
+
+        <text x="533" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">AOTAutograd</text>
+        <text x="533" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">decomposition</text>
+        <text x="533" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">fusion schedule</text>
+        <text x="533" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Triton / C++ kernel</text>
+
+        <text x="778" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">warmup 去掉首编译</text>
+        <text x="778" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">CUDA synchronize</text>
+        <text x="778" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">TORCH_LOGS</text>
+        <text x="778" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">speedup 表格</text>
+
+        <line x1="32" y1="360" x2="948" y2="360" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="32" y="387" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+        <rect x="32" y="400" width="220" height="34" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="142" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">编译链路图</text>
+        <rect x="268" y="400" width="220" height="34" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="378" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">graph break 诊断表</text>
+        <rect x="504" y="400" width="220" height="34" rx="5" fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="614" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">benchmark 脚本</text>
+        <rect x="740" y="400" width="200" height="34" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="840" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">eager vs compile 记录</text>
+      </svg>
+      <div class="mindmap-cap">FIG · Day 13 全景:先知道编译链路,再学会诊断 graph break / recompile,最后用 benchmark 验证收益</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 1. WHY ========== -->
+<section>
+  <div class="sec-head">
+    <h2>torch.compile 解决什么问题</h2>
+    <div class="count">25 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      PyTorch eager 的优点是灵活:每一行 Python 都立刻执行,动态控制流天然可用。
+      代价是每个 op 都要走 Python 调度、Dispatcher、kernel launch、临时张量分配。
+      对 GPU 来说,很多小 op 的真正瓶颈不是算力,而是<strong>启动开销、内存读写和中间结果搬运</strong>。
+      <code class="inline">torch.compile</code> 的核心目标,就是把一段稳定的 PyTorch 计算变成可优化的图,
+      然后让后端把多个小操作揉成更少、更贴近硬件的 kernel。
+    </p>
+
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>执行方式</th>
+            <th>发生了什么</th>
+            <th>常见收益</th>
+            <th>常见代价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Eager</td>
+            <td>Python 逐行执行,每个 op 单独 dispatch,通常每个 CUDA op 单独 launch kernel</td>
+            <td>调试简单,动态行为完全自然</td>
+            <td>小 op 多时 CPU launch 开销大;中间张量多;跨 op 优化机会少</td>
+          </tr>
+          <tr>
+            <td><code class="inline">torch.compile</code></td>
+            <td>Dynamo 捕获 FX 图,Inductor 对图做融合、调度和代码生成,后续调用命中缓存</td>
+            <td class="clay">减少 launch、融合 elementwise、降低 Python overhead、可能触发 CUDA graphs</td>
+            <td>首次调用要编译;遇到 graph break 会碎图;shape 变化可能重编译</td>
+          </tr>
+          <tr>
+            <td>手写 Triton / CUDA</td>
+            <td>人工为热点写特定 kernel</td>
+            <td>极限性能和完全控制</td>
+            <td>维护成本高,正确性和 shape 泛化都要自己兜住</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">它最擅长的三类加速</h3>
+    <div class="grid grid-3">
+      <div class="node accent">
+        <div class="tag clay">FUSION</div>
+        <h3>融合内存带宽型 op</h3>
+        <p>例如 <code class="inline">x * scale + bias</code>、激活函数、mask、残差加法、部分归一化 epilogue。多个读写全局显存的 op 被融合后,中间张量不再落地,内存流量直接下降。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">LAUNCH</div>
+        <h3>减少 CPU 端调度成本</h3>
+        <p>batch 小、序列短、op 很碎时,GPU 没吃饱,CPU 一直在发 kernel。编译后的图可以合并 launch,在 <code class="inline">reduce-overhead</code> 模式下还可能用 CUDA graphs 降低重复调用成本。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">SPECIALIZE</div>
+        <h3>为当前 shape 生成更贴切的代码</h3>
+        <p>编译器知道 dtype、device、shape、stride 后,可以选择更合适的 tile、layout 和 kernel。代价是这些假设要靠 guards 保护,输入变化太频繁就会触发重编译。</p>
+      </div>
+    </div>
+
+    <div class="annot">第一条纪律:benchmark 时必须把首次编译成本排除,否则你测到的是编译器启动时间,不是模型稳定态吞吐。</div>
+  </div>
+</section>
+
+<!-- ========== 2. PIPELINE ========== -->
+<section>
+  <div class="sec-head">
+    <h2>编译链路:从 Python 到 kernel</h2>
+    <div class="count">35 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      <code class="inline">torch.compile</code> 不是一个单独的优化 pass,
+      而是一条流水线。粗略看,它把 Python 执行切成可捕获的区域,生成 FX 图,
+      为这张图生成 guards,再把 forward / backward 交给后端编译。
+      每个环节都有可能失败、降级或变慢,所以要把链路图刻进脑子里。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 980 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="torch.compile 编译链路">
+        <text x="490" y="30" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#87867F" letter-spacing="2" font-weight="600">TORCH.COMPILE PIPELINE</text>
+
+        <rect x="36" y="72" width="132" height="78" rx="6" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="102" y="101" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">Python Module</text>
+        <text x="102" y="124" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">forward()</text>
+
+        <line x1="168" y1="111" x2="212" y2="111" stroke="#87867F" stroke-width="2"/>
+        <polygon points="208,106 218,111 208,116" fill="#87867F"/>
+
+        <rect x="218" y="72" width="132" height="78" rx="6" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="284" y="98" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">TorchDynamo</text>
+        <text x="284" y="120" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">bytecode trace</text>
+        <text x="284" y="137" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">guards</text>
+
+        <line x1="350" y1="111" x2="394" y2="111" stroke="#87867F" stroke-width="2"/>
+        <polygon points="390,106 400,111 390,116" fill="#87867F"/>
+
+        <rect x="400" y="72" width="132" height="78" rx="6" fill="#FFFFFF" stroke="#87867F" stroke-width="2"/>
+        <text x="466" y="98" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">FX Graph</text>
+        <text x="466" y="120" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">GraphModule</text>
+        <text x="466" y="137" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">call_function</text>
+
+        <line x1="532" y1="111" x2="576" y2="111" stroke="#87867F" stroke-width="2"/>
+        <polygon points="572,106 582,111 572,116" fill="#87867F"/>
+
+        <rect x="582" y="72" width="132" height="78" rx="6" fill="#FFFFFF" stroke="#87867F" stroke-width="2"/>
+        <text x="648" y="98" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">AOTAutograd</text>
+        <text x="648" y="120" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">forward + backward</text>
+        <text x="648" y="137" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">decompose</text>
+
+        <line x1="714" y1="111" x2="758" y2="111" stroke="#87867F" stroke-width="2"/>
+        <polygon points="754,106 764,111 754,116" fill="#87867F"/>
+
+        <rect x="764" y="72" width="176" height="78" rx="6" fill="#141413" stroke="#141413" stroke-width="2"/>
+        <text x="852" y="98" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#FAF9F5" font-weight="500">TorchInductor</text>
+        <text x="852" y="120" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">schedule · fusion</text>
+        <text x="852" y="137" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#D97757">Triton / C++</text>
+
+        <line x1="102" y1="150" x2="102" y2="190" stroke="#D97757" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="118" y="176" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">graph break → eager island</text>
+
+        <rect x="36" y="216" width="904" height="128" rx="6" fill="#FAF9F5" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="62" y="246" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600" letter-spacing="1">RUNTIME CACHE</text>
+        <text x="62" y="272" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">第一次调用: trace → compile → cache compiled graph</text>
+        <text x="62" y="300" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">后续调用: 先跑 guards。如果 shape / dtype / device / 常量等假设满足,直接复用 compiled graph。</text>
+        <text x="62" y="328" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">guards 失败: 为新输入重新 trace / compile。超过重编译上限后,该函数区域会回退到 eager。</text>
+
+        <line x1="710" y1="250" x2="865" y2="250" stroke="#788C5D" stroke-width="10" stroke-linecap="round"/>
+        <text x="710" y="276" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#788C5D">guard pass → reuse</text>
+        <line x1="710" y1="306" x2="865" y2="306" stroke="#D97757" stroke-width="10" stroke-linecap="round"/>
+        <text x="710" y="332" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E">guard fail → recompile</text>
+      </svg>
+      <div class="archdiag-cap">FIG · Dynamo 负责捕获和 guards,FX 是中间图,AOTAutograd 处理训练的 backward,Inductor 才是真正生成快代码的默认后端</div>
+    </div>
+
+    <h3 style="margin-top:32px;">组件速查</h3>
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">TORCHDYNAMO</div>
+        <h3>从 Python 执行中安全捕获图</h3>
+        <p>它观察 Python frame / bytecode 执行,把能表达成 PyTorch op 的部分提取成 FX graph。遇到无法静态理解的 Python 行为,就切出 graph break,让那一小段继续用 eager 跑。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">FX GRAPH</div>
+        <h3>可检查、可变换的图 IR</h3>
+        <p>FX graph 近似是一串 <code class="inline">placeholder</code>、<code class="inline">call_function</code>、<code class="inline">call_module</code>、<code class="inline">output</code> 节点。它不等于最终 kernel,只是后端优化的输入。</p>
+      </div>
+      <div class="node">
+        <div class="tag">AOTAUTOGRAD</div>
+        <h3>训练时把 backward 也纳入图</h3>
+        <p>如果只编 forward,训练收益有限。AOTAutograd 会通过 ahead-of-time 的方式捕获反向图,让 Inductor 同时优化 forward 和 backward 的可优化区域。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">INDUCTOR</div>
+        <h3>默认后端,负责真正变快</h3>
+        <p>Inductor 会做算子分解、融合、调度,再为 GPU 生成 Triton kernel,为 CPU 生成 C++/OpenMP 代码。<code class="inline">backend="inductor"</code> 是默认选择。</p>
+      </div>
+    </div>
+
+<pre class="code"><span class="c"># 三层调试阶梯:每一层多打开一点编译器能力</span>
+compiled = torch.compile(model, backend=<span class="s">"eager"</span>)       <span class="c"># 只走 Dynamo 捕获,不做后端优化</span>
+compiled = torch.compile(model, backend=<span class="s">"aot_eager"</span>)   <span class="c"># Dynamo + AOTAutograd,仍用 eager 执行图</span>
+compiled = torch.compile(model, backend=<span class="s">"inductor"</span>)   <span class="c"># 默认:完整编译链路</span>
+
+<span class="c"># 用 fullgraph 当作"图完整性测试":有 graph break 就直接报错</span>
+compiled = torch.compile(model, fullgraph=<span class="k">True</span>)</pre>
+
+    <div class="annot">调试时先 backend="eager" 看 Dynamo 能不能捕获,再用 aot_eager 查 backward,最后才上 inductor 查性能和代码生成。</div>
+  </div>
+</section>
+
+<!-- ========== 3. GRAPH BREAK ========== -->
+<section>
+  <div class="sec-head">
+    <h2>FX 捕获与 graph break</h2>
+    <div class="count">35 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      graph break 的意思不是"编译失败",而是 Dynamo 捕获到某一行时发现:
+      这段 Python 行为无法安全放进 FX 图。于是它先把已经捕获的图编译掉,
+      中间那段 unsupported code 用 eager 执行,然后继续尝试捕获后面的代码。
+      这保留了 PyTorch 的灵活性,但会<strong>打断融合、增加调度边界、降低优化机会</strong>。
+    </p>
+
+<pre class="code"><span class="k">import</span> torch
+
+@torch.compile
+<span class="k">def</span> bad_fn(x):
+    y = x.sin() + x.cos()
+    <span class="k">if</span> y.sum().item() &gt; <span class="n">0</span>:       <span class="c"># 数据依赖控制流 + Tensor.item()</span>
+        print(<span class="s">"positive"</span>)       <span class="c"># logging 也会打断图</span>
+        <span class="k">return</span> y * <span class="n">2</span>
+    <span class="k">return</span> y - <span class="n">2</span>
+
+bad_fn(torch.randn(<span class="n">1024</span>, device=<span class="s">"cuda"</span>))
+
+<span class="c"># 观察 graph break 位置和原因</span>
+<span class="c"># TORCH_LOGS="graph_breaks" python playground.py</span></pre>
+
+    <h3 style="margin-top:32px;">常见 graph break 与改法</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>触发源</th>
+            <th>为什么断图</th>
+            <th>优先改法</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>数据依赖 <code class="inline">if/while</code></td>
+            <td>分支取决于 tensor runtime 值,trace 时不能提前知道走哪条路</td>
+            <td>能改成张量表达就用 <code class="inline">torch.where</code>;真分支用 <code class="inline">torch.cond</code>;否则把分支移出 compiled region</td>
+          </tr>
+          <tr>
+            <td><code class="inline">Tensor.item()</code></td>
+            <td>把 GPU tensor 标量拉回 Python,通常意味着同步和数据依赖</td>
+            <td>避免在热路径上取 Python 标量;必要时尝试 <code class="inline">capture_scalar_outputs</code>,但先确认语义安全</td>
+          </tr>
+          <tr>
+            <td>print / logging / 文件 I/O</td>
+            <td>副作用无法放进纯张量计算图</td>
+            <td>放到外层;或用 <code class="inline">torch.compiler.disable</code> 包住日志函数;调试时临时打开即可</td>
+          </tr>
+          <tr>
+            <td>Python 容器动态变形</td>
+            <td>list/dict 长度、对象 id、模块属性变化会影响 trace 假设</td>
+            <td>让 compiled forward 只处理张量计算;把采样、后处理、统计聚合移出去</td>
+          </tr>
+          <tr>
+            <td>自定义 op / 第三方 kernel</td>
+            <td>Dynamo 或后端不知道如何追踪/分解/降低</td>
+            <td>注册 custom op + fake/meta kernel;或把这段作为 eager island,只编其前后稳定部分</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">fullgraph=True 的正确用法</h3>
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">DEBUG GATE</div>
+        <h3>用来发现隐藏 graph break</h3>
+        <p>默认模式会默默切图继续跑,你可能以为"已经 compile 了",但实际只编到几个碎片。<code class="inline">fullgraph=True</code> 会要求整个函数捕获成一张图,一旦断图就报错,特别适合在 benchmark 前做图完整性检查。</p>
+      </div>
+      <div class="node">
+        <div class="tag">PRODUCTION</div>
+        <h3>不一定适合直接上线</h3>
+        <p>生产里有些 eager island 是合理的,例如前后处理、日志、采样分支。比较稳妥的方式是:把真正的 tensor hot path 抽成小函数或子模块,对那部分开 <code class="inline">fullgraph=True</code>。</p>
+      </div>
+    </div>
+
+<pre class="code"><span class="c"># 推荐结构:把可编译的热路径剥离出来</span>
+<span class="k">class</span> Model(torch.nn.Module):
+    <span class="k">def</span> __init__(self):
+        <span class="k">super</span>().__init__()
+        self.block = torch.compile(Block(), fullgraph=<span class="k">True</span>)
+
+    <span class="k">def</span> forward(self, batch):
+        x = preprocess(batch)      <span class="c"># Python / I/O / tokenizer:留在 eager</span>
+        x = self.block(x)          <span class="c"># 稳定张量计算:compile</span>
+        <span class="k">return</span> postprocess(x)      <span class="c"># 采样 / 日志:留在 eager</span></pre>
+
+    <div class="annot">graph break 的优化原则:不要追求"全程序都 compile",要追求"高耗时张量区域被完整捕获"。</div>
+  </div>
+</section>
+
+<!-- ========== 4. GUARDS ========== -->
+<section>
+  <div class="sec-head">
+    <h2>guards、recompile 与 fallback</h2>
+    <div class="count">35 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      编译器要生成快代码,就必须相信一些假设:输入 dtype 是 fp16、shape 是
+      <code class="inline">(32, 128, 768)</code>、stride 连续、module 的某个属性没变。
+      guards 就是这些假设的 runtime check。后续调用时 guards 通过,直接复用已编译代码;
+      guards 失败,就针对新条件重新编译。重编译次数太多时,Dynamo 会放弃,回到 eager。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="guards 与重编译流程">
+        <text x="490" y="30" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#87867F" letter-spacing="2" font-weight="600">GUARDS DECIDE CACHE REUSE</text>
+
+        <rect x="52" y="74" width="180" height="76" rx="6" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="142" y="103" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">Call #1</text>
+        <text x="142" y="126" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">trace + compile</text>
+
+        <line x1="232" y1="112" x2="304" y2="112" stroke="#87867F" stroke-width="2"/>
+        <polygon points="300,107 310,112 300,117" fill="#87867F"/>
+
+        <rect x="310" y="74" width="220" height="76" rx="6" fill="#FFFFFF" stroke="#87867F" stroke-width="2"/>
+        <text x="420" y="100" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413" font-weight="500">Compiled Graph A</text>
+        <text x="420" y="122" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">guards attached</text>
+        <text x="420" y="139" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">shape=(32,128,768)</text>
+
+        <line x1="530" y1="112" x2="604" y2="112" stroke="#87867F" stroke-width="2"/>
+        <polygon points="600,107 610,112 600,117" fill="#87867F"/>
+
+        <rect x="610" y="54" width="318" height="116" rx="6" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="630" y="84" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600" letter-spacing="1">CALL #2, #3, ...</text>
+        <text x="630" y="110" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">guards pass → reuse Graph A</text>
+        <text x="630" y="136" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">guards fail → compile Graph B / C / ...</text>
+        <text x="630" y="158" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">too many variants → eager fallback</text>
+
+        <line x1="52" y1="220" x2="928" y2="220" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="52" y="250" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600" letter-spacing="1">COMMON GUARDS</text>
+
+        <rect x="52" y="270" width="170" height="48" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="137" y="300" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#3D3D3A">shape / stride</text>
+        <rect x="242" y="270" width="170" height="48" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="327" y="300" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#3D3D3A">dtype / device</text>
+        <rect x="432" y="270" width="170" height="48" rx="5" fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="517" y="300" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#3D3D3A">requires_grad</text>
+        <rect x="622" y="270" width="170" height="48" rx="5" fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="707" y="300" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#3D3D3A">object id</text>
+        <rect x="812" y="270" width="116" height="48" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="870" y="300" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#FAF9F5">constants</text>
+      </svg>
+      <div class="archdiag-cap">FIG · guards 是 compiled graph 的准入条件;失败不是错误,但频繁失败会把编译收益吃掉</div>
+    </div>
+
+    <h3 style="margin-top:32px;">静态 shape 与 dynamic=True</h3>
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">STATIC</div>
+        <h3>固定输入通常最快</h3>
+        <p>如果 batch、seq_len、hidden 都稳定,让编译器针对固定 shape 特化,通常能得到更强的融合和更简单的 kernel。线上推理常通过 padding / bucketing 把 shape 规整到少数几档。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">DYNAMIC</div>
+        <h3>shape 变化频繁时减少重编译</h3>
+        <p><code class="inline">dynamic=True</code> 会让 Dynamo 尽量生成动态 shape kernel,避免每个 seq_len 都重新编译。但动态 kernel 可能牺牲部分优化,并且不是所有 op 都能完全动态化。</p>
+      </div>
+      <div class="node">
+        <div class="tag">DEFAULT NONE</div>
+        <h3>先特化,遇到变化再更动态</h3>
+        <p>官方默认 <code class="inline">dynamic=None</code>:开始会尝试更专门的图,当检测到输入尺寸变化导致重编译时,再尝试生成更动态的版本。这是通用场景的折中。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">INFRA LESSON</div>
+        <h3>shape 策略是系统设计问题</h3>
+        <p>编译器不是孤立优化。服务层的 batching、padding、request bucketing、KV cache layout 都会影响 guards 命中率。AI Infra 工程师要从入口流量开始控制 shape 分布。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">诊断命令</h3>
+<pre class="code"><span class="c"># 小样例:看 graph break / guards / recompile 明细</span>
+TORCH_LOGS=<span class="s">"graph_breaks,guards,recompiles"</span> python day13_compile_bench.py
+
+<span class="c"># 动态 shape 过度特化:看 dynamic shape 相关日志</span>
+TORCH_LOGS=<span class="s">"dynamic,recompiles"</span> python day13_compile_bench.py --dynamic
+
+<span class="c"># 大模型:生成完整编译报告,再用 tlparse 打开</span>
+TORCH_TRACE=<span class="s">"/tmp/day13_trace"</span> python train_or_infer.py
+pip install tlparse
+tlparse /tmp/day13_trace</pre>
+
+    <div class="annot">看到 recompile 时不要只怪编译器,先查输入 shape、dtype、module 属性和 Python 常量是不是每次都在变。</div>
+  </div>
+</section>
+
+<!-- ========== 5. INDUCTOR ========== -->
+<section>
+  <div class="sec-head">
+    <h2>Inductor:融合、模式与现实边界</h2>
+    <div class="count">30 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Dynamo 捕获图只是"拿到了优化材料",真正把图变快的是后端。
+      PyTorch 默认后端 Inductor 会把高层 PyTorch ops 分解到更底层的 aten / prim 表达,
+      做 layout、调度、融合和代码生成。GPU 上常见输出是 Triton kernel;
+      CPU 上则生成 C++/OpenMP 代码。理解 Inductor 不必一开始读源码,
+      先会选模式、看 trace、解释为什么没加速。
+    </p>
+
+    <h3>compile mode 速查</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>mode</th>
+            <th>做什么</th>
+            <th>适合场景</th>
+            <th>注意</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">default</code></td>
+            <td>性能和编译开销的平衡模式</td>
+            <td>第一轮实验、训练、debug benchmark</td>
+            <td>先用它建立 baseline,不要一上来 max-autotune</td>
+          </tr>
+          <tr>
+            <td><code class="inline">reduce-overhead</code></td>
+            <td>通过 CUDA graphs 等方式减少 Python overhead</td>
+            <td>小 batch、固定 shape、稳定推理服务</td>
+            <td>可能占更多内存;CUDA graph 也有适用条件</td>
+          </tr>
+          <tr>
+            <td><code class="inline">max-autotune</code></td>
+            <td>为 matmul / convolution 等 profile 多种实现并选择更快方案</td>
+            <td>离线压测、延迟极敏感、shape 很稳定</td>
+            <td>首次编译很慢;要把 autotune 成本从延迟统计里拿掉</td>
+          </tr>
+          <tr>
+            <td><code class="inline">max-autotune-no-cudagraphs</code></td>
+            <td>类似 max-autotune,但不启用 CUDA graphs</td>
+            <td>想要 autotune,但 CUDA graph 不适用或影响调试</td>
+            <td>作为定位 reduce-overhead / cudagraph 问题的对照组</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">为什么编译后仍可能不快</h3>
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">GRAPH COVERAGE</div>
+        <h3>图太碎,融合机会没了</h3>
+        <p>如果 forward 里每几行就一次 graph break,Inductor 只能优化小片段,片段之间仍要回 eager。症状是 <code class="inline">TORCH_LOGS="graph_breaks"</code> 输出很多,benchmark 加速很小。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">RECOMPILE</div>
+        <h3>输入变化吃掉收益</h3>
+        <p>变长 seq、动态图结构、Python 常量每步变化,都会触发新图编译。症状是 <code class="inline">TORCH_LOGS="recompiles"</code> 不断刷屏,首 token / 前几批延迟异常高。</p>
+      </div>
+      <div class="node">
+        <div class="tag">NOT HOT</div>
+        <h3>模型太小或瓶颈不在 PyTorch op</h3>
+        <p>如果主要耗时在数据加载、tokenizer、网络 I/O、custom CUDA op 或大 GEMM 本身,compile 可能没有多少空间。先 profile,再决定是否编译。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">CORRECTNESS</div>
+        <h3>性能优化必须配正确性校验</h3>
+        <p>编译后 kernel、融合顺序、数值舍入可能变化。每次引入 compile,都要做 eager vs compiled 输出对齐、端到端指标回归和异常 shape 覆盖。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">Inductor 调试选项</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>选项 / 命令</th>
+            <th>用途</th>
+            <th>什么时候用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">torch._inductor.list_mode_options()</code></td>
+            <td>查看每种 mode 实际打开了哪些配置</td>
+            <td>想知道 <code class="inline">default</code> 和 <code class="inline">max-autotune</code> 差在哪</td>
+          </tr>
+          <tr>
+            <td><code class="inline">torch._inductor.list_options()</code></td>
+            <td>列出 Inductor 支持的可配置项</td>
+            <td>查某个 options key 是否存在</td>
+          </tr>
+          <tr>
+            <td><code class="inline">options={"trace.enabled": True}</code></td>
+            <td>输出编译 trace,用于定位后端行为</td>
+            <td>性能异常或想看 fusion 后图形</td>
+          </tr>
+          <tr>
+            <td><code class="inline">options={"trace.graph_diagram": True}</code></td>
+            <td>生成融合后的图示</td>
+            <td>需要解释"哪些 op 被融合了"</td>
+          </tr>
+          <tr>
+            <td><code class="inline">options={"fallback_random": True}</code></td>
+            <td>调试随机数相关正确性问题</td>
+            <td>compiled 输出与 eager 对不齐且怀疑随机 op</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="annot">Inductor 的收益来自"稳定图 + 足够大的热路径 + 可融合/可调度的 op";三者缺一,compile 就可能只是更复杂的 eager。</div>
+  </div>
+</section>
+
+<!-- ========== 6. BENCHMARK ========== -->
+<section>
+  <div class="sec-head">
+    <h2>动手实践:eager vs compile benchmark</h2>
+    <div class="count">1 H</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      今天的交付物是一份可复现实验记录:同一个小模型分别跑 eager 和 compile,
+      排除首编译开销,同步 GPU 计时,校验输出正确性,记录 graph break / recompile 日志。
+      如果你只有 CPU,脚本也能跑,但更推荐在 CUDA 机器上观察 kernel launch 和 fusion 收益。
+    </p>
+
+<pre class="code"><span class="c"># day13_compile_bench.py</span>
+<span class="k">import</span> argparse
+<span class="k">import</span> time
+<span class="k">import</span> torch
+<span class="k">from</span> torch <span class="k">import</span> nn
+
+
+<span class="k">class</span> TinyBlock(nn.Module):
+    <span class="k">def</span> __init__(self, hidden, expansion):
+        <span class="k">super</span>().__init__()
+        self.ln = nn.LayerNorm(hidden)
+        self.fc1 = nn.Linear(hidden, hidden * expansion)
+        self.fc2 = nn.Linear(hidden * expansion, hidden)
+
+    <span class="k">def</span> forward(self, x):
+        residual = x
+        x = self.ln(x)
+        x = self.fc1(x)
+        x = torch.nn.functional.gelu(x)
+        x = x * <span class="n">1.41421356</span> + <span class="n">0.01</span>
+        x = self.fc2(x)
+        <span class="k">return</span> x + residual
+
+
+<span class="k">def</span> sync(device):
+    <span class="k">if</span> device.type == <span class="s">"cuda"</span>:
+        torch.cuda.synchronize()
+
+
+<span class="k">def</span> bench(fn, x, device, warmup, iters):
+    <span class="k">with</span> torch.inference_mode():
+        <span class="k">for</span> _ <span class="k">in</span> range(warmup):
+            fn(x)
+        sync(device)
+        start = time.perf_counter()
+        <span class="k">for</span> _ <span class="k">in</span> range(iters):
+            fn(x)
+        sync(device)
+    <span class="k">return</span> (time.perf_counter() - start) * <span class="n">1000</span> / iters
+
+
+<span class="k">def</span> main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(<span class="s">"--mode"</span>, default=<span class="s">"default"</span>,
+                        choices=[<span class="s">"default"</span>, <span class="s">"reduce-overhead"</span>, <span class="s">"max-autotune"</span>, <span class="s">"max-autotune-no-cudagraphs"</span>])
+    parser.add_argument(<span class="s">"--dynamic"</span>, action=<span class="s">"store_true"</span>)
+    parser.add_argument(<span class="s">"--fullgraph"</span>, action=<span class="s">"store_true"</span>)
+    parser.add_argument(<span class="s">"--batch"</span>, type=int, default=<span class="n">32</span>)
+    parser.add_argument(<span class="s">"--seq"</span>, type=int, default=<span class="n">128</span>)
+    parser.add_argument(<span class="s">"--hidden"</span>, type=int, default=<span class="n">768</span>)
+    parser.add_argument(<span class="s">"--iters"</span>, type=int, default=<span class="n">100</span>)
+    parser.add_argument(<span class="s">"--warmup"</span>, type=int, default=<span class="n">20</span>)
+    args = parser.parse_args()
+
+    torch.manual_seed(<span class="n">0</span>)
+    torch.set_float32_matmul_precision(<span class="s">"high"</span>)
+    device = torch.device(<span class="s">"cuda"</span> <span class="k">if</span> torch.cuda.is_available() <span class="k">else</span> <span class="s">"cpu"</span>)
+    dtype = torch.float16 <span class="k">if</span> device.type == <span class="s">"cuda"</span> <span class="k">else</span> torch.float32
+
+    model = TinyBlock(args.hidden, expansion=<span class="n">4</span>).to(device=device, dtype=dtype).eval()
+    x = torch.randn(args.batch, args.seq, args.hidden, device=device, dtype=dtype)
+
+    compiled = torch.compile(
+        model,
+        mode=args.mode,
+        dynamic=args.dynamic <span class="k">or</span> <span class="k">None</span>,
+        fullgraph=args.fullgraph,
+    )
+
+    <span class="k">with</span> torch.inference_mode():
+        eager_out = model(x)
+        compiled_out = compiled(x)      <span class="c"># 首次调用会触发 trace + compile</span>
+        torch.testing.assert_close(compiled_out, eager_out, rtol=<span class="n">1e-2</span>, atol=<span class="n">1e-2</span>)
+
+    eager_ms = bench(model, x, device, args.warmup, args.iters)
+    compile_ms = bench(compiled, x, device, args.warmup, args.iters)
+    speedup = eager_ms / compile_ms
+
+    print(<span class="s">f"device={device} dtype={dtype} mode={args.mode} dynamic={args.dynamic}"</span>)
+    print(<span class="s">f"shape=({args.batch}, {args.seq}, {args.hidden})"</span>)
+    print(<span class="s">f"eager   : {eager_ms:.3f} ms / iter"</span>)
+    print(<span class="s">f"compile : {compile_ms:.3f} ms / iter"</span>)
+    print(<span class="s">f"speedup : {speedup:.2f}x"</span>)
+
+
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    main()</pre>
+
+    <h3 style="margin-top:32px;">实验命令</h3>
+<pre class="code"><span class="c"># 1) 默认模式,建立 baseline</span>
+python day13_compile_bench.py --mode default
+
+<span class="c"># 2) 检查是否有 graph break / recompile</span>
+TORCH_LOGS=<span class="s">"graph_breaks,recompiles"</span> python day13_compile_bench.py --mode default --fullgraph
+
+<span class="c"># 3) 固定 shape 推理可以试 reduce-overhead</span>
+python day13_compile_bench.py --mode reduce-overhead
+
+<span class="c"># 4) 离线压测再试 max-autotune,不要把首次 autotune 算进线上延迟</span>
+python day13_compile_bench.py --mode max-autotune
+
+<span class="c"># 5) 变长 seq 对比 dynamic=True 的重编译情况</span>
+TORCH_LOGS=<span class="s">"recompiles,dynamic"</span> python day13_compile_bench.py --seq 64 --dynamic
+TORCH_LOGS=<span class="s">"recompiles,dynamic"</span> python day13_compile_bench.py --seq 128 --dynamic</pre>
+
+    <h3 style="margin-top:32px;">结果记录模板</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>环境</th>
+            <th>mode</th>
+            <th>shape</th>
+            <th>eager</th>
+            <th>compile</th>
+            <th>speedup</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GPU / dtype</td>
+            <td><code class="inline">default</code></td>
+            <td class="mono">32 × 128 × 768</td>
+            <td>__ ms</td>
+            <td>__ ms</td>
+            <td class="clay">__×</td>
+            <td>是否有 graph break / recompile</td>
+          </tr>
+          <tr>
+            <td>GPU / dtype</td>
+            <td><code class="inline">reduce-overhead</code></td>
+            <td class="mono">32 × 128 × 768</td>
+            <td>__ ms</td>
+            <td>__ ms</td>
+            <td class="clay">__×</td>
+            <td>内存是否上升,CUDA graph 是否生效</td>
+          </tr>
+          <tr>
+            <td>GPU / dtype</td>
+            <td><code class="inline">max-autotune</code></td>
+            <td class="mono">32 × 128 × 768</td>
+            <td>__ ms</td>
+            <td>__ ms</td>
+            <td class="clay">__×</td>
+            <td>首次编译/调参耗时另记</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">交付物检查清单</h3>
+    <div class="check">
+      <ul>
+        <li>能画出 <code class="inline">Python → Dynamo → FX → AOTAutograd → Inductor → Triton/C++</code> 的链路图。</li>
+        <li>能解释 graph break 为什么会降低融合机会,并用 <code class="inline">TORCH_LOGS="graph_breaks"</code> 找到位置。</li>
+        <li>能解释 guards 失败为什么导致 recompile,并用 <code class="inline">TORCH_LOGS="recompiles"</code> 找到触发条件。</li>
+        <li>完成 eager / compile / reduce-overhead 至少三组 benchmark,并排除首次编译耗时。</li>
+        <li>写下结论:这个模型是否值得 compile?瓶颈是 graph break、recompile、编译开销还是算子本身?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 7. PRODUCTION ========== -->
+<section>
+  <div class="sec-head">
+    <h2>生产判断:什么时候该 compile</h2>
+    <div class="count">20 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      AI Infra 里,编译不是"开关",而是一项容量和延迟工程。
+      你需要知道它给哪条路径带来收益、给哪条路径带来风险,
+      以及如何把编译缓存、shape 分桶、灰度验证接进服务系统。
+    </p>
+
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">适合开</div>
+        <h3>稳定、重复、张量密集</h3>
+        <p>Transformer block、MLP、vision backbone、固定 shape 推理、长时间训练 step。只要图覆盖高、输入分布稳定、warmup 后调用次数足够多,compile 的一次性成本就能摊薄。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">谨慎开</div>
+        <h3>形状和控制流很动态</h3>
+        <p>agent 工具调用、复杂采样后处理、频繁变长 batch、Python object 操作重的模型。先拆出稳定子模块,不要把整条业务链路一口气 compile。</p>
+      </div>
+      <div class="node">
+        <div class="tag">上线流程</div>
+        <h3>三步灰度</h3>
+        <p>① 离线输出对齐;② 压测固定 shape 和长尾 shape;③ 线上小流量灰度,记录 p50/p95/p99、首次请求延迟、recompile 次数和显存峰值。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">原则</div>
+        <h3>编译器吃稳定性</h3>
+        <p>你越能把请求整理成少数稳定 shape,越能把热路径写成纯张量计算,编译器越能回报你。服务层的调度质量,常常决定 compile 的最终收益。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">为什么第一次调用 compiled model 特别慢?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>第一次调用不仅在跑模型,还在做 trace、guard 生成、后端编译、Triton/C++ 代码生成,有时还会做 autotune。这个成本是一次性的,所以 benchmark 必须先 warmup,线上服务也要预热常见 shape。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">compile 后没有变快,第一优先查什么?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>先查三件事:是否把首次编译算进去了;是否有很多 graph break;是否一直 recompile。命令分别是正常 warmup、<code>TORCH_LOGS="graph_breaks"</code>、<code>TORCH_LOGS="recompiles"</code>。如果这三项都干净,再用 profiler 看瓶颈是不是数据加载、大 GEMM 或第三方 kernel。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q"><code>dynamic=True</code> 是不是总该打开?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>不是。固定 shape 场景下,静态特化通常更快。<code>dynamic=True</code> 的价值是减少 shape 变化导致的重编译,适合变长序列和 batch 波动明显的场景。实际策略通常是:服务层先 bucketing / padding,仍然重编译明显时再开 dynamic。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">能不能把整个训练脚本都套一层 <code>torch.compile</code>?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>不建议。训练脚本里有 DataLoader、日志、checkpoint、调度器、评估分支和大量 Python 副作用。更好的边界是模型 forward、部分 optimizer step 或单个高耗时子模块。边界越纯粹,guards 越稳定,graph break 越少。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q"><code>torch.compile</code> 能替代手写 Triton kernel 吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>它是很好的 baseline,但不能替代所有手写 kernel。通用 elementwise、简单融合、部分 matmul/convolution 模式交给 Inductor 很合适;极端热点、特殊 layout、FlashAttention 这类 IO-aware 算法,仍然需要专门 kernel。Day 14 的算子融合和 FlashAttention 会继续接上这里。</p>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <h2>复盘问题</h2>
+    <div class="count">REVIEW</div>
+  </div>
+  <div class="indent">
+    <ol class="review">
+      <li>为什么 <code class="inline">torch.compile</code> 可以在保持 eager 语义的同时获得优化机会?</li>
+      <li>FX graph 和最终 Triton kernel 是同一个层级的东西吗?中间还经历了哪些阶段?</li>
+      <li>graph break 为什么通常不是 correctness bug,但会影响性能?</li>
+      <li>guards 失败、recompile、fallback 三者的因果关系是什么?</li>
+      <li>固定 shape 推理服务为什么更适合 <code class="inline">reduce-overhead</code>?</li>
+      <li>如果 benchmark 没加速,你会按什么顺序排查?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== REFERENCES ========== -->
+<section>
+  <div class="sec-head">
+    <h2>参考资料</h2>
+    <div class="count">OFFICIAL DOCS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">API</div>
+        <h3>torch.compile API</h3>
+        <p>官方参数说明: <code class="inline">fullgraph</code>、<code class="inline">dynamic</code>、<code class="inline">backend</code>、<code class="inline">mode</code>、<code class="inline">options</code>。<br><a href="https://docs.pytorch.org/docs/2.12/generated/torch.compile.html" style="color:#B85C3E;text-decoration:underline;">docs.pytorch.org · torch.compile</a></p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">DEBUG</div>
+        <h3>torch.compile Troubleshooting</h3>
+        <p>官方 graph break、guards、recompile、<code class="inline">TORCH_LOGS</code> 与 <code class="inline">tlparse</code> 调试指南。<br><a href="https://docs.pytorch.org/docs/2.12/user_guide/torch_compiler/torch.compiler_troubleshooting.html" style="color:#B85C3E;text-decoration:underline;">docs.pytorch.org · troubleshooting</a></p>
+      </div>
+      <div class="node">
+        <div class="tag">OVERVIEW</div>
+        <h3>PyTorch 2.x Compiler Stack</h3>
+        <p>官方介绍 TorchDynamo、AOTAutograd、PrimTorch、TorchInductor 的关系。<br><a href="https://docs.pytorch.org/get-started/pytorch-2.0/" style="color:#B85C3E;text-decoration:underline;">docs.pytorch.org · PyTorch 2.x</a></p>
+      </div>
+      <div class="node dark">
+        <div class="tag">TUTORIAL</div>
+        <h3>Introduction to torch.compile</h3>
+        <p>官方入门教程,包含基础用法、graph break 和 troubleshooting 指向。<br><a href="https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html" style="color:#D97757;text-decoration:underline;">docs.pytorch.org · tutorial</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="quote">编译器不是魔法开关,它是对稳定张量计算的奖励。</p>
+  <p class="meta">DAY 13 COMPLETE · NEXT: OPERATOR FUSION & FLASHATTENTION</p>
+</footer>
+
+</div>

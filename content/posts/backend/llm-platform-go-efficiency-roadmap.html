@@ -1,0 +1,636 @@
+---
+title: "LLM 开放平台 Go 后端 30 天提效与进阶路线"
+date: '2026-06-14'
+draft: false
+description: "面向技术一般的 LLM 开放平台 Go 后端程序员：用 30 天建立工作提效系统，补齐 Go 后端、LLM API 网关、流式调用、稳定性、安全与影响力能力。"
+toc: false
+tags:
+  - Backend
+  - Go
+  - AI
+  - LLM
+  - Roadmap
+  - Productivity
+---
+
+<style>
+:root{
+  --lg-parchment:#f5f4ed;
+  --lg-ivory:#faf9f5;
+  --lg-paper:#ffffff;
+  --lg-brand:#1B365D;
+  --lg-brand-light:#2D5A8A;
+  --lg-ink:#141413;
+  --lg-warm:#3d3d3a;
+  --lg-olive:#504e49;
+  --lg-stone:#6b6a64;
+  --lg-border:#e8e6dc;
+  --lg-border-soft:#e5e3d8;
+  --lg-tag:#EEF2F7;
+  --lg-serif:"TsangerJinKai02","Source Han Serif SC","Noto Serif CJK SC","Songti SC","STSong",Georgia,serif;
+  --lg-sans:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --lg-mono:"JetBrains Mono","SF Mono",Consolas,"TsangerJinKai02","Source Han Serif SC",monospace;
+}
+
+body{
+  background:var(--lg-parchment);
+  color:var(--lg-ink);
+}
+
+.llmgo-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 128px;
+  color:var(--lg-ink);
+  font-family:var(--lg-sans);
+  font-size:15px;
+  line-height:1.65;
+}
+
+.llmgo-wrap *{ box-sizing:border-box; }
+
+.llmgo-wrap a{
+  color:var(--lg-brand);
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+}
+
+.llmgo-wrap strong{ font-weight:600; }
+
+.llmgo-wrap code{
+  font-family:var(--lg-mono);
+  font-size:0.9em;
+  background:var(--lg-tag);
+  color:var(--lg-brand);
+  padding:1px 6px;
+  border-radius:4px;
+}
+
+.llmgo-wrap pre{
+  overflow:auto;
+  margin:14px 0 0;
+  padding:18px 20px;
+  background:var(--lg-ivory);
+  border:1px solid var(--lg-border);
+  border-radius:8px;
+}
+
+.llmgo-wrap pre code{
+  display:block;
+  padding:0;
+  background:transparent;
+  color:var(--lg-warm);
+  font-size:13px;
+  line-height:1.65;
+}
+
+.llmgo-wrap .eyebrow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-family:var(--lg-mono);
+  font-size:12px;
+  letter-spacing:0;
+  text-transform:uppercase;
+  color:var(--lg-stone);
+}
+
+.llmgo-wrap .eyebrow::before{
+  content:"";
+  display:block;
+  width:28px;
+  height:2px;
+  background:var(--lg-brand);
+  border-radius:2px;
+}
+
+.llmgo-wrap h1,
+.llmgo-wrap h2,
+.llmgo-wrap h3{
+  font-family:var(--lg-serif);
+  font-weight:500;
+  color:var(--lg-ink);
+  letter-spacing:0;
+}
+
+.llmgo-wrap h1{
+  max-width:19ch;
+  margin:22px 0 28px;
+  font-size:56px;
+  line-height:1.12;
+}
+
+.llmgo-wrap h1 span{ color:var(--lg-brand); }
+
+.llmgo-wrap h2{
+  margin:0;
+  font-size:28px;
+  line-height:1.25;
+}
+
+.llmgo-wrap h3{
+  margin:0 0 10px;
+  font-size:20px;
+  line-height:1.3;
+}
+
+.llmgo-wrap p{ margin:0; }
+
+.llmgo-wrap .lede{
+  max-width:70ch;
+  margin:0 0 28px;
+  color:var(--lg-warm);
+  font-size:16px;
+  line-height:1.7;
+}
+
+.llmgo-wrap .masthead{
+  padding:78px 0 52px;
+}
+
+.llmgo-wrap .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  padding:14px 0;
+  border-top:1px solid var(--lg-border);
+  border-bottom:1px solid var(--lg-border);
+  font-family:var(--lg-mono);
+  font-size:12px;
+  color:var(--lg-stone);
+}
+
+.llmgo-wrap .meta-strip span{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:26px;
+}
+
+.llmgo-wrap .meta-strip strong{
+  color:var(--lg-ink);
+  font-weight:600;
+}
+
+.llmgo-wrap section{ margin-top:72px; }
+
+.llmgo-wrap .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:28px;
+}
+
+.llmgo-wrap .count{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:3px 10px;
+  border-radius:6px;
+  background:var(--lg-tag);
+  color:var(--lg-brand);
+  font-family:var(--lg-mono);
+  font-size:11px;
+}
+
+.llmgo-wrap .overview{
+  background:var(--lg-ivory);
+  border:1px solid var(--lg-border);
+  border-radius:8px;
+  padding:28px;
+}
+
+.llmgo-wrap .overview svg{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.llmgo-wrap .figure-cap{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px dashed var(--lg-border-soft);
+  color:var(--lg-stone);
+  font-family:var(--lg-mono);
+  font-size:12px;
+  text-align:center;
+}
+
+.llmgo-wrap .grid{
+  display:grid;
+  gap:18px;
+}
+
+.llmgo-wrap .grid-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+.llmgo-wrap .grid-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+.llmgo-wrap .grid-4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+
+.llmgo-wrap .card,
+.llmgo-wrap .day,
+.llmgo-wrap .template,
+.llmgo-wrap .source{
+  background:var(--lg-paper);
+  border:1px solid var(--lg-border);
+  border-radius:8px;
+  padding:22px 24px;
+}
+
+.llmgo-wrap .card.focus{
+  border-left:3px solid var(--lg-brand);
+}
+
+.llmgo-wrap .tag{
+  display:inline-block;
+  margin-bottom:10px;
+  color:var(--lg-brand);
+  font-family:var(--lg-mono);
+  font-size:11px;
+  letter-spacing:0.6px;
+  text-transform:uppercase;
+}
+
+.llmgo-wrap .card p,
+.llmgo-wrap .day p,
+.llmgo-wrap .template p,
+.llmgo-wrap .source p{
+  color:var(--lg-olive);
+}
+
+.llmgo-wrap .metric{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  padding:16px 0 14px 14px;
+  border-left:2px solid var(--lg-brand);
+  border-radius:2px;
+}
+
+.llmgo-wrap .metric strong{
+  color:var(--lg-brand);
+  font-family:var(--lg-serif);
+  font-size:28px;
+  font-weight:500;
+  line-height:1;
+}
+
+.llmgo-wrap .metric span{
+  color:var(--lg-olive);
+  font-size:13px;
+}
+
+.llmgo-wrap .phase{
+  margin-top:28px;
+  background:var(--lg-ivory);
+  border:1px solid var(--lg-border);
+  border-radius:8px;
+  padding:24px;
+}
+
+.llmgo-wrap .phase-head{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  padding-bottom:18px;
+  margin-bottom:18px;
+  border-bottom:1px solid var(--lg-border);
+}
+
+.llmgo-wrap .phase-head p{
+  max-width:58ch;
+  color:var(--lg-olive);
+}
+
+.llmgo-wrap .days{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+
+.llmgo-wrap .day{
+  display:grid;
+  grid-template-rows:auto auto 1fr auto;
+  gap:8px;
+  min-height:228px;
+}
+
+.llmgo-wrap .day-num{
+  color:var(--lg-brand);
+  font-family:var(--lg-mono);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.8px;
+  text-transform:uppercase;
+}
+
+.llmgo-wrap .task{
+  color:var(--lg-warm);
+  font-weight:600;
+}
+
+.llmgo-wrap .done{
+  padding-top:10px;
+  border-top:1px dashed var(--lg-border-soft);
+  color:var(--lg-stone);
+  font-size:13px;
+}
+
+.llmgo-wrap ul.clean{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.llmgo-wrap ul.clean li{
+  position:relative;
+  padding:9px 0 9px 18px;
+  border-bottom:1px solid var(--lg-border-soft);
+  color:var(--lg-olive);
+}
+
+.llmgo-wrap ul.clean li:last-child{ border-bottom:0; }
+
+.llmgo-wrap ul.clean li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:20px;
+  width:8px;
+  height:2px;
+  background:var(--lg-brand);
+}
+
+.llmgo-wrap .callout{
+  margin-top:20px;
+  padding:18px 20px;
+  background:var(--lg-ivory);
+  border-left:3px solid var(--lg-brand);
+  border-radius:6px;
+  color:var(--lg-olive);
+}
+
+.llmgo-wrap .templates{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+
+@media (max-width:900px){
+  .llmgo-wrap{ padding:0 22px 96px; }
+  .llmgo-wrap h1{ font-size:44px; }
+  .llmgo-wrap .grid-2,
+  .llmgo-wrap .grid-3,
+  .llmgo-wrap .grid-4,
+  .llmgo-wrap .days,
+  .llmgo-wrap .templates{ grid-template-columns:1fr; }
+  .llmgo-wrap .phase-head{ display:block; }
+  .llmgo-wrap .phase-head p{ margin-top:10px; }
+}
+
+@media (max-width:520px){
+  .llmgo-wrap{ padding:0 14px 80px; }
+  .llmgo-wrap .masthead{ padding:52px 0 42px; }
+  .llmgo-wrap h1{ font-size:36px; }
+  .llmgo-wrap section{ margin-top:54px; }
+  .llmgo-wrap .sec-head{ display:block; }
+  .llmgo-wrap .count{ margin-bottom:12px; }
+  .llmgo-wrap .overview,
+  .llmgo-wrap .phase,
+  .llmgo-wrap .card,
+  .llmgo-wrap .day,
+  .llmgo-wrap .template,
+  .llmgo-wrap .source{ padding:18px; }
+}
+</style>
+
+<article class="llmgo-wrap">
+  <header class="masthead">
+    <div class="eyebrow">LLM Platform · Go Backend · 30 Days</div>
+    <h1>LLM 开放平台 Go 后端 <span>提效与进阶路线</span></h1>
+    <p class="lede">你现在最值得提高的不是「再多学几个框架」，而是把工作拆成 4 个可复制动作：更快理解需求、更稳交付后端接口、更懂 LLM API 的特殊风险、更能把经验沉淀成工具和文档。30 天后，你应该能独立负责一个中等复杂的 LLM 平台能力，从接口设计到上线观测都有抓手。</p>
+    <div class="meta-strip">
+      <span><strong>周期</strong>30 天</span>
+      <span><strong>每天</strong>60-90 min</span>
+      <span><strong>角色</strong>Go 后端 / LLM 开放平台</span>
+      <span><strong>目标</strong>效率 + 技术能力</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="count">01</span>
+      <h2>先看你真正缺的 5 块能力</h2>
+    </div>
+    <p class="lede">LLM 开放平台后端不是普通 CRUD。它多了模型供应商适配、流式响应、限流计费、Prompt 安全、异步任务、可观测性和成本控制。你要把「技术一般」拆开看：哪些是 Go 基础不稳，哪些是平台工程经验少，哪些只是没有固定工作流。</p>
+
+    <div class="overview">
+      <svg viewBox="0 0 980 420" role="img" aria-label="LLM 开放平台 Go 后端能力地图">
+        <rect x="20" y="20" width="940" height="380" rx="14" fill="#faf9f5" stroke="#e8e6dc"/>
+        <text x="490" y="70" text-anchor="middle" font-family="Georgia, Songti SC, serif" font-size="28" fill="#141413">能力地图：从会写接口到能守住平台</text>
+        <g font-family="Georgia, Songti SC, serif" font-size="18" fill="#141413">
+          <rect x="70" y="130" width="150" height="86" rx="8" fill="#EEF2F7" stroke="#1B365D"/>
+          <text x="145" y="164" text-anchor="middle">效率系统</text>
+          <text x="145" y="190" text-anchor="middle" font-size="13" fill="#504e49">AI / IDE / 模板</text>
+
+          <rect x="250" y="130" width="150" height="86" rx="8" fill="#ffffff" stroke="#e8e6dc"/>
+          <text x="325" y="164" text-anchor="middle">Go 后端</text>
+          <text x="325" y="190" text-anchor="middle" font-size="13" fill="#504e49">并发 / 测试 / 性能</text>
+
+          <rect x="430" y="130" width="150" height="86" rx="8" fill="#ffffff" stroke="#e8e6dc"/>
+          <text x="505" y="164" text-anchor="middle">LLM 网关</text>
+          <text x="505" y="190" text-anchor="middle" font-size="13" fill="#504e49">路由 / 流式 / 重试</text>
+
+          <rect x="610" y="130" width="150" height="86" rx="8" fill="#ffffff" stroke="#e8e6dc"/>
+          <text x="685" y="164" text-anchor="middle">稳定安全</text>
+          <text x="685" y="190" text-anchor="middle" font-size="13" fill="#504e49">限流 / 观测 / 风控</text>
+
+          <rect x="790" y="130" width="120" height="86" rx="8" fill="#EEF2F7" stroke="#1B365D"/>
+          <text x="850" y="164" text-anchor="middle">影响力</text>
+          <text x="850" y="190" text-anchor="middle" font-size="13" fill="#504e49">方案 / 复盘 / 推进</text>
+        </g>
+        <path d="M220 173H250M400 173H430M580 173H610M760 173H790" stroke="#1B365D" stroke-width="2"/>
+        <g font-family="Georgia, Songti SC, serif" font-size="16" fill="#3d3d3a">
+          <text x="80" y="285">每天交付一个小结果：</text>
+          <text x="80" y="320">读懂一个模块 / 写一个测试 / 做一次压测 / 补一个观测指标 / 输出一页方案</text>
+          <text x="80" y="355">不要只收藏资料。能进入仓库、命令行、接口文档和监控面板的学习，才会变成工作能力。</text>
+        </g>
+      </svg>
+      <div class="figure-cap">路线主线：效率系统 → Go 后端硬功 → LLM 平台工程 → 稳定性与安全 → 技术影响力。</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="count">02</span>
+      <h2>30 天后你应该变成什么样</h2>
+    </div>
+    <div class="grid grid-4">
+      <div class="metric"><strong>3 类</strong><span>常见需求能拆成接口、数据、风险</span></div>
+      <div class="metric"><strong>5 个</strong><span>Go 后端检查动作固定下来</span></div>
+      <div class="metric"><strong>1 套</strong><span>LLM 调用链路观测面板思路</span></div>
+      <div class="metric"><strong>2 篇</strong><span>技术方案或事故复盘文章</span></div>
+    </div>
+    <div class="grid grid-3" style="margin-top:24px;">
+      <div class="card focus"><span class="tag">Efficiency</span><h3>工作效率</h3><p>需求来了先写任务卡、接口草图、风险清单，再让 AI 帮你补测试、查边界、生成样例。效率来自固定流程，不来自临时兴奋。</p></div>
+      <div class="card focus"><span class="tag">Engineering</span><h3>后端能力</h3><p>熟悉 context、并发、错误处理、单测、压测、pprof、数据库索引、缓存和消息队列。写接口时能顺手考虑超时、幂等、限流和回滚。</p></div>
+      <div class="card focus"><span class="tag">Platform</span><h3>平台判断</h3><p>能解释模型路由、流式响应、配额计费、供应商降级、Prompt 注入、内容安全和成本归因。你不只写代码，也能判断方案能不能上线。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="count">03</span>
+      <h2>每天固定动作</h2>
+    </div>
+    <div class="grid grid-4">
+      <div class="card"><span class="tag">10 min</span><h3>读一个概念</h3><p>只读当天任务需要的材料，例如 Go context、SSE、限流或 OpenTelemetry。不要把学习变成刷文章。</p></div>
+      <div class="card"><span class="tag">40 min</span><h3>做一个小练习</h3><p>写代码、跑命令、压测接口、补监控指标。每一天都要留下可检查产物。</p></div>
+      <div class="card"><span class="tag">20 min</span><h3>用 AI 做辅助</h3><p>让 AI 帮你解释代码、生成测试、审查方案、列边界条件，但最终判断要由你完成。</p></div>
+      <div class="card"><span class="tag">10 min</span><h3>写复盘</h3><p>记录今天学到的 3 个点、1 个坑、1 个明天可复用模板。长期能力来自复盘沉淀。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="count">04</span>
+      <h2>30 天路线</h2>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <h3>第 1 阶段：先把工作效率拉起来</h3>
+        <p>先建立个人工作系统。你的目标不是马上变强，而是让每天少丢上下文、少重复劳动、少靠记忆推进任务。</p>
+      </div>
+      <div class="days">
+        <div class="day"><span class="day-num">Day 01</span><h3>建立工作台</h3><p class="task">整理你每天会打开的 6 个入口：需求文档、接口文档、日志、监控、数据库、代码仓库。</p><p>交付物：一张「工作入口清单」。</p><p class="done">完成标准：下一次排查问题时，不再临时问入口在哪里。<a href="/posts/backend/llm-platform-go-day01/">进入 Day01</a></p></div>
+        <div class="day"><span class="day-num">Day 02</span><h3>任务卡模板</h3><p class="task">把需求拆成背景、目标、接口、数据、风险、验收 6 栏。</p><p>交付物：一个可复制的任务卡模板。</p><p class="done">完成标准：任何需求都能先写出 10 行以内任务卡。</p></div>
+        <div class="day"><span class="day-num">Day 03</span><h3>AI 辅助阅读代码</h3><p class="task">选一个线上接口，让 AI 帮你画调用链，你自己补充数据库和外部依赖。</p><p>交付物：一个接口调用链笔记。</p><p class="done">完成标准：能说清入口、核心函数、依赖、错误返回。</p></div>
+        <div class="day"><span class="day-num">Day 04</span><h3>AI 辅助写测试</h3><p class="task">挑一个纯函数或 service 方法，让 AI 生成测试用例，你负责删掉不真实的 case。</p><p>交付物：至少 3 个有效测试用例。</p><p class="done">完成标准：测试能跑通，且覆盖正常、边界、错误 3 类场景。</p></div>
+        <div class="day"><span class="day-num">Day 05</span><h3>个人命令清单</h3><p class="task">整理项目里最常用的构建、测试、lint、启动、查日志命令。</p><p>交付物：<code>dev-commands.md</code>。</p><p class="done">完成标准：新开终端后 3 分钟内能跑起本地服务或单测。</p></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <h3>第 2 阶段：补 Go 后端硬功</h3>
+        <p>这 7 天只补最影响交付质量的 Go 能力：错误处理、context、并发、测试、性能、数据库和接口设计。</p>
+      </div>
+      <div class="days">
+        <div class="day"><span class="day-num">Day 06</span><h3>错误处理与日志</h3><p class="task">梳理一个接口的错误码、日志字段和用户可见错误。</p><p>交付物：错误码与日志字段表。</p><p class="done">完成标准：日志里能定位 request_id、用户、模型、供应商、错误原因。</p></div>
+        <div class="day"><span class="day-num">Day 07</span><h3><code>context</code> 与超时</h3><p class="task">检查项目里一次外部 API 调用，确认超时、取消、重试是否合理。</p><p>交付物：调用超时链路图。</p><p class="done">完成标准：知道一个请求最多会占用资源多久。</p></div>
+        <div class="day"><span class="day-num">Day 08</span><h3>并发与队列</h3><p class="task">写一个小 demo：并发调用 3 个 mock 模型，最先成功者返回，其余取消。</p><p>交付物：Go demo + 测试。</p><p class="done">完成标准：没有 goroutine 泄漏，错误路径也能退出。</p></div>
+        <div class="day"><span class="day-num">Day 09</span><h3>表驱动测试</h3><p class="task">给一个参数校验或计费函数补表驱动测试。</p><p>交付物：一组可读的 table tests。</p><p class="done">完成标准：新增 case 只需要加一行结构体。</p></div>
+        <div class="day"><span class="day-num">Day 10</span><h3>接口设计</h3><p class="task">重写一个内部接口文档，明确请求、响应、错误、幂等、限流。</p><p>交付物：接口设计卡。</p><p class="done">完成标准：前端或调用方不用追问关键字段语义。</p></div>
+        <div class="day"><span class="day-num">Day 11</span><h3>数据库与索引</h3><p class="task">找一条慢查询或高频查询，写出 where、order by、索引和 explain 结果。</p><p>交付物：一页 SQL 分析。</p><p class="done">完成标准：能解释为什么这个索引有效或无效。</p></div>
+        <div class="day"><span class="day-num">Day 12</span><h3>性能剖析</h3><p class="task">用 benchmark 或 pprof 看一个热点函数。</p><p>交付物：一次性能记录。</p><p class="done">完成标准：至少能指出 CPU、内存、锁等待中的一个主要瓶颈。</p></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <h3>第 3 阶段：进入 LLM 开放平台核心链路</h3>
+        <p>LLM 平台最核心的是「请求进来后如何被安全、稳定、可计费地送到模型，再把结果返回」。这 8 天围绕这条链路练。</p>
+      </div>
+      <div class="days">
+        <div class="day"><span class="day-num">Day 13</span><h3>OpenAI 风格 API</h3><p class="task">梳理 Chat Completions / Responses 风格接口字段：messages、model、stream、tools、metadata。</p><p>交付物：字段语义表。</p><p class="done">完成标准：知道哪些字段影响路由、计费、审计和安全。</p></div>
+        <div class="day"><span class="day-num">Day 14</span><h3>流式响应</h3><p class="task">用 Go 写一个最小 SSE 代理，把上游 token 流转发给下游。</p><p>交付物：SSE demo。</p><p class="done">完成标准：客户端断开时，上游请求能取消。</p></div>
+        <div class="day"><span class="day-num">Day 15</span><h3>模型路由</h3><p class="task">设计一张路由表：按模型、租户、供应商健康度、成本和区域选择上游。</p><p>交付物：模型路由决策表。</p><p class="done">完成标准：能解释 3 种 fallback 策略的取舍。</p></div>
+        <div class="day"><span class="day-num">Day 16</span><h3>重试与降级</h3><p class="task">为一次模型调用设计重试条件：哪些错误能重试，哪些不能。</p><p>交付物：错误分类与重试表。</p><p class="done">完成标准：不会对已产生费用或非幂等请求盲目重试。</p></div>
+        <div class="day"><span class="day-num">Day 17</span><h3>限流与配额</h3><p class="task">设计租户、用户、模型 3 个维度的限流与日配额。</p><p>交付物：限流键设计。</p><p class="done">完成标准：能处理突刺、透支和管理后台调整。</p></div>
+        <div class="day"><span class="day-num">Day 18</span><h3>计费与成本</h3><p class="task">梳理一次调用从 token 统计到账单落库的链路。</p><p>交付物：成本归因流程图。</p><p class="done">完成标准：知道请求失败、流中断、重试时如何计费。</p></div>
+        <div class="day"><span class="day-num">Day 19</span><h3>工具调用</h3><p class="task">设计一个最小 tool calling 执行器：参数校验、权限检查、超时、结果回传。</p><p>交付物：工具调用状态机。</p><p class="done">完成标准：工具失败不会污染主请求状态。</p></div>
+        <div class="day"><span class="day-num">Day 20</span><h3>异步任务</h3><p class="task">为批量推理或长任务设计 job 表、状态流转和取消机制。</p><p>交付物：任务状态表。</p><p class="done">完成标准：能处理 pending、running、succeeded、failed、cancelled。</p></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <h3>第 4 阶段：稳定性、安全与上线能力</h3>
+        <p>平台工程师的价值在故障时最明显。你要能提前埋点、发现异常、控制损失，并把事故复盘成下一次不会再犯的规则。</p>
+      </div>
+      <div class="days">
+        <div class="day"><span class="day-num">Day 21</span><h3>可观测指标</h3><p class="task">列出 LLM 调用链路必须看的指标：延迟、错误率、token、成本、上游状态。</p><p>交付物：指标字典。</p><p class="done">完成标准：每个指标有维度、用途和报警建议。</p></div>
+        <div class="day"><span class="day-num">Day 22</span><h3>Tracing</h3><p class="task">为一次请求设计 trace span：入口、鉴权、路由、上游、计费、返回。</p><p>交付物：trace 结构草图。</p><p class="done">完成标准：线上慢请求能定位卡在哪个 span。</p></div>
+        <div class="day"><span class="day-num">Day 23</span><h3>Prompt 注入与越权</h3><p class="task">阅读 OWASP LLM Top 10 的 Prompt Injection 与 Sensitive Information Disclosure，映射到你们平台。</p><p>交付物：风险清单。</p><p class="done">完成标准：至少列出 5 个你们接口可能遇到的安全场景。</p></div>
+        <div class="day"><span class="day-num">Day 24</span><h3>密钥与租户隔离</h3><p class="task">梳理 API key 生命周期：创建、展示、存储、轮换、禁用、审计。</p><p>交付物：API key 生命周期图。</p><p class="done">完成标准：不会明文存储密钥，不会在日志里泄露。</p></div>
+        <div class="day"><span class="day-num">Day 25</span><h3>灰度与回滚</h3><p class="task">为模型路由或计费逻辑设计灰度开关和回滚方案。</p><p>交付物：上线检查表。</p><p class="done">完成标准：出问题时能在 5 分钟内关闭新路径。</p></div>
+        <div class="day"><span class="day-num">Day 26</span><h3>事故复盘</h3><p class="task">找一个真实或模拟故障，写时间线、影响面、根因、修复、预防。</p><p>交付物：一篇复盘。</p><p class="done">完成标准：预防措施能落成代码、监控或流程。</p></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <h3>第 5 阶段：把技术能力变成影响力</h3>
+        <p>技术能力不只在代码里。你要能让别人理解你的判断，愿意采用你的方案，并在团队里复用你的工具。</p>
+      </div>
+      <div class="days">
+        <div class="day"><span class="day-num">Day 27</span><h3>写一页技术方案</h3><p class="task">选一个小功能，写背景、目标、非目标、方案、风险、验收。</p><p>交付物：一页方案。</p><p class="done">完成标准：读者能在 3 分钟内知道是否同意。</p></div>
+        <div class="day"><span class="day-num">Day 28</span><h3>做一个内部工具</h3><p class="task">写一个脚本或小命令，解决你每周重复做的事，例如查 token 成本或生成接口样例。</p><p>交付物：一个可运行小工具。</p><p class="done">完成标准：下周你自己会继续用。</p></div>
+        <div class="day"><span class="day-num">Day 29</span><h3>Code Review 能力</h3><p class="task">审查一段平台相关代码，只看正确性、边界、安全、可观测性和测试。</p><p>交付物：一份 review 清单。</p><p class="done">完成标准：每条意见都能说明风险，而不是只说风格。</p></div>
+        <div class="day"><span class="day-num">Day 30</span><h3>毕业任务</h3><p class="task">设计并实现一个迷你 LLM API 网关：鉴权、限流、模型路由、流式返回、日志、测试。</p><p>交付物：代码仓库 + README + 复盘。</p><p class="done">完成标准：本地能跑通 1 个非流式请求和 1 个流式请求。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="count">05</span>
+      <h2>可复制模板</h2>
+    </div>
+    <div class="templates">
+      <div class="template">
+        <span class="tag">Task Card</span>
+        <h3>需求任务卡</h3>
+        <pre><code>背景：
+目标：
+非目标：
+接口/数据变化：
+风险：
+验收方式：
+需要谁确认：</code></pre>
+      </div>
+      <div class="template">
+        <span class="tag">AI Prompt</span>
+        <h3>让 AI 帮你审查方案</h3>
+        <pre><code>你是 LLM 开放平台 Go 后端 reviewer。
+请审查下面方案，只关注：正确性、并发、超时、幂等、限流、计费、安全、可观测性、测试缺口。
+请按 P0/P1/P2 输出问题，每条说明风险和修改建议。</code></pre>
+      </div>
+      <div class="template">
+        <span class="tag">API Checklist</span>
+        <h3>接口上线前检查</h3>
+        <pre><code>- 鉴权：API key / 租户 / 权限是否正确
+- 超时：入口、数据库、外部模型调用是否有 deadline
+- 幂等：重试是否会重复扣费或重复写入
+- 限流：租户、用户、模型维度是否覆盖
+- 日志：request_id、tenant_id、model、provider、error 是否可查
+- 监控：延迟、错误率、token、成本是否可观测
+- 回滚：开关、降级、fallback 是否准备好</code></pre>
+      </div>
+      <div class="template">
+        <span class="tag">Weekly Review</span>
+        <h3>每周复盘</h3>
+        <pre><code>本周我少做了哪些重复劳动？
+我在哪个问题上仍然靠猜？
+哪个 bug 暴露了基础短板？
+我沉淀了哪个命令、模板、脚本或文档？
+下周最值得补的一项能力是什么？</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="count">06</span>
+      <h2>推荐资料与使用方式</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="source"><span class="tag">Go</span><h3>Go 官方文档</h3><p>优先读 Effective Go、testing、pprof、context、database/sql。不要泛读，和当天练习绑定。</p></div>
+      <div class="source"><span class="tag">LLM API</span><h3>模型 API 官方文档</h3><p>重点看 streaming、tool calling、structured outputs、rate limits、errors。你要知道字段如何影响平台链路。</p></div>
+      <div class="source"><span class="tag">Security</span><h3>OWASP LLM Top 10</h3><p>不要只背名词，把 Prompt 注入、敏感信息泄露、过度代理权限映射到你们自己的接口。</p></div>
+      <div class="source"><span class="tag">Observability</span><h3>OpenTelemetry</h3><p>学习 trace、metric、log 如何串起来。LLM 平台排障要能看到一次请求经过了哪些阶段。</p></div>
+      <div class="source"><span class="tag">Engineering</span><h3>真实项目源码</h3><p>每周读一个成熟 Go 项目的接口、错误处理、测试和配置方式。读源码时只追一条调用链。</p></div>
+      <div class="source"><span class="tag">Writing</span><h3>技术写作</h3><p>每周输出 1 篇短文：一个接口设计、一个故障复盘、一个性能分析。能写清楚，才说明你真的掌握。</p></div>
+    </div>
+    <div class="callout">最重要的一句话：不要把学习路线当课程表，要把它当交付节奏。每天留下一点能进入工作流的东西，30 天后你的能力会明显变厚。</div>
+  </section>
+</article>

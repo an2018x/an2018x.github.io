@@ -1,0 +1,1568 @@
+---
+title: "Day 12 · 混合精度与 AMP"
+date: '2026-05-26'
+draft: false
+description: "拆开混合精度训练:FP32 / TF32 / FP16 / BF16 / FP8 的数值范围、精度与溢出风险;理解 torch.amp.autocast 的算子选择、GradScaler 的动态 loss scaling,并跑通一个可对比的 AMP benchmark。"
+toc: false
+tags:
+  - AI
+  - PyTorch
+  - AMP
+  - Mixed Precision
+  - FP8
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ========== Base ========== */
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.day12-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.day12-wrap .eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.day12-wrap .eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:24px; height:1.5px;
+  background:var(--clay);
+  margin-right:12px;
+  vertical-align:middle;
+}
+
+.day12-wrap h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(36px, 5.2vw, 58px);
+  letter-spacing:-0.018em;
+  line-height:1.08;
+  max-width:18ch;
+  margin: 22px 0 30px;
+  color:var(--slate);
+}
+.day12-wrap h1 em{
+  font-style:italic;
+  color:var(--clay);
+}
+
+.day12-wrap h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:27px;
+  letter-spacing:-0.012em;
+  margin: 0;
+  color:var(--slate);
+}
+
+.day12-wrap h3{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:19px;
+  letter-spacing:-0.008em;
+  margin: 0 0 10px;
+  color:var(--slate);
+}
+
+.day12-wrap .lede{
+  font-size:16.5px;
+  color:var(--g700);
+  max-width:62ch;
+  margin:0 0 32px;
+  line-height:1.65;
+}
+
+/* ========== Masthead ========== */
+.day12-wrap header.masthead{
+  padding: 80px 0 56px;
+}
+.day12-wrap .meta-strip{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.day12-wrap .meta-strip strong{
+  color:var(--slate);
+  font-weight:600;
+  margin-right:6px;
+}
+
+/* ========== Section ========== */
+.day12-wrap section{ margin-top:72px; }
+.day12-wrap .indent{ margin-left:50px; }
+
+.day12-wrap .sec-head{
+  display:flex; align-items:baseline; gap:18px;
+  margin-bottom:28px;
+}
+.day12-wrap .sec-head .count{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  padding:3px 12px;
+  background:var(--g100);
+  border-radius:999px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* ========== Mind Map ========== */
+.day12-wrap .mindmap{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 32px;
+  margin: 0;
+}
+.day12-wrap .mindmap svg{
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+}
+.day12-wrap .mindmap-cap{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px dashed var(--g300);
+}
+
+/* ========== Card Grid ========== */
+.day12-wrap .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.day12-wrap .grid-2{
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+}
+.day12-wrap .grid-3{
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.day12-wrap .grid-4{
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+/* ========== Node Card ========== */
+.day12-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:22px 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.day12-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.day12-wrap .node.accent{ border-color:var(--clay); }
+.day12-wrap .node.entry { background:var(--g100); }
+.day12-wrap .node.exit  { background:var(--oat); border-color:var(--clay); }
+.day12-wrap .node.dark  {
+  background:var(--slate);
+  border-color:var(--slate);
+  color:var(--ivory);
+}
+.day12-wrap .node.dark .tag{ color:var(--oat); }
+.day12-wrap .node.dark p{ color:var(--oat); }
+.day12-wrap .node.dark h3{ color:var(--ivory); }
+
+.day12-wrap .node .tag{
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  font-weight:600;
+}
+.day12-wrap .node .tag.clay{ color:var(--clay); }
+.day12-wrap .node p{
+  font-size:13.5px;
+  color:var(--g700);
+  margin:6px 0 0;
+  line-height:1.6;
+}
+
+/* ========== Annotation ========== */
+.day12-wrap .annot{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  position:relative;
+  margin-top:14px;
+  padding-left:44px;
+  letter-spacing:.04em;
+}
+.day12-wrap .annot::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:8px;
+  width:32px;
+  height:1.5px;
+  background:var(--clay);
+}
+
+/* ========== Table ========== */
+.day12-wrap .table-wrap{ overflow-x:auto; }
+.day12-wrap table.compare{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  overflow:hidden;
+}
+.day12-wrap table.compare th,
+.day12-wrap table.compare td{
+  text-align:left;
+  padding:14px 20px;
+  border-bottom:1px solid var(--g200);
+  vertical-align:top;
+}
+.day12-wrap table.compare th{
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+  background:var(--g100);
+  border-bottom:1.5px solid var(--slate);
+}
+.day12-wrap table.compare td:first-child{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:15px;
+  width:17%;
+  color:var(--slate);
+}
+.day12-wrap table.compare tr:last-child td{ border-bottom:none; }
+.day12-wrap table.compare .clay{ color:var(--clay-d); }
+.day12-wrap table.compare .olive{ color:var(--olive); }
+.day12-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+
+/* ========== Code ========== */
+.day12-wrap pre.code{
+  background:var(--slate);
+  color:var(--ivory);
+  font-family:var(--mono);
+  font-size:12.5px;
+  padding:20px 24px;
+  border-radius:10px;
+  overflow-x:auto;
+  line-height:1.65;
+  margin:18px 0;
+}
+.day12-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.day12-wrap pre.code .k{ color:var(--clay); }
+.day12-wrap pre.code .s{ color:var(--olive); }
+.day12-wrap pre.code .t{ color:#7EC8E3; }
+.day12-wrap pre.code .n{ color:#C4B28A; }
+
+.day12-wrap code.inline{
+  font-family:var(--mono);
+  font-size:12.5px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 6px;
+  color:var(--clay-d);
+}
+
+/* ========== Architecture Diagram ========== */
+.day12-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:36px 28px 28px;
+  margin: 0;
+}
+.day12-wrap .archdiag svg{
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+}
+.day12-wrap .archdiag-cap{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px dashed var(--g300);
+}
+
+/* ========== Checklist ========== */
+.day12-wrap .check{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  padding:8px 24px;
+}
+.day12-wrap .check ul{
+  list-style:none; padding:0; margin:0;
+}
+.day12-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative;
+  font-size:14.5px;
+  color:var(--slate);
+}
+.day12-wrap .check li:last-child{ border-bottom:none; }
+.day12-wrap .check li::before{
+  content:"";
+  position:absolute;
+  left:0; top:16px;
+  width:18px; height:18px;
+  border:1.5px solid var(--g300);
+  border-radius:4px;
+  background:var(--paper);
+}
+
+/* ========== Review Questions ========== */
+.day12-wrap .review{
+  counter-reset: q;
+  margin:0; padding:0; list-style:none;
+}
+.day12-wrap .review li{
+  counter-increment: q;
+  position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px;
+  color:var(--g700);
+}
+.day12-wrap .review li:last-child{ border-bottom:none; }
+.day12-wrap .review li::before{
+  content: counter(q, decimal-leading-zero);
+  position:absolute;
+  left:0; top:18px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--clay);
+  letter-spacing:.06em;
+  font-weight:600;
+}
+
+/* ========== Q/A Cards ========== */
+.day12-wrap .qa-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-top:8px;
+}
+.day12-wrap .qa-card{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:14px;
+  overflow:hidden;
+  transition: border-color 150ms ease;
+}
+.day12-wrap .qa-card[open]{
+  border-color:var(--slate);
+}
+.day12-wrap .qa-card summary{
+  list-style:none;
+  cursor:pointer;
+  padding:18px 24px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  transition: background 150ms ease;
+}
+.day12-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.day12-wrap .qa-card summary::marker{ display:none; }
+.day12-wrap .qa-card summary:hover{
+  background:var(--g100);
+}
+.day12-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.day12-wrap .qa-num{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--clay);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:3px;
+}
+.day12-wrap .qa-q{
+  font-family:var(--serif);
+  font-size:16px;
+  font-weight:500;
+  color:var(--slate);
+  line-height:1.5;
+  flex:1;
+}
+.day12-wrap .qa-toggle{
+  font-family:var(--mono);
+  font-size:18px;
+  color:var(--g500);
+  flex-shrink:0;
+  font-weight:300;
+  line-height:1;
+  margin-top:2px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+.day12-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg);
+  color:var(--clay);
+}
+.day12-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+}
+.day12-wrap .qa-a-label{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--olive);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.day12-wrap .qa-a-body{
+  flex:1;
+  font-family:var(--sans);
+  font-size:14.5px;
+  color:var(--g700);
+  line-height:1.7;
+}
+.day12-wrap .qa-a-body p{
+  margin:0 0 10px;
+}
+.day12-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.day12-wrap .qa-a-body strong{
+  font-family:var(--serif);
+  font-style:italic;
+  font-weight:500;
+  color:var(--slate);
+}
+.day12-wrap .qa-a-body code{
+  font-family:var(--mono);
+  font-size:13px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 5px;
+  color:var(--clay-d);
+}
+
+/* ========== Footer ========== */
+.day12-wrap footer{
+  margin-top:100px;
+  padding-top:40px;
+  border-top:1px solid var(--g200);
+  text-align:center;
+}
+.day12-wrap footer .quote{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:18px;
+  color:var(--g700);
+  max-width:44ch;
+  margin:0 auto;
+  line-height:1.55;
+}
+.day12-wrap footer .meta{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-top:24px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px){
+  .day12-wrap{ padding:0 22px 90px; }
+  .day12-wrap .indent{ margin-left:0; }
+  .day12-wrap header.masthead{ padding:56px 0 40px; }
+  .day12-wrap section{ margin-top:56px; }
+  .day12-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .day12-wrap .archdiag{ padding:20px 12px; }
+  .day12-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .day12-wrap .qa-q{ font-size:14.5px; }
+  .day12-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="day12-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 12 · AI INFRA ROADMAP · 60 DAYS</div>
+  <h1>让数字 <em>变轻</em></h1>
+  <p class="lede">
+    Day 11 我们从 allocator 视角节省显存;今天换一个更底层的杠杆:
+    <em style="font-style:italic;color:#B85C3E;">把每个数字本身变小</em>。
+    混合精度训练的目标不是"全部换成半精度",而是让不同算子在不同 dtype 里各司其职:
+    GEMM / Conv 用 Tensor Core 跑低精度,归约 / Softmax / Loss 留在高精度,
+    反向传播用 loss scaling 避免梯度下溢。
+    今天你要看清 <strong>FP32 / TF32 / FP16 / BF16 / FP8</strong> 的数值边界,
+    掌握 <code class="inline">torch.amp.autocast</code> 与
+    <code class="inline">GradScaler</code> 的真实分工。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 3 h</span>
+    <span><strong>THEORY</strong> 1.5 h</span>
+    <span><strong>HANDS-ON</strong> 1 h</span>
+    <span><strong>REVIEW</strong> 0.5 h</span>
+    <span><strong>STACK</strong> PyTorch · CUDA · AMP · Tensor Core · FP8</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 12 思维导图">
+        <rect x="290" y="20" width="400" height="62" rx="5"
+              fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="46" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16"
+              fill="#141413">DAY 12 · 混合精度与 AMP</text>
+        <text x="490" y="68" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#87867F" letter-spacing="2">DTYPES · AUTOCAST · GRAD SCALER · FP8</text>
+
+        <line x1="490" y1="82" x2="490" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="106" x2="858" y2="106" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <line x1="122" y1="106" x2="122" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="106" x2="367" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="106" x2="613" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="106" x2="858" y2="132" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <rect x="32" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="122" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">01 · DTYPE</text>
+        <text x="122" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">数值格式边界</text>
+
+        <rect x="277" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">02 · AUTOCAST</text>
+        <text x="367" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">算子级 dtype 策略</text>
+
+        <rect x="523" y="132" width="180" height="56" rx="5"
+              fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#D97757" letter-spacing="2" font-weight="600">03 · SCALER</text>
+        <text x="613" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">动态 Loss Scaling</text>
+
+        <rect x="768" y="132" width="180" height="56" rx="5"
+              fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="858" y="155" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="10.5"
+              fill="#B85C3E" letter-spacing="2" font-weight="600">04 · FP8</text>
+        <text x="858" y="176" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15"
+              fill="#141413">H100 时代</text>
+
+        <text x="42"  y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">FP32 / TF32</text>
+        <text x="42"  y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">FP16 vs BF16</text>
+        <text x="42"  y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">范围 / 精度 / 溢出</text>
+        <text x="42"  y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58"  y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Tensor Core 路径</text>
+
+        <text x="287" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">白名单 / 黑名单</text>
+        <text x="287" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">matmul / conv 降精度</text>
+        <text x="287" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">softmax / norm 保守</text>
+        <text x="287" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">局部禁用 autocast</text>
+
+        <text x="533" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">梯度下溢</text>
+        <text x="533" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">scale → backward</text>
+        <text x="533" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">unscale → step</text>
+        <text x="533" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">inf / nan 检测</text>
+
+        <text x="778" y="220" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="220" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">E4M3 / E5M2</text>
+        <text x="778" y="250" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">amax history</text>
+        <text x="778" y="280" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="280" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">TransformerEngine</text>
+        <text x="778" y="310" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="310" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">精度回归测试</text>
+
+        <line x1="32" y1="358" x2="948" y2="358" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="32" y="385" font-family="ui-monospace, Menlo, monospace" font-size="11"
+              fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+
+        <rect x="32"  y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="142" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">dtype 对照表</text>
+
+        <rect x="268" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="378" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">AMP 训练模板</text>
+
+        <rect x="504" y="398" width="220" height="34" rx="5"
+              fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="614" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">FP32 vs AMP benchmark</text>
+
+        <rect x="740" y="398" width="200" height="34" rx="5"
+              fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="840" y="421" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">数值稳定性 checklist</text>
+      </svg>
+      <div class="mindmap-cap">FIG · Day 12 全景:先理解数字格式,再理解 autocast 怎么选 dtype,最后用 GradScaler 和 FP8 处理边界</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 1. dtype ========== -->
+<section>
+  <div class="sec-head">
+    <h2>先看数字格式 — 范围、精度与溢出</h2>
+    <div class="count">35 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      半精度训练的第一个坑是把"位数少"理解成"一定不准"。
+      真正要分清的是两件事:
+      <strong>指数位</strong>决定能表达多大/多小的数,也就是溢出和下溢;
+      <strong>尾数位</strong>决定相邻两个数之间的间隔,也就是精度。
+      FP16 和 BF16 都是 16 位,但性格完全不同。
+    </p>
+
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>格式</th>
+            <th>位宽结构</th>
+            <th>最大有限值</th>
+            <th>精度特征</th>
+            <th>AI Infra 里的角色</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FP32</td>
+            <td class="mono">1 sign · 8 exp · 23 mantissa</td>
+            <td>~3.4e38</td>
+            <td>范围大、精度高,最稳但慢/占显存</td>
+            <td>基线;optimizer master weights;敏感归约</td>
+          </tr>
+          <tr>
+            <td>TF32</td>
+            <td class="mono">8 exp · 10 mantissa</td>
+            <td>~3.4e38</td>
+            <td>FP32 范围 + 接近 FP16 尾数</td>
+            <td>Ampere+ 默认 GEMM 加速路径,通常不改模型代码</td>
+          </tr>
+          <tr>
+            <td class="clay">FP16</td>
+            <td class="mono">1 sign · 5 exp · 10 mantissa</td>
+            <td>65504</td>
+            <td>尾数还行,但指数太短,非常容易 overflow / underflow</td>
+            <td>V100/T4/A10 上常用;通常需要 GradScaler</td>
+          </tr>
+          <tr>
+            <td class="olive">BF16</td>
+            <td class="mono">1 sign · 8 exp · 7 mantissa</td>
+            <td>~3.4e38</td>
+            <td>范围与 FP32 相同,尾数较粗</td>
+            <td>A100/H100 训练默认推荐;通常不需要 GradScaler</td>
+          </tr>
+          <tr>
+            <td>FP8 E4M3</td>
+            <td class="mono">1 sign · 4 exp · 3 mantissa</td>
+            <td>~448</td>
+            <td>精度相对更好,范围小</td>
+            <td>TransformerEngine 常用于 activation / weight 前向</td>
+          </tr>
+          <tr>
+            <td>FP8 E5M2</td>
+            <td class="mono">1 sign · 5 exp · 2 mantissa</td>
+            <td>~57344</td>
+            <td>范围更大,精度更粗</td>
+            <td>TransformerEngine 常用于 gradient 反向</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">一张图理解 FP16 vs BF16</h3>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 960 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FP16 BF16 数值范围对比">
+        <text x="480" y="28" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">FP16 VS BF16 — SAME 16 BITS, DIFFERENT FAILURE MODE</text>
+
+        <text x="52" y="76" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600">FP32</text>
+        <rect x="120" y="60" width="80" height="34" fill="#D97757" stroke="#B85C3E"/>
+        <text x="160" y="82" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#FFF">sign</text>
+        <rect x="204" y="60" width="260" height="34" fill="#788C5D" stroke="#5C6E47"/>
+        <text x="334" y="82" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#FFF">8-bit exponent · huge range</text>
+        <rect x="468" y="60" width="420" height="34" fill="#E3DACC" stroke="#87867F"/>
+        <text x="678" y="82" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">23-bit mantissa · high precision</text>
+
+        <text x="52" y="146" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#B85C3E" font-weight="600">FP16</text>
+        <rect x="120" y="130" width="80" height="34" fill="#D97757" stroke="#B85C3E"/>
+        <text x="160" y="152" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#FFF">sign</text>
+        <rect x="204" y="130" width="170" height="34" fill="#788C5D" stroke="#5C6E47"/>
+        <text x="289" y="152" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#FFF">5-bit exp</text>
+        <rect x="378" y="130" width="270" height="34" fill="#E3DACC" stroke="#87867F"/>
+        <text x="513" y="152" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">10-bit mantissa</text>
+        <text x="680" y="152" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="12" fill="#B85C3E">范围窄: 65504 以上直接 inf</text>
+
+        <text x="52" y="216" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#5C6E47" font-weight="600">BF16</text>
+        <rect x="120" y="200" width="80" height="34" fill="#D97757" stroke="#B85C3E"/>
+        <text x="160" y="222" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#FFF">sign</text>
+        <rect x="204" y="200" width="260" height="34" fill="#788C5D" stroke="#5C6E47"/>
+        <text x="334" y="222" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#FFF">8-bit exponent · FP32 range</text>
+        <rect x="468" y="200" width="200" height="34" fill="#E3DACC" stroke="#87867F"/>
+        <text x="568" y="222" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">7-bit mantissa</text>
+        <text x="700" y="222" font-family="ui-serif, Georgia, serif" font-style="italic" font-size="12" fill="#5C6E47">范围稳: 很少需要 loss scaling</text>
+
+        <line x1="40" y1="274" x2="920" y2="274" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="40" y="304" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="1" font-weight="600">经验判断</text>
+        <text x="40" y="326" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">A100 / H100 训练 LLM:优先 BF16;旧卡或推理服务:FP16 更常见;FP8 只在硬件和库都准备好时作为下一层优化。</text>
+      </svg>
+      <div class="archdiag-cap">FIG · FP16 的风险是范围窄,BF16 的风险是尾数粗;二者不是简单的"谁更准"</div>
+    </div>
+
+    <h3 style="margin-top:32px;">为什么 FP16 会炸</h3>
+
+<pre class="code"><span class="k">import</span> torch
+
+x = torch.tensor([<span class="n">1e4</span>], device=<span class="s">"cuda"</span>, dtype=torch.float16)
+<span class="k">print</span>(x * x)       <span class="c"># tensor([inf], device='cuda:0', dtype=torch.float16)</span>
+
+g = torch.tensor([<span class="n">1e-8</span>], device=<span class="s">"cuda"</span>, dtype=torch.float16)
+<span class="k">print</span>(g)           <span class="c"># tensor([0.], device='cuda:0', dtype=torch.float16)  ← 梯度下溢</span>
+
+b = torch.tensor([<span class="n">1e4</span>], device=<span class="s">"cuda"</span>, dtype=torch.bfloat16)
+<span class="k">print</span>(b * b)       <span class="c"># 仍然能表达大数,但尾数更粗</span></pre>
+
+    <div class="grid grid-2" style="margin-top:24px;">
+      <div class="node accent">
+        <div class="tag clay">OVERFLOW</div>
+        <h3>前向 / 反向变成 inf</h3>
+        <p>FP16 最大有限值只有 65504。attention score、loss、梯度范数、指数运算一旦超过边界,结果就是 <code class="inline">inf</code>,接着传播成 <code class="inline">nan</code>。这就是为什么 softmax、exp、log、norm 通常不能莽撞降到 FP16。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">UNDERFLOW</div>
+        <h3>小梯度直接变成 0</h3>
+        <p>深层网络反向传播时很多梯度本来就在 <code class="inline">1e-8</code> 附近。FP16 的可表示小数范围不够,这些梯度会被 flush 到 0。<strong>GradScaler 的本质就是先把 loss 放大,让梯度落进 FP16 能表达的区间</strong>。</p>
+      </div>
+      <div class="node">
+        <div class="tag">BF16</div>
+        <h3>为什么 LLM 喜欢 BF16</h3>
+        <p>LLM 训练的主要麻烦是梯度范围和 activation 范围大,而不是每个数都需要很细的尾数。BF16 保留 FP32 的 8 位指数,所以稳定性接近 FP32;尾数少一点通常可以靠大 batch 和优化器噪声消化。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">TF32</div>
+        <h3>不要忘记默认加速</h3>
+        <p>在 Ampere+ GPU 上,很多 FP32 matmul 会走 TF32 Tensor Core:输入按 TF32 乘,累加仍是 FP32。它不是显式 dtype,更像 CUDA/cuBLAS 的计算模式。想要严格可复现时需要关掉,想要吞吐时通常保留。</p>
+      </div>
+    </div>
+
+    <div class="annot">本节 takeaway:指数位管生死,尾数位管细腻;FP16 需要防溢出/BF16 需要接受粗粒度/FP8 需要额外 scale。</div>
+  </div>
+</section>
+
+<!-- ========== 2. Autocast ========== -->
+<section>
+  <div class="sec-head">
+    <h2>autocast — 不是全局转 dtype,而是算子级决策</h2>
+    <div class="count">35 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      <code class="inline">autocast</code> 不是把模型参数永久改成半精度。
+      它只是在一个上下文里拦截算子调用,根据算子的数值风险选择合适 dtype:
+      大矩阵乘和卷积适合降精度,归约和 softmax 更保守,有些算子会主动提升到 FP32。
+      这就是 AMP 的核心: <strong>Automatic Mixed Precision</strong>,自动混合,不是自动半精度。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="autocast 决策路径">
+        <text x="480" y="28" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">AUTOCAST DISPATCH — 每个 OP 单独决定计算 dtype</text>
+
+        <rect x="54" y="68" width="180" height="54" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="144" y="91" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">Python 调用 op</text>
+        <text x="144" y="111" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">torch.matmul / softmax</text>
+
+        <line x1="234" y1="95" x2="318" y2="95" stroke="#87867F" stroke-width="2"/>
+        <polygon points="312,90 324,95 312,100" fill="#87867F"/>
+
+        <rect x="324" y="54" width="280" height="82" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="464" y="81" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#141413">autocast policy table</text>
+        <text x="464" y="104" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">eligible op? device? target dtype?</text>
+        <text x="464" y="122" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">CUDA: fp16 / bf16 · CPU: bf16</text>
+
+        <line x1="604" y1="95" x2="686" y2="95" stroke="#87867F" stroke-width="2"/>
+        <polygon points="680,90 692,95 680,100" fill="#87867F"/>
+
+        <rect x="692" y="68" width="214" height="54" rx="5" fill="#141413" stroke="#141413" stroke-width="2"/>
+        <text x="799" y="91" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#FAF9F5">实际 kernel</text>
+        <text x="799" y="111" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">Tensor Core / CUDA kernel</text>
+
+        <line x1="112" y1="170" x2="848" y2="170" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="54" y="194" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="1" font-weight="600">THREE POLICY BUCKETS</text>
+
+        <rect x="54" y="214" width="260" height="108" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="74" y="242" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#B85C3E" font-weight="600" letter-spacing="1">LOW PRECISION SAFE</text>
+        <text x="74" y="266" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">matmul / linear / conv</text>
+        <text x="74" y="288" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">输入 cast 到 fp16/bf16</text>
+        <text x="74" y="306" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">Tensor Core 执行,吞吐收益最大</text>
+
+        <rect x="350" y="214" width="260" height="108" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="370" y="242" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#B85C3E" font-weight="600" letter-spacing="1">PROMOTE TO FP32</text>
+        <text x="370" y="266" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">softmax / norm / loss</text>
+        <text x="370" y="288" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">数值敏感,小误差会被放大</text>
+        <text x="370" y="306" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">通常保留 FP32 或内部 FP32 accumulate</text>
+
+        <rect x="646" y="214" width="260" height="108" rx="5" fill="#F0EEE6" stroke="#87867F" stroke-width="2"/>
+        <text x="666" y="242" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600" letter-spacing="1">WIDEST INPUT</text>
+        <text x="666" y="266" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">add / cat / where</text>
+        <text x="666" y="288" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">多个输入 dtype 不一致</text>
+        <text x="666" y="306" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">提升到最宽 dtype 避免隐式丢精度</text>
+
+        <text x="54" y="368" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" font-weight="600">重要:</text>
+        <text x="112" y="368" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">autocast 只包 forward 和 loss 计算;backward 会沿用 forward 产生的 dtype 路径,不要单独包 backward。</text>
+      </svg>
+      <div class="archdiag-cap">FIG · autocast 的本质是 op policy table,不是一把梭把所有 Tensor 转成半精度</div>
+    </div>
+
+    <h3 style="margin-top:32px;">现代 PyTorch 写法</h3>
+
+<pre class="code"><span class="k">import</span> torch
+
+device = <span class="s">"cuda"</span>
+model = MyModel().to(device)
+optimizer = torch.optim.AdamW(model.parameters(), lr=<span class="n">3e-4</span>)
+
+<span class="c"># CUDA + fp16 训练:需要 GradScaler</span>
+scaler = torch.amp.GradScaler(device)
+
+<span class="k">for</span> x, y <span class="k">in</span> loader:
+    x, y = x.to(device), y.to(device)
+    optimizer.zero_grad(set_to_none=<span class="k">True</span>)
+
+    <span class="c"># 只包 forward + loss</span>
+    <span class="k">with</span> torch.amp.autocast(device_type=device, dtype=torch.float16):
+        logits = model(x)
+        loss = torch.nn.functional.cross_entropy(logits, y)
+
+    <span class="c"># scale 后 backward,避免 fp16 梯度下溢</span>
+    scaler.scale(loss).backward()
+
+    <span class="c"># 如需 gradient clipping,必须先 unscale</span>
+    scaler.unscale_(optimizer)
+    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=<span class="n">1.0</span>)
+
+    scaler.step(optimizer)  <span class="c"># 若发现 inf/nan,自动跳过 optimizer.step()</span>
+    scaler.update()         <span class="c"># 动态调整 scale</span></pre>
+
+    <h3 style="margin-top:32px;">BF16 写法更简单</h3>
+
+<pre class="code"><span class="c"># A100 / H100 上训练 LLM 的常见默认</span>
+<span class="k">for</span> x, y <span class="k">in</span> loader:
+    optimizer.zero_grad(set_to_none=<span class="k">True</span>)
+    <span class="k">with</span> torch.amp.autocast(<span class="s">"cuda"</span>, dtype=torch.bfloat16):
+        loss = model(x).loss
+    loss.backward()
+    optimizer.step()
+
+<span class="c"># BF16 的指数范围和 FP32 一样,通常不需要 GradScaler</span></pre>
+
+    <h3 style="margin-top:32px;">需要手动接管的场景</h3>
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">局部禁用</div>
+        <h3>敏感算子强制 FP32</h3>
+        <p>如果某段计算在 AMP 下不稳定,局部退出 autocast:<br><code class="inline">with torch.amp.autocast("cuda", enabled=False):</code><br>在里面把输入显式转回 <code class="inline">float()</code>。常见对象:自定义 loss、复杂归约、指数/对数链路。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">自定义 op</div>
+        <h3>别让 autocast 猜</h3>
+        <p>自定义 <code class="inline">autograd.Function</code> 可以用 <code class="inline">torch.amp.custom_fwd</code> / <code class="inline">custom_bwd</code> 标注输入如何 cast。写 CUDA extension 时也要明确 accumulator dtype,否则 forward 看似加速,backward 悄悄不稳。</p>
+      </div>
+      <div class="node">
+        <div class="tag">模型参数</div>
+        <h3>不要手动 model.half()</h3>
+        <p>初学者常犯错:直接 <code class="inline">model.half()</code> 然后训练。这样 LayerNorm、embedding、optimizer 状态都可能进入低精度,稳定性大幅下降。AMP 推荐参数保持 FP32/BF16 策略,由 autocast 决定每个 op 的输入 dtype。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">验证习惯</div>
+        <h3>永远和 FP32 baseline 比</h3>
+        <p>AMP 不是"开了就算成功"。至少比较三件事:loss 曲线前 100 step 是否贴近、最终指标是否在误差范围、是否出现 inf/nan/scale 回退。生产里还要记录吞吐、显存峰值和数值回归。</p>
+      </div>
+    </div>
+
+    <div class="annot">API 提醒:新代码优先写 torch.amp.autocast("cuda", ...) 与 torch.amp.GradScaler("cuda"),不要继续传播旧的 torch.cuda.amp 写法。</div>
+  </div>
+</section>
+
+<!-- ========== 3. GradScaler ========== -->
+<section>
+  <div class="sec-head">
+    <h2>GradScaler — 动态 Loss Scaling 的状态机</h2>
+    <div class="count">30 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      FP16 最危险的是梯度下溢。解决思路非常朴素:
+      loss 乘一个很大的 scale,反向传播得到的梯度也跟着变大,
+      optimizer.step 前再除回去。
+      关键是 scale 不能太大,否则梯度又会 overflow。
+      <code class="inline">GradScaler</code> 做的就是这个动态平衡。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 960 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GradScaler 状态机">
+        <text x="480" y="28" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">DYNAMIC LOSS SCALING — 放大梯度,检测溢出,再调 scale</text>
+
+        <rect x="70" y="72" width="160" height="58" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="150" y="96" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">loss</text>
+        <text x="150" y="116" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">e.g. 2.31</text>
+
+        <line x1="230" y1="101" x2="316" y2="101" stroke="#87867F" stroke-width="2"/>
+        <polygon points="310,96 322,101 310,106" fill="#87867F"/>
+        <text x="274" y="88" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">× scale</text>
+
+        <rect x="322" y="72" width="180" height="58" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="412" y="96" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">scaled loss</text>
+        <text x="412" y="116" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">2.31 × 65536</text>
+
+        <line x1="502" y1="101" x2="588" y2="101" stroke="#87867F" stroke-width="2"/>
+        <polygon points="582,96 594,101 582,106" fill="#87867F"/>
+        <text x="546" y="88" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">backward</text>
+
+        <rect x="594" y="72" width="260" height="58" rx="5" fill="#141413" stroke="#141413" stroke-width="2"/>
+        <text x="724" y="96" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#FAF9F5">scaled gradients</text>
+        <text x="724" y="116" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">小梯度被抬进 FP16 可表示区间</text>
+
+        <line x1="724" y1="130" x2="724" y2="184" stroke="#87867F" stroke-width="2"/>
+        <polygon points="719,178 724,190 729,178" fill="#87867F"/>
+
+        <rect x="594" y="190" width="260" height="58" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="724" y="214" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">unscale + check</text>
+        <text x="724" y="234" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">grad /= scale · found_inf?</text>
+
+        <line x1="594" y1="219" x2="502" y2="219" stroke="#87867F" stroke-width="2"/>
+        <polygon points="508,214 496,219 508,224" fill="#87867F"/>
+
+        <rect x="316" y="190" width="180" height="58" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="406" y="214" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">optimizer.step?</text>
+        <text x="406" y="234" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">skip if inf/nan</text>
+
+        <line x1="406" y1="248" x2="406" y2="306" stroke="#87867F" stroke-width="2"/>
+        <polygon points="401,300 406,312 411,300" fill="#87867F"/>
+
+        <rect x="230" y="312" width="352" height="74" rx="5" fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="406" y="338" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">scale update</text>
+        <text x="406" y="360" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">连续 growth_interval 次无溢出 → scale × growth_factor</text>
+        <text x="406" y="378" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">发现溢出 → scale × backoff_factor</text>
+
+        <line x1="230" y1="350" x2="128" y2="350" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="128" y1="350" x2="128" y2="132" stroke="#D1CFC5" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <polygon points="123,138 128,126 133,138" fill="#D1CFC5"/>
+
+        <text x="70" y="418" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F">典型初始 scale=65536,growth_factor=2,backoff_factor=0.5,growth_interval=2000。</text>
+      </svg>
+      <div class="archdiag-cap">FIG · GradScaler 是一个小型反馈控制器:无溢出就增大 scale,有溢出就跳过 step 并减小 scale</div>
+    </div>
+
+    <h3 style="margin-top:32px;">关键 API 顺序</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>步骤</th>
+            <th>API</th>
+            <th>为什么顺序不能错</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><code class="inline">scaler.scale(loss).backward()</code></td>
+            <td>放大 loss 后再反传,让小梯度不会被 FP16 吃掉</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><code class="inline">scaler.unscale_(optimizer)</code></td>
+            <td>如果要梯度裁剪/检查,必须先把梯度除回原尺度</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><code class="inline">clip_grad_norm_</code></td>
+            <td>在真实梯度尺度上裁剪,否则 max_norm 没意义</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><code class="inline">scaler.step(optimizer)</code></td>
+            <td>内部检查 inf/nan;发现溢出会跳过这次 step,避免污染参数</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><code class="inline">scaler.update()</code></td>
+            <td>根据这一步是否溢出动态调 scale</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">常见错误</h3>
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">ERROR 1</div>
+        <h3>clip 前忘记 unscale</h3>
+        <p>如果梯度还乘着 65536 就做 norm clipping,几乎每步都会被错误裁掉,训练会变慢甚至不收敛。固定顺序: <code class="inline">backward → unscale_ → clip → step → update</code>。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">ERROR 2</div>
+        <h3>多个 optimizer 混用</h3>
+        <p>GAN、MoE、RLHF 里可能有多个 optimizer。每个 optimizer 都要单独 <code class="inline">unscale_</code> 和 <code class="inline">step</code>;但一般共用一个 scaler。跳过某个 optimizer step 时要知道参数更新不同步的影响。</p>
+      </div>
+      <div class="node">
+        <div class="tag">ERROR 3</div>
+        <h3>把 scaler 用在 BF16 上</h3>
+        <p>BF16 通常不需要 loss scaling。不是绝对不能用,而是收益很小且会让调试更复杂。A100/H100 上优先 BF16 + no scaler;旧卡 FP16 才用 scaler。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">DEBUG</div>
+        <h3>看 scale 曲线</h3>
+        <p>如果 <code class="inline">scaler.get_scale()</code> 一直下降,说明频繁 overflow:学习率过大、loss 本身不稳、某个算子不该进 FP16。如果 scale 长期稳定或缓慢上升,AMP 状态基本健康。</p>
+      </div>
+    </div>
+
+    <div class="annot">GradScaler 保护的是 FP16 的梯度区间;它不解决 forward 里 softmax 爆炸,那是 autocast policy 或模型数值稳定性的问题。</div>
+  </div>
+</section>
+
+<!-- ========== 4. hands-on ========== -->
+<section>
+  <div class="sec-head">
+    <h2>动手实践 — 跑一个 AMP benchmark</h2>
+    <div class="count">1 H</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      今天的练习目标不是把某个模型训到高分,而是建立一套固定的 AMP 验证手感:
+      同一个模型分别跑 FP32、FP16 AMP、BF16 AMP,
+      记录吞吐、显存峰值、loss 是否贴近。
+      以后你给任何训练脚本开 AMP,都照这个流程验。
+    </p>
+
+<pre class="code"><span class="c"># amp_bench.py — FP32 / FP16 AMP / BF16 AMP 对比骨架</span>
+<span class="k">import</span> argparse, time, torch
+<span class="k">import</span> torch.nn <span class="k">as</span> nn
+<span class="k">import</span> torch.nn.functional <span class="k">as</span> F
+
+<span class="k">class</span> TinyMLP(nn.Module):
+    <span class="k">def</span> __init__(self, d=<span class="n">4096</span>, layers=<span class="n">8</span>):
+        super().__init__()
+        self.net = nn.Sequential(*[
+            layer <span class="k">for</span> _ <span class="k">in</span> range(layers)
+            <span class="k">for</span> layer <span class="k">in</span> (nn.Linear(d, d), nn.GELU())
+        ], nn.Linear(d, <span class="n">1000</span>))
+
+    <span class="k">def</span> forward(self, x):
+        <span class="k">return</span> self.net(x)
+
+<span class="k">def</span> run(mode):
+    device = <span class="s">"cuda"</span>
+    model = TinyMLP().to(device)
+    opt = torch.optim.AdamW(model.parameters(), lr=<span class="n">1e-3</span>)
+    scaler = torch.amp.GradScaler(device, enabled=(mode == <span class="s">"fp16"</span>))
+    dtype = {<span class="s">"fp32"</span>: <span class="k">None</span>, <span class="s">"fp16"</span>: torch.float16, <span class="s">"bf16"</span>: torch.bfloat16}[mode]
+
+    torch.cuda.reset_peak_memory_stats()
+    torch.cuda.synchronize()
+    t0 = time.perf_counter()
+
+    losses = []
+    <span class="k">for</span> step <span class="k">in</span> range(<span class="n">80</span>):
+        x = torch.randn(<span class="n">32</span>, <span class="n">4096</span>, device=device)
+        y = torch.randint(<span class="n">0</span>, <span class="n">1000</span>, (<span class="n">32</span>,), device=device)
+        opt.zero_grad(set_to_none=<span class="k">True</span>)
+
+        enabled = (dtype <span class="k">is not</span> <span class="k">None</span>)
+        <span class="k">with</span> torch.amp.autocast(device_type=device, dtype=dtype, enabled=enabled):
+            loss = F.cross_entropy(model(x), y)
+
+        <span class="k">if</span> mode == <span class="s">"fp16"</span>:
+            scaler.scale(loss).backward()
+            scaler.step(opt)
+            scaler.update()
+        <span class="k">else</span>:
+            loss.backward()
+            opt.step()
+
+        losses.append(float(loss.detach()))
+
+    torch.cuda.synchronize()
+    dt = time.perf_counter() - t0
+    mem = torch.cuda.max_memory_allocated() / <span class="n">2</span>**<span class="n">30</span>
+    <span class="k">print</span>(<span class="s">f"{mode:4s}  time={dt:.2f}s  peak={mem:.2f}GiB  last_loss={losses[-1]:.4f}  scale={scaler.get_scale():.0f}"</span>)
+
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(<span class="s">"--mode"</span>, choices=[<span class="s">"fp32"</span>, <span class="s">"fp16"</span>, <span class="s">"bf16"</span>], required=<span class="k">True</span>)
+    run(parser.parse_args().mode)</pre>
+
+    <h3 style="margin-top:32px;">运行方式</h3>
+
+<pre class="code"><span class="k">python</span> amp_bench.py --mode fp32
+<span class="k">python</span> amp_bench.py --mode fp16
+<span class="k">python</span> amp_bench.py --mode bf16
+
+<span class="c"># 记录这三列:</span>
+<span class="c"># 1) time:吞吐收益</span>
+<span class="c"># 2) peak:显存峰值</span>
+<span class="c"># 3) last_loss / loss 曲线:数值是否明显偏离</span></pre>
+
+    <h3 style="margin-top:32px;">你应该看到什么</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>模式</th>
+            <th>速度</th>
+            <th>显存</th>
+            <th>稳定性</th>
+            <th>解释</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FP32</td>
+            <td>最慢</td>
+            <td>最高</td>
+            <td>最稳</td>
+            <td>基线,用于对照 loss 与最终指标</td>
+          </tr>
+          <tr>
+            <td>FP16 AMP</td>
+            <td class="clay">通常最快</td>
+            <td>低</td>
+            <td>依赖 scaler</td>
+            <td>Tensor Core 吞吐高,但需要处理 overflow / underflow</td>
+          </tr>
+          <tr>
+            <td>BF16 AMP</td>
+            <td>接近 FP16</td>
+            <td>低</td>
+            <td class="olive">接近 FP32</td>
+            <td>LLM 训练默认优先项,前提是 GPU 支持 BF16 Tensor Core</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">生产检查项</h3>
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">吞吐</div>
+        <h3>不要只看 wall time</h3>
+        <p>记录 samples/s 或 tokens/s,并确保 batch size、gradient accumulation、dataloader 都一致。AMP 加速如果被数据加载拖住,你看到的 wall time 可能没有明显变化。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">显存</div>
+        <h3>看 peak allocated</h3>
+        <p>用 <code class="inline">torch.cuda.max_memory_allocated()</code> 对比峰值。AMP 会减少 activation / gradient 的字节数,但 optimizer state 仍可能是 FP32,所以整体不一定正好减半。</p>
+      </div>
+      <div class="node">
+        <div class="tag">数值</div>
+        <h3>先短跑再长跑</h3>
+        <p>先比前 100 step loss,再跑完整 epoch 指标。短跑偏离代表 dtype 策略或 scale 有问题;长跑偏离可能是随机性、学习率或优化器超参需要重调。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">日志</div>
+        <h3>把 dtype 写进实验元数据</h3>
+        <p>日志里固定记录:目标 dtype、是否开 TF32、GradScaler 初始值、scale 最小值、是否出现 inf/nan、GPU 型号。否则你以后复现实验会很痛苦。</p>
+      </div>
+    </div>
+
+    <div class="annot">今日交付物:一份 FP32/FP16/BF16 对比表,外加一句结论:在你的 GPU 和模型上,推荐默认 dtype 是什么。</div>
+  </div>
+</section>
+
+<!-- ========== 5. FP8 ========== -->
+<section>
+  <div class="sec-head">
+    <h2>FP8 — H100 时代的下一层混合精度</h2>
+    <div class="count">25 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      FP8 不是"把 AMP 的 dtype 从 FP16 改成 FP8"这么简单。
+      8 位太小,必须额外维护 scale / amax history,
+      把真实数值范围映射进 FP8 可表示区间。
+      这也是为什么 FP8 在生产里通常通过 NVIDIA TransformerEngine 这类库使用,
+      而不是手写一堆 <code class="inline">tensor.to(torch.float8_*)</code>。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 960 390" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FP8 scale 工作流">
+        <text x="480" y="28" text-anchor="middle"
+              font-family="ui-monospace, Menlo, monospace" font-size="12"
+              fill="#87867F" letter-spacing="2" font-weight="600">FP8 TRAINING — dtype + scale + amax history</text>
+
+        <rect x="60" y="70" width="170" height="58" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="145" y="94" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">FP16/BF16 tensor</text>
+        <text x="145" y="114" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">真实训练值</text>
+
+        <line x1="230" y1="99" x2="318" y2="99" stroke="#87867F" stroke-width="2"/>
+        <polygon points="312,94 324,99 312,104" fill="#87867F"/>
+        <text x="274" y="86" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">÷ scale</text>
+
+        <rect x="324" y="70" width="170" height="58" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="409" y="94" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">quantize to FP8</text>
+        <text x="409" y="114" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">E4M3 / E5M2</text>
+
+        <line x1="494" y1="99" x2="582" y2="99" stroke="#87867F" stroke-width="2"/>
+        <polygon points="576,94 588,99 576,104" fill="#87867F"/>
+
+        <rect x="588" y="70" width="170" height="58" rx="5" fill="#141413" stroke="#141413" stroke-width="2"/>
+        <text x="673" y="94" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#FAF9F5">Tensor Core GEMM</text>
+        <text x="673" y="114" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#E3DACC">FP8 输入,FP16/BF16 累加</text>
+
+        <line x1="673" y1="128" x2="673" y2="184" stroke="#87867F" stroke-width="2"/>
+        <polygon points="668,178 673,190 678,178" fill="#87867F"/>
+
+        <rect x="588" y="190" width="170" height="58" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="673" y="214" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">dequantize</text>
+        <text x="673" y="234" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#3D3D3A">× scale</text>
+
+        <line x1="588" y1="219" x2="500" y2="219" stroke="#87867F" stroke-width="2"/>
+        <polygon points="506,214 494,219 506,224" fill="#87867F"/>
+
+        <rect x="286" y="190" width="208" height="58" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="390" y="214" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="14" fill="#141413">update amax history</text>
+        <text x="390" y="234" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">跟踪近期最大绝对值</text>
+
+        <line x1="390" y1="190" x2="390" y2="138" stroke="#D97757" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <polygon points="385,144 390,132 395,144" fill="#D97757"/>
+
+        <line x1="60" y1="292" x2="900" y2="292" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="60" y="320" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="1" font-weight="600">FORMAT CHOICE</text>
+        <text x="60" y="344" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">E4M3:尾数更多,精度较好,范围较小,适合 forward activation / weight。</text>
+        <text x="520" y="344" font-family="system-ui, sans-serif" font-size="12" fill="#3D3D3A">E5M2:指数更多,范围更大,适合 backward gradient。</text>
+      </svg>
+      <div class="archdiag-cap">FIG · FP8 真正的复杂度在 per-tensor/per-channel scale 与 amax history,不是 dtype 名字本身</div>
+    </div>
+
+    <h3 style="margin-top:32px;">TransformerEngine 的使用形状</h3>
+
+<pre class="code"><span class="c"># 概念示例:真实项目需按 TransformerEngine 版本与硬件配置调整</span>
+<span class="k">import</span> torch
+<span class="k">import</span> transformer_engine.pytorch <span class="k">as</span> te
+<span class="k">from</span> transformer_engine.common <span class="k">import</span> recipe
+
+fp8_recipe = recipe.DelayedScaling(
+    margin=<span class="n">0</span>,
+    fp8_format=recipe.Format.HYBRID,  <span class="c"># forward E4M3, backward E5M2</span>
+    amax_history_len=<span class="n">16</span>,
+    amax_compute_algo=<span class="s">"max"</span>,
+)
+
+model = te.Linear(<span class="n">4096</span>, <span class="n">4096</span>).cuda()
+
+<span class="k">with</span> te.fp8_autocast(enabled=<span class="k">True</span>, fp8_recipe=fp8_recipe):
+    y = model(x)
+    loss = y.float().pow(<span class="n">2</span>).mean()</pre>
+
+    <div class="grid grid-2" style="margin-top:24px;">
+      <div class="node accent">
+        <div class="tag clay">适合</div>
+        <h3>大 Transformer 的 Linear/GEMM</h3>
+        <p>FP8 收益主要来自 Linear、Attention projection、MLP projection 这些大 GEMM。模型越大、GEMM 占比越高,收益越明显。小模型或数据瓶颈任务,FP8 可能只增加复杂度。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">不适合</div>
+        <h3>敏感归约与小算子</h3>
+        <p>LayerNorm、Softmax、loss、复杂 mask、采样逻辑通常继续使用 FP16/BF16/FP32。FP8 的正确用法是把高吞吐 GEMM 降下去,不是让全模型所有数都变成 8 位。</p>
+      </div>
+      <div class="node">
+        <div class="tag">验证</div>
+        <h3>精度回归比 FP16 更严格</h3>
+        <p>FP8 需要额外比较收敛曲线、per-layer amax、scale 是否饱和、是否出现大量 clamping。生产上通常先在小规模预训练/微调验证,再扩到大集群。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">硬件</div>
+        <h3>别脱离 GPU 世代谈 FP8</h3>
+        <p>FP8 的现实价值建立在 H100/H200/B200 这类硬件的 Transformer Engine 与 Tensor Core 上。没有对应硬件时,模拟 FP8 往往只会更慢,适合研究不适合提吞吐。</p>
+      </div>
+    </div>
+
+    <div class="annot">FP8 是"AMP 的下一阶":dtype 更小,但需要 scale 系统托底;没有 scale,FP8 只是一台数值事故制造机。</div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">FP16 和 BF16 都是 16 位,为什么 BF16 通常更稳定?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>因为稳定性首先看指数范围。FP16 只有 5 位 exponent,最大有限值约 65504;BF16 有 8 位 exponent,范围和 FP32 基本一致。训练里最怕的是 activation、loss、gradient norm 突然变大或变小,这些都由指数位决定。</p>
+            <p>BF16 的代价是尾数只有 7 位,相邻数间隔更粗。但深度学习训练本来就带噪声,很多模型能接受这点尾数损失。大模型训练里,不 overflow 往往比多几位尾数更重要。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">开 AMP 后 loss 偶尔变 nan,应该先查哪里?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>按顺序查四件事:第一,看 <code>scaler.get_scale()</code> 是否频繁下降,如果是 FP16 overflow;第二,把可疑 loss、softmax、normalization 局部禁用 autocast 强制 FP32;第三,检查学习率和梯度裁剪顺序,特别是 clip 前是否 <code>unscale_</code>;第四,短跑 FP32 baseline,确认不是模型本身就不稳定。</p>
+            <p>不要一上来就把整个 AMP 关掉。更好的调试方式是二分定位哪一段 op 在低精度下不稳,然后只把那一段升回 FP32。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">为什么不直接把模型参数保存成 FP16/BF16 来省一半显存?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>推理可以这么做,训练要小心。训练不仅有参数,还有梯度、optimizer state、master weights。AdamW 的 m/v 状态通常仍需要 FP32 或至少更高精度;如果把所有状态都降到 FP16,长跑很容易积累误差。</p>
+            <p>AMP 的设计是"计算用低精度,关键状态保高精度"。这也是为什么显存不会刚好减半:activation 和 gradient 省了,但 optimizer state 仍然很重。真正想切 optimizer state,要看 ZeRO/FSDP/8-bit optimizer,那是 Day 18 之后的内容。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">TF32、FP16 AMP、BF16 AMP 应该怎么选?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>如果你在 Ampere+ 上跑 FP32 baseline,默认就可能已经吃到 TF32 加速,这是最少改动的选项。想进一步省显存和提吞吐,优先看 BF16 AMP,前提是 GPU 支持 BF16 Tensor Core。旧卡或部署环境常见 FP16,就用 FP16 AMP + GradScaler。</p>
+            <p>粗略规则:A100/H100 训练 LLM 用 BF16;V100/T4/A10 用 FP16 AMP;严格数值对齐或科学计算先关 TF32/AMP 做 baseline。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">FP8 会不会很快取代 BF16?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>不会是简单替代,更像是再加一层。BF16 仍然是稳定、通用、易调的训练默认;FP8 更适合大模型里占主导的 GEMM 路径,并且依赖硬件、库和 scale 策略。生产系统很可能是 FP8 GEMM + BF16/FP16 activation 辅助 + FP32 optimizer state 的多层混合。</p>
+            <p>所以学习顺序也应该是:先懂 BF16/FP16 AMP,再懂 FP8 的 scale 系统。没有前者,直接上 FP8 会很难判断问题来自 dtype、scale、kernel 还是模型本身。</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <h2>复盘问题</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <ol class="review">
+      <li>画出 FP32 / FP16 / BF16 的 sign、exponent、mantissa 位宽,解释为什么 FP16 需要 GradScaler 而 BF16 通常不需要。</li>
+      <li>说明 <code class="inline">autocast</code> 为什么不能理解成"把所有 op 都转成 FP16",并举出三类算子的 dtype 策略:降精度、升 FP32、跟随最宽输入。</li>
+      <li>写出 AMP 训练循环的 5 个关键步骤:scale、backward、unscale、step、update,并说明 gradient clipping 应该插在哪一步。</li>
+      <li>如果 AMP 训练第 20 step 开始出现 nan,设计一个二分排查流程:看哪些日志、禁用哪些局部 autocast、如何和 FP32 baseline 比。</li>
+      <li>解释 FP8 E4M3 / E5M2 的差异,以及为什么 FP8 必须配合 scale / amax history 才能训练。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== CHECKLIST ========== -->
+<section>
+  <div class="sec-head">
+    <h2>今日检查清单</h2>
+    <div class="count">8 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="check">
+      <ul>
+        <li>能解释指数位和尾数位分别控制什么,并用这个视角比较 FP16 / BF16</li>
+        <li>能写出新版 <code class="inline">torch.amp.autocast</code> 与 <code class="inline">torch.amp.GradScaler</code> 的 AMP 训练模板</li>
+        <li>知道 backward 不需要单独包 autocast,只包 forward 和 loss</li>
+        <li>知道 FP16 下 gradient clipping 前必须先 <code class="inline">scaler.unscale_(optimizer)</code></li>
+        <li>能用 <code class="inline">torch.cuda.max_memory_allocated()</code> 对比 FP32 / FP16 / BF16 的显存峰值</li>
+        <li>能用 loss 曲线和 <code class="inline">scaler.get_scale()</code> 判断 AMP 是否健康</li>
+        <li>知道 BF16 是 A100/H100 上训练 LLM 的默认优先项,FP16 更依赖 GradScaler</li>
+        <li>能解释 FP8 为什么需要 scale / amax history,以及 TransformerEngine 大致做了什么</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== READING ========== -->
+<section>
+  <div class="sec-head">
+    <h2>推荐阅读</h2>
+    <div class="count">5 ITEMS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">MUST READ</div>
+        <h3>PyTorch AMP 官方文档</h3>
+        <p>重点看 <code class="inline">torch.amp.autocast</code>、<code class="inline">torch.amp.GradScaler</code>、op eligibility 三块。注意新版 API 已统一到 <code class="inline">torch.amp</code>,旧的 <code class="inline">torch.cuda.amp</code> 只应在维护老代码时出现。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">OFFICIAL</div>
+        <h3>PyTorch Automatic Mixed Precision Examples</h3>
+        <p>官方例子覆盖典型训练循环、gradient clipping、gradient accumulation、多 loss / 多 optimizer 场景。今天的实践模板就是从这些模式抽象出来的。</p>
+      </div>
+      <div class="node">
+        <div class="tag">NVIDIA</div>
+        <h3>Mixed Precision Training Guide</h3>
+        <p>NVIDIA 对 Tensor Core、FP16 accumulation、loss scaling 的解释最直接。适合补硬件视角:为什么矩阵维度对齐、GEMM 大小、累加 dtype 会影响真实吞吐。</p>
+      </div>
+      <div class="node">
+        <div class="tag">FP8</div>
+        <h3>NVIDIA TransformerEngine 文档</h3>
+        <p>学习 FP8 的入口。重点看 delayed scaling、E4M3/E5M2 hybrid format、FP8 autocast、支持的 layer。不要先读论文,先把工程 API 的形状看懂。</p>
+      </div>
+      <div class="node entry">
+        <div class="tag">PAPER</div>
+        <h3>FP8 Formats for Deep Learning</h3>
+        <p>理解 E4M3 / E5M2 为什么这样设计,以及前向和反向为何选择不同格式。读完你会更清楚 FP8 的难点不是位宽,而是动态范围校准。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PREVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <h2>Day 13 预告</h2>
+    <div class="count">NEXT</div>
+  </div>
+  <div class="indent">
+    <div class="node exit">
+      <div class="tag clay">COMING NEXT</div>
+      <h3>torch.compile / TorchDynamo / Inductor — 从 eager 到图编译</h3>
+      <p>今天我们让单个 op 在更合适的 dtype 上跑得更快;明天继续往上看一层:PyTorch 如何把 Python eager 执行捕获成 FX graph,用 guards 保证语义,再交给 Inductor 做融合与代码生成。你会 benchmark 同一个小模型的 eager vs compile,第一次真正看到"图捕获 + 算子融合"带来的端到端收益。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p class="quote">"混合精度不是少用几位数,而是把每一位都用在最值得的位置。"</p>
+  <p class="meta">DAY 12 · AI INFRA 60-DAY ROADMAP</p>
+</footer>
+
+</div>

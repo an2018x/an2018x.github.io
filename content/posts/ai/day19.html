@@ -1,0 +1,1380 @@
+---
+title: "Day 19 · Tensor Parallel"
+date: '2026-06-20'
+draft: false
+description: "深入 Megatron-LM Tensor Parallel:理解列并行与行并行 Linear 的矩阵切分、通信边界、MLP 和 Attention 的 TP 布局;手画 Transformer block 的张量切分图,看懂 tensor_model_parallel_size 如何影响显存、计算与通信。"
+toc: false
+tags:
+  - AI
+  - PyTorch
+  - Distributed
+  - Megatron-LM
+  - Tensor Parallel
+  - Transformer
+---
+
+<style>
+/* ========== Color Tokens ========== */
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --blue:#4F7A92; --gold:#B9964A;
+  --serif: ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:  system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+*{ box-sizing:border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.day19-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+
+/* ========== Typography ========== */
+.day19-wrap .eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.day19-wrap .eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:24px;
+  height:1.5px;
+  background:var(--clay);
+  margin-right:12px;
+  vertical-align:middle;
+}
+.day19-wrap h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(36px, 5.2vw, 58px);
+  letter-spacing:0;
+  line-height:1.08;
+  max-width:18ch;
+  margin:22px 0 30px;
+  color:var(--slate);
+}
+.day19-wrap h1 em{ font-style:italic; color:var(--clay); }
+.day19-wrap h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:27px;
+  letter-spacing:0;
+  margin:0;
+  color:var(--slate);
+}
+.day19-wrap h3{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:19px;
+  letter-spacing:0;
+  margin:0 0 10px;
+  color:var(--slate);
+}
+.day19-wrap .lede{
+  font-size:16.5px;
+  color:var(--g700);
+  max-width:64ch;
+  margin:0 0 32px;
+  line-height:1.65;
+}
+.day19-wrap em{
+  font-style:italic;
+  color:var(--clay-d);
+}
+
+/* ========== Masthead ========== */
+.day19-wrap header.masthead{ padding:80px 0 56px; }
+.day19-wrap .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.day19-wrap .meta-strip strong{
+  color:var(--slate);
+  font-weight:600;
+  margin-right:6px;
+}
+
+/* ========== Section ========== */
+.day19-wrap section{ margin-top:72px; }
+.day19-wrap .indent{ margin-left:50px; }
+.day19-wrap .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:18px;
+  margin-bottom:28px;
+}
+.day19-wrap .sec-head .count{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  padding:3px 12px;
+  background:var(--g100);
+  border-radius:999px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* ========== Visual Blocks ========== */
+.day19-wrap .mindmap,
+.day19-wrap .archdiag{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:36px 28px 32px;
+  margin:0;
+}
+.day19-wrap .mindmap svg,
+.day19-wrap .archdiag svg{
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+}
+.day19-wrap .mindmap-cap,
+.day19-wrap .archdiag-cap{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px dashed var(--g300);
+}
+
+/* ========== Cards ========== */
+.day19-wrap .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(316px, 1fr));
+  gap:20px;
+}
+.day19-wrap .grid-2{ grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); }
+.day19-wrap .grid-3{ grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); }
+.day19-wrap .grid-4{ grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); }
+.day19-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:22px 24px;
+  transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.day19-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.10);
+  border-color:var(--slate);
+}
+.day19-wrap .node.accent{ border-color:var(--clay); }
+.day19-wrap .node.entry{ background:var(--g100); }
+.day19-wrap .node.exit{ background:var(--oat); border-color:var(--clay); }
+.day19-wrap .node.dark{
+  background:var(--slate);
+  border-color:var(--slate);
+  color:var(--ivory);
+}
+.day19-wrap .node.dark .tag,
+.day19-wrap .node.dark p{ color:var(--oat); }
+.day19-wrap .node.dark h3{ color:var(--ivory); }
+.day19-wrap .node .tag{
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  font-weight:600;
+}
+.day19-wrap .node .tag.clay{ color:var(--clay); }
+.day19-wrap .node .tag.blue{ color:var(--blue); }
+.day19-wrap .node p{
+  font-size:13.5px;
+  color:var(--g700);
+  margin:6px 0 0;
+  line-height:1.6;
+}
+
+/* ========== Annotation / Table / Code ========== */
+.day19-wrap .annot{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  position:relative;
+  margin-top:14px;
+  padding-left:44px;
+  letter-spacing:.04em;
+}
+.day19-wrap .annot::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:8px;
+  width:32px;
+  height:1.5px;
+  background:var(--clay);
+}
+.day19-wrap .table-wrap{ overflow-x:auto; }
+.day19-wrap table.compare{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  overflow:hidden;
+}
+.day19-wrap table.compare th,
+.day19-wrap table.compare td{
+  text-align:left;
+  padding:14px 20px;
+  border-bottom:1px solid var(--g200);
+  vertical-align:top;
+}
+.day19-wrap table.compare th{
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+  background:var(--g100);
+  border-bottom:1.5px solid var(--slate);
+}
+.day19-wrap table.compare td:first-child{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:15px;
+  width:20%;
+  color:var(--slate);
+}
+.day19-wrap table.compare tr:last-child td{ border-bottom:none; }
+.day19-wrap table.compare .clay{ color:var(--clay-d); }
+.day19-wrap table.compare .blue{ color:var(--blue); }
+.day19-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+.day19-wrap pre.code{
+  background:var(--slate);
+  color:var(--ivory);
+  font-family:var(--mono);
+  font-size:12.5px;
+  padding:20px 24px;
+  border-radius:8px;
+  overflow-x:auto;
+  line-height:1.65;
+  margin:18px 0;
+}
+.day19-wrap pre.code .c{ color:var(--g500); font-style:italic; }
+.day19-wrap pre.code .k{ color:var(--clay); }
+.day19-wrap pre.code .s{ color:var(--olive); }
+.day19-wrap pre.code .t{ color:#7EC8E3; }
+.day19-wrap pre.code .n{ color:#C4B28A; }
+.day19-wrap pre.code .b{ color:#8CB7C7; }
+.day19-wrap code.inline{
+  font-family:var(--mono);
+  font-size:12.5px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 6px;
+  color:var(--clay-d);
+}
+
+/* ========== Checklist / Review / Q&A ========== */
+.day19-wrap .check{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:8px 24px;
+}
+.day19-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.day19-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative;
+  font-size:14.5px;
+  color:var(--slate);
+}
+.day19-wrap .check li:last-child{ border-bottom:none; }
+.day19-wrap .check li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:16px;
+  width:18px;
+  height:18px;
+  border:1.5px solid var(--g300);
+  border-radius:4px;
+  background:var(--paper);
+}
+.day19-wrap .review{
+  counter-reset:q;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.day19-wrap .review li{
+  counter-increment:q;
+  position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px;
+  color:var(--g700);
+}
+.day19-wrap .review li:last-child{ border-bottom:none; }
+.day19-wrap .review li::before{
+  content:counter(q, decimal-leading-zero);
+  position:absolute;
+  left:0;
+  top:18px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--clay);
+  letter-spacing:.06em;
+  font-weight:600;
+}
+.day19-wrap .qa-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-top:8px;
+}
+.day19-wrap .qa-card{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  overflow:hidden;
+  transition:border-color 150ms ease;
+}
+.day19-wrap .qa-card[open]{ border-color:var(--slate); }
+.day19-wrap .qa-card summary{
+  list-style:none;
+  cursor:pointer;
+  padding:18px 24px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  transition:background 150ms ease;
+}
+.day19-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.day19-wrap .qa-card summary::marker{ display:none; }
+.day19-wrap .qa-card summary:hover{ background:var(--g100); }
+.day19-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.day19-wrap .qa-num{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--clay);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:3px;
+}
+.day19-wrap .qa-q{
+  font-family:var(--serif);
+  font-size:16px;
+  font-weight:500;
+  color:var(--slate);
+  line-height:1.5;
+  flex:1;
+}
+.day19-wrap .qa-toggle{
+  font-family:var(--mono);
+  font-size:18px;
+  color:var(--g500);
+  flex-shrink:0;
+  font-weight:300;
+  line-height:1;
+  margin-top:2px;
+  transition:transform 150ms ease, color 150ms ease;
+}
+.day19-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg);
+  color:var(--clay);
+}
+.day19-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+}
+.day19-wrap .qa-a-label{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--olive);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.day19-wrap .qa-a-body{
+  flex:1;
+  font-size:14.5px;
+  color:var(--g700);
+  line-height:1.7;
+}
+.day19-wrap .qa-a-body p{ margin:0 0 10px; }
+.day19-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.day19-wrap .qa-a-body strong{
+  font-family:var(--serif);
+  font-style:italic;
+  font-weight:500;
+  color:var(--slate);
+}
+.day19-wrap .qa-a-body code{
+  font-family:var(--mono);
+  font-size:13px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 5px;
+  color:var(--clay-d);
+}
+
+/* ========== Footer ========== */
+.day19-wrap footer{
+  margin-top:100px;
+  padding-top:40px;
+  border-top:1px solid var(--g200);
+  text-align:center;
+}
+.day19-wrap footer .quote{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:18px;
+  color:var(--g700);
+  max-width:42ch;
+  margin:0 auto;
+  line-height:1.55;
+}
+.day19-wrap footer .meta{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-top:24px;
+}
+
+@media (max-width:720px){
+  .day19-wrap{ padding:0 22px 90px; }
+  .day19-wrap .indent{ margin-left:0; }
+  .day19-wrap header.masthead{ padding:56px 0 40px; }
+  .day19-wrap section{ margin-top:56px; }
+  .day19-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .day19-wrap .mindmap,
+  .day19-wrap .archdiag{ padding:20px 12px; }
+  .day19-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .day19-wrap .qa-q{ font-size:14.5px; }
+  .day19-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="day19-wrap">
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="eyebrow">DAY 19 · AI INFRA ROADMAP · DISTRIBUTED TRAINING</div>
+  <h1>把一层 Transformer <em>切进多张 GPU</em></h1>
+  <p class="lede">
+    Day 17 的 DDP 是把<strong>完整模型复制到每张 GPU</strong>,Day 18 的 ZeRO 是把模型状态切给数据并行组。
+    今天换一个维度:当单层本身太大,或者一个 GEMM 太重,就要把<strong>层内张量</strong>切开。
+    Tensor Parallel(TP) 的核心是把 Linear 权重矩阵沿列或行切分,让多张 GPU 同时算一层里的不同分片。
+    Megatron-LM 的经典模式是:
+    <code class="inline">ColumnParallelLinear</code> 先把输出 hidden 切开,
+    <code class="inline">RowParallelLinear</code> 再吃这些切开的输入并在结尾做一次 reduce。
+    今天的交付物很明确:能手画 MLP 和 Attention 的 TP 切分图,并能标出每一步的通信。
+  </p>
+  <div class="meta-strip">
+    <span><strong>DURATION</strong> 3 h</span>
+    <span><strong>THEORY</strong> 1.4 h</span>
+    <span><strong>HANDS-ON</strong> 1.1 h</span>
+    <span><strong>REVIEW</strong> 0.5 h</span>
+    <span><strong>STACK</strong> Megatron-LM · PyTorch · NCCL · Transformer</span>
+  </div>
+</header>
+
+<!-- ========== MIND MAP ========== -->
+<section>
+  <div class="sec-head">
+    <h2>思维导图</h2>
+    <div class="count">OVERVIEW</div>
+  </div>
+  <div class="indent">
+    <div class="mindmap">
+      <svg viewBox="0 0 980 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Day 19 Tensor Parallel 思维导图">
+        <rect x="285" y="22" width="410" height="62" rx="5" fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+        <text x="490" y="48" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="16" fill="#141413">DAY 19 · Tensor Parallel</text>
+        <text x="490" y="70" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F" letter-spacing="2">COLUMN · ROW · MLP · ATTENTION · MEGATRON</text>
+
+        <line x1="490" y1="84" x2="490" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="108" x2="858" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="122" y1="108" x2="122" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="367" y1="108" x2="367" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="613" y1="108" x2="613" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+        <line x1="858" y1="108" x2="858" y2="134" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+
+        <rect x="32" y="134" width="180" height="56" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="122" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" letter-spacing="2" font-weight="600">01 · WHY</text>
+        <text x="122" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">为什么要 TP</text>
+
+        <rect x="277" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="367" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#D97757" letter-spacing="2" font-weight="600">02 · LINEAR</text>
+        <text x="367" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">列并行 / 行并行</text>
+
+        <rect x="523" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#141413" stroke-width="2"/>
+        <text x="613" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#D97757" letter-spacing="2" font-weight="600">03 · BLOCK</text>
+        <text x="613" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">MLP / Attention</text>
+
+        <rect x="768" y="134" width="180" height="56" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+        <text x="858" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" letter-spacing="2" font-weight="600">04 · PRACTICE</text>
+        <text x="858" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-weight="500" font-size="15" fill="#141413">手画切分图</text>
+
+        <text x="42" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">层内模型并行</text>
+        <text x="42" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">切参数 / 激活</text>
+        <text x="42" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">降低单卡显存</text>
+        <text x="42" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="58" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">增加通信边界</text>
+
+        <text x="287" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">ColumnParallelLinear</text>
+        <text x="287" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">RowParallelLinear</text>
+        <text x="287" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">all-gather / all-reduce</text>
+        <text x="287" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="303" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">tensor model group</text>
+
+        <text x="533" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">W1 column split</text>
+        <text x="533" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">W2 row split</text>
+        <text x="533" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">QKV head split</text>
+        <text x="533" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="549" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Output projection reduce</text>
+
+        <text x="778" y="222" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="222" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">shape table</text>
+        <text x="778" y="252" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="252" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">communication arrows</text>
+        <text x="778" y="282" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="282" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Megatron flags</text>
+        <text x="778" y="312" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+        <text x="794" y="312" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">TP + DP + PP</text>
+
+        <line x1="32" y1="360" x2="948" y2="360" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="32" y="387" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+        <rect x="32" y="400" width="220" height="34" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="142" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">列/行并行对比表</text>
+        <rect x="268" y="400" width="220" height="34" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="378" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">MLP TP 切分图</text>
+        <rect x="504" y="400" width="220" height="34" rx="5" fill="#FFFFFF" stroke="#87867F" stroke-width="1.5"/>
+        <text x="614" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">Attention TP 切分图</text>
+        <rect x="740" y="400" width="200" height="34" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="840" y="422" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">TP 通信边界清单</text>
+      </svg>
+      <div class="mindmap-cap">FIG · Day 19 全景:先理解层内切分,再掌握 Megatron 的列并行/行并行组合,最后画出 MLP 与 Attention 的通信边界</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 1. WHY TP ========== -->
+<section>
+  <div class="sec-head">
+    <h2>为什么需要 Tensor Parallel</h2>
+    <div class="count">25 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      DDP 解决的是<strong>样本维度</strong>扩展:每张 GPU 都有完整模型,只是处理不同数据。
+      ZeRO/FSDP 解决的是<strong>模型状态</strong>切分:参数、梯度、优化器状态不再完整复制。
+      Tensor Parallel 解决的是另一类问题:
+      <em>单层矩阵本身太大,或单个 GEMM 太重,需要多张 GPU 一起算同一层</em>。
+      对 Transformer 来说,最值得切的是 MLP 的两层大 Linear、Attention 的 QKV projection 和 output projection。
+    </p>
+
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>并行方式</th>
+            <th>切什么</th>
+            <th>减少什么</th>
+            <th>引入什么通信</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Data Parallel</td>
+            <td>batch 维度</td>
+            <td>训练时间,不减少单卡模型显存</td>
+            <td>梯度 AllReduce / ReduceScatter</td>
+          </tr>
+          <tr>
+            <td>ZeRO / FSDP</td>
+            <td>参数、梯度、优化器状态</td>
+            <td>模型状态显存</td>
+            <td>参数 AllGather、梯度 ReduceScatter</td>
+          </tr>
+          <tr>
+            <td class="clay">Tensor Parallel</td>
+            <td>单层权重矩阵和激活 hidden 维度</td>
+            <td>单层参数、激活、中间 GEMM 工作量</td>
+            <td>层内 AllGather / AllReduce / ReduceScatter</td>
+          </tr>
+          <tr>
+            <td>Pipeline Parallel</td>
+            <td>层深度</td>
+            <td>每张 GPU 持有的层数</td>
+            <td>相邻 stage 之间的 activation P2P</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">TP 最适合放在哪里</h3>
+    <div class="grid grid-3">
+      <div class="node accent">
+        <div class="tag clay">大 hidden</div>
+        <h3>4096+ hidden 的大 Linear</h3>
+        <p>Transformer 的 MLP 通常扩展到 <code class="inline">4H</code> 或 SwiGLU 的近似 <code class="inline">8H/3</code>。这两层 Linear 参数和 FLOPs 都很大,沿 hidden 切分收益明显。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">多头注意力</div>
+        <h3>按 attention heads 切</h3>
+        <p>Q/K/V projection 的输出维度天然可以按 head 分片。每张 GPU 处理一部分 heads,local attention 独立完成,直到 output projection 才需要合并。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">代价</div>
+        <h3>TP 吃互联带宽</h3>
+        <p>TP 是层内同步,通信频率比 PP 更高。它最适合放在同一节点 NVLink/NVSwitch 内;跨节点 TP 往往会让网络成为瓶颈,除非硬件互联非常强。</p>
+      </div>
+    </div>
+
+    <div class="annot">一个实用判断:如果问题是"模型副本太多",先想 ZeRO/FSDP;如果问题是"单层本身太大或 GEMM 太重",再想 TP。</div>
+  </div>
+</section>
+
+<!-- ========== 2. COLUMN / ROW ========== -->
+<section>
+  <div class="sec-head">
+    <h2>两块积木:列并行与行并行 Linear</h2>
+    <div class="count">40 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Megatron-LM 的 TP 可以先抽象成一个矩阵乘法:
+      <code class="inline">Y = X A + b</code>。
+      如果把 <code class="inline">A</code> 沿输出维度切,每张 GPU 算一段
+      <code class="inline">Y_i = X A_i</code>,这就是列并行。
+      如果把 <code class="inline">A</code> 沿输入维度切,输入 <code class="inline">X</code>
+      也被切成 <code class="inline">X_i</code>,每张 GPU 算 partial sum,
+      最后 reduce 成完整输出,这就是行并行。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 980 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="列并行与行并行 Linear">
+        <text x="490" y="30" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#87867F" letter-spacing="2" font-weight="600">COLUMN PARALLEL VS ROW PARALLEL LINEAR</text>
+
+        <text x="250" y="70" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#B85C3E" font-weight="600" letter-spacing="1">COLUMN PARALLEL · SPLIT OUTPUT FEATURES</text>
+        <rect x="72" y="100" width="92" height="92" rx="5" fill="#F0EEE6" stroke="#87867F" stroke-width="1.5"/>
+        <text x="118" y="151" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#3D3D3A">X</text>
+        <text x="118" y="210" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">[B,S,H]</text>
+
+        <rect x="210" y="92" width="76" height="108" rx="4" fill="#E3DACC" stroke="#D97757" stroke-width="1.5"/>
+        <rect x="286" y="92" width="76" height="108" rx="4" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="248" y="151" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">A0</text>
+        <text x="324" y="151" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">A1</text>
+        <text x="286" y="218" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">[H, 4H/TP]</text>
+
+        <line x1="164" y1="146" x2="206" y2="146" stroke="#87867F" stroke-width="2"/>
+        <polygon points="202,141 212,146 202,151" fill="#87867F"/>
+        <line x1="362" y1="146" x2="410" y2="146" stroke="#87867F" stroke-width="2"/>
+        <polygon points="406,141 416,146 406,151" fill="#87867F"/>
+
+        <rect x="416" y="100" width="72" height="92" rx="4" fill="#E3DACC" stroke="#D97757" stroke-width="1.5"/>
+        <rect x="488" y="100" width="72" height="92" rx="4" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="452" y="151" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">Y0</text>
+        <text x="524" y="151" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">Y1</text>
+        <text x="488" y="210" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">sharded output</text>
+
+        <path d="M560 146 C610 146, 630 146, 670 146" fill="none" stroke="#D97757" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="620" y="132" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">optional all-gather</text>
+        <rect x="670" y="100" width="140" height="92" rx="5" fill="#FAF9F5" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="740" y="151" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#3D3D3A">Y = [Y0,Y1]</text>
+        <text x="740" y="210" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">if gather_output=True</text>
+
+        <line x1="70" y1="258" x2="910" y2="258" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <text x="250" y="296" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#4F7A92" font-weight="600" letter-spacing="1">ROW PARALLEL · SPLIT INPUT FEATURES</text>
+        <rect x="72" y="326" width="72" height="92" rx="4" fill="#E3DACC" stroke="#4F7A92" stroke-width="1.5"/>
+        <rect x="144" y="326" width="72" height="92" rx="4" fill="#FFFFFF" stroke="#4F7A92" stroke-width="1.5"/>
+        <text x="108" y="377" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">X0</text>
+        <text x="180" y="377" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">X1</text>
+        <text x="144" y="436" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">input already split</text>
+
+        <rect x="272" y="318" width="86" height="108" rx="4" fill="#E3DACC" stroke="#4F7A92" stroke-width="1.5"/>
+        <rect x="358" y="318" width="86" height="108" rx="4" fill="#FFFFFF" stroke="#4F7A92" stroke-width="1.5"/>
+        <text x="315" y="377" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">B0</text>
+        <text x="401" y="377" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">B1</text>
+        <text x="358" y="444" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">[4H/TP, H]</text>
+
+        <line x1="216" y1="372" x2="268" y2="372" stroke="#87867F" stroke-width="2"/>
+        <polygon points="264,367 274,372 264,377" fill="#87867F"/>
+        <line x1="444" y1="372" x2="496" y2="372" stroke="#87867F" stroke-width="2"/>
+        <polygon points="492,367 502,372 492,377" fill="#87867F"/>
+
+        <rect x="502" y="334" width="84" height="76" rx="4" fill="#E3DACC" stroke="#4F7A92" stroke-width="1.5"/>
+        <rect x="604" y="334" width="84" height="76" rx="4" fill="#FFFFFF" stroke="#4F7A92" stroke-width="1.5"/>
+        <text x="544" y="377" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">P0</text>
+        <text x="646" y="377" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">P1</text>
+        <text x="596" y="428" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">partial sums</text>
+
+        <path d="M690 372 C724 372, 740 372, 772 372" fill="none" stroke="#D97757" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="732" y="356" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">all-reduce</text>
+        <rect x="772" y="334" width="138" height="76" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="841" y="377" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#FAF9F5">Y = P0 + P1</text>
+      </svg>
+      <div class="archdiag-cap">FIG · 列并行切输出,可选择是否 all-gather;行并行切输入,最终需要 reduce partial sums</div>
+    </div>
+
+    <h3 style="margin-top:32px;">Megatron 两种 Linear 的语义</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>模块</th>
+            <th>权重切分</th>
+            <th>输入 / 输出</th>
+            <th>通信</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">ColumnParallelLinear</code></td>
+            <td>沿输出维度切: <code class="inline">A = [A_1, ..., A_p]</code></td>
+            <td>每个 rank 读完整输入 <code class="inline">X</code>,输出自己的 <code class="inline">Y_i = X A_i</code></td>
+            <td><code class="inline">gather_output=True</code> 时 all-gather;Megatron MLP 中通常先不 gather,直接交给下一层 RowParallel</td>
+          </tr>
+          <tr>
+            <td><code class="inline">RowParallelLinear</code></td>
+            <td>沿输入维度切:每个 rank 持有 <code class="inline">A_i</code> 的一部分行</td>
+            <td>输入通常已经按 hidden 分片;每个 rank 算 partial output</td>
+            <td>forward 末尾 reduce partial sums,得到完整 hidden 输出;bias 不切分</td>
+          </tr>
+          <tr>
+            <td class="clay">组合技巧</td>
+            <td>第一层 column,第二层 row</td>
+            <td>中间激活保持分片,避免中间 all-gather</td>
+            <td>把通信压到 block 末尾的一次 reduce,这是 Megatron TP 的核心省通信模式</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+<pre class="code"><span class="c"># 伪代码:Megatron-style MLP 的核心形状</span>
+<span class="c"># X: [S, B, H], tensor_model_parallel_size = tp</span>
+
+<span class="c"># 1) 列并行:每张 GPU 算 4H/tp 个 hidden</span>
+Y_i = X @ W1_i + b1_i                 <span class="c"># W1_i: [H, 4H/tp]</span>
+Z_i = gelu(Y_i)                       <span class="c"># activation 在本地做,不通信</span>
+
+<span class="c"># 2) 行并行:输入已经是 Z_i,每张 GPU 算输出 partial sum</span>
+P_i = Z_i @ W2_i                      <span class="c"># W2_i: [4H/tp, H]</span>
+O = all_reduce_sum(P_i) + b2          <span class="c"># O: [S, B, H]</span></pre>
+
+    <div class="annot">最重要的记忆点:Column 的输出是分片,Row 的输入吃分片;两者接在一起,中间非线性不需要通信。</div>
+  </div>
+</section>
+
+<!-- ========== 3. MLP SPLIT ========== -->
+<section>
+  <div class="sec-head">
+    <h2>手画 MLP 的 Tensor Parallel</h2>
+    <div class="count">35 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      以标准 FFN/MLP 为例:
+      <code class="inline">MLP(X) = GELU(X W_up) W_down</code>。
+      Megatron 的设计很漂亮:第一层 <code class="inline">W_up</code> 做列并行,
+      输出的 <code class="inline">4H</code> 中间维度被切成多份;
+      GELU 是逐元素函数,每张 GPU 在本地做;
+      第二层 <code class="inline">W_down</code> 做行并行,用本地中间激活算 partial output,
+      最后一次 AllReduce 得到完整 hidden。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 980 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MLP Tensor Parallel 切分图">
+        <text x="490" y="30" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#87867F" letter-spacing="2" font-weight="600">MLP TENSOR PARALLEL · TP=2</text>
+
+        <rect x="40" y="120" width="92" height="96" rx="5" fill="#F0EEE6" stroke="#87867F" stroke-width="1.5"/>
+        <text x="86" y="172" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#3D3D3A">X</text>
+        <text x="86" y="235" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">[S,B,H]</text>
+
+        <line x1="132" y1="168" x2="178" y2="168" stroke="#87867F" stroke-width="2"/>
+        <polygon points="174,163 184,168 174,173" fill="#87867F"/>
+
+        <rect x="184" y="82" width="112" height="172" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="1.5"/>
+        <rect x="296" y="82" width="112" height="172" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="240" y="158" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">W_up_0</text>
+        <text x="352" y="158" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">W_up_1</text>
+        <text x="296" y="274" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">ColumnParallelLinear · [H, 2H] + [H, 2H]</text>
+
+        <line x1="408" y1="168" x2="454" y2="168" stroke="#87867F" stroke-width="2"/>
+        <polygon points="450,163 460,168 450,173" fill="#87867F"/>
+
+        <rect x="460" y="92" width="84" height="152" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="1.5"/>
+        <rect x="544" y="92" width="84" height="152" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="502" y="154" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">GELU</text>
+        <text x="502" y="174" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">Z0</text>
+        <text x="586" y="154" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">GELU</text>
+        <text x="586" y="174" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">Z1</text>
+        <text x="544" y="264" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">local activation · no communication</text>
+
+        <line x1="628" y1="168" x2="674" y2="168" stroke="#87867F" stroke-width="2"/>
+        <polygon points="670,163 680,168 670,173" fill="#87867F"/>
+
+        <rect x="680" y="102" width="90" height="132" rx="5" fill="#E3DACC" stroke="#4F7A92" stroke-width="1.5"/>
+        <rect x="770" y="102" width="90" height="132" rx="5" fill="#FFFFFF" stroke="#4F7A92" stroke-width="1.5"/>
+        <text x="725" y="158" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">W_down_0</text>
+        <text x="815" y="158" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">W_down_1</text>
+        <text x="770" y="254" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">RowParallelLinear · [2H,H] + [2H,H]</text>
+
+        <path d="M860 168 C888 168, 898 168, 920 168" fill="none" stroke="#D97757" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="896" y="151" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">all-reduce</text>
+        <rect x="888" y="294" width="52" height="52" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="914" y="325" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#FAF9F5">O</text>
+        <text x="914" y="362" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">[S,B,H]</text>
+
+        <rect x="70" y="356" width="760" height="64" rx="6" fill="#F0EEE6" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="92" y="382" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600" letter-spacing="1">DRAWING RULE</text>
+        <text x="92" y="404" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">Column 后输出分片,elementwise 本地做;Row 后 partial sum 必须 all-reduce。标图时把通信箭头画在 Row 的输出边界。</text>
+      </svg>
+      <div class="archdiag-cap">FIG · MLP TP=2:W_up 按列切,中间激活保持分片,W_down 按行切,最后一次 all-reduce 合并输出</div>
+    </div>
+
+    <h3 style="margin-top:32px;">形状表:以 TP=4 为例</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>张量</th>
+            <th>全量形状</th>
+            <th>每个 TP rank 形状</th>
+            <th>通信</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>输入 X</td>
+            <td class="mono">[S, B, H]</td>
+            <td class="mono">[S, B, H]</td>
+            <td>每个 TP rank 需要完整 X。结合 sequence parallel 时会有额外切分,Day21 再展开。</td>
+          </tr>
+          <tr>
+            <td>W_up</td>
+            <td class="mono">[H, 4H]</td>
+            <td class="mono">[H, H]</td>
+            <td>ColumnParallel,forward 通常不 all-gather</td>
+          </tr>
+          <tr>
+            <td>中间激活</td>
+            <td class="mono">[S, B, 4H]</td>
+            <td class="mono">[S, B, H]</td>
+            <td>GELU/SwiGLU/dropout 可本地完成</td>
+          </tr>
+          <tr>
+            <td>W_down</td>
+            <td class="mono">[4H, H]</td>
+            <td class="mono">[H, H]</td>
+            <td>RowParallel,forward 末尾 all-reduce partial output</td>
+          </tr>
+          <tr>
+            <td>输出 O</td>
+            <td class="mono">[S, B, H]</td>
+            <td class="mono">[S, B, H]</td>
+            <td>完整输出供 residual / layernorm / 下一子层使用</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="annot">画 MLP TP 图时,不要漏掉 bias:Column 的 bias 随输出分片切,Row 的 bias 通常不切,在 reduce 后加。</div>
+  </div>
+</section>
+
+<!-- ========== 4. ATTENTION SPLIT ========== -->
+<section>
+  <div class="sec-head">
+    <h2>手画 Attention 的 Tensor Parallel</h2>
+    <div class="count">35 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      Multi-Head Attention 比 MLP 更自然适合 TP:
+      Q/K/V projection 的输出可以按 heads 切分。
+      如果总共有 <code class="inline">num_heads</code> 个头,TP size 是
+      <code class="inline">p</code>,每个 rank 持有
+      <code class="inline">num_heads / p</code> 个头。
+      每个 rank 在本地完成这些头的 attention softmax 和 value 加权,
+      然后 output projection 用 RowParallelLinear 把各 rank 的 head 输出合成完整 hidden。
+    </p>
+
+    <div class="archdiag">
+      <svg viewBox="0 0 980 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Attention Tensor Parallel 切分图">
+        <text x="490" y="30" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#87867F" letter-spacing="2" font-weight="600">ATTENTION TENSOR PARALLEL · SPLIT HEADS</text>
+
+        <rect x="42" y="120" width="88" height="96" rx="5" fill="#F0EEE6" stroke="#87867F" stroke-width="1.5"/>
+        <text x="86" y="172" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#3D3D3A">X</text>
+        <text x="86" y="235" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">[S,B,H]</text>
+
+        <line x1="130" y1="168" x2="172" y2="168" stroke="#87867F" stroke-width="2"/>
+        <polygon points="168,163 178,168 168,173" fill="#87867F"/>
+
+        <rect x="178" y="70" width="130" height="196" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="1.5"/>
+        <rect x="308" y="70" width="130" height="196" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="243" y="145" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">W_qkv_0</text>
+        <text x="243" y="165" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">heads 0..h/2</text>
+        <text x="373" y="145" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">W_qkv_1</text>
+        <text x="373" y="165" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">heads h/2..h</text>
+        <text x="308" y="286" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">ColumnParallel QKV · output heads are sharded</text>
+
+        <line x1="438" y1="168" x2="484" y2="168" stroke="#87867F" stroke-width="2"/>
+        <polygon points="480,163 490,168 480,173" fill="#87867F"/>
+
+        <rect x="490" y="88" width="112" height="160" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="1.5"/>
+        <rect x="602" y="88" width="112" height="160" rx="5" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+        <text x="546" y="136" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">Attention</text>
+        <text x="546" y="156" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">local heads</text>
+        <text x="546" y="178" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">Q0 K0 V0</text>
+        <text x="658" y="136" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#141413">Attention</text>
+        <text x="658" y="156" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">local heads</text>
+        <text x="658" y="178" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#141413">Q1 K1 V1</text>
+        <text x="602" y="268" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">softmax and AV are local per head</text>
+
+        <line x1="714" y1="168" x2="760" y2="168" stroke="#87867F" stroke-width="2"/>
+        <polygon points="756,163 766,168 756,173" fill="#87867F"/>
+
+        <rect x="766" y="100" width="78" height="136" rx="5" fill="#E3DACC" stroke="#4F7A92" stroke-width="1.5"/>
+        <rect x="844" y="100" width="78" height="136" rx="5" fill="#FFFFFF" stroke="#4F7A92" stroke-width="1.5"/>
+        <text x="805" y="160" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">W_o_0</text>
+        <text x="883" y="160" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#141413">W_o_1</text>
+        <text x="844" y="256" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#87867F">RowParallel output projection</text>
+
+        <path d="M848 288 C856 320, 876 336, 910 338" fill="none" stroke="#D97757" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="868" y="317" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#B85C3E">all-reduce</text>
+        <rect x="890" y="344" width="54" height="54" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+        <text x="917" y="376" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#FAF9F5">O</text>
+
+        <rect x="70" y="360" width="750" height="72" rx="6" fill="#F0EEE6" stroke="#D1CFC5" stroke-width="1.5"/>
+        <text x="92" y="385" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" font-weight="600" letter-spacing="1">ATTENTION RULE</text>
+        <text x="92" y="407" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">QKV projection 按 head 分片;attention score / softmax / AV 都在本地 heads 上完成;output projection 行并行后 reduce。</text>
+      </svg>
+      <div class="archdiag-cap">FIG · Attention TP:QKV 按 heads 分片,本地完成 attention,output projection 通过 row parallel 合并回完整 hidden</div>
+    </div>
+
+    <h3 style="margin-top:32px;">Attention 的通信边界</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>位置</th>
+            <th>切分方式</th>
+            <th>是否通信</th>
+            <th>原因</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>QKV projection</td>
+            <td>ColumnParallel,输出 heads 被切开</td>
+            <td>通常不 all-gather</td>
+            <td>每个 attention head 是独立计算单元,分片 heads 可以直接进入本地 attention</td>
+          </tr>
+          <tr>
+            <td>QK^T / softmax / AV</td>
+            <td>每个 rank 处理自己的 heads</td>
+            <td>无 TP 通信</td>
+            <td>head 之间没有依赖;attention mask 通常复制或按序列并行规则处理</td>
+          </tr>
+          <tr>
+            <td>output projection</td>
+            <td>RowParallel,输入 hidden/head 维度已分片</td>
+            <td class="clay">需要 reduce</td>
+            <td>每个 rank 得到的是输出 hidden 的 partial sum,必须合并成完整输出供 residual 使用</td>
+          </tr>
+          <tr>
+            <td>KV cache 推理</td>
+            <td>cache 也按 heads 分片</td>
+            <td>prefill/decode 通信模式不同</td>
+            <td>推理引擎里 TP 影响 KV cache 布局、batching 和跨卡同步,Day30+ 再继续</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+<pre class="code"><span class="c"># 伪代码:Megatron-style attention TP</span>
+<span class="c"># X: [S, B, H], num_heads = A, tp = p</span>
+
+QKV_i = X @ W_qkv_i                   <span class="c"># ColumnParallel, [S,B,3H/p]</span>
+Q_i, K_i, V_i = split_heads(QKV_i)    <span class="c"># each rank owns A/p heads</span>
+
+Context_i = attention(Q_i, K_i, V_i)  <span class="c"># local heads only, no TP communication</span>
+P_i = Context_i @ W_o_i               <span class="c"># RowParallel partial output</span>
+O = all_reduce_sum(P_i) + b_o         <span class="c"># full [S,B,H]</span></pre>
+
+    <div class="annot">画 Attention TP 图时,先按 heads 切 QKV,再问一句:这一段是否需要跨 head 信息?如果不需要,就没有 TP 通信。</div>
+  </div>
+</section>
+
+<!-- ========== 5. COMMUNICATION / MEMORY ========== -->
+<section>
+  <div class="sec-head">
+    <h2>TP 的显存、计算与通信账本</h2>
+    <div class="count">30 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      TP 看起来很美:参数和 GEMM 工作量约按 <code class="inline">1 / tp</code> 分到每张 GPU。
+      但通信也进入了每个 Transformer layer 内部。
+      所以 TP size 不是越大越好:太小放不下层,太大每张 GPU 的 GEMM 变碎、通信比例上升、kernel 利用率下降。
+      这也是为什么实际大模型常把 TP 放在单机高速互联内,再用 PP/DP 扩到多机。
+    </p>
+
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">显存收益</div>
+        <h3>参数和部分激活按 TP 切</h3>
+        <p>Column/Row Parallel 的权重只保存本 rank 分片;MLP 中间激活和 attention heads 也按 TP 分片。对大 hidden 模型,这是单层能否放进 GPU 的关键。</p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">计算收益</div>
+        <h3>大 GEMM 被拆到多卡</h3>
+        <p>每张 GPU 只做部分输出或 partial sum,理论 FLOPs 约按 TP size 分摊。但如果分得太细,每个 GEMM 小到吃不满 Tensor Core,收益会变差。</p>
+      </div>
+      <div class="node">
+        <div class="tag blue">通信代价</div>
+        <h3>每层都有同步点</h3>
+        <p>MLP 和 Attention 的 RowParallel 输出边界都需要 reduce。反向传播中还会出现对应的 all-gather / reduce-scatter / all-reduce。TP 对节点内互联依赖很强。</p>
+      </div>
+      <div class="node dark">
+        <div class="tag">经验法则</div>
+        <h3>TP 先放 NVLink/NVSwitch 内</h3>
+        <p>单机 8 卡常见 TP=2/4/8;跨节点优先用 PP/DP 扩展。TP 跨节点不是不能做,但要非常谨慎地用 profile 和 NCCL 日志验证。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">选择 TP size 的检查表</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>问题</th>
+            <th>判断方法</th>
+            <th>行动</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>单层能否放下?</td>
+            <td>估算最大 Linear 权重 + 激活峰值 + optimizer 状态</td>
+            <td>放不下就提高 TP 或结合 ZeRO/FSDP</td>
+          </tr>
+          <tr>
+            <td>每卡 GEMM 是否太小?</td>
+            <td>看 hidden/tp、heads/tp 是否仍足够大;用 profiler 看 Tensor Core 利用率</td>
+            <td>太小就降低 TP,改用 PP/DP 扩展</td>
+          </tr>
+          <tr>
+            <td>heads 是否能整除?</td>
+            <td><code class="inline">num_attention_heads % tensor_model_parallel_size == 0</code></td>
+            <td>不整除就改 TP size 或模型 head 数</td>
+          </tr>
+          <tr>
+            <td>通信是否拖慢?</td>
+            <td>看 NCCL all-reduce 时间、GPU idle gap、跨节点流量</td>
+            <td>TP 限制在节点内,或启用 sequence parallel / fused comm 优化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 6. MEGATRON CONFIG / PRACTICE ========== -->
+<section>
+  <div class="sec-head">
+    <h2>动手实践:从配置到手画图</h2>
+    <div class="count">45 MIN</div>
+  </div>
+  <div class="indent">
+    <p class="lede">
+      今天不要求完整跑 Megatron 训练,那是 Day22 的任务。
+      今天的重点是能从配置推导出每个 rank 持有哪些权重分片、哪些激活分片、哪些通信边界。
+      你可以用纸画,也可以把下面模板填成 markdown 表。
+    </p>
+
+    <h3>Megatron 关键配置</h3>
+<pre class="code"><span class="c"># 典型 Megatron-LM 配置片段</span>
+torchrun --nproc_per_node=8 pretrain_gpt.py \
+  --tensor-model-parallel-size 4 \
+  --pipeline-model-parallel-size 2 \
+  --num-layers 32 \
+  --hidden-size 4096 \
+  --ffn-hidden-size 16384 \
+  --num-attention-heads 32 \
+  --sequence-parallel \
+  ...
+
+<span class="c"># 解释:</span>
+<span class="c"># 8 GPUs = TP 4 * PP 2 * DP 1</span>
+<span class="c"># 每个 pipeline stage 内有一个 4-GPU tensor parallel group</span>
+<span class="c"># 每个 TP rank 持有 32/4 = 8 个 attention heads</span></pre>
+
+    <h3 style="margin-top:32px;">推导模板</h3>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>项目</th>
+            <th>全量值</th>
+            <th>TP=4 每 rank</th>
+            <th>要画什么</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>hidden size</td>
+            <td class="mono">H = 4096</td>
+            <td class="mono">Column 输出切成 1024 或按具体投影切</td>
+            <td>标出每个 rank 的 hidden shard 范围</td>
+          </tr>
+          <tr>
+            <td>FFN hidden</td>
+            <td class="mono">4H = 16384</td>
+            <td class="mono">4096</td>
+            <td>W_up 四个列分片,W_down 四个行分片</td>
+          </tr>
+          <tr>
+            <td>attention heads</td>
+            <td class="mono">32 heads</td>
+            <td class="mono">8 heads</td>
+            <td>QKV 每 rank 画 8 个 head,本地 attention</td>
+          </tr>
+          <tr>
+            <td>通信边界</td>
+            <td>每个 block 里的 row parallel 输出</td>
+            <td>每个 TP group 内 collective</td>
+            <td>在 MLP output 和 attention output 处画 AllReduce 箭头</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px;">小型教学模拟:不用 Megatron 也能理解</h3>
+<pre class="code"><span class="c"># 这是单进程 shape 模拟,帮助你检查列切/行切的数学等价性</span>
+<span class="k">import</span> torch
+
+torch.manual_seed(<span class="n">0</span>)
+B, S, H, TP = <span class="n">2</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">2</span>
+X = torch.randn(B, S, H)
+W1 = torch.randn(H, <span class="n">4</span> * H)
+W2 = torch.randn(<span class="n">4</span> * H, H)
+
+<span class="c"># eager full MLP</span>
+full = torch.relu(X @ W1) @ W2
+
+<span class="c"># ColumnParallel W1: split output dim</span>
+W1_parts = W1.chunk(TP, dim=<span class="n">1</span>)
+Z_parts = [torch.relu(X @ w) <span class="k">for</span> w <span class="k">in</span> W1_parts]
+
+<span class="c"># RowParallel W2: split input dim, then reduce partial sums</span>
+W2_parts = W2.chunk(TP, dim=<span class="n">0</span>)
+partials = [z @ w <span class="k">for</span> z, w <span class="k">in</span> zip(Z_parts, W2_parts)]
+tp_out = sum(partials)                 <span class="c"># distributed version = all_reduce_sum</span>
+
+torch.testing.assert_close(tp_out, full)
+print(<span class="s">"TP math matches full MLP"</span>)</pre>
+
+    <h3 style="margin-top:32px;">交付物检查清单</h3>
+    <div class="check">
+      <ul>
+        <li>画出 <code class="inline">ColumnParallelLinear</code> 的权重切分、输出分片和可选 all-gather。</li>
+        <li>画出 <code class="inline">RowParallelLinear</code> 的输入分片、partial sum 和 all-reduce。</li>
+        <li>画出 MLP: W_up column split, GELU local, W_down row split, output all-reduce。</li>
+        <li>画出 Attention: QKV 按 heads column split, attention local, output projection row split, output all-reduce。</li>
+        <li>给定 <code class="inline">hidden=4096</code>、<code class="inline">heads=32</code>、<code class="inline">TP=4</code>,能写出每 rank 的 head 数和 FFN shard 大小。</li>
+        <li>写一句 TP size 选择结论:为什么它通常适合放在单机 NVLink/NVSwitch 内。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q/A ========== -->
+<section>
+  <div class="sec-head">
+    <h2>常见疑问</h2>
+    <div class="count">5 QUESTIONS</div>
+  </div>
+  <div class="indent">
+    <div class="qa-grid">
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q1</span>
+          <span class="qa-q">为什么 Megatron MLP 要用 Column 后接 Row,而不是两层都 all-gather?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>因为第一层 ColumnParallel 的输出正好是第二层 RowParallel 需要的分片输入。中间 GELU/SwiGLU 是逐元素操作,不需要完整 <code>4H</code> 激活。这样可以省掉一个很大的中间 all-gather,只在 block 输出边界做一次 reduce。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q2</span>
+          <span class="qa-q">Attention 里为什么可以按 head 切?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>多头注意力的每个 head 独立计算自己的 QK softmax 和 AV,head 之间在 output projection 前没有数据依赖。因此 QKV projection 的输出可以按 head 分给不同 TP rank,每个 rank 本地完成一部分 heads,最后通过 output projection 合并。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q3</span>
+          <span class="qa-q">Tensor Parallel 和 ZeRO/FSDP 能一起用吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>能,而且大模型训练经常这么做。TP 在层内切大矩阵,PP 按层深度切 stage,DP/FSDP/ZeRO 在数据并行组内切模型状态。组合时要清楚每个 process group 的维度:TP group 内做层内通信,DP group 内做梯度/参数状态同步。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q4</span>
+          <span class="qa-q">TP size 越大越好吗?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>不是。TP size 增大后,单卡参数和计算下降,但每层通信更重,每个 GEMM 也更小。小 GEMM 可能吃不满 Tensor Core,通信还会占更多比例。经验上先让 TP 满足单层显存和大 GEMM 分摊需求,再用 PP/DP 扩展全局 GPU 数。</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qa-card">
+        <summary>
+          <span class="qa-num">Q5</span>
+          <span class="qa-q">为什么常说 TP 适合节点内,不适合跨节点?</span>
+          <span class="qa-toggle">+</span>
+        </summary>
+        <div class="qa-a">
+          <span class="qa-a-label">ANS</span>
+          <div class="qa-a-body">
+            <p>因为 TP 的 collective 在每层内部频繁发生,对延迟和带宽都敏感。节点内 NVLink/NVSwitch 通常能承受这种高频通信;跨节点网络即使有 IB/RDMA,延迟和带宽也更容易成为瓶颈。跨节点更常用 PP/DP,通信频率和数据形态更适合网络层。</p>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEW ========== -->
+<section>
+  <div class="sec-head">
+    <h2>复盘问题</h2>
+    <div class="count">REVIEW</div>
+  </div>
+  <div class="indent">
+    <ol class="review">
+      <li>Tensor Parallel 和 Data Parallel 分别切的是哪个维度?</li>
+      <li><code class="inline">ColumnParallelLinear</code> 为什么切输出维度?它什么时候需要 all-gather?</li>
+      <li><code class="inline">RowParallelLinear</code> 为什么需要 reduce partial sums?</li>
+      <li>Megatron MLP 为什么可以把中间激活保持为分片状态?</li>
+      <li>Attention 的 QKV projection 为什么可以按 heads 切?</li>
+      <li>给定 <code class="inline">num_heads=40</code>,哪些 TP size 是合法的?为什么?</li>
+      <li>TP size 过大时,性能可能从哪里掉下来?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== REFERENCES ========== -->
+<section>
+  <div class="sec-head">
+    <h2>参考资料</h2>
+    <div class="count">OFFICIAL DOCS</div>
+  </div>
+  <div class="indent">
+    <div class="grid grid-2">
+      <div class="node accent">
+        <div class="tag clay">PAPER</div>
+        <h3>Megatron-LM Paper</h3>
+        <p>Megatron-LM 原始论文,提出高效的层内模型并行方法,并说明 MLP 与 Attention 的切分方式。<br><a href="https://arxiv.org/abs/1909.08053" style="color:#B85C3E;text-decoration:underline;">arxiv.org · Megatron-LM</a></p>
+      </div>
+      <div class="node accent">
+        <div class="tag clay">NVIDIA</div>
+        <h3>Megatron Core Parallelism Guide</h3>
+        <p>NVIDIA 官方 Megatron Core 并行策略说明,介绍 TP/PP/DP/CP/EP 的适用场景和配置。<br><a href="https://docs.nvidia.com/megatron-core/developer-guide/0.16.0/user-guide/parallelism-guide.html" style="color:#B85C3E;text-decoration:underline;">docs.nvidia.com · Parallelism Guide</a></p>
+      </div>
+      <div class="node">
+        <div class="tag blue">API</div>
+        <h3>ColumnParallelLinear / RowParallelLinear</h3>
+        <p>Megatron Core API 文档,定义列并行与行并行 Linear 的权重切分、输出 gather 和输入分片语义。<br><a href="https://docs.nvidia.com/megatron-core/developer-guide/0.15.0/apidocs/core/core.tensor_parallel.layers.html" style="color:#B85C3E;text-decoration:underline;">docs.nvidia.com · tensor_parallel.layers</a></p>
+      </div>
+      <div class="node dark">
+        <div class="tag">PYTORCH</div>
+        <h3>PyTorch Tensor Parallel Tutorial</h3>
+        <p>PyTorch 官方 Tensor Parallel 教程,展示如何把 Transformer-like 模型用 TP 与 FSDP 组合训练。<br><a href="https://docs.pytorch.org/tutorials/intermediate/TP_tutorial.html" style="color:#D97757;text-decoration:underline;">docs.pytorch.org · TP tutorial</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="quote">Tensor Parallel 的精髓,不是把矩阵随便切开,而是把通信留到最少、最值得的位置。</p>
+  <p class="meta">DAY 19 COMPLETE · NEXT: PIPELINE PARALLEL</p>
+</footer>
+
+</div>
