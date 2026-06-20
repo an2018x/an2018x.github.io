@@ -1,0 +1,1255 @@
+---
+title: "Day 35 · 量化 (1)：权重量化"
+date: '2026-06-21T00:00:00+08:00'
+draft: false
+description: "学习 LLM 推理中的权重量化:理解 INT8 / INT4、per-channel / group-wise scale、GPTQ 与 AWQ 的核心思想,并用 AutoGPTQ 或 llama.cpp 完成一次模型量化与评估。"
+toc: false
+tags:
+  - AI
+  - LLM
+  - Inference
+  - Quantization
+  - GPTQ
+  - AWQ
+  - AutoGPTQ
+  - llama.cpp
+---
+
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --blue:#4F7A92; --gold:#B9964A; --teal:#3C8D80;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.day35-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+.day35-wrap .eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.day35-wrap .eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:24px;
+  height:1.5px;
+  background:var(--gold);
+  margin-right:12px;
+  vertical-align:middle;
+}
+.day35-wrap h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(36px,5.2vw,58px);
+  letter-spacing:0;
+  line-height:1.08;
+  max-width:18ch;
+  margin:22px 0 30px;
+  color:var(--slate);
+}
+.day35-wrap h1 em{ font-style:italic; color:var(--gold); }
+.day35-wrap h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:27px;
+  letter-spacing:0;
+  margin:0;
+  color:var(--slate);
+}
+.day35-wrap h3{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:19px;
+  letter-spacing:0;
+  margin:0 0 10px;
+  color:var(--slate);
+}
+.day35-wrap .lede{
+  font-size:16.5px;
+  color:var(--g700);
+  max-width:70ch;
+  margin:0 0 32px;
+  line-height:1.65;
+}
+.day35-wrap em{ font-style:italic; color:var(--clay-d); }
+.day35-wrap a{ color:var(--clay-d); text-decoration-thickness:1px; text-underline-offset:3px; }
+.day35-wrap header.masthead{ padding:80px 0 56px; }
+.day35-wrap .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.day35-wrap .meta-strip strong{ color:var(--slate); font-weight:600; margin-right:6px; }
+.day35-wrap section{ margin-top:72px; }
+.day35-wrap .indent{ margin-left:50px; }
+.day35-wrap .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:18px;
+  margin-bottom:28px;
+}
+.day35-wrap .sec-head .count{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  padding:3px 12px;
+  background:var(--g100);
+  border-radius:999px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.day35-wrap .mindmap,.day35-wrap .diagram{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:36px 28px 32px;
+  margin:0;
+}
+.day35-wrap .mindmap svg,.day35-wrap .diagram svg{
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+}
+.day35-wrap .cap{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px dashed var(--g300);
+}
+.day35-wrap .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(316px,1fr));
+  gap:20px;
+}
+.day35-wrap .grid-2{ grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); }
+.day35-wrap .grid-3{ grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); }
+.day35-wrap .grid-4{ grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); }
+.day35-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:22px 24px;
+  transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease;
+}
+.day35-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.1);
+  border-color:var(--slate);
+}
+.day35-wrap .node.accent{ border-color:var(--clay); }
+.day35-wrap .node.blue{ border-color:var(--blue); }
+.day35-wrap .node.gold{ border-color:var(--gold); }
+.day35-wrap .node.teal{ border-color:var(--teal); }
+.day35-wrap .node.entry{ background:var(--g100); }
+.day35-wrap .node.exit{ background:var(--oat); border-color:var(--gold); }
+.day35-wrap .node.dark{
+  background:var(--slate);
+  border-color:var(--slate);
+  color:var(--ivory);
+}
+.day35-wrap .node.dark h3{ color:var(--ivory); }
+.day35-wrap .node.dark p,.day35-wrap .node.dark .tag{ color:var(--oat); }
+.day35-wrap .node .tag{
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  font-weight:600;
+}
+.day35-wrap .node .tag.clay{ color:var(--clay); }
+.day35-wrap .node .tag.blue{ color:var(--blue); }
+.day35-wrap .node .tag.gold{ color:var(--gold); }
+.day35-wrap .node .tag.teal{ color:var(--teal); }
+.day35-wrap .node p{
+  font-size:13.5px;
+  color:var(--g700);
+  margin:6px 0 0;
+  line-height:1.6;
+}
+.day35-wrap .annot{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  position:relative;
+  margin-top:14px;
+  padding-left:44px;
+  letter-spacing:.04em;
+}
+.day35-wrap .annot::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:8px;
+  width:32px;
+  height:1.5px;
+  background:var(--gold);
+}
+.day35-wrap .table-wrap{ overflow-x:auto; }
+.day35-wrap table.compare{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  overflow:hidden;
+}
+.day35-wrap table.compare th,.day35-wrap table.compare td{
+  text-align:left;
+  padding:14px 20px;
+  border-bottom:1px solid var(--g200);
+  vertical-align:top;
+}
+.day35-wrap table.compare th{
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+  background:var(--g100);
+  border-bottom:1.5px solid var(--slate);
+}
+.day35-wrap table.compare td:first-child{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:15px;
+  width:20%;
+  color:var(--slate);
+}
+.day35-wrap table.compare tr:last-child td{ border-bottom:none; }
+.day35-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+.day35-wrap table.compare .gold{ color:var(--gold); }
+.day35-wrap table.compare .clay{ color:var(--clay-d); }
+.day35-wrap table.compare .blue{ color:var(--blue); }
+.day35-wrap table.compare .teal{ color:var(--teal); }
+.day35-wrap code.inline{
+  font-family:var(--mono);
+  font-size:12.5px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 6px;
+  color:var(--clay-d);
+}
+.day35-wrap pre.code{
+  background:var(--slate);
+  color:var(--ivory);
+  font-family:var(--mono);
+  font-size:12.5px;
+  padding:20px 24px;
+  border-radius:8px;
+  overflow-x:auto;
+  line-height:1.65;
+  margin:18px 0;
+}
+.day35-wrap pre.code .c{ color:#9C9A91; font-style:italic; }
+.day35-wrap pre.code .k{ color:#E39A7F; }
+.day35-wrap pre.code .s{ color:#A7B984; }
+.day35-wrap pre.code .n{ color:#D8C98D; }
+.day35-wrap .formula{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+  gap:18px;
+  margin-top:18px;
+}
+.day35-wrap .formula .box{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:22px 24px;
+}
+.day35-wrap .formula .math{
+  font-family:var(--mono);
+  font-size:14px;
+  color:var(--slate);
+  word-break:break-word;
+}
+.day35-wrap .formula p{
+  color:var(--g700);
+  font-size:13.5px;
+  margin:10px 0 0;
+}
+.day35-wrap .steps{
+  counter-reset:step;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+.day35-wrap .step{
+  counter-increment:step;
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:20px 20px 20px 56px;
+  position:relative;
+}
+.day35-wrap .step::before{
+  content:counter(step,decimal-leading-zero);
+  position:absolute;
+  left:20px;
+  top:22px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--gold);
+  font-weight:700;
+  letter-spacing:.08em;
+}
+.day35-wrap .step h3{ font-size:16px; }
+.day35-wrap .step p{ font-size:13.5px; color:var(--g700); margin:6px 0 0; }
+.day35-wrap .qa-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-top:8px;
+}
+.day35-wrap .qa-card{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  overflow:hidden;
+  transition:border-color 150ms ease;
+}
+.day35-wrap .qa-card[open]{ border-color:var(--slate); }
+.day35-wrap .qa-card summary{
+  list-style:none;
+  cursor:pointer;
+  padding:18px 24px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  transition:background 150ms ease;
+}
+.day35-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.day35-wrap .qa-card summary::marker{ display:none; }
+.day35-wrap .qa-card summary:hover{ background:var(--g100); }
+.day35-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.day35-wrap .qa-num{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--gold);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:3px;
+}
+.day35-wrap .qa-q{
+  font-family:var(--serif);
+  font-size:16px;
+  font-weight:500;
+  color:var(--slate);
+  line-height:1.5;
+  flex:1;
+}
+.day35-wrap .qa-toggle{
+  font-family:var(--mono);
+  font-size:18px;
+  color:var(--g500);
+  flex-shrink:0;
+  font-weight:300;
+  line-height:1;
+  margin-top:2px;
+  transition:transform 150ms ease,color 150ms ease;
+}
+.day35-wrap .qa-card[open] .qa-toggle{ transform:rotate(45deg); color:var(--gold); }
+.day35-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+}
+.day35-wrap .qa-a-label{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--olive);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.day35-wrap .qa-a-body{
+  flex:1;
+  font-size:14.5px;
+  color:var(--g700);
+  line-height:1.7;
+}
+.day35-wrap .qa-a-body p{ margin:0 0 10px; }
+.day35-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.day35-wrap .check{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:8px 24px;
+}
+.day35-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.day35-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative;
+  font-size:14.5px;
+  color:var(--slate);
+}
+.day35-wrap .check li:last-child{ border-bottom:none; }
+.day35-wrap .check li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:16px;
+  width:18px;
+  height:18px;
+  border:1.5px solid var(--g300);
+  border-radius:4px;
+  background:var(--paper);
+}
+.day35-wrap .review{
+  counter-reset:q;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.day35-wrap .review li{
+  counter-increment:q;
+  position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px;
+  color:var(--g700);
+}
+.day35-wrap .review li:last-child{ border-bottom:none; }
+.day35-wrap .review li::before{
+  content:counter(q,decimal-leading-zero);
+  position:absolute;
+  left:0;
+  top:18px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--gold);
+  letter-spacing:.06em;
+  font-weight:600;
+}
+.day35-wrap footer{
+  margin-top:100px;
+  padding-top:40px;
+  border-top:1px solid var(--g200);
+  text-align:center;
+}
+.day35-wrap footer .quote{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:18px;
+  color:var(--g700);
+  max-width:48ch;
+  margin:0 auto;
+  line-height:1.55;
+}
+.day35-wrap footer .meta{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-top:24px;
+}
+@media(max-width:720px){
+  .day35-wrap{ padding:0 22px 90px; }
+  .day35-wrap .indent{ margin-left:0; }
+  .day35-wrap header.masthead{ padding:56px 0 40px; }
+  .day35-wrap section{ margin-top:56px; }
+  .day35-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .day35-wrap .mindmap,.day35-wrap .diagram{ padding:20px 12px; }
+  .day35-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .day35-wrap .qa-q{ font-size:14.5px; }
+  .day35-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="day35-wrap">
+  <header class="masthead">
+    <div class="eyebrow">DAY 35 · AI INFRA ROADMAP · 60 DAYS</div>
+    <h1>把模型权重压进 <em>4 bit</em></h1>
+    <p class="lede">Day 31-34 讨论了 serving 系统如何管理 KV Cache、调度请求和复用前缀。
+      Day 35 切到另一条推理优化主线:<strong>权重量化</strong>。
+      目标不是让模型“变聪明”,而是把模型权重从 FP16/BF16 压到 INT8/INT4,
+      让单卡能放下更大的模型,让内存带宽压力下降,并在有合适 kernel 时提升吞吐。
+      今天重点理解 <strong>INT8 / INT4</strong>、<strong>GPTQ</strong>、<strong>AWQ</strong>,
+      最后用 AutoGPTQ 或 llama.cpp 完成一次可复现的量化与评估。</p>
+    <div class="meta-strip">
+      <span><strong>DURATION</strong> 3 h</span>
+      <span><strong>THEORY</strong> 1.3 h</span>
+      <span><strong>HANDS-ON</strong> 1.3 h</span>
+      <span><strong>METHODS</strong> INT8 · INT4 · GPTQ · AWQ</span>
+      <span><strong>OUTPUT</strong> quantized model · eval table</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <h2>思维导图</h2>
+      <div class="count">OVERVIEW</div>
+    </div>
+    <div class="indent">
+      <div class="mindmap">
+        <svg viewBox="0 0 980 500" role="img" aria-label="Day 35 权重量化思维导图">
+          <rect x="278" y="20" width="424" height="62" rx="5" fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+          <text x="490" y="46" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="16" font-weight="500" fill="#141413">DAY 35 · Weight Quantization</text>
+          <text x="490" y="68" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F" letter-spacing="2">INT8 · INT4 · GPTQ · AWQ · GGUF</text>
+
+          <line x1="490" y1="82" x2="490" y2="108" stroke="#87867F" stroke-width="2"/>
+          <line x1="122" y1="108" x2="858" y2="108" stroke="#87867F" stroke-width="2"/>
+          <line x1="122" y1="108" x2="122" y2="134" stroke="#87867F" stroke-width="2"/>
+          <line x1="367" y1="108" x2="367" y2="134" stroke="#87867F" stroke-width="2"/>
+          <line x1="613" y1="108" x2="613" y2="134" stroke="#87867F" stroke-width="2"/>
+          <line x1="858" y1="108" x2="858" y2="134" stroke="#87867F" stroke-width="2"/>
+
+          <rect x="32" y="134" width="180" height="56" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+          <text x="122" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" letter-spacing="2" font-weight="600">01 · WHY</text>
+          <text x="122" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#141413">显存与带宽</text>
+
+          <rect x="277" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#B9964A" stroke-width="2"/>
+          <text x="367" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B9964A" letter-spacing="2" font-weight="600">02 · BASICS</text>
+          <text x="367" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#141413">scale / zero point</text>
+
+          <rect x="523" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#4F7A92" stroke-width="2"/>
+          <text x="613" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#4F7A92" letter-spacing="2" font-weight="600">03 · METHODS</text>
+          <text x="613" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#141413">GPTQ / AWQ</text>
+
+          <rect x="768" y="134" width="180" height="56" rx="5" fill="#141413" stroke="#141413" stroke-width="2"/>
+          <text x="858" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#E3DACC" letter-spacing="2" font-weight="600">04 · PRACTICE</text>
+          <text x="858" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#FAF9F5">量化与评估</text>
+
+          <text x="42" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">权重占用下降</text>
+          <text x="42" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">load / swap 更轻</text>
+          <text x="42" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">显存留给 KV cache</text>
+          <text x="42" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">速度取决于 kernel</text>
+
+          <text x="287" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#B9964A">·</text>
+          <text x="303" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">symmetric / asymmetric</text>
+          <text x="287" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#B9964A">·</text>
+          <text x="303" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">per-channel</text>
+          <text x="287" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#B9964A">·</text>
+          <text x="303" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">group-wise</text>
+          <text x="287" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#B9964A">·</text>
+          <text x="303" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">校准数据</text>
+
+          <text x="533" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="549" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">GPTQ:近似二阶</text>
+          <text x="533" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="549" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">逐层重构误差</text>
+          <text x="533" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="549" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">AWQ:激活感知</text>
+          <text x="533" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="549" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">保护 salient channels</text>
+
+          <text x="778" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">AutoGPTQ</text>
+          <text x="778" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">llama.cpp GGUF</text>
+          <text x="778" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">perplexity / task eval</text>
+          <text x="778" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">latency / memory</text>
+
+          <line x1="32" y1="370" x2="948" y2="370" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="32" y="397" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+          <rect x="32" y="410" width="210" height="34" rx="5" fill="#FFF" stroke="#D97757" stroke-width="1.5"/>
+          <text x="137" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">量化误差笔记</text>
+          <rect x="262" y="410" width="220" height="34" rx="5" fill="#FFF" stroke="#B9964A" stroke-width="1.5"/>
+          <text x="372" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">INT4 / INT8 对照表</text>
+          <rect x="502" y="410" width="220" height="34" rx="5" fill="#FFF" stroke="#4F7A92" stroke-width="1.5"/>
+          <text x="612" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">量化脚本</text>
+          <rect x="742" y="410" width="206" height="34" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+          <text x="845" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">评估报告</text>
+        </svg>
+        <div class="cap">FIG · Day 35 全景:权重量化先压模型体积,再用评估确认质量与性能收益</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>为什么先做权重量化</h2>
+      <div class="count">25 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">推理时,模型权重通常是最大的一块静态显存。
+        对一个 7B 模型,FP16 权重大约 14GB;如果权重压到 4 bit,理论权重主体约 3.5GB,
+        再加上 scale、zero point、packing metadata 和运行时 buffer。
+        这会直接影响能否单卡加载、能否留下更多显存给 KV Cache,以及 decode 阶段读权重时的带宽压力。</p>
+
+      <div class="formula">
+        <div class="box">
+          <div class="math">FP16 size ≈ params · 2 bytes</div>
+          <p>7B 权重主体约 14GB,13B 约 26GB,70B 约 140GB。实际还要算 tokenizer、buffer 和框架开销。</p>
+        </div>
+        <div class="box">
+          <div class="math">INT4 size ≈ params · 0.5 bytes + scales</div>
+          <p>4 bit 不是“精确四分之一总显存”,因为每组权重还需要 scale / zero point 等元数据。</p>
+        </div>
+        <div class="box">
+          <div class="math">speedup = memory saving × kernel support</div>
+          <p>量化文件变小不等于一定更快。若 kernel 需要频繁反量化或没有 Tensor Core / SIMD 优化,收益会被吃掉。</p>
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:24px">
+        <div class="node gold">
+          <div class="tag gold">容量收益</div>
+          <h3>更大模型放进同一张卡</h3>
+          <p>权重量化最直接的收益是降低模型常驻显存,让 7B/13B/34B 在更小设备上运行。</p>
+        </div>
+        <div class="node teal">
+          <div class="tag teal">吞吐收益</div>
+          <h3>decode 更少搬权重</h3>
+          <p>decode 每步 batch 小、读权重频繁,低 bit 权重可降低内存带宽压力,前提是 kernel 真的高效。</p>
+        </div>
+        <div class="node accent">
+          <div class="tag clay">质量风险</div>
+          <h3>低 bit 会引入误差</h3>
+          <p>量化会改变线性层输出。校准集、group size、保留哪些层高精度,都会影响 perplexity 和下游任务。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>INT8 / INT4 基础</h2>
+      <div class="count">40 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">量化的基本动作是把浮点权重映射到整数格点。
+        反推理时,整数权重需要和 scale 一起恢复为近似浮点值,或在 mixed-precision kernel 中边乘边反量化。
+        LLM 权重量化常见的是 weight-only quantization:权重低 bit 存储,激活仍用 FP16/BF16。</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 960 360" role="img" aria-label="权重量化流程图">
+          <rect x="44" y="52" width="872" height="238" rx="6" fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+          <text x="64" y="82" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="1" font-weight="600">WEIGHT-ONLY QUANTIZATION PIPELINE</text>
+
+          <rect x="82" y="128" width="176" height="86" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+          <text x="170" y="158" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="16" fill="#141413">FP16 / BF16 W</text>
+          <text x="170" y="184" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#3D3D3A">float weights</text>
+
+          <line x1="258" y1="171" x2="346" y2="171" stroke="#B9964A" stroke-width="2"/>
+          <polygon points="338,163 354,171 338,179" fill="#B9964A"/>
+          <rect x="356" y="128" width="190" height="86" rx="5" fill="#F0EEE6" stroke="#B9964A" stroke-width="2"/>
+          <text x="451" y="154" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="16" fill="#141413">calibrate group</text>
+          <text x="451" y="180" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#3D3D3A">scale · zero point · group size</text>
+
+          <line x1="546" y1="171" x2="636" y2="171" stroke="#B9964A" stroke-width="2"/>
+          <polygon points="628,163 644,171 628,179" fill="#B9964A"/>
+          <rect x="646" y="128" width="206" height="86" rx="5" fill="#141413" stroke="#141413" stroke-width="2"/>
+          <text x="749" y="154" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="16" fill="#FAF9F5">packed INT4 / INT8</text>
+          <text x="749" y="180" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#E3DACC">weights + scales</text>
+
+          <text x="480" y="254" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#3D3D3A">runtime: activation(fp16/bf16) × dequantized weight ≈ original linear output</text>
+          <text x="480" y="330" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="1">质量来自误差控制,速度来自高效 packing 与 mixed precision kernel</text>
+        </svg>
+        <div class="cap">FIG · 权重量化不是只改文件后缀,而是 scale、packing 与 kernel 的组合</div>
+      </div>
+
+      <div class="formula">
+        <div class="box">
+          <div class="math">q = clamp(round(w / s) + z, qmin, qmax)</div>
+          <p>非对称量化带 zero point。适合范围不以 0 为中心的分布,但硬件实现可能更复杂。</p>
+        </div>
+        <div class="box">
+          <div class="math">w_hat = s · (q - z)</div>
+          <p>反量化后的权重近似原权重。量化误差会通过线性层传到 logits。</p>
+        </div>
+        <div class="box">
+          <div class="math">group-wise: each group owns scale</div>
+          <p>group size 越小,scale 越细,质量通常更好;但 metadata 更多,packing / kernel 也更复杂。</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:32px">toy symmetric quantization</h3>
+      <pre class="code"><span class="k">import</span> torch
+
+<span class="k">def</span> quantize_symmetric(x, bits=<span class="n">4</span>, group_size=<span class="n">128</span>):
+    qmax = <span class="n">2</span> ** (bits - <span class="n">1</span>) - <span class="n">1</span>
+    qmin = -<span class="n">2</span> ** (bits - <span class="n">1</span>)
+    flat = x.flatten()
+    qs, scales = [], []
+
+    <span class="k">for</span> start <span class="k">in</span> range(<span class="n">0</span>, flat.numel(), group_size):
+        g = flat[start:start + group_size]
+        scale = g.abs().max().clamp_min(<span class="n">1e-8</span>) / qmax
+        q = torch.round(g / scale).clamp(qmin, qmax).to(torch.int8)
+        qs.append(q)
+        scales.append(scale)
+
+    <span class="k">return</span> torch.cat(qs), torch.stack(scales)
+
+<span class="k">def</span> dequantize_symmetric(q, scales, shape, group_size=<span class="n">128</span>):
+    chunks = []
+    <span class="k">for</span> i, scale <span class="k">in</span> enumerate(scales):
+        chunks.append(q[i * group_size:(i + <span class="n">1</span>) * group_size].float() * scale)
+    <span class="k">return</span> torch.cat(chunks).reshape(shape)</pre>
+
+      <div class="table-wrap" style="margin-top:24px">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>方式</th>
+              <th>特点</th>
+              <th>优点</th>
+              <th>风险</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>INT8</td>
+              <td>8 bit 权重,通常质量更稳。</td>
+              <td>误差小,部署风险低。</td>
+              <td>压缩率不如 INT4,速度收益依赖 kernel。</td>
+            </tr>
+            <tr>
+              <td>INT4</td>
+              <td>4 bit 权重,LLM 本地推理很常见。</td>
+              <td>显存下降明显,适合单卡/边缘设备。</td>
+              <td>质量更依赖校准、group size 和方法。</td>
+            </tr>
+            <tr>
+              <td>per-channel</td>
+              <td>每个输出通道有独立 scale。</td>
+              <td>比 per-tensor 更能适配不同通道范围。</td>
+              <td>metadata 增加,实现复杂一点。</td>
+            </tr>
+            <tr>
+              <td>group-wise</td>
+              <td>每组若干权重共享 scale,如 group size 128。</td>
+              <td>质量和体积折中较好。</td>
+              <td>group size 选错会影响精度或吞吐。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>GPTQ 与 AWQ</h2>
+      <div class="count">45 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">直接 round-to-nearest 通常不够好。
+        GPTQ 和 AWQ 都是 post-training quantization,不需要重新训练完整模型,
+        但会用少量校准数据判断哪些误差更重要。
+        粗略说,GPTQ 试图逐层最小化量化后的重构误差;AWQ 则用激活分布识别重要通道,
+        通过缩放保护 salient weights,尽量让 4 bit 权重保留指令模型的质量。</p>
+
+      <div class="grid grid-2">
+        <div class="node blue">
+          <div class="tag blue">GPTQ</div>
+          <h3>用近似二阶信息补偿误差</h3>
+          <p>GPTQ 是 one-shot weight quantization。它用校准样本估计层输入分布,逐层量化权重,并用近似 Hessian 信息补偿已量化权重带来的输出误差。</p>
+        </div>
+        <div class="node gold">
+          <div class="tag gold">AWQ</div>
+          <h3>用激活识别重要权重通道</h3>
+          <p>AWQ 认为权重本身大小不是唯一信号,应该看真实激活会放大哪些通道。它保护少量 salient channels,常用于 4-bit weight-only 部署。</p>
+        </div>
+      </div>
+
+      <div class="diagram" style="margin-top:24px">
+        <svg viewBox="0 0 960 380" role="img" aria-label="GPTQ 与 AWQ 方法对比">
+          <rect x="44" y="44" width="872" height="274" rx="6" fill="#FFFFFF" stroke="#D1CFC5" stroke-width="1.5"/>
+          <text x="64" y="74" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="1" font-weight="600">TWO PTQ IDEAS</text>
+
+          <rect x="86" y="118" width="350" height="150" rx="6" fill="#F0EEE6" stroke="#4F7A92" stroke-width="2"/>
+          <text x="261" y="148" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="18" fill="#141413">GPTQ</text>
+          <text x="116" y="180" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">1. 收集校准输入 X</text>
+          <text x="116" y="208" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">2. 逐层量化 W</text>
+          <text x="116" y="236" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">3. 用近似二阶信息补偿重构误差</text>
+          <text x="261" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#4F7A92">minimize layer output error</text>
+
+          <rect x="524" y="118" width="350" height="150" rx="6" fill="#F0EEE6" stroke="#B9964A" stroke-width="2"/>
+          <text x="699" y="148" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="18" fill="#141413">AWQ</text>
+          <text x="554" y="180" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">1. 收集激活统计</text>
+          <text x="554" y="208" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">2. 找 salient channels</text>
+          <text x="554" y="236" font-family="system-ui, sans-serif" font-size="13" fill="#3D3D3A">3. 缩放通道,降低低 bit 误差</text>
+          <text x="699" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#B9964A">activation-aware protection</text>
+
+          <text x="480" y="350" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="1">二者都是 PTQ:少量校准数据 + 不做完整训练 + 量化后必须重新评估</text>
+        </svg>
+        <div class="cap">FIG · GPTQ 关心重构误差补偿,AWQ 关心激活感知的重要通道保护</div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:24px">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>关键输入</th>
+              <th>典型配置</th>
+              <th>适合场景</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>RTN</td>
+              <td>只看权重范围。</td>
+              <td class="mono">round(w / scale)</td>
+              <td>教学、快速基线,质量通常不是最好。</td>
+            </tr>
+            <tr>
+              <td>GPTQ</td>
+              <td>校准样本的层输入分布。</td>
+              <td class="mono">bits=4, group_size=128, act_order/desc_act</td>
+              <td>GPU 侧 4-bit GPTQ 格式,常用于 Transformers / ExLlama / Marlin 路线。</td>
+            </tr>
+            <tr>
+              <td>AWQ</td>
+              <td>激活统计与重要通道。</td>
+              <td class="mono">w_bit=4, q_group_size=128</td>
+              <td>指令模型、多模态模型、对泛化稳定性要求较高的部署。</td>
+            </tr>
+            <tr>
+              <td>GGUF k-quants</td>
+              <td>llama.cpp 的 tensor packing 规则,可选 imatrix。</td>
+              <td class="mono">Q4_K_M, Q5_K_M, Q8_0</td>
+              <td>CPU / Metal / Vulkan / 边缘设备上的 llama.cpp 生态。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>动手一:AutoGPTQ 路线</h2>
+      <div class="count">35 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">AutoGPTQ 是理解 GPTQ 流程的好入口:准备校准样本,配置 bits/group_size,
+        加载 FP16 模型,执行 <code class="inline">model.quantize(examples)</code>,保存量化权重。
+        真实项目里要注意维护状态、模型支持表、CUDA/PyTorch 版本和推理 kernel 是否匹配。</p>
+
+      <pre class="code"><span class="k">from</span> transformers <span class="k">import</span> AutoTokenizer
+<span class="k">from</span> auto_gptq <span class="k">import</span> AutoGPTQForCausalLM, BaseQuantizeConfig
+
+pretrained_model_dir = <span class="s">"facebook/opt-125m"</span>
+quantized_model_dir = <span class="s">"opt-125m-gptq-4bit"</span>
+
+tokenizer = AutoTokenizer.from_pretrained(pretrained_model_dir, use_fast=<span class="k">True</span>)
+examples = [
+    tokenizer(<span class="s">"Quantization compresses LLM weights for inference."</span>),
+    tokenizer(<span class="s">"Calibration samples should look like serving prompts."</span>),
+]
+
+quantize_config = BaseQuantizeConfig(
+    bits=<span class="n">4</span>,
+    group_size=<span class="n">128</span>,
+    desc_act=<span class="k">False</span>,  <span class="c"># True 可能更准,但推理/兼容性需验证</span>
+)
+
+model = AutoGPTQForCausalLM.from_pretrained(
+    pretrained_model_dir,
+    quantize_config,
+    device=<span class="s">"cuda:0"</span>,
+)
+model.quantize(examples)
+model.save_quantized(quantized_model_dir, use_safetensors=<span class="k">True</span>)
+tokenizer.save_pretrained(quantized_model_dir)</pre>
+
+      <div class="steps" style="margin-top:24px">
+        <div class="step">
+          <h3>选校准集</h3>
+          <p>尽量接近线上 prompt 分布。通用模型可用 C4/WikiText 子集,业务模型用真实脱敏样本。</p>
+        </div>
+        <div class="step">
+          <h3>先量小模型</h3>
+          <p>用 125M/1B 级模型跑通流程,再量 7B/13B,避免一次量化卡在环境和显存问题上。</p>
+        </div>
+        <div class="step">
+          <h3>记录配置</h3>
+          <p>保存 bits、group_size、desc_act、seqlen、校准样本数、CUDA/PyTorch/AutoGPTQ 版本。</p>
+        </div>
+        <div class="step">
+          <h3>重新评估</h3>
+          <p>量化后必须跑 perplexity、任务集、人工样例和 latency,不能只看模型能加载。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>动手二:llama.cpp / GGUF 路线</h2>
+      <div class="count">35 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">llama.cpp 的常见流程是两步:
+        先把 Hugging Face 模型转换为高精度 GGUF,再用 <code class="inline">llama-quantize</code>
+        生成 Q4/Q5/Q8 等量化 GGUF。这个路线特别适合本地推理、CPU/Metal/Vulkan 或边缘设备部署。</p>
+
+      <pre class="code"><span class="c"># 1. 安装 Python 依赖</span>
+python3 -m pip install -r requirements.txt
+
+<span class="c"># 2. 从 Hugging Face repo 转成高精度 GGUF</span>
+python convert_hf_to_gguf.py \
+  --outfile model-bf16.gguf \
+  --outtype bf16 \
+  --remote meta-llama/Llama-3.2-1B-Instruct
+
+<span class="c"># 3. 量化成常用 Q4_K_M</span>
+./build/bin/llama-quantize \
+  model-bf16.gguf \
+  model-Q4_K_M.gguf \
+  Q4_K_M
+
+<span class="c"># 4. 运行量化模型</span>
+./build/bin/llama-cli \
+  -m model-Q4_K_M.gguf \
+  -p <span class="s">"Explain weight quantization in one paragraph."</span> \
+  -n <span class="n">128</span></pre>
+
+      <div class="table-wrap" style="margin-top:24px">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>GGUF 类型</th>
+              <th>大致定位</th>
+              <th>建议</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Q8_0</td>
+              <td>接近高质量低风险量化。</td>
+              <td>作为质量对照或空间还够时使用。</td>
+            </tr>
+            <tr>
+              <td>Q5_K_M</td>
+              <td>质量和体积折中偏质量。</td>
+              <td>对回答稳定性要求较高时优先试。</td>
+            </tr>
+            <tr>
+              <td>Q4_K_M</td>
+              <td>本地推理常见 4-bit 折中。</td>
+              <td>Day35 推荐先用它跑完整流程。</td>
+            </tr>
+            <tr>
+              <td>Q2 / Q3</td>
+              <td>极限压缩。</td>
+              <td>除非设备非常受限,否则要谨慎评估质量下降。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>量化后怎么评估</h2>
+      <div class="count">35 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">量化评估要同时看三类指标:
+        质量有没有明显下降,性能有没有真实提升,资源占用是否达成目标。
+        只看模型文件变小会漏掉最关键的问题:低 bit 权重可能造成困惑度上升、输出格式不稳,
+        也可能因为 kernel 不匹配而没有速度收益。</p>
+
+      <div class="table-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>指标</th>
+              <th>怎么测</th>
+              <th>通过标准</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>质量</td>
+              <td>perplexity、MMLU/GSM8K、业务 golden set、人工样例。</td>
+              <td>同一 tokenizer、同一 prompt、同一 decoding 参数对比 FP16。</td>
+              <td>重要任务下降在可接受范围内,格式和拒答行为无明显异常。</td>
+            </tr>
+            <tr>
+              <td>性能</td>
+              <td>TTFT、TPOT、tokens/s、并发吞吐。</td>
+              <td>固定 batch、context、输出长度,分别测 prefill 和 decode。</td>
+              <td>速度收益来自真实 serving workload,不是单条样例偶然变快。</td>
+            </tr>
+            <tr>
+              <td>资源</td>
+              <td>模型文件大小、加载后显存、KV cache 可用空间。</td>
+              <td>记录 nvidia-smi / engine memory report / llama.cpp 日志。</td>
+              <td>权重节省转化为更大 batch、更长 context 或更低硬件成本。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="margin-top:32px">报告模板</h3>
+      <pre class="code">model: Llama-3.2-1B-Instruct
+baseline: bf16
+quantized: Q4_K_M / GPTQ-4bit-g128
+calibration:
+  samples: 128
+  max_seq_len: 2048
+  source: mixed chat prompts
+
+quality:
+  ppl_fp16: 8.42
+  ppl_quant: 8.83
+  golden_pass_rate_fp16: 94.0%
+  golden_pass_rate_quant: 92.5%
+
+performance:
+  peak_vram_fp16: 3.1 GB
+  peak_vram_quant: 1.4 GB
+  tpot_fp16: 28.4 ms
+  tpot_quant: 17.9 ms
+
+decision:
+  accept: yes
+  reason: quality drop acceptable, memory target met, decode faster</pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>常见误区</h2>
+      <div class="count">20 MIN</div>
+    </div>
+    <div class="indent">
+      <div class="table-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>误区</th>
+              <th>为什么不准确</th>
+              <th>正确做法</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>4-bit 一定快 4 倍</td>
+              <td>权重读写减少,但反量化、packing、kernel 和 batch shape 都会影响速度。</td>
+              <td>分别测 prefill、decode、并发吞吐和显存。</td>
+            </tr>
+            <tr>
+              <td>文件能加载就算成功</td>
+              <td>加载成功只说明格式和 kernel 兼容,不说明质量可用。</td>
+              <td>跑 perplexity、golden set 和真实 prompt。</td>
+            </tr>
+            <tr>
+              <td>校准集随便选</td>
+              <td>GPTQ/AWQ 都依赖校准样本反映激活或层输入分布。</td>
+              <td>校准集要尽量接近线上场景,并记录采样方式。</td>
+            </tr>
+            <tr>
+              <td>权重量化解决所有显存问题</td>
+              <td>长上下文 serving 的 KV Cache 仍可能是大头。</td>
+              <td>Day36 继续看 KV Cache 与激活量化,结合 PagedAttention 管理。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>常见疑问</h2>
+      <div class="count">FAQ</div>
+    </div>
+    <div class="indent">
+      <div class="qa-grid">
+        <details class="qa-card" open>
+          <summary>
+            <span class="qa-num">Q1</span>
+            <span class="qa-q">权重量化和 KV Cache 量化有什么区别?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>权重量化压的是模型参数,通常是离线完成,模型加载后一直使用。KV Cache 量化压的是推理过程中动态产生的 K/V,会影响长上下文和高并发时的显存。Day35 只讲权重,Day36 会讲 KV 与激活。</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="qa-card">
+          <summary>
+            <span class="qa-num">Q2</span>
+            <span class="qa-q">GPTQ 和 AWQ 谁更好?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>没有固定答案。GPTQ 路线成熟,生态里有很多 kernel 和模型格式;AWQ 对 instruction-tuned、多模态和泛化场景常有不错表现。最终取决于模型、校准集、目标硬件和推理引擎支持。</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="qa-card">
+          <summary>
+            <span class="qa-num">Q3</span>
+            <span class="qa-q">为什么 group size 常见 128?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>它是质量、元数据开销和 kernel 实现之间的工程折中。更小 group 通常误差更小,但 scale 更多;更大 group 元数据少,但不同权重分布被迫共享同一 scale,误差可能更大。</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="qa-card">
+          <summary>
+            <span class="qa-num">Q4</span>
+            <span class="qa-q">什么时候不应该量化到 INT4?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>如果任务对细微数值很敏感、模型很小、线上要求严格可复现,或者目标引擎没有高效 INT4 kernel,INT8、FP8 或 BF16 可能更稳。量化是部署选择,不是越低越高级。</p>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>复盘问题</h2>
+      <div class="count">REVIEW</div>
+    </div>
+    <div class="indent">
+      <ol class="review">
+        <li>为什么 weight-only quantization 能降低 decode 阶段的内存带宽压力?</li>
+        <li>scale、zero point、group size 分别控制什么?group size 变小会带来什么代价?</li>
+        <li>GPTQ 为什么需要校准样本?它试图最小化什么误差?</li>
+        <li>AWQ 为什么要看 activation 而不只看 weight magnitude?</li>
+        <li>量化模型上线前,你会用哪些质量、性能和资源指标做验收?</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>今日检查清单</h2>
+      <div class="count">CHECKLIST</div>
+    </div>
+    <div class="indent">
+      <div class="check">
+        <ul>
+          <li>能解释 INT8 / INT4 权重量化的 scale、zero point 和反量化公式。</li>
+          <li>能区分 per-tensor、per-channel、group-wise quantization。</li>
+          <li>能说明 GPTQ 的逐层重构误差思路和 AWQ 的激活感知通道保护思路。</li>
+          <li>能用 AutoGPTQ 或 llama.cpp 跑通一次小模型量化。</li>
+          <li>能记录 bits、group_size、校准集、版本、目标硬件和推理 kernel。</li>
+          <li>能输出一张量化前后质量、延迟、吞吐、显存的对比表。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>推荐阅读</h2>
+      <div class="count">LINKS</div>
+    </div>
+    <div class="indent">
+      <div class="grid grid-2">
+        <div class="node">
+          <div class="tag blue">Paper</div>
+          <h3><a href="https://arxiv.org/abs/2210.17323">GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers</a></h3>
+          <p>GPTQ 原论文。重点读 one-shot、近似二阶信息和 3/4-bit 权重量化实验。</p>
+        </div>
+        <div class="node">
+          <div class="tag gold">Paper</div>
+          <h3><a href="https://arxiv.org/abs/2306.00978">AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration</a></h3>
+          <p>AWQ 原论文。重点读 salient weights、activation-aware scaling 和 4-bit weight-only 部署动机。</p>
+        </div>
+        <div class="node">
+          <div class="tag teal">Tool</div>
+          <h3><a href="https://github.com/AutoGPTQ/AutoGPTQ">AutoGPTQ</a></h3>
+          <p>GPTQ 工具入口。注意核对当前维护状态、安装方式、支持模型和推理 kernel。</p>
+        </div>
+        <div class="node">
+          <div class="tag clay">Tool</div>
+          <h3><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md">llama.cpp quantize README</a></h3>
+          <p>官方量化说明。核心流程是先转换为 GGUF,再用 <code class="inline">llama-quantize</code> 生成目标量化格式。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Day 36 预告</h2>
+      <div class="count">NEXT</div>
+    </div>
+    <div class="indent">
+      <div class="node exit">
+        <div class="tag gold">量化 (2)</div>
+        <h3>KV Cache 与激活量化</h3>
+        <p>下一天会从静态权重走向动态数据:
+          FP8 KV Cache、SmoothQuant、per-channel vs per-token activation quantization,
+          以及为什么长上下文 serving 里 KV Cache 量化和权重量化同样重要。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="quote">量化不是把精度一刀砍掉,而是把误差放到模型最能承受的位置。</p>
+    <div class="meta">DAY 35 · WEIGHT QUANTIZATION · AI INFRA ROADMAP</div>
+  </footer>
+</div>

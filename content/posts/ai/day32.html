@@ -1,0 +1,1283 @@
+---
+title: "Day 32 · vLLM 实战"
+date: '2026-06-21T00:00:00+08:00'
+draft: false
+description: "动手部署一个 7B 模型到 vLLM,开启 OpenAI 兼容 API,学习 --max-num-seqs 与 --gpu-memory-utilization 的调参方法,并建立推理服务压测与排错流程。"
+toc: false
+tags:
+  - AI
+  - LLM
+  - vLLM
+  - Inference
+  - OpenAI API
+  - PagedAttention
+  - Serving
+---
+
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --blue:#4F7A92; --gold:#B9964A; --teal:#3C8D80;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background:var(--ivory);
+  color:var(--slate);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.day32-wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px 140px;
+}
+.day32-wrap .eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.day32-wrap .eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:24px;
+  height:1.5px;
+  background:var(--clay);
+  margin-right:12px;
+  vertical-align:middle;
+}
+.day32-wrap h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:56px;
+  letter-spacing:0;
+  line-height:1.08;
+  max-width:19ch;
+  margin:22px 0 30px;
+  color:var(--slate);
+}
+.day32-wrap h1 em{ font-style:italic; color:var(--blue); }
+.day32-wrap h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:27px;
+  letter-spacing:0;
+  margin:0;
+  color:var(--slate);
+}
+.day32-wrap h3{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:19px;
+  letter-spacing:0;
+  margin:0 0 10px;
+  color:var(--slate);
+}
+.day32-wrap .lede{
+  font-size:16.5px;
+  color:var(--g700);
+  max-width:70ch;
+  margin:0 0 32px;
+  line-height:1.65;
+}
+.day32-wrap em{ font-style:italic; color:var(--clay-d); }
+.day32-wrap a{ color:var(--clay-d); text-decoration-thickness:1px; text-underline-offset:3px; }
+.day32-wrap header.masthead{ padding:80px 0 56px; }
+.day32-wrap .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:32px;
+  padding:14px 0;
+  border-top:1px solid var(--g200);
+  border-bottom:1px solid var(--g200);
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.day32-wrap .meta-strip strong{
+  color:var(--slate);
+  font-weight:600;
+  margin-right:6px;
+}
+.day32-wrap section{ margin-top:72px; }
+.day32-wrap .indent{ margin-left:50px; }
+.day32-wrap .sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:18px;
+  margin-bottom:28px;
+}
+.day32-wrap .sec-head .count{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  padding:3px 12px;
+  background:var(--g100);
+  border-radius:999px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.day32-wrap .mindmap,.day32-wrap .diagram{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:36px 28px 32px;
+  margin:0;
+}
+.day32-wrap .mindmap svg,.day32-wrap .diagram svg{
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+}
+.day32-wrap .cap{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px dashed var(--g300);
+}
+.day32-wrap .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(316px,1fr));
+  gap:20px;
+}
+.day32-wrap .grid-2{ grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); }
+.day32-wrap .grid-3{ grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); }
+.day32-wrap .grid-4{ grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); }
+.day32-wrap .node{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:22px 24px;
+  transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.day32-wrap .node:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(20,20,19,.1);
+  border-color:var(--slate);
+}
+.day32-wrap .node.accent{ border-color:var(--clay); }
+.day32-wrap .node.blue{ border-color:var(--blue); }
+.day32-wrap .node.gold{ border-color:var(--gold); }
+.day32-wrap .node.teal{ border-color:var(--teal); }
+.day32-wrap .node.entry{ background:var(--g100); }
+.day32-wrap .node.exit{ background:var(--oat); border-color:var(--clay); }
+.day32-wrap .node.dark{
+  background:var(--slate);
+  border-color:var(--slate);
+  color:var(--ivory);
+}
+.day32-wrap .node.dark h3{ color:var(--ivory); }
+.day32-wrap .node.dark p,.day32-wrap .node.dark .tag{ color:var(--oat); }
+.day32-wrap .node .tag{
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  font-weight:600;
+}
+.day32-wrap .node .tag.clay{ color:var(--clay); }
+.day32-wrap .node .tag.blue{ color:var(--blue); }
+.day32-wrap .node .tag.gold{ color:var(--gold); }
+.day32-wrap .node .tag.teal{ color:var(--teal); }
+.day32-wrap .node p{
+  font-size:13.5px;
+  color:var(--g700);
+  margin:6px 0 0;
+  line-height:1.6;
+}
+.day32-wrap .annot{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--g500);
+  position:relative;
+  margin-top:14px;
+  padding-left:44px;
+  letter-spacing:.04em;
+}
+.day32-wrap .annot::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:8px;
+  width:32px;
+  height:1.5px;
+  background:var(--clay);
+}
+.day32-wrap .table-wrap{ overflow-x:auto; }
+.day32-wrap table.compare{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  overflow:hidden;
+}
+.day32-wrap table.compare th,.day32-wrap table.compare td{
+  text-align:left;
+  padding:14px 20px;
+  border-bottom:1px solid var(--g200);
+  vertical-align:top;
+}
+.day32-wrap table.compare th{
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+  background:var(--g100);
+  border-bottom:1.5px solid var(--slate);
+}
+.day32-wrap table.compare td:first-child{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:15px;
+  width:20%;
+  color:var(--slate);
+}
+.day32-wrap table.compare tr:last-child td{ border-bottom:none; }
+.day32-wrap table.compare .mono{ font-family:var(--mono); font-size:12.5px; }
+.day32-wrap table.compare .clay{ color:var(--clay-d); }
+.day32-wrap table.compare .blue{ color:var(--blue); }
+.day32-wrap table.compare .gold{ color:var(--gold); }
+.day32-wrap table.compare .teal{ color:var(--teal); }
+.day32-wrap code.inline{
+  font-family:var(--mono);
+  font-size:12.5px;
+  background:var(--g100);
+  border:1px solid var(--g200);
+  border-radius:4px;
+  padding:1px 6px;
+  color:var(--clay-d);
+}
+.day32-wrap pre.code{
+  background:var(--slate);
+  color:var(--ivory);
+  font-family:var(--mono);
+  font-size:12.5px;
+  padding:20px 24px;
+  border-radius:8px;
+  overflow-x:auto;
+  line-height:1.65;
+  margin:18px 0;
+}
+.day32-wrap pre.code .c{ color:#9C9A91; font-style:italic; }
+.day32-wrap pre.code .k{ color:#E39A7F; }
+.day32-wrap pre.code .s{ color:#A7B984; }
+.day32-wrap pre.code .n{ color:#D8C98D; }
+.day32-wrap .steps{
+  counter-reset:step;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+.day32-wrap .step{
+  counter-increment:step;
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:20px 20px 20px 56px;
+  position:relative;
+}
+.day32-wrap .step::before{
+  content:counter(step,decimal-leading-zero);
+  position:absolute;
+  left:20px;
+  top:22px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--clay);
+  font-weight:700;
+  letter-spacing:.08em;
+}
+.day32-wrap .step h3{ font-size:16px; }
+.day32-wrap .step p{
+  font-size:13.5px;
+  color:var(--g700);
+  margin:6px 0 0;
+}
+.day32-wrap .formula{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:18px;
+  margin-top:18px;
+}
+.day32-wrap .formula .box{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:22px 24px;
+}
+.day32-wrap .formula .math{
+  font-family:var(--mono);
+  font-size:14px;
+  color:var(--slate);
+  word-break:break-word;
+}
+.day32-wrap .formula p{
+  color:var(--g700);
+  font-size:13.5px;
+  margin:10px 0 0;
+}
+.day32-wrap .flow{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+.day32-wrap .flow-card{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  min-height:150px;
+  padding:18px;
+  position:relative;
+}
+.day32-wrap .flow-card::after{
+  content:"";
+  position:absolute;
+  right:-10px;
+  top:50%;
+  width:10px;
+  height:1.5px;
+  background:var(--g300);
+}
+.day32-wrap .flow-card:last-child::after{ display:none; }
+.day32-wrap .flow-card .num{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--clay);
+  letter-spacing:.1em;
+  font-weight:700;
+}
+.day32-wrap .flow-card h3{
+  font-size:16px;
+  margin-top:8px;
+}
+.day32-wrap .flow-card p{
+  margin:6px 0 0;
+  color:var(--g700);
+  font-size:13.5px;
+}
+.day32-wrap .qa-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-top:8px;
+}
+.day32-wrap .qa-card{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  overflow:hidden;
+  transition:border-color 150ms ease;
+}
+.day32-wrap .qa-card[open]{ border-color:var(--slate); }
+.day32-wrap .qa-card summary{
+  list-style:none;
+  cursor:pointer;
+  padding:18px 24px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  transition:background 150ms ease;
+}
+.day32-wrap .qa-card summary::-webkit-details-marker{ display:none; }
+.day32-wrap .qa-card summary::marker{ display:none; }
+.day32-wrap .qa-card summary:hover{ background:var(--g100); }
+.day32-wrap .qa-card[open] summary{
+  background:var(--g100);
+  border-bottom:1px dashed var(--g300);
+}
+.day32-wrap .qa-num{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--clay);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:3px;
+}
+.day32-wrap .qa-q{
+  font-family:var(--serif);
+  font-size:16px;
+  font-weight:500;
+  color:var(--slate);
+  line-height:1.5;
+  flex:1;
+}
+.day32-wrap .qa-toggle{
+  font-family:var(--mono);
+  font-size:18px;
+  color:var(--g500);
+  flex-shrink:0;
+  font-weight:300;
+  line-height:1;
+  margin-top:2px;
+  transition:transform 150ms ease, color 150ms ease;
+}
+.day32-wrap .qa-card[open] .qa-toggle{
+  transform:rotate(45deg);
+  color:var(--clay);
+}
+.day32-wrap .qa-a{
+  padding:20px 24px 22px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+}
+.day32-wrap .qa-a-label{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--olive);
+  letter-spacing:.1em;
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.day32-wrap .qa-a-body{
+  flex:1;
+  font-size:14.5px;
+  color:var(--g700);
+  line-height:1.7;
+}
+.day32-wrap .qa-a-body p{ margin:0 0 10px; }
+.day32-wrap .qa-a-body p:last-child{ margin-bottom:0; }
+.day32-wrap .check{
+  background:var(--paper);
+  border:1.5px solid var(--g300);
+  border-radius:8px;
+  padding:8px 24px;
+}
+.day32-wrap .check ul{ list-style:none; padding:0; margin:0; }
+.day32-wrap .check li{
+  padding:14px 0 14px 36px;
+  border-bottom:1px solid var(--g200);
+  position:relative;
+  font-size:14.5px;
+  color:var(--slate);
+}
+.day32-wrap .check li:last-child{ border-bottom:none; }
+.day32-wrap .check li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:16px;
+  width:18px;
+  height:18px;
+  border:1.5px solid var(--g300);
+  border-radius:4px;
+  background:var(--paper);
+}
+.day32-wrap .review{
+  counter-reset:q;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.day32-wrap .review li{
+  counter-increment:q;
+  position:relative;
+  padding:18px 0 18px 56px;
+  border-bottom:1px solid var(--g200);
+  font-size:15px;
+  color:var(--g700);
+}
+.day32-wrap .review li:last-child{ border-bottom:none; }
+.day32-wrap .review li::before{
+  content:counter(q,decimal-leading-zero);
+  position:absolute;
+  left:0;
+  top:18px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--clay);
+  letter-spacing:.06em;
+  font-weight:600;
+}
+.day32-wrap footer{
+  margin-top:100px;
+  padding-top:40px;
+  border-top:1px solid var(--g200);
+  text-align:center;
+}
+.day32-wrap footer .quote{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:18px;
+  color:var(--g700);
+  max-width:48ch;
+  margin:0 auto;
+  line-height:1.55;
+}
+.day32-wrap footer .meta{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--g500);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-top:24px;
+}
+@media(max-width:920px){
+  .day32-wrap .flow{ grid-template-columns:1fr 1fr; }
+  .day32-wrap .flow-card::after{ display:none; }
+}
+@media(max-width:720px){
+  .day32-wrap{ padding:0 22px 90px; }
+  .day32-wrap h1{ font-size:40px; }
+  .day32-wrap .indent{ margin-left:0; }
+  .day32-wrap header.masthead{ padding:56px 0 40px; }
+  .day32-wrap section{ margin-top:56px; }
+  .day32-wrap .meta-strip{ gap:18px; font-size:10.5px; }
+  .day32-wrap .mindmap,.day32-wrap .diagram{ padding:20px 12px; }
+  .day32-wrap .flow{ grid-template-columns:1fr; }
+  .day32-wrap .qa-card summary{ padding:16px 18px; gap:12px; }
+  .day32-wrap .qa-q{ font-size:14.5px; }
+  .day32-wrap .qa-a{ padding:16px 18px 18px; gap:12px; }
+}
+</style>
+
+<div class="day32-wrap">
+  <header class="masthead">
+    <div class="eyebrow">DAY 32 · AI INFRA ROADMAP · 60 DAYS</div>
+    <h1>把 7B 模型部署成 <em>OpenAI API</em></h1>
+    <p class="lede">Day 29-31 已经把 LLM 推理拆成 prefill、decode、KV Cache 和 PagedAttention。
+      Day 32 进入真正的服务化实战:用 <strong>vLLM</strong> 拉起一个 7B 级别模型,
+      暴露 OpenAI 兼容接口,用 curl 和 OpenAI SDK 验证调用,
+      再通过 <code class="inline">--max-num-seqs</code> 与
+      <code class="inline">--gpu-memory-utilization</code> 做第一轮吞吐/延迟调参。</p>
+    <div class="meta-strip">
+      <span><strong>DURATION</strong> 3 h</span>
+      <span><strong>THEORY</strong> 35 min</span>
+      <span><strong>HANDS-ON</strong> 2 h</span>
+      <span><strong>METRICS</strong> TTFT · TPOT · throughput · VRAM</span>
+      <span><strong>STACK</strong> vLLM · OpenAI SDK · curl · nvidia-smi</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <h2>思维导图</h2>
+      <div class="count">OVERVIEW</div>
+    </div>
+    <div class="indent">
+      <div class="mindmap">
+        <svg viewBox="0 0 980 500" role="img" aria-label="Day 32 vLLM 实战思维导图">
+          <rect x="278" y="20" width="424" height="62" rx="5" fill="#FAF9F5" stroke="#141413" stroke-width="2"/>
+          <text x="490" y="46" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="16" font-weight="500" fill="#141413">DAY 32 · vLLM Hands-on</text>
+          <text x="490" y="68" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#87867F" letter-spacing="2">7B MODEL · OPENAI API · TUNING · BENCHMARK</text>
+
+          <line x1="490" y1="82" x2="490" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+          <line x1="122" y1="108" x2="858" y2="108" stroke="#87867F" stroke-width="2" stroke-linecap="round"/>
+          <line x1="122" y1="108" x2="122" y2="134" stroke="#87867F" stroke-width="2"/>
+          <line x1="367" y1="108" x2="367" y2="134" stroke="#87867F" stroke-width="2"/>
+          <line x1="613" y1="108" x2="613" y2="134" stroke="#87867F" stroke-width="2"/>
+          <line x1="858" y1="108" x2="858" y2="134" stroke="#87867F" stroke-width="2"/>
+
+          <rect x="32" y="134" width="180" height="56" rx="5" fill="#E3DACC" stroke="#D97757" stroke-width="2"/>
+          <text x="122" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#B85C3E" letter-spacing="2" font-weight="600">01 · PREP</text>
+          <text x="122" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#141413">环境与模型</text>
+
+          <rect x="277" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#4F7A92" stroke-width="2"/>
+          <text x="367" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#4F7A92" letter-spacing="2" font-weight="600">02 · SERVE</text>
+          <text x="367" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#141413">vllm serve</text>
+
+          <rect x="523" y="134" width="180" height="56" rx="5" fill="#F0EEE6" stroke="#3C8D80" stroke-width="2"/>
+          <text x="613" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#3C8D80" letter-spacing="2" font-weight="600">03 · API</text>
+          <text x="613" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#141413">OpenAI 兼容</text>
+
+          <rect x="768" y="134" width="180" height="56" rx="5" fill="#141413" stroke="#141413" stroke-width="2"/>
+          <text x="858" y="157" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#E3DACC" letter-spacing="2" font-weight="600">04 · TUNE</text>
+          <text x="858" y="178" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="15" fill="#FAF9F5">参数调优</text>
+
+          <text x="42" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">CUDA / driver</text>
+          <text x="42" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">vllm / openai</text>
+          <text x="42" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">7B 模型下载</text>
+          <text x="42" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="58" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">显存预算</text>
+
+          <text x="287" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="303" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">host / port</text>
+          <text x="287" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="303" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">served-model-name</text>
+          <text x="287" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="303" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">max-model-len</text>
+          <text x="287" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#4F7A92">·</text>
+          <text x="303" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">api-key</text>
+
+          <text x="533" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#3C8D80">·</text>
+          <text x="549" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">/v1/models</text>
+          <text x="533" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#3C8D80">·</text>
+          <text x="549" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">chat completions</text>
+          <text x="533" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#3C8D80">·</text>
+          <text x="549" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">stream=true</text>
+          <text x="533" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#3C8D80">·</text>
+          <text x="549" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">OpenAI SDK</text>
+
+          <text x="778" y="224" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="224" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">max-num-seqs</text>
+          <text x="778" y="254" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="254" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">gpu-memory-utilization</text>
+          <text x="778" y="284" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="284" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">max-model-len</text>
+          <text x="778" y="314" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#D97757">·</text>
+          <text x="794" y="314" font-family="system-ui, sans-serif" font-size="12.5" fill="#3D3D3A">bench serve</text>
+
+          <line x1="32" y1="370" x2="948" y2="370" stroke="#D1CFC5" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="32" y="397" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#87867F" letter-spacing="2" font-weight="600">DELIVERABLES</text>
+          <rect x="32" y="410" width="210" height="34" rx="5" fill="#FFF" stroke="#D97757" stroke-width="1.5"/>
+          <text x="137" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">启动命令</text>
+          <rect x="262" y="410" width="220" height="34" rx="5" fill="#FFF" stroke="#4F7A92" stroke-width="1.5"/>
+          <text x="372" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">OpenAI 调用脚本</text>
+          <rect x="502" y="410" width="220" height="34" rx="5" fill="#FFF" stroke="#3C8D80" stroke-width="1.5"/>
+          <text x="612" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#141413">调参矩阵</text>
+          <rect x="742" y="410" width="206" height="34" rx="5" fill="#141413" stroke="#141413" stroke-width="1.5"/>
+          <text x="845" y="432" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" fill="#FAF9F5">压测记录</text>
+        </svg>
+        <div class="cap">FIG · Day 32 全景:从启动 vLLM 到 API 验证,再到并发与显存预算调参</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>今天要跑通什么</h2>
+      <div class="count">15 MIN</div>
+    </div>
+    <div class="indent">
+      <div class="flow">
+        <div class="flow-card">
+          <div class="num">01</div>
+          <h3>确认 GPU</h3>
+          <p>用 <code class="inline">nvidia-smi</code> 看显存、驱动、空闲进程。7B BF16 建议至少 24GB 显存。</p>
+        </div>
+        <div class="flow-card">
+          <div class="num">02</div>
+          <h3>安装 vLLM</h3>
+          <p>准备 Python 环境,安装 <code class="inline">vllm</code> 与 <code class="inline">openai</code> 客户端。</p>
+        </div>
+        <div class="flow-card">
+          <div class="num">03</div>
+          <h3>启动服务</h3>
+          <p>用 <code class="inline">vllm serve</code> 加载 7B 模型并监听 <code class="inline">:8000</code>。</p>
+        </div>
+        <div class="flow-card">
+          <div class="num">04</div>
+          <h3>验证 API</h3>
+          <p>访问 <code class="inline">/v1/models</code> 和 <code class="inline">/v1/chat/completions</code>。</p>
+        </div>
+        <div class="flow-card">
+          <div class="num">05</div>
+          <h3>调参压测</h3>
+          <p>改变并发上限和显存占比,记录 TTFT、TPOT、tokens/s 和 OOM 边界。</p>
+        </div>
+      </div>
+
+      <div class="annot">Day32 不是追求一次跑出最高分,而是建立一套可复现实验流程:参数、负载、指标、日志必须能对应起来。</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>环境与模型选择</h2>
+      <div class="count">25 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">RoadMap 写的是“部署一个 7B 模型”。这里用
+        <code class="inline">Qwen/Qwen2.5-7B-Instruct</code> 作为默认练习模型:
+        它是开放模型,适合中文实验,也能走标准 chat template。
+        如果显存不足,先把 <code class="inline">--max-model-len</code> 降到 2048/4096,
+        或暂时换 1.5B 模型把服务链路跑通。</p>
+
+      <div class="grid grid-3">
+        <div class="node accent">
+          <div class="tag clay">GPU</div>
+          <h3>24GB 是舒服起点</h3>
+          <p>7B BF16/FP16 权重约十几 GB,剩余显存要留给 KV Cache、CUDA graph 和运行时 buffer。</p>
+        </div>
+        <div class="node blue">
+          <div class="tag blue">MODEL</div>
+          <h3>优先选 Instruct</h3>
+          <p>OpenAI Chat API 入口会依赖 tokenizer 的 chat template。Instruct 模型更适合对话式验证。</p>
+        </div>
+        <div class="node teal">
+          <div class="tag teal">FALLBACK</div>
+          <h3>显存不足先降上下文</h3>
+          <p>先降低 <code class="inline">--max-model-len</code> 和并发,不要一开始就把问题归因到 vLLM。</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:32px">环境检查</h3>
+      <pre class="code">nvidia-smi
+python --version
+pip --version
+
+<span class="c"># 可选:新建虚拟环境</span>
+python -m venv .venv-vllm
+source .venv-vllm/bin/activate
+
+pip install -U pip
+pip install -U vllm openai
+
+<span class="c"># 如果模型需要授权,先登录 Hugging Face</span>
+huggingface-cli login</pre>
+
+      <div class="table-wrap" style="margin-top:24px">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>场景</th>
+              <th>建议模型</th>
+              <th>启动侧重点</th>
+              <th>目的</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>标准 7B 实战</td>
+              <td class="mono">Qwen/Qwen2.5-7B-Instruct</td>
+              <td>限制 <code class="inline">--max-model-len</code>,记录 KV cache blocks。</td>
+              <td>贴近 RoadMap 要求,能观察真实 7B 显存压力。</td>
+            </tr>
+            <tr>
+              <td>显存紧张</td>
+              <td class="mono">Qwen/Qwen2.5-1.5B-Instruct</td>
+              <td>先验证 API、SDK、streaming、压测脚本。</td>
+              <td>把服务链路跑通,再换回 7B。</td>
+            </tr>
+            <tr>
+              <td>多卡机器</td>
+              <td class="mono">Qwen/Qwen2.5-7B-Instruct</td>
+              <td>尝试 <code class="inline">--tensor-parallel-size 2</code>。</td>
+              <td>学习 vLLM 多 GPU 单机模型切分。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>启动 OpenAI 兼容 API</h2>
+      <div class="count">40 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">vLLM 的在线服务入口是 <code class="inline">vllm serve</code>。
+        它会拉起兼容 OpenAI 协议的 HTTP 服务,默认端口是 <code class="inline">8000</code>。
+        生产环境会有反向代理、鉴权、限流和多实例;今天先把单实例跑稳。</p>
+
+      <h3>最小启动命令</h3>
+      <pre class="code">export MODEL=Qwen/Qwen2.5-7B-Instruct
+
+vllm serve ${MODEL} \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --served-model-name qwen2.5-7b \
+  --dtype bfloat16 \
+  --max-model-len 4096 \
+  --gpu-memory-utilization 0.85 \
+  --max-num-seqs 64 \
+  --api-key local-dev-key</pre>
+
+      <div class="grid grid-2" style="margin-top:22px">
+        <div class="node blue">
+          <div class="tag blue">启动成功标志</div>
+          <h3>看三类日志</h3>
+          <p>模型权重加载完成;KV cache profiling 完成;Uvicorn/FastAPI 服务开始监听端口。中间若 OOM,先降低 <code class="inline">max-model-len</code> 或 <code class="inline">gpu-memory-utilization</code>。</p>
+        </div>
+        <div class="node gold">
+          <div class="tag gold">安全提醒</div>
+          <h3>公网不要裸奔</h3>
+          <p><code class="inline">--api-key</code> 只是一层简单 bearer key。正式服务要放在网关后面,加 TLS、限流、审计和租户隔离。</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:32px">用配置文件启动</h3>
+      <pre class="code"><span class="c"># config.yaml</span>
+model: Qwen/Qwen2.5-7B-Instruct
+host: 0.0.0.0
+port: 8000
+served-model-name: qwen2.5-7b
+dtype: bfloat16
+max-model-len: 4096
+gpu-memory-utilization: 0.85
+max-num-seqs: 64
+api-key: local-dev-key
+
+<span class="c"># 启动</span>
+vllm serve --config config.yaml</pre>
+
+      <div class="annot">如果命令行参数和 YAML 同时出现,以命令行为准。调参时建议每组实验都保存完整启动命令和 git/hash/镜像版本。</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>API 验证</h2>
+      <div class="count">35 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">vLLM 的价值之一是把本地开源模型伪装成一个 OpenAI-compatible endpoint。
+        上层应用只要把 <code class="inline">base_url</code> 指向本地服务,
+        多数 Chat Completions 调用就能复用原来的客户端代码。</p>
+
+      <h3>列出模型</h3>
+      <pre class="code">curl http://localhost:8000/v1/models \
+  -H <span class="s">"Authorization: Bearer local-dev-key"</span></pre>
+
+      <h3 style="margin-top:32px">Chat Completions</h3>
+      <pre class="code">curl http://localhost:8000/v1/chat/completions \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -H <span class="s">"Authorization: Bearer local-dev-key"</span> \
+  -d '{
+    "model": "qwen2.5-7b",
+    "messages": [
+      {"role": "system", "content": "你是一个简洁的 AI Infra 助教。"},
+      {"role": "user", "content": "用三点解释 vLLM 为什么适合 LLM 推理服务。"}
+    ],
+    "temperature": 0.2,
+    "max_tokens": 256
+  }'</pre>
+
+      <h3 style="margin-top:32px">Streaming</h3>
+      <pre class="code">curl http://localhost:8000/v1/chat/completions \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -H <span class="s">"Authorization: Bearer local-dev-key"</span> \
+  -d '{
+    "model": "qwen2.5-7b",
+    "messages": [{"role": "user", "content": "解释 TTFT 和 TPOT 的区别。"}],
+    "stream": true,
+    "max_tokens": 128
+  }'</pre>
+
+      <h3 style="margin-top:32px">OpenAI Python SDK</h3>
+      <pre class="code"><span class="k">from</span> openai <span class="k">import</span> OpenAI
+<span class="k">import</span> time
+
+client = OpenAI(
+    api_key=<span class="s">"local-dev-key"</span>,
+    base_url=<span class="s">"http://localhost:8000/v1"</span>,
+)
+
+start = time.perf_counter()
+stream = client.chat.completions.create(
+    model=<span class="s">"qwen2.5-7b"</span>,
+    messages=[
+        {<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"给我一个 vLLM 调参检查清单。"</span>},
+    ],
+    temperature=<span class="n">0.2</span>,
+    max_tokens=<span class="n">256</span>,
+    stream=<span class="k">True</span>,
+)
+
+first = <span class="k">None</span>
+token_count = <span class="n">0</span>
+<span class="k">for</span> chunk <span class="k">in</span> stream:
+    delta = chunk.choices[<span class="n">0</span>].delta.content <span class="k">or</span> <span class="s">""</span>
+    <span class="k">if</span> delta <span class="k">and</span> first <span class="k">is</span> <span class="k">None</span>:
+        first = time.perf_counter()
+    token_count += <span class="n">1</span> <span class="k">if</span> delta <span class="k">else</span> <span class="n">0</span>
+    print(delta, end=<span class="s">""</span>, flush=<span class="k">True</span>)
+
+end = time.perf_counter()
+print()
+print({<span class="s">"ttft_s"</span>: first - start <span class="k">if</span> first <span class="k">else</span> <span class="k">None</span>, <span class="s">"elapsed_s"</span>: end - start, <span class="s">"chunks"</span>: token_count})</pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>理解两个核心调参旋钮</h2>
+      <div class="count">45 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">RoadMap 点名的两个参数分别控制不同资源:
+        <code class="inline">--gpu-memory-utilization</code> 决定 vLLM 实例可使用的 GPU 显存预算,
+        进而影响 KV Cache 可分配空间;
+        <code class="inline">--max-num-seqs</code> 限制单次调度迭代能处理的序列数量,
+        影响并发、batching、CUDA graph 捕获规模和延迟。</p>
+
+      <div class="formula">
+        <div class="box">
+          <div class="math">higher gpu_memory_utilization → more KV cache blocks → higher possible concurrency</div>
+          <p>值太低会浪费显存,值太高可能给 CUDA graph、临时 buffer、其他进程留不出余量。当前 vLLM 稳定文档默认值为 0.92。</p>
+        </div>
+        <div class="box">
+          <div class="math">higher max_num_seqs → larger active decode batch → higher throughput, possible higher latency</div>
+          <p>并发上限不是越大越好。超出实际请求分布后,可能增加排队、内存压力和 CUDA graph 预热成本。</p>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:24px">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>参数</th>
+              <th>控制对象</th>
+              <th>调大可能收益</th>
+              <th>调大可能风险</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">--gpu-memory-utilization</td>
+              <td>当前 vLLM 实例可用的 GPU 显存比例,主要影响 KV Cache 预算。</td>
+              <td class="teal">更多 cache blocks,更高并发或更长上下文。</td>
+              <td>启动 OOM、运行时 OOM、与其他进程抢显存。</td>
+            </tr>
+            <tr>
+              <td class="mono">--max-num-seqs</td>
+              <td>一次调度迭代最多处理多少条序列。</td>
+              <td class="blue">decode batch 更大,吞吐可能提升。</td>
+              <td>TTFT/TPOT 变差,CUDA graph 内存增加,请求尾延迟上升。</td>
+            </tr>
+            <tr>
+              <td class="mono">--max-model-len</td>
+              <td>模型可接受的 prompt + output 最大长度。</td>
+              <td class="gold">支持更长上下文。</td>
+              <td>KV Cache 预算压力变大,可服务并发减少。</td>
+            </tr>
+            <tr>
+              <td class="mono">--max-num-batched-tokens</td>
+              <td>一次调度迭代可处理的 token 总数。</td>
+              <td>更好地控制 prefill/decode 混合负载。</td>
+              <td>设置不当会让长 prompt 挤压短请求。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="margin-top:32px">实验矩阵</h3>
+      <pre class="code"><span class="c"># 每组只改一个变量,记录启动日志、显存、吞吐、TTFT/TPOT</span>
+
+gpu_memory_utilization: [0.80, 0.85, 0.90, 0.92]
+max_num_seqs: [16, 32, 64, 128]
+max_model_len: [2048, 4096, 8192]
+
+report:
+  model: qwen2.5-7b
+  gpu: "A10 24GB / L40S 48GB / A100 80GB ..."
+  vllm_version: "..."
+  prompt_len: 512
+  output_len: 128
+  concurrency: [1, 4, 16, 32]
+  metrics:
+    - p50_ttft_ms
+    - p95_ttft_ms
+    - p50_tpot_ms
+    - output_tokens_per_s
+    - gpu_memory_used_gb
+    - oom_or_preemption</pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>压测与观测</h2>
+      <div class="count">35 MIN</div>
+    </div>
+    <div class="indent">
+      <p class="lede">上线前至少要压三种负载:短 prompt 短输出、长 prompt 短输出、短 prompt 长输出。
+        这三类分别压到不同阶段:调度开销、prefill、decode 和 KV Cache。</p>
+
+      <h3>轻量压测脚本</h3>
+      <pre class="code"><span class="k">import</span> asyncio
+<span class="k">import</span> time
+<span class="k">from</span> openai <span class="k">import</span> AsyncOpenAI
+
+client = AsyncOpenAI(api_key=<span class="s">"local-dev-key"</span>, base_url=<span class="s">"http://localhost:8000/v1"</span>)
+
+<span class="k">async def</span> one_request(i, prompt):
+    t0 = time.perf_counter()
+    resp = <span class="k">await</span> client.chat.completions.create(
+        model=<span class="s">"qwen2.5-7b"</span>,
+        messages=[{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: prompt}],
+        temperature=<span class="n">0.0</span>,
+        max_tokens=<span class="n">128</span>,
+    )
+    dt = time.perf_counter() - t0
+    text = resp.choices[<span class="n">0</span>].message.content
+    <span class="k">return</span> {<span class="s">"id"</span>: i, <span class="s">"latency_s"</span>: dt, <span class="s">"chars"</span>: len(text)}
+
+<span class="k">async def</span> main(concurrency=<span class="n">16</span>):
+    prompt = <span class="s">"用 5 条 bullet 总结 vLLM 调参方法。"</span>
+    tasks = [one_request(i, prompt) <span class="k">for</span> i <span class="k">in</span> range(concurrency)]
+    results = <span class="k">await</span> asyncio.gather(*tasks)
+    lat = sorted(r[<span class="s">"latency_s"</span>] <span class="k">for</span> r <span class="k">in</span> results)
+    print({
+        <span class="s">"concurrency"</span>: concurrency,
+        <span class="s">"p50_s"</span>: lat[len(lat)//<span class="n">2</span>],
+        <span class="s">"p95_s"</span>: lat[int(len(lat)*<span class="n">0.95</span>) - <span class="n">1</span>],
+        <span class="s">"max_s"</span>: lat[-<span class="n">1</span>],
+    })
+
+asyncio.run(main(concurrency=<span class="n">32</span>))</pre>
+
+      <div class="grid grid-3" style="margin-top:24px">
+        <div class="node blue">
+          <div class="tag blue">日志</div>
+          <h3>看 vLLM stats</h3>
+          <p>观察 running、waiting、prompt throughput、generation throughput、KV cache usage 和是否出现 preemption。</p>
+        </div>
+        <div class="node teal">
+          <div class="tag teal">显存</div>
+          <h3>看 nvidia-smi</h3>
+          <p>记录启动后静态显存和压测峰值显存。调参时保留 1-2GB 安全余量更稳。</p>
+        </div>
+        <div class="node gold">
+          <div class="tag gold">接口</div>
+          <h3>看 HTTP 错误</h3>
+          <p>区分 401 鉴权、404 模型名不匹配、400 请求参数错误、500/503 服务端压力或 OOM。</p>
+        </div>
+      </div>
+
+      <div class="node entry" style="margin-top:22px">
+        <div class="tag clay">可选</div>
+        <h3>使用 vLLM 自带 benchmark</h3>
+        <p>如果当前安装版本包含 <code class="inline">vllm bench serve</code>,
+          可以用它替代手写脚本做更规范的 serving benchmark。重点仍是同一套负载下比较参数变化,而不是把不同 prompt/output 分布的结果混在一起。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>排错速查</h2>
+      <div class="count">20 MIN</div>
+    </div>
+    <div class="indent">
+      <div class="table-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>现象</th>
+              <th>可能原因</th>
+              <th>检查</th>
+              <th>处理</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>启动 OOM</td>
+              <td>权重 + KV cache + CUDA graph 超出显存。</td>
+              <td>看启动日志和 <code class="inline">nvidia-smi</code>。</td>
+              <td>降低 <code class="inline">max-model-len</code>、<code class="inline">gpu-memory-utilization</code>、<code class="inline">max-num-seqs</code>,或换量化模型。</td>
+            </tr>
+            <tr>
+              <td>请求 401</td>
+              <td>设置了 <code class="inline">--api-key</code>,请求没有带 Bearer token。</td>
+              <td>检查 curl/header/OpenAI SDK api_key。</td>
+              <td>补上 <code class="inline">Authorization: Bearer ...</code>。</td>
+            </tr>
+            <tr>
+              <td>请求 404 / model not found</td>
+              <td>请求里的 <code class="inline">model</code> 与 <code class="inline">--served-model-name</code> 不一致。</td>
+              <td>访问 <code class="inline">/v1/models</code>。</td>
+              <td>统一服务端 served name 和客户端 model 字段。</td>
+            </tr>
+            <tr>
+              <td>TTFT 很高</td>
+              <td>排队、长 prompt prefill、冷启动、batch 太大。</td>
+              <td>看 waiting requests、prompt throughput、p95 prompt length。</td>
+              <td>降低并发上限,启用 prefix cache,拆分长 prompt,调 chunked prefill。</td>
+            </tr>
+            <tr>
+              <td>TPOT 很高</td>
+              <td>decode batch 太大、KV 读取压力、显存带宽受限。</td>
+              <td>看 generation throughput 与 GPU 利用率。</td>
+              <td>调小 <code class="inline">max-num-seqs</code>,减少输出长度,评估 KV cache dtype/量化。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>常见疑问</h2>
+      <div class="count">FAQ</div>
+    </div>
+    <div class="indent">
+      <div class="qa-grid">
+        <details class="qa-card" open>
+          <summary>
+            <span class="qa-num">Q1</span>
+            <span class="qa-q">为什么我设置了很高的 gpu-memory-utilization 还是并发不高?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>显存只是上限之一。并发还受 <code class="inline">max-num-seqs</code>、prompt/output 长度、KV Cache block 可用数量、调度策略和模型计算吞吐影响。长上下文请求尤其容易把 cache 占满。</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="qa-card">
+          <summary>
+            <span class="qa-num">Q2</span>
+            <span class="qa-q">max-num-seqs 是不是应该直接设到很大?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>不是。它提高的是调度迭代中的序列上限,可能改善吞吐,也可能拉高延迟、增加 CUDA graph 相关内存和调度开销。在线服务要以 p95/p99 延迟 SLO 为约束逐步上调。</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="qa-card">
+          <summary>
+            <span class="qa-num">Q3</span>
+            <span class="qa-q">served-model-name 有什么用?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>它决定 OpenAI API 中 <code class="inline">model</code> 字段可使用的名字,也会影响 metrics 中的 model_name 标签。给服务一个稳定短名,可以避免客户端暴露 Hugging Face 路径。</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="qa-card">
+          <summary>
+            <span class="qa-num">Q4</span>
+            <span class="qa-q">为什么要固定 prompt/output 分布再调参?</span>
+            <span class="qa-toggle">+</span>
+          </summary>
+          <div class="qa-a">
+            <div class="qa-a-label">A</div>
+            <div class="qa-a-body">
+              <p>prefill 和 decode 压力完全不同。长 prompt 会拉高 TTFT,长输出会放大 decode TPOT。负载分布变了,参数收益也会变,所以每次实验必须记录 prompt_len、output_len 和 concurrency。</p>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>复盘问题</h2>
+      <div class="count">6 QUESTIONS</div>
+    </div>
+    <div class="indent">
+      <ol class="review">
+        <li>写出你今天的 <code class="inline">vllm serve</code> 启动命令,解释每个关键参数的作用。</li>
+        <li><code class="inline">--gpu-memory-utilization</code> 调大后,KV Cache、并发和 OOM 风险分别如何变化?</li>
+        <li><code class="inline">--max-num-seqs</code> 和 batch size 是什么关系?为什么它会影响 TPOT?</li>
+        <li>如何验证 OpenAI 兼容 API 的模型名、鉴权和 streaming 都正常?</li>
+        <li>设计一个调参实验矩阵:你会固定哪些变量,记录哪些指标?</li>
+        <li>如果 p95 TTFT 变差但 tokens/s 变高,你会如何判断这个参数配置能不能上线?</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>今日检查清单</h2>
+      <div class="count">10 ITEMS</div>
+    </div>
+    <div class="indent">
+      <div class="check">
+        <ul>
+          <li>能安装并确认当前 <code class="inline">vllm</code>、CUDA、GPU 显存环境。</li>
+          <li>能用 <code class="inline">vllm serve</code> 启动一个 7B Instruct 模型。</li>
+          <li>能访问 <code class="inline">/v1/models</code> 验证服务存活和模型名。</li>
+          <li>能用 curl 调通 <code class="inline">/v1/chat/completions</code>。</li>
+          <li>能用 OpenAI Python SDK 指向本地 <code class="inline">base_url</code>。</li>
+          <li>能解释 <code class="inline">--served-model-name</code>、<code class="inline">--api-key</code>、<code class="inline">--max-model-len</code> 的作用。</li>
+          <li>能解释 <code class="inline">--gpu-memory-utilization</code> 如何影响 KV Cache 预算。</li>
+          <li>能解释 <code class="inline">--max-num-seqs</code> 如何影响吞吐和尾延迟。</li>
+          <li>完成至少 3 组调参实验,记录 TTFT、TPOT、tokens/s、显存和错误。</li>
+          <li>能写出一个服务排错 runbook:启动 OOM、401、404、TTFT 高、TPOT 高。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>推荐阅读</h2>
+      <div class="count">5 ITEMS</div>
+    </div>
+    <div class="indent">
+      <div class="grid grid-2">
+        <div class="node">
+          <div class="tag blue">vLLM</div>
+          <h3><a href="https://docs.vllm.ai/en/stable/getting_started/quickstart/">Quickstart</a></h3>
+          <p>官方快速开始。重点看 online serving、默认端口、OpenAI 兼容调用和 chat/completions 示例。</p>
+        </div>
+        <div class="node">
+          <div class="tag teal">OpenAI API</div>
+          <h3><a href="https://docs.vllm.ai/en/stable/cli/serve/">vllm serve CLI</a></h3>
+          <p>查看 <code class="inline">--host</code>、<code class="inline">--port</code>、<code class="inline">--api-key</code>、<code class="inline">--served-model-name</code> 等服务参数。</p>
+        </div>
+        <div class="node">
+          <div class="tag gold">Tuning</div>
+          <h3><a href="https://docs.vllm.ai/en/stable/configuration/engine_args/">Engine Arguments</a></h3>
+          <p>重点看 CacheConfig 和 SchedulerConfig,尤其是 <code class="inline">gpu-memory-utilization</code>、<code class="inline">max-num-seqs</code>、<code class="inline">max-model-len</code>。</p>
+        </div>
+        <div class="node">
+          <div class="tag clay">Benchmark</div>
+          <h3><a href="https://docs.vllm.ai/en/stable/">vLLM Docs</a></h3>
+          <p>继续阅读 Benchmarking、Metrics、Production Metrics。Day33 会把视角从单实例调参推进到 continuous batching 调度器。</p>
+        </div>
+        <div class="node entry">
+          <div class="tag">NEXT</div>
+          <h3>Continuous Batching</h3>
+          <p>Day33 会比较静态 batching 与 in-flight batching,并把 vLLM、TGI、SGLang 的调度思路放到一起看。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Day 33 预告</h2>
+      <div class="count">NEXT</div>
+    </div>
+    <div class="indent">
+      <div class="node exit">
+        <div class="tag clay">COMING NEXT</div>
+        <h3>Continuous Batching:让请求在运行中进出 batch</h3>
+        <p>今天我们把 vLLM 单实例跑起来,并学会调最基础的并发和显存参数。
+          明天会拆开调度器:为什么静态 batch 浪费 GPU,continuous batching 如何把新请求插入正在运行的 decode loop,
+          以及 vLLM、TGI、SGLang 在调度策略上的差异。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="quote">推理服务调参的第一原则:同一组负载、同一套指标、一次只改一个变量。</p>
+    <div class="meta">DAY 32 · vLLM HANDS-ON · AI INFRA ROADMAP</div>
+  </footer>
+</div>
