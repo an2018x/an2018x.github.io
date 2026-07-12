@@ -1,0 +1,524 @@
+---
+title: "Hertz 反向代理中结合 WithSenseClientDisconnection"
+date: '2026-06-21'
+draft: false
+description: "介绍 server.WithSenseClientDisconnection(true) 如何和 hertz-contrib/reverseproxy 的 rp *reverseproxy.ReverseProxy 结合使用，让客户端断开信号传递到代理上游请求。"
+toc: false
+tags:
+  - Backend
+  - Go
+  - Hertz
+  - ReverseProxy
+  - CloudWeGo
+---
+
+<style>
+.hzrpsense{
+  --surface:#ffffff; --ink:#17202a; --muted:#667085; --line:#e4e7ec;
+  --soft:#f6f8fb; --blue:#1f5eff; --teal:#0f766e; --amber:#b25e09; --red:#b42318;
+  --serif:ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  max-width:1080px; margin:0 auto; padding:0 30px 112px;
+  color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.68;
+}
+.hzrpsense *{ box-sizing:border-box; }
+.hzrpsense a{ color:var(--blue); text-decoration:none; border-bottom:1px solid rgba(31,94,255,.24); }
+.hzrpsense a:hover{ border-bottom-color:var(--blue); }
+.hzrpsense p{ margin:0; }
+.hzrpsense strong{ font-weight:650; }
+.hzrpsense code{
+  font-family:var(--mono); font-size:.9em; color:#12315f;
+  background:#edf4ff; border:1px solid #d9e8ff; border-radius:4px; padding:1px 6px;
+}
+.hzrpsense pre{
+  overflow:auto; margin:14px 0 0; padding:16px 18px;
+  border:1px solid #d0d5dd; border-radius:8px; background:#101828; color:#f9fafb;
+}
+.hzrpsense pre code{
+  display:block; padding:0; border:0; border-radius:0; background:transparent;
+  color:inherit; font-size:13px; line-height:1.6; white-space:pre;
+}
+html body .post-content .hzrpsense pre{
+  overflow:auto; padding:16px 18px; background:#101828 !important;
+  border:1px solid #2d3a4f; border-radius:8px;
+}
+html body .post-content .hzrpsense pre code{
+  display:block !important; margin:0 !important; padding:0 !important;
+  color:#f8fafc !important; background:transparent !important; border:0 !important;
+  border-radius:0 !important; box-shadow:none !important; overflow:visible;
+  white-space:pre !important; word-break:normal !important; overflow-wrap:normal !important;
+}
+.hzrpsense .masthead{ padding:76px 0 48px; border-bottom:1px solid var(--line); }
+.hzrpsense .eyebrow{
+  display:flex; align-items:center; gap:12px; color:var(--muted);
+  font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+}
+.hzrpsense .eyebrow::before{ content:""; width:28px; height:2px; background:var(--teal); }
+.hzrpsense h1{
+  max-width:20ch; margin:20px 0 24px; font-family:var(--serif);
+  font-size:clamp(36px, 5vw, 58px); font-weight:560; line-height:1.1; letter-spacing:0;
+}
+.hzrpsense h2{
+  margin:0; font-family:var(--serif); font-size:28px;
+  font-weight:560; line-height:1.22; letter-spacing:0;
+}
+.hzrpsense h3{
+  margin:0 0 8px; font-family:var(--serif); font-size:20px;
+  font-weight:560; line-height:1.28; letter-spacing:0;
+}
+.hzrpsense .lede{ max-width:72ch; color:#344054; font-size:17px; line-height:1.78; }
+.hzrpsense .meta-strip{ display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+.hzrpsense .meta-pill{
+  display:inline-flex; align-items:center; min-height:38px; padding:8px 12px;
+  border:1px solid var(--line); border-radius:8px; background:var(--surface);
+  color:#475467; font-family:var(--mono); font-size:12px;
+}
+.hzrpsense .hero-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap:16px; margin-top:32px;
+}
+.hzrpsense .focus-box,
+.hzrpsense .brief-box{
+  padding:20px; border:1px solid var(--line); border-radius:8px; background:var(--surface);
+}
+.hzrpsense .focus-box h3,
+.hzrpsense .brief-box h3,
+.hzrpsense .focus-box p,
+.hzrpsense .brief-box p{
+  word-break:normal; overflow-wrap:break-word;
+}
+.hzrpsense .brief-box{ background:#f0fdfa; border-color:#b8e3df; }
+.hzrpsense .plain-list{ margin:10px 0 0; padding-left:20px; }
+.hzrpsense li{ margin:6px 0; }
+.hzrpsense .section{ padding-top:52px; }
+.hzrpsense .section-head{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:20px; margin-bottom:20px;
+}
+.hzrpsense .section-note{ max-width:58ch; color:var(--muted); }
+.hzrpsense .grid-3{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap:14px;
+}
+.hzrpsense .card{
+  min-height:176px; padding:18px; border:1px solid var(--line);
+  border-radius:8px; background:var(--surface);
+}
+.hzrpsense .tag{
+  display:inline-flex; margin-bottom:12px; padding:4px 9px; border-radius:999px;
+  background:#eef4ff; color:#1849a9; font-family:var(--mono); font-size:12px;
+}
+.hzrpsense .card:nth-child(2) .tag{ background:#ecfdf3; color:#067647; }
+.hzrpsense .card:nth-child(3) .tag{ background:#fff7ed; color:#9a3412; }
+.hzrpsense .card p{ color:var(--muted); }
+.hzrpsense .matrix{
+  width:100%; border-collapse:collapse; overflow:hidden;
+  border:1px solid var(--line); border-radius:8px; background:var(--surface);
+}
+.hzrpsense .matrix th,
+.hzrpsense .matrix td{
+  padding:12px 14px; border-bottom:1px solid var(--line);
+  text-align:left; vertical-align:top;
+}
+.hzrpsense .matrix th{
+  color:#344054; background:#f8fafc; font-family:var(--mono); font-size:12px;
+}
+.hzrpsense .matrix tr:last-child td{ border-bottom:0; }
+.hzrpsense .flow{
+  display:grid; gap:10px; counter-reset:flow;
+}
+.hzrpsense .flow-step{
+  position:relative; padding:16px 18px 16px 58px;
+  border:1px solid var(--line); border-radius:8px; background:var(--surface);
+}
+.hzrpsense .flow-step::before{
+  counter-increment:flow; content:counter(flow);
+  position:absolute; left:18px; top:18px; width:26px; height:26px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; background:var(--blue); color:#fff; font-family:var(--mono); font-size:12px;
+}
+.hzrpsense .verify{
+  padding:18px 20px; border-left:4px solid var(--teal);
+  border-radius:0 8px 8px 0; background:#f0fdfa;
+}
+.hzrpsense .warning{
+  padding:18px 20px; border-left:4px solid var(--amber);
+  border-radius:0 8px 8px 0; background:#fffbeb;
+}
+.hzrpsense .danger{
+  padding:18px 20px; border-left:4px solid var(--red);
+  border-radius:0 8px 8px 0; background:#fff1f3;
+}
+.hzrpsense .check-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap:14px;
+}
+.hzrpsense .check{
+  padding:18px; border:1px solid var(--line); border-radius:8px; background:var(--soft);
+}
+.hzrpsense .resources{
+  padding:20px; border:1px solid var(--line); border-radius:8px; background:var(--surface);
+}
+.hzrpsense .small{ color:var(--muted); font-size:13px; }
+@media (max-width:900px){
+  .hzrpsense{ padding-left:22px; padding-right:22px; }
+}
+@media (max-width:640px){
+  .hzrpsense{ padding-left:16px; padding-right:16px; font-size:14px; }
+  .hzrpsense .masthead{ padding-top:48px; }
+  .hzrpsense .focus-box,
+  .hzrpsense .brief-box,
+  .hzrpsense .card,
+  .hzrpsense .check{ padding:16px; }
+  .hzrpsense h3{ font-size:18px; }
+  .hzrpsense .section-head{ display:block; }
+  .hzrpsense .section-note{ margin-top:10px; }
+  .hzrpsense .matrix{ display:block; overflow-x:auto; }
+}
+</style>
+
+<article class="hzrpsense">
+  <header class="masthead">
+    <div class="eyebrow">Hertz · Reverse Proxy · Cancellation</div>
+    <h1>WithSenseClientDisconnection 如何结合 ReverseProxy</h1>
+    <p class="lede">
+      在代理网关里，<code>server.WithSenseClientDisconnection(true)</code> 和 <code>rp *reverseproxy.ReverseProxy</code> 的组合价值很直接：客户端断开后，Hertz 取消 handler 的 <code>context.Context</code>；<code>rp.ServeHTTP(c, ctx)</code> 再把这个 <code>c</code> 传给 Hertz Client 的上游请求，从而让代理链路有机会及时退出。
+    </p>
+    <div class="meta-strip">
+      <span class="meta-pill">Hertz：v0.10.5</span>
+      <span class="meta-pill">reverseproxy：v1.0.6</span>
+      <span class="meta-pill">关键方法：rp.ServeHTTP(c, ctx)</span>
+      <span class="meta-pill">核心原则：传递原始 context</span>
+    </div>
+
+    <div class="hero-grid">
+      <section class="focus-box">
+        <h3>一句话结论</h3>
+        <p>
+          代理路由可以直接注册 <code>rp.ServeHTTP</code>；如果你要包一层自定义 handler，也必须调用 <code>rp.ServeHTTP(c, ctx)</code>，不要把第一个参数换成 <code>context.Background()</code>。
+        </p>
+      </section>
+      <section class="brief-box">
+        <h3>最小组合</h3>
+        <pre><code class="language-go">h := server.Default(
+    server.WithHostPorts(":8888"),
+    server.WithSenseClientDisconnection(true),
+)
+
+rp, _ := reverseproxy.NewSingleHostReverseProxy("http://127.0.0.1:8082")
+h.Any("/api/*path", rp.ServeHTTP)</code></pre>
+      </section>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>为什么要结合</h2>
+      <p class="section-note">反向代理常常是长链路，客户端断开时更应该尽早停止上游等待。</p>
+    </div>
+    <div class="grid-3">
+      <article class="card">
+        <span class="tag">Gateway</span>
+        <h3>减少无效上游请求</h3>
+        <p>客户端已经关闭页面，代理仍在等用户服务、订单服务或搜索服务响应，会浪费连接和 goroutine。</p>
+      </article>
+      <article class="card">
+        <span class="tag">Backpressure</span>
+        <h3>避免代理层堆积</h3>
+        <p>高并发下，下游慢响应和客户端中断会放大资源占用。取消信号能让代理更快释放请求链路。</p>
+      </article>
+      <article class="card">
+        <span class="tag">Observability</span>
+        <h3>区分取消和故障</h3>
+        <p><code>context.Canceled</code> 通常不是上游故障，而是客户端离开。错误处理里应单独记录，避免误报。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>源码链路</h2>
+      <p class="section-note">组合生效的关键，在于同一个 context 从 server 传到 reverseproxy，再传给 client。</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <h3>server 开启断开感知</h3>
+        <p><code>server.WithSenseClientDisconnection(true)</code> 让 Hertz 在客户端连接关闭时取消 handler 入参 <code>c context.Context</code>。</p>
+      </div>
+      <div class="flow-step">
+        <h3>路由进入代理 handler</h3>
+        <p>直接注册 <code>h.Any("/api/*path", rp.ServeHTTP)</code> 时，Hertz 会把当前请求的 <code>c</code> 和 <code>ctx</code> 传入 <code>rp.ServeHTTP</code>。</p>
+      </div>
+      <div class="flow-step">
+        <h3>ReverseProxy 改写请求</h3>
+        <p><code>rp.ServeHTTP</code> 执行 <code>director</code>，清理 hop-by-hop Header，补充 <code>X-Forwarded-For</code>，准备向上游发请求。</p>
+      </div>
+      <div class="flow-step">
+        <h3>Hertz Client 接收同一个 context</h3>
+        <p><code>rp.doClientBehavior(c, req, resp)</code> 会把 <code>c</code> 传给 <code>r.client.Do</code>、<code>DoTimeout</code>、<code>DoDeadline</code> 或 <code>DoRedirects</code>。</p>
+      </div>
+      <div class="flow-step">
+        <h3>客户端断开后向上游传播取消</h3>
+        <p>一旦客户端断开，<code>c.Done()</code> 关闭；代理中的 client 调用可以感知取消，错误会进入 <code>SetErrorHandler</code> 或默认 502 逻辑。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>最小可用代码</h2>
+      <p class="section-note">这就是组合的基本形态：server option 开启，代理路由传原始 context。</p>
+    </div>
+    <pre><code class="language-go">package main
+
+import (
+    "github.com/cloudwego/hertz/pkg/app/server"
+    "github.com/hertz-contrib/reverseproxy"
+)
+
+func main() {
+    h := server.Default(
+        server.WithHostPorts(":8888"),
+        server.WithSenseClientDisconnection(true),
+    )
+
+    rp, err := reverseproxy.NewSingleHostReverseProxy("http://127.0.0.1:8082")
+    if err != nil {
+        panic(err)
+    }
+
+    h.Any("/api/*path", rp.ServeHTTP)
+    h.Spin()
+}</code></pre>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>推荐生产写法</h2>
+      <p class="section-note">真实网关里通常会加超时、错误区分、请求头透传和上游标识。</p>
+    </div>
+    <pre><code class="language-go">package main
+
+import (
+    "context"
+    "errors"
+    "log"
+    "time"
+
+    "github.com/cloudwego/hertz/pkg/app"
+    hclient "github.com/cloudwego/hertz/pkg/app/client"
+    "github.com/cloudwego/hertz/pkg/app/server"
+    "github.com/cloudwego/hertz/pkg/common/utils"
+    "github.com/cloudwego/hertz/pkg/protocol"
+    "github.com/cloudwego/hertz/pkg/protocol/consts"
+    "github.com/hertz-contrib/reverseproxy"
+)
+
+func main() {
+    h := server.Default(
+        server.WithHostPorts(":8888"),
+        server.WithSenseClientDisconnection(true),
+    )
+
+    rp, err := reverseproxy.NewSingleHostReverseProxy(
+        "http://127.0.0.1:8082",
+        hclient.WithClientReadTimeout(5*time.Second),
+    )
+    if err != nil {
+        panic(err)
+    }
+
+    rp.SetClientBehavior(reverseproxy.ClientDoTimeout(3 * time.Second))
+
+    rp.SetDirector(func(req *protocol.Request) {
+        req.SetRequestURI(string(reverseproxy.JoinURLPath(req, rp.Target)))
+        req.Header.SetHostBytes(req.URI().Host())
+        req.Header.Set("X-Gateway", "hertz")
+        req.Header.Set("X-Forwarded-Proto", "http")
+    })
+
+    rp.SetErrorHandler(func(ctx *app.RequestContext, err error) {
+        if errors.Is(err, context.Canceled) {
+            log.Printf("client canceled proxy request: %v", err)
+            ctx.SetStatusCode(499)
+            return
+        }
+
+        ctx.JSON(consts.StatusBadGateway, utils.H{
+            "code":    50201,
+            "message": "upstream unavailable",
+            "detail":  err.Error(),
+        })
+    })
+
+    h.Any("/api/*path", func(c context.Context, ctx *app.RequestContext) {
+        // Keep this c. It carries client-disconnection cancellation.
+        rp.ServeHTTP(c, ctx)
+    })
+
+    h.Spin()
+}</code></pre>
+    <div class="warning" style="margin-top:14px;">
+      <h3>为什么还要配置 ReadTimeout</h3>
+      <p>
+        Hertz Client 的 <code>DoTimeout</code> 注释说明：超时返回不等于一定终止底层请求本身。代理场景建议同时设置 <code>WithClientReadTimeout</code> 或请求级 <code>config.WithReadTimeout</code>，给连接池和上游等待一个更硬的边界。
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>不要这样写</h2>
+      <p class="section-note">下面这些写法会破坏取消传播，或者让取消信号变得不可靠。</p>
+    </div>
+    <div class="danger">
+      <h3>不要丢掉 handler 的 context</h3>
+      <pre><code class="language-go">h.Any("/api/*path", func(c context.Context, ctx *app.RequestContext) {
+    // Wrong: client disconnection cancellation is lost.
+    rp.ServeHTTP(context.Background(), ctx)
+})</code></pre>
+    </div>
+    <div class="warning" style="margin-top:14px;">
+      <h3>不要只依赖 502 判断上游故障</h3>
+      <p>
+        客户端主动断开、代理超时、上游连接失败都可能进入 <code>SetErrorHandler</code>。要根据 <code>err</code>、日志字段和 trace 区分，避免把用户取消误判成服务故障。
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>组合配置矩阵</h2>
+      <p class="section-note">可以按接口类型选择不同的代理配置。</p>
+    </div>
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>代理场景</th>
+          <th>推荐配置</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>普通 JSON API</td>
+          <td><code>WithSenseClientDisconnection(true)</code> + <code>ClientDoTimeout</code> + <code>WithClientReadTimeout</code></td>
+          <td>覆盖客户端取消、业务超时和上游慢响应。</td>
+        </tr>
+        <tr>
+          <td>慢查询 / 报表代理</td>
+          <td>较长 <code>ReadTimeout</code> + 明确业务 timeout + 取消日志</td>
+          <td>用户取消和真正超时要分开观测。</td>
+        </tr>
+        <tr>
+          <td>流式响应代理</td>
+          <td><code>client.WithResponseBodyStream(true)</code> + 断开感知 + 写错误处理</td>
+          <td>流式响应更依赖连接生命周期，客户端断开后要尽快释放上游。</td>
+        </tr>
+        <tr>
+          <td>多上游网关</td>
+          <td>共享 <code>*client.Client</code> + <code>SetClient</code> + 统一 <code>SetErrorHandler</code></td>
+          <td>统一连接池、超时、TLS、服务发现和错误结构。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>如何验证</h2>
+      <p class="section-note">用一个慢上游服务，再从代理入口中断客户端请求。</p>
+    </div>
+    <div class="verify">
+      <h3>实验步骤</h3>
+      <ol class="plain-list">
+        <li>启动一个慢上游：<code>/slow</code> 延迟 10 秒再返回。</li>
+        <li>启动代理服务，并开启 <code>WithSenseClientDisconnection(true)</code>。</li>
+        <li>执行 <code>curl -v http://127.0.0.1:8888/api/slow</code>。</li>
+        <li>在上游返回前按 <code>Ctrl-C</code> 中断 curl。</li>
+        <li>观察代理日志，应看到 <code>context canceled</code> 或自定义的取消日志。</li>
+      </ol>
+    </div>
+    <pre><code class="language-bash">curl -v http://127.0.0.1:8888/api/slow
+# 等 1-2 秒后按 Ctrl-C
+# 代理日志：client canceled proxy request: context canceled</code></pre>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>源码要点</h2>
+      <p class="section-note">读源码时抓住这几处就够了。</p>
+    </div>
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>源码位置</th>
+          <th>关键代码</th>
+          <th>意义</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>server.WithSenseClientDisconnection</code></td>
+          <td>设置 <code>Options.SenseClientDisconnection</code></td>
+          <td>开启连接关闭检测，客户端断开时取消 handler context。</td>
+        </tr>
+        <tr>
+          <td><code>ReverseProxy.ServeHTTP</code></td>
+          <td><code>func (r *ReverseProxy) ServeHTTP(c context.Context, ctx *app.RequestContext)</code></td>
+          <td>第一个参数就是取消传播的入口。</td>
+        </tr>
+        <tr>
+          <td><code>rp.doClientBehavior</code></td>
+          <td><code>r.client.Do(ctx, req, resp)</code></td>
+          <td>代理把同一个 context 传给 Hertz Client。</td>
+        </tr>
+        <tr>
+          <td><code>SetErrorHandler</code></td>
+          <td>处理 client 调用错误或响应修改错误</td>
+          <td>可以区分客户端取消、上游超时和真正的 5xx 故障。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>实践清单</h2>
+      <p class="section-note">落到项目里时，可以按这个清单检查。</p>
+    </div>
+    <div class="check-grid">
+      <article class="check">
+        <h3>server 层</h3>
+        <p>确认创建 Hertz 实例时已开启 <code>server.WithSenseClientDisconnection(true)</code>。</p>
+      </article>
+      <article class="check">
+        <h3>handler 层</h3>
+        <p>直接注册 <code>rp.ServeHTTP</code>，或包一层时继续传 <code>rp.ServeHTTP(c, ctx)</code>。</p>
+      </article>
+      <article class="check">
+        <h3>client 层</h3>
+        <p>为反向代理配置合理的 <code>ClientDoTimeout</code>、<code>WithClientReadTimeout</code> 或自定义 client。</p>
+      </article>
+      <article class="check">
+        <h3>观测层</h3>
+        <p>把 <code>context.Canceled</code>、超时、上游不可达分开打日志和统计。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>参考资料</h2>
+      <p class="section-note">本页基于 Hertz v0.10.5 和 reverseproxy v1.0.6 源码整理。</p>
+    </div>
+    <div class="resources">
+      <ul class="plain-list">
+        <li><a href="https://github.com/hertz-contrib/reverseproxy/blob/v1.0.6/reverse_proxy.go" target="_blank" rel="noreferrer">hertz-contrib/reverseproxy v1.0.6: reverse_proxy.go</a></li>
+        <li><a href="https://pkg.go.dev/github.com/hertz-contrib/reverseproxy" target="_blank" rel="noreferrer">pkg.go.dev: github.com/hertz-contrib/reverseproxy</a></li>
+        <li><a href="https://github.com/cloudwego/hertz/blob/v0.10.5/pkg/app/server/option.go" target="_blank" rel="noreferrer">Hertz v0.10.5: server option.go</a></li>
+        <li><a href="https://github.com/cloudwego/hertz/blob/v0.10.5/pkg/app/client/client.go" target="_blank" rel="noreferrer">Hertz v0.10.5: app/client/client.go</a></li>
+      </ul>
+      <p class="small" style="margin-top:12px;">资料核对时间：2026-06-21。当前模块源返回 <code>github.com/cloudwego/hertz@latest</code> 为 <code>v0.10.5</code>，<code>github.com/hertz-contrib/reverseproxy@latest</code> 为 <code>v1.0.6</code>。</p>
+    </div>
+  </section>
+</article>

@@ -1,0 +1,818 @@
+---
+title: "Day 02 · Hertz 路由注册、分组与匹配规则"
+date: '2026-06-21'
+draft: false
+description: "Hertz HTTP 框架 30 天系统学习路线 Day 02：系统学习路由注册、路由分组、静态路由、参数路由、通配路由、404/405 处理和尾斜杠重定向，完成一个 REST API 路由骨架。"
+toc: false
+tags:
+  - Backend
+  - Go
+  - Hertz
+  - CloudWeGo
+  - Day 02
+---
+
+<style>
+.hertz-d02{
+  --paper:#fffdf8;
+  --surface:#ffffff;
+  --ink:#17202a;
+  --muted:#667085;
+  --line:#e4e7ec;
+  --soft:#f6f8fb;
+  --blue:#1f5eff;
+  --teal:#0f766e;
+  --amber:#b25e09;
+  --red:#b42318;
+  --purple:#6941c6;
+  --serif:ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;
+  --sans:system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 30px 112px;
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.68;
+}
+.hertz-d02 *{ box-sizing:border-box; }
+.hertz-d02 a{ color:var(--blue); text-decoration:none; border-bottom:1px solid rgba(31,94,255,.24); }
+.hertz-d02 a:hover{ border-bottom-color:var(--blue); }
+.hertz-d02 p{ margin:0; }
+.hertz-d02 strong{ font-weight:650; }
+.hertz-d02 code{
+  font-family:var(--mono);
+  font-size:.9em;
+  color:#12315f;
+  background:#edf4ff;
+  border:1px solid #d9e8ff;
+  border-radius:4px;
+  padding:1px 6px;
+}
+.hertz-d02 pre{
+  overflow:auto;
+  margin:14px 0 0;
+  padding:16px 18px;
+  border:1px solid #d0d5dd;
+  border-radius:8px;
+  background:#101828;
+  color:#f9fafb;
+}
+.hertz-d02 pre code{
+  display:block;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:inherit;
+  font-size:13px;
+  line-height:1.6;
+  white-space:pre;
+}
+html body .post-content .hertz-d02 pre{
+  overflow:auto;
+  padding:16px 18px;
+  background:#101828 !important;
+  border:1px solid #2d3a4f;
+  border-radius:8px;
+}
+html body .post-content .hertz-d02 pre code{
+  display:block !important;
+  margin:0 !important;
+  padding:0 !important;
+  color:#f8fafc !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  overflow:visible;
+  white-space:pre !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+}
+.hertz-d02 .masthead{
+  padding:76px 0 48px;
+  border-bottom:1px solid var(--line);
+}
+.hertz-d02 .eyebrow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.hertz-d02 .eyebrow::before{
+  content:"";
+  width:28px;
+  height:2px;
+  background:var(--teal);
+}
+.hertz-d02 h1{
+  max-width:18ch;
+  margin:20px 0 24px;
+  font-family:var(--serif);
+  font-size:clamp(36px, 5vw, 58px);
+  font-weight:560;
+  line-height:1.1;
+  letter-spacing:0;
+}
+.hertz-d02 h2{
+  margin:0;
+  font-family:var(--serif);
+  font-size:28px;
+  font-weight:560;
+  line-height:1.22;
+  letter-spacing:0;
+}
+.hertz-d02 h3{
+  margin:0 0 8px;
+  font-family:var(--serif);
+  font-size:20px;
+  font-weight:560;
+  line-height:1.28;
+  letter-spacing:0;
+}
+.hertz-d02 .lede{
+  max-width:68ch;
+  color:#344054;
+  font-size:17px;
+  line-height:1.78;
+}
+.hertz-d02 .meta-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:28px;
+}
+.hertz-d02 .meta-pill{
+  display:inline-flex;
+  align-items:center;
+  min-height:38px;
+  padding:8px 12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+  color:#475467;
+  font-family:var(--mono);
+  font-size:12px;
+}
+.hertz-d02 .hero-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:32px;
+}
+.hertz-d02 .focus-box,
+.hertz-d02 .brief-box{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+.hertz-d02 .brief-box{ background:#f0fdfa; border-color:#b8e3df; }
+.hertz-d02 .focus-list,
+.hertz-d02 .plain-list{
+  margin:10px 0 0;
+  padding-left:20px;
+}
+.hertz-d02 li{ margin:6px 0; }
+.hertz-d02 .section{
+  padding-top:52px;
+}
+.hertz-d02 .section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:20px;
+  margin-bottom:20px;
+}
+.hertz-d02 .section-note{
+  max-width:58ch;
+  color:var(--muted);
+}
+.hertz-d02 .timeline{
+  display:grid;
+  gap:12px;
+}
+.hertz-d02 .slot{
+  display:grid;
+  grid-template-columns:140px minmax(0, 1fr);
+  gap:18px;
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+.hertz-d02 .time{
+  color:var(--blue);
+  font-family:var(--mono);
+  font-weight:700;
+}
+.hertz-d02 .slot p{ color:#475467; }
+.hertz-d02 .concept-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:14px;
+}
+.hertz-d02 .concept{
+  min-height:178px;
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+.hertz-d02 .concept .tag{
+  display:inline-flex;
+  margin-bottom:12px;
+  padding:4px 9px;
+  border-radius:999px;
+  background:#eef4ff;
+  color:#1849a9;
+  font-family:var(--mono);
+  font-size:12px;
+}
+.hertz-d02 .concept:nth-child(2) .tag{ background:#ecfdf3; color:#067647; }
+.hertz-d02 .concept:nth-child(3) .tag{ background:#fff7ed; color:#9a3412; }
+.hertz-d02 .concept p{ color:var(--muted); }
+.hertz-d02 .method-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:10px;
+}
+.hertz-d02 .method{
+  min-height:98px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+.hertz-d02 .method b{
+  display:block;
+  margin-bottom:6px;
+  color:#1849a9;
+  font-family:var(--mono);
+  font-size:13px;
+}
+.hertz-d02 .method span{
+  color:var(--muted);
+  font-size:13px;
+}
+.hertz-d02 .rule-table{
+  width:100%;
+  border-collapse:collapse;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+.hertz-d02 .rule-table th,
+.hertz-d02 .rule-table td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  vertical-align:top;
+}
+.hertz-d02 .rule-table th{
+  color:#344054;
+  background:#f8fafc;
+  font-family:var(--mono);
+  font-size:12px;
+}
+.hertz-d02 .rule-table tr:last-child td{ border-bottom:0; }
+.hertz-d02 .lab{
+  display:grid;
+  gap:14px;
+}
+.hertz-d02 .lab-step{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+.hertz-d02 .step-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+.hertz-d02 .step-num{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:var(--blue);
+  color:#fff;
+  font-family:var(--mono);
+  font-size:13px;
+}
+.hertz-d02 .verify{
+  padding:18px 20px;
+  border-left:4px solid var(--teal);
+  border-radius:0 8px 8px 0;
+  background:#f0fdfa;
+}
+.hertz-d02 .warning{
+  padding:18px 20px;
+  border-left:4px solid var(--amber);
+  border-radius:0 8px 8px 0;
+  background:#fffbeb;
+}
+.hertz-d02 .check-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:14px;
+}
+.hertz-d02 .check{
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--soft);
+}
+.hertz-d02 .note-template{
+  padding:20px;
+  border:1px solid #c7d7fe;
+  border-radius:8px;
+  background:#f5f8ff;
+}
+.hertz-d02 .resources{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+.hertz-d02 .small{
+  color:var(--muted);
+  font-size:13px;
+}
+@media (max-width:900px){
+  .hertz-d02{ padding-left:22px; padding-right:22px; }
+  .hertz-d02 .hero-grid,
+  .hertz-d02 .concept-grid,
+  .hertz-d02 .check-grid{ grid-template-columns:1fr; }
+  .hertz-d02 .method-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width:640px){
+  .hertz-d02{ padding-left:16px; padding-right:16px; font-size:14px; }
+  .hertz-d02 .masthead{ padding-top:48px; }
+  .hertz-d02 .section-head{ display:block; }
+  .hertz-d02 .section-note{ margin-top:10px; }
+  .hertz-d02 .slot,
+  .hertz-d02 .method-grid{ grid-template-columns:1fr; }
+  .hertz-d02 .rule-table{ display:block; overflow-x:auto; }
+}
+</style>
+
+<article class="hertz-d02">
+  <header class="masthead">
+    <div class="eyebrow">Hertz Roadmap · Day 02</div>
+    <h1>Hertz 路由注册、分组与匹配规则</h1>
+    <p class="lede">
+      Day 02 的核心任务是把“一个请求如何被命中到一个 handler”讲清楚。今天你会系统练习 HTTP 方法注册、版本化路由分组、路径参数、通配路径、404/405 兜底和尾斜杠重定向，最后得到一个可继续扩展的 REST API 路由骨架。
+    </p>
+    <div class="meta-strip">
+      <span class="meta-pill">建议时长：2.5 小时</span>
+      <span class="meta-pill">难度：入门进阶</span>
+      <span class="meta-pill">前置：Day01 /ping 服务</span>
+      <span class="meta-pill">产物：REST 路由骨架 + curl 验证表</span>
+    </div>
+
+    <div class="hero-grid">
+      <section class="focus-box">
+        <h3>今天要掌握</h3>
+        <ul class="focus-list">
+          <li>能用 <code>GET</code>、<code>POST</code>、<code>PUT</code>、<code>DELETE</code> 注册资源路由。</li>
+          <li>能用 <code>Group</code> 组织 <code>/api/v1</code>、<code>/api/admin</code> 等路由前缀。</li>
+          <li>能解释静态路由、参数路由、通配路由的匹配差异。</li>
+          <li>能为未知路径和方法错误配置清晰的 JSON 响应。</li>
+        </ul>
+      </section>
+      <section class="brief-box">
+        <h3>一句话心智模型</h3>
+        <p>
+          路由表就是 Hertz 的“分诊台”：请求方法和路径先被路由器匹配，命中后才进入对应 handler。路由设计越清晰，后续参数绑定、认证中间件、日志和接口文档都会更顺。
+        </p>
+      </section>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>时间安排</h2>
+      <p class="section-note">今天以编码练习为主。先把路由跑通，再讨论命名和组织方式。</p>
+    </div>
+    <div class="timeline">
+      <div class="slot">
+        <div class="time">00:00-00:25</div>
+        <div>
+          <h3>复盘 Day01 项目</h3>
+          <p>确认 <code>/ping</code> 能启动，理解 <code>h.GET(path, handler)</code> 里方法、路径和 handler 的关系。</p>
+        </div>
+      </div>
+      <div class="slot">
+        <div class="time">00:25-00:55</div>
+        <div>
+          <h3>注册 HTTP 方法路由</h3>
+          <p>练习 GET、POST、PUT、DELETE、PATCH、HEAD、OPTIONS、Any 和 Handle 的使用边界。</p>
+        </div>
+      </div>
+      <div class="slot">
+        <div class="time">00:55-01:25</div>
+        <div>
+          <h3>设计路由分组</h3>
+          <p>用 <code>/api/v1</code> 管业务资源，用 <code>/api/admin</code> 管内部调试或管理接口。</p>
+        </div>
+      </div>
+      <div class="slot">
+        <div class="time">01:25-02:00</div>
+        <div>
+          <h3>练习匹配规则</h3>
+          <p>分别验证静态、参数、通配路由，观察优先级：静态路由 &gt; 参数路由 &gt; 通配路由。</p>
+        </div>
+      </div>
+      <div class="slot">
+        <div class="time">02:00-02:30</div>
+        <div>
+          <h3>补齐兜底与文档</h3>
+          <p>配置 NoRoute、NoMethod，输出路由清单，并把 curl 验证结果写进笔记。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>核心概念</h2>
+      <p class="section-note">今天先把路由层的术语统一，后续中间件和绑定都会复用这些概念。</p>
+    </div>
+    <div class="concept-grid">
+      <article class="concept">
+        <span class="tag">Register</span>
+        <h3>路由注册</h3>
+        <p>路由注册把 HTTP 方法、路径模式和 handler 绑定起来。例如 <code>GET /api/v1/users/:id</code> 表示只处理 GET 方法，并把路径里的 <code>:id</code> 交给 handler。</p>
+      </article>
+      <article class="concept">
+        <span class="tag">Group</span>
+        <h3>路由分组</h3>
+        <p><code>Group</code> 用来共享路径前缀，也可以配合中间件。今天先用它做版本化和管理端分组，Day08 再深入中间件链。</p>
+      </article>
+      <article class="concept">
+        <span class="tag">Match</span>
+        <h3>匹配优先级</h3>
+        <p>Hertz 支持静态路由、参数路由和通配路由。官方文档给出的优先级是：静态路由高于参数路由，参数路由高于通配路由。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>常用注册方法</h2>
+      <p class="section-note">这张表先作为编码速查。不是每个方法每天都会用，但要知道它们的位置。</p>
+    </div>
+    <div class="method-grid">
+      <div class="method"><b>GET</b><span>读取资源，例如列表、详情、健康检查。</span></div>
+      <div class="method"><b>POST</b><span>创建资源或提交动作。</span></div>
+      <div class="method"><b>PUT</b><span>整体更新一个资源。</span></div>
+      <div class="method"><b>DELETE</b><span>删除资源或撤销关系。</span></div>
+      <div class="method"><b>PATCH</b><span>局部更新资源。</span></div>
+      <div class="method"><b>HEAD</b><span>只需要响应头，不需要响应体。</span></div>
+      <div class="method"><b>OPTIONS</b><span>查询服务支持的方法或预检请求。</span></div>
+      <div class="method"><b>Any / Handle</b><span>匹配多个方法，或注册自定义 HTTP 方法。</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>匹配规则</h2>
+      <p class="section-note">这一段要亲自 curl 验证。只有看到命中和不命中，路由规则才会变成直觉。</p>
+    </div>
+    <table class="rule-table">
+      <thead>
+        <tr>
+          <th>路由类型</th>
+          <th>示例</th>
+          <th>匹配行为</th>
+          <th>适用场景</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>静态路由</td>
+          <td><code>/api/v1/users/profile</code></td>
+          <td>路径必须完全匹配。</td>
+          <td>固定功能入口，例如当前用户资料、健康检查。</td>
+        </tr>
+        <tr>
+          <td>参数路由</td>
+          <td><code>/api/v1/users/:id</code></td>
+          <td><code>:id</code> 只匹配一个路径片段，用 <code>c.Param("id")</code> 获取。</td>
+          <td>资源详情、更新、删除。</td>
+        </tr>
+        <tr>
+          <td>通配路由</td>
+          <td><code>/api/v1/files/*filepath</code></td>
+          <td><code>*filepath</code> 匹配后续路径内容，用 <code>c.Param("filepath")</code> 获取。</td>
+          <td>文件路径、代理路径、静态资源兜底。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warning" style="margin-top:16px;">
+      <h3>注意</h3>
+      <p>不要滥用通配路由。它很方便，但容易吞掉后续更明确的接口。业务 API 优先写静态和参数路由，通配路由一般放在边界清晰的路径前缀下。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>实验：构建 REST 路由骨架</h2>
+      <p class="section-note">在 Day01 项目的基础上替换 <code>main.go</code>。今天重点验证路由，不引入数据库和复杂绑定。</p>
+    </div>
+    <div class="lab">
+      <div class="lab-step">
+        <div class="step-head">
+          <span class="step-num">1</span>
+          <h3>准备项目</h3>
+        </div>
+        <p>继续使用 Day01 的项目，也可以复制一份新目录。</p>
+        <pre><code class="language-bash">cp -R hertz-day01 hertz-day02
+cd hertz-day02</code></pre>
+      </div>
+
+      <div class="lab-step">
+        <div class="step-head">
+          <span class="step-num">2</span>
+          <h3>替换 main.go</h3>
+        </div>
+        <p>这份代码包含版本化路由、资源路由、参数路由、通配路由、路由清单和 404/405 处理。</p>
+        <pre><code class="language-go">package main
+
+import (
+    "context"
+
+    "github.com/cloudwego/hertz/pkg/app"
+    "github.com/cloudwego/hertz/pkg/app/server"
+    "github.com/cloudwego/hertz/pkg/common/utils"
+    "github.com/cloudwego/hertz/pkg/protocol/consts"
+)
+
+func main() {
+    h := server.Default(
+        server.WithHostPorts(":8888"),
+        server.WithHandleMethodNotAllowed(true),
+    )
+
+    h.GET("/ping", func(ctx context.Context, c *app.RequestContext) {
+        c.JSON(consts.StatusOK, utils.H{"message": "pong", "day": "day02"})
+    })
+
+    v1 := h.Group("/api/v1")
+    {
+        v1.GET("/users", routeName("list users"))
+        v1.POST("/users", routeName("create user"))
+        v1.GET("/users/profile", routeName("current user profile"))
+        v1.GET("/users/:id", func(ctx context.Context, c *app.RequestContext) {
+            c.JSON(consts.StatusOK, utils.H{
+                "route": "get user",
+                "id":    c.Param("id"),
+            })
+        })
+        v1.PUT("/users/:id", func(ctx context.Context, c *app.RequestContext) {
+            c.JSON(consts.StatusOK, utils.H{
+                "route": "update user",
+                "id":    c.Param("id"),
+            })
+        })
+        v1.DELETE("/users/:id", func(ctx context.Context, c *app.RequestContext) {
+            c.JSON(consts.StatusOK, utils.H{
+                "route": "delete user",
+                "id":    c.Param("id"),
+            })
+        })
+        v1.GET("/files/*filepath", func(ctx context.Context, c *app.RequestContext) {
+            c.JSON(consts.StatusOK, utils.H{
+                "route":    "file wildcard",
+                "filepath": c.Param("filepath"),
+            })
+        })
+    }
+
+    admin := h.Group("/api/admin")
+    {
+        admin.GET("/routes", func(ctx context.Context, c *app.RequestContext) {
+            routes := make([]utils.H, 0, len(h.Routes()))
+            for _, r := range h.Routes() {
+                routes = append(routes, utils.H{
+                    "method":  r.Method,
+                    "path":    r.Path,
+                    "handler": r.Handler,
+                })
+            }
+            c.JSON(consts.StatusOK, utils.H{"routes": routes})
+        })
+    }
+
+    h.Any("/debug/any", routeName("any method"))
+    h.Handle("LOAD", "/debug/load", routeName("custom LOAD method"))
+
+    h.NoRoute(func(ctx context.Context, c *app.RequestContext) {
+        c.JSON(consts.StatusNotFound, utils.H{
+            "error": "route not found",
+            "path":  string(c.Path()),
+        })
+    })
+
+    h.NoMethod(func(ctx context.Context, c *app.RequestContext) {
+        c.JSON(consts.StatusMethodNotAllowed, utils.H{
+            "error":  "method not allowed",
+            "method": string(c.Method()),
+            "path":   string(c.Path()),
+        })
+    })
+
+    h.Spin()
+}
+
+func routeName(name string) app.HandlerFunc {
+    return func(ctx context.Context, c *app.RequestContext) {
+        c.JSON(consts.StatusOK, utils.H{"route": name})
+    }
+}</code></pre>
+      </div>
+
+      <div class="lab-step">
+        <div class="step-head">
+          <span class="step-num">3</span>
+          <h3>启动服务</h3>
+        </div>
+        <pre><code class="language-bash">go mod tidy
+go run .</code></pre>
+      </div>
+
+      <div class="lab-step">
+        <div class="step-head">
+          <span class="step-num">4</span>
+          <h3>验证路由</h3>
+        </div>
+        <p>另开一个终端执行下面命令，并记录每条命中了哪个 handler。</p>
+        <pre><code class="language-bash">curl -i http://127.0.0.1:8888/ping
+curl -i http://127.0.0.1:8888/api/v1/users
+curl -i -X POST http://127.0.0.1:8888/api/v1/users
+curl -i http://127.0.0.1:8888/api/v1/users/profile
+curl -i http://127.0.0.1:8888/api/v1/users/42
+curl -i -X PUT http://127.0.0.1:8888/api/v1/users/42
+curl -i -X DELETE http://127.0.0.1:8888/api/v1/users/42
+curl -i http://127.0.0.1:8888/api/v1/files/docs/hertz/day02.md
+curl -i http://127.0.0.1:8888/api/admin/routes
+curl -i http://127.0.0.1:8888/not-exists
+curl -i -X PATCH http://127.0.0.1:8888/api/v1/users/42</code></pre>
+        <div class="verify">
+          <h3>验收标准</h3>
+          <p>能看到 <code>/users/profile</code> 命中静态路由，<code>/users/42</code> 命中参数路由，<code>/files/docs/hertz/day02.md</code> 命中通配路由，未知路径返回 404，未注册方法返回 405。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>路由设计建议</h2>
+      <p class="section-note">路由设计没有唯一答案，但有一些能长期降低维护成本的习惯。</p>
+    </div>
+    <table class="rule-table">
+      <thead>
+        <tr>
+          <th>建议</th>
+          <th>示例</th>
+          <th>原因</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>按资源组织路径</td>
+          <td><code>/api/v1/users/:id</code></td>
+          <td>让 URL 表达“操作什么”，把动作交给 HTTP 方法表达。</td>
+        </tr>
+        <tr>
+          <td>显式版本化</td>
+          <td><code>/api/v1</code>、<code>/api/v2</code></td>
+          <td>后续接口不兼容升级时有迁移空间。</td>
+        </tr>
+        <tr>
+          <td>管理端单独分组</td>
+          <td><code>/api/admin/routes</code></td>
+          <td>后面接认证、审计、限流时可以整组处理。</td>
+        </tr>
+        <tr>
+          <td>少用动词路径</td>
+          <td>优先 <code>POST /users</code>，少写 <code>/createUser</code></td>
+          <td>REST API 更容易被文档、测试和网关工具理解。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>学习笔记模板</h2>
+      <p class="section-note">建议保存为 <code>notes/day02.md</code>，重点记录命中结果。</p>
+    </div>
+    <div class="note-template">
+      <pre><code class="language-markdown"># Day 02 · Hertz 路由注册、分组与匹配规则
+
+## 1. 今天新增了哪些路由
+- GET /ping:
+- GET /api/v1/users:
+- POST /api/v1/users:
+- GET /api/v1/users/profile:
+- GET /api/v1/users/:id:
+- GET /api/v1/files/*filepath:
+- GET /api/admin/routes:
+
+## 2. 路由分组设计
+- /api/v1:
+- /api/admin:
+
+## 3. 匹配规则验证
+- 静态路由命中结果:
+- 参数路由命中结果:
+- 通配路由命中结果:
+- 优先级结论:
+
+## 4. 404 / 405 验证
+- NoRoute:
+- NoMethod:
+- WithHandleMethodNotAllowed:
+
+## 5. 遇到的问题
+- 问题:
+- 解决:
+
+## 6. 明天想重点搞懂
+- RequestContext:
+- Param / Query / Header / Cookie:
+- 请求数据和响应数据的边界:</code></pre>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Day 02 检查清单</h2>
+      <p class="section-note">全部勾上后，再进入 Day03 的 RequestContext 和请求数据学习。</p>
+    </div>
+    <div class="check-grid">
+      <div class="check">
+        <h3>编码</h3>
+        <ul class="plain-list">
+          <li>能注册常用 HTTP 方法路由。</li>
+          <li>能用 <code>Group</code> 组织版本化路由。</li>
+          <li>能用 <code>c.Param</code> 获取路径参数。</li>
+        </ul>
+      </div>
+      <div class="check">
+        <h3>规则</h3>
+        <ul class="plain-list">
+          <li>能解释静态、参数、通配路由差异。</li>
+          <li>能说明匹配优先级。</li>
+          <li>知道尾斜杠可能触发自动重定向。</li>
+        </ul>
+      </div>
+      <div class="check">
+        <h3>兜底</h3>
+        <ul class="plain-list">
+          <li>能配置 <code>NoRoute</code> 返回统一 404。</li>
+          <li>能配置 <code>NoMethod</code> 返回统一 405。</li>
+          <li>知道 405 需要配合 <code>WithHandleMethodNotAllowed(true)</code>。</li>
+        </ul>
+      </div>
+      <div class="check">
+        <h3>输出</h3>
+        <ul class="plain-list">
+          <li>完成 <code>notes/day02.md</code>。</li>
+          <li>保存 curl 验证结果。</li>
+          <li>画出自己的 API 路由树。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>参考资料</h2>
+      <p class="section-note">今天重点阅读 Route，RequestContext 可以先略读，留给 Day03 深入。</p>
+    </div>
+    <div class="resources">
+      <ul class="plain-list">
+        <li><a href="https://www.cloudwego.io/docs/hertz/tutorials/basic-feature/route/" target="_blank" rel="noreferrer">Hertz Route</a>：路由注册、Group、路由类型、NoRoute、NoMethod、尾斜杠重定向。</li>
+        <li><a href="https://www.cloudwego.io/docs/hertz/tutorials/basic-feature/request/" target="_blank" rel="noreferrer">Request</a>：Day03 会深入请求数据读取。</li>
+        <li><a href="https://www.cloudwego.io/docs/hertz/tutorials/basic-feature/middleware/" target="_blank" rel="noreferrer">Middleware Overview</a>：Day08 会用 Group 串中间件。</li>
+        <li><a href="https://github.com/cloudwego/hertz-examples" target="_blank" rel="noreferrer">hertz-examples</a>：查找官方示例代码。</li>
+      </ul>
+      <p class="small" style="margin-top:12px;">资料核对时间：2026-06-21。官方 Route 文档当前列出 GET、POST、DELETE、PUT、PATCH、HEAD、OPTIONS、Handle、Any、StaticFile/Static/StaticFS 等注册方式，并说明路由优先级为静态路由 &gt; 参数路由 &gt; 通配路由。</p>
+    </div>
+  </section>
+</article>
