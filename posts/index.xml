@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.163.3</generator><language>zh</language><lastBuildDate>Sat, 20 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Day 14 · 周复盘 + 算子融合</title><link>https://blog.ans20xx.com/posts/ai/day14/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day14/</guid><description>Phase 1 收官:复盘 PyTorch 核心抽象、Autograd、算子后端、显存管理、AMP 与 torch.compile,再用 FlashAttention 拆开算子融合与 IO-aware kernel 的本质。</description></item><item><title>Day 15 · 分布式基础</title><link>https://blog.ans20xx.com/posts/ai/day15/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day15/</guid><description>进入 AI Infra 分布式训练阶段:理解进程组、rank/world_size、torchrun 启动模型,掌握 AllReduce、AllGather、ReduceScatter、Broadcast 四类集合通信,并跑通一个 DDP MNIST。</description></item><item><title>Day 16 · NCCL 深入</title><link>https://blog.ans20xx.com/posts/ai/day16/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day16/</guid><description>进入分布式训练通信层:理解 NCCL 的 ring、tree、双二叉树 AllReduce 算法,看懂 NCCL_DEBUG=INFO 的初始化、拓扑、通道、算法选择日志,并用一个小脚本完整跑通 AllReduce 取证流程。</description></item><item><title>Day 17 · 数据并行 DP/DDP</title><link>https://blog.ans20xx.com/posts/ai/day17/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day17/</guid><description>进入分布式训练的第一条主线:从 DataParallel 到 DistributedDataParallel,拆开梯度同步时机、Reducer、bucket、overlap 与 no_sync;阅读 torch/nn/parallel/distributed.py 关键路径,并用 torchrun 跑一个可观测的 DDP 实验。</description></item><item><title>Day 18 · ZeRO 系列（DeepSpeed）</title><link>https://blog.ans20xx.com/posts/ai/day18/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day18/</guid><description>理解 ZeRO-1/2/3 分别切分 optimizer state、gradient 和 parameter 的方式，读 ZeRO 论文主线，并用 DeepSpeed 配置把 DDP 的复制显存一步步拆掉。</description></item><item><title>Day 19 · Tensor Parallel</title><link>https://blog.ans20xx.com/posts/ai/day19/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day19/</guid><description>深入 Megatron-LM Tensor Parallel:理解列并行与行并行 Linear 的矩阵切分、通信边界、MLP 和 Attention 的 TP 布局;手画 Transformer block 的张量切分图,看懂 tensor_model_parallel_size 如何影响显存、计算与通信。</description></item><item><title>Day 20 · Pipeline Parallel</title><link>https://blog.ans20xx.com/posts/ai/day20/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day20/</guid><description>拆开 Pipeline Parallel:理解模型按层切 stage、micro-batch 如何填流水线,对比 GPipe、1F1B 与 Megatron Interleaved 1F1B,掌握 bubble 时间计算与 pipeline 调参方法。</description></item><item><title>Day 21 · Sequence Parallel &amp; Context Parallel</title><link>https://blog.ans20xx.com/posts/ai/day21/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day21/</guid><description>进入长序列训练的并行策略:解释为什么长上下文会让 activation 和 attention 成为瓶颈,拆开 Sequence Parallel 与 Context Parallel 的切分边界,理解 Ring Attention 如何用块状 attention 和环形 KV 传递扩展上下文长度。</description></item><item><title>Day 22 · 3D / 4D 并行实战</title><link>https://blog.ans20xx.com/posts/ai/day22/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day22/</guid><description>把 Day19-21 的 TP、PP、DP、SP/CP 组合起来,在单机多卡上用 Megatron-LM 跑一个小 GPT,并通过调整 tensor-model-parallel-size 与 pipeline-model-parallel-size 理解并行维度的取舍。</description></item><item><title>Day 23 · DeepSpeed 实战</title><link>https://blog.ans20xx.com/posts/ai/day23/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day23/</guid><description>实战 DeepSpeed ZeRO-3 + Offload:理解参数、梯度、优化器状态如何分片与换入换出,拆解 ds_config.json 的 zero_optimization、offload_param、offload_optimizer、bucket、overlap 与 NVMe 参数,并给出可运行的训练配置模板。</description></item><item><title>Day 24 · Checkpoint 与容错</title><link>https://blog.ans20xx.com/posts/ai/day24/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day24/</guid><description>学习分布式训练中的 checkpoint 与容错:理解 DCP 分片保存、异步保存、训练中断恢复、torchrun elastic restart,并建立可恢复训练的状态清单与演练流程。</description></item><item><title>Day 25 · 数据 Pipeline</title><link>https://blog.ans20xx.com/posts/ai/day25/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day25/</guid><description>进入训练数据通路:理解 WebDataset、Mosaic Streaming 与自定义 IterableDataset 的设计取舍;调优 DataLoader 的 num_workers、prefetch_factor、pin_memory、persistent_workers 与 shared memory,定位 GPU starvation。</description></item><item><title>Day 26 · 算子层加速</title><link>https://blog.ans20xx.com/posts/ai/day26/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day26/</guid><description>进入 Transformer 算子层加速:理解 FlashAttention v2/v3、PyTorch SDPA、xFormers 与 Apex Fused Kernels 的适用边界,动手替换 attention,并用 TFLOPS / MFU 判断优化是否真的生效。</description></item><item><title>Day 27 · 训练性能分析</title><link>https://blog.ans20xx.com/posts/ai/day27/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day27/</guid><description>学习训练性能分析的最小闭环:计算 MFU / HFU,用 Nsight Systems 抓一段训练 step,通过 NVTX、CUDA kernel、NCCL timeline 识别 compute、communication 与 pipeline bubble。</description></item><item><title>Day 28 · 周复盘 + 小项目</title><link>https://blog.ans20xx.com/posts/ai/day28/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day28/</guid><description>阶段 2 收官:复盘分布式训练 Infra 的 NCCL、DDP、ZeRO、TP、PP、SP/CP、DeepSpeed、checkpoint、data pipeline、算子加速与 profiling;在 2 卡或云上 8 卡训练一个约 125M GPT,记录 MFU,并完成 ZeRO-3 vs TP+PP 的硬件取舍笔记。</description></item><item><title>Day 29 · LLM 推理基础</title><link>https://blog.ans20xx.com/posts/ai/day29/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day29/</guid><description>进入 LLM 推理 Infra:理解 prefill 与 decode 的阶段差异、KV Cache 为什么是显存大头、吞吐/延迟指标如何拆解,并写出一个最小 generation loop。</description></item><item><title>Day 30 · 解码算法</title><link>https://blog.ans20xx.com/posts/ai/day30/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day30/</guid><description>进入 LLM 解码策略:理解 greedy、beam search、temperature、top-k、top-p 的采样语义与服务化影响;掌握 speculative decoding 的 draft/verify 思想,并用 Transformers 与 vLLM 参数做小型实验。</description></item><item><title>Day 31 · PagedAttention &amp; vLLM</title><link>https://blog.ans20xx.com/posts/ai/day31/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day31/</guid><description>学习 PagedAttention 与 vLLM 的核心机制:为什么 KV Cache 会浪费显存,如何用 block table 管理逻辑块到物理块的映射,copy-on-write 如何支撑并行采样和 beam search,以及这些机制如何服务高吞吐 LLM serving。</description></item><item><title>Day 33 · Continuous Batching</title><link>https://blog.ans20xx.com/posts/ai/day33/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day33/</guid><description>学习 LLM 推理服务中的 Continuous Batching:理解静态 batching 与 in-flight batching 的差异,prefill/decode 如何混排,以及 TGI、vLLM、SGLang 调度器在吞吐、TTFT、TPOT 与公平性上的取舍。</description></item><item><title>VSCode 最实用技巧与效率工具清单</title><link>https://blog.ans20xx.com/posts/tools/vscode-practical-tips/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-practical-tips/</guid><description>一份面向日常开发的 VSCode 实用技巧与效率工具清单：快捷键、搜索替换、多光标、Snippets、工作区、终端、Tasks、Git、Profiles，以及常用扩展组合与可复制配置。</description></item><item><title>Day 32 · vLLM 实战</title><link>https://blog.ans20xx.com/posts/ai/day32/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0800</pubDate><guid>https://blog.ans20xx.com/posts/ai/day32/</guid><description>动手部署一个 7B 模型到 vLLM,开启 OpenAI 兼容 API,学习 --max-num-seqs 与 --gpu-memory-utilization 的调参方法,并建立推理服务压测与排错流程。</description></item><item><title>Day 34 · SGLang &amp; RadixAttention</title><link>https://blog.ans20xx.com/posts/ai/day34/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0800</pubDate><guid>https://blog.ans20xx.com/posts/ai/day34/</guid><description>学习 SGLang 推理框架与 RadixAttention:理解前缀缓存、共享 prefix 的请求调度、Radix Tree 如何复用 KV Cache,并动手用同一个 system prompt 发多请求观察缓存命中。</description></item><item><title>Day 35 · 量化 (1)：权重量化</title><link>https://blog.ans20xx.com/posts/ai/day35/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0800</pubDate><guid>https://blog.ans20xx.com/posts/ai/day35/</guid><description>学习 LLM 推理中的权重量化:理解 INT8 / INT4、per-channel / group-wise scale、GPTQ 与 AWQ 的核心思想,并用 AutoGPTQ 或 llama.cpp 完成一次模型量化与评估。</description></item><item><title>OpenAI 和 Anthropic 的工具调用格式</title><link>https://blog.ans20xx.com/posts/ai/openai-anthropic-tool-calling/</link><pubDate>Fri, 19 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/openai-anthropic-tool-calling/</guid><description>对比 OpenAI Responses / Chat Completions 与 Anthropic Messages API 的工具定义、模型请求、工具调用结果回传和多轮执行循环。</description></item><item><title>Codex 桌面端 21 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/codex-desktop-learning-roadmap/</link><pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/codex-desktop-learning-roadmap/</guid><description>面向 Codex 桌面端用户的 21 天学习路线：覆盖提示、项目规则、权限、审查、插件、MCP、浏览器验证、自动化和子代理。</description></item><item><title>Day 01 · LLM 开放平台 Go 后端建立工作台</title><link>https://blog.ans20xx.com/posts/backend/llm-platform-go-day01/</link><pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/llm-platform-go-day01/</guid><description>LLM 开放平台 Go 后端 30 天提效与进阶路线 Day 01：整理需求文档、接口文档、日志、监控、数据库、代码仓库 6 个入口，建立日常排查和交付工作台。</description></item><item><title>LLM 开放平台 Go 后端 30 天提效与进阶路线</title><link>https://blog.ans20xx.com/posts/backend/llm-platform-go-efficiency-roadmap/</link><pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/llm-platform-go-efficiency-roadmap/</guid><description>面向技术一般的 LLM 开放平台 Go 后端程序员：用 30 天建立工作提效系统，补齐 Go 后端、LLM API 网关、流式调用、稳定性、安全与影响力能力。</description></item><item><title>Day 07 · Nvim + Go 代码导航与项目搜索</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day07/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day07/</guid><description>Nvim + Go 30 天系统学习路线 Day 07：配置 fuzzy finder，练习文件、buffer、symbol、grep 搜索，并用 :lua vim.lsp.buf.definition() 理解 LSP 请求。</description></item><item><title>Day 08 · Nvim + Go 补全与片段</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day08/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day08/</guid><description>Nvim + Go 30 天系统学习路线 Day 08：接入补全插件或使用内置补全，只保留 Go 常用片段：函数、测试、表驱动测试、error return，并避免把补全菜单调得过重。</description></item><item><title>Day 09 · Nvim + Go 格式化与导入整理</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day09/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day09/</guid><description>Nvim + Go 30 天系统学习路线 Day 09：绑定保存时 gofmt、goimports、gofumpt，确认格式化来自 LSP 还是外部 formatter，并建立可排错的保存格式化流程。</description></item><item><title>Day 10 · Nvim + Go 诊断与 Quickfix</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day10/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day10/</guid><description>Nvim + Go 30 天系统学习路线 Day 10：学习 diagnostics 浮窗、跳转、quickfix 与 location list，把编译错误、LSP 诊断和 grep 结果放进同一个处理习惯里。</description></item><item><title>Day 11 · Nvim + Go 包结构与模块边界</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day11/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day11/</guid><description>Nvim + Go 30 天系统学习路线 Day 11：梳理 cmd、internal、package 命名和 import path，用 go list、文件树、搜索和 LSP 建立 Go 项目地图。</description></item><item><title>什么是 Telescope：Nvim 里的模糊查找中枢</title><link>https://blog.ans20xx.com/posts/infra/nvim-telescope-intro/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-telescope-intro/</guid><description>一篇面向 Nvim + Go 学习者的 Telescope 入门说明：理解 picker、finder、sorter、previewer，配置文件搜索、全文搜索、buffer、LSP 引用和当前文件函数列表。</description></item><item><title>我的 Nvim 配置整理</title><link>https://blog.ans20xx.com/posts/infra/nvim-config/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-config/</guid><description>整理当前 ~/.config/nvim 配置：lazy.nvim、Catppuccin、Telescope、Neo-tree、gitsigns、Diffview、which-key、lualine、Trouble、nvim-cmp 和 Go LSP。</description></item><item><title>Day 06 · Nvim + Go 接入 gopls</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day06/</link><pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day06/</guid><description>Nvim + Go 30 天系统学习路线 Day 06：安装 gopls，用 Neovim 内置 LSP 连接 Go 项目，配置 attach 后的定义、引用、悬浮说明、重命名和诊断快捷键。</description></item><item><title>Day 05 · Nvim + Go Go 工具链入门</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day05/</link><pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day05/</guid><description>Nvim + Go 30 天系统学习路线 Day 05：创建 go mod init 项目，跑通 go fmt、go test、go run，并写一个小 CLI 作为后续练习项目。</description></item><item><title>Day 04 · Nvim + Go Lua 配置结构</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day04/</link><pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day04/</guid><description>Nvim + Go 30 天系统学习路线 Day 04：把 init.lua 拆成 options、keymaps、plugins、lsp，理解 require、模块加载顺序、package.loaded 与最小可维护配置结构。</description></item><item><title>Day 03 · Nvim + Go 文本对象与批量编辑</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day03/</link><pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day03/</guid><description>Nvim + Go 30 天系统学习路线 Day 03：练习 ciw、di(、ya&amp;#34;、点命令和宏录制，用 Go 文件完成变量名、函数参数、注释与重复结构的批量编辑。</description></item><item><title>Day 02 · Nvim + Go Vim 移动心智</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day02/</link><pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day02/</guid><description>Nvim + Go 30 天系统学习路线 Day 02：练习 normal、insert、visual 三种模式，掌握 hjkl、word、line、paragraph 与 search 移动，并输出个人快捷键纸。</description></item><item><title>Day 01 · Nvim + Go 安装与健康检查</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day01/</link><pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day01/</guid><description>Nvim + Go 30 天系统学习路线 Day 01：安装 Neovim、Go、ripgrep、fd 和 gopls，完成 :checkhealth、最小 init.lua、Go module 练习和 Git 提交。</description></item><item><title>Nvim + Go 30 天系统学习路线</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-roadmap/</link><pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-roadmap/</guid><description>从 Vim 心智、Lua 配置到 gopls、Delve、测试、调试与真实 Go 项目交付的 30 天 Nvim Go 开发学习路线。</description></item><item><title>Day 11 · 内建 Git 与 Source Control</title><link>https://blog.ans20xx.com/posts/tools/vscode-day11/</link><pubDate>Sat, 30 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day11/</guid><description>VSCode 内建 Git 与 Source Control：变更列表、diff、stage hunk、discard、commit、branch、sync、3-way merge editor、timeline 与 blame。把每一次改动管理得更稳。</description></item><item><title>Day 10 · 任务系统 tasks.json</title><link>https://blog.ans20xx.com/posts/tools/vscode-day10/</link><pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day10/</guid><description>VSCode 任务系统 tasks.json：npm / shell / process / 自定义 task、group、dependsOn、problemMatcher、background task 与 preLaunchTask。把手敲命令升级成可复用动作。</description></item><item><title>Day 09 · 集成终端深入</title><link>https://blog.ans20xx.com/posts/tools/vscode-day09/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day09/</guid><description>VSCode 集成终端深入：多 terminal、profile、split、cwd、环境变量、Shell Integration、命令装饰、路径链接跳转源码。把终端从外部窗口收回到项目上下文。</description></item><item><title>Day 06 · JWT 深入 · JWS / JWE / JWK / JWA 全家族</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day06/</link><pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day06/</guid><description>认证授权 30 天 Day 06：拆开 JWT 的 Header.Payload.Signature 三段结构,理解 JWS/JWE/JWK/JWA 四条 RFC 的分工,辨析 HS256/RS256/PS256/ES256/EdDSA 五大算法的选型,掌握 iss/sub/aud/exp/nbf/iat/jti 七个标准声明。Phase 2 开篇。</description></item><item><title>Day 08 · 文件浏览器与多根工作区</title><link>https://blog.ans20xx.com/posts/tools/vscode-day08/</link><pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day08/</guid><description>VSCode 文件浏览器与多根工作区：Explorer、.code-workspace、Multi-root、file nesting、Breadcrumbs、Workspace Trust 与项目视图整理。把 VSCode 从打开文件夹升级成项目控制台。</description></item><item><title>Day 13 · torch.compile / TorchDynamo / Inductor</title><link>https://blog.ans20xx.com/posts/ai/day13/</link><pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day13/</guid><description>进入 PyTorch 2.x 编译器栈: TorchDynamo 如何从 Python 代码捕获 FX 图, guards 如何决定复用/重编译/fallback, Inductor 如何融合算子并生成 Triton/C++ kernel;最后对一个小模型做 eager vs compile benchmark。</description></item><item><title>Day 07 · Snippets 与 Emmet</title><link>https://blog.ans20xx.com/posts/tools/vscode-day07/</link><pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day07/</guid><description>VSCode Snippets 与 Emmet：用户 / 全局 / 项目三层模板、tab stops、placeholder、choice、变量、项目级 .code-snippets，以及 HTML/CSS/JSX 中的 Emmet abbreviation。把高频样板代码压缩成一次 Tab。</description></item><item><title>Day 12 · 混合精度与 AMP</title><link>https://blog.ans20xx.com/posts/ai/day12/</link><pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day12/</guid><description>拆开混合精度训练:FP32 / TF32 / FP16 / BF16 / FP8 的数值范围、精度与溢出风险;理解 torch.amp.autocast 的算子选择、GradScaler 的动态 loss scaling,并跑通一个可对比的 AMP benchmark。</description></item><item><title>Day 06 · 搜索、替换与正则</title><link>https://blog.ans20xx.com/posts/tools/vscode-day06/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day06/</guid><description>VSCode 搜索两套体系 —— ⌘F 单文件 / ⌘⇧F 全工作区。正则捕获组 ($1 $2)、大小写转换 (\U \L)、lookbehind/lookahead、include/exclude glob。多光标是临时正则,正则是永久多光标。</description></item><item><title>Day 11 · 显存管理</title><link>https://blog.ans20xx.com/posts/ai/day11/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day11/</guid><description>拆开 PyTorch 的 caching allocator:Segment / Block 两级结构、small/large pool 分裂、stream 池隔离;掌握 memory_summary / memory_snapshot 工具链,学会 OOM 排查的标准流程,并理解 expandable_segments 如何根治碎片化。</description></item><item><title>Day 01 · VSCode 安装、CLI 与同步登录</title><link>https://blog.ans20xx.com/posts/tools/vscode-day01/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day01/</guid><description>从零开始：选择 Stable / Insiders、各平台安装、把 code 命令装进 PATH、用 Microsoft 或 GitHub 登录开启 Settings Sync，让任何一台新机器 10 分钟还原你的 VSCode。</description></item><item><title>Day 02 · 界面骨架与命令面板</title><link>https://blog.ans20xx.com/posts/tools/vscode-day02/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day02/</guid><description>拆解 VSCode 的「五大件」—— Activity Bar / Side Bar / Editor / Panel / Status Bar 的边界与协作，以及命令面板 ⌘⇧P 的四种模式（&amp;gt; / @ / # / :）—— 老司机的唯一菜单。</description></item><item><title>Day 03 · 设置三层与 settings.json 实战</title><link>https://blog.ans20xx.com/posts/tools/vscode-day03/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day03/</guid><description>VSCode 配置的三层架构 —— User / Workspace / Folder 的优先级与覆盖规则；为什么直接写 JSON 比点 UI 更高效；如何用 .vscode/settings.json 和 extensions.json 给团队建立统一规范；@modified / @lang / @feature 过滤器的实战用法。</description></item><item><title>Day 04 · 基础导航与选择</title><link>https://blog.ans20xx.com/posts/tools/vscode-day04/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day04/</guid><description>VSCode 编辑器内功第一天 —— 导航三件套（文件 / 符号 / 行号）、光标按词/按行/按符号的移动、扩展选择与 Smart Select、行操作四件套（删/复制/移动/合并）。修饰键 = 作用域，这是所有快捷键的底层规律。</description></item><item><title>Day 05 · 多光标与列编辑</title><link>https://blog.ans20xx.com/posts/tools/vscode-day05/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day05/</guid><description>VSCode 最强的批量魔法 —— ⌘D 选下一个相同、⌘⇧L 选全部、⌥click 任意加光标、Box Selection 列编辑。理解后,SQL 列对齐、批改 import、给 100 个变量加前缀都是 5 秒钟的事。</description></item><item><title>VSCode 21 天系统进阶路线</title><link>https://blog.ans20xx.com/posts/tools/vscode-roadmap/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-roadmap/</guid><description>从安装到扩展开发：覆盖编辑器内功、工作区、调试、远程开发、AI 协作的 21 天 VSCode 学习路线图。</description></item><item><title>Day 03 · PKI · TLS 1.3 与 mTLS</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day03/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day03/</guid><description>认证授权 30 天 Day 03：理解 PKI 信任锚 / X.509 证书链 / TLS 1.3 一发握手 / SNI 与 ALPN 扩展，用 openssl 自建 CA、用 Go 跑通 HTTPS 服务端 + mTLS 双向认证。</description></item><item><title>Day 04 · 会话管理与 Web 安全 · Session / CSRF / XSS</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day04/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day04/</guid><description>认证授权 30 天 Day 04：理解 Session 完整生命周期与 Session Fixation 攻击，对比 CSRF 的四种防御方案，区分 Stored/Reflected/DOM 三种 XSS，并用 Go 实现安全的 Cookie / CSRF Token / CSP 中间件。</description></item><item><title>Day 05 · 多因素认证 · TOTP · WebAuthn / Passkey</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day05/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day05/</guid><description>认证授权 30 天 Day 05：辨清 MFA 三要素与威胁模型，看懂 RFC 4226 / 6238 的 HOTP/TOTP 公式，理解 SMS OTP 为何被 NIST 弃用，用 Go 实现 TOTP 服务并跑通 WebAuthn / Passkey 登录。Phase 1 收官。</description></item><item><title>Day 01 · AuthN vs AuthZ · HTTP 认证与 Session 模型</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day01/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day01/</guid><description>认证授权 30 天 Day 01：辨析 AuthN/AuthZ/Accounting 三个 A，理解 HTTP Basic / Digest 的挑战-应答模型，掌握 Cookie/Session 的工作原理与三大安全属性,并用 Go 实现最小可运行的登录系统。</description></item><item><title>Day 02 · 密码学基础 · 哈希 · 加密 · HMAC 与签名</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day02/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day02/</guid><description>认证授权 30 天 Day 02：辨清通用哈希与密码哈希的本质差异，理解对称 vs 非对称加密的取舍，掌握 HMAC 与数字签名的设计动机,并用 Go 跑通 bcrypt / argon2id / AES-GCM / Ed25519 全套样例。</description></item><item><title>Day 14 · Agent 与子代理 — 并行调度 · 自定义 agents · Worktree 隔离</title><link>https://blog.ans20xx.com/posts/ai/cc-day14/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day14/</guid><description>派分身去干活——把开放式探索、独立评审、批量重构交给 subagent 在隔离上下文里跑;用 .claude/agents/ 把团队的工种沉淀成可复用资产;用 Git worktree 让多个 agent 在不同分支上同时改文件不会打架。一个任务,几只手并行。</description></item><item><title>Day 16 · 自动化工作流 — /loop · Cron · 后台执行 · Monitor</title><link>https://blog.ans20xx.com/posts/ai/cc-day16/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day16/</guid><description>把 Claude 从『会话内的助手』变成『会话外的同事』——拆透 /loop 的两种节奏、Cron 的本地时区与抖动、Bash/Agent 的后台执行与回调、Monitor 的事件流与覆盖率铁律,再把四件套编排成一条真正能 24×7 运转的自动化流水线。</description></item><item><title>Day 17 · 全栈项目实战 — 从 CLAUDE.md 到上线的完整循环</title><link>https://blog.ans20xx.com/posts/ai/cc-day17/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day17/</guid><description>把 Day 1–16 学过的所有招式拼成一个真实项目——以 Mini Task Tracker(FastAPI + React)为例,跑通 CLAUDE.md → 脚手架 → DB → API → 前端 → 测试 → 部署七步,看 Hooks / Skills / MCP / Subagent 在其中各自的位置。</description></item><item><title>认证授权 30 天系统学习路线（Go 开放平台视角）</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-roadmap/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-roadmap/</guid><description>从 HTTP Basic 到 OAuth 2.1，从 JWT 到 mTLS，从 RBAC 到 Google Zanzibar——面向 Go 后端 / 开放平台工程师的 30 天认证授权学习路线。</description></item><item><title>Day 10 · 算子与后端</title><link>https://blog.ans20xx.com/posts/ai/day10/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day10/</guid><description>拆开 PyTorch 算子实现层:c10 是底座,ATen 是算子库,native_functions.yaml 是真理之源。从代码生成管线到 TORCH_LIBRARY 注册机制,跑通一个自定义 CUDA 算子。</description></item><item><title>Day 15 · Plan 模式 — 规划与执行分离 · 决策矩阵 · 大型重构安全网</title><link>https://blog.ans20xx.com/posts/ai/cc-day15/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day15/</guid><description>把 Day 08 提到的 Plan 模式真正变成肌肉记忆——拆解 EnterPlanMode / ExitPlanMode 的两阶段协议、给出『何时必须先 plan』的决策矩阵、用五要素模板把方案写到能被 review、把 Plan 与 Subagent / Hooks / CLAUDE.md 串成一张大型重构的安全网。一句『直接动手』可能撞墙,一份 30 秒能读完的 plan 能省下一下午回滚。</description></item><item><title>JSON 工具盒</title><link>https://blog.ans20xx.com/posts/tools/json-tools/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/json-tools/</guid><description>JSON 工作台(格式化/压缩/排序/树视图四合一)+ 转义/反转义 + git-style 行级 diff。纸感学术风一站式工具,纯前端无依赖。</description></item><item><title>时间工具盒</title><link>https://blog.ans20xx.com/posts/tools/time-tools/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/time-tools/</guid><description>时间戳 ↔ 日期相互转换、日期加减运算、两日期时间差、跨时区对照。纸感学术风的一站式时间小工具,纯前端无依赖。</description></item><item><title>Day 09 · Autograd 原理</title><link>https://blog.ans20xx.com/posts/ai/day09/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day09/</guid><description>用 ~200 行 Python 手写一个 mini-autograd:理解动态计算图的构建、链式法则的层层应用、拓扑排序的反向遍历。在最小可运行实现里看清 PyTorch backward() 的真面目。</description></item><item><title>Day 08 · PyTorch 核心抽象</title><link>https://blog.ans20xx.com/posts/ai/day08/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day08/</guid><description>打开 PyTorch 黑盒:Tensor 与 Storage 的分离、Dispatcher 的多重派发机制、Autograd Engine 的工作原理。跟踪一行 a + b 从 Python 一路调到 CUDA kernel 的完整路径。</description></item><item><title>Day 11 · 自定义 Skills — 参数化模板 · 嵌套资源 · 跨项目分发</title><link>https://blog.ans20xx.com/posts/ai/cc-day11/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day11/</guid><description>把 Day 07 的 Skill 入门带到生产级——掌握完整 frontmatter、$ARGUMENTS 参数化、嵌套 scripts/templates 资源结构、三层分发位置和团队级跨项目复用，让团队的「祖传手艺」一键可调用。</description></item><item><title>Day 12 · Memory 记忆系统 — 四种类型 · 生命周期 · 与 CLAUDE.md 的边界</title><link>https://blog.ans20xx.com/posts/ai/cc-day12/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day12/</guid><description>把 Day 03 的 Memory 入门带到生产级——深入 user / feedback / project / reference 四种类型的写法标准，掌握 MEMORY.md 索引结构、读写时机、过期处理与跨系统协作。让 Claude 成为有长期记忆的同事，不再每次从零开始。</description></item><item><title>Day 13 · MCP 服务器 — 协议本质 · 三大集成 · 自建服务</title><link>https://blog.ans20xx.com/posts/ai/cc-day13/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day13/</guid><description>把 Day 07 的 MCP 入门带到生产级——拆解 Model Context Protocol 的 JSON-RPC 协议、三种传输方式（stdio/http/sse）的取舍、三层 scope 的优先级，跑通 Postgres/GitHub/Slack 三大主流集成，最后用 Python SDK 写一个自己的 MCP 服务器。</description></item><item><title>Day 07 · 周复盘 + 网络/存储基础</title><link>https://blog.ans20xx.com/posts/ai/day07/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day07/</guid><description>Week 1 收官:把 Day 01–06 的 GPU 编程知识串成地图,再补上 AI 集群的网络与存储基础——NVLink 与 PCIe、InfiniBand 与 RoCE、RDMA 原理、NCCL 通信模型、存储分层。为 Phase 1 进入框架内部机制铺路。</description></item><item><title>Day 10 · Hooks 钩子系统 — 完整事件 · 自动格式化 · 自动测试 · Shell &amp; HTTP</title><link>https://blog.ans20xx.com/posts/ai/cc-day10/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day10/</guid><description>把 Day 07 的 Hooks 入门带到生产级——掌握全部 9 种钩子事件、Shell 与 HTTP 两种处理器、自动格式化与自动测试的最佳实践，以及 hook 调试、撤销与阻断机制。让规则自动执行，不再依赖记忆。</description></item><item><title>Day 06 · Profiling 工具链</title><link>https://blog.ans20xx.com/posts/ai/day06/</link><pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day06/</guid><description>系统学习 GPU profiling 工具链:nsys 看系统级 timeline、ncu 做 kernel 深度分析、py-spy 抓 Python 热点、torch.profiler 串起训练全链路,建立先测量再优化的工程习惯。</description></item><item><title>Claude Code 20 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/claude-code-roadmap/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/claude-code-roadmap/</guid><description>从安装到自动化工作流：覆盖核心工具、Git 工作流、Hooks、MCP 服务器、Agent 子代理、Plan 模式的 20 天 Claude Code 学习路线图。</description></item><item><title>Day 01 · Claude Code 安装与初体验</title><link>https://blog.ans20xx.com/posts/ai/cc-day01/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day01/</guid><description>从零开始：安装 CLI / VS Code 扩展 / Desktop App，完成 OAuth 认证，理解工具调用与权限确认机制，完成第一次 AI 辅助编程体验。</description></item><item><title>Day 02 · 四大核心工具 — Read · Edit · Write · Bash</title><link>https://blog.ans20xx.com/posts/ai/cc-day02/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day02/</guid><description>深入掌握 Claude Code 的四把瑞士军刀：Read 的精准阅读、Edit 的外科手术式修改、Write 的全量创建、Bash 的系统操作。建立工具选择的直觉判断。</description></item><item><title>Day 03 · CLAUDE.md 与项目配置</title><link>https://blog.ans20xx.com/posts/ai/cc-day03/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day03/</guid><description>通过 CLAUDE.md 告诉 Claude 你的项目规范与偏好，掌握 settings.json 权限配置、.claude/ 目录结构和 Memory 跨会话记忆——让 Claude 从通用助手变成你的专属团队成员。</description></item><item><title>Day 04 · CUDA 编程入门 (1)</title><link>https://blog.ans20xx.com/posts/ai/day04/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day04/</guid><description>从 Host 到 Device：理解 kernel 启动、Grid/Block/Thread 线程层级与 Global/Shared Memory 存储模型，动手实现 vector add 与 naive GEMM。</description></item><item><title>Day 04 · 上下文管理 — /compact · /clear · 对话策略</title><link>https://blog.ans20xx.com/posts/ai/cc-day04/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day04/</guid><description>理解 Claude Code 的上下文窗口机制，掌握 /compact 主动压缩、自动压缩触发、/clear 清空重置，以及 --continue / --resume 对话延续策略——让每一轮对话都在最佳状态下工作。</description></item><item><title>Day 05 · CUDA 编程入门 (2)</title><link>https://blog.ans20xx.com/posts/ai/day05/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day05/</guid><description>用 Shared Memory Tiling 优化矩阵乘：理解 bank conflict 与 coalesced access，实现 tiled GEMM 并用 Nsight Compute 分析性能瓶颈。</description></item><item><title>Day 05 · Git 工作流 — commit · PR · 分支管理 · Code Review</title><link>https://blog.ans20xx.com/posts/ai/cc-day05/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day05/</guid><description>用自然语言驱动 Git 操作：让 Claude Code 生成智能 commit message、创建 Pull Request、管理分支、执行 Code Review——从此你有了一个 24/7 在线的结对编程搭档。</description></item><item><title>Day 06 · 调试与测试 — 错误诊断 · 测试生成 · TDD 工作流</title><link>https://blog.ans20xx.com/posts/ai/cc-day06/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day06/</guid><description>把报错信息丢给 Claude 就能定位 Bug；自动生成覆盖正例、边界和异常的测试用例；用 AI 驱动的 TDD 循环写出更可靠的代码——调试和测试从此不再是苦差。</description></item><item><title>Day 07 · 搜索与导航 — grep · glob · 符号查找 · 跨文件追踪</title><link>https://blog.ans20xx.com/posts/ai/cc-day07/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day07/</guid><description>在大型代码库里精准找到目标——掌握 Grep/Glob/Bash find 工具家族的取舍、正则与路径模式技巧、符号定义与引用查找、跨文件追踪 callers/callees,以及何时让 Explore agent 帮你做开放式探索。导航不熟,改一个函数都可能漏改五处。</description></item><item><title>Day 08 · 大型代码库 — 多文件重构 · 代码迁移 · 架构重组</title><link>https://blog.ans20xx.com/posts/ai/cc-day08/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day08/</guid><description>跨越单文件的边界——学会让 Claude Code 在大型代码库中定位代码、批量重构、执行语言迁移、拆分巨型模块。掌握 Agent 子任务分发和 Worktree 隔离，精准控制上万行的变更。</description></item><item><title>Day 09 · 权限与安全 — 四档信任阶梯 · 工具白名单 · 敏感文件保护</title><link>https://blog.ans20xx.com/posts/ai/cc-day09/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day09/</guid><description>把 Claude Code 的能力锁在你想给的范围里——理解 default / acceptEdits / plan / bypassPermissions 四档权限模式的取舍,用 allow / deny 规则做白名单与黑名单,用 Hooks 兜底拦截危险命令和敏感文件读取。一句 rm -rf 和一个泄漏的 .env,可能让你和 Claude 的全部信任崩盘。</description></item><item><title>LLM 数学基础 40 天学习路线</title><link>https://blog.ans20xx.com/posts/ai/math-roadmap/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/math-roadmap/</guid><description>从线性代数到 Transformer 实现：覆盖向量空间、矩阵微积分、概率论、信息论、优化算法的 40 天数学学习路线图。</description></item><item><title>OpenAI vs Anthropic API 格式对比</title><link>https://blog.ans20xx.com/posts/ai/openai-vs-anthropic-api/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/openai-vs-anthropic-api/</guid><description>端点、认证、请求参数、消息结构、响应解析、Tool Use、Streaming、Thinking、多模态输入、多轮对话——两大 API 体系全维度 HTTP 格式差异详解。</description></item><item><title>Day 02 · Linux / 容器基础回顾</title><link>https://blog.ans20xx.com/posts/ai/day02/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day02/</guid><description>深入 Linux 隔离原语 cgroups 与 namespaces，掌握 Docker GPU 容器的启动链路，动手编写 CUDA Dockerfile 并运行第一个 GPU 容器。</description></item><item><title>Day 03 · GPU 硬件与体系结构</title><link>https://blog.ans20xx.com/posts/ai/day03/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day03/</guid><description>拆解 GPU 微架构：从 SM、Warp 调度到 Tensor Core，理解 HBM-L2-SMEM 存储层级与算术强度，对比 A100/H100/H20 代际演进。</description></item><item><title>AI Infra 60 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/roadmap/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/roadmap/</guid><description>从 GPU 编程入门到 LLM 训推一体平台：覆盖 CUDA、PyTorch 内部机制、分布式训练、推理引擎、平台调度的全栈 60 天学习路线图。</description></item><item><title>Day 01 · AI Infra 全景与学习环境</title><link>https://blog.ans20xx.com/posts/ai/day01/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day01/</guid><description>AI Infra 60 天学习计划的起点：梳理从用户 prompt 到 GPU kernel 的完整链路，搭建开发环境，理解推理与训练基础设施的全景图。</description></item><item><title>个人用 SKILLS</title><link>https://blog.ans20xx.com/posts/tools/%E4%B8%AA%E4%BA%BA%E7%94%A8-skill/</link><pubDate>Sun, 10 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/%E4%B8%AA%E4%BA%BA%E7%94%A8-skill/</guid><description>&lt;h1 id="绘图-skill"&gt;绘图 SKILL&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 安橙的博客</title><link>https://blog.ans20xx.com/posts/</link><description>Recent content in Posts on 安橙的博客</description><generator>Hugo -- 0.164.0</generator><language>zh</language><lastBuildDate>Sun, 12 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.ans20xx.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>人生的 7 条感悟</title><link>https://blog.ans20xx.com/posts/life/%E4%BA%BA%E7%94%9F%E7%9A%84-7-%E6%9D%A1%E6%84%9F%E6%82%9F/</link><pubDate>Sun, 12 Jul 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/life/%E4%BA%BA%E7%94%9F%E7%9A%84-7-%E6%9D%A1%E6%84%9F%E6%82%9F/</guid><description>关于心态、学习、身体、社交、勇气、输入和秩序的 7 条提醒。</description></item><item><title>Transformer 到底在解决什么？</title><link>https://blog.ans20xx.com/posts/ai/transformer-problem/</link><pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/transformer-problem/</guid><description>用一张 Excalidraw 图梳理 Transformer 解决的核心问题。</description></item><item><title>Day 01 · Hertz 入门认知与开发环境准备</title><link>https://blog.ans20xx.com/posts/backend/hertz-day01/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-day01/</guid><description>Hertz HTTP 框架 30 天系统学习路线 Day 01：理解 Hertz 的定位、架构特性和适用场景，搭建 Go 开发环境，跑通最小健康检查，为后续路由、上下文和中间件学习建立工作台。</description></item><item><title>Day 02 · Hertz 路由注册、分组与匹配规则</title><link>https://blog.ans20xx.com/posts/backend/hertz-day02/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-day02/</guid><description>Hertz HTTP 框架 30 天系统学习路线 Day 02：系统学习路由注册、路由分组、静态路由、参数路由、通配路由、404/405 处理和尾斜杠重定向，完成一个 REST API 路由骨架。</description></item><item><title>Day 03 · Hertz RequestContext 与请求数据读取</title><link>https://blog.ans20xx.com/posts/backend/hertz-day03/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-day03/</guid><description>Hertz HTTP 框架 30 天系统学习路线 Day 03：系统学习 RequestContext，读取路径参数、Query、Header、Cookie、Form、Body、ClientIP 和上下文元数据，完成 /debug/echo 请求回显工作台。</description></item><item><title>Day 04 · Hertz 响应写入、渲染与统一返回结构</title><link>https://blog.ans20xx.com/posts/backend/hertz-day04/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-day04/</guid><description>Hertz HTTP 框架 30 天系统学习路线 Day 04：系统学习响应状态码、Header、Cookie、Redirect、JSON/PureJSON/IndentedJSON/String/Data/XML 渲染、Write/WriteString、AbortWithStatusJSON 和统一响应结构。</description></item><item><title>Hertz HTTP 框架 30 天系统学习路线</title><link>https://blog.ans20xx.com/posts/backend/hertz-http-framework-roadmap/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-http-framework-roadmap/</guid><description>面向 Go 后端开发者的 Hertz HTTP 框架系统学习路线：覆盖路由、中间件、参数绑定、hz 代码生成、测试、可观测性、微服务集成和生产部署。</description></item><item><title>Hertz reverseproxy.ReverseProxy 结构与使用说明</title><link>https://blog.ans20xx.com/posts/backend/hertz-reverseproxy-reverseproxy/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-reverseproxy-reverseproxy/</guid><description>系统介绍 hertz-contrib/reverseproxy 中 rp *reverseproxy.ReverseProxy 的含义、字段、ServeHTTP 转发流程、SetDirector、SetModifyResponse、SetErrorHandler、SetClient、ClientBehavior 和常见使用方式。</description></item><item><title>Hertz server.WithSenseClientDisconnection(true) 配置说明</title><link>https://blog.ans20xx.com/posts/backend/hertz-with-sense-client-disconnection/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-with-sense-client-disconnection/</guid><description>系统介绍 Hertz 中 server.WithSenseClientDisconnection(true) 的作用、默认值、版本支持、源码机制、长请求/SSE/反向代理场景下的用法和注意事项。</description></item><item><title>Hertz 反向代理中结合 WithSenseClientDisconnection</title><link>https://blog.ans20xx.com/posts/backend/hertz-reverseproxy-sense-client-disconnection/</link><pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/hertz-reverseproxy-sense-client-disconnection/</guid><description>介绍 server.WithSenseClientDisconnection(true) 如何和 hertz-contrib/reverseproxy 的 rp *reverseproxy.ReverseProxy 结合使用，让客户端断开信号传递到代理上游请求。</description></item><item><title>Day 14 · 周复盘 + 算子融合</title><link>https://blog.ans20xx.com/posts/ai/day14/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day14/</guid><description>Phase 1 收官:复盘 PyTorch 核心抽象、Autograd、算子后端、显存管理、AMP 与 torch.compile,再用 FlashAttention 拆开算子融合与 IO-aware kernel 的本质。</description></item><item><title>Day 15 · 分布式基础</title><link>https://blog.ans20xx.com/posts/ai/day15/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day15/</guid><description>进入 AI Infra 分布式训练阶段:理解进程组、rank/world_size、torchrun 启动模型,掌握 AllReduce、AllGather、ReduceScatter、Broadcast 四类集合通信,并跑通一个 DDP MNIST。</description></item><item><title>Day 16 · NCCL 深入</title><link>https://blog.ans20xx.com/posts/ai/day16/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day16/</guid><description>进入分布式训练通信层:理解 NCCL 的 ring、tree、双二叉树 AllReduce 算法,看懂 NCCL_DEBUG=INFO 的初始化、拓扑、通道、算法选择日志,并用一个小脚本完整跑通 AllReduce 取证流程。</description></item><item><title>Day 17 · 数据并行 DP/DDP</title><link>https://blog.ans20xx.com/posts/ai/day17/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day17/</guid><description>进入分布式训练的第一条主线:从 DataParallel 到 DistributedDataParallel,拆开梯度同步时机、Reducer、bucket、overlap 与 no_sync;阅读 torch/nn/parallel/distributed.py 关键路径,并用 torchrun 跑一个可观测的 DDP 实验。</description></item><item><title>Day 18 · ZeRO 系列（DeepSpeed）</title><link>https://blog.ans20xx.com/posts/ai/day18/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day18/</guid><description>理解 ZeRO-1/2/3 分别切分 optimizer state、gradient 和 parameter 的方式，读 ZeRO 论文主线，并用 DeepSpeed 配置把 DDP 的复制显存一步步拆掉。</description></item><item><title>Day 19 · Tensor Parallel</title><link>https://blog.ans20xx.com/posts/ai/day19/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day19/</guid><description>深入 Megatron-LM Tensor Parallel:理解列并行与行并行 Linear 的矩阵切分、通信边界、MLP 和 Attention 的 TP 布局;手画 Transformer block 的张量切分图,看懂 tensor_model_parallel_size 如何影响显存、计算与通信。</description></item><item><title>Day 20 · Pipeline Parallel</title><link>https://blog.ans20xx.com/posts/ai/day20/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day20/</guid><description>拆开 Pipeline Parallel:理解模型按层切 stage、micro-batch 如何填流水线,对比 GPipe、1F1B 与 Megatron Interleaved 1F1B,掌握 bubble 时间计算与 pipeline 调参方法。</description></item><item><title>Day 21 · Sequence Parallel &amp; Context Parallel</title><link>https://blog.ans20xx.com/posts/ai/day21/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day21/</guid><description>进入长序列训练的并行策略:解释为什么长上下文会让 activation 和 attention 成为瓶颈,拆开 Sequence Parallel 与 Context Parallel 的切分边界,理解 Ring Attention 如何用块状 attention 和环形 KV 传递扩展上下文长度。</description></item><item><title>Day 22 · 3D / 4D 并行实战</title><link>https://blog.ans20xx.com/posts/ai/day22/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day22/</guid><description>把 Day19-21 的 TP、PP、DP、SP/CP 组合起来,在单机多卡上用 Megatron-LM 跑一个小 GPT,并通过调整 tensor-model-parallel-size 与 pipeline-model-parallel-size 理解并行维度的取舍。</description></item><item><title>Day 23 · DeepSpeed 实战</title><link>https://blog.ans20xx.com/posts/ai/day23/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day23/</guid><description>实战 DeepSpeed ZeRO-3 + Offload:理解参数、梯度、优化器状态如何分片与换入换出,拆解 ds_config.json 的 zero_optimization、offload_param、offload_optimizer、bucket、overlap 与 NVMe 参数,并给出可运行的训练配置模板。</description></item><item><title>Day 24 · Checkpoint 与容错</title><link>https://blog.ans20xx.com/posts/ai/day24/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day24/</guid><description>学习分布式训练中的 checkpoint 与容错:理解 DCP 分片保存、异步保存、训练中断恢复、torchrun elastic restart,并建立可恢复训练的状态清单与演练流程。</description></item><item><title>Day 25 · 数据 Pipeline</title><link>https://blog.ans20xx.com/posts/ai/day25/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day25/</guid><description>进入训练数据通路:理解 WebDataset、Mosaic Streaming 与自定义 IterableDataset 的设计取舍;调优 DataLoader 的 num_workers、prefetch_factor、pin_memory、persistent_workers 与 shared memory,定位 GPU starvation。</description></item><item><title>Day 26 · 算子层加速</title><link>https://blog.ans20xx.com/posts/ai/day26/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day26/</guid><description>进入 Transformer 算子层加速:理解 FlashAttention v2/v3、PyTorch SDPA、xFormers 与 Apex Fused Kernels 的适用边界,动手替换 attention,并用 TFLOPS / MFU 判断优化是否真的生效。</description></item><item><title>Day 27 · 训练性能分析</title><link>https://blog.ans20xx.com/posts/ai/day27/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day27/</guid><description>学习训练性能分析的最小闭环:计算 MFU / HFU,用 Nsight Systems 抓一段训练 step,通过 NVTX、CUDA kernel、NCCL timeline 识别 compute、communication 与 pipeline bubble。</description></item><item><title>Day 28 · 周复盘 + 小项目</title><link>https://blog.ans20xx.com/posts/ai/day28/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day28/</guid><description>阶段 2 收官:复盘分布式训练 Infra 的 NCCL、DDP、ZeRO、TP、PP、SP/CP、DeepSpeed、checkpoint、data pipeline、算子加速与 profiling;在 2 卡或云上 8 卡训练一个约 125M GPT,记录 MFU,并完成 ZeRO-3 vs TP+PP 的硬件取舍笔记。</description></item><item><title>Day 29 · LLM 推理基础</title><link>https://blog.ans20xx.com/posts/ai/day29/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day29/</guid><description>进入 LLM 推理 Infra:理解 prefill 与 decode 的阶段差异、KV Cache 为什么是显存大头、吞吐/延迟指标如何拆解,并写出一个最小 generation loop。</description></item><item><title>Day 30 · 解码算法</title><link>https://blog.ans20xx.com/posts/ai/day30/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day30/</guid><description>进入 LLM 解码策略:理解 greedy、beam search、temperature、top-k、top-p 的采样语义与服务化影响;掌握 speculative decoding 的 draft/verify 思想,并用 Transformers 与 vLLM 参数做小型实验。</description></item><item><title>Day 31 · PagedAttention &amp; vLLM</title><link>https://blog.ans20xx.com/posts/ai/day31/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day31/</guid><description>学习 PagedAttention 与 vLLM 的核心机制:为什么 KV Cache 会浪费显存,如何用 block table 管理逻辑块到物理块的映射,copy-on-write 如何支撑并行采样和 beam search,以及这些机制如何服务高吞吐 LLM serving。</description></item><item><title>Day 33 · Continuous Batching</title><link>https://blog.ans20xx.com/posts/ai/day33/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day33/</guid><description>学习 LLM 推理服务中的 Continuous Batching:理解静态 batching 与 in-flight batching 的差异,prefill/decode 如何混排,以及 TGI、vLLM、SGLang 调度器在吞吐、TTFT、TPOT 与公平性上的取舍。</description></item><item><title>VSCode 最实用技巧与效率工具清单</title><link>https://blog.ans20xx.com/posts/tools/vscode-practical-tips/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-practical-tips/</guid><description>一份面向日常开发的 VSCode 实用技巧与效率工具清单：快捷键、搜索替换、多光标、Snippets、工作区、终端、Tasks、Git、Profiles，以及常用扩展组合与可复制配置。</description></item><item><title>Day 32 · vLLM 实战</title><link>https://blog.ans20xx.com/posts/ai/day32/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0800</pubDate><guid>https://blog.ans20xx.com/posts/ai/day32/</guid><description>动手部署一个 7B 模型到 vLLM,开启 OpenAI 兼容 API,学习 --max-num-seqs 与 --gpu-memory-utilization 的调参方法,并建立推理服务压测与排错流程。</description></item><item><title>Day 34 · SGLang &amp; RadixAttention</title><link>https://blog.ans20xx.com/posts/ai/day34/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0800</pubDate><guid>https://blog.ans20xx.com/posts/ai/day34/</guid><description>学习 SGLang 推理框架与 RadixAttention:理解前缀缓存、共享 prefix 的请求调度、Radix Tree 如何复用 KV Cache,并动手用同一个 system prompt 发多请求观察缓存命中。</description></item><item><title>Day 35 · 量化 (1)：权重量化</title><link>https://blog.ans20xx.com/posts/ai/day35/</link><pubDate>Sat, 20 Jun 2026 00:00:00 +0800</pubDate><guid>https://blog.ans20xx.com/posts/ai/day35/</guid><description>学习 LLM 推理中的权重量化:理解 INT8 / INT4、per-channel / group-wise scale、GPTQ 与 AWQ 的核心思想,并用 AutoGPTQ 或 llama.cpp 完成一次模型量化与评估。</description></item><item><title>OpenAI 和 Anthropic 的工具调用格式</title><link>https://blog.ans20xx.com/posts/ai/openai-anthropic-tool-calling/</link><pubDate>Fri, 19 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/openai-anthropic-tool-calling/</guid><description>对比 OpenAI Responses / Chat Completions 与 Anthropic Messages API 的工具定义、模型请求、工具调用结果回传和多轮执行循环。</description></item><item><title>Codex 桌面端 21 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/codex-desktop-learning-roadmap/</link><pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/codex-desktop-learning-roadmap/</guid><description>面向 Codex 桌面端用户的 21 天学习路线：覆盖提示、项目规则、权限、审查、插件、MCP、浏览器验证、自动化和子代理。</description></item><item><title>Day 01 · LLM 开放平台 Go 后端建立工作台</title><link>https://blog.ans20xx.com/posts/backend/llm-platform-go-day01/</link><pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/llm-platform-go-day01/</guid><description>LLM 开放平台 Go 后端 30 天提效与进阶路线 Day 01：整理需求文档、接口文档、日志、监控、数据库、代码仓库 6 个入口，建立日常排查和交付工作台。</description></item><item><title>LLM 开放平台 Go 后端 30 天提效与进阶路线</title><link>https://blog.ans20xx.com/posts/backend/llm-platform-go-efficiency-roadmap/</link><pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/llm-platform-go-efficiency-roadmap/</guid><description>面向技术一般的 LLM 开放平台 Go 后端程序员：用 30 天建立工作提效系统，补齐 Go 后端、LLM API 网关、流式调用、稳定性、安全与影响力能力。</description></item><item><title>Day 07 · Nvim + Go 代码导航与项目搜索</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day07/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day07/</guid><description>Nvim + Go 30 天系统学习路线 Day 07：配置 fuzzy finder，练习文件、buffer、symbol、grep 搜索，并用 :lua vim.lsp.buf.definition() 理解 LSP 请求。</description></item><item><title>Day 08 · Nvim + Go 补全与片段</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day08/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day08/</guid><description>Nvim + Go 30 天系统学习路线 Day 08：接入补全插件或使用内置补全，只保留 Go 常用片段：函数、测试、表驱动测试、error return，并避免把补全菜单调得过重。</description></item><item><title>Day 09 · Nvim + Go 格式化与导入整理</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day09/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day09/</guid><description>Nvim + Go 30 天系统学习路线 Day 09：绑定保存时 gofmt、goimports、gofumpt，确认格式化来自 LSP 还是外部 formatter，并建立可排错的保存格式化流程。</description></item><item><title>Day 10 · Nvim + Go 诊断与 Quickfix</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day10/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day10/</guid><description>Nvim + Go 30 天系统学习路线 Day 10：学习 diagnostics 浮窗、跳转、quickfix 与 location list，把编译错误、LSP 诊断和 grep 结果放进同一个处理习惯里。</description></item><item><title>Day 11 · Nvim + Go 包结构与模块边界</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day11/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day11/</guid><description>Nvim + Go 30 天系统学习路线 Day 11：梳理 cmd、internal、package 命名和 import path，用 go list、文件树、搜索和 LSP 建立 Go 项目地图。</description></item><item><title>什么是 Telescope：Nvim 里的模糊查找中枢</title><link>https://blog.ans20xx.com/posts/infra/nvim-telescope-intro/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-telescope-intro/</guid><description>一篇面向 Nvim + Go 学习者的 Telescope 入门说明：理解 picker、finder、sorter、previewer，配置文件搜索、全文搜索、buffer、LSP 引用和当前文件函数列表。</description></item><item><title>我的 Nvim 配置整理</title><link>https://blog.ans20xx.com/posts/infra/nvim-config/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-config/</guid><description>整理当前 ~/.config/nvim 配置：lazy.nvim、Catppuccin、Telescope、Neo-tree、gitsigns、Diffview、which-key、lualine、Trouble、nvim-cmp 和 Go LSP。</description></item><item><title>Day 06 · Nvim + Go 接入 gopls</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day06/</link><pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day06/</guid><description>Nvim + Go 30 天系统学习路线 Day 06：安装 gopls，用 Neovim 内置 LSP 连接 Go 项目，配置 attach 后的定义、引用、悬浮说明、重命名和诊断快捷键。</description></item><item><title>Day 05 · Nvim + Go Go 工具链入门</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day05/</link><pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day05/</guid><description>Nvim + Go 30 天系统学习路线 Day 05：创建 go mod init 项目，跑通 go fmt、go test、go run，并写一个小 CLI 作为后续练习项目。</description></item><item><title>Day 04 · Nvim + Go Lua 配置结构</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day04/</link><pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day04/</guid><description>Nvim + Go 30 天系统学习路线 Day 04：把 init.lua 拆成 options、keymaps、plugins、lsp，理解 require、模块加载顺序、package.loaded 与最小可维护配置结构。</description></item><item><title>Day 03 · Nvim + Go 文本对象与批量编辑</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day03/</link><pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day03/</guid><description>Nvim + Go 30 天系统学习路线 Day 03：练习 ciw、di(、ya&amp;#34;、点命令和宏录制，用 Go 文件完成变量名、函数参数、注释与重复结构的批量编辑。</description></item><item><title>Day 02 · Nvim + Go Vim 移动心智</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day02/</link><pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day02/</guid><description>Nvim + Go 30 天系统学习路线 Day 02：练习 normal、insert、visual 三种模式，掌握 hjkl、word、line、paragraph 与 search 移动，并输出个人快捷键纸。</description></item><item><title>Day 01 · Nvim + Go 安装与健康检查</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-day01/</link><pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-day01/</guid><description>Nvim + Go 30 天系统学习路线 Day 01：安装 Neovim、Go、ripgrep、fd 和 gopls，完成 :checkhealth、最小 init.lua、Go module 练习和 Git 提交。</description></item><item><title>Nvim + Go 30 天系统学习路线</title><link>https://blog.ans20xx.com/posts/infra/nvim-go-roadmap/</link><pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/nvim-go-roadmap/</guid><description>从 Vim 心智、Lua 配置到 gopls、Delve、测试、调试与真实 Go 项目交付的 30 天 Nvim Go 开发学习路线。</description></item><item><title>Day 11 · 内建 Git 与 Source Control</title><link>https://blog.ans20xx.com/posts/tools/vscode-day11/</link><pubDate>Sat, 30 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day11/</guid><description>VSCode 内建 Git 与 Source Control：变更列表、diff、stage hunk、discard、commit、branch、sync、3-way merge editor、timeline 与 blame。把每一次改动管理得更稳。</description></item><item><title>Day 10 · 任务系统 tasks.json</title><link>https://blog.ans20xx.com/posts/tools/vscode-day10/</link><pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day10/</guid><description>VSCode 任务系统 tasks.json：npm / shell / process / 自定义 task、group、dependsOn、problemMatcher、background task 与 preLaunchTask。把手敲命令升级成可复用动作。</description></item><item><title>Day 09 · 集成终端深入</title><link>https://blog.ans20xx.com/posts/tools/vscode-day09/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day09/</guid><description>VSCode 集成终端深入：多 terminal、profile、split、cwd、环境变量、Shell Integration、命令装饰、路径链接跳转源码。把终端从外部窗口收回到项目上下文。</description></item><item><title>Day 06 · JWT 深入 · JWS / JWE / JWK / JWA 全家族</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day06/</link><pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day06/</guid><description>认证授权 30 天 Day 06：拆开 JWT 的 Header.Payload.Signature 三段结构,理解 JWS/JWE/JWK/JWA 四条 RFC 的分工,辨析 HS256/RS256/PS256/ES256/EdDSA 五大算法的选型,掌握 iss/sub/aud/exp/nbf/iat/jti 七个标准声明。Phase 2 开篇。</description></item><item><title>Day 08 · 文件浏览器与多根工作区</title><link>https://blog.ans20xx.com/posts/tools/vscode-day08/</link><pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day08/</guid><description>VSCode 文件浏览器与多根工作区：Explorer、.code-workspace、Multi-root、file nesting、Breadcrumbs、Workspace Trust 与项目视图整理。把 VSCode 从打开文件夹升级成项目控制台。</description></item><item><title>Day 13 · torch.compile / TorchDynamo / Inductor</title><link>https://blog.ans20xx.com/posts/ai/day13/</link><pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day13/</guid><description>进入 PyTorch 2.x 编译器栈: TorchDynamo 如何从 Python 代码捕获 FX 图, guards 如何决定复用/重编译/fallback, Inductor 如何融合算子并生成 Triton/C++ kernel;最后对一个小模型做 eager vs compile benchmark。</description></item><item><title>Day 07 · Snippets 与 Emmet</title><link>https://blog.ans20xx.com/posts/tools/vscode-day07/</link><pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day07/</guid><description>VSCode Snippets 与 Emmet：用户 / 全局 / 项目三层模板、tab stops、placeholder、choice、变量、项目级 .code-snippets，以及 HTML/CSS/JSX 中的 Emmet abbreviation。把高频样板代码压缩成一次 Tab。</description></item><item><title>Day 12 · 混合精度与 AMP</title><link>https://blog.ans20xx.com/posts/ai/day12/</link><pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day12/</guid><description>拆开混合精度训练:FP32 / TF32 / FP16 / BF16 / FP8 的数值范围、精度与溢出风险;理解 torch.amp.autocast 的算子选择、GradScaler 的动态 loss scaling,并跑通一个可对比的 AMP benchmark。</description></item><item><title>Day 06 · 搜索、替换与正则</title><link>https://blog.ans20xx.com/posts/tools/vscode-day06/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day06/</guid><description>VSCode 搜索两套体系 —— ⌘F 单文件 / ⌘⇧F 全工作区。正则捕获组 ($1 $2)、大小写转换 (\U \L)、lookbehind/lookahead、include/exclude glob。多光标是临时正则,正则是永久多光标。</description></item><item><title>Day 11 · 显存管理</title><link>https://blog.ans20xx.com/posts/ai/day11/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day11/</guid><description>拆开 PyTorch 的 caching allocator:Segment / Block 两级结构、small/large pool 分裂、stream 池隔离;掌握 memory_summary / memory_snapshot 工具链,学会 OOM 排查的标准流程,并理解 expandable_segments 如何根治碎片化。</description></item><item><title>Day 01 · VSCode 安装、CLI 与同步登录</title><link>https://blog.ans20xx.com/posts/tools/vscode-day01/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day01/</guid><description>从零开始：选择 Stable / Insiders、各平台安装、把 code 命令装进 PATH、用 Microsoft 或 GitHub 登录开启 Settings Sync，让任何一台新机器 10 分钟还原你的 VSCode。</description></item><item><title>Day 02 · 界面骨架与命令面板</title><link>https://blog.ans20xx.com/posts/tools/vscode-day02/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day02/</guid><description>拆解 VSCode 的「五大件」—— Activity Bar / Side Bar / Editor / Panel / Status Bar 的边界与协作，以及命令面板 ⌘⇧P 的四种模式（&amp;gt; / @ / # / :）—— 老司机的唯一菜单。</description></item><item><title>Day 03 · 设置三层与 settings.json 实战</title><link>https://blog.ans20xx.com/posts/tools/vscode-day03/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day03/</guid><description>VSCode 配置的三层架构 —— User / Workspace / Folder 的优先级与覆盖规则；为什么直接写 JSON 比点 UI 更高效；如何用 .vscode/settings.json 和 extensions.json 给团队建立统一规范；@modified / @lang / @feature 过滤器的实战用法。</description></item><item><title>Day 04 · 基础导航与选择</title><link>https://blog.ans20xx.com/posts/tools/vscode-day04/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day04/</guid><description>VSCode 编辑器内功第一天 —— 导航三件套（文件 / 符号 / 行号）、光标按词/按行/按符号的移动、扩展选择与 Smart Select、行操作四件套（删/复制/移动/合并）。修饰键 = 作用域，这是所有快捷键的底层规律。</description></item><item><title>Day 05 · 多光标与列编辑</title><link>https://blog.ans20xx.com/posts/tools/vscode-day05/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-day05/</guid><description>VSCode 最强的批量魔法 —— ⌘D 选下一个相同、⌘⇧L 选全部、⌥click 任意加光标、Box Selection 列编辑。理解后,SQL 列对齐、批改 import、给 100 个变量加前缀都是 5 秒钟的事。</description></item><item><title>VSCode 21 天系统进阶路线</title><link>https://blog.ans20xx.com/posts/tools/vscode-roadmap/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/vscode-roadmap/</guid><description>从安装到扩展开发：覆盖编辑器内功、工作区、调试、远程开发、AI 协作的 21 天 VSCode 学习路线图。</description></item><item><title>Day 03 · PKI · TLS 1.3 与 mTLS</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day03/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day03/</guid><description>认证授权 30 天 Day 03：理解 PKI 信任锚 / X.509 证书链 / TLS 1.3 一发握手 / SNI 与 ALPN 扩展，用 openssl 自建 CA、用 Go 跑通 HTTPS 服务端 + mTLS 双向认证。</description></item><item><title>Day 04 · 会话管理与 Web 安全 · Session / CSRF / XSS</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day04/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day04/</guid><description>认证授权 30 天 Day 04：理解 Session 完整生命周期与 Session Fixation 攻击，对比 CSRF 的四种防御方案，区分 Stored/Reflected/DOM 三种 XSS，并用 Go 实现安全的 Cookie / CSRF Token / CSP 中间件。</description></item><item><title>Day 05 · 多因素认证 · TOTP · WebAuthn / Passkey</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day05/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day05/</guid><description>认证授权 30 天 Day 05：辨清 MFA 三要素与威胁模型，看懂 RFC 4226 / 6238 的 HOTP/TOTP 公式，理解 SMS OTP 为何被 NIST 弃用，用 Go 实现 TOTP 服务并跑通 WebAuthn / Passkey 登录。Phase 1 收官。</description></item><item><title>Day 01 · AuthN vs AuthZ · HTTP 认证与 Session 模型</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day01/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day01/</guid><description>认证授权 30 天 Day 01：辨析 AuthN/AuthZ/Accounting 三个 A，理解 HTTP Basic / Digest 的挑战-应答模型，掌握 Cookie/Session 的工作原理与三大安全属性,并用 Go 实现最小可运行的登录系统。</description></item><item><title>Day 02 · 密码学基础 · 哈希 · 加密 · HMAC 与签名</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-day02/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-day02/</guid><description>认证授权 30 天 Day 02：辨清通用哈希与密码哈希的本质差异，理解对称 vs 非对称加密的取舍，掌握 HMAC 与数字签名的设计动机,并用 Go 跑通 bcrypt / argon2id / AES-GCM / Ed25519 全套样例。</description></item><item><title>Day 14 · Agent 与子代理 — 并行调度 · 自定义 agents · Worktree 隔离</title><link>https://blog.ans20xx.com/posts/ai/cc-day14/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day14/</guid><description>派分身去干活——把开放式探索、独立评审、批量重构交给 subagent 在隔离上下文里跑;用 .claude/agents/ 把团队的工种沉淀成可复用资产;用 Git worktree 让多个 agent 在不同分支上同时改文件不会打架。一个任务,几只手并行。</description></item><item><title>Day 16 · 自动化工作流 — /loop · Cron · 后台执行 · Monitor</title><link>https://blog.ans20xx.com/posts/ai/cc-day16/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day16/</guid><description>把 Claude 从『会话内的助手』变成『会话外的同事』——拆透 /loop 的两种节奏、Cron 的本地时区与抖动、Bash/Agent 的后台执行与回调、Monitor 的事件流与覆盖率铁律,再把四件套编排成一条真正能 24×7 运转的自动化流水线。</description></item><item><title>Day 17 · 全栈项目实战 — 从 CLAUDE.md 到上线的完整循环</title><link>https://blog.ans20xx.com/posts/ai/cc-day17/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day17/</guid><description>把 Day 1–16 学过的所有招式拼成一个真实项目——以 Mini Task Tracker(FastAPI + React)为例,跑通 CLAUDE.md → 脚手架 → DB → API → 前端 → 测试 → 部署七步,看 Hooks / Skills / MCP / Subagent 在其中各自的位置。</description></item><item><title>认证授权 30 天系统学习路线（Go 开放平台视角）</title><link>https://blog.ans20xx.com/posts/backend/authn-authz-roadmap/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/authn-authz-roadmap/</guid><description>从 HTTP Basic 到 OAuth 2.1，从 JWT 到 mTLS，从 RBAC 到 Google Zanzibar——面向 Go 后端 / 开放平台工程师的 30 天认证授权学习路线。</description></item><item><title>Day 10 · 算子与后端</title><link>https://blog.ans20xx.com/posts/ai/day10/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day10/</guid><description>拆开 PyTorch 算子实现层:c10 是底座,ATen 是算子库,native_functions.yaml 是真理之源。从代码生成管线到 TORCH_LIBRARY 注册机制,跑通一个自定义 CUDA 算子。</description></item><item><title>Day 15 · Plan 模式 — 规划与执行分离 · 决策矩阵 · 大型重构安全网</title><link>https://blog.ans20xx.com/posts/ai/cc-day15/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day15/</guid><description>把 Day 08 提到的 Plan 模式真正变成肌肉记忆——拆解 EnterPlanMode / ExitPlanMode 的两阶段协议、给出『何时必须先 plan』的决策矩阵、用五要素模板把方案写到能被 review、把 Plan 与 Subagent / Hooks / CLAUDE.md 串成一张大型重构的安全网。一句『直接动手』可能撞墙,一份 30 秒能读完的 plan 能省下一下午回滚。</description></item><item><title>JSON 工具盒</title><link>https://blog.ans20xx.com/posts/tools/json-tools/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/json-tools/</guid><description>JSON 工作台(格式化/压缩/排序/树视图四合一)+ 转义/反转义 + git-style 行级 diff。纸感学术风一站式工具,纯前端无依赖。</description></item><item><title>时间工具盒</title><link>https://blog.ans20xx.com/posts/tools/time-tools/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/time-tools/</guid><description>时间戳 ↔ 日期相互转换、日期加减运算、两日期时间差、跨时区对照。纸感学术风的一站式时间小工具,纯前端无依赖。</description></item><item><title>Day 09 · Autograd 原理</title><link>https://blog.ans20xx.com/posts/ai/day09/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day09/</guid><description>用 ~200 行 Python 手写一个 mini-autograd:理解动态计算图的构建、链式法则的层层应用、拓扑排序的反向遍历。在最小可运行实现里看清 PyTorch backward() 的真面目。</description></item><item><title>Day 08 · PyTorch 核心抽象</title><link>https://blog.ans20xx.com/posts/ai/day08/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day08/</guid><description>打开 PyTorch 黑盒:Tensor 与 Storage 的分离、Dispatcher 的多重派发机制、Autograd Engine 的工作原理。跟踪一行 a + b 从 Python 一路调到 CUDA kernel 的完整路径。</description></item><item><title>Day 11 · 自定义 Skills — 参数化模板 · 嵌套资源 · 跨项目分发</title><link>https://blog.ans20xx.com/posts/ai/cc-day11/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day11/</guid><description>把 Day 07 的 Skill 入门带到生产级——掌握完整 frontmatter、$ARGUMENTS 参数化、嵌套 scripts/templates 资源结构、三层分发位置和团队级跨项目复用，让团队的「祖传手艺」一键可调用。</description></item><item><title>Day 12 · Memory 记忆系统 — 四种类型 · 生命周期 · 与 CLAUDE.md 的边界</title><link>https://blog.ans20xx.com/posts/ai/cc-day12/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day12/</guid><description>把 Day 03 的 Memory 入门带到生产级——深入 user / feedback / project / reference 四种类型的写法标准，掌握 MEMORY.md 索引结构、读写时机、过期处理与跨系统协作。让 Claude 成为有长期记忆的同事，不再每次从零开始。</description></item><item><title>Day 13 · MCP 服务器 — 协议本质 · 三大集成 · 自建服务</title><link>https://blog.ans20xx.com/posts/ai/cc-day13/</link><pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day13/</guid><description>把 Day 07 的 MCP 入门带到生产级——拆解 Model Context Protocol 的 JSON-RPC 协议、三种传输方式（stdio/http/sse）的取舍、三层 scope 的优先级，跑通 Postgres/GitHub/Slack 三大主流集成，最后用 Python SDK 写一个自己的 MCP 服务器。</description></item><item><title>Day 07 · 周复盘 + 网络/存储基础</title><link>https://blog.ans20xx.com/posts/ai/day07/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day07/</guid><description>Week 1 收官:把 Day 01–06 的 GPU 编程知识串成地图,再补上 AI 集群的网络与存储基础——NVLink 与 PCIe、InfiniBand 与 RoCE、RDMA 原理、NCCL 通信模型、存储分层。为 Phase 1 进入框架内部机制铺路。</description></item><item><title>Day 10 · Hooks 钩子系统 — 完整事件 · 自动格式化 · 自动测试 · Shell &amp; HTTP</title><link>https://blog.ans20xx.com/posts/ai/cc-day10/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day10/</guid><description>把 Day 07 的 Hooks 入门带到生产级——掌握全部 9 种钩子事件、Shell 与 HTTP 两种处理器、自动格式化与自动测试的最佳实践，以及 hook 调试、撤销与阻断机制。让规则自动执行，不再依赖记忆。</description></item><item><title>Day 06 · Profiling 工具链</title><link>https://blog.ans20xx.com/posts/ai/day06/</link><pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day06/</guid><description>系统学习 GPU profiling 工具链:nsys 看系统级 timeline、ncu 做 kernel 深度分析、py-spy 抓 Python 热点、torch.profiler 串起训练全链路,建立先测量再优化的工程习惯。</description></item><item><title>Claude Code 20 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/claude-code-roadmap/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/claude-code-roadmap/</guid><description>从安装到自动化工作流：覆盖核心工具、Git 工作流、Hooks、MCP 服务器、Agent 子代理、Plan 模式的 20 天 Claude Code 学习路线图。</description></item><item><title>Day 01 · Claude Code 安装与初体验</title><link>https://blog.ans20xx.com/posts/ai/cc-day01/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day01/</guid><description>从零开始：安装 CLI / VS Code 扩展 / Desktop App，完成 OAuth 认证，理解工具调用与权限确认机制，完成第一次 AI 辅助编程体验。</description></item><item><title>Day 02 · 四大核心工具 — Read · Edit · Write · Bash</title><link>https://blog.ans20xx.com/posts/ai/cc-day02/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day02/</guid><description>深入掌握 Claude Code 的四把瑞士军刀：Read 的精准阅读、Edit 的外科手术式修改、Write 的全量创建、Bash 的系统操作。建立工具选择的直觉判断。</description></item><item><title>Day 03 · CLAUDE.md 与项目配置</title><link>https://blog.ans20xx.com/posts/ai/cc-day03/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day03/</guid><description>通过 CLAUDE.md 告诉 Claude 你的项目规范与偏好，掌握 settings.json 权限配置、.claude/ 目录结构和 Memory 跨会话记忆——让 Claude 从通用助手变成你的专属团队成员。</description></item><item><title>Day 04 · CUDA 编程入门 (1)</title><link>https://blog.ans20xx.com/posts/ai/day04/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day04/</guid><description>从 Host 到 Device：理解 kernel 启动、Grid/Block/Thread 线程层级与 Global/Shared Memory 存储模型，动手实现 vector add 与 naive GEMM。</description></item><item><title>Day 04 · 上下文管理 — /compact · /clear · 对话策略</title><link>https://blog.ans20xx.com/posts/ai/cc-day04/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day04/</guid><description>理解 Claude Code 的上下文窗口机制，掌握 /compact 主动压缩、自动压缩触发、/clear 清空重置，以及 --continue / --resume 对话延续策略——让每一轮对话都在最佳状态下工作。</description></item><item><title>Day 05 · CUDA 编程入门 (2)</title><link>https://blog.ans20xx.com/posts/ai/day05/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day05/</guid><description>用 Shared Memory Tiling 优化矩阵乘：理解 bank conflict 与 coalesced access，实现 tiled GEMM 并用 Nsight Compute 分析性能瓶颈。</description></item><item><title>Day 05 · Git 工作流 — commit · PR · 分支管理 · Code Review</title><link>https://blog.ans20xx.com/posts/ai/cc-day05/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day05/</guid><description>用自然语言驱动 Git 操作：让 Claude Code 生成智能 commit message、创建 Pull Request、管理分支、执行 Code Review——从此你有了一个 24/7 在线的结对编程搭档。</description></item><item><title>Day 06 · 调试与测试 — 错误诊断 · 测试生成 · TDD 工作流</title><link>https://blog.ans20xx.com/posts/ai/cc-day06/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day06/</guid><description>把报错信息丢给 Claude 就能定位 Bug；自动生成覆盖正例、边界和异常的测试用例；用 AI 驱动的 TDD 循环写出更可靠的代码——调试和测试从此不再是苦差。</description></item><item><title>Day 07 · 搜索与导航 — grep · glob · 符号查找 · 跨文件追踪</title><link>https://blog.ans20xx.com/posts/ai/cc-day07/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day07/</guid><description>在大型代码库里精准找到目标——掌握 Grep/Glob/Bash find 工具家族的取舍、正则与路径模式技巧、符号定义与引用查找、跨文件追踪 callers/callees,以及何时让 Explore agent 帮你做开放式探索。导航不熟,改一个函数都可能漏改五处。</description></item><item><title>Day 08 · 大型代码库 — 多文件重构 · 代码迁移 · 架构重组</title><link>https://blog.ans20xx.com/posts/ai/cc-day08/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day08/</guid><description>跨越单文件的边界——学会让 Claude Code 在大型代码库中定位代码、批量重构、执行语言迁移、拆分巨型模块。掌握 Agent 子任务分发和 Worktree 隔离，精准控制上万行的变更。</description></item><item><title>Day 09 · 权限与安全 — 四档信任阶梯 · 工具白名单 · 敏感文件保护</title><link>https://blog.ans20xx.com/posts/ai/cc-day09/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/cc-day09/</guid><description>把 Claude Code 的能力锁在你想给的范围里——理解 default / acceptEdits / plan / bypassPermissions 四档权限模式的取舍,用 allow / deny 规则做白名单与黑名单,用 Hooks 兜底拦截危险命令和敏感文件读取。一句 rm -rf 和一个泄漏的 .env,可能让你和 Claude 的全部信任崩盘。</description></item><item><title>LLM 数学基础 40 天学习路线</title><link>https://blog.ans20xx.com/posts/ai/math-roadmap/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/math-roadmap/</guid><description>从线性代数到 Transformer 实现：覆盖向量空间、矩阵微积分、概率论、信息论、优化算法的 40 天数学学习路线图。</description></item><item><title>OpenAI vs Anthropic API 格式对比</title><link>https://blog.ans20xx.com/posts/ai/openai-vs-anthropic-api/</link><pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/openai-vs-anthropic-api/</guid><description>端点、认证、请求参数、消息结构、响应解析、Tool Use、Streaming、Thinking、多模态输入、多轮对话——两大 API 体系全维度 HTTP 格式差异详解。</description></item><item><title>Day 02 · Linux / 容器基础回顾</title><link>https://blog.ans20xx.com/posts/ai/day02/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day02/</guid><description>深入 Linux 隔离原语 cgroups 与 namespaces，掌握 Docker GPU 容器的启动链路，动手编写 CUDA Dockerfile 并运行第一个 GPU 容器。</description></item><item><title>Day 03 · GPU 硬件与体系结构</title><link>https://blog.ans20xx.com/posts/ai/day03/</link><pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day03/</guid><description>拆解 GPU 微架构：从 SM、Warp 调度到 Tensor Core，理解 HBM-L2-SMEM 存储层级与算术强度，对比 A100/H100/H20 代际演进。</description></item><item><title>AI Infra 60 天系统学习路线</title><link>https://blog.ans20xx.com/posts/ai/roadmap/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/roadmap/</guid><description>从 GPU 编程入门到 LLM 训推一体平台：覆盖 CUDA、PyTorch 内部机制、分布式训练、推理引擎、平台调度的全栈 60 天学习路线图。</description></item><item><title>Day 01 · AI Infra 全景与学习环境</title><link>https://blog.ans20xx.com/posts/ai/day01/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/day01/</guid><description>AI Infra 60 天学习计划的起点：梳理从用户 prompt 到 GPU kernel 的完整链路，搭建开发环境，理解推理与训练基础设施的全景图。</description></item><item><title>个人用 SKILLS</title><link>https://blog.ans20xx.com/posts/tools/%E4%B8%AA%E4%BA%BA%E7%94%A8-skill/</link><pubDate>Sun, 10 May 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/tools/%E4%B8%AA%E4%BA%BA%E7%94%A8-skill/</guid><description>&lt;h1 id="绘图-skill"&gt;绘图 SKILL&lt;/h1&gt;
 &lt;div class="highlight"&gt;&lt;div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
 &lt;pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
@@ -613,10 +613,10 @@
 &lt;h2 id="向量与向量空间"&gt;向量与向量空间&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-76123458"
+id="mindmap-36172458"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-76123458" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-36172458" style="display:none;"&gt;
 - 向量与向量空间
 - 什么是向量
 - 向量是一个有方向的量
@@ -725,10 +725,10 @@ print(f&amp;#34; {word}: {sim:.4f}&amp;#34;)
 &lt;h2 id="矩阵基本运算"&gt;矩阵基本运算&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42573681"
+id="mindmap-17463825"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42573681" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-17463825" style="display:none;"&gt;
 - 矩阵基本运算
 - 矩阵是什么
 - 是数字排列成的二维表格，用行数 x 列数描述它的形状（称为&amp;#34;维度&amp;#34;或&amp;#34;shape&amp;#34;）
@@ -854,10 +854,10 @@ print(&amp;#34;\ntoken 0 对所有 token 的注意力分数:&amp;#34;, scores[0]
 &lt;h2 id="线性变换的几何直觉"&gt;线性变换的几何直觉&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-15274638"
+id="mindmap-68124573"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-15274638" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-68124573" style="display:none;"&gt;
 - 线性变换的几何直觉
 - 核心洞察：矩阵的列=基向量的去向
 - 什么是基向量
@@ -994,10 +994,10 @@ plot_transformation(np.array([[-1, 0], [0, 1]]), &amp;#34;沿 y 轴反射&amp;#3
 &lt;h2 id="特征值与特征向量"&gt;特征值与特征向量&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-48261573"
+id="mindmap-25674183"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-48261573" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25674183" style="display:none;"&gt;
 - 特征值与特征向量
 - 变换中不变的方向
 - 一个矩阵作用于空间，所有向量都被旋转、拉伸、扭曲。绝大多数向量变换后，方向都改变了
@@ -1146,10 +1146,10 @@ print(f&amp;#34;用 1 维保留了 {info_kept:.1%} 的信息&amp;#34;)
 &lt;h2 id="svd-奇异值分解"&gt;SVD (奇异值分解)&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34586721"
+id="mindmap-37621584"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34586721" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-37621584" style="display:none;"&gt;
 - SVD (奇异值分解)
 - 为什么需要 SVD
 - 特征分解 $A = PDP^{-1}$ 有两个限制
@@ -1272,10 +1272,10 @@ print(f&amp;#34;近似误差: {np.linalg.norm(delta_W_true - delta_W_approx):.6f
 &lt;h2 id="aiinfra-全景--学习内容"&gt;AIInfra 全景 + 学习内容&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-63215847"
+id="mindmap-82365471"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-63215847" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-82365471" style="display:none;"&gt;
 - AIInfra 全景 &amp; 学习内容
 - 理论部分
 - AIInfra 是什么
@@ -1351,10 +1351,10 @@ watch -n 0.5 nvidia-smi # 观察显存占用、SM 利用率
 &lt;h2 id="linux-容器回顾"&gt;Linux 容器回顾&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-36412857"
+id="mindmap-52418376"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-36412857" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-52418376" style="display:none;"&gt;
 - Linux/容器基础回顾
 - 理论部分
 - Linux 进程隔离三件套
@@ -1472,10 +1472,10 @@ python first_infer.py
 &lt;h2 id="gpu-硬件与体系结构"&gt;GPU 硬件与体系结构&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42856173"
+id="mindmap-64253187"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42856173" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-64253187" style="display:none;"&gt;
 - GPU 硬件与体系结构
 - 理论部分
 - 一张图看懂 GPU
@@ -1509,10 +1509,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="go-环境搭建与工具链"&gt;Go 环境搭建与工具链&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-23851647"
+id="mindmap-31658742"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-23851647" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-31658742" style="display:none;"&gt;
 - Go 环境搭建与工具链
 - 安装 Go
 - 官网直接安装
@@ -1585,10 +1585,10 @@ go env -w GOPROXY=https://goproxy.cn,direct
 &lt;h2 id="类型系统与变量"&gt;类型系统与变量&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-58432716"
+id="mindmap-25483716"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-58432716" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25483716" style="display:none;"&gt;
 - 类型系统与变量
 - 基本类型总览
 - Go 是强类型语言，每个类型都有明确的类型
@@ -1771,10 +1771,10 @@ small := int32(big) // 溢出！结果不可预测
 &lt;h2 id="流程控制"&gt;流程控制&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-31675248"
+id="mindmap-72563148"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-31675248" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-72563148" style="display:none;"&gt;
 - 流程控制
 - if/else 条件判断
 - 条件不需要括号
@@ -2083,10 +2083,10 @@ x = 20
 &lt;h2 id="函数"&gt;函数&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-41362587"
+id="mindmap-38271465"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-41362587" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-38271465" style="display:none;"&gt;
 - 函数深入
 - 函数基础
 - Go 的函数定义和 C 系列语言不一样：关键字 func 在前，返回值类型在后
@@ -2375,10 +2375,10 @@ return save(result)
 &lt;h2 id="数组切片与-map"&gt;数组、切片与 Map&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35421768"
+id="mindmap-85673124"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35421768" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-85673124" style="display:none;"&gt;
 - 数组、切片与 Map
 - 数组：固定长度的值类型
 - Go 的数组和 C/Java 的不一样，它是值类型，长度是类型的一部分
@@ -2728,10 +2728,10 @@ return true // 返回 false 停止遍历
 &lt;h2 id="结构体与方法"&gt;结构体与方法&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-81532746"
+id="mindmap-52381764"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-81532746" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-52381764" style="display:none;"&gt;
 - 结构体与方法
 - 结构体基础
 - 结构体是 Go 中组织数据的核心方式
@@ -3155,10 +3155,10 @@ Email string `json:&amp;#34;email&amp;#34; validate:&amp;#34;required,email&amp;
 &lt;h2 id="接口与多态"&gt;接口与多态&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-56432187"
+id="mindmap-63187425"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-56432187" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-63187425" style="display:none;"&gt;
 - 接口与多态
 - 接口是什么
 - 接口是 Go 最优雅的特性。
@@ -3571,10 +3571,10 @@ h := NewHandler(mock) // 注入 Mock
 &lt;h1 id="并发与工程化"&gt;并发与工程化&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-24867153"
+id="mindmap-62413587"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-24867153" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62413587" style="display:none;"&gt;
 - 并发与工程化
 - Goroutine 入门
 - Goroutine 是什么
@@ -6174,10 +6174,10 @@ ttl time.Duration
 &lt;h1 id="web-开发实战"&gt;Web 开发实战&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-35718426"
+id="mindmap-61572384"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-35718426" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-61572384" style="display:none;"&gt;
 - Web 开发实战
 - net/http 标准库
 - net/http 核心概念
@@ -8709,10 +8709,10 @@ return nil
 &lt;p&gt;开发一个 Plugin 给 Claude Code 使用。&lt;/p&gt;</description></item><item><title>Grafana 复习</title><link>https://blog.ans20xx.com/posts/infra/grafana-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 10 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/grafana-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础入门"&gt;基础入门&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-84765123"
+id="mindmap-68312754"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-84765123" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-68312754" style="display:none;"&gt;
 - 基础入门
 - 可观测性与 Grafana 概览
 - 理解可观测性
@@ -8918,10 +8918,10 @@ prometheus_http_requests_total{code=&amp;#34;302&amp;#34;, handler=&amp;#34;/&am
 &lt;h1 id="核心技能"&gt;核心技能&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-54718326"
+id="mindmap-85436172"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-54718326" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-85436172" style="display:none;"&gt;
 - 核心技能
 - PromQL
 - 两种向量 - PromQL 的基石
@@ -9214,10 +9214,10 @@ sum(rate(myapp_http_requests_total{endpoint=~&amp;#34;$endpoint&amp;#34;}[$__rat
 &lt;h1 id="告警与日志"&gt;告警与日志&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43176852"
+id="mindmap-52184637"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43176852" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-52184637" style="display:none;"&gt;
 - 告警与日志
 - Grafana 的告警系统
 - 理解 Grafana 告警架构
@@ -9374,10 +9374,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;docker-compose.yml&lt;/p&gt;</description></item><item><title>js 复习</title><link>https://blog.ans20xx.com/posts/frontend/js-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/frontend/js-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="语言核心基础"&gt;语言核心基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34865217"
+id="mindmap-18367524"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34865217" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-18367524" style="display:none;"&gt;
 - 语言核心基础
 - 变量与数据类型
 - 变量声明
@@ -10812,10 +10812,10 @@ console.log(`${index &amp;#43; 1}. ${name}`);
 &lt;h1 id="面向对象与核心机制"&gt;面向对象与核心机制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-87621534"
+id="mindmap-67412385"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-87621534" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-67412385" style="display:none;"&gt;
 - 面向对象与核心机制
 - this 指向
 - 为什么 this 这么重要
@@ -11992,10 +11992,10 @@ const utils = require(&amp;#39;./utils&amp;#39;);
 &lt;h1 id="异步编程与浏览器-api"&gt;异步编程与浏览器 API&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-71536248"
+id="mindmap-25843167"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-71536248" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25843167" style="display:none;"&gt;
 - 异步编程与浏览器 API
 - 异步基础与回调
 - 同步 vs 异步
@@ -12387,10 +12387,10 @@ return { user, orders };
 &lt;p&gt;实验编号/标题：OpenSpec 实验&lt;/p&gt;</description></item><item><title>CSS 复习</title><link>https://blog.ans20xx.com/posts/frontend/css-%E5%A4%8D%E4%B9%A0/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/frontend/css-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="基础核心"&gt;基础核心&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65384721"
+id="mindmap-57416328"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65384721" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-57416328" style="display:none;"&gt;
 - 基础核心
 - CSS 基础与选择器
 - CSS 的三种引入方式
@@ -13315,10 +13315,10 @@ overflow-wrap: break-word;
 &lt;h1 id="布局体系"&gt;布局体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-57681423"
+id="mindmap-15273864"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-57681423" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15273864" style="display:none;"&gt;
 - 布局体系
 - Flex 基础与主轴
 - Flex 容器与项目
@@ -13952,10 +13952,10 @@ repeat(auto-fit, minmax(280px, 1fr))
 &lt;h1 id="响应式与进阶"&gt;响应式与进阶&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-36475821"
+id="mindmap-71386254"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-36475821" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-71386254" style="display:none;"&gt;
 - 响应式与进阶
 - 响应式基础与媒体查询
 - viewport meta 标签
@@ -14974,17 +14974,17 @@ to { transform: translateY(0); }
 &lt;h1 id="工程化与实战"&gt;工程化与实战&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-32478165"
+id="mindmap-65327814"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-32478165" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65327814" style="display:none;"&gt;
 - 标题
 &lt;/textarea&gt;</description></item><item><title>思维导图新功能测试</title><link>https://blog.ans20xx.com/posts/career/%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/career/%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-14683527"
+id="mindmap-73428561"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-14683527" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-73428561" style="display:none;"&gt;
 - 项目规划
 - 前端
 - 示例代码
@@ -15051,10 +15051,10 @@ env.execute(&amp;#34;timestamp-water-mark-demo&amp;#34;);
 &lt;p&gt;一切都会显得不同寻常。&lt;/p&gt;</description></item><item><title>Flink 复习</title><link>https://blog.ans20xx.com/posts/infra/flink-%E5%A4%8D%E4%B9%A0/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/flink-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="flink-整体认知"&gt;Flink 整体认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-53621847"
+id="mindmap-74815362"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-53621847" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74815362" style="display:none;"&gt;
 - Flink 整体认知
 - 认识 Flink
 - Flink 是什么
@@ -15407,10 +15407,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="时间与窗口"&gt;时间与窗口&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38416275"
+id="mindmap-23418675"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38416275" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-23418675" style="display:none;"&gt;
 - 时间与窗口
 - 时间语义
 - processing time
@@ -15587,10 +15587,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="状态与容错"&gt;状态与容错&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-53162748"
+id="mindmap-45736218"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-53162748" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-45736218" style="display:none;"&gt;
 - 状态与容错
 - State 基础
 - 什么是状态
@@ -15713,10 +15713,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="连接外部系统"&gt;连接外部系统&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65138247"
+id="mindmap-86173524"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65138247" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-86173524" style="display:none;"&gt;
 - 连接外部系统
 - Flink 读写文件与接
 - Kafka 集成
@@ -15726,10 +15726,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="flink-sql-与-table-api"&gt;Flink SQL 与 Table API&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-12675438"
+id="mindmap-18674532"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-12675438" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-18674532" style="display:none;"&gt;
 - Flink SQL 与 Table API
 - 认识 Table API 与 Flink SQL
 - 为什么要有 Table API 与 SQL
@@ -15883,10 +15883,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="原理深入"&gt;原理深入&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34652718"
+id="mindmap-72345681"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34652718" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-72345681" style="display:none;"&gt;
 - 原理深入
 - 背压与性能调优
 - 什么是背压
@@ -15896,10 +15896,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;这就说明了追求生命内涵的重要性。&lt;/p&gt;</description></item><item><title>HBase 复习</title><link>https://blog.ans20xx.com/posts/database/hbase-%E5%AD%A6%E4%B9%A0/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/database/hbase-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="基础认知"&gt;基础认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-52736148"
+id="mindmap-25436187"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-52736148" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25436187" style="display:none;"&gt;
 - 基础认知
 - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别
 - HBase
@@ -16014,10 +16014,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据模型与表设计"&gt;数据模型与表设计&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38712654"
+id="mindmap-72148563"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38712654" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-72148563" style="display:none;"&gt;
 - 数据模型与表设计
 - RowKey 设计原则
 - 总纲
@@ -16121,10 +16121,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="架构原理"&gt;架构原理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-67135284"
+id="mindmap-57413268"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-67135284" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-57413268" style="display:none;"&gt;
 - 架构原理
 - HMaster 做什么
 - HMaster 的定位
@@ -16279,10 +16279,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="实际操作"&gt;实际操作&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43167528"
+id="mindmap-74186523"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43167528" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74186523" style="display:none;"&gt;
 - 实操
 - 启动单机 HBase
 - 单机模式是什么
@@ -16401,10 +16401,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="java-客户端开发"&gt;Java 客户端开发&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-31627584"
+id="mindmap-41752638"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-31627584" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41752638" style="display:none;"&gt;
 - Java 客户端开发
 - Connection/Admin/Table
 - 职责边界
@@ -16461,10 +16461,10 @@ OpenClaw 原理&lt;/p&gt;
 &lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
-&lt;pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-md" data-lang="md"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;name: grill-me
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions &amp;#34;grill me&amp;#34;.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-md" data-lang="md"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#268bd2"&gt;---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#268bd2;font-weight:bold"&gt;name&lt;/span&gt;: &lt;span style="color:#2aa198"&gt;grill-me&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#268bd2;font-weight:bold"&gt;description&lt;/span&gt;: &lt;span style="color:#2aa198"&gt;Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions &amp;#34;grill me&amp;#34;.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#268bd2"&gt;---&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -16545,10 +16545,10 @@ ClaudeCode Skill 如何实现的&lt;/p&gt;</description></item><item><title>禅�
 &lt;p&gt;就是帮助我们开发觉醒的心。&lt;/p&gt;</description></item><item><title>面试冲刺</title><link>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</link><pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA/</guid><description>&lt;h1 id="算法"&gt;算法&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-16372854"
+id="mindmap-42681735"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-16372854" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-42681735" style="display:none;"&gt;
 - 算法
 - 通用操作技巧
 - 数组常用操作
@@ -16740,10 +16740,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="数据库"&gt;数据库&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-87451263"
+id="mindmap-63842751"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-87451263" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-63842751" style="display:none;"&gt;
 - 数据库
 - 基础认识
 - InnoDB 和 MyISAM 的区别是什么？
@@ -17074,10 +17074,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="计算机网络"&gt;计算机网络&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-12468537"
+id="mindmap-74812563"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-12468537" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74812563" style="display:none;"&gt;
 - 计算机网络
 - TCP/UDP
 - TCP/UDP 区别
@@ -17373,10 +17373,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="java"&gt;Java&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-18356742"
+id="mindmap-62578134"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-18356742" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62578134" style="display:none;"&gt;
 - Java
 - Java 集合
 - HashMap 为什么线程不安全？
@@ -17547,10 +17547,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="spring"&gt;Spring&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-63284715"
+id="mindmap-85623147"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-63284715" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-85623147" style="display:none;"&gt;
 - Spring
 - Spring 核心基础
 - 什么是 Spring？它解决了什么问题？
@@ -17676,10 +17676,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="系统设计"&gt;系统设计&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65238471"
+id="mindmap-85347621"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65238471" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-85347621" style="display:none;"&gt;
 - 系统设计
 - RPC 框架
 - 第一层是服务定义与代理层
@@ -17707,10 +17707,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="redis"&gt;Redis&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42135687"
+id="mindmap-21475638"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42135687" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-21475638" style="display:none;"&gt;
 - Redis
 - 基础认知
 - Redis 为什么快
@@ -17924,10 +17924,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="rocketmq"&gt;RocketMQ&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-54862371"
+id="mindmap-16435872"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-54862371" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-16435872" style="display:none;"&gt;
 - RocketMQ
 - 基础认知
 - RocketMQ 解决了哪些问题？
@@ -18023,10 +18023,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="agent-开发"&gt;Agent 开发&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46517238"
+id="mindmap-64813572"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46517238" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-64813572" style="display:none;"&gt;
 - Agent 开发
 - 基础概念
 - 什么是 Agent？它和普通 Chatbot 的本质区别是什么？
@@ -18358,10 +18358,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="nacos-配置中心"&gt;Nacos 配置中心&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38427156"
+id="mindmap-75463218"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38427156" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-75463218" style="display:none;"&gt;
 - Nacos 配置中心
 - Nacos 是什么？解决了什么问题？
 - 服务实例很多，IP 和端口是动态变化的，如果没有注册中心，服务之间就很难稳定地互相发现和调用
@@ -18391,10 +18391,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="websocket"&gt;WebSocket&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-46185273"
+id="mindmap-34586271"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-46185273" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-34586271" style="display:none;"&gt;
 - WebSocket
 - 解决了什么问题
 - 一种基于 TCP 的应用层全双工通信协议
@@ -18504,10 +18504,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="linux"&gt;Linux&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42836571"
+id="mindmap-23617458"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42836571" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-23617458" style="display:none;"&gt;
 - Linux
 - 基础认知
 - Linux 的内核态和用户态有什么区别？
@@ -18790,10 +18790,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="计算机组成原理"&gt;计算机组成原理&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-86274315"
+id="mindmap-18753426"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-86274315" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-18753426" style="display:none;"&gt;
 - 计算机组成原理
 - 存储系统
 - 虚拟内存与地址转换
@@ -18817,10 +18817,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="elasticserach"&gt;ElasticSerach&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-61384257"
+id="mindmap-43617582"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-61384257" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-43617582" style="display:none;"&gt;
 - ElasticSerach
 - 基础概念
 - ElasticSearch 的核心应用场景有哪些？
@@ -18943,10 +18943,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h2 id="系统设计-1"&gt;系统设计&lt;/h2&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-27518436"
+id="mindmap-82467135"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-27518436" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-82467135" style="display:none;"&gt;
 - 系统设计
 - 设计一个短链接系统（类似 TinyURL）
 - 客户端把长链接发到服务端，服务端先做参数校验，比如 URL 格式是否合法，是否命中黑名单
@@ -19026,10 +19026,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="项目"&gt;项目&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-42371856"
+id="mindmap-26543817"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42371856" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-26543817" style="display:none;"&gt;
 - 项目
 - 异步收银台
 - 问题
@@ -19201,10 +19201,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;实验编号/标题：Transformer 实验&lt;/p&gt;</description></item><item><title>LLM 复习</title><link>https://blog.ans20xx.com/posts/ai/llm-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sun, 22 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/ai/llm-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="预备知识"&gt;预备知识&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-23685741"
+id="mindmap-87325641"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-23685741" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-87325641" style="display:none;"&gt;
 - 预备知识
 - 线性代数
 - 向量与矩阵乘法
@@ -19357,10 +19357,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/ul&gt;</description></item><item><title>Java IO</title><link>https://blog.ans20xx.com/posts/backend/java-io/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/java-io/</guid><description>&lt;h1 id="io-模型与概念框架"&gt;IO 模型与概念框架&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-78165234"
+id="mindmap-15486372"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-78165234" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-15486372" style="display:none;"&gt;
 - IO 模型与概念框架
 - 四个基本概念
 - 阻塞 vs 非阻塞
@@ -19423,10 +19423,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="java-bio"&gt;Java BIO&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-78642315"
+id="mindmap-31682547"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-78642315" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-31682547" style="display:none;"&gt;
 - Java BIO
 - IO 流体系
 - 两大抽象
@@ -19496,10 +19496,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="nio-基础-bufferchannel"&gt;NIO 基础 Buffer/Channel&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21486573"
+id="mindmap-54261378"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21486573" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-54261378" style="display:none;"&gt;
 - NIO 基础
 - NIO 的核心心智模型：Buffer&amp;#43;Channel
 - 在 NIO 中，数据永远在 Buffer 里转
@@ -19565,10 +19565,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="nio-进阶-selector多路复用"&gt;NIO 进阶 Selector/多路复用&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-41753268"
+id="mindmap-28654713"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-41753268" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-28654713" style="display:none;"&gt;
 - NIO 进阶 Selector/多路复用
 - Selector/SelectionKey/Channel：三者关系与生命周期
 - 三件套职责
@@ -19612,10 +19612,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="netty"&gt;Netty&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-16542738"
+id="mindmap-24751863"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-16542738" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-24751863" style="display:none;"&gt;
 - Netty
 - 解决什么问题
 - 原生 NIO 的痛点
@@ -19670,10 +19670,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="selectpollepoll"&gt;select/poll/epoll&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-28631457"
+id="mindmap-48371256"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-28631457" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-48371256" style="display:none;"&gt;
 - select/poll/epoll
 - 简介
 - 都是操作系统提供的 I/O 多路复用机制
@@ -19713,10 +19713,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>nosql 复习.md</title><link>https://blog.ans20xx.com/posts/database/nosql-%E5%A4%8D%E4%B9%A0/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/database/nosql-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="cap-与一致性模型"&gt;CAP 与一致性模型&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-27864135"
+id="mindmap-46782135"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-27864135" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46782135" style="display:none;"&gt;
 - CAP 与一致性模型
 - CAP 定理
 - 组成
@@ -19787,10 +19787,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="分布式存储底层"&gt;分布式存储底层&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38572416"
+id="mindmap-74281356"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38572416" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74281356" style="display:none;"&gt;
 - 分布式存储底层
 - 分布式存储底层总览
 - Client/SDK
@@ -19910,10 +19910,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="cassandrahbase"&gt;Cassandra/HBase&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-53418627"
+id="mindmap-34758621"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-53418627" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-34758621" style="display:none;"&gt;
 - Cassandra/HBase
 - LSM-Tree &amp;#43; WAL
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/22/20260222101553862.png,604,382)
@@ -19984,10 +19984,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据建模与查询建模"&gt;数据建模与查询建模&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65842371"
+id="mindmap-76518423"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65842371" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-76518423" style="display:none;"&gt;
 - 数据建模与查询建模
 - NoSQL 建模的通用原则
 - Query-driven modeling(按查询建模)
@@ -20012,10 +20012,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>搜索引擎复习</title><link>https://blog.ans20xx.com/posts/database/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/</link><pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/database/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/</guid><description>&lt;h1 id="信息检索核心原理"&gt;信息检索核心原理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-84256137"
+id="mindmap-46375281"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-84256137" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46375281" style="display:none;"&gt;
 - 信息检索 IR 核心原理
 - IR 的基本对象与术语
 - 文档、语料、字段
@@ -20073,10 +20073,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="索引结构与写入链路"&gt;索引结构与写入链路&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-76251834"
+id="mindmap-46512738"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-76251834" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-46512738" style="display:none;"&gt;
 - 索引结构与写入链路
 - ES 的索引
 - InvertedIndex（倒排）：解决词-&amp;gt;文档的快速检索
@@ -20111,10 +20111,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>Java 并发复习</title><link>https://blog.ans20xx.com/posts/backend/java-%E5%B9%B6%E5%8F%91/</link><pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/java-%E5%B9%B6%E5%8F%91/</guid><description>&lt;h1 id="并发基础与-jmm-入门"&gt;并发基础与 JMM 入门&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-14326785"
+id="mindmap-62413587"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-14326785" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62413587" style="display:none;"&gt;
 - 并发基础与 JMM 入门
 - 并发三大问题
 - 原子性
@@ -20192,10 +20192,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线程模型与线程安全"&gt;线程模型与线程安全&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21568437"
+id="mindmap-45872631"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21568437" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-45872631" style="display:none;"&gt;
 - 线程模型与线程安全
 - Java 线程模型：Thread/Runnable/Callable/Future
 - 四者关系与使用场景
@@ -20350,10 +20350,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="juc-核心与-aqs"&gt;JUC 核心与 AQS&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-25478316"
+id="mindmap-58367214"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-25478316" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-58367214" style="display:none;"&gt;
 - JUC 核心与 AQS
 - CAS 与原子类
 - CAS 是什么
@@ -20457,10 +20457,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线程池与并发工程实战"&gt;线程池与并发工程实战&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-61523748"
+id="mindmap-13285674"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-61523748" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-13285674" style="display:none;"&gt;
 - 线程池与并发工程实战
 - 不用线程池的问题
 - 线程创建/销毁成本高（栈、TLAB、调度）
@@ -20606,10 +20606,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="并发容器阻塞队列并发设计"&gt;并发容器、阻塞队列、并发设计&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-74268153"
+id="mindmap-41762583"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-74268153" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41762583" style="display:none;"&gt;
 - 并发容器、阻塞队列、并发设计
 - 并发容器解决的问题
 - 线程安全访问：多线程读写不会破坏结构、不丢数据
@@ -20693,10 +20693,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>Sping 复习</title><link>https://blog.ans20xx.com/posts/backend/spring-%E5%A4%8D%E4%B9%A0/</link><pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/spring-%E5%A4%8D%E4%B9%A0/</guid><description>&lt;h1 id="spring-core"&gt;Spring Core&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-34562871"
+id="mindmap-58723164"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-34562871" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-58723164" style="display:none;"&gt;
 - Spring Core（IoC/DI/Bean 生命周期）
 - 概述
 - Spring 的核心是 IoC 容器，它负责把对象 Bean 的创建、依赖装配、生命周期管理、扩展点回调统一托管
@@ -20843,10 +20843,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-aop"&gt;Spring AOP&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-58316427"
+id="mindmap-38154627"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-58316427" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-38154627" style="display:none;"&gt;
 - Spring AOP
 - AOP 在 Spring 里解决什么问题
 - 目标：把横切关注点从业务逻辑中剥离出来，日志，鉴权，事务，监控，限流，缓存，重试等
@@ -20944,10 +20944,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-transaction"&gt;Spring Transaction&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-68342175"
+id="mindmap-42315876"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-68342175" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-42315876" style="display:none;"&gt;
 - Spring Transaction
 - 定义：Spring 事务本质是 AOP 拦截方法调用，在方法执行前后通过 TransactionManager 控制开启/加入事务、提交/回滚、资源绑定/解绑
 - 事务体系的关键对象
@@ -21014,10 +21014,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-mvc"&gt;Spring MVC&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-83126457"
+id="mindmap-51428637"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-83126457" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-51428637" style="display:none;"&gt;
 - SpringMVC(请求链路、参数绑定、异常处理)
 - 总控思维模型
 - Spring MVC 是一个基于 DispatcherServlet 的前端控制器框架，它把一次 HTTP 请求拆分
@@ -21131,10 +21131,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-boot-自动配置启动过程外部化配置"&gt;Spring boot （自动配置、启动过程、外部化配置）&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-65382741"
+id="mindmap-73546182"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-65382741" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-73546182" style="display:none;"&gt;
 - Spring boot
 - 解决了什么问题
 - Boot 的核心价值是：约定优于配置&amp;#43;自动配置&amp;#43;Starter依赖聚合
@@ -21212,10 +21212,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="数据访问整合"&gt;数据访问整合&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-26731548"
+id="mindmap-36417285"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-26731548" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-36417285" style="display:none;"&gt;
 - 数据访问整合
 - 通用底座
 - DataSource：连接的来源
@@ -21250,10 +21250,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="spring-security"&gt;Spring Security&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-72368145"
+id="mindmap-25734168"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-72368145" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-25734168" style="display:none;"&gt;
 - Spring Security
 - 核心概念
 - SecurityContext：安全上下文，存当前请求/线程的认证信息
@@ -21292,10 +21292,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>JVM 学习</title><link>https://blog.ans20xx.com/posts/backend/jvm/</link><pubDate>Thu, 19 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/jvm/</guid><description>&lt;h1 id="类加载与字节码"&gt;类加载与字节码&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21674835"
+id="mindmap-16547238"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21674835" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-16547238" style="display:none;"&gt;
 - 类加载与字节码
 - 类加载机制
 - 类的生命周期
@@ -21365,10 +21365,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="jvm-内存结构与对象模型"&gt;JVM 内存结构与对象模型&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-51768432"
+id="mindmap-35618742"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-51768432" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-35618742" style="display:none;"&gt;
 - JVM 内存结构与对象模型
 - 运行时数据区
 - 整体结构
@@ -21481,10 +21481,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="gc-体系"&gt;GC 体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-63852174"
+id="mindmap-31864275"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-63852174" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-31864275" style="display:none;"&gt;
 - GC 体系
 - GC 基础原理
 - GC 要解决的问题
@@ -21667,10 +21667,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="jit-与性能"&gt;JIT 与性能&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-84123576"
+id="mindmap-76413285"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-84123576" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-76413285" style="display:none;"&gt;
 - JIT 与性能
 - 解释器 vs JIT
 - 解释器：启动快、编译开销低，但是每次执行都要逐条解释代码，长期运行慢
@@ -21687,10 +21687,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="线上排障与工具链"&gt;线上排障与工具链&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-32145876"
+id="mindmap-71285634"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-32145876" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-71285634" style="display:none;"&gt;
 - 线上排障与工具链
 - 保存现场
 - 采集 4 件套
@@ -21794,10 +21794,10 @@ style="width:100%; height:860px; min-height: 860px;"
 （例如：Transformer、Redis 持久化、JVM 垃圾回收、操作系统进程调度）&lt;/p&gt;</description></item><item><title>RocketMQ 复习</title><link>https://blog.ans20xx.com/posts/backend/rocketmq-%E5%AD%A6%E4%B9%A0/</link><pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/rocketmq-%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="概述"&gt;概述&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38471562"
+id="mindmap-13785426"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38471562" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-13785426" style="display:none;"&gt;
 - 概述
 - 定位
 - RocketMQ 是一个分布式消息中间件，用于在分布式系统中以异步方式传递时间/数据
@@ -21859,10 +21859,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="核心概念"&gt;核心概念&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-51476823"
+id="mindmap-76135248"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-51476823" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-76135248" style="display:none;"&gt;
 - 核心概念
 - Topic
 - 定义：消息的逻辑分类，Producer 发送到 Topic，Consumer 订阅 Topic。
@@ -21930,10 +21930,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="可靠性语义幂等重试死信"&gt;可靠性、语义、幂等、重试、死信&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-51278364"
+id="mindmap-63458217"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-51278364" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-63458217" style="display:none;"&gt;
 - 可靠性/语义/幂等/重试/死信
 - 消息语义
 - 三种语义
@@ -21976,10 +21976,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="性能与扩展顺序与分区堆积治理"&gt;性能与扩展、顺序与分区、堆积治理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-53418627"
+id="mindmap-14376825"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-53418627" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-14376825" style="display:none;"&gt;
 - 性能与扩展、顺序与分区、堆积治理
 - 吞吐与并发怎么调
 - 吞吐链路拆解，多个环节的 min
@@ -22041,10 +22041,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="存储与高可用"&gt;存储与高可用&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-37461528"
+id="mindmap-82157346"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-37461528" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-82157346" style="display:none;"&gt;
 - 存储与高可用
 - Broker 存储核心
 - 三类文件
@@ -22100,10 +22100,10 @@ SSE 原理&lt;/p&gt;
 （写清楚用途、场景、目标，比如面试、项目、论文、考试）&lt;/p&gt;</description></item><item><title>计算机组成原理</title><link>https://blog.ans20xx.com/posts/infra/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</link><pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</guid><description>&lt;h1 id="全局框架"&gt;全局框架&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-53274168"
+id="mindmap-62354781"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-53274168" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62354781" style="display:none;"&gt;
 - 全局框架
 - 系统层次
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/18/20260218105815855.png,424,537)
@@ -22119,10 +22119,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="指令系统与数据表示"&gt;指令系统与数据表示&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-21573684"
+id="mindmap-18347652"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-21573684" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-18347652" style="display:none;"&gt;
 - 指令系统与数据表示
 - 整数与位运算的数据表示
 - 位、字节、字
@@ -22231,10 +22231,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="cpu-执行与控制"&gt;CPU 执行与控制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43581672"
+id="mindmap-31256487"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43581672" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-31256487" style="display:none;"&gt;
 - CPU 执行与控制
 - 单周期 Datapath
 - 必备组件
@@ -22324,10 +22324,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="流水线与冒险"&gt;流水线与冒险&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-61287534"
+id="mindmap-27381546"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-61287534" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-27381546" style="display:none;"&gt;
 - 流水线与冒险
 - 五级流水线核心内容
 - 五段功能定义
@@ -22400,10 +22400,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="存储体系"&gt;存储体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-48617352"
+id="mindmap-38546217"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-48617352" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-38546217" style="display:none;"&gt;
 - 存储体系
 - 核心矛盾
 - CPU 周期是纳秒级，DRAM 访问通常是几十到上百纳秒级，差一个数量级
@@ -22494,10 +22494,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="虚拟内存"&gt;虚拟内存&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-67528431"
+id="mindmap-73581624"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-67528431" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-73581624" style="display:none;"&gt;
 - 虚拟内存
 - 要解决的问题
 - 抽象：每个进程看到连续的虚拟内存空间（VA）
@@ -22609,10 +22609,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="io-总线"&gt;IO 总线&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-13842675"
+id="mindmap-18654327"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-13842675" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-18654327" style="display:none;"&gt;
 - IO 总线
 - IO 本质上慢
 - 设备物理特性：SSD/网卡/磁盘的延迟远远高于 CPU
@@ -22678,10 +22678,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>计算机网络</title><link>https://blog.ans20xx.com/posts/infra/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</link><pubDate>Mon, 16 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h1 id="网络分层--端到端路径"&gt;网络分层 + 端到端路径&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-37461258"
+id="mindmap-32761854"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-37461258" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-32761854" style="display:none;"&gt;
 - 网络分层 &amp;#43; 端到端路径
 - 分层模型
 - 链路层 (LINK)
@@ -22762,10 +22762,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="tcp-精讲"&gt;TCP 精讲&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-17854236"
+id="mindmap-74256813"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-17854236" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-74256813" style="display:none;"&gt;
 - TCP 精讲
 - TCP 本质：在不可靠 IP 上提供可靠字节流
 - TCP 提供内容
@@ -23032,10 +23032,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="http-与-web-体系"&gt;HTTP 与 Web 体系&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-17832456"
+id="mindmap-41652783"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-17832456" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41652783" style="display:none;"&gt;
 - HTTP 与 Web 体系
 - HTTP 基础语义
 - HTTP 是无状态应用层协议：每个请求都自包含信息，状态由 Cookie/Token/Session 等机制在应用层实现
@@ -23453,10 +23453,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>投资</title><link>https://blog.ans20xx.com/posts/life/%E6%8A%95%E8%B5%84/</link><pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/life/%E6%8A%95%E8%B5%84/</guid><description>&lt;h1 id="投资基础认知"&gt;投资基础认知&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-84753261"
+id="mindmap-76254138"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-84753261" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-76254138" style="display:none;"&gt;
 - 投资基础认知
 - 什么是投资
 - 储蓄
@@ -23779,10 +23779,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="财务报表与公司分析"&gt;财务报表与公司分析&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-43516287"
+id="mindmap-62741358"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-43516287" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62741358" style="display:none;"&gt;
 - 财务报表与公司分析
 - 为什么要看财报
 - 财报是什么
@@ -24146,10 +24146,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;</description></item><item><title>mysql 知识点</title><link>https://blog.ans20xx.com/posts/database/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/database/mysql-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h1 id="环境准备"&gt;环境准备&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-32617854"
+id="mindmap-61872453"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-32617854" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-61872453" style="display:none;"&gt;
 - 环境配置与校验
 - docker-compose 启动
 - 命令行连接
@@ -24187,10 +24187,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="基础查询"&gt;基础查询&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-72461583"
+id="mindmap-47268135"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-72461583" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-47268135" style="display:none;"&gt;
 - 基础查询
 - 电商数据集
 - 单表查询
@@ -24364,10 +24364,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="约束与范式基础"&gt;约束与范式基础&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-68417352"
+id="mindmap-62451783"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-68417352" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-62451783" style="display:none;"&gt;
 - 约束与范式基础
 - 约束
 - 目的
@@ -24427,10 +24427,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="索引--explain"&gt;索引 + EXPLAIN&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-54876312"
+id="mindmap-41867235"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-54876312" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-41867235" style="display:none;"&gt;
 - 索引 &amp;#43; EXPLAIN
 - 准备索引
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214111724844.png,200,50)
@@ -24638,10 +24638,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="事务与并发控制"&gt;事务与并发控制&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-27134568"
+id="mindmap-68514372"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-27134568" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-68514372" style="display:none;"&gt;
 - 事务与并发控制
 - ACID
 - A 原子性：要么全成功，要么全失败，依靠 undo log &amp;#43; 回滚机制
@@ -25035,10 +25035,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="表设计与数据治理"&gt;表设计与数据治理&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-47325816"
+id="mindmap-57348261"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-47325816" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-57348261" style="display:none;"&gt;
 - 表设计与数据治理
 - 建模方法与边界
 - 建模方法
@@ -25217,10 +25217,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="运维与排障"&gt;运维与排障&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-76482513"
+id="mindmap-32681745"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-76482513" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-32681745" style="display:none;"&gt;
 - 运维与排障
 - 指标体系
 - 指标分层
@@ -25249,10 +25249,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="体系架构"&gt;体系架构&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-73812645"
+id="mindmap-27468513"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-73812645" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-27468513" style="display:none;"&gt;
 - mysql 体系架构
 - Server 层
 - 连接与会话管理
@@ -25438,10 +25438,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;li&gt;有鹦鹉的情况下，可以给触发战吼野兽套盾&lt;/li&gt;
 &lt;/ol&gt;</description></item><item><title>Docker复习</title><link>https://blog.ans20xx.com/posts/infra/docker%E6%96%B0/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/infra/docker%E6%96%B0/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-42158637"
+id="mindmap-71623485"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-42158637" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-71623485" style="display:none;"&gt;
 - Docker
 - mac 安装 -&amp;gt; https://www.docker.com
 - Container 容器
@@ -25584,10 +25584,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/textarea&gt;
 &lt;h1 id="容器原理"&gt;容器原理&lt;/h1&gt;</description></item><item><title>Redis 复习</title><link>https://blog.ans20xx.com/posts/database/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/database/redis-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-64718235"
+id="mindmap-61472583"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-64718235" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-61472583" style="display:none;"&gt;
 - Redis
 - 环境安装
 - docker run -d --name redis -p 6379:6379 redis
@@ -27375,10 +27375,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;p&gt;思路 1 ：动态规划&lt;/p&gt;
 &lt;p&gt;dp[i] = 以 i 位置结尾的最大子数组和&lt;/p&gt;</description></item><item><title>无重复字符的最长子串</title><link>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/leetcode/leetcode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</guid><description>无重复字符的最长子串</description></item><item><title>重启人生</title><link>https://blog.ans20xx.com/posts/life/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</link><pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/life/%E9%87%8D%E5%90%AF%E4%BA%BA%E7%94%9F/</guid><description>&lt;div
 class="mindmap-container"
-id="mindmap-23157684"
+id="mindmap-65783124"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-23157684" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-65783124" style="display:none;"&gt;
 - 重启人生
 - 重要
 - 万事切不可急躁，三思而后行
@@ -28275,10 +28275,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;/div&gt;</description></item><item><title>mindmap 测试</title><link>https://blog.ans20xx.com/posts/hugo-examples/mindmap/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/hugo-examples/mindmap/</guid><description>mindmap 测试</description></item><item><title>Python语法汇总</title><link>https://blog.ans20xx.com/posts/backend/python%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/</link><pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.ans20xx.com/posts/backend/python%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/</guid><description>&lt;h1 id="基础用法"&gt;基础用法&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-58476123"
+id="mindmap-53714268"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-58476123" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-53714268" style="display:none;"&gt;
 - Python 语法
 - 注释
 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/15/20260315235532706.png,201,109)
@@ -28548,10 +28548,10 @@ style="width:100%; height:860px; min-height: 860px;"
 &lt;h1 id="uv-安装包"&gt;uv 安装包&lt;/h1&gt;
 &lt;div
 class="mindmap-container"
-id="mindmap-38641752"
+id="mindmap-81546327"
 style="width:100%; height:860px; min-height: 860px;"
 &gt;&lt;/div&gt;
-&lt;textarea id="mindmap-data-38641752" style="display:none;"&gt;
+&lt;textarea id="mindmap-data-81546327" style="display:none;"&gt;
 - uv
 - 安装 uv
 - curl -LsSf https://astral.sh/uv/install.sh | sh
