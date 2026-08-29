@@ -1,499 +1,144 @@
-<!doctype html><html lang="zh" dir="auto"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="robots" content="index, follow"><title>AIInfra 学习 | 安橙的博客</title><meta name="keywords" content="AI,CUDA,GPU,PyTorch"><meta name="description" content='GPU 体系结构 + CUDA 入门 + Profiling
-AIInfra 全景 + 学习内容
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AIInfra 学习 | 安橙的博客</title><meta name="description" content="GPU 体系结构 + CUDA 入门 + Profiling AIInfra 全景 + 学习内容 AIInfra 全景 &amp;amp; 学习内容 理论部分 AIInfra 是什么 AI Infra 不是一个单一的东西，而是一整套支撑「让模型在合适的硬件上、以合适的成本、稳定地训练和服务用户」的技术栈 一条 prompt 的 …"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/ai/aiinfra-%E5%AD%A6%E4%B9%A0/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">AIInfra 学习</h1><div class="post-meta"><span title='2026-05-05 00:00:00 +0000 UTC'>五月 5, 2026</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#gpu-体系结构--cuda-入门--profiling">GPU 体系结构 + CUDA 入门 + Profiling</a><ul><li><a href="#aiinfra-全景--学习内容">AIInfra 全景 + 学习内容</a></li><li><a href="#linux-容器回顾">Linux 容器回顾</a></li><li><a href="#gpu-硬件与体系结构">GPU 硬件与体系结构</a></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="gpu-体系结构--cuda-入门--profiling">GPU 体系结构 + CUDA 入门 + Profiling</h1><h2 id="aiinfra-全景--学习内容">AIInfra 全景 + 学习内容</h2><div class="mindmap-list"><ul><li>AIInfra 全景 & 学习内容<ul><li>理论部分<ul><li>AIInfra 是什么<ul><li>AI Infra 不是一个单一的东西，而是一整套支撑「让模型在合适的硬件上、以合适的成本、稳定地训练和服务用户」的技术栈</li><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510163128065.png" alt></button></figure></li></ul></li><li>一条 prompt 的完整生命周期<ul><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/Clipboard_Screenshot_1778404995.png" alt></button></figure></li></ul></li><li>训练 vs 推理的关键差异<ul><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510180216416.png" alt></button></figure></li></ul></li></ul></li><li>动手部分<ul><li><h2 id="环境检查清单">环境检查清单</h2><pre><code class="language-bash"># 1. 操作系统
+uname -a                         # 期望 Linux x86_64，推荐 Ubuntu 22.04
+cat /etc/os-release
 
+# 2. GPU &amp; 驱动
+nvidia-smi                       # 看到 GPU 型号、驱动版本、CUDA 版本
+nvidia-smi topo -m               # 看 GPU 间互联拓扑（NVLink/PCIe）
 
+# 3. CUDA Toolkit
+nvcc --version                   # 没装就先装，建议 12.x
 
+# 4. Python 环境（推荐 uv 或 conda）
+python --version                 # 3.10 / 3.11 都可
+pip --version
+</code></pre></li><li><h2 id="装-pytorch--transformers">装 PyTorch + transformers</h2><pre><code class="language-bash"># 用 conda 建一个干净环境
+conda create -n aiinfra python=3.10 -y
+conda activate aiinfra
 
+# PyTorch（按你的 CUDA 版本选，下面以 CUDA 12.1 为例）
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 
-- AIInfra 全景 & 学习内容
-    - 理论部分
-        - AIInfra 是什么    
-            - AI Infra 不是一个单一的东西，而是一整套支撑「让模型在合适的硬件上、以合适的成本、稳定地训练和服务用户」的技术栈
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510163128065.png,726,300)
-        - 一条 prompt 的完整生命周期
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/Clipboard_Screenshot_1778404995.png,500,400)
-        - 训练 vs 推理的关键差异
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510180216416.png,655,286)
-    - 动手部分
-        - 环境检查清单
-            - 
-            ```bash
-            # 1. 操作系统
-            uname -a                         # 期望 Linux x86_64，推荐 Ubuntu 22.04
-            cat /etc/os-release
+# 推理常用库
+pip install transformers accelerate sentencepiece
+</code></pre><ul><li>验证</li></ul><pre><code class="language-python"># check.py
+import torch
+print(&quot;torch:&quot;, torch.__version__)
+print(&quot;cuda available:&quot;, torch.cuda.is_available())
+print(&quot;device count:&quot;, torch.cuda.device_count())
+print(&quot;device name:&quot;, torch.cuda.get_device_name(0))
+</code></pre></li><li>跑通第一个 LLM 推理<ul><li>选一个小模型（千万别第一次就拉 70B），比如 Qwen2.5-0.5B-Instruct 或 TinyLlama-1.1B：</li><li></li></ul><pre><code class="language-python"># first_infer.py
+import time, torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-            # 2. GPU & 驱动
-            nvidia-smi                       # 看到 GPU 型号、驱动版本、CUDA 版本
-            nvidia-smi topo -m               # 看 GPU 间互联拓扑（NVLink/PCIe）
+model_id = &quot;Qwen/Qwen2.5-0.5B-Instruct&quot;  # 国内可换镜像
+tok = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id, torch_dtype=torch.float16, device_map=&quot;cuda&quot;
+)
 
-            # 3. CUDA Toolkit
-            nvcc --version                   # 没装就先装，建议 12.x
+prompt = &quot;用一句话解释什么是 KV Cache。&quot;
+inputs = tok(prompt, return_tensors=&quot;pt&quot;).to(&quot;cuda&quot;)
 
-            # 4. Python 环境（推荐 uv 或 conda）
-            python --version                 # 3.10 / 3.11 都可
-            pip --version
-            ```
-        - 装 PyTorch + transformers
-            - 
-            ```bash
-            # 用 conda 建一个干净环境
-            conda create -n aiinfra python=3.10 -y
-            conda activate aiinfra
+torch.cuda.synchronize()
+t0 = time.time()
+out = model.generate(**inputs, max_new_tokens=128, do_sample=False)
+torch.cuda.synchronize()
+t1 = time.time()
 
-            # PyTorch（按你的 CUDA 版本选，下面以 CUDA 12.1 为例）
-            pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+print(tok.decode(out[0], skip_special_tokens=True))
+print(f&quot;\n耗时 {t1-t0:.2f}s, 生成 {out.shape[1]-inputs.input_ids.shape[1]} tokens&quot;)
+</code></pre><ul><li>监控</li></ul><pre><code class="language-bash">watch -n 0.5 nvidia-smi          # 观察显存占用、SM 利用率
+</code></pre></li></ul></li></ul></li></ul></div><h2 id="linux-容器回顾">Linux 容器回顾</h2><div class="mindmap-list"><ul><li>Linux/容器基础回顾<ul><li>理论部分<ul><li>Linux 进程隔离三件套<ul><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510201727118.png" alt></button></figure></li><li>需要记住的几个 namespace：pid、net、mnt、uts、ipc、user</li><li>GPU 不在 namespace 隔离范围内 —— 这就是为什么需要 nvidia-container-toolkit</li></ul></li><li>NUMA、CPU 亲和性、与 GPU 的关系<ul><li>一台 8 卡 GPU 服务器，CPU 和 GPU 之间的距离不是均等的</li><li></li></ul><pre><code>[ NUMA Node 0 ]            [ NUMA Node 1 ]
+    CPU0–47                    CPU48–95
+    ├─ GPU0 (PCIe)             ├─ GPU4
+    ├─ GPU1                    ├─ GPU5
+    ├─ GPU2                    ├─ GPU6
+    └─ GPU3                    └─ GPU7
+</code></pre><ul><li>如果你的数据加载进程在 NUMA 0，但用的是 GPU 4，每条数据都要跨 NUMA 走 UPI，吞吐立即掉一截</li><li></li></ul><pre><code class="language-bash">numactl --hardware            # 看 NUMA 拓扑
+numactl --cpunodebind=0 --membind=0 python train.py   # 绑到 NUMA 0
+taskset -c 0-15 python ...   # 绑到具体 CPU 核
+nvidia-smi topo -m            # 看 GPU 与 CPU 的拓扑距离 (PIX/PHB/NODE/SYS)
+</code></pre><ul><li>训练任务的 dataloader worker 必须和它要喂的 GPU 在同一个 NUMA node 上</li></ul></li><li>容器与 GPU：为什么需要 nvidia-container-toolkit<ul><li>普通容器只能隔离 CPU/内存/网络，看不到 GPU 设备</li><li>驱动在宿主机，CUDA Toolkit 在容器里</li><li>宿主机驱动版本必须 ≥ 容器里 CUDA 编译要求的最低版本</li><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510203843759.png" alt></button></figure></li></ul></li></ul></li><li>动手部分<ul><li>操作 namespace 和 cgroup<ul><li>直观感受「容器不过是一组 namespace + cgroup 的进程」</li><li></li></ul><pre><code># 1. 用 unshare 起一个独立 PID namespace 的 shell
+sudo unshare --pid --fork --mount-proc bash
+ps aux        # 只看到几个进程！这就是 PID namespace
+exit
 
-            # 推理常用库
-            pip install transformers accelerate sentencepiece
-            ```
-            - 验证
-            ```python
-            # check.py
-            import torch
-            print("torch:", torch.__version__)
-            print("cuda available:", torch.cuda.is_available())
-            print("device count:", torch.cuda.device_count())
-            print("device name:", torch.cuda.get_device_name(0))
-            ```
-        - 跑通第一个 LLM 推理
-            - 选一个小模型（千万别第一次就拉 70B），比如 Qwen2.5-0.5B-Instruct 或 TinyLlama-1.1B：
-            -
-            ```python
-            # first_infer.py
-            import time, torch
-            from transformers import AutoTokenizer, AutoModelForCausalLM
+# 2. 看自己进程的 namespace
+ls -l /proc/self/ns/
 
-            model_id = "Qwen/Qwen2.5-0.5B-Instruct"  # 国内可换镜像
-            tok = AutoTokenizer.from_pretrained(model_id)
-            model = AutoModelForCausalLM.from_pretrained(
-                model_id, torch_dtype=torch.float16, device_map="cuda"
-            )
+# 3. cgroup v2：看当前 shell 的资源限制
+cat /proc/self/cgroup
+cat /sys/fs/cgroup/memory.max  2&gt;/dev/null || echo &quot;no limit&quot;
+</code></pre></li><li><h2 id="安装-nvidia-container-toolkit">安装 nvidia-container-toolkit</h2><pre><code class="language-bash">distribution=$(. /etc/os-release; echo $ID$VERSION_ID)
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
+    | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
 
-            prompt = "用一句话解释什么是 KV Cache。"
-            inputs = tok(prompt, return_tensors="pt").to("cuda")
+curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list \
+    | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' \
+    | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 
-            torch.cuda.synchronize()
-            t0 = time.time()
-            out = model.generate(**inputs, max_new_tokens=128, do_sample=False)
-            torch.cuda.synchronize()
-            t1 = time.time()
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+</code></pre><ul><li>验证</li></ul><pre><code class="language-bash">docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
+</code></pre></li><li><h2 id="写自己的-ai-infra-开发镜像">写自己的 AI Infra 开发镜像</h2><pre><code class="language-dockerfile"># 基础镜像：CUDA 12.4 + cuDNN + Ubuntu 22.04
+FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 
-            print(tok.decode(out[0], skip_special_tokens=True))
-            print(f"\n耗时 {t1-t0:.2f}s, 生成 {out.shape[1]-inputs.input_ids.shape[1]} tokens")
-            ```
-            - 监控
-            ```bash
-            watch -n 0.5 nvidia-smi          # 观察显存占用、SM 利用率
-            ```
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-Linux 容器回顾
+# 系统依赖
+RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends \
+    python3.10 python3-pip python3.10-venv \
+    git curl wget vim numactl htop \
+    build-essential ninja-build \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
 
+RUN ln -sf /usr/bin/python3.10 /usr/bin/python &amp;&amp; \
+    ln -sf /usr/bin/pip3 /usr/bin/pip
 
+# Python 依赖
+RUN pip install --no-cache-dir \
+    torch==2.4.0 torchvision \
+    --index-url https://download.pytorch.org/whl/cu124
 
+RUN pip install --no-cache-dir \
+    transformers accelerate sentencepiece \
+    jupyterlab ipython \
+    nvitop py-spy
 
+WORKDIR /workspace
+CMD [&quot;bash&quot;]
+</code></pre><ul><li>构建 + 运行</li></ul><pre><code class="language-bash">docker build -t aiinfra-dev:0.1 .
 
-- Linux/容器基础回顾
-    - 理论部分
-        - Linux 进程隔离三件套
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510201727118.png,716,170)
-            - 需要记住的几个 namespace：pid、net、mnt、uts、ipc、user
-            - GPU 不在 namespace 隔离范围内 —— 这就是为什么需要 nvidia-container-toolkit
-        - NUMA、CPU 亲和性、与 GPU 的关系
-            - 一台 8 卡 GPU 服务器，CPU 和 GPU 之间的距离不是均等的
-            - 
-            ```
-            [ NUMA Node 0 ]            [ NUMA Node 1 ]
-                CPU0–47                    CPU48–95
-                ├─ GPU0 (PCIe)             ├─ GPU4
-                ├─ GPU1                    ├─ GPU5
-                ├─ GPU2                    ├─ GPU6
-                └─ GPU3                    └─ GPU7
-            ```
-            - 如果你的数据加载进程在 NUMA 0，但用的是 GPU 4，每条数据都要跨 NUMA 走 UPI，吞吐立即掉一截
-            - 
-            ```bash
-            numactl --hardware            # 看 NUMA 拓扑
-            numactl --cpunodebind=0 --membind=0 python train.py   # 绑到 NUMA 0
-            taskset -c 0-15 python ...   # 绑到具体 CPU 核
-            nvidia-smi topo -m            # 看 GPU 与 CPU 的拓扑距离 (PIX/PHB/NODE/SYS)
-            ```
-            - 训练任务的 dataloader worker 必须和它要喂的 GPU 在同一个 NUMA node 上
-        - 容器与 GPU：为什么需要 nvidia-container-toolkit
-            - 普通容器只能隔离 CPU/内存/网络，看不到 GPU 设备
-            - 驱动在宿主机，CUDA Toolkit 在容器里
-            - 宿主机驱动版本必须 ≥ 容器里 CUDA 编译要求的最低版本
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510203843759.png,585,612)
-    - 动手部分
-        - 操作 namespace 和 cgroup
-            - 直观感受「容器不过是一组 namespace + cgroup 的进程」
-            - 
-            ```
-            # 1. 用 unshare 起一个独立 PID namespace 的 shell
-            sudo unshare --pid --fork --mount-proc bash
-            ps aux        # 只看到几个进程！这就是 PID namespace
-            exit
+# 跑起来，挂载工作目录、暴露 jupyter 端口
+docker run --rm -it \
+    --gpus all \
+    --shm-size=8g \
+    -v $PWD:/workspace \
+    -p 8888:8888 \
+    aiinfra-dev:0.1
+</code></pre></li><li>NUMA 绑定<ul><li>多卡机器</li></ul><pre><code class="language-bash"># 先看拓扑
+nvidia-smi topo -m
+numactl --hardware
 
-            # 2. 看自己进程的 namespace
-            ls -l /proc/self/ns/
-
-            # 3. cgroup v2：看当前 shell 的资源限制
-            cat /proc/self/cgroup
-            cat /sys/fs/cgroup/memory.max  2>/dev/null || echo "no limit"
-            ```
-        - 安装 nvidia-container-toolkit
-            - 
-            ```bash
-            distribution=$(. /etc/os-release; echo $ID$VERSION_ID)
-            curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
-                | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-
-            curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list \
-                | sed &#39;s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g&#39; \
-                | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-
-            sudo apt-get update
-            sudo apt-get install -y nvidia-container-toolkit
-            sudo nvidia-ctk runtime configure --runtime=docker
-            sudo systemctl restart docker
-            ```
-            - 验证
-            ```bash
-            docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
-            ```
-        - 写自己的 AI Infra 开发镜像
-            - 
-            ```dockerfile
-            # 基础镜像：CUDA 12.4 + cuDNN + Ubuntu 22.04
-            FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
-
-            ENV DEBIAN_FRONTEND=noninteractive \
-                LANG=C.UTF-8 \
-                PYTHONDONTWRITEBYTECODE=1 \
-                PYTHONUNBUFFERED=1
-
-            # 系统依赖
-            RUN apt-get update && apt-get install -y --no-install-recommends \
-                python3.10 python3-pip python3.10-venv \
-                git curl wget vim numactl htop \
-                build-essential ninja-build \
-                && rm -rf /var/lib/apt/lists/*
-
-            RUN ln -sf /usr/bin/python3.10 /usr/bin/python && \
-                ln -sf /usr/bin/pip3 /usr/bin/pip
-
-            # Python 依赖
-            RUN pip install --no-cache-dir \
-                torch==2.4.0 torchvision \
-                --index-url https://download.pytorch.org/whl/cu124
-
-            RUN pip install --no-cache-dir \
-                transformers accelerate sentencepiece \
-                jupyterlab ipython \
-                nvitop py-spy
-
-            WORKDIR /workspace
-            CMD ["bash"]
-            ```
-            - 构建 + 运行
-            ```bash
-            docker build -t aiinfra-dev:0.1 .
-
-            # 跑起来，挂载工作目录、暴露 jupyter 端口
-            docker run --rm -it \
-                --gpus all \
-                --shm-size=8g \
-                -v $PWD:/workspace \
-                -p 8888:8888 \
-                aiinfra-dev:0.1
-            ```
-        - NUMA 绑定
-            - 多卡机器
-            ```bash
-            # 先看拓扑
-            nvidia-smi topo -m
-            numactl --hardware
-
-            # 把推理脚本绑到 GPU0 同 NUMA 的 CPU 上
-            CUDA_VISIBLE_DEVICES=0 numactl --cpunodebind=0 --membind=0 \
-            python first_infer.py
-            ```
-
-GPU 硬件与体系结构
-
-
-
-
-
-- GPU 硬件与体系结构
-    - 理论部分
-        - 一张图看懂 GPU
-            - 以 NVIDIA H100 (Hopper) 为例
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511002451179.png,756,565)
-            - H100 一共有 132 个 SM（消费卡 4090 是 128 SM，A100 是 108 SM）
-            - SM 是 GPU 的核，所有的 CUDA kernel 都在 SM 上执行
-            - 算力：FP16/BF16 Tensor Core ≈ 989 TFLOPS，FP8 ≈ 1979 TFLOPS
-            - 显存带宽：HBM3 ≈ 3 TB/s
-            - L2 Cache：50 MB（A100 是 40MB）
-            - NVLink：单卡对外 900 GB/s（A100 600 GB/s，4090 没 NVLink）
-        - SM 内部
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003227058.png,561,620)
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003301355.png,686,280)
-            - 关键洞察
-                - Warp Divergence：一个 warp 里 32 个线程如果走不同分支（if/else），GPU 会 顺序执行两条路径，性能直接腰斩。这就是为什么 GPU 不擅长复杂控制流
-                - Tensor Core 是深度学习的命门
-                    - CUDA Core 一条指令算 1 个 FMA（乘加）
-                    - Tensor Core 一条指令算 数百个 FMA
-                    - 所以 H100 标称的 989 TFLOPS 几乎全来自 Tensor Core，CUDA Core 只有 ~67 TFLOPS
-                    - 如果你的 kernel 没用上 Tensor Core，就只用了 GPU 7% 的算力
-        - 显存层级：从 Register 到 HBM
-            - GPU 是带宽为王的设备
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003449699.png,713,234)
-            - 核心结论
-                - 访问 HBM 比访问 Register 慢 500 倍
-                - 所以高性能 kernel 的核心套路就是：把数据从 HBM 搬到 Shared Memory，重复使用
-                - 这正是 FlashAttention 的核心思想
-            - 
-'><meta name="author" content="map[name:An]"><link rel="canonical" href="https://blog.ans20xx.com/posts/ai/aiinfra-%E5%AD%A6%E4%B9%A0/"><link crossorigin="anonymous" href="/assets/css/stylesheet.86604d73028cb8c469fdf1bff1b8f1221026c402d1d756728b7690b8bed9ab5e.css" integrity="sha256-hmBNcwKMuMRp/fG/8bjxIhAmxALR11Zyi3aQuL7Zq14=" rel="preload stylesheet" as="style"><link rel="icon" href="https://blog.ans20xx.com/img/ancheng-favicon.svg"><link rel="apple-touch-icon" href="https://blog.ans20xx.com/apple-touch-icon.png"><link rel="mask-icon" href="https://blog.ans20xx.com/safari-pinned-tab.svg"><meta name="theme-color" content="#2e2e33"><meta name="msapplication-TileColor" content="#2e2e33"><link rel="alternate" hreflang="zh" href="https://blog.ans20xx.com/posts/ai/aiinfra-%E5%AD%A6%E4%B9%A0/"><noscript><style>.top-link{display:none}</style></noscript><link rel="dns-prefetch" href="//cdn.jsdmirror.com"><link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin><link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com"><link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin><script>/Macintosh/.test(navigator.userAgent)||["https://cdn.jsdmirror.com/npm/charter-webfont@4/charter.min.css","https://cdn.jsdmirror.com/npm/@fontsource/noto-serif-sc@latest/400.css"].forEach(function(e){var t=document.createElement("link");t.rel="stylesheet",t.href=e,document.head.appendChild(t)})</script><style>.post-content .highlight{overflow-x:auto}.post-content pre code{word-break:normal}</style><link rel="stylesheet" href="/css/includes/mind-elixir.min.css"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a><div class="logo-switches"></div></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/" title="博文"><span>博文</span></a></li><li><a href="https://blog.ans20xx.com/tags/" title="标签"><span>标签</span></a></li><li><a href="https://blog.ans20xx.com/search/" title="搜索"><span>搜索</span></a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title entry-hint-parent">AIInfra 学习</h1><div class="post-meta"><span title='2026-05-05 00:00:00 +0000 UTC'>五月 5, 2026</span></div></header><aside id="toc-container" class="toc-container"><button id="toc-trigger" aria-label="目录">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg></button><div class="toc"><div class="toc-header"><span class="toc-title">目录</span>
-<button id="toc-close" aria-label="关闭目录">&#215;</button></div><div class="inner"><ul><li><a href="#gpu-%e4%bd%93%e7%b3%bb%e7%bb%93%e6%9e%84--cuda-%e5%85%a5%e9%97%a8--profiling" aria-label="GPU 体系结构 + CUDA 入门 + Profiling">GPU 体系结构 + CUDA 入门 + Profiling</a><ul><li><a href="#aiinfra-%e5%85%a8%e6%99%af--%e5%ad%a6%e4%b9%a0%e5%86%85%e5%ae%b9" aria-label="AIInfra 全景 + 学习内容">AIInfra 全景 + 学习内容</a></li><li><a href="#linux-%e5%ae%b9%e5%99%a8%e5%9b%9e%e9%a1%be" aria-label="Linux 容器回顾">Linux 容器回顾</a></li><li><a href="#gpu-%e7%a1%ac%e4%bb%b6%e4%b8%8e%e4%bd%93%e7%b3%bb%e7%bb%93%e6%9e%84" aria-label="GPU 硬件与体系结构">GPU 硬件与体系结构</a></li></ul></li></ul></div></div></aside><script>(function(){var t,n,s,o,e=document.getElementById("toc-container"),i=document.getElementById("toc-trigger"),l=document.getElementById("toc-close");if(!e||!i)return;function h(){e.classList.add("toc-open")}function a(){e.classList.remove("toc-open")}function c(){e.classList.toggle("toc-open")}i.addEventListener("click",function(e){e.stopPropagation(),c()}),l.addEventListener("click",function(e){e.stopPropagation(),a()}),document.addEventListener("click",function(t){e.classList.contains("toc-open")&&!e.querySelector(".toc").contains(t.target)&&a()}),s=!1,document.addEventListener("mousemove",function(t){var n=48;t.clientX<n&&!e.classList.contains("toc-open")?s||(i.classList.add("toc-trigger-visible"),s=!0):e.classList.contains("toc-open")||s&&(i.classList.remove("toc-trigger-visible"),s=!1)}),t=[],o=[];function d(e,t,n){var o,i,s=(e||"").trim().toLowerCase().replace(/[/\\?#[\]@!$&'()*+,;=:。·—–"“”‘’、，：；（）]/g,"-").replace(/\s+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");for(s||(s="section-"+(t+1)),i=s,o=2;n[s]||document.getElementById(s);)s=i+"-"+o,o+=1;return n[s]=!0,s}function u(){var n={};t=Array.from(document.querySelectorAll(".post-content h1,.post-content h2,.post-content h3,.post-content h4,.post-content h5,.post-content h6")),o=Array.from(e.querySelectorAll('.inner a[href^="#"]')),t.forEach(function(e,t){e.id?n[e.id]=!0:e.id=d(e.textContent,t,n)}),o.forEach(function(e,n){var s=t[n];if(!s)return;e.setAttribute("href","#"+s.id),e.dataset.targetId=s.id,e.addEventListener("click",function(e){e.preventDefault(),s.scrollIntoView({behavior:"smooth",block:"start"}),history.pushState?history.pushState(null,"","#"+s.id):location.hash=s.id,setTimeout(a,150)})})}function r(e){o.forEach(function(t){t.classList.toggle("active",t.dataset.targetId===e.id)})}document.addEventListener("DOMContentLoaded",function(){u(),t.length>0&&(n=t[0],r(n));var e=document.getElementById("top-link");e&&e.addEventListener("click",function(e){e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("scroll",function(){var s,o,a,c,i=window.pageYOffset||document.documentElement.scrollTop;if(i===0||!t||t.length===0)return;n=Array.from(t).find(function(e){var t=e.getBoundingClientRect().top+window.pageYOffset-i;return t>0&&t<window.innerHeight/2})||n,r(n),s=e.querySelector('.inner a[data-target-id="'+n.id+'"]'),o=e.querySelector(".toc .inner"),s&&o&&e.classList.contains("toc-open")&&(a=s.offsetTop,c=o.clientHeight,o.scrollTo({top:a-c/2+s.clientHeight/2,behavior:"smooth"}))},!1),document.querySelectorAll(".toc .inner li").forEach(function(e){var t,n,s=e.querySelector(":scope > ul");if(!s)return;t=document.createElement("button"),t.className="toc-toggle",t.setAttribute("aria-label","折叠"),t.textContent="▾",t.addEventListener("click",function(e){e.preventDefault(),e.stopPropagation();var n=s.classList.toggle("toc-collapsed");t.textContent=n?"▸":"▾",t.setAttribute("aria-label",n?"展开":"折叠")}),n=e.querySelector(":scope > a"),n&&n.after(t)})})()</script><div class="post-content"><h1 id="gpu-体系结构--cuda-入门--profiling">GPU 体系结构 + CUDA 入门 + Profiling<a hidden class="anchor" aria-hidden="true" href="#gpu-体系结构--cuda-入门--profiling">#</a></h1><h2 id="aiinfra-全景--学习内容">AIInfra 全景 + 学习内容<a hidden class="anchor" aria-hidden="true" href="#aiinfra-全景--学习内容">#</a></h2><div class="mindmap-container" id="mindmap-82365471" style="width:100%;height:860px;min-height:860px"></div><textarea id="mindmap-data-82365471" style="display:none">
-- AIInfra 全景 & 学习内容
-    - 理论部分
-        - AIInfra 是什么    
-            - AI Infra 不是一个单一的东西，而是一整套支撑「让模型在合适的硬件上、以合适的成本、稳定地训练和服务用户」的技术栈
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510163128065.png,726,300)
-        - 一条 prompt 的完整生命周期
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/Clipboard_Screenshot_1778404995.png,500,400)
-        - 训练 vs 推理的关键差异
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510180216416.png,655,286)
-    - 动手部分
-        - 环境检查清单
-            - 
-            ```bash
-            # 1. 操作系统
-            uname -a                         # 期望 Linux x86_64，推荐 Ubuntu 22.04
-            cat /etc/os-release
-
-            # 2. GPU & 驱动
-            nvidia-smi                       # 看到 GPU 型号、驱动版本、CUDA 版本
-            nvidia-smi topo -m               # 看 GPU 间互联拓扑（NVLink/PCIe）
-
-            # 3. CUDA Toolkit
-            nvcc --version                   # 没装就先装，建议 12.x
-
-            # 4. Python 环境（推荐 uv 或 conda）
-            python --version                 # 3.10 / 3.11 都可
-            pip --version
-            ```
-        - 装 PyTorch &#43; transformers
-            - 
-            ```bash
-            # 用 conda 建一个干净环境
-            conda create -n aiinfra python=3.10 -y
-            conda activate aiinfra
-
-            # PyTorch（按你的 CUDA 版本选，下面以 CUDA 12.1 为例）
-            pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-
-            # 推理常用库
-            pip install transformers accelerate sentencepiece
-            ```
-            - 验证
-            ```python
-            # check.py
-            import torch
-            print(&#34;torch:&#34;, torch.__version__)
-            print(&#34;cuda available:&#34;, torch.cuda.is_available())
-            print(&#34;device count:&#34;, torch.cuda.device_count())
-            print(&#34;device name:&#34;, torch.cuda.get_device_name(0))
-            ```
-        - 跑通第一个 LLM 推理
-            - 选一个小模型（千万别第一次就拉 70B），比如 Qwen2.5-0.5B-Instruct 或 TinyLlama-1.1B：
-            -
-            ```python
-            # first_infer.py
-            import time, torch
-            from transformers import AutoTokenizer, AutoModelForCausalLM
-
-            model_id = &#34;Qwen/Qwen2.5-0.5B-Instruct&#34;  # 国内可换镜像
-            tok = AutoTokenizer.from_pretrained(model_id)
-            model = AutoModelForCausalLM.from_pretrained(
-                model_id, torch_dtype=torch.float16, device_map=&#34;cuda&#34;
-            )
-
-            prompt = &#34;用一句话解释什么是 KV Cache。&#34;
-            inputs = tok(prompt, return_tensors=&#34;pt&#34;).to(&#34;cuda&#34;)
-
-            torch.cuda.synchronize()
-            t0 = time.time()
-            out = model.generate(**inputs, max_new_tokens=128, do_sample=False)
-            torch.cuda.synchronize()
-            t1 = time.time()
-
-            print(tok.decode(out[0], skip_special_tokens=True))
-            print(f&#34;\n耗时 {t1-t0:.2f}s, 生成 {out.shape[1]-inputs.input_ids.shape[1]} tokens&#34;)
-            ```
-            - 监控
-            ```bash
-            watch -n 0.5 nvidia-smi          # 观察显存占用、SM 利用率
-            ```
-</textarea><h2 id="linux-容器回顾">Linux 容器回顾<a hidden class="anchor" aria-hidden="true" href="#linux-容器回顾">#</a></h2><div class="mindmap-container" id="mindmap-52418376" style="width:100%;height:860px;min-height:860px"></div><textarea id="mindmap-data-52418376" style="display:none">
-- Linux/容器基础回顾
-    - 理论部分
-        - Linux 进程隔离三件套
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510201727118.png,716,170)
-            - 需要记住的几个 namespace：pid、net、mnt、uts、ipc、user
-            - GPU 不在 namespace 隔离范围内 —— 这就是为什么需要 nvidia-container-toolkit
-        - NUMA、CPU 亲和性、与 GPU 的关系
-            - 一台 8 卡 GPU 服务器，CPU 和 GPU 之间的距离不是均等的
-            - 
-            ```
-            [ NUMA Node 0 ]            [ NUMA Node 1 ]
-                CPU0–47                    CPU48–95
-                ├─ GPU0 (PCIe)             ├─ GPU4
-                ├─ GPU1                    ├─ GPU5
-                ├─ GPU2                    ├─ GPU6
-                └─ GPU3                    └─ GPU7
-            ```
-            - 如果你的数据加载进程在 NUMA 0，但用的是 GPU 4，每条数据都要跨 NUMA 走 UPI，吞吐立即掉一截
-            - 
-            ```bash
-            numactl --hardware            # 看 NUMA 拓扑
-            numactl --cpunodebind=0 --membind=0 python train.py   # 绑到 NUMA 0
-            taskset -c 0-15 python ...   # 绑到具体 CPU 核
-            nvidia-smi topo -m            # 看 GPU 与 CPU 的拓扑距离 (PIX/PHB/NODE/SYS)
-            ```
-            - 训练任务的 dataloader worker 必须和它要喂的 GPU 在同一个 NUMA node 上
-        - 容器与 GPU：为什么需要 nvidia-container-toolkit
-            - 普通容器只能隔离 CPU/内存/网络，看不到 GPU 设备
-            - 驱动在宿主机，CUDA Toolkit 在容器里
-            - 宿主机驱动版本必须 ≥ 容器里 CUDA 编译要求的最低版本
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/10/20260510203843759.png,585,612)
-    - 动手部分
-        - 操作 namespace 和 cgroup
-            - 直观感受「容器不过是一组 namespace &#43; cgroup 的进程」
-            - 
-            ```
-            # 1. 用 unshare 起一个独立 PID namespace 的 shell
-            sudo unshare --pid --fork --mount-proc bash
-            ps aux        # 只看到几个进程！这就是 PID namespace
-            exit
-
-            # 2. 看自己进程的 namespace
-            ls -l /proc/self/ns/
-
-            # 3. cgroup v2：看当前 shell 的资源限制
-            cat /proc/self/cgroup
-            cat /sys/fs/cgroup/memory.max  2&gt;/dev/null || echo &#34;no limit&#34;
-            ```
-        - 安装 nvidia-container-toolkit
-            - 
-            ```bash
-            distribution=$(. /etc/os-release; echo $ID$VERSION_ID)
-            curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
-                | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-
-            curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list \
-                | sed &#39;s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g&#39; \
-                | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-
-            sudo apt-get update
-            sudo apt-get install -y nvidia-container-toolkit
-            sudo nvidia-ctk runtime configure --runtime=docker
-            sudo systemctl restart docker
-            ```
-            - 验证
-            ```bash
-            docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
-            ```
-        - 写自己的 AI Infra 开发镜像
-            - 
-            ```dockerfile
-            # 基础镜像：CUDA 12.4 &#43; cuDNN &#43; Ubuntu 22.04
-            FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
-
-            ENV DEBIAN_FRONTEND=noninteractive \
-                LANG=C.UTF-8 \
-                PYTHONDONTWRITEBYTECODE=1 \
-                PYTHONUNBUFFERED=1
-
-            # 系统依赖
-            RUN apt-get update && apt-get install -y --no-install-recommends \
-                python3.10 python3-pip python3.10-venv \
-                git curl wget vim numactl htop \
-                build-essential ninja-build \
-                && rm -rf /var/lib/apt/lists/*
-
-            RUN ln -sf /usr/bin/python3.10 /usr/bin/python && \
-                ln -sf /usr/bin/pip3 /usr/bin/pip
-
-            # Python 依赖
-            RUN pip install --no-cache-dir \
-                torch==2.4.0 torchvision \
-                --index-url https://download.pytorch.org/whl/cu124
-
-            RUN pip install --no-cache-dir \
-                transformers accelerate sentencepiece \
-                jupyterlab ipython \
-                nvitop py-spy
-
-            WORKDIR /workspace
-            CMD [&#34;bash&#34;]
-            ```
-            - 构建 &#43; 运行
-            ```bash
-            docker build -t aiinfra-dev:0.1 .
-
-            # 跑起来，挂载工作目录、暴露 jupyter 端口
-            docker run --rm -it \
-                --gpus all \
-                --shm-size=8g \
-                -v $PWD:/workspace \
-                -p 8888:8888 \
-                aiinfra-dev:0.1
-            ```
-        - NUMA 绑定
-            - 多卡机器
-            ```bash
-            # 先看拓扑
-            nvidia-smi topo -m
-            numactl --hardware
-
-            # 把推理脚本绑到 GPU0 同 NUMA 的 CPU 上
-            CUDA_VISIBLE_DEVICES=0 numactl --cpunodebind=0 --membind=0 \
-            python first_infer.py
-            ```
-</textarea><h2 id="gpu-硬件与体系结构">GPU 硬件与体系结构<a hidden class="anchor" aria-hidden="true" href="#gpu-硬件与体系结构">#</a></h2><div class="mindmap-container" id="mindmap-64253187" style="width:100%;height:860px;min-height:860px"></div><textarea id="mindmap-data-64253187" style="display:none">
-- GPU 硬件与体系结构
-    - 理论部分
-        - 一张图看懂 GPU
-            - 以 NVIDIA H100 (Hopper) 为例
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511002451179.png,756,565)
-            - H100 一共有 132 个 SM（消费卡 4090 是 128 SM，A100 是 108 SM）
-            - SM 是 GPU 的核，所有的 CUDA kernel 都在 SM 上执行
-            - 算力：FP16/BF16 Tensor Core ≈ 989 TFLOPS，FP8 ≈ 1979 TFLOPS
-            - 显存带宽：HBM3 ≈ 3 TB/s
-            - L2 Cache：50 MB（A100 是 40MB）
-            - NVLink：单卡对外 900 GB/s（A100 600 GB/s，4090 没 NVLink）
-        - SM 内部
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003227058.png,561,620)
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003301355.png,686,280)
-            - 关键洞察
-                - Warp Divergence：一个 warp 里 32 个线程如果走不同分支（if/else），GPU 会 顺序执行两条路径，性能直接腰斩。这就是为什么 GPU 不擅长复杂控制流
-                - Tensor Core 是深度学习的命门
-                    - CUDA Core 一条指令算 1 个 FMA（乘加）
-                    - Tensor Core 一条指令算 数百个 FMA
-                    - 所以 H100 标称的 989 TFLOPS 几乎全来自 Tensor Core，CUDA Core 只有 ~67 TFLOPS
-                    - 如果你的 kernel 没用上 Tensor Core，就只用了 GPU 7% 的算力
-        - 显存层级：从 Register 到 HBM
-            - GPU 是带宽为王的设备
-            - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003449699.png,713,234)
-            - 核心结论
-                - 访问 HBM 比访问 Register 慢 500 倍
-                - 所以高性能 kernel 的核心套路就是：把数据从 HBM 搬到 Shared Memory，重复使用
-                - 这正是 FlashAttention 的核心思想
-            - 
-</textarea></div><footer class="post-footer"><ul class="post-tags"><li><a href="https://blog.ans20xx.com/tags/ai/">AI</a></li><li><a href="https://blog.ans20xx.com/tags/cuda/">CUDA</a></li><li><a href="https://blog.ans20xx.com/tags/gpu/">GPU</a></li><li><a href="https://blog.ans20xx.com/tags/pytorch/">PyTorch</a></li></ul></footer></article></main><footer class="footer"><span>&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span></footer><a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g"><span class="topInner"><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
-<span id="read_progress"></span>
-</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script><div id="site-toast" class="site-toast"></div><script>window.showToast=function(e,t=2e3){const n=document.getElementById("site-toast");if(!n)return;n.textContent=e,n.classList.add("show"),clearTimeout(window.__toastTimer),window.__toastTimer=setTimeout(()=>{n.classList.remove("show")},t)}</script><script src="/js/mindmap.js" defer></script><link rel="stylesheet" href="/css/includes/atom-one-dark.min.min.css"></body></html>
+# 把推理脚本绑到 GPU0 同 NUMA 的 CPU 上
+CUDA_VISIBLE_DEVICES=0 numactl --cpunodebind=0 --membind=0 \
+python first_infer.py
+</code></pre></li></ul></li></ul></li></ul></div><h2 id="gpu-硬件与体系结构">GPU 硬件与体系结构</h2><div class="mindmap-list"><ul><li>GPU 硬件与体系结构<ul><li>理论部分<ul><li>一张图看懂 GPU<ul><li>以 NVIDIA H100 (Hopper) 为例</li><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511002451179.png" alt></button></figure></li><li>H100 一共有 132 个 SM（消费卡 4090 是 128 SM，A100 是 108 SM）</li><li>SM 是 GPU 的核，所有的 CUDA kernel 都在 SM 上执行</li><li>算力：FP16/BF16 Tensor Core ≈ 989 TFLOPS，FP8 ≈ 1979 TFLOPS</li><li>显存带宽：HBM3 ≈ 3 TB/s</li><li>L2 Cache：50 MB（A100 是 40MB）</li><li>NVLink：单卡对外 900 GB/s（A100 600 GB/s，4090 没 NVLink）</li></ul></li><li>SM 内部<ul><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003227058.png" alt></button></figure></li><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003301355.png" alt></button></figure></li><li>关键洞察<ul><li>Warp Divergence：一个 warp 里 32 个线程如果走不同分支（if/else），GPU 会 顺序执行两条路径，性能直接腰斩。这就是为什么 GPU 不擅长复杂控制流</li><li>Tensor Core 是深度学习的命门<ul><li>CUDA Core 一条指令算 1 个 FMA（乘加）</li><li>Tensor Core 一条指令算 数百个 FMA</li><li>所以 H100 标称的 989 TFLOPS 几乎全来自 Tensor Core，CUDA Core 只有 ~67 TFLOPS</li><li>如果你的 kernel 没用上 Tensor Core，就只用了 GPU 7% 的算力</li></ul></li></ul></li></ul></li><li>显存层级：从 Register 到 HBM<ul><li>GPU 是带宽为王的设备</li><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/05/11/20260511003449699.png" alt></button></figure></li><li>核心结论<ul><li>访问 HBM 比访问 Register 慢 500 倍</li><li>所以高性能 kernel 的核心套路就是：把数据从 HBM 搬到 Shared Memory，重复使用</li><li>这正是 FlashAttention 的核心思想</li></ul></li><li></li></ul></li></ul></li></ul></li></ul></div></div><footer class="post-footer"><ul class="post-tags"><li><a href="/tags/ai/">AI</a></li><li><a href="/tags/cuda/">CUDA</a></li><li><a href="/tags/gpu/">GPU</a></li><li><a href="/tags/pytorch/">PyTorch</a></li></ul></footer></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
+<output>100%</output>
+<button type="button" data-zoom-in aria-label="放大">＋</button>
+<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

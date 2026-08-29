@@ -1,385 +1,197 @@
-<!doctype html><html lang="zh" dir="auto"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="robots" content="index, follow"><title>字母异位词分组 | 安橙的博客</title><meta name="keywords" content><meta name="description" content="字母异位词分组"><meta name="author" content="map[name:An]"><link rel="canonical" href="https://blog.ans20xx.com/posts/leetcode/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/"><link crossorigin="anonymous" href="/assets/css/stylesheet.86604d73028cb8c469fdf1bff1b8f1221026c402d1d756728b7690b8bed9ab5e.css" integrity="sha256-hmBNcwKMuMRp/fG/8bjxIhAmxALR11Zyi3aQuL7Zq14=" rel="preload stylesheet" as="style"><link rel="icon" href="https://blog.ans20xx.com/img/ancheng-favicon.svg"><link rel="apple-touch-icon" href="https://blog.ans20xx.com/apple-touch-icon.png"><link rel="mask-icon" href="https://blog.ans20xx.com/safari-pinned-tab.svg"><meta name="theme-color" content="#2e2e33"><meta name="msapplication-TileColor" content="#2e2e33"><link rel="alternate" hreflang="zh" href="https://blog.ans20xx.com/posts/leetcode/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/"><noscript><style>.top-link{display:none}</style></noscript><link rel="dns-prefetch" href="//cdn.jsdmirror.com"><link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin><link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com"><link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin><script>/Macintosh/.test(navigator.userAgent)||["https://cdn.jsdmirror.com/npm/charter-webfont@4/charter.min.css","https://cdn.jsdmirror.com/npm/@fontsource/noto-serif-sc@latest/400.css"].forEach(function(e){var t=document.createElement("link");t.rel="stylesheet",t.href=e,document.head.appendChild(t)})</script><style>.post-content .highlight{overflow-x:auto}.post-content pre code{word-break:normal}</style><link crossorigin="anonymous" href="/assets/css/fancyboxcss.min.css" integrity rel="stylesheet"><script crossorigin="anonymous" src="/assets/js/fancybox.js" integrity defer></script></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a><div class="logo-switches"></div></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/" title="博文"><span>博文</span></a></li><li><a href="https://blog.ans20xx.com/tags/" title="标签"><span>标签</span></a></li><li><a href="https://blog.ans20xx.com/search/" title="搜索"><span>搜索</span></a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title entry-hint-parent">字母异位词分组</h1><div class="post-description">字母异位词分组</div><div class="post-meta"><span title='2025-01-12 00:00:00 +0000 UTC'>一月 12, 2025</span></div></header><aside id="toc-container" class="toc-container"><button id="toc-trigger" aria-label="目录">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg></button><div class="toc"><div class="toc-header"><span class="toc-title">目录</span>
-<button id="toc-close" aria-label="关闭目录">&#215;</button></div><div class="inner"><ul><li><a href="#%e5%ad%97%e6%af%8d%e5%bc%82%e4%bd%8d%e8%af%8d%e5%88%86%e7%bb%84" aria-label="字母异位词分组">字母异位词分组</a><ul><li><a href="#%e8%a7%a3%e6%b3%95-1%e5%85%88%e6%8e%92%e5%ba%8f%e5%86%8d-hash" aria-label="解法 1：先排序，再 hash">解法 1：先排序，再 hash</a></li><li><a href="#go-%e8%af%ad%e8%a8%80%e5%86%99%e6%b3%95" aria-label="Go 语言写法">Go 语言写法</a></li><li><a href="#python-%e5%86%99%e6%b3%95" aria-label="Python 写法">Python 写法</a></li><li><a href="#js-%e5%86%99%e6%b3%95" aria-label="JS 写法">JS 写法</a></li></ul></li><li><a href="#onk-%e5%a4%8d%e6%9d%82%e5%ba%a6%e5%86%99%e6%b3%95" aria-label="O(n*k) 复杂度写法">O(n*k) 复杂度写法</a><ul><li><a href="#java-%e5%86%99%e6%b3%95" aria-label="Java 写法">Java 写法</a></li><li><a href="#go-%e5%86%99%e6%b3%95" aria-label="Go 写法">Go 写法</a></li><li><a href="#python-%e5%86%99%e6%b3%95-1" aria-label="Python 写法">Python 写法</a></li><li><a href="#js-%e5%86%99%e6%b3%95-1" aria-label="JS 写法">JS 写法</a></li></ul></li></ul></div></div></aside><script>(function(){var t,n,s,o,e=document.getElementById("toc-container"),i=document.getElementById("toc-trigger"),l=document.getElementById("toc-close");if(!e||!i)return;function h(){e.classList.add("toc-open")}function a(){e.classList.remove("toc-open")}function c(){e.classList.toggle("toc-open")}i.addEventListener("click",function(e){e.stopPropagation(),c()}),l.addEventListener("click",function(e){e.stopPropagation(),a()}),document.addEventListener("click",function(t){e.classList.contains("toc-open")&&!e.querySelector(".toc").contains(t.target)&&a()}),s=!1,document.addEventListener("mousemove",function(t){var n=48;t.clientX<n&&!e.classList.contains("toc-open")?s||(i.classList.add("toc-trigger-visible"),s=!0):e.classList.contains("toc-open")||s&&(i.classList.remove("toc-trigger-visible"),s=!1)}),t=[],o=[];function d(e,t,n){var o,i,s=(e||"").trim().toLowerCase().replace(/[/\\?#[\]@!$&'()*+,;=:。·—–"“”‘’、，：；（）]/g,"-").replace(/\s+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");for(s||(s="section-"+(t+1)),i=s,o=2;n[s]||document.getElementById(s);)s=i+"-"+o,o+=1;return n[s]=!0,s}function u(){var n={};t=Array.from(document.querySelectorAll(".post-content h1,.post-content h2,.post-content h3,.post-content h4,.post-content h5,.post-content h6")),o=Array.from(e.querySelectorAll('.inner a[href^="#"]')),t.forEach(function(e,t){e.id?n[e.id]=!0:e.id=d(e.textContent,t,n)}),o.forEach(function(e,n){var s=t[n];if(!s)return;e.setAttribute("href","#"+s.id),e.dataset.targetId=s.id,e.addEventListener("click",function(e){e.preventDefault(),s.scrollIntoView({behavior:"smooth",block:"start"}),history.pushState?history.pushState(null,"","#"+s.id):location.hash=s.id,setTimeout(a,150)})})}function r(e){o.forEach(function(t){t.classList.toggle("active",t.dataset.targetId===e.id)})}document.addEventListener("DOMContentLoaded",function(){u(),t.length>0&&(n=t[0],r(n));var e=document.getElementById("top-link");e&&e.addEventListener("click",function(e){e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("scroll",function(){var s,o,a,c,i=window.pageYOffset||document.documentElement.scrollTop;if(i===0||!t||t.length===0)return;n=Array.from(t).find(function(e){var t=e.getBoundingClientRect().top+window.pageYOffset-i;return t>0&&t<window.innerHeight/2})||n,r(n),s=e.querySelector('.inner a[data-target-id="'+n.id+'"]'),o=e.querySelector(".toc .inner"),s&&o&&e.classList.contains("toc-open")&&(a=s.offsetTop,c=o.clientHeight,o.scrollTo({top:a-c/2+s.clientHeight/2,behavior:"smooth"}))},!1),document.querySelectorAll(".toc .inner li").forEach(function(e){var t,n,s=e.querySelector(":scope > ul");if(!s)return;t=document.createElement("button"),t.className="toc-toggle",t.setAttribute("aria-label","折叠"),t.textContent="▾",t.addEventListener("click",function(e){e.preventDefault(),e.stopPropagation();var n=s.classList.toggle("toc-collapsed");t.textContent=n?"▸":"▾",t.setAttribute("aria-label",n?"展开":"折叠")}),n=e.querySelector(":scope > a"),n&&n.after(t)})})()</script><div class="post-content"><h1 id="字母异位词分组">字母异位词分组<a hidden class="anchor" aria-hidden="true" href="#字母异位词分组">#</a></h1><p><div class="post-img-view"><a data-fancybox href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112155138006.png" onclick=window.Fancybox||event.preventDefault()><img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112155138006.png" alt></a></div></p><h2 id="解法-1先排序再-hash">解法 1：先排序，再 hash<a hidden class="anchor" aria-hidden="true" href="#解法-1先排序再-hash">#</a></h2><p><div class="post-img-view"><a data-fancybox href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160332483.png" onclick=window.Fancybox||event.preventDefault()><img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160332483.png" alt></a></div></p><p><div class="post-img-view"><a data-fancybox href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160659850.png" onclick=window.Fancybox||event.preventDefault()><img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160659850.png" alt></a></div></p><p>优点：简单，易于实施。</p><p>使用 lambda 表达式解题：</p><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">public</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">String</span>[] <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">Arrays</span>.<span style="color:#268bd2">stream</span>(<span style="color:#268bd2">strs</span>)
-</span></span><span style="display:flex"><span>                .<span style="color:#268bd2">collect</span>(<span style="color:#268bd2">Collectors</span>.<span style="color:#268bd2">groupingBy</span>(<span style="color:#268bd2">s</span> -&gt; {
-</span></span><span style="display:flex"><span>                    <span style="color:#859900;font-weight:700">char</span> [] <span style="color:#268bd2">ch</span> = <span style="color:#268bd2">s</span>.<span style="color:#268bd2">toCharArray</span>();
-</span></span><span style="display:flex"><span>                    <span style="color:#268bd2">Arrays</span>.<span style="color:#268bd2">sort</span>(<span style="color:#268bd2">ch</span>);
-</span></span><span style="display:flex"><span>                    <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#268bd2">String</span>(<span style="color:#268bd2">ch</span>);
-</span></span><span style="display:flex"><span>                }))
-</span></span><span style="display:flex"><span>                .<span style="color:#268bd2">values</span>()
-</span></span><span style="display:flex"><span>                .<span style="color:#268bd2">stream</span>()
-</span></span><span style="display:flex"><span>                .<span style="color:#268bd2">collect</span>(<span style="color:#268bd2">Collectors</span>.<span style="color:#268bd2">toList</span>());
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><p>更加简化写法：</p><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">public</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">String</span>[] <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">String</span>, <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">map</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">HashMap</span>&lt;&gt;();
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> (<span style="color:#268bd2">String</span> <span style="color:#268bd2">str</span> : <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#859900;font-weight:700">char</span>[] <span style="color:#268bd2">ch</span> = <span style="color:#268bd2">str</span>.<span style="color:#268bd2">toCharArray</span>();
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">Arrays</span>.<span style="color:#268bd2">sort</span>(<span style="color:#268bd2">ch</span>);
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">map</span>.<span style="color:#268bd2">computeIfAbsent</span>(<span style="color:#268bd2">String</span>.<span style="color:#268bd2">valueOf</span>(<span style="color:#268bd2">ch</span>), <span style="color:#268bd2">k</span> -&gt; <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;()).<span style="color:#268bd2">add</span>(<span style="color:#268bd2">str</span>);
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;(<span style="color:#268bd2">map</span>.<span style="color:#268bd2">values</span>());
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><p>当 Map 里没有某个 key 时，就用你传入的 lambda 生成一个默认值放进去，并返回这个值；如果 key 已存在，就直接返回已有值。它非常适合“分组/聚合”这类场景。</p><h2 id="go-语言写法">Go 语言写法<a hidden class="anchor" aria-hidden="true" href="#go-语言写法">#</a></h2><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-Go" data-lang="Go"><span style="display:flex"><span><span style="color:#859900">func</span> <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">strs</span> []<span style="color:#859900;font-weight:700">string</span>) [][]<span style="color:#859900;font-weight:700">string</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">m</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:700">string</span>][]<span style="color:#859900;font-weight:700">string</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">strs</span>))
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">s</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">strs</span> {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">b</span> := []<span style="color:#cb4b16">byte</span>(<span style="color:#268bd2">s</span>)
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">sort</span>.<span style="color:#268bd2">Slice</span>(<span style="color:#268bd2">b</span>, <span style="color:#859900">func</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:700">int</span>) <span style="color:#859900;font-weight:700">bool</span> {<span style="color:#859900">return</span> <span style="color:#268bd2">b</span>[<span style="color:#268bd2">i</span>] &lt; <span style="color:#268bd2">b</span>[<span style="color:#268bd2">j</span>]})
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">key</span> := <span style="color:#cb4b16">string</span>(<span style="color:#268bd2">b</span>)
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">m</span>[<span style="color:#268bd2">key</span>] = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">m</span>[<span style="color:#268bd2">key</span>], <span style="color:#268bd2">s</span>)
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">res</span> := <span style="color:#cb4b16">make</span>([][]<span style="color:#859900;font-weight:700">string</span>, <span style="color:#2aa198;font-weight:700">0</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">m</span>))
-</span></span><span style="display:flex"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">m</span> {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">res</span> = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">res</span>, <span style="color:#268bd2">v</span>)
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h2 id="python-写法">Python 写法<a hidden class="anchor" aria-hidden="true" href="#python-写法">#</a></h2><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">9
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-python" data-lang="python"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span>:
-</span></span><span style="display:flex"><span>    <span style="color:#859900">def</span> <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#cb4b16">self</span>, <span style="color:#268bd2">strs</span>: <span style="color:#268bd2">List</span>[<span style="color:#cb4b16">str</span>]) -&gt; <span style="color:#268bd2">List</span>[<span style="color:#268bd2">List</span>[<span style="color:#cb4b16">str</span>]]:
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">mp</span> = <span style="color:#268bd2">defaultdict</span>(<span style="color:#cb4b16">list</span>)
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> <span style="color:#268bd2">s</span> <span style="color:#859900">in</span> <span style="color:#268bd2">strs</span>:
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">key</span> = <span style="color:#2aa198">&#39;&#39;</span>.<span style="color:#268bd2">join</span>(<span style="color:#cb4b16">sorted</span>(<span style="color:#268bd2">s</span>))          <span style="color:#93a1a1;font-style:italic"># 通用：排序作为 key</span>
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">mp</span>[<span style="color:#268bd2">key</span>].<span style="color:#268bd2">append</span>(<span style="color:#268bd2">s</span>)
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#cb4b16">list</span>(<span style="color:#268bd2">mp</span>.<span style="color:#268bd2">values</span>())
-</span></span></code></pre></td></tr></table></div></div><ul><li>defaultdict 会创建一个默认的 dict，在访问某个 value 不存在的 key 时，会自动调用传入的工厂函数来设置 value 值。</li></ul><h2 id="js-写法">JS 写法<a hidden class="anchor" aria-hidden="true" href="#js-写法">#</a></h2><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-js" data-lang="js"><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic">/**
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> * LeetCode 49 - Group Anagrams
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> * 通用写法：排序后字符串作为 key
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> * 时间复杂度：O(n * k log k)（k 为单词平均长度）
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> * 空间复杂度：O(n * k)
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> *
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> * @param {string[]} strs
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> * @return {string[][]}
-</span></span></span><span style="display:flex"><span><span style="color:#93a1a1;font-style:italic"> */</span>
-</span></span><span style="display:flex"><span><span style="color:#859900">function</span> <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>  <span style="color:#859900">const</span> <span style="color:#268bd2">map</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Map</span>(); <span style="color:#93a1a1;font-style:italic">// key -&gt; string[]
-</span></span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>  <span style="color:#859900">for</span> (<span style="color:#859900">const</span> <span style="color:#268bd2">s</span> <span style="color:#859900">of</span> <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">const</span> <span style="color:#268bd2">key</span> = <span style="color:#268bd2">s</span>.<span style="color:#268bd2">split</span>(<span style="color:#2aa198">&#34;&#34;</span>).<span style="color:#268bd2">sort</span>().<span style="color:#268bd2">join</span>(<span style="color:#2aa198">&#34;&#34;</span>); <span style="color:#93a1a1;font-style:italic">// 规范化 key
-</span></span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (!<span style="color:#268bd2">map</span>.<span style="color:#268bd2">has</span>(<span style="color:#268bd2">key</span>)) <span style="color:#268bd2">map</span>.<span style="color:#268bd2">set</span>(<span style="color:#268bd2">key</span>, []);
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">map</span>.<span style="color:#268bd2">get</span>(<span style="color:#268bd2">key</span>).<span style="color:#268bd2">push</span>(<span style="color:#268bd2">s</span>);
-</span></span><span style="display:flex"><span>  }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>  <span style="color:#859900">return</span> <span style="color:#cb4b16">Array</span>.<span style="color:#268bd2">from</span>(<span style="color:#268bd2">map</span>.<span style="color:#268bd2">values</span>());
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h1 id="onk-复杂度写法">O(n*k) 复杂度写法<a hidden class="anchor" aria-hidden="true" href="#onk-复杂度写法">#</a></h1><p><div class="post-img-view"><a data-fancybox href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/14/20260114151158277.png" onclick=window.Fancybox||event.preventDefault()><img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/14/20260114151158277.png" alt></a></div></p><h2 id="java-写法">Java 写法<a hidden class="anchor" aria-hidden="true" href="#java-写法">#</a></h2><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">public</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">String</span>[] <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">String</span>, <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">map</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">HashMap</span>&lt;&gt;(<span style="color:#268bd2">strs</span>.<span style="color:#268bd2">length</span> * <span style="color:#268bd2">2</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> (<span style="color:#268bd2">String</span> <span style="color:#268bd2">s</span> : <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#859900;font-weight:700">int</span>[] <span style="color:#268bd2">cnt</span> = <span style="color:#859900">new</span> <span style="color:#859900;font-weight:700">int</span>[<span style="color:#268bd2">26</span>];
-</span></span><span style="display:flex"><span>            <span style="color:#859900">for</span> (<span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">i</span> = <span style="color:#268bd2">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">s</span>.<span style="color:#268bd2">length</span>(); <span style="color:#268bd2">i</span>++) {
-</span></span><span style="display:flex"><span>                <span style="color:#268bd2">cnt</span>[<span style="color:#268bd2">s</span>.<span style="color:#268bd2">charAt</span>(<span style="color:#268bd2">i</span>) - <span style="color:#2aa198">&#39;a&#39;</span>]++;
-</span></span><span style="display:flex"><span>            }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>            <span style="color:#93a1a1;font-style:italic">// 用计数向量编码成 key：#1#0#0...（避免歧义）</span>
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">StringBuilder</span> <span style="color:#268bd2">sb</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">StringBuilder</span>(<span style="color:#268bd2">26</span> * <span style="color:#268bd2">2</span>);
-</span></span><span style="display:flex"><span>            <span style="color:#859900">for</span> (<span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">i</span> = <span style="color:#268bd2">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">26</span>; <span style="color:#268bd2">i</span>++) {
-</span></span><span style="display:flex"><span>                <span style="color:#268bd2">sb</span>.<span style="color:#268bd2">append</span>(<span style="color:#2aa198">&#39;#&#39;</span>).<span style="color:#268bd2">append</span>(<span style="color:#268bd2">cnt</span>[<span style="color:#268bd2">i</span>]);
-</span></span><span style="display:flex"><span>            }
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">String</span> <span style="color:#268bd2">key</span> = <span style="color:#268bd2">sb</span>.<span style="color:#268bd2">toString</span>();
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">map</span>.<span style="color:#268bd2">computeIfAbsent</span>(<span style="color:#268bd2">key</span>, <span style="color:#268bd2">k</span> -&gt; <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;()).<span style="color:#268bd2">add</span>(<span style="color:#268bd2">s</span>);
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;(<span style="color:#268bd2">map</span>.<span style="color:#268bd2">values</span>());
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><p>更加简洁的写法是，可以直接生成 array 的 hashcode，虽然有概率哈希冲突。</p><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">public</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">String</span>[] <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">Integer</span>, <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">map</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">HashMap</span>&lt;&gt;(<span style="color:#268bd2">strs</span>.<span style="color:#268bd2">length</span> * <span style="color:#268bd2">2</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> (<span style="color:#268bd2">String</span> <span style="color:#268bd2">s</span> : <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#859900;font-weight:700">int</span>[] <span style="color:#268bd2">cnt</span> = <span style="color:#859900">new</span> <span style="color:#859900;font-weight:700">int</span>[<span style="color:#268bd2">26</span>];
-</span></span><span style="display:flex"><span>            <span style="color:#859900">for</span> (<span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">i</span> = <span style="color:#268bd2">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">s</span>.<span style="color:#268bd2">length</span>(); <span style="color:#268bd2">i</span>++) {
-</span></span><span style="display:flex"><span>                <span style="color:#268bd2">cnt</span>[<span style="color:#268bd2">s</span>.<span style="color:#268bd2">charAt</span>(<span style="color:#268bd2">i</span>) - <span style="color:#2aa198">&#39;a&#39;</span>]++;
-</span></span><span style="display:flex"><span>            }
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">Integer</span> <span style="color:#268bd2">key</span> = <span style="color:#268bd2">Arrays</span>.<span style="color:#268bd2">hashCode</span>(<span style="color:#268bd2">cnt</span>);
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">map</span>.<span style="color:#268bd2">computeIfAbsent</span>(<span style="color:#268bd2">key</span>, <span style="color:#268bd2">k</span> -&gt; <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;()).<span style="color:#268bd2">add</span>(<span style="color:#268bd2">s</span>);
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;(<span style="color:#268bd2">map</span>.<span style="color:#268bd2">values</span>());
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><p>同时，我们甚至能直接使用 list<integer> 作为 key：</p><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">public</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">String</span>[] <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">Integer</span>&gt;, <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">String</span>&gt;&gt; <span style="color:#268bd2">map</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">HashMap</span>&lt;&gt;(<span style="color:#268bd2">strs</span>.<span style="color:#268bd2">length</span> * <span style="color:#268bd2">2</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> (<span style="color:#268bd2">String</span> <span style="color:#268bd2">s</span> : <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">Integer</span>[] <span style="color:#268bd2">cnt</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Integer</span>[<span style="color:#268bd2">26</span>];
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">Arrays</span>.<span style="color:#268bd2">fill</span>(<span style="color:#268bd2">cnt</span>, <span style="color:#268bd2">0</span>);
-</span></span><span style="display:flex"><span>            <span style="color:#859900">for</span> (<span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">i</span> = <span style="color:#268bd2">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">s</span>.<span style="color:#268bd2">length</span>(); <span style="color:#268bd2">i</span>++) {
-</span></span><span style="display:flex"><span>                <span style="color:#268bd2">cnt</span>[<span style="color:#268bd2">s</span>.<span style="color:#268bd2">charAt</span>(<span style="color:#268bd2">i</span>) - <span style="color:#2aa198">&#39;a&#39;</span>]++;
-</span></span><span style="display:flex"><span>            }
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">map</span>.<span style="color:#268bd2">computeIfAbsent</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>(<span style="color:#268bd2">Arrays</span>.<span style="color:#268bd2">asList</span>(<span style="color:#268bd2">cnt</span>)), <span style="color:#268bd2">k</span> -&gt; <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;()).<span style="color:#268bd2">add</span>(<span style="color:#268bd2">s</span>);
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#268bd2">ArrayList</span>&lt;&gt;(<span style="color:#268bd2">map</span>.<span style="color:#268bd2">values</span>());
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h2 id="go-写法">Go 写法<a hidden class="anchor" aria-hidden="true" href="#go-写法">#</a></h2><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-Go" data-lang="Go"><span style="display:flex"><span><span style="color:#859900">func</span> <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">strs</span> []<span style="color:#859900;font-weight:700">string</span>) [][]<span style="color:#859900;font-weight:700">string</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">mp</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">map</span>[[<span style="color:#2aa198;font-weight:700">26</span>]<span style="color:#859900;font-weight:700">byte</span>][]<span style="color:#859900;font-weight:700">string</span>)
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">s</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">strs</span> {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">var</span> <span style="color:#268bd2">key</span> [<span style="color:#2aa198;font-weight:700">26</span>]<span style="color:#859900;font-weight:700">byte</span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:700">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">s</span>); <span style="color:#268bd2">i</span> ++ {
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">key</span>[<span style="color:#268bd2">s</span>[<span style="color:#268bd2">i</span>] - <span style="color:#2aa198">&#39;a&#39;</span>] ++
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">mp</span>[<span style="color:#268bd2">key</span>] = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">mp</span>[<span style="color:#268bd2">key</span>], <span style="color:#268bd2">s</span>)
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">res</span> := <span style="color:#cb4b16">make</span>([][]<span style="color:#859900;font-weight:700">string</span>, <span style="color:#2aa198;font-weight:700">0</span>)
-</span></span><span style="display:flex"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">mp</span> {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">res</span> = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">res</span>, <span style="color:#268bd2">v</span>)
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><p>Go 语言还可以这么写：</p><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-Go" data-lang="Go"><span style="display:flex"><span><span style="color:#859900">func</span> <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">strs</span> []<span style="color:#859900;font-weight:700">string</span>) [][]<span style="color:#859900;font-weight:700">string</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">mp</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:700">string</span>][]<span style="color:#859900;font-weight:700">string</span>)
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">s</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">strs</span> {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">var</span> <span style="color:#268bd2">key</span> [<span style="color:#2aa198;font-weight:700">26</span>]<span style="color:#859900;font-weight:700">byte</span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:700">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">s</span>); <span style="color:#268bd2">i</span> ++ {
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">key</span>[<span style="color:#268bd2">s</span>[<span style="color:#268bd2">i</span>] - <span style="color:#2aa198">&#39;a&#39;</span>] ++
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">keyStr</span> := <span style="color:#cb4b16">string</span>(<span style="color:#268bd2">key</span>)
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">mp</span>[<span style="color:#268bd2">keyStr</span>] = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">mp</span>[<span style="color:#268bd2">keyStr</span>], <span style="color:#268bd2">s</span>)
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">res</span> := <span style="color:#cb4b16">make</span>([][]<span style="color:#859900;font-weight:700">string</span>, <span style="color:#2aa198;font-weight:700">0</span>)
-</span></span><span style="display:flex"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">mp</span> {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">res</span> = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">res</span>, <span style="color:#268bd2">v</span>)
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h2 id="python-写法-1">Python 写法<a hidden class="anchor" aria-hidden="true" href="#python-写法-1">#</a></h2><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-python" data-lang="python"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span>:
-</span></span><span style="display:flex"><span>    <span style="color:#859900">def</span> <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#cb4b16">self</span>, <span style="color:#268bd2">strs</span>: <span style="color:#268bd2">List</span>[<span style="color:#cb4b16">str</span>]) -&gt; <span style="color:#268bd2">List</span>[<span style="color:#268bd2">List</span>[<span style="color:#cb4b16">str</span>]]:
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">mp</span> = <span style="color:#268bd2">defaultdict</span>(<span style="color:#cb4b16">list</span>)
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">for</span> <span style="color:#268bd2">s</span> <span style="color:#859900">in</span> <span style="color:#268bd2">strs</span>:
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">cnt</span> = [<span style="color:#2aa198;font-weight:700">0</span>] * <span style="color:#2aa198;font-weight:700">26</span>
-</span></span><span style="display:flex"><span>            <span style="color:#859900">for</span> <span style="color:#268bd2">ch</span> <span style="color:#859900">in</span> <span style="color:#268bd2">s</span>:
-</span></span><span style="display:flex"><span>                <span style="color:#268bd2">cnt</span>[<span style="color:#cb4b16">ord</span>(<span style="color:#268bd2">ch</span>) - <span style="color:#cb4b16">ord</span>(<span style="color:#2aa198">&#39;a&#39;</span>)] += <span style="color:#2aa198;font-weight:700">1</span>
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">mp</span>[<span style="color:#cb4b16">tuple</span>(<span style="color:#268bd2">cnt</span>)].<span style="color:#268bd2">append</span>(<span style="color:#268bd2">s</span>)  <span style="color:#93a1a1;font-style:italic"># O(1) 哈希 key（按 26 维计数）</span>
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#cb4b16">list</span>(<span style="color:#268bd2">mp</span>.<span style="color:#268bd2">values</span>())
-</span></span></code></pre></td></tr></table></div></div><p>python 写法中需要注意的是，字符转整数需要通过 ord 转，不能直接进行计算。</p><p>tuple 可以作为 map 的 key，其他不行。</p><h2 id="js-写法-1">JS 写法<a hidden class="anchor" aria-hidden="true" href="#js-写法-1">#</a></h2><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-js" data-lang="js"><span style="display:flex"><span><span style="color:#859900">function</span> <span style="color:#268bd2">groupAnagrams</span>(<span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>  <span style="color:#859900">const</span> <span style="color:#268bd2">map</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Map</span>(); <span style="color:#93a1a1;font-style:italic">// key -&gt; string[]
-</span></span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>  <span style="color:#859900">for</span> (<span style="color:#859900">const</span> <span style="color:#268bd2">s</span> <span style="color:#859900">of</span> <span style="color:#268bd2">strs</span>) {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">const</span> <span style="color:#268bd2">cnt</span> = <span style="color:#859900">new</span> <span style="color:#cb4b16">Array</span>(<span style="color:#2aa198;font-weight:700">26</span>).<span style="color:#268bd2">fill</span>(<span style="color:#2aa198;font-weight:700">0</span>);
-</span></span><span style="display:flex"><span>    <span style="color:#859900">for</span> (<span style="color:#859900">let</span> <span style="color:#268bd2">i</span> = <span style="color:#2aa198;font-weight:700">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">s</span>.<span style="color:#268bd2">length</span>; <span style="color:#268bd2">i</span>++) {
-</span></span><span style="display:flex"><span>      <span style="color:#268bd2">cnt</span>[<span style="color:#268bd2">s</span>.<span style="color:#268bd2">charCodeAt</span>(<span style="color:#268bd2">i</span>) - <span style="color:#2aa198;font-weight:700">97</span>]++; <span style="color:#93a1a1;font-style:italic">// &#39;a&#39; 的 ASCII/Unicode 码点是 97
-</span></span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#93a1a1;font-style:italic">// 计数数组转 key（加分隔符避免歧义）
-</span></span></span><span style="display:flex"><span>    <span style="color:#859900">const</span> <span style="color:#268bd2">key</span> = <span style="color:#268bd2">cnt</span>.<span style="color:#268bd2">join</span>(<span style="color:#2aa198">&#34;#&#34;</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (!<span style="color:#268bd2">map</span>.<span style="color:#268bd2">has</span>(<span style="color:#268bd2">key</span>)) <span style="color:#268bd2">map</span>.<span style="color:#268bd2">set</span>(<span style="color:#268bd2">key</span>, []);
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">map</span>.<span style="color:#268bd2">get</span>(<span style="color:#268bd2">key</span>).<span style="color:#268bd2">push</span>(<span style="color:#268bd2">s</span>);
-</span></span><span style="display:flex"><span>  }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>  <span style="color:#859900">return</span> <span style="color:#cb4b16">Array</span>.<span style="color:#268bd2">from</span>(<span style="color:#268bd2">map</span>.<span style="color:#268bd2">values</span>());
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><p>需要注意的是，js 中，charAt 返回的是字符串，而 charCodeAt 才返回整数。</p></div><footer class="post-footer"><ul class="post-tags"></ul></footer></article></main><footer class="footer"><span>&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span></footer><a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g"><span class="topInner"><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
-<span id="read_progress"></span>
-</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script><div id="site-toast" class="site-toast"></div><script>window.showToast=function(e,t=2e3){const n=document.getElementById("site-toast");if(!n)return;n.textContent=e,n.classList.add("show"),clearTimeout(window.__toastTimer),window.__toastTimer=setTimeout(()=>{n.classList.remove("show")},t)}</script></body></html>
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>字母异位词分组 | 安橙的博客</title><meta name="description" content="字母异位词分组"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/leetcode/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">字母异位词分组</h1><div class="post-description">字母异位词分组</div><div class="post-meta"><span title='2025-01-12 00:00:00 +0000 UTC'>一月 12, 2025</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#字母异位词分组">字母异位词分组</a><ul><li><a href="#解法-1先排序再-hash">解法 1：先排序，再 hash</a></li><li><a href="#go-语言写法">Go 语言写法</a></li><li><a href="#python-写法">Python 写法</a></li><li><a href="#js-写法">JS 写法</a></li></ul></li><li><a href="#onk-复杂度写法">O(n*k) 复杂度写法</a><ul><li><a href="#java-写法">Java 写法</a></li><li><a href="#go-写法">Go 写法</a></li><li><a href="#python-写法-1">Python 写法</a></li><li><a href="#js-写法-1">JS 写法</a></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="字母异位词分组">字母异位词分组</h1><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112155138006.png" alt></button></figure></p><h2 id="解法-1先排序再-hash">解法 1：先排序，再 hash</h2><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160332483.png" alt></button></figure></p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160659850.png" alt></button></figure></p><p>优点：简单，易于实施。</p><p>使用 lambda 表达式解题：</p><pre><code class="language-java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        return Arrays.stream(strs)
+                .collect(Collectors.groupingBy(s -&gt; {
+                    char [] ch = s.toCharArray();
+                    Arrays.sort(ch);
+                    return new String(ch);
+                }))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+    }
+}
+</code></pre><p>更加简化写法：</p><pre><code class="language-java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();
+        for (String str : strs) {
+            char[] ch = str.toCharArray();
+            Arrays.sort(ch);
+            map.computeIfAbsent(String.valueOf(ch), k -&gt; new ArrayList&lt;&gt;()).add(str);
+        }
+        return new ArrayList&lt;&gt;(map.values());
+    }
+}
+</code></pre><p>当 Map 里没有某个 key 时，就用你传入的 lambda 生成一个默认值放进去，并返回这个值；如果 key 已存在，就直接返回已有值。它非常适合“分组/聚合”这类场景。</p><h2 id="go-语言写法">Go 语言写法</h2><pre><code class="language-Go">func groupAnagrams(strs []string) [][]string {
+    m := make(map[string][]string, len(strs))
+
+    for _, s := range strs {
+        b := []byte(s)
+        sort.Slice(b, func(i, j int) bool {return b[i] &lt; b[j]})
+        key := string(b)
+        m[key] = append(m[key], s)
+    }
+
+    res := make([][]string, 0, len(m))
+    for _, v := range m {
+        res = append(res, v)
+    }
+    return res
+}
+</code></pre><h2 id="python-写法">Python 写法</h2><pre><code class="language-python">class Solution:
+    def groupAnagrams(self, strs: List[str]) -&gt; List[List[str]]:
+        mp = defaultdict(list)
+
+        for s in strs:
+            key = ''.join(sorted(s))          # 通用：排序作为 key
+            mp[key].append(s)
+
+        return list(mp.values())
+</code></pre><ul><li>defaultdict 会创建一个默认的 dict，在访问某个 value 不存在的 key 时，会自动调用传入的工厂函数来设置 value 值。</li></ul><h2 id="js-写法">JS 写法</h2><pre><code class="language-js">/**
+ * LeetCode 49 - Group Anagrams
+ * 通用写法：排序后字符串作为 key
+ * 时间复杂度：O(n * k log k)（k 为单词平均长度）
+ * 空间复杂度：O(n * k)
+ *
+ * @param {string[]} strs
+ * @return {string[][]}
+ */
+function groupAnagrams(strs) {
+  const map = new Map(); // key -&gt; string[]
+
+  for (const s of strs) {
+    const key = s.split(&quot;&quot;).sort().join(&quot;&quot;); // 规范化 key
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(s);
+  }
+
+  return Array.from(map.values());
+}
+</code></pre><h1 id="onk-复杂度写法">O(n*k) 复杂度写法</h1><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/14/20260114151158277.png" alt></button></figure></p><h2 id="java-写法">Java 写法</h2><pre><code class="language-java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;(strs.length * 2);
+
+        for (String s : strs) {
+            int[] cnt = new int[26];
+            for (int i = 0; i &lt; s.length(); i++) {
+                cnt[s.charAt(i) - 'a']++;
+            }
+
+            // 用计数向量编码成 key：#1#0#0...（避免歧义）
+            StringBuilder sb = new StringBuilder(26 * 2);
+            for (int i = 0; i &lt; 26; i++) {
+                sb.append('#').append(cnt[i]);
+            }
+            String key = sb.toString();
+
+            map.computeIfAbsent(key, k -&gt; new ArrayList&lt;&gt;()).add(s);
+        }
+
+        return new ArrayList&lt;&gt;(map.values());
+    }
+}
+</code></pre><p>更加简洁的写法是，可以直接生成 array 的 hashcode，虽然有概率哈希冲突。</p><pre><code class="language-java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        Map&lt;Integer, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;(strs.length * 2);
+
+        for (String s : strs) {
+            int[] cnt = new int[26];
+            for (int i = 0; i &lt; s.length(); i++) {
+                cnt[s.charAt(i) - 'a']++;
+            }
+            Integer key = Arrays.hashCode(cnt);
+            map.computeIfAbsent(key, k -&gt; new ArrayList&lt;&gt;()).add(s);
+        }
+
+        return new ArrayList&lt;&gt;(map.values());
+    }
+}
+</code></pre><p>同时，我们甚至能直接使用 list<integer> 作为 key：</p><pre><code class="language-java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        Map&lt;List&lt;Integer&gt;, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;(strs.length * 2);
+
+        for (String s : strs) {
+            Integer[] cnt = new Integer[26];
+            Arrays.fill(cnt, 0);
+            for (int i = 0; i &lt; s.length(); i++) {
+                cnt[s.charAt(i) - 'a']++;
+            }
+            map.computeIfAbsent(new ArrayList(Arrays.asList(cnt)), k -&gt; new ArrayList&lt;&gt;()).add(s);
+        }
+
+        return new ArrayList&lt;&gt;(map.values());
+    }
+}
+</code></pre><h2 id="go-写法">Go 写法</h2><pre><code class="language-Go">func groupAnagrams(strs []string) [][]string {
+    mp := make(map[[26]byte][]string)
+
+    for _, s := range strs {
+        var key [26]byte
+        for i := 0; i &lt; len(s); i ++ {
+            key[s[i] - 'a'] ++
+        }
+        mp[key] = append(mp[key], s)
+    }
+
+    res := make([][]string, 0)
+    for _, v := range mp {
+        res = append(res, v)
+    }
+    return res
+}
+</code></pre><p>Go 语言还可以这么写：</p><pre><code class="language-Go">func groupAnagrams(strs []string) [][]string {
+    mp := make(map[string][]string)
+
+    for _, s := range strs {
+        var key [26]byte
+        for i := 0; i &lt; len(s); i ++ {
+            key[s[i] - 'a'] ++
+        }
+        keyStr := string(key)
+        mp[keyStr] = append(mp[keyStr], s)
+    }
+
+    res := make([][]string, 0)
+    for _, v := range mp {
+        res = append(res, v)
+    }
+    return res
+}
+</code></pre><h2 id="python-写法-1">Python 写法</h2><pre><code class="language-python">class Solution:
+    def groupAnagrams(self, strs: List[str]) -&gt; List[List[str]]:
+        mp = defaultdict(list)
+
+        for s in strs:
+            cnt = [0] * 26
+            for ch in s:
+                cnt[ord(ch) - ord('a')] += 1
+
+            mp[tuple(cnt)].append(s)  # O(1) 哈希 key（按 26 维计数）
+
+        return list(mp.values())
+</code></pre><p>python 写法中需要注意的是，字符转整数需要通过 ord 转，不能直接进行计算。</p><p>tuple 可以作为 map 的 key，其他不行。</p><h2 id="js-写法-1">JS 写法</h2><pre><code class="language-js">function groupAnagrams(strs) {
+  const map = new Map(); // key -&gt; string[]
+
+  for (const s of strs) {
+    const cnt = new Array(26).fill(0);
+    for (let i = 0; i &lt; s.length; i++) {
+      cnt[s.charCodeAt(i) - 97]++; // 'a' 的 ASCII/Unicode 码点是 97
+    }
+
+    // 计数数组转 key（加分隔符避免歧义）
+    const key = cnt.join(&quot;#&quot;);
+
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(s);
+  }
+
+  return Array.from(map.values());
+}
+</code></pre><p>需要注意的是，js 中，charAt 返回的是字符串，而 charCodeAt 才返回整数。</p></div></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
+<output>100%</output>
+<button type="button" data-zoom-in aria-label="放大">＋</button>
+<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

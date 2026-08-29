@@ -1,917 +1,903 @@
-<!doctype html><html lang="zh" dir="auto"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="robots" content="index, follow"><title>OpenAI vs Anthropic API 格式对比 | 安橙的博客</title><meta name="keywords" content="AI,API,OpenAI,Anthropic"><meta name="description" content="端点、认证、请求参数、消息结构、响应解析、Tool Use、Streaming、Thinking、多模态输入、多轮对话——两大 API 体系全维度 HTTP 格式差异详解。"><meta name="author" content="map[name:An]"><link rel="canonical" href="https://blog.ans20xx.com/posts/ai/openai-vs-anthropic-api/"><link crossorigin="anonymous" href="/assets/css/stylesheet.86604d73028cb8c469fdf1bff1b8f1221026c402d1d756728b7690b8bed9ab5e.css" integrity="sha256-hmBNcwKMuMRp/fG/8bjxIhAmxALR11Zyi3aQuL7Zq14=" rel="preload stylesheet" as="style"><link rel="icon" href="https://blog.ans20xx.com/img/ancheng-favicon.svg"><link rel="apple-touch-icon" href="https://blog.ans20xx.com/apple-touch-icon.png"><link rel="mask-icon" href="https://blog.ans20xx.com/safari-pinned-tab.svg"><meta name="theme-color" content="#2e2e33"><meta name="msapplication-TileColor" content="#2e2e33"><link rel="alternate" hreflang="zh" href="https://blog.ans20xx.com/posts/ai/openai-vs-anthropic-api/"><noscript><style>.top-link{display:none}</style></noscript><link rel="dns-prefetch" href="//cdn.jsdmirror.com"><link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin><link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com"><link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin><script>/Macintosh/.test(navigator.userAgent)||["https://cdn.jsdmirror.com/npm/charter-webfont@4/charter.min.css","https://cdn.jsdmirror.com/npm/@fontsource/noto-serif-sc@latest/400.css"].forEach(function(e){var t=document.createElement("link");t.rel="stylesheet",t.href=e,document.head.appendChild(t)})</script><style>.post-content .highlight{overflow-x:auto}.post-content pre code{word-break:normal}</style></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a><div class="logo-switches"></div></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/" title="博文"><span>博文</span></a></li><li><a href="https://blog.ans20xx.com/tags/" title="标签"><span>标签</span></a></li><li><a href="https://blog.ans20xx.com/search/" title="搜索"><span>搜索</span></a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title entry-hint-parent">OpenAI vs Anthropic API 格式对比</h1><div class="post-description">端点、认证、请求参数、消息结构、响应解析、Tool Use、Streaming、Thinking、多模态输入、多轮对话——两大 API 体系全维度 HTTP 格式差异详解。</div><div class="post-meta"><span title='2026-05-16 00:00:00 +0000 UTC'>五月 16, 2026</span></div></header><aside id="toc-container" class="toc-container"><button id="toc-trigger" aria-label="目录">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg></button><div class="toc"><div class="toc-header"><span class="toc-title">目录</span>
-<button id="toc-close" aria-label="关闭目录">&#215;</button></div><div class="inner"><ul><li><a href="#" aria-label="OpenAI vs Anthropic
-HTTP 格式对比">OpenAI vs Anthropic<br><em>HTTP 格式对比</em></a><ul><li><a href="#" aria-label="总览对比">总览对比</a></li><li><a href="#" aria-label="端点与认证">端点与认证</a><ul><li><a href="#" aria-label="完整 curl 示例">完整 curl 示例</a></li></ul></li><li><a href="#" aria-label="请求参数">请求参数</a></li><li><a href="#" aria-label="请求体结构">请求体结构</a><ul><li><a href="#" aria-label="基础请求体">基础请求体</a></li><li><a href="#" aria-label="System Prompt 的高级用法">System Prompt 的高级用法</a></li><li><a href="#" aria-label="消息内容的两种写法">消息内容的两种写法</a></li></ul></li><li><a href="#" aria-label="响应体">响应体</a><ul><li><a href="#" aria-label="完整响应 JSON">完整响应 JSON</a></li><li><a href="#" aria-label="取值路径对比">取值路径对比</a></li><li><a href="#" aria-label="Usage 字段全览对照">Usage 字段全览对照</a></li><li><a href="#" aria-label="完整 usage 对象（含全部子字段）">完整 usage 对象（含全部子字段）</a></li><li><a href="#" aria-label="Prompt Caching 计费机制对比">Prompt Caching 计费机制对比</a></li><li><a href="#" aria-label="Reasoning / Thinking Token 计费">Reasoning / Thinking Token 计费</a></li><li><a href="#" aria-label="多模态 Token 计算（图片 / 音频）">多模态 Token 计算（图片 / 音频）</a></li><li><a href="#" aria-label="流式（Streaming）中获取 usage">流式（Streaming）中获取 usage</a></li><li><a href="#" aria-label="服务层级（Service Tier）对 usage 的影响">服务层级（Service Tier）对 usage 的影响</a></li><li><a href="#" aria-label="典型场景下的 Token 计算示例">典型场景下的 Token 计算示例</a></li><li><a href="#" aria-label="用量追踪与会话级聚合">用量追踪与会话级聚合</a></li><li><a href="#" aria-label="停止原因值对照">停止原因值对照</a></li><li><a href="#" aria-label="错误响应格式">错误响应格式</a></li></ul></li><li><a href="#" aria-label="Tool Use">Tool Use</a><ul><li><a href="#" aria-label="工具定义（请求体中的 tools 字段）">工具定义（请求体中的 tools 字段）</a></li><li><a href="#" aria-label="tool_choice 对比">tool_choice 对比</a></li><li><a href="#" aria-label="响应中的工具调用">响应中的工具调用</a></li><li><a href="#" aria-label="并行工具调用">并行工具调用</a></li><li><a href="#" aria-label="回传工具结果">回传工具结果</a></li></ul></li><li><a href="#" aria-label="Streaming">Streaming</a><ul><li><a href="#" aria-label='启用流式（请求体加 "stream": true）'>启用流式（请求体加 "stream": true）</a></li><li><a href="#" aria-label="SSE 事件生命周期对比">SSE 事件生命周期对比</a></li><li><a href="#" aria-label="工具调用的流式事件">工具调用的流式事件</a></li></ul></li><li><a href="#" aria-label="Thinking / Reasoning">Thinking / Reasoning</a><ul><li><a href="#" aria-label="请求格式">请求格式</a></li><li><a href="#" aria-label="响应格式">响应格式</a></li><li><a href="#" aria-label="Thinking 的流式事件">Thinking 的流式事件</a></li><li><a href="#" aria-label="多轮对话中的 Thinking 回传">多轮对话中的 Thinking 回传</a></li></ul></li><li><a href="#" aria-label="Vision / 多模态输入">Vision / 多模态输入</a><ul><li><a href="#" aria-label="通过 URL 传入图片">通过 URL 传入图片</a></li><li><a href="#" aria-label="通过 Base64 传入图片">通过 Base64 传入图片</a></li><li><a href="#" aria-label="支持的图片格式">支持的图片格式</a></li></ul></li><li><a href="#" aria-label="多轮对话">多轮对话</a><ul><li><a href="#" aria-label="基础多轮对话">基础多轮对话</a></li><li><a href="#" aria-label="含 Tool Use 的多轮对话（完整流程）">含 Tool Use 的多轮对话（完整流程）</a></li><li><a href="#" aria-label="消息排列规则">消息排列规则</a></li></ul></li><li><a href="#" aria-label="总结速查">总结速查</a><ul><li><a href="#" aria-label="choices[] 包裹 · 字符串优先 · 灵活宽松">choices[] 包裹 · 字符串优先 · 灵活宽松</a></li><li><a href="#" aria-label="content blocks · 结构化优先 · 严格有序">content blocks · 结构化优先 · 严格有序</a></li></ul></li><li><a href="#" aria-label="常见问题">常见问题</a></li></ul></li></ul></div></div></aside><script>(function(){var t,n,s,o,e=document.getElementById("toc-container"),i=document.getElementById("toc-trigger"),l=document.getElementById("toc-close");if(!e||!i)return;function h(){e.classList.add("toc-open")}function a(){e.classList.remove("toc-open")}function c(){e.classList.toggle("toc-open")}i.addEventListener("click",function(e){e.stopPropagation(),c()}),l.addEventListener("click",function(e){e.stopPropagation(),a()}),document.addEventListener("click",function(t){e.classList.contains("toc-open")&&!e.querySelector(".toc").contains(t.target)&&a()}),s=!1,document.addEventListener("mousemove",function(t){var n=48;t.clientX<n&&!e.classList.contains("toc-open")?s||(i.classList.add("toc-trigger-visible"),s=!0):e.classList.contains("toc-open")||s&&(i.classList.remove("toc-trigger-visible"),s=!1)}),t=[],o=[];function d(e,t,n){var o,i,s=(e||"").trim().toLowerCase().replace(/[/\\?#[\]@!$&'()*+,;=:。·—–"“”‘’、，：；（）]/g,"-").replace(/\s+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");for(s||(s="section-"+(t+1)),i=s,o=2;n[s]||document.getElementById(s);)s=i+"-"+o,o+=1;return n[s]=!0,s}function u(){var n={};t=Array.from(document.querySelectorAll(".post-content h1,.post-content h2,.post-content h3,.post-content h4,.post-content h5,.post-content h6")),o=Array.from(e.querySelectorAll('.inner a[href^="#"]')),t.forEach(function(e,t){e.id?n[e.id]=!0:e.id=d(e.textContent,t,n)}),o.forEach(function(e,n){var s=t[n];if(!s)return;e.setAttribute("href","#"+s.id),e.dataset.targetId=s.id,e.addEventListener("click",function(e){e.preventDefault(),s.scrollIntoView({behavior:"smooth",block:"start"}),history.pushState?history.pushState(null,"","#"+s.id):location.hash=s.id,setTimeout(a,150)})})}function r(e){o.forEach(function(t){t.classList.toggle("active",t.dataset.targetId===e.id)})}document.addEventListener("DOMContentLoaded",function(){u(),t.length>0&&(n=t[0],r(n));var e=document.getElementById("top-link");e&&e.addEventListener("click",function(e){e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("scroll",function(){var s,o,a,c,i=window.pageYOffset||document.documentElement.scrollTop;if(i===0||!t||t.length===0)return;n=Array.from(t).find(function(e){var t=e.getBoundingClientRect().top+window.pageYOffset-i;return t>0&&t<window.innerHeight/2})||n,r(n),s=e.querySelector('.inner a[data-target-id="'+n.id+'"]'),o=e.querySelector(".toc .inner"),s&&o&&e.classList.contains("toc-open")&&(a=s.offsetTop,c=o.clientHeight,o.scrollTo({top:a-c/2+s.clientHeight/2,behavior:"smooth"}))},!1),document.querySelectorAll(".toc .inner li").forEach(function(e){var t,n,s=e.querySelector(":scope > ul");if(!s)return;t=document.createElement("button"),t.className="toc-toggle",t.setAttribute("aria-label","折叠"),t.textContent="▾",t.addEventListener("click",function(e){e.preventDefault(),e.stopPropagation();var n=s.classList.toggle("toc-collapsed");t.textContent=n?"▸":"▾",t.setAttribute("aria-label",n?"展开":"折叠")}),n=e.querySelector(":scope > a"),n&&n.after(t)})})()</script><div class="post-content"><style>:root{--ivory:#FAF9F5;--paper:#FFFFFF;--slate:#141413;--clay:#D97757;--clay-d:#B85C3E;--oat:#E3DACC;--olive:#788C5D;--g100:#F0EEE6;--g200:#E6E3DA;--g300:#D1CFC5;--g500:#87867F;--g700:#3D3D3A;--serif:ui-serif, Georgia, "Songti SC", "STSong", "Times New Roman", Times, serif;--sans:system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;--mono:ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace}*{box-sizing:border-box}.api-compare-wrap{max-width:1120px;margin:0 auto;padding:0 32px 140px}.api-compare-wrap .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--g500)}.api-compare-wrap .eyebrow::before{content:"";display:inline-block;width:24px;height:1.5px;background:var(--clay);margin-right:12px;vertical-align:middle}.api-compare-wrap h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,5vw,54px);letter-spacing:-.018em;line-height:1.1;max-width:20ch;margin:22px 0 30px;color:var(--slate)}.api-compare-wrap h1 em{font-style:italic;color:var(--clay)}.api-compare-wrap h2{font-family:var(--serif);font-weight:500;font-size:27px;letter-spacing:-.012em;margin:0;color:var(--slate)}.api-compare-wrap h3{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:-.008em;margin:0 0 10px;color:var(--slate)}.api-compare-wrap .lede{font-size:16.5px;color:var(--g700);max-width:62ch;margin:0 0 32px;line-height:1.65}.api-compare-wrap header.masthead{padding:80px 0 56px}.api-compare-wrap .meta-strip{display:flex;flex-wrap:wrap;gap:32px;padding:14px 0;border-top:1px solid var(--g200);border-bottom:1px solid var(--g200);font-family:var(--mono);font-size:11.5px;color:var(--g500);letter-spacing:.06em;text-transform:uppercase}.api-compare-wrap .meta-strip strong{color:var(--slate);font-weight:600;margin-right:6px}.api-compare-wrap section{margin-top:72px}.api-compare-wrap .indent{margin-left:50px}.api-compare-wrap .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:28px}.api-compare-wrap .sec-head .count{font-family:var(--mono);font-size:11px;color:var(--g500);padding:3px 12px;background:var(--g100);border-radius:999px;letter-spacing:.08em;text-transform:uppercase}.api-compare-wrap .table-wrap{overflow-x:auto}.api-compare-wrap table.compare{width:100%;border-collapse:collapse;font-size:14px;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden}.api-compare-wrap table.compare th,.api-compare-wrap table.compare td{text-align:left;padding:14px 20px;border-bottom:1px solid var(--g200);vertical-align:top}.api-compare-wrap table.compare th{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);background:var(--g100);border-bottom:1.5px solid var(--slate)}.api-compare-wrap table.compare td:first-child{font-family:var(--serif);font-weight:500;font-size:15px;width:22%;color:var(--slate)}.api-compare-wrap table.compare tr:last-child td{border-bottom:none}.api-compare-wrap table.compare .clay{color:var(--clay-d)}.api-compare-wrap .badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:600;vertical-align:middle}.api-compare-wrap .badge.req{background:#fde8e0;color:var(--clay-d)}.api-compare-wrap .badge.opt{background:var(--g100);color:var(--g500)}.api-compare-wrap .badge.yes{background:#e8f0e0;color:var(--olive)}.api-compare-wrap .badge.no{background:var(--g100);color:var(--g500)}.api-compare-wrap pre.code{background:var(--slate);color:var(--ivory);font-family:var(--mono);font-size:12.5px;padding:20px 24px;border-radius:10px;overflow-x:auto;line-height:1.65;margin:18px 0}.api-compare-wrap pre.code .c{color:var(--g500);font-style:italic}.api-compare-wrap pre.code .k{color:var(--clay)}.api-compare-wrap pre.code .s{color:var(--olive)}.api-compare-wrap pre.code .t{color:#7ec8e3}.api-compare-wrap pre.code .n{color:#c4b28a}.api-compare-wrap pre.code .comment{color:var(--g500);font-style:italic}.api-compare-wrap code.inline{font-family:var(--mono);font-size:12.5px;background:var(--g100);border:1px solid var(--g200);border-radius:4px;padding:1px 6px;color:var(--clay-d)}.api-compare-wrap .dual-code{display:grid;grid-template-columns:1fr 1fr;gap:12px}.api-compare-wrap .dual-code .col-label{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;padding-left:4px}.api-compare-wrap .dual-code .col-label.openai{color:var(--olive)}.api-compare-wrap .dual-code .col-label.anthropic{color:var(--clay)}.api-compare-wrap .dual-code pre.code{margin:0}.api-compare-wrap .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(316px,1fr));gap:20px}.api-compare-wrap .grid-2{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}.api-compare-wrap .node{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;padding:22px 24px;transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease}.api-compare-wrap .node:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(20,20,19,.1);border-color:var(--slate)}.api-compare-wrap .node.accent{border-color:var(--clay)}.api-compare-wrap .node.dark{background:var(--slate);border-color:var(--slate);color:var(--ivory)}.api-compare-wrap .node.dark .tag{color:var(--oat)}.api-compare-wrap .node.dark p{color:var(--oat)}.api-compare-wrap .node.dark h3{color:var(--ivory)}.api-compare-wrap .node .tag{font-family:var(--mono);font-size:10.5px;color:var(--g500);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-weight:600}.api-compare-wrap .node .tag.clay{color:var(--clay)}.api-compare-wrap .node p{font-size:13.5px;color:var(--g700);margin:6px 0 0;line-height:1.6}.api-compare-wrap .annot{font-family:var(--mono);font-size:11.5px;color:var(--g500);position:relative;margin-top:14px;padding-left:44px;letter-spacing:.04em}.api-compare-wrap .annot::before{content:"";position:absolute;left:0;top:8px;width:32px;height:1.5px;background:var(--clay)}.api-compare-wrap .callout{background:var(--g100);border-left:3px solid var(--clay);padding:16px 22px;border-radius:0 10px 10px 0;margin:18px 0;font-size:13.5px;color:var(--g700);line-height:1.6}.api-compare-wrap .callout strong{font-family:var(--serif);font-weight:500;color:var(--slate)}.api-compare-wrap .sub-gap{margin-top:36px}.api-compare-wrap .qa-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px}.api-compare-wrap .qa-card{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;transition:border-color 150ms ease}.api-compare-wrap .qa-card[open]{border-color:var(--slate)}.api-compare-wrap .qa-card summary{list-style:none;cursor:pointer;padding:18px 24px;display:flex;align-items:flex-start;gap:18px;transition:background 150ms ease}.api-compare-wrap .qa-card summary::-webkit-details-marker{display:none}.api-compare-wrap .qa-card summary::marker{display:none}.api-compare-wrap .qa-card summary:hover{background:var(--g100)}.api-compare-wrap .qa-card[open] summary{background:var(--g100);border-bottom:1px dashed var(--g300)}.api-compare-wrap .qa-num{font-family:var(--mono);font-size:12px;color:var(--clay);letter-spacing:.1em;font-weight:600;flex-shrink:0;margin-top:3px}.api-compare-wrap .qa-q{font-family:var(--serif);font-size:16px;font-weight:500;color:var(--slate);line-height:1.5;flex:1}.api-compare-wrap .qa-toggle{font-family:var(--mono);font-size:18px;color:var(--g500);flex-shrink:0;font-weight:300;line-height:1;margin-top:2px;transition:transform 150ms ease,color 150ms ease}.api-compare-wrap .qa-card[open] .qa-toggle{transform:rotate(45deg);color:var(--clay)}.api-compare-wrap .qa-a{padding:20px 24px 22px;display:flex;align-items:flex-start;gap:18px}.api-compare-wrap .qa-a-label{font-family:var(--mono);font-size:12px;color:var(--olive);letter-spacing:.1em;font-weight:600;flex-shrink:0;margin-top:2px}.api-compare-wrap .qa-a-body{flex:1;font-family:var(--sans);font-size:14.5px;color:var(--g700);line-height:1.7}.api-compare-wrap .qa-a-body p{margin:0 0 10px}.api-compare-wrap .qa-a-body p:last-child{margin-bottom:0}.api-compare-wrap .qa-a-body strong{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--slate)}.api-compare-wrap .qa-a-body code{font-family:var(--mono);font-size:13px;background:var(--g100);border:1px solid var(--g200);border-radius:4px;padding:1px 5px;color:var(--clay-d)}.api-compare-wrap footer.article-footer{margin-top:100px;padding-top:40px;border-top:1px solid var(--g200);text-align:center}.api-compare-wrap footer.article-footer .quote{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--g700);max-width:42ch;margin:0 auto;line-height:1.55}.api-compare-wrap footer.article-footer .meta{font-family:var(--mono);font-size:11px;color:var(--g500);letter-spacing:.12em;text-transform:uppercase;margin-top:24px}@media(max-width:720px){.api-compare-wrap{padding:0 22px 90px}.api-compare-wrap .indent{margin-left:0}.api-compare-wrap header.masthead{padding:56px 0 40px}.api-compare-wrap section{margin-top:56px}.api-compare-wrap .meta-strip{gap:18px;font-size:10.5px}.api-compare-wrap .dual-code{grid-template-columns:1fr}.api-compare-wrap .qa-card summary{padding:16px 18px;gap:12px}.api-compare-wrap .qa-q{font-size:14.5px}.api-compare-wrap .qa-a{padding:16px 18px 18px;gap:12px}}</style><div class="api-compare-wrap"><header class="masthead"><div class="eyebrow">API FORMAT COMPARISON · REFERENCE</div><h1>OpenAI vs Anthropic<br><em>HTTP 格式对比</em></h1><p class="lede">两套 API 在端点、认证、请求参数、消息结构、响应解析、工具调用、流式传输、推理模式、多模态输入和多轮对话上的核心差异。
-同一个意图，两种 JSON——理解差异，才能自由切换。</p><div class="meta-strip"><span><strong>OPENAI</strong> /v1/chat/completions</span>
-<span><strong>ANTHROPIC</strong> /v1/messages</span>
-<span><strong>SECTIONS</strong> 10</span>
-<span><strong>SCOPE</strong> HTTP / JSON</span></div></header><section><div class="sec-head"><h2>总览对比</h2><div class="count">OVERVIEW</div></div><div class="indent"><div class="table-wrap"><table class="compare"><thead><tr><th>维度</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>端点</td><td><code class="inline">POST /v1/chat/completions</code></td><td><code class="inline">POST /v1/messages</code></td></tr><tr><td>认证方式</td><td><code class="inline">Authorization: Bearer sk-...</code></td><td><code class="inline">x-api-key: sk-ant-...</code></td></tr><tr><td>版本头</td><td>—（无需版本头）</td><td><code class="inline">anthropic-version: 2023-06-01</code></td></tr><tr><td>组织 / 项目头</td><td><code class="inline">OpenAI-Organization</code> / <code class="inline">OpenAI-Project</code></td><td>—</td></tr><tr><td>System Prompt</td><td>放在 <code class="inline">messages</code> 中，<code class="inline">role: "system"</code></td><td>独立顶层 <code class="inline">system</code> 字段（字符串或 block 数组）</td></tr><tr><td>max_tokens</td><td>可选（有默认值）</td><td class="clay"><strong>必填</strong></td></tr><tr><td>temperature</td><td>0 – 2（默认 1）</td><td>0 – 1（默认 1）</td></tr><tr><td>top_k</td><td>✗ 不支持</td><td>✓ 支持</td></tr><tr><td>多候选（n）</td><td>✓ 支持 n ≥ 1</td><td>✗ 不支持</td></tr><tr><td>响应取值路径</td><td><code class="inline">choices[0].message.content</code></td><td><code class="inline">content[0].text</code></td></tr><tr><td>内容格式</td><td><code class="inline">content</code> 为字符串（或工具调用时为 null）</td><td><code class="inline">content</code> 为 block 数组（text / thinking / tool_use）</td></tr><tr><td>Tool 定义 key</td><td><code class="inline">type:"function"</code> 包裹 + <code class="inline">parameters</code></td><td>扁平结构 + <code class="inline">input_schema</code></td></tr><tr><td>Tool 参数格式</td><td><code class="inline">arguments</code>（JSON 字符串）</td><td><code class="inline">input</code>（已解析 JSON 对象）</td></tr><tr><td>Tool 结果角色</td><td><code class="inline">role: "tool"</code></td><td><code class="inline">role: "user"</code> + <code class="inline">type: "tool_result"</code></td></tr><tr><td>tool_choice</td><td><code class="inline">"auto" / "none" / "required"</code> / 指定函数</td><td><code class="inline">{type:"auto"} / {type:"any"} / {type:"tool"}</code></td></tr><tr><td>Thinking</td><td><code class="inline">&lt;think></code> 标签内嵌或 <code class="inline">reasoning_split</code></td><td>独立 <code class="inline">thinking</code> content block + <code class="inline">budget_tokens</code></td></tr><tr><td>Streaming</td><td>SSE <code class="inline">data: {"choices":[{"delta":...}]}</code></td><td>SSE <code class="inline">event: content_block_delta</code></td></tr><tr><td>流结束标记</td><td><code class="inline">data: [DONE]</code></td><td><code class="inline">event: message_stop</code></td></tr><tr><td>Vision / 图片</td><td><code class="inline">type: "image_url"</code> + <code class="inline">detail</code></td><td><code class="inline">type: "image"</code> + <code class="inline">source</code></td></tr><tr><td>错误格式</td><td><code class="inline">{"error": {"message":..., "type":...}}</code></td><td><code class="inline">{"type":"error", "error": {"type":..., "message":...}}</code></td></tr><tr><td>停止原因字段</td><td><code class="inline">finish_reason</code>（stop / length / tool_calls）</td><td><code class="inline">stop_reason</code>（end_turn / max_tokens / tool_use）</td></tr><tr><td>Token 计量</td><td><code class="inline">prompt_tokens</code> / <code class="inline">completion_tokens</code></td><td><code class="inline">input_tokens</code> / <code class="inline">output_tokens</code></td></tr></tbody></table></div></div></section><section><div class="sec-head"><h2>端点与认证</h2><div class="count">ENDPOINT</div></div><div class="indent"><div class="dual-code"><div><div class="col-label openai">OpenAI</div><pre class="code"><span class="k">POST</span> <span class="s">https://api.openai.com/v1/chat/completions</span>
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenAI vs Anthropic API 格式对比 | 安橙的博客</title><meta name="description" content="端点、认证、请求参数、消息结构、响应解析、Tool Use、Streaming、Thinking、多模态输入、多轮对话——两大 API 体系全维度 HTTP 格式差异详解。"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/ai/openai-vs-anthropic-api/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">OpenAI vs Anthropic API 格式对比</h1><div class="post-description">端点、认证、请求参数、消息结构、响应解析、Tool Use、Streaming、Thinking、多模态输入、多轮对话——两大 API 体系全维度 HTTP 格式差异详解。</div><div class="post-meta"><span title='2026-05-16 00:00:00 +0000 UTC'>五月 16, 2026</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#openai-vs-anthropic-http-格式对比">OpenAI vs Anthropic <em>HTTP 格式对比</em></a><ul><li><a href="#总览对比">总览对比</a></li><li><a href="#端点与认证">端点与认证</a><ul><li><a href="#完整-curl-示例">完整 curl 示例</a></li></ul></li><li><a href="#请求参数">请求参数</a></li><li><a href="#请求体结构">请求体结构</a><ul><li><a href="#基础请求体">基础请求体</a></li><li><a href="#system-prompt-的高级用法">System Prompt 的高级用法</a></li><li><a href="#消息内容的两种写法">消息内容的两种写法</a></li></ul></li><li><a href="#响应体">响应体</a><ul><li><a href="#完整响应-json">完整响应 JSON</a></li><li><a href="#取值路径对比">取值路径对比</a></li><li><a href="#usage-字段全览对照">Usage 字段全览对照</a></li><li><a href="#完整-usage-对象含全部子字段">完整 usage 对象（含全部子字段）</a></li><li><a href="#prompt-caching-计费机制对比">Prompt Caching 计费机制对比</a></li><li><a href="#reasoning--thinking-token-计费">Reasoning / Thinking Token 计费</a></li><li><a href="#多模态-token-计算图片--音频">多模态 Token 计算（图片 / 音频）</a></li><li><a href="#流式streaming中获取-usage">流式（Streaming）中获取 usage</a></li><li><a href="#服务层级service-tier对-usage-的影响">服务层级（Service Tier）对 usage 的影响</a></li><li><a href="#典型场景下的-token-计算示例">典型场景下的 Token 计算示例</a></li><li><a href="#用量追踪与会话级聚合">用量追踪与会话级聚合</a></li><li><a href="#停止原因值对照">停止原因值对照</a></li><li><a href="#错误响应格式">错误响应格式</a></li></ul></li><li><a href="#tool-use">Tool Use</a><ul><li><a href="#工具定义请求体中的-tools-字段">工具定义（请求体中的 tools 字段）</a></li><li><a href="#tool_choice-对比">tool_choice 对比</a></li><li><a href="#响应中的工具调用">响应中的工具调用</a></li><li><a href="#并行工具调用">并行工具调用</a></li><li><a href="#回传工具结果">回传工具结果</a></li></ul></li><li><a href="#streaming">Streaming</a><ul><li><a href="#启用流式请求体加-stream-true">启用流式（请求体加 &ldquo;stream&rdquo;: true）</a></li><li><a href="#sse-事件生命周期对比">SSE 事件生命周期对比</a></li><li><a href="#工具调用的流式事件">工具调用的流式事件</a></li></ul></li><li><a href="#thinking--reasoning">Thinking / Reasoning</a><ul><li><a href="#请求格式">请求格式</a></li><li><a href="#响应格式">响应格式</a></li><li><a href="#thinking-的流式事件">Thinking 的流式事件</a></li><li><a href="#多轮对话中的-thinking-回传">多轮对话中的 Thinking 回传</a></li></ul></li><li><a href="#vision--多模态输入">Vision / 多模态输入</a><ul><li><a href="#通过-url-传入图片">通过 URL 传入图片</a></li><li><a href="#通过-base64-传入图片">通过 Base64 传入图片</a></li><li><a href="#支持的图片格式">支持的图片格式</a></li></ul></li><li><a href="#多轮对话">多轮对话</a><ul><li><a href="#基础多轮对话">基础多轮对话</a></li><li><a href="#含-tool-use-的多轮对话完整流程">含 Tool Use 的多轮对话（完整流程）</a></li><li><a href="#消息排列规则">消息排列规则</a></li></ul></li><li><a href="#总结速查">总结速查</a><ul><li><a href="#choices-包裹--字符串优先--灵活宽松">choices[] 包裹 · 字符串优先 · 灵活宽松</a></li><li><a href="#content-blocks--结构化优先--严格有序">content blocks · 结构化优先 · 严格有序</a></li></ul></li><li><a href="#常见问题">常见问题</a><ul><li><a href="#q1--两套-api-的请求体可以直接互转吗">Q1 · 两套 API 的请求体可以直接互转吗？</a></li><li><a href="#q2--anthropic-为什么要把-system-提为独立字段">Q2 · Anthropic 为什么要把 system 提为独立字段？</a></li><li><a href="#q3--content-blocks-相比纯字符串有什么优势">Q3 · content blocks 相比纯字符串有什么优势？</a></li><li><a href="#q4--流式-sse-中如何区分-thinking-和-text-的增量">Q4 · 流式 SSE 中如何区分 thinking 和 text 的增量？</a></li><li><a href="#q5--为什么-anthropic-的-tool-参数-input-已经是-json-对象而-openai-是字符串">Q5 · 为什么 Anthropic 的 tool 参数 (input) 已经是 JSON 对象，而 OpenAI 是字符串？</a></li><li><a href="#q6--anthropic-的消息交替要求会带来什么影响">Q6 · Anthropic 的消息交替要求会带来什么影响？</a></li></ul></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><p>API FORMAT COMPARISON · REFERENCE</p><h1 id="openai-vs-anthropic-http-格式对比">OpenAI vs Anthropic <em>HTTP 格式对比</em></h1><p>两套 API 在端点、认证、请求参数、消息结构、响应解析、工具调用、流式传输、推理模式、多模态输入和多轮对话上的核心差异。 同一个意图，两种 JSON——理解差异，才能自由切换。</p><p><strong>OPENAI</strong> /v1/chat/completions <strong>ANTHROPIC</strong> /v1/messages <strong>SECTIONS</strong> 10 <strong>SCOPE</strong> HTTP / JSON</p><h2 id="总览对比">总览对比</h2><p>OVERVIEW</p><table><thead><tr><th>维度</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>端点</td><td><code>POST /v1/chat/completions</code></td><td><code>POST /v1/messages</code></td></tr><tr><td>认证方式</td><td><code>Authorization: Bearer sk-...</code></td><td><code>x-api-key: sk-ant-...</code></td></tr><tr><td>版本头</td><td>—（无需版本头）</td><td><code>anthropic-version: 2023-06-01</code></td></tr><tr><td>组织 / 项目头</td><td><code>OpenAI-Organization</code> / <code>OpenAI-Project</code></td><td>—</td></tr><tr><td>System Prompt</td><td>放在 <code>messages</code> 中，<code>role: "system"</code></td><td>独立顶层 <code>system</code> 字段（字符串或 block 数组）</td></tr><tr><td>max_tokens</td><td>可选（有默认值）</td><td><strong>必填</strong></td></tr><tr><td>temperature</td><td>0 – 2（默认 1）</td><td>0 – 1（默认 1）</td></tr><tr><td>top_k</td><td>✗ 不支持</td><td>✓ 支持</td></tr><tr><td>多候选（n）</td><td>✓ 支持 n ≥ 1</td><td>✗ 不支持</td></tr><tr><td>响应取值路径</td><td><code>choices[0].message.content</code></td><td><code>content[0].text</code></td></tr><tr><td>内容格式</td><td><code>content</code> 为字符串（或工具调用时为 null）</td><td><code>content</code> 为 block 数组（text / thinking / tool_use）</td></tr><tr><td>Tool 定义 key</td><td><code>type:"function"</code> 包裹 + <code>parameters</code></td><td>扁平结构 + <code>input_schema</code></td></tr><tr><td>Tool 参数格式</td><td><code>arguments</code>（JSON 字符串）</td><td><code>input</code>（已解析 JSON 对象）</td></tr><tr><td>Tool 结果角色</td><td><code>role: "tool"</code></td><td><code>role: "user"</code> + <code>type: "tool_result"</code></td></tr><tr><td>tool_choice</td><td><code>"auto" / "none" / "required"</code> / 指定函数</td><td><code>{type:"auto"} / {type:"any"} / {type:"tool"}</code></td></tr><tr><td>Thinking</td><td><code>&lt;think></code> 标签内嵌或 <code>reasoning_split</code></td><td>独立 <code>thinking</code> content block + <code>budget_tokens</code></td></tr><tr><td>Streaming</td><td>SSE <code>data: {"choices":[{"delta":...}]}</code></td><td>SSE <code>event: content_block_delta</code></td></tr><tr><td>流结束标记</td><td><code>data: [DONE]</code></td><td><code>event: message_stop</code></td></tr><tr><td>Vision / 图片</td><td><code>type: "image_url"</code> + <code>detail</code></td><td><code>type: "image"</code> + <code>source</code></td></tr><tr><td>错误格式</td><td><code>{"error": {"message":..., "type":...}}</code></td><td><code>{"type":"error", "error": {"type":..., "message":...}}</code></td></tr><tr><td>停止原因字段</td><td><code>finish_reason</code>（stop / length / tool_calls）</td><td><code>stop_reason</code>（end_turn / max_tokens / tool_use）</td></tr><tr><td>Token 计量</td><td><code>prompt_tokens</code> / <code>completion_tokens</code></td><td><code>input_tokens</code> / <code>output_tokens</code></td></tr></tbody></table><h2 id="端点与认证">端点与认证</h2><p>ENDPOINT</p><p>OpenAI</p><pre><code>POST https://api.openai.com/v1/chat/completions
 
-<span class="t">Content-Type</span>: application/json
-<span class="t">Authorization</span>: Bearer <span class="n">sk-...</span>
-<span class="t">OpenAI-Organization</span>: <span class="n">org-...</span>   <span class="comment">← 可选</span>
-<span class="t">OpenAI-Project</span>: <span class="n">proj_...</span>        <span class="comment">← 可选</span></pre></div><div><div class="col-label anthropic">Anthropic</div><pre class="code"><span class="k">POST</span> <span class="s">https://api.anthropic.com/v1/messages</span>
+Content-Type: application/json
+Authorization: Bearer sk-...
+OpenAI-Organization: org-... ← 可选
+OpenAI-Project: proj_... ← 可选
+</code></pre><p>Anthropic</p><pre><code>POST https://api.anthropic.com/v1/messages
 
-<span class="t">Content-Type</span>: application/json
-<span class="t">x-api-key</span>: <span class="n">sk-ant-api03-...</span>
-<span class="t">anthropic-version</span>: <span class="n">2023-06-01</span>  <span class="comment">← 必填</span>
-<span class="t">anthropic-beta</span>: <span class="n">...</span>             <span class="comment">← Beta 功能时使用</span></pre></div></div><div class="sub-gap"></div><h3>完整 curl 示例</h3><div class="dual-code"><div><div class="col-label openai">OpenAI curl</div><pre class="code">curl <span class="s">https://api.openai.com/v1/chat/completions</span> \
-  -H <span class="s">"Content-Type: application/json"</span> \
-  -H <span class="s">"Authorization: Bearer $OPENAI_API_KEY"</span> \
-  -d <span class="s">'{
-    "model": "gpt-4o",
-    "messages": [
-      {"role": "system", "content": "You are helpful."},
-      {"role": "user", "content": "Hello!"}
+Content-Type: application/json
+x-api-key: sk-ant-api03-...
+anthropic-version: 2023-06-01 ← 必填
+anthropic-beta: ... ← Beta 功能时使用
+</code></pre><h3 id="完整-curl-示例">完整 curl 示例</h3><p>OpenAI curl</p><pre><code>curl https://api.openai.com/v1/chat/completions \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;Authorization: Bearer $OPENAI_API_KEY&quot; \
+  -d '{
+    &quot;model&quot;: &quot;gpt-4o&quot;,
+    &quot;messages&quot;: [
+      {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;You are helpful.&quot;},
+      {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello!&quot;}
     ]
-  }'</span></pre></div><div><div class="col-label anthropic">Anthropic curl</div><pre class="code">curl <span class="s">https://api.anthropic.com/v1/messages</span> \
-  -H <span class="s">"Content-Type: application/json"</span> \
-  -H <span class="s">"x-api-key: $ANTHROPIC_API_KEY"</span> \
-  -H <span class="s">"anthropic-version: 2023-06-01"</span> \
-  -d <span class="s">'{
-    "model": "claude-sonnet-4-20250514",
-    "max_tokens": 1024,
-    "system": "You are helpful.",
-    "messages": [
-      {"role": "user", "content": "Hello!"}
+  }'
+</code></pre><p>Anthropic curl</p><pre><code>curl https://api.anthropic.com/v1/messages \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;x-api-key: $ANTHROPIC_API_KEY&quot; \
+  -H &quot;anthropic-version: 2023-06-01&quot; \
+  -d '{
+    &quot;model&quot;: &quot;claude-sonnet-4-20250514&quot;,
+    &quot;max_tokens&quot;: 1024,
+    &quot;system&quot;: &quot;You are helpful.&quot;,
+    &quot;messages&quot;: [
+      {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello!&quot;}
     ]
-  }'</span></pre></div></div><div class="callout"><strong>认证差异：</strong>OpenAI 使用标准 HTTP <code class="inline">Authorization: Bearer</code> 方案；
-Anthropic 使用自定义 <code class="inline">x-api-key</code> header，并要求 <code class="inline">anthropic-version</code> 版本头。<br><br><strong>组织管理：</strong>OpenAI 通过可选的 <code class="inline">OpenAI-Organization</code> 和 <code class="inline">OpenAI-Project</code> 头控制多组织/项目隔离。
-Anthropic 目前无对应机制。</div></div></section><section><div class="sec-head"><h2>请求参数</h2><div class="count">PARAMETERS</div></div><div class="indent"><div class="table-wrap"><table class="compare"><thead><tr><th>参数</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>model</td><td><span class="badge req">required</span> <code class="inline">"gpt-4o"</code></td><td><span class="badge req">required</span> <code class="inline">"claude-sonnet-4-20250514"</code></td></tr><tr><td>max_tokens</td><td><span class="badge opt">optional</span> 有默认值</td><td><span class="badge req">required</span> 必须显式指定</td></tr><tr><td>messages</td><td><span class="badge req">required</span> 含 system / user / assistant / tool</td><td><span class="badge req">required</span> 仅含 user / assistant</td></tr><tr><td>system</td><td>—（在 messages 数组中传入）</td><td><span class="badge opt">optional</span> 顶层字段，字符串或 block 数组</td></tr><tr><td>temperature</td><td><span class="badge opt">optional</span> 范围 0 – 2，默认 1</td><td><span class="badge opt">optional</span> 范围 0 – 1，默认 1</td></tr><tr><td>top_p</td><td><span class="badge opt">optional</span> 0 – 1</td><td><span class="badge opt">optional</span> 0 – 1</td></tr><tr><td>top_k</td><td><span class="badge no">✗</span></td><td><span class="badge opt">optional</span> 整数</td></tr><tr><td>n</td><td><span class="badge opt">optional</span> 返回多个候选（1 – 128）</td><td><span class="badge no">✗</span></td></tr><tr><td>stop</td><td><span class="badge opt">optional</span> 字符串或数组（最多 4 个）</td><td><span class="badge opt">optional</span> <code class="inline">stop_sequences</code> 数组</td></tr><tr><td>stream</td><td><span class="badge opt">optional</span> boolean</td><td><span class="badge opt">optional</span> boolean</td></tr><tr><td>tools</td><td><span class="badge opt">optional</span> function 定义数组</td><td><span class="badge opt">optional</span> tool 定义数组</td></tr><tr><td>tool_choice</td><td><span class="badge opt">optional</span> <code class="inline">"auto"</code> / <code class="inline">"none"</code> / <code class="inline">"required"</code> / 指定函数</td><td><span class="badge opt">optional</span> <code class="inline">{type:"auto"}</code> / <code class="inline">{type:"any"}</code> / <code class="inline">{type:"tool"}</code></td></tr><tr><td>presence_penalty</td><td><span class="badge opt">optional</span> -2.0 – 2.0</td><td><span class="badge no">✗</span></td></tr><tr><td>frequency_penalty</td><td><span class="badge opt">optional</span> -2.0 – 2.0</td><td><span class="badge no">✗</span></td></tr><tr><td>logprobs</td><td><span class="badge opt">optional</span> boolean</td><td><span class="badge no">✗</span></td></tr><tr><td>response_format</td><td><span class="badge opt">optional</span> <code class="inline">json_object</code> / <code class="inline">json_schema</code></td><td><span class="badge no">✗</span></td></tr><tr><td>seed</td><td><span class="badge opt">optional</span> 整数（尽力复现）</td><td><span class="badge no">✗</span></td></tr><tr><td>thinking</td><td>—（通过 <code class="inline">reasoning_split</code> 等参数控制）</td><td><span class="badge opt">optional</span> <code class="inline">{type:"enabled", budget_tokens:N}</code></td></tr><tr><td>metadata</td><td><span class="badge no">✗</span>（通过 <code class="inline">user</code> 字符串追踪）</td><td><span class="badge opt">optional</span> <code class="inline">{user_id: "..."}</code></td></tr><tr><td>stream_options</td><td><span class="badge opt">optional</span> <code class="inline">{include_usage: true}</code></td><td>—（usage 默认包含在事件中）</td></tr></tbody></table></div><div class="callout"><strong>参数哲学差异：</strong>OpenAI 提供更多"调味"参数（penalty、logprobs、seed、response_format），适合精细控制输出分布。
-Anthropic 则提供更多"结构化"控制（thinking.budget_tokens、metadata、system 独立字段），侧重请求语义的明确性。
-两者的 <code class="inline">temperature</code> 范围也不同（0–2 vs 0–1），迁移时需注意。</div></div></section><section><div class="sec-head"><h2>请求体结构</h2><div class="count">REQUEST BODY</div></div><div class="indent"><h3>基础请求体</h3><div class="dual-code"><div><div class="col-label openai">OpenAI 请求体</div><pre class="code">{
-  <span class="s">"model"</span>: <span class="s">"gpt-4o"</span>,
-  <span class="s">"messages"</span>: [
+  }'
+</code></pre><p><strong>认证差异：</strong> OpenAI 使用标准 HTTP <code>Authorization: Bearer</code> 方案； Anthropic 使用自定义 <code>x-api-key</code> header，并要求 <code>anthropic-version</code> 版本头。</p><p><strong>组织管理：</strong> OpenAI 通过可选的 <code>OpenAI-Organization</code> 和 <code>OpenAI-Project</code> 头控制多组织/项目隔离。 Anthropic 目前无对应机制。</p><h2 id="请求参数">请求参数</h2><p>PARAMETERS</p><table><thead><tr><th>参数</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>model</td><td>required <code>"gpt-4o"</code></td><td>required <code>"claude-sonnet-4-20250514"</code></td></tr><tr><td>max_tokens</td><td>optional 有默认值</td><td>required 必须显式指定</td></tr><tr><td>messages</td><td>required 含 system / user / assistant / tool</td><td>required 仅含 user / assistant</td></tr><tr><td>system</td><td>—（在 messages 数组中传入）</td><td>optional 顶层字段，字符串或 block 数组</td></tr><tr><td>temperature</td><td>optional 范围 0 – 2，默认 1</td><td>optional 范围 0 – 1，默认 1</td></tr><tr><td>top_p</td><td>optional 0 – 1</td><td>optional 0 – 1</td></tr><tr><td>top_k</td><td>✗</td><td>optional 整数</td></tr><tr><td>n</td><td>optional 返回多个候选（1 – 128）</td><td>✗</td></tr><tr><td>stop</td><td>optional 字符串或数组（最多 4 个）</td><td>optional <code>stop_sequences</code> 数组</td></tr><tr><td>stream</td><td>optional boolean</td><td>optional boolean</td></tr><tr><td>tools</td><td>optional function 定义数组</td><td>optional tool 定义数组</td></tr><tr><td>tool_choice</td><td>optional <code>"auto"</code> / <code>"none"</code> / <code>"required"</code> / 指定函数</td><td>optional <code>{type:"auto"}</code> / <code>{type:"any"}</code> / <code>{type:"tool"}</code></td></tr><tr><td>presence_penalty</td><td>optional -2.0 – 2.0</td><td>✗</td></tr><tr><td>frequency_penalty</td><td>optional -2.0 – 2.0</td><td>✗</td></tr><tr><td>logprobs</td><td>optional boolean</td><td>✗</td></tr><tr><td>response_format</td><td>optional <code>json_object</code> / <code>json_schema</code></td><td>✗</td></tr><tr><td>seed</td><td>optional 整数（尽力复现）</td><td>✗</td></tr><tr><td>thinking</td><td>—（通过 <code>reasoning_split</code> 等参数控制）</td><td>optional <code>{type:"enabled", budget_tokens:N}</code></td></tr><tr><td>metadata</td><td>✗（通过 <code>user</code> 字符串追踪）</td><td>optional <code>{user_id: "..."}</code></td></tr><tr><td>stream_options</td><td>optional <code>{include_usage: true}</code></td><td>—（usage 默认包含在事件中）</td></tr></tbody></table><p><strong>参数哲学差异：</strong> OpenAI 提供更多"调味"参数（penalty、logprobs、seed、response_format），适合精细控制输出分布。 Anthropic 则提供更多"结构化"控制（thinking.budget_tokens、metadata、system 独立字段），侧重请求语义的明确性。 两者的 <code>temperature</code> 范围也不同（0–2 vs 0–1），迁移时需注意。</p><h2 id="请求体结构">请求体结构</h2><p>REQUEST BODY</p><h3 id="基础请求体">基础请求体</h3><p>OpenAI 请求体</p><pre><code>{
+  &quot;model&quot;: &quot;gpt-4o&quot;,
+  &quot;messages&quot;: [
     {
-      <span class="s">"role"</span>: <span class="s">"system"</span>,        <span class="comment">← system 在 messages 中</span>
-      <span class="s">"content"</span>: <span class="s">"You are a helpful assistant."</span>
+      &quot;role&quot;: &quot;system&quot;, ← system 在 messages 中
+      &quot;content&quot;: &quot;You are a helpful assistant.&quot;
     },
     {
-      <span class="s">"role"</span>: <span class="s">"user"</span>,
-      <span class="s">"content"</span>: <span class="s">"Hi, how are you?"</span>
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: &quot;Hi, how are you?&quot;
     }
   ]
-}</pre></div><div><div class="col-label anthropic">Anthropic 请求体</div><pre class="code">{
-  <span class="s">"model"</span>: <span class="s">"claude-sonnet-4-20250514"</span>,
-  <span class="s">"max_tokens"</span>: <span class="n">1024</span>,           <span class="comment">← 必填</span>
-  <span class="s">"system"</span>: <span class="s">"You are a helpful assistant."</span>,  <span class="comment">← 顶层字段</span>
-  <span class="s">"messages"</span>: [
+}
+</code></pre><p>Anthropic 请求体</p><pre><code>{
+  &quot;model&quot;: &quot;claude-sonnet-4-20250514&quot;,
+  &quot;max_tokens&quot;: 1024, ← 必填
+  &quot;system&quot;: &quot;You are a helpful assistant.&quot;, ← 顶层字段
+  &quot;messages&quot;: [
     {
-      <span class="s">"role"</span>: <span class="s">"user"</span>,
-      <span class="s">"content"</span>: <span class="s">"Hi, how are you?"</span>
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: &quot;Hi, how are you?&quot;
     }
   ]
-}</pre></div></div><div class="callout"><strong>关键差异 ①：</strong>System Prompt 在 OpenAI 中是 <code class="inline">messages</code> 数组的一条消息（<code class="inline">role: "system"</code>），
-Anthropic 将其提升为请求体的顶层字段 <code class="inline">"system"</code>。<br><br><strong>关键差异 ②：</strong>Anthropic 的 <code class="inline">max_tokens</code> 是必填字段，OpenAI 则有默认值可省略。</div><div class="sub-gap"></div><h3>System Prompt 的高级用法</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 多条 system 消息</div><pre class="code"><span class="comment">// OpenAI 支持在 messages 中放置多条 system 消息</span>
-<span class="s">"messages"</span>: [
-  {<span class="s">"role"</span>: <span class="s">"system"</span>,
-   <span class="s">"content"</span>: <span class="s">"You are a translator."</span>},
-  {<span class="s">"role"</span>: <span class="s">"system"</span>,
-   <span class="s">"content"</span>: <span class="s">"Always respond in JSON."</span>},
-  {<span class="s">"role"</span>: <span class="s">"user"</span>,
-   <span class="s">"content"</span>: <span class="s">"Translate: Hello"</span>}
+}
+</code></pre><p><strong>关键差异 ①：</strong> System Prompt 在 OpenAI 中是 <code>messages</code> 数组的一条消息（<code>role: "system"</code>）， Anthropic 将其提升为请求体的顶层字段 <code>"system"</code>。</p><p><strong>关键差异 ②：</strong> Anthropic 的 <code>max_tokens</code> 是必填字段，OpenAI 则有默认值可省略。</p><h3 id="system-prompt-的高级用法">System Prompt 的高级用法</h3><p>OpenAI — 多条 system 消息</p><pre><code>// OpenAI 支持在 messages 中放置多条 system 消息
+&quot;messages&quot;: [
+  {&quot;role&quot;: &quot;system&quot;,
+   &quot;content&quot;: &quot;You are a translator.&quot;},
+  {&quot;role&quot;: &quot;system&quot;,
+   &quot;content&quot;: &quot;Always respond in JSON.&quot;},
+  {&quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;Translate: Hello&quot;}
 ]
 
-<span class="comment">// 也可以在对话中间插入 system 消息</span></pre></div><div><div class="col-label anthropic">Anthropic — system block 数组 + 缓存控制</div><pre class="code"><span class="comment">// system 支持 block 数组格式（可附加 cache_control）</span>
-<span class="s">"system"</span>: [
+// 也可以在对话中间插入 system 消息
+</code></pre><p>Anthropic — system block 数组 + 缓存控制</p><pre><code>// system 支持 block 数组格式（可附加 cache_control）
+&quot;system&quot;: [
   {
-    <span class="s">"type"</span>: <span class="s">"text"</span>,
-    <span class="s">"text"</span>: <span class="s">"You are a translator."</span>,
-    <span class="s">"cache_control"</span>: {<span class="s">"type"</span>: <span class="s">"ephemeral"</span>}
+    &quot;type&quot;: &quot;text&quot;,
+    &quot;text&quot;: &quot;You are a translator.&quot;,
+    &quot;cache_control&quot;: {&quot;type&quot;: &quot;ephemeral&quot;}
   },
   {
-    <span class="s">"type"</span>: <span class="s">"text"</span>,
-    <span class="s">"text"</span>: <span class="s">"Always respond in JSON."</span>
+    &quot;type&quot;: &quot;text&quot;,
+    &quot;text&quot;: &quot;Always respond in JSON.&quot;
   }
-]</pre></div></div><div class="annot">Anthropic 的 system 字段可以是字符串或 block 数组，后者支持 cache_control 实现 prompt caching</div><div class="sub-gap"></div><h3>消息内容的两种写法</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 两种写法均可</div><pre class="code"><span class="comment">// 简写：content 为字符串</span>
-{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"Hello"</span>}
+]
+</code></pre><p>Anthropic 的 system 字段可以是字符串或 block 数组，后者支持 cache_control 实现 prompt caching</p><h3 id="消息内容的两种写法">消息内容的两种写法</h3><p>OpenAI — 两种写法均可</p><pre><code>// 简写：content 为字符串
+{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello&quot;}
 
-<span class="comment">// 完整写法：content 为数组（多模态时必须用此格式）</span>
-{<span class="s">"role"</span>: <span class="s">"user"</span>,
- <span class="s">"content"</span>: [
-   {<span class="s">"type"</span>: <span class="s">"text"</span>, <span class="s">"text"</span>: <span class="s">"Hello"</span>},
-   {<span class="s">"type"</span>: <span class="s">"image_url"</span>, <span class="s">"image_url"</span>: {<span class="s">"url"</span>: <span class="s">"..."</span>}}
- ]}</pre></div><div><div class="col-label anthropic">Anthropic — 两种写法均可</div><pre class="code"><span class="comment">// 简写：content 为字符串</span>
-{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"Hello"</span>}
+// 完整写法：content 为数组（多模态时必须用此格式）
+{&quot;role&quot;: &quot;user&quot;,
+ &quot;content&quot;: [
+   {&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;Hello&quot;},
+   {&quot;type&quot;: &quot;image_url&quot;, &quot;image_url&quot;: {&quot;url&quot;: &quot;...&quot;}}
+ ]}
+</code></pre><p>Anthropic — 两种写法均可</p><pre><code>// 简写：content 为字符串
+{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello&quot;}
 
-<span class="comment">// 完整写法：content 为 block 数组（多模态时必须用此格式）</span>
-{<span class="s">"role"</span>: <span class="s">"user"</span>,
- <span class="s">"content"</span>: [
-   {<span class="s">"type"</span>: <span class="s">"text"</span>, <span class="s">"text"</span>: <span class="s">"Hello"</span>},
-   {<span class="s">"type"</span>: <span class="s">"image"</span>, <span class="s">"source"</span>: {<span class="s">"type"</span>: <span class="s">"url"</span>, <span class="s">"url"</span>: <span class="s">"..."</span>}}
- ]}</pre></div></div></div></section><section><div class="sec-head"><h2>响应体</h2><div class="count">RESPONSE BODY</div></div><div class="indent"><h3>完整响应 JSON</h3><div class="dual-code"><div><div class="col-label openai">OpenAI 响应</div><pre class="code">{
-  <span class="s">"id"</span>: <span class="s">"chatcmpl-abc123"</span>,
-  <span class="s">"object"</span>: <span class="s">"chat.completion"</span>,
-  <span class="s">"created"</span>: <span class="n">1700000000</span>,
-  <span class="s">"model"</span>: <span class="s">"gpt-4o-2024-08-06"</span>,
-  <span class="s">"choices"</span>: [{                  <span class="comment">← choices 数组包裹</span>
-    <span class="s">"index"</span>: <span class="n">0</span>,
-    <span class="s">"message"</span>: {
-      <span class="s">"role"</span>: <span class="s">"assistant"</span>,
-      <span class="s">"content"</span>: <span class="s">"I'm doing well!"</span>  <span class="comment">← 纯字符串</span>
+// 完整写法：content 为 block 数组（多模态时必须用此格式）
+{&quot;role&quot;: &quot;user&quot;,
+ &quot;content&quot;: [
+   {&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;Hello&quot;},
+   {&quot;type&quot;: &quot;image&quot;, &quot;source&quot;: {&quot;type&quot;: &quot;url&quot;, &quot;url&quot;: &quot;...&quot;}}
+ ]}
+</code></pre><h2 id="响应体">响应体</h2><p>RESPONSE BODY</p><h3 id="完整响应-json">完整响应 JSON</h3><p>OpenAI 响应</p><pre><code>{
+  &quot;id&quot;: &quot;chatcmpl-abc123&quot;,
+  &quot;object&quot;: &quot;chat.completion&quot;,
+  &quot;created&quot;: 1700000000,
+  &quot;model&quot;: &quot;gpt-4o-2024-08-06&quot;,
+  &quot;choices&quot;: [{ ← choices 数组包裹
+    &quot;index&quot;: 0,
+    &quot;message&quot;: {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: &quot;I'm doing well!&quot; ← 纯字符串
     },
-    <span class="s">"finish_reason"</span>: <span class="s">"stop"</span>        <span class="comment">← 结束原因在 choice 内</span>
+    &quot;finish_reason&quot;: &quot;stop&quot; ← 结束原因在 choice 内
   }],
-  <span class="s">"usage"</span>: {
-    <span class="s">"prompt_tokens"</span>: <span class="n">12</span>,
-    <span class="s">"completion_tokens"</span>: <span class="n">8</span>,
-    <span class="s">"total_tokens"</span>: <span class="n">20</span>,
-    <span class="s">"prompt_tokens_details"</span>: {
-      <span class="s">"cached_tokens"</span>: <span class="n">0</span>
+  &quot;usage&quot;: {
+    &quot;prompt_tokens&quot;: 12,
+    &quot;completion_tokens&quot;: 8,
+    &quot;total_tokens&quot;: 20,
+    &quot;prompt_tokens_details&quot;: {
+      &quot;cached_tokens&quot;: 0
     },
-    <span class="s">"completion_tokens_details"</span>: {
-      <span class="s">"reasoning_tokens"</span>: <span class="n">0</span>
+    &quot;completion_tokens_details&quot;: {
+      &quot;reasoning_tokens&quot;: 0
     }
   }
-}</pre></div><div><div class="col-label anthropic">Anthropic 响应</div><pre class="code">{
-  <span class="s">"id"</span>: <span class="s">"msg_abc123"</span>,
-  <span class="s">"type"</span>: <span class="s">"message"</span>,
-  <span class="s">"role"</span>: <span class="s">"assistant"</span>,
-  <span class="s">"model"</span>: <span class="s">"claude-sonnet-4-20250514"</span>,
-  <span class="s">"content"</span>: [{                  <span class="comment">← content block 数组</span>
-    <span class="s">"type"</span>: <span class="s">"text"</span>,
-    <span class="s">"text"</span>: <span class="s">"I'm doing well!"</span>  <span class="comment">← block 中的 text 字段</span>
+}
+</code></pre><p>Anthropic 响应</p><pre><code>{
+  &quot;id&quot;: &quot;msg_abc123&quot;,
+  &quot;type&quot;: &quot;message&quot;,
+  &quot;role&quot;: &quot;assistant&quot;,
+  &quot;model&quot;: &quot;claude-sonnet-4-20250514&quot;,
+  &quot;content&quot;: [{ ← content block 数组
+    &quot;type&quot;: &quot;text&quot;,
+    &quot;text&quot;: &quot;I'm doing well!&quot; ← block 中的 text 字段
   }],
-  <span class="s">"stop_reason"</span>: <span class="s">"end_turn"</span>,      <span class="comment">← 结束原因在顶层</span>
-  <span class="s">"stop_sequence"</span>: <span class="k">null</span>,
-  <span class="s">"usage"</span>: {
-    <span class="s">"input_tokens"</span>: <span class="n">12</span>,
-    <span class="s">"output_tokens"</span>: <span class="n">8</span>,
-    <span class="s">"cache_creation_input_tokens"</span>: <span class="n">0</span>,
-    <span class="s">"cache_read_input_tokens"</span>: <span class="n">0</span>
-  }
-}</pre></div></div><div class="callout"><strong>结构差异：</strong>OpenAI 用 <code class="inline">choices[]</code> 数组包裹（支持 n > 1 多候选），文本在 <code class="inline">message.content</code>（字符串）。
-Anthropic 直接在顶层返回 <code class="inline">content</code> block 数组，文本在 <code class="inline">content[i].text</code>。<br><br><strong>用量命名：</strong><code class="inline">prompt_tokens / completion_tokens</code> vs <code class="inline">input_tokens / output_tokens</code>。
-Anthropic 额外返回 <code class="inline">cache_creation_input_tokens</code> 和 <code class="inline">cache_read_input_tokens</code> 用于 prompt caching 计费。</div><div class="sub-gap"></div><h3>取值路径对比</h3><div class="dual-code"><div><div class="col-label openai">OpenAI 路径</div><pre class="code"><span class="comment">// 文本</span>
-response.<span class="t">choices</span>[<span class="n">0</span>].<span class="t">message</span>.<span class="t">content</span>  <span class="comment">→ 字符串</span>
-
-<span class="comment">// 结束原因</span>
-response.<span class="t">choices</span>[<span class="n">0</span>].<span class="t">finish_reason</span>
-
-<span class="comment">// Token 用量</span>
-response.<span class="t">usage</span>.<span class="t">prompt_tokens</span>
-response.<span class="t">usage</span>.<span class="t">completion_tokens</span>
-response.<span class="t">usage</span>.<span class="t">total_tokens</span></pre></div><div><div class="col-label anthropic">Anthropic 路径</div><pre class="code"><span class="comment">// 文本</span>
-response.<span class="t">content</span>[<span class="n">0</span>].<span class="t">text</span>  <span class="comment">→ 字符串</span>
-
-<span class="comment">// 结束原因</span>
-response.<span class="t">stop_reason</span>
-
-<span class="comment">// Token 用量</span>
-response.<span class="t">usage</span>.<span class="t">input_tokens</span>
-response.<span class="t">usage</span>.<span class="t">output_tokens</span>
-<span class="comment">// 无 total，需自行相加</span></pre></div></div><div class="sub-gap"></div><h3>Usage 字段全览对照</h3><div class="table-wrap"><table class="compare"><thead><tr><th>语义</th><th>OpenAI 字段</th><th>Anthropic 字段</th></tr></thead><tbody><tr><td>输入 token 总数</td><td><code class="inline">usage.prompt_tokens</code></td><td><code class="inline">usage.input_tokens</code></td></tr><tr><td>输出 token 总数</td><td><code class="inline">usage.completion_tokens</code></td><td><code class="inline">usage.output_tokens</code></td></tr><tr><td>总 token</td><td><code class="inline">usage.total_tokens</code>（API 给出）</td><td>—（需 input + output + cache_* 自行相加）</td></tr><tr><td>缓存命中</td><td><code class="inline">usage.prompt_tokens_details.cached_tokens</code></td><td><code class="inline">usage.cache_read_input_tokens</code></td></tr><tr><td>缓存写入</td><td>—（自动，不单独计量）</td><td><code class="inline">usage.cache_creation_input_tokens</code></td></tr><tr><td>缓存细分（多 TTL）</td><td>—</td><td><code class="inline">usage.cache_creation.ephemeral_5m_input_tokens</code><br><code class="inline">usage.cache_creation.ephemeral_1h_input_tokens</code></td></tr><tr><td>推理 token</td><td><code class="inline">usage.completion_tokens_details.reasoning_tokens</code></td><td>计入 <code class="inline">output_tokens</code>（thinking block 部分）</td></tr><tr><td>接受的预测 token</td><td><code class="inline">usage.completion_tokens_details.accepted_prediction_tokens</code></td><td>—</td></tr><tr><td>拒绝的预测 token</td><td><code class="inline">usage.completion_tokens_details.rejected_prediction_tokens</code></td><td>—</td></tr><tr><td>音频输入 token</td><td><code class="inline">usage.prompt_tokens_details.audio_tokens</code></td><td>—（暂不支持音频输入）</td></tr><tr><td>音频输出 token</td><td><code class="inline">usage.completion_tokens_details.audio_tokens</code></td><td>—</td></tr><tr><td>Web 搜索请求数</td><td>—</td><td><code class="inline">usage.server_tool_use.web_search_requests</code></td></tr><tr><td>服务层级</td><td>—（请求体 <code class="inline">service_tier</code> 控制）</td><td><code class="inline">usage.service_tier</code>（<code class="inline">"standard" | "priority" | "batch"</code>）</td></tr></tbody></table></div><div class="callout"><strong>计费基本规则：</strong>OpenAI 的 <code class="inline">prompt_tokens</code> 已经包含缓存命中部分（<code class="inline">cached_tokens</code> 是其子集），按"原价 × (prompt − cached) + 折扣价 × cached"计费。
-Anthropic 的 <code class="inline">input_tokens</code> 只统计<strong>未命中缓存且未触发写缓存</strong>的部分，三类 token（input / cache_creation / cache_read）<strong>互不重叠</strong>，需分别按不同费率计费。<br><br><strong>常见踩坑：</strong>用 Anthropic 时若简单地 <code class="inline">input + output</code>，会漏算 <code class="inline">cache_creation_input_tokens</code>（缓存写入按 1.25× 或 2× 原价计费）和 <code class="inline">cache_read_input_tokens</code>（按 0.1× 原价计费）。</div><div class="sub-gap"></div><h3>完整 usage 对象（含全部子字段）</h3><div class="dual-code"><div><div class="col-label openai">OpenAI usage — 全字段示例</div><pre class="code"><span class="s">"usage"</span>: {
-  <span class="s">"prompt_tokens"</span>: <span class="n">2048</span>,        <span class="comment">← 含 cached_tokens</span>
-  <span class="s">"completion_tokens"</span>: <span class="n">512</span>,     <span class="comment">← 含 reasoning_tokens</span>
-  <span class="s">"total_tokens"</span>: <span class="n">2560</span>,
-
-  <span class="s">"prompt_tokens_details"</span>: {
-    <span class="s">"cached_tokens"</span>: <span class="n">1024</span>,      <span class="comment">← 自动命中缓存</span>
-    <span class="s">"audio_tokens"</span>: <span class="n">0</span>            <span class="comment">← 音频输入(GPT-4o-audio)</span>
-  },
-
-  <span class="s">"completion_tokens_details"</span>: {
-    <span class="s">"reasoning_tokens"</span>: <span class="n">256</span>,    <span class="comment">← o1/o3/o4 思考</span>
-    <span class="s">"audio_tokens"</span>: <span class="n">0</span>,           <span class="comment">← 音频输出</span>
-    <span class="s">"accepted_prediction_tokens"</span>: <span class="n">0</span>,
-    <span class="s">"rejected_prediction_tokens"</span>: <span class="n">0</span>
+  &quot;stop_reason&quot;: &quot;end_turn&quot;, ← 结束原因在顶层
+  &quot;stop_sequence&quot;: null,
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 12,
+    &quot;output_tokens&quot;: 8,
+    &quot;cache_creation_input_tokens&quot;: 0,
+    &quot;cache_read_input_tokens&quot;: 0
   }
 }
+</code></pre><p><strong>结构差异：</strong> OpenAI 用 <code>choices[]</code> 数组包裹（支持 n > 1 多候选），文本在 <code>message.content</code>（字符串）。 Anthropic 直接在顶层返回 <code>content</code> block 数组，文本在 <code>content[i].text</code>。</p><p><strong>用量命名：</strong> <code>prompt_tokens / completion_tokens</code> vs <code>input_tokens / output_tokens</code>。 Anthropic 额外返回 <code>cache_creation_input_tokens</code> 和 <code>cache_read_input_tokens</code> 用于 prompt caching 计费。</p><h3 id="取值路径对比">取值路径对比</h3><p>OpenAI 路径</p><pre><code>// 文本
+response.choices[0].message.content → 字符串
 
-<span class="comment">// 计费示例（GPT-4o，价格仅示意）：</span>
-<span class="comment">// 普通输入: (2048 - 1024) × $2.50/M = ...</span>
-<span class="comment">// 缓存输入: 1024 × $1.25/M = ...</span>
-<span class="comment">// 输出: 512 × $10.00/M = ...</span>
-<span class="comment">// (reasoning_tokens 已在 completion_tokens 中)</span></pre></div><div><div class="col-label anthropic">Anthropic usage — 全字段示例</div><pre class="code"><span class="s">"usage"</span>: {
-  <span class="s">"input_tokens"</span>: <span class="n">512</span>,             <span class="comment">← 未命中也未写缓存</span>
-  <span class="s">"cache_creation_input_tokens"</span>: <span class="n">1024</span>,
-  <span class="s">"cache_read_input_tokens"</span>: <span class="n">2048</span>,
+// 结束原因
+response.choices[0].finish_reason
 
-  <span class="s">"cache_creation"</span>: {              <span class="comment">← 缓存写入按 TTL 拆分</span>
-    <span class="s">"ephemeral_5m_input_tokens"</span>: <span class="n">512</span>,
-    <span class="s">"ephemeral_1h_input_tokens"</span>: <span class="n">512</span>
+// Token 用量
+response.usage.prompt_tokens
+response.usage.completion_tokens
+response.usage.total_tokens
+</code></pre><p>Anthropic 路径</p><pre><code>// 文本
+response.content[0].text → 字符串
+
+// 结束原因
+response.stop_reason
+
+// Token 用量
+response.usage.input_tokens
+response.usage.output_tokens
+// 无 total，需自行相加
+</code></pre><h3 id="usage-字段全览对照">Usage 字段全览对照</h3><table><thead><tr><th>语义</th><th>OpenAI 字段</th><th>Anthropic 字段</th></tr></thead><tbody><tr><td>输入 token 总数</td><td><code>usage.prompt_tokens</code></td><td><code>usage.input_tokens</code></td></tr><tr><td>输出 token 总数</td><td><code>usage.completion_tokens</code></td><td><code>usage.output_tokens</code></td></tr><tr><td>总 token</td><td><code>usage.total_tokens</code>（API 给出）</td><td>—（需 input + output + cache_* 自行相加）</td></tr><tr><td>缓存命中</td><td><code>usage.prompt_tokens_details.cached_tokens</code></td><td><code>usage.cache_read_input_tokens</code></td></tr><tr><td>缓存写入</td><td>—（自动，不单独计量）</td><td><code>usage.cache_creation_input_tokens</code></td></tr><tr><td>缓存细分（多 TTL）</td><td>—</td><td><code>usage.cache_creation.ephemeral_5m_input_tokens</code></td></tr><tr><td><code>usage.cache_creation.ephemeral_1h_input_tokens</code></td><td></td><td></td></tr><tr><td>推理 token</td><td><code>usage.completion_tokens_details.reasoning_tokens</code></td><td>计入 <code>output_tokens</code>（thinking block 部分）</td></tr><tr><td>接受的预测 token</td><td><code>usage.completion_tokens_details.accepted_prediction_tokens</code></td><td>—</td></tr><tr><td>拒绝的预测 token</td><td><code>usage.completion_tokens_details.rejected_prediction_tokens</code></td><td>—</td></tr><tr><td>音频输入 token</td><td><code>usage.prompt_tokens_details.audio_tokens</code></td><td>—（暂不支持音频输入）</td></tr><tr><td>音频输出 token</td><td><code>usage.completion_tokens_details.audio_tokens</code></td><td>—</td></tr><tr><td>Web 搜索请求数</td><td>—</td><td><code>usage.server_tool_use.web_search_requests</code></td></tr><tr><td>服务层级</td><td>—（请求体 <code>service_tier</code> 控制）</td><td><code>usage.service_tier</code>（<code>"standard" | "priority" | "batch"</code>）</td></tr></tbody></table><p><strong>计费基本规则：</strong> OpenAI 的 <code>prompt_tokens</code> 已经包含缓存命中部分（<code>cached_tokens</code> 是其子集），按"原价 × (prompt − cached) + 折扣价 × cached"计费。 Anthropic 的 <code>input_tokens</code> 只统计 <strong>未命中缓存且未触发写缓存</strong> 的部分，三类 token（input / cache_creation / cache_read） <strong>互不重叠</strong> ，需分别按不同费率计费。</p><p><strong>常见踩坑：</strong> 用 Anthropic 时若简单地 <code>input + output</code>，会漏算 <code>cache_creation_input_tokens</code>（缓存写入按 1.25× 或 2× 原价计费）和 <code>cache_read_input_tokens</code>（按 0.1× 原价计费）。</p><h3 id="完整-usage-对象含全部子字段">完整 usage 对象（含全部子字段）</h3><p>OpenAI usage — 全字段示例</p><pre><code>&quot;usage&quot;: {
+  &quot;prompt_tokens&quot;: 2048, ← 含 cached_tokens
+  &quot;completion_tokens&quot;: 512, ← 含 reasoning_tokens
+  &quot;total_tokens&quot;: 2560,
+
+  &quot;prompt_tokens_details&quot;: {
+    &quot;cached_tokens&quot;: 1024, ← 自动命中缓存
+    &quot;audio_tokens&quot;: 0 ← 音频输入(GPT-4o-audio)
   },
 
-  <span class="s">"output_tokens"</span>: <span class="n">768</span>,            <span class="comment">← thinking + 正文</span>
-  <span class="s">"server_tool_use"</span>: {              <span class="comment">← 服务端工具计量</span>
-    <span class="s">"web_search_requests"</span>: <span class="n">2</span>
-  },
-  <span class="s">"service_tier"</span>: <span class="s">"standard"</span>      <span class="comment">← standard/priority/batch</span>
-}
-
-<span class="comment">// 计费示例（Claude Sonnet 4，价格仅示意）：</span>
-<span class="comment">// 普通输入: 512 × $3.00/M = ...</span>
-<span class="comment">// 缓存写入(5m): 512 × $3.75/M (1.25×) = ...</span>
-<span class="comment">// 缓存写入(1h): 512 × $6.00/M (2.00×) = ...</span>
-<span class="comment">// 缓存读取: 2048 × $0.30/M (0.10×) = ...</span>
-<span class="comment">// 输出: 768 × $15.00/M = ...</span></pre></div></div><div class="annot">OpenAI 的 cached_tokens 是 prompt_tokens 的子集（重叠）；Anthropic 三类输入字段相互独立（不重叠），合计才是实际处理的输入总量</div><div class="sub-gap"></div><h3>Prompt Caching 计费机制对比</h3><div class="table-wrap"><table class="compare"><thead><tr><th>维度</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>触发方式</td><td>自动（prefix ≥ 1024 token 时）</td><td>显式，在请求体加 <code class="inline">cache_control: {type: "ephemeral"}</code></td></tr><tr><td>缓存最小粒度</td><td>1024 token（不足不缓存）</td><td>取决于模型：Sonnet/Opus 1024、Haiku 2048</td></tr><tr><td>缓存写入费用</td><td>免费（不额外计费）</td><td>5m TTL: 1.25× 原价；1h TTL: 2.00× 原价</td></tr><tr><td>缓存读取费用</td><td>0.5× 原价（约 50% 折扣）</td><td>0.1× 原价（约 90% 折扣）</td></tr><tr><td>TTL 默认</td><td>~5–10 分钟（不可调整）</td><td>5 分钟（默认）或 1 小时（<code class="inline">ttl: "1h"</code>）</td></tr><tr><td>断点数量</td><td>—（自动 prefix）</td><td>最多 4 个 <code class="inline">cache_control</code> 断点（system + tools + messages）</td></tr><tr><td>响应中的命中量</td><td><code class="inline">prompt_tokens_details.cached_tokens</code></td><td><code class="inline">cache_read_input_tokens</code></td></tr><tr><td>响应中的写入量</td><td>不区分（已含在 prompt_tokens 内）</td><td><code class="inline">cache_creation_input_tokens</code> + <code class="inline">cache_creation.ephemeral_{5m,1h}_input_tokens</code></td></tr></tbody></table></div><div class="callout"><strong>缓存计费公式：</strong><br>▸ <strong>OpenAI</strong>：<code class="inline">cost = input × full_price − cached × 0.5 × full_price + output × out_price</code><br>▸ <strong>Anthropic</strong>：<code class="inline">cost = input × full + cache_creation × {1.25 or 2.00} × full + cache_read × 0.10 × full + output × out_price</code><br><br>由于 Anthropic 的三类输入<strong>不重叠</strong>，统计实际处理的 prompt 总 token 时需 <code class="inline">total_input = input_tokens + cache_creation_input_tokens + cache_read_input_tokens</code>。</div><div class="sub-gap"></div><h3>Reasoning / Thinking Token 计费</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — reasoning_tokens（o1/o3/o4 系列）</div><pre class="code"><span class="comment">// 思考 token 是 completion 的子集，不可读</span>
-<span class="s">"usage"</span>: {
-  <span class="s">"prompt_tokens"</span>: <span class="n">100</span>,
-  <span class="s">"completion_tokens"</span>: <span class="n">1500</span>,
-  <span class="s">"completion_tokens_details"</span>: {
-    <span class="s">"reasoning_tokens"</span>: <span class="n">1200</span>  <span class="comment">← 隐式思考</span>
+  &quot;completion_tokens_details&quot;: {
+    &quot;reasoning_tokens&quot;: 256, ← o1/o3/o4 思考
+    &quot;audio_tokens&quot;: 0, ← 音频输出
+    &quot;accepted_prediction_tokens&quot;: 0,
+    &quot;rejected_prediction_tokens&quot;: 0
   }
 }
 
-<span class="comment">// 关键点：</span>
-<span class="comment">// 1. reasoning_tokens 已包含在 completion_tokens 中</span>
-<span class="comment">// 2. 计费时按 output 价计算 (整个 completion)</span>
-<span class="comment">// 3. 思考内容对用户不可见（仅返回 summary）</span>
-<span class="comment">// 4. max_completion_tokens 需要预留思考预算</span>
-<span class="comment">//    （而非旧的 max_tokens，o-系列已弃用）</span>
-<span class="comment">// 5. 通过 reasoning_effort: "low/medium/high"</span>
-<span class="comment">//    控制思考深度</span></pre></div><div><div class="col-label anthropic">Anthropic — thinking block（Claude 3.7+ / 4.x）</div><pre class="code"><span class="comment">// 思考 token 计入 output_tokens，但内容可见</span>
-<span class="s">"usage"</span>: {
-  <span class="s">"input_tokens"</span>: <span class="n">100</span>,
-  <span class="s">"output_tokens"</span>: <span class="n">1500</span>  <span class="comment">← thinking + 正文</span>
+// 计费示例（GPT-4o，价格仅示意）：
+// 普通输入: (2048 - 1024) × $2.50/M = ...
+// 缓存输入: 1024 × $1.25/M = ...
+// 输出: 512 × $10.00/M = ...
+// (reasoning_tokens 已在 completion_tokens 中)
+</code></pre><p>Anthropic usage — 全字段示例</p><pre><code>&quot;usage&quot;: {
+  &quot;input_tokens&quot;: 512, ← 未命中也未写缓存
+  &quot;cache_creation_input_tokens&quot;: 1024,
+  &quot;cache_read_input_tokens&quot;: 2048,
+
+  &quot;cache_creation&quot;: { ← 缓存写入按 TTL 拆分
+    &quot;ephemeral_5m_input_tokens&quot;: 512,
+    &quot;ephemeral_1h_input_tokens&quot;: 512
+  },
+
+  &quot;output_tokens&quot;: 768, ← thinking + 正文
+  &quot;server_tool_use&quot;: { ← 服务端工具计量
+    &quot;web_search_requests&quot;: 2
+  },
+  &quot;service_tier&quot;: &quot;standard&quot; ← standard/priority/batch
 }
 
-<span class="s">"content"</span>: [
-  {<span class="s">"type"</span>:<span class="s">"thinking"</span>,<span class="s">"thinking"</span>:<span class="s">"Let me ..."</span>,
-   <span class="s">"signature"</span>:<span class="s">"abc..."</span>},  <span class="comment">← 思考块（可见）</span>
-  {<span class="s">"type"</span>:<span class="s">"text"</span>,<span class="s">"text"</span>:<span class="s">"答案是 42"</span>}
+// 计费示例（Claude Sonnet 4，价格仅示意）：
+// 普通输入: 512 × $3.00/M = ...
+// 缓存写入(5m): 512 × $3.75/M (1.25×) = ...
+// 缓存写入(1h): 512 × $6.00/M (2.00×) = ...
+// 缓存读取: 2048 × $0.30/M (0.10×) = ...
+// 输出: 768 × $15.00/M = ...
+</code></pre><p>OpenAI 的 cached_tokens 是 prompt_tokens 的子集（重叠）；Anthropic 三类输入字段相互独立（不重叠），合计才是实际处理的输入总量</p><h3 id="prompt-caching-计费机制对比">Prompt Caching 计费机制对比</h3><table><thead><tr><th>维度</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>触发方式</td><td>自动（prefix ≥ 1024 token 时）</td><td>显式，在请求体加 <code>cache_control: {type: "ephemeral"}</code></td></tr><tr><td>缓存最小粒度</td><td>1024 token（不足不缓存）</td><td>取决于模型：Sonnet/Opus 1024、Haiku 2048</td></tr><tr><td>缓存写入费用</td><td>免费（不额外计费）</td><td>5m TTL: 1.25× 原价；1h TTL: 2.00× 原价</td></tr><tr><td>缓存读取费用</td><td>0.5× 原价（约 50% 折扣）</td><td>0.1× 原价（约 90% 折扣）</td></tr><tr><td>TTL 默认</td><td>~5–10 分钟（不可调整）</td><td>5 分钟（默认）或 1 小时（<code>ttl: "1h"</code>）</td></tr><tr><td>断点数量</td><td>—（自动 prefix）</td><td>最多 4 个 <code>cache_control</code> 断点（system + tools + messages）</td></tr><tr><td>响应中的命中量</td><td><code>prompt_tokens_details.cached_tokens</code></td><td><code>cache_read_input_tokens</code></td></tr><tr><td>响应中的写入量</td><td>不区分（已含在 prompt_tokens 内）</td><td><code>cache_creation_input_tokens</code> + <code>cache_creation.ephemeral_{5m,1h}_input_tokens</code></td></tr></tbody></table><p><strong>缓存计费公式：</strong>
+▸ <strong>OpenAI</strong> ：<code>cost = input × full_price − cached × 0.5 × full_price + output × out_price</code>
+▸ <strong>Anthropic</strong> ：<code>cost = input × full + cache_creation × {1.25 or 2.00} × full + cache_read × 0.10 × full + output × out_price</code></p><p>由于 Anthropic 的三类输入 <strong>不重叠</strong> ，统计实际处理的 prompt 总 token 时需 <code>total_input = input_tokens + cache_creation_input_tokens + cache_read_input_tokens</code>。</p><h3 id="reasoning--thinking-token-计费">Reasoning / Thinking Token 计费</h3><p>OpenAI — reasoning_tokens（o1/o3/o4 系列）</p><pre><code>// 思考 token 是 completion 的子集，不可读
+&quot;usage&quot;: {
+  &quot;prompt_tokens&quot;: 100,
+  &quot;completion_tokens&quot;: 1500,
+  &quot;completion_tokens_details&quot;: {
+    &quot;reasoning_tokens&quot;: 1200 ← 隐式思考
+  }
+}
+
+// 关键点：
+// 1. reasoning_tokens 已包含在 completion_tokens 中
+// 2. 计费时按 output 价计算 (整个 completion)
+// 3. 思考内容对用户不可见（仅返回 summary）
+// 4. max_completion_tokens 需要预留思考预算
+// （而非旧的 max_tokens，o-系列已弃用）
+// 5. 通过 reasoning_effort: &quot;low/medium/high&quot;
+// 控制思考深度
+</code></pre><p>Anthropic — thinking block（Claude 3.7+ / 4.x）</p><pre><code>// 思考 token 计入 output_tokens，但内容可见
+&quot;usage&quot;: {
+  &quot;input_tokens&quot;: 100,
+  &quot;output_tokens&quot;: 1500 ← thinking + 正文
+}
+
+&quot;content&quot;: [
+  {&quot;type&quot;:&quot;thinking&quot;,&quot;thinking&quot;:&quot;Let me ...&quot;,
+   &quot;signature&quot;:&quot;abc...&quot;}, ← 思考块（可见）
+  {&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;答案是 42&quot;}
 ]
 
-<span class="comment">// 关键点：</span>
-<span class="comment">// 1. thinking 文本按 output 价计费</span>
-<span class="comment">// 2. 通过 thinking.budget_tokens 控制上限</span>
-<span class="comment">// 3. budget_tokens 必须 &lt; max_tokens</span>
-<span class="comment">// 4. 多轮回传时需要带回 signature 才会被采信</span>
-<span class="comment">// 5. 工具调用循环中必须回传 thinking block</span></pre></div></div><div class="sub-gap"></div><h3>多模态 Token 计算（图片 / 音频）</h3><div class="table-wrap"><table class="compare"><thead><tr><th>类型</th><th>OpenAI 计费规则</th><th>Anthropic 计费规则</th></tr></thead><tbody><tr><td>图片（low detail）</td><td>固定 85 tokens / 张</td><td>—（不区分 detail，按尺寸折算）</td></tr><tr><td>图片（high detail）</td><td>85 + 170 × tile 数（每 tile = 512×512）</td><td><code class="inline">tokens ≈ (width × height) / 750</code></td></tr><tr><td>图片建议尺寸上限</td><td>≤ 2000×768 或 768×2000（自动缩放）</td><td>≤ 1568 px 长边（超出会缩放）</td></tr><tr><td>图片 token 归属</td><td><code class="inline">prompt_tokens</code>（不单列）</td><td><code class="inline">input_tokens</code>（不单列）</td></tr><tr><td>音频输入</td><td><code class="inline">prompt_tokens_details.audio_tokens</code><br>（约 25 tokens/秒，gpt-4o-audio）</td><td>—（暂不支持）</td></tr><tr><td>音频输出</td><td><code class="inline">completion_tokens_details.audio_tokens</code></td><td>—</td></tr><tr><td>PDF / 文档</td><td>通常先转图片，按图片计费</td><td>直接传 PDF，按页转 token（约 1500–3000 / 页）</td></tr></tbody></table></div><div class="callout"><strong>图片 token 估算示例：</strong>一张 1024×768 的图片，OpenAI（high detail）需 <code class="inline">85 + 170 × 6 = 1105</code> tokens；
-Anthropic 约 <code class="inline">(1024 × 768) / 750 ≈ 1049</code> tokens。两者数量级接近，但实际请求可能因预处理差异略有不同。</div><div class="sub-gap"></div><h3>流式（Streaming）中获取 usage</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 需显式开启</div><pre class="code"><span class="comment">// 请求体必须加 stream_options</span>
+// 关键点：
+// 1. thinking 文本按 output 价计费
+// 2. 通过 thinking.budget_tokens 控制上限
+// 3. budget_tokens 必须 &lt; max_tokens
+// 4. 多轮回传时需要带回 signature 才会被采信
+// 5. 工具调用循环中必须回传 thinking block
+</code></pre><h3 id="多模态-token-计算图片--音频">多模态 Token 计算（图片 / 音频）</h3><table><thead><tr><th>类型</th><th>OpenAI 计费规则</th><th>Anthropic 计费规则</th></tr></thead><tbody><tr><td>图片（low detail）</td><td>固定 85 tokens / 张</td><td>—（不区分 detail，按尺寸折算）</td></tr><tr><td>图片（high detail）</td><td>85 + 170 × tile 数（每 tile = 512×512）</td><td><code>tokens ≈ (width × height) / 750</code></td></tr><tr><td>图片建议尺寸上限</td><td>≤ 2000×768 或 768×2000（自动缩放）</td><td>≤ 1568 px 长边（超出会缩放）</td></tr><tr><td>图片 token 归属</td><td><code>prompt_tokens</code>（不单列）</td><td><code>input_tokens</code>（不单列）</td></tr><tr><td>音频输入</td><td><code>prompt_tokens_details.audio_tokens</code></td><td></td></tr><tr><td>（约 25 tokens/秒，gpt-4o-audio）</td><td>—（暂不支持）</td><td></td></tr><tr><td>音频输出</td><td><code>completion_tokens_details.audio_tokens</code></td><td>—</td></tr><tr><td>PDF / 文档</td><td>通常先转图片，按图片计费</td><td>直接传 PDF，按页转 token（约 1500–3000 / 页）</td></tr></tbody></table><p><strong>图片 token 估算示例：</strong> 一张 1024×768 的图片，OpenAI（high detail）需 <code>85 + 170 × 6 = 1105</code> tokens； Anthropic 约 <code>(1024 × 768) / 750 ≈ 1049</code> tokens。两者数量级接近，但实际请求可能因预处理差异略有不同。</p><h3 id="流式streaming中获取-usage">流式（Streaming）中获取 usage</h3><p>OpenAI — 需显式开启</p><pre><code>// 请求体必须加 stream_options
 {
-  <span class="s">"model"</span>: <span class="s">"gpt-4o"</span>,
-  <span class="s">"messages"</span>: [...],
-  <span class="s">"stream"</span>: <span class="k">true</span>,
-  <span class="s">"stream_options"</span>: {<span class="s">"include_usage"</span>: <span class="k">true</span>}
+  &quot;model&quot;: &quot;gpt-4o&quot;,
+  &quot;messages&quot;: [...],
+  &quot;stream&quot;: true,
+  &quot;stream_options&quot;: {&quot;include_usage&quot;: true}
 }
 
-<span class="comment">// 中间事件 usage 字段为 null</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{...}}],
-       <span class="s">"usage"</span>: <span class="k">null</span>}
+// 中间事件 usage 字段为 null
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{...}}],
+       &quot;usage&quot;: null}
 
-<span class="comment">// 倒数第二个 chunk（choices 为空）携带 usage</span>
-data: {<span class="s">"choices"</span>: [],
-       <span class="s">"usage"</span>: {
-         <span class="s">"prompt_tokens"</span>: <span class="n">12</span>,
-         <span class="s">"completion_tokens"</span>: <span class="n">8</span>,
-         <span class="s">"total_tokens"</span>: <span class="n">20</span>
+// 倒数第二个 chunk（choices 为空）携带 usage
+data: {&quot;choices&quot;: [],
+       &quot;usage&quot;: {
+         &quot;prompt_tokens&quot;: 12,
+         &quot;completion_tokens&quot;: 8,
+         &quot;total_tokens&quot;: 20
        }}
 
 data: [DONE]
 
-<span class="comment">// 不加 include_usage 时整个流没有 usage 字段</span></pre></div><div><div class="col-label anthropic">Anthropic — 默认包含，分两次返回</div><pre class="code"><span class="comment">// 无需任何额外配置</span>
+// 不加 include_usage 时整个流没有 usage 字段
+</code></pre><p>Anthropic — 默认包含，分两次返回</p><pre><code>// 无需任何额外配置
 
-<span class="comment">// 首个事件 message_start 含 input_tokens</span>
+// 首个事件 message_start 含 input_tokens
 event: message_start
-data: {<span class="s">"type"</span>:<span class="s">"message_start"</span>,<span class="s">"message"</span>:{
+data: {&quot;type&quot;:&quot;message_start&quot;,&quot;message&quot;:{
   ...,
-  <span class="s">"usage"</span>:{
-    <span class="s">"input_tokens"</span>: <span class="n">12</span>,
-    <span class="s">"cache_creation_input_tokens"</span>: <span class="n">0</span>,
-    <span class="s">"cache_read_input_tokens"</span>: <span class="n">0</span>,
-    <span class="s">"output_tokens"</span>: <span class="n">1</span>  <span class="comment">← 仅占位</span>
+  &quot;usage&quot;:{
+    &quot;input_tokens&quot;: 12,
+    &quot;cache_creation_input_tokens&quot;: 0,
+    &quot;cache_read_input_tokens&quot;: 0,
+    &quot;output_tokens&quot;: 1 ← 仅占位
   }}}
 
-<span class="comment">// 末尾事件 message_delta 含 output_tokens</span>
+// 末尾事件 message_delta 含 output_tokens
 event: message_delta
-data: {<span class="s">"type"</span>:<span class="s">"message_delta"</span>,
-  <span class="s">"delta"</span>:{<span class="s">"stop_reason"</span>:<span class="s">"end_turn"</span>},
-  <span class="s">"usage"</span>:{<span class="s">"output_tokens"</span>: <span class="n">8</span>}}
+data: {&quot;type&quot;:&quot;message_delta&quot;,
+  &quot;delta&quot;:{&quot;stop_reason&quot;:&quot;end_turn&quot;},
+  &quot;usage&quot;:{&quot;output_tokens&quot;: 8}}
 
-<span class="comment">// 需要合并 message_start.usage + message_delta.usage</span>
-<span class="comment">// 才能拿到完整的 usage 对象</span></pre></div></div><div class="annot">OpenAI 在最后一个非 [DONE] 的 chunk 一次性返回完整 usage；Anthropic 把输入和输出 usage 拆到流的两端，需要客户端做合并</div><div class="sub-gap"></div><h3>服务层级（Service Tier）对 usage 的影响</h3><div class="table-wrap"><table class="compare"><thead><tr><th>层级</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>标准</td><td>请求体 <code class="inline">"service_tier": "auto"</code>（默认）</td><td><code class="inline">usage.service_tier: "standard"</code></td></tr><tr><td>优先 / Flex</td><td><code class="inline">"service_tier": "flex"</code>（折扣价、更慢）<br><code class="inline">"service_tier": "priority"</code>（部分模型，溢价、更快）</td><td><code class="inline">usage.service_tier: "priority"</code><br>（请求体加 <code class="inline">"service_tier": "auto"</code> 或调用 Priority Tier endpoint）</td></tr><tr><td>批处理</td><td>独立 <code class="inline">/v1/batches</code> 接口，约 0.5× 原价、24h 内完成</td><td>独立 <code class="inline">/v1/messages/batches</code>，0.5× 原价；<code class="inline">usage.service_tier: "batch"</code></td></tr><tr><td>用量字段差异</td><td>响应里没有 <code class="inline">service_tier</code>，请求体里指定</td><td>响应 <code class="inline">usage.service_tier</code> 明示实际处理层级（可能与请求不一致）</td></tr></tbody></table></div><div class="sub-gap"></div><h3>典型场景下的 Token 计算示例</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 多轮 + 缓存 + 推理</div><pre class="code"><span class="comment">// 场景：o3 模型 + 长 system + 多轮对话</span>
-<span class="s">"usage"</span>: {
-  <span class="s">"prompt_tokens"</span>: <span class="n">5200</span>,        <span class="comment">← system + 历史</span>
-  <span class="s">"completion_tokens"</span>: <span class="n">800</span>,
-  <span class="s">"total_tokens"</span>: <span class="n">6000</span>,
-  <span class="s">"prompt_tokens_details"</span>: {
-    <span class="s">"cached_tokens"</span>: <span class="n">4800</span>      <span class="comment">← 92% 命中</span>
+// 需要合并 message_start.usage + message_delta.usage
+// 才能拿到完整的 usage 对象
+</code></pre><p>OpenAI 在最后一个非 [DONE] 的 chunk 一次性返回完整 usage；Anthropic 把输入和输出 usage 拆到流的两端，需要客户端做合并</p><h3 id="服务层级service-tier对-usage-的影响">服务层级（Service Tier）对 usage 的影响</h3><table><thead><tr><th>层级</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>标准</td><td>请求体 <code>"service_tier": "auto"</code>（默认）</td><td><code>usage.service_tier: "standard"</code></td></tr><tr><td>优先 / Flex</td><td><code>"service_tier": "flex"</code>（折扣价、更慢）</td><td></td></tr><tr><td><code>"service_tier": "priority"</code>（部分模型，溢价、更快）</td><td><code>usage.service_tier: "priority"</code></td><td></td></tr><tr><td>（请求体加 <code>"service_tier": "auto"</code> 或调用 Priority Tier endpoint）</td><td></td><td></td></tr><tr><td>批处理</td><td>独立 <code>/v1/batches</code> 接口，约 0.5× 原价、24h 内完成</td><td>独立 <code>/v1/messages/batches</code>，0.5× 原价；<code>usage.service_tier: "batch"</code></td></tr><tr><td>用量字段差异</td><td>响应里没有 <code>service_tier</code>，请求体里指定</td><td>响应 <code>usage.service_tier</code> 明示实际处理层级（可能与请求不一致）</td></tr></tbody></table><h3 id="典型场景下的-token-计算示例">典型场景下的 Token 计算示例</h3><p>OpenAI — 多轮 + 缓存 + 推理</p><pre><code>// 场景：o3 模型 + 长 system + 多轮对话
+&quot;usage&quot;: {
+  &quot;prompt_tokens&quot;: 5200, ← system + 历史
+  &quot;completion_tokens&quot;: 800,
+  &quot;total_tokens&quot;: 6000,
+  &quot;prompt_tokens_details&quot;: {
+    &quot;cached_tokens&quot;: 4800 ← 92% 命中
   },
-  <span class="s">"completion_tokens_details"</span>: {
-    <span class="s">"reasoning_tokens"</span>: <span class="n">600</span>    <span class="comment">← 75% 用于推理</span>
+  &quot;completion_tokens_details&quot;: {
+    &quot;reasoning_tokens&quot;: 600 ← 75% 用于推理
   }
 }
 
-<span class="comment">// 计算（假设 $2/M 输入, $1/M 缓存, $8/M 输出）：</span>
-<span class="comment">// 非缓存输入: (5200 - 4800) × $2/M = $0.0008</span>
-<span class="comment">// 缓存输入:   4800 × $1/M = $0.0048</span>
-<span class="comment">// 输出(含推理): 800 × $8/M = $0.0064</span>
-<span class="comment">// 合计: ≈ $0.012</span></pre></div><div><div class="col-label anthropic">Anthropic — 多轮 + 缓存 + thinking + 工具</div><pre class="code"><span class="comment">// 场景：Sonnet 4 + cache + thinking + 工具调用</span>
-<span class="s">"usage"</span>: {
-  <span class="s">"input_tokens"</span>: <span class="n">120</span>,            <span class="comment">← 仅本轮新增</span>
-  <span class="s">"cache_creation_input_tokens"</span>: <span class="n">800</span>,
-  <span class="s">"cache_read_input_tokens"</span>: <span class="n">4280</span>,  <span class="comment">← 83% 复用</span>
-  <span class="s">"cache_creation"</span>: {
-    <span class="s">"ephemeral_5m_input_tokens"</span>: <span class="n">800</span>
+// 计算（假设 $2/M 输入, $1/M 缓存, $8/M 输出）：
+// 非缓存输入: (5200 - 4800) × $2/M = $0.0008
+// 缓存输入: 4800 × $1/M = $0.0048
+// 输出(含推理): 800 × $8/M = $0.0064
+// 合计: ≈ $0.012
+</code></pre><p>Anthropic — 多轮 + 缓存 + thinking + 工具</p><pre><code>// 场景：Sonnet 4 + cache + thinking + 工具调用
+&quot;usage&quot;: {
+  &quot;input_tokens&quot;: 120, ← 仅本轮新增
+  &quot;cache_creation_input_tokens&quot;: 800,
+  &quot;cache_read_input_tokens&quot;: 4280, ← 83% 复用
+  &quot;cache_creation&quot;: {
+    &quot;ephemeral_5m_input_tokens&quot;: 800
   },
-  <span class="s">"output_tokens"</span>: <span class="n">900</span>,            <span class="comment">← thinking + tool_use + text</span>
-  <span class="s">"server_tool_use"</span>: {<span class="s">"web_search_requests"</span>: <span class="n">1</span>},
-  <span class="s">"service_tier"</span>: <span class="s">"standard"</span>
+  &quot;output_tokens&quot;: 900, ← thinking + tool_use + text
+  &quot;server_tool_use&quot;: {&quot;web_search_requests&quot;: 1},
+  &quot;service_tier&quot;: &quot;standard&quot;
 }
 
-<span class="comment">// 计算（假设 $3/M 输入, $15/M 输出）：</span>
-<span class="comment">// 普通输入: 120 × $3/M = $0.00036</span>
-<span class="comment">// 缓存写入: 800 × $3.75/M (1.25×) = $0.003</span>
-<span class="comment">// 缓存读取: 4280 × $0.30/M (0.10×) = $0.00128</span>
-<span class="comment">// 输出: 900 × $15/M = $0.0135</span>
-<span class="comment">// Web 搜索: 1 × $10/1000 = $0.01</span>
-<span class="comment">// 合计: ≈ $0.028</span>
-<span class="comment">// 实际处理输入 = 120 + 800 + 4280 = 5200 tokens</span></pre></div></div><div class="sub-gap"></div><h3>用量追踪与会话级聚合</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 追踪用户与会话</div><pre class="code"><span class="comment">// 请求体加 user 字段，便于在 Dashboard / 风控里聚合</span>
+// 计算（假设 $3/M 输入, $15/M 输出）：
+// 普通输入: 120 × $3/M = $0.00036
+// 缓存写入: 800 × $3.75/M (1.25×) = $0.003
+// 缓存读取: 4280 × $0.30/M (0.10×) = $0.00128
+// 输出: 900 × $15/M = $0.0135
+// Web 搜索: 1 × $10/1000 = $0.01
+// 合计: ≈ $0.028
+// 实际处理输入 = 120 + 800 + 4280 = 5200 tokens
+</code></pre><h3 id="用量追踪与会话级聚合">用量追踪与会话级聚合</h3><p>OpenAI — 追踪用户与会话</p><pre><code>// 请求体加 user 字段，便于在 Dashboard / 风控里聚合
 {
-  <span class="s">"model"</span>: <span class="s">"gpt-4o"</span>,
-  <span class="s">"messages"</span>: [...],
-  <span class="s">"user"</span>: <span class="s">"user_8a3f..."</span>     <span class="comment">← 字符串，自由格式</span>
+  &quot;model&quot;: &quot;gpt-4o&quot;,
+  &quot;messages&quot;: [...],
+  &quot;user&quot;: &quot;user_8a3f...&quot; ← 字符串，自由格式
 }
 
-<span class="comment">// 响应中没有 user 回显，但可在用量报告中按 user 切片</span>
-<span class="comment">// 项目 / 组织维度通过 OpenAI-Project / OpenAI-Organization</span>
-<span class="comment">// 请求头自动归类</span>
+// 响应中没有 user 回显，但可在用量报告中按 user 切片
+// 项目 / 组织维度通过 OpenAI-Project / OpenAI-Organization
+// 请求头自动归类
 
-<span class="comment">// 多轮 token 聚合 = 每次响应的 total_tokens 累加</span>
-<span class="comment">// （已含 cached_tokens，不会重复计费）</span></pre></div><div><div class="col-label anthropic">Anthropic — metadata.user_id</div><pre class="code"><span class="comment">// 请求体加 metadata.user_id 用于滥用检测和报表</span>
+// 多轮 token 聚合 = 每次响应的 total_tokens 累加
+// （已含 cached_tokens，不会重复计费）
+</code></pre><p>Anthropic — metadata.user_id</p><pre><code>// 请求体加 metadata.user_id 用于滥用检测和报表
 {
-  <span class="s">"model"</span>: <span class="s">"claude-sonnet-4-20250514"</span>,
-  <span class="s">"max_tokens"</span>: <span class="n">1024</span>,
-  <span class="s">"messages"</span>: [...],
-  <span class="s">"metadata"</span>: {
-    <span class="s">"user_id"</span>: <span class="s">"user_8a3f..."</span>  <span class="comment">← 建议哈希化</span>
+  &quot;model&quot;: &quot;claude-sonnet-4-20250514&quot;,
+  &quot;max_tokens&quot;: 1024,
+  &quot;messages&quot;: [...],
+  &quot;metadata&quot;: {
+    &quot;user_id&quot;: &quot;user_8a3f...&quot; ← 建议哈希化
   }
 }
 
-<span class="comment">// 多轮 token 聚合需要分别累加：</span>
-<span class="comment">//   total_input = Σ (input + cache_creation + cache_read)</span>
-<span class="comment">//   total_output = Σ output_tokens</span>
-<span class="comment">// 否则会漏掉缓存读写的两类输入 token</span>
+// 多轮 token 聚合需要分别累加：
+// total_input = Σ (input + cache_creation + cache_read)
+// total_output = Σ output_tokens
+// 否则会漏掉缓存读写的两类输入 token
 
-<span class="comment">// 注意：metadata.user_id 不会出现在响应中，</span>
-<span class="comment">// 仅用于服务端聚合和滥用检测</span></pre></div></div><div class="callout"><strong>会话级累加易错点：</strong><br>▸ OpenAI：直接累加 <code class="inline">total_tokens</code> 即可（缓存命中已折算在 prompt_tokens 中，但 dashboard 计费按实际付费 token）。<br>▸ Anthropic：必须三类输入字段都参与累加，否则统计的"实际处理 prompt 长度"会严重偏低（典型场景下可能只统计到真实值的 10–20%）。<br>▸ Streaming：OpenAI 不开 <code class="inline">include_usage</code> 时 usage 全程缺失；Anthropic 必须合并 <code class="inline">message_start.usage</code> 与 <code class="inline">message_delta.usage</code>。</div><div class="sub-gap"></div><h3>停止原因值对照</h3><div class="table-wrap"><table class="compare"><thead><tr><th>场景</th><th>OpenAI <code>finish_reason</code></th><th>Anthropic <code>stop_reason</code></th></tr></thead><tbody><tr><td>正常结束</td><td><code class="inline">"stop"</code></td><td><code class="inline">"end_turn"</code></td></tr><tr><td>达到 token 上限</td><td><code class="inline">"length"</code></td><td><code class="inline">"max_tokens"</code></td></tr><tr><td>需要调用工具</td><td><code class="inline">"tool_calls"</code></td><td><code class="inline">"tool_use"</code></td></tr><tr><td>命中停止序列</td><td><code class="inline">"stop"</code>（同正常结束）</td><td><code class="inline">"stop_sequence"</code>（有独立值）</td></tr><tr><td>内容过滤</td><td><code class="inline">"content_filter"</code></td><td>—（以错误响应返回）</td></tr></tbody></table></div><div class="sub-gap"></div><h3>错误响应格式</h3><div class="dual-code"><div><div class="col-label openai">OpenAI 错误（HTTP 401）</div><pre class="code">{
-  <span class="s">"error"</span>: {
-    <span class="s">"message"</span>: <span class="s">"Incorrect API key provided: sk-...xxxx."</span>,
-    <span class="s">"type"</span>: <span class="s">"invalid_request_error"</span>,
-    <span class="s">"param"</span>: <span class="k">null</span>,
-    <span class="s">"code"</span>: <span class="s">"invalid_api_key"</span>
+// 注意：metadata.user_id 不会出现在响应中，
+// 仅用于服务端聚合和滥用检测
+</code></pre><p><strong>会话级累加易错点：</strong>
+▸ OpenAI：直接累加 <code>total_tokens</code> 即可（缓存命中已折算在 prompt_tokens 中，但 dashboard 计费按实际付费 token）。
+▸ Anthropic：必须三类输入字段都参与累加，否则统计的"实际处理 prompt 长度"会严重偏低（典型场景下可能只统计到真实值的 10–20%）。
+▸ Streaming：OpenAI 不开 <code>include_usage</code> 时 usage 全程缺失；Anthropic 必须合并 <code>message_start.usage</code> 与 <code>message_delta.usage</code>。</p><h3 id="停止原因值对照">停止原因值对照</h3><table><thead><tr><th>场景</th><th>OpenAI <code>finish_reason</code></th><th>Anthropic <code>stop_reason</code></th></tr></thead><tbody><tr><td>正常结束</td><td><code>"stop"</code></td><td><code>"end_turn"</code></td></tr><tr><td>达到 token 上限</td><td><code>"length"</code></td><td><code>"max_tokens"</code></td></tr><tr><td>需要调用工具</td><td><code>"tool_calls"</code></td><td><code>"tool_use"</code></td></tr><tr><td>命中停止序列</td><td><code>"stop"</code>（同正常结束）</td><td><code>"stop_sequence"</code>（有独立值）</td></tr><tr><td>内容过滤</td><td><code>"content_filter"</code></td><td>—（以错误响应返回）</td></tr></tbody></table><h3 id="错误响应格式">错误响应格式</h3><p>OpenAI 错误（HTTP 401）</p><pre><code>{
+  &quot;error&quot;: {
+    &quot;message&quot;: &quot;Incorrect API key provided: sk-...xxxx.&quot;,
+    &quot;type&quot;: &quot;invalid_request_error&quot;,
+    &quot;param&quot;: null,
+    &quot;code&quot;: &quot;invalid_api_key&quot;
   }
 }
 
-<span class="comment">// 错误类型：invalid_request_error, authentication_error,
-// permission_error, rate_limit_error, server_error</span></pre></div><div><div class="col-label anthropic">Anthropic 错误（HTTP 401）</div><pre class="code">{
-  <span class="s">"type"</span>: <span class="s">"error"</span>,
-  <span class="s">"error"</span>: {
-    <span class="s">"type"</span>: <span class="s">"authentication_error"</span>,
-    <span class="s">"message"</span>: <span class="s">"invalid x-api-key"</span>
+// 错误类型：invalid_request_error, authentication_error,
+// permission_error, rate_limit_error, server_error
+</code></pre><p>Anthropic 错误（HTTP 401）</p><pre><code>{
+  &quot;type&quot;: &quot;error&quot;,
+  &quot;error&quot;: {
+    &quot;type&quot;: &quot;authentication_error&quot;,
+    &quot;message&quot;: &quot;invalid x-api-key&quot;
   }
 }
 
-<span class="comment">// 错误类型：invalid_request_error, authentication_error,
+// 错误类型：invalid_request_error, authentication_error,
 // permission_error, not_found_error, rate_limit_error,
-// api_error, overloaded_error</span></pre></div></div><div class="annot">OpenAI 错误体多一个 param（指向出错参数）和 code（细分错误码）字段；Anthropic 结构更简洁，外层多一个 "type": "error" 标识</div></div></section><section><div class="sec-head"><h2>Tool Use</h2><div class="count">FUNCTION CALLING</div></div><div class="indent"><h3>工具定义（请求体中的 tools 字段）</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — type + function 包裹</div><pre class="code"><span class="s">"tools"</span>: [{
-  <span class="s">"type"</span>: <span class="s">"function"</span>,       <span class="comment">← 额外包裹层</span>
-  <span class="s">"function"</span>: {
-    <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
-    <span class="s">"description"</span>: <span class="s">"Get weather info"</span>,
-    <span class="s">"parameters"</span>: {         <span class="comment">← "parameters"</span>
-      <span class="s">"type"</span>: <span class="s">"object"</span>,
-      <span class="s">"properties"</span>: {
-        <span class="s">"location"</span>: {
-          <span class="s">"type"</span>: <span class="s">"string"</span>,
-          <span class="s">"description"</span>: <span class="s">"City name"</span>
+// api_error, overloaded_error
+</code></pre><p>OpenAI 错误体多一个 param（指向出错参数）和 code（细分错误码）字段；Anthropic 结构更简洁，外层多一个 &ldquo;type&rdquo;: &ldquo;error&rdquo; 标识</p><h2 id="tool-use">Tool Use</h2><p>FUNCTION CALLING</p><h3 id="工具定义请求体中的-tools-字段">工具定义（请求体中的 tools 字段）</h3><p>OpenAI — type + function 包裹</p><pre><code>&quot;tools&quot;: [{
+  &quot;type&quot;: &quot;function&quot;, ← 额外包裹层
+  &quot;function&quot;: {
+    &quot;name&quot;: &quot;get_weather&quot;,
+    &quot;description&quot;: &quot;Get weather info&quot;,
+    &quot;parameters&quot;: { ← &quot;parameters&quot;
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;location&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;City name&quot;
         }
       },
-      <span class="s">"required"</span>: [<span class="s">"location"</span>]
+      &quot;required&quot;: [&quot;location&quot;]
     },
-    <span class="s">"strict"</span>: <span class="k">false</span>          <span class="comment">← 可选：强制结构化输出</span>
+    &quot;strict&quot;: false ← 可选：强制结构化输出
   }
-}]</pre></div><div><div class="col-label anthropic">Anthropic — 扁平结构 + input_schema</div><pre class="code"><span class="s">"tools"</span>: [{
-  <span class="s">"name"</span>: <span class="s">"get_weather"</span>,       <span class="comment">← 直接平铺</span>
-  <span class="s">"description"</span>: <span class="s">"Get weather info"</span>,
-  <span class="s">"input_schema"</span>: {           <span class="comment">← "input_schema"</span>
-    <span class="s">"type"</span>: <span class="s">"object"</span>,
-    <span class="s">"properties"</span>: {
-      <span class="s">"location"</span>: {
-        <span class="s">"type"</span>: <span class="s">"string"</span>,
-        <span class="s">"description"</span>: <span class="s">"City name"</span>
+}]
+</code></pre><p>Anthropic — 扁平结构 + input_schema</p><pre><code>&quot;tools&quot;: [{
+  &quot;name&quot;: &quot;get_weather&quot;, ← 直接平铺
+  &quot;description&quot;: &quot;Get weather info&quot;,
+  &quot;input_schema&quot;: { ← &quot;input_schema&quot;
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;location&quot;: {
+        &quot;type&quot;: &quot;string&quot;,
+        &quot;description&quot;: &quot;City name&quot;
       }
     },
-    <span class="s">"required"</span>: [<span class="s">"location"</span>]
+    &quot;required&quot;: [&quot;location&quot;]
   }
-}]</pre></div></div><div class="callout"><strong>差异 ①：</strong>OpenAI 有 <code class="inline">"type":"function"</code> + <code class="inline">"function":{}</code> 包裹，Anthropic 直接平铺。<br><strong>差异 ②：</strong>Schema key：<code class="inline">"parameters"</code> vs <code class="inline">"input_schema"</code>。<br><strong>差异 ③：</strong>OpenAI 支持 <code class="inline">"strict": true</code> 强制结构化输出（Structured Outputs）。</div><div class="sub-gap"></div><h3>tool_choice 对比</h3><div class="dual-code"><div><div class="col-label openai">OpenAI tool_choice</div><pre class="code"><span class="comment">// 模型自行决定（默认）</span>
-<span class="s">"tool_choice"</span>: <span class="s">"auto"</span>
+}]
+</code></pre><p><strong>差异 ①：</strong> OpenAI 有 <code>"type":"function"</code> + <code>"function":{}</code> 包裹，Anthropic 直接平铺。
+<strong>差异 ②：</strong> Schema key：<code>"parameters"</code> vs <code>"input_schema"</code>。
+<strong>差异 ③：</strong> OpenAI 支持 <code>"strict": true</code> 强制结构化输出（Structured Outputs）。</p><h3 id="tool_choice-对比">tool_choice 对比</h3><p>OpenAI tool_choice</p><pre><code>// 模型自行决定（默认）
+&quot;tool_choice&quot;: &quot;auto&quot;
 
-<span class="comment">// 禁止使用工具</span>
-<span class="s">"tool_choice"</span>: <span class="s">"none"</span>
+// 禁止使用工具
+&quot;tool_choice&quot;: &quot;none&quot;
 
-<span class="comment">// 强制使用工具（不限定哪个）</span>
-<span class="s">"tool_choice"</span>: <span class="s">"required"</span>
+// 强制使用工具（不限定哪个）
+&quot;tool_choice&quot;: &quot;required&quot;
 
-<span class="comment">// 指定使用某个工具</span>
-<span class="s">"tool_choice"</span>: {
-  <span class="s">"type"</span>: <span class="s">"function"</span>,
-  <span class="s">"function"</span>: {<span class="s">"name"</span>: <span class="s">"get_weather"</span>}
+// 指定使用某个工具
+&quot;tool_choice&quot;: {
+  &quot;type&quot;: &quot;function&quot;,
+  &quot;function&quot;: {&quot;name&quot;: &quot;get_weather&quot;}
 }
 
-<span class="comment">// 控制并行工具调用</span>
-<span class="s">"parallel_tool_calls"</span>: <span class="k">false</span></pre></div><div><div class="col-label anthropic">Anthropic tool_choice</div><pre class="code"><span class="comment">// 模型自行决定（默认）</span>
-<span class="s">"tool_choice"</span>: {<span class="s">"type"</span>: <span class="s">"auto"</span>}
+// 控制并行工具调用
+&quot;parallel_tool_calls&quot;: false
+</code></pre><p>Anthropic tool_choice</p><pre><code>// 模型自行决定（默认）
+&quot;tool_choice&quot;: {&quot;type&quot;: &quot;auto&quot;}
 
-<span class="comment">// 无 "none" — 不传 tools 即可</span>
+// 无 &quot;none&quot; — 不传 tools 即可
 
-<span class="comment">// 强制使用工具（不限定哪个）</span>
-<span class="s">"tool_choice"</span>: {<span class="s">"type"</span>: <span class="s">"any"</span>}
+// 强制使用工具（不限定哪个）
+&quot;tool_choice&quot;: {&quot;type&quot;: &quot;any&quot;}
 
-<span class="comment">// 指定使用某个工具</span>
-<span class="s">"tool_choice"</span>: {
-  <span class="s">"type"</span>: <span class="s">"tool"</span>,
-  <span class="s">"name"</span>: <span class="s">"get_weather"</span>
+// 指定使用某个工具
+&quot;tool_choice&quot;: {
+  &quot;type&quot;: &quot;tool&quot;,
+  &quot;name&quot;: &quot;get_weather&quot;
 }
 
-<span class="comment">// 控制并行工具调用（嵌套在 tool_choice 中）</span>
-<span class="s">"tool_choice"</span>: {
-  <span class="s">"type"</span>: <span class="s">"auto"</span>,
-  <span class="s">"disable_parallel_tool_use"</span>: <span class="k">true</span>
-}</pre></div></div><div class="annot">OpenAI 用字符串 "auto"/"none"/"required"，Anthropic 用对象 {type: "auto"/"any"/"tool"}。并行控制位置也不同</div><div class="sub-gap"></div><h3>响应中的工具调用</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — message.tool_calls 数组</div><pre class="code">{
-  <span class="s">"choices"</span>: [{
-    <span class="s">"message"</span>: {
-      <span class="s">"role"</span>: <span class="s">"assistant"</span>,
-      <span class="s">"content"</span>: <span class="k">null</span>,         <span class="comment">← 有工具调用时 content 为 null</span>
-      <span class="s">"tool_calls"</span>: [{        <span class="comment">← 独立的 tool_calls 字段</span>
-        <span class="s">"id"</span>: <span class="s">"call_abc123"</span>,
-        <span class="s">"type"</span>: <span class="s">"function"</span>,
-        <span class="s">"function"</span>: {
-          <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
-          <span class="s">"arguments"</span>: <span class="s">"{\"location\":\"San Francisco\"}"</span>
-        }               <span class="comment">↑ arguments 是 JSON 字符串</span>
+// 控制并行工具调用（嵌套在 tool_choice 中）
+&quot;tool_choice&quot;: {
+  &quot;type&quot;: &quot;auto&quot;,
+  &quot;disable_parallel_tool_use&quot;: true
+}
+</code></pre><p>OpenAI 用字符串 &ldquo;auto&rdquo;/&ldquo;none&rdquo;/&ldquo;required&rdquo;，Anthropic 用对象 {type: &ldquo;auto&rdquo;/&ldquo;any&rdquo;/&ldquo;tool&rdquo;}。并行控制位置也不同</p><h3 id="响应中的工具调用">响应中的工具调用</h3><p>OpenAI — message.tool_calls 数组</p><pre><code>{
+  &quot;choices&quot;: [{
+    &quot;message&quot;: {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: null, ← 有工具调用时 content 为 null
+      &quot;tool_calls&quot;: [{ ← 独立的 tool_calls 字段
+        &quot;id&quot;: &quot;call_abc123&quot;,
+        &quot;type&quot;: &quot;function&quot;,
+        &quot;function&quot;: {
+          &quot;name&quot;: &quot;get_weather&quot;,
+          &quot;arguments&quot;: &quot;{\&quot;location\&quot;:\&quot;San Francisco\&quot;}&quot;
+        } ↑ arguments 是 JSON 字符串
       }]
     },
-    <span class="s">"finish_reason"</span>: <span class="s">"tool_calls"</span>
+    &quot;finish_reason&quot;: &quot;tool_calls&quot;
   }]
-}</pre></div><div><div class="col-label anthropic">Anthropic — content block 中的 tool_use</div><pre class="code">{
-  <span class="s">"role"</span>: <span class="s">"assistant"</span>,
-  <span class="s">"content"</span>: [
+}
+</code></pre><p>Anthropic — content block 中的 tool_use</p><pre><code>{
+  &quot;role&quot;: &quot;assistant&quot;,
+  &quot;content&quot;: [
     {
-      <span class="s">"type"</span>: <span class="s">"text"</span>,           <span class="comment">← 可以有文本说明</span>
-      <span class="s">"text"</span>: <span class="s">"Let me check the weather."</span>
+      &quot;type&quot;: &quot;text&quot;, ← 可以有文本说明
+      &quot;text&quot;: &quot;Let me check the weather.&quot;
     },
     {
-      <span class="s">"type"</span>: <span class="s">"tool_use"</span>,       <span class="comment">← 工具调用也在 content 数组中</span>
-      <span class="s">"id"</span>: <span class="s">"toolu_abc123"</span>,
-      <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
-      <span class="s">"input"</span>: {<span class="s">"location"</span>: <span class="s">"San Francisco"</span>}
-    }                    <span class="comment">↑ input 是已解析的 JSON 对象</span>
+      &quot;type&quot;: &quot;tool_use&quot;, ← 工具调用也在 content 数组中
+      &quot;id&quot;: &quot;toolu_abc123&quot;,
+      &quot;name&quot;: &quot;get_weather&quot;,
+      &quot;input&quot;: {&quot;location&quot;: &quot;San Francisco&quot;}
+    } ↑ input 是已解析的 JSON 对象
   ],
-  <span class="s">"stop_reason"</span>: <span class="s">"tool_use"</span>
-}</pre></div></div><div class="callout"><strong>核心差异：</strong>OpenAI 将工具调用放在 <code class="inline">message.tool_calls</code> 独立字段中，<code class="inline">content</code> 为 null。
-Anthropic 将工具调用作为 <code class="inline">content</code> block 数组中的一个元素（可与 text block 共存）。<br><br><strong>参数格式：</strong>OpenAI 的 <code class="inline">arguments</code> 是 <strong>JSON 字符串</strong>（需 <code class="inline">JSON.parse()</code>），
-Anthropic 的 <code class="inline">input</code> 是<strong>已解析的 JSON 对象</strong>（直接使用）。</div><div class="sub-gap"></div><h3>并行工具调用</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 多个 tool_calls 元素</div><pre class="code"><span class="s">"tool_calls"</span>: [
+  &quot;stop_reason&quot;: &quot;tool_use&quot;
+}
+</code></pre><p><strong>核心差异：</strong> OpenAI 将工具调用放在 <code>message.tool_calls</code> 独立字段中，<code>content</code> 为 null。 Anthropic 将工具调用作为 <code>content</code> block 数组中的一个元素（可与 text block 共存）。</p><p><strong>参数格式：</strong> OpenAI 的 <code>arguments</code> 是 <strong>JSON 字符串</strong> （需 <code>JSON.parse()</code>）， Anthropic 的 <code>input</code> 是 <strong>已解析的 JSON 对象</strong> （直接使用）。</p><h3 id="并行工具调用">并行工具调用</h3><p>OpenAI — 多个 tool_calls 元素</p><pre><code>&quot;tool_calls&quot;: [
   {
-    <span class="s">"id"</span>: <span class="s">"call_1"</span>,
-    <span class="s">"type"</span>: <span class="s">"function"</span>,
-    <span class="s">"function"</span>: {
-      <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
-      <span class="s">"arguments"</span>: <span class="s">"{\"location\":\"SF\"}"</span>
+    &quot;id&quot;: &quot;call_1&quot;,
+    &quot;type&quot;: &quot;function&quot;,
+    &quot;function&quot;: {
+      &quot;name&quot;: &quot;get_weather&quot;,
+      &quot;arguments&quot;: &quot;{\&quot;location\&quot;:\&quot;SF\&quot;}&quot;
     }
   },
   {
-    <span class="s">"id"</span>: <span class="s">"call_2"</span>,
-    <span class="s">"type"</span>: <span class="s">"function"</span>,
-    <span class="s">"function"</span>: {
-      <span class="s">"name"</span>: <span class="s">"get_time"</span>,
-      <span class="s">"arguments"</span>: <span class="s">"{\"timezone\":\"PST\"}"</span>
+    &quot;id&quot;: &quot;call_2&quot;,
+    &quot;type&quot;: &quot;function&quot;,
+    &quot;function&quot;: {
+      &quot;name&quot;: &quot;get_time&quot;,
+      &quot;arguments&quot;: &quot;{\&quot;timezone\&quot;:\&quot;PST\&quot;}&quot;
     }
   }
-]</pre></div><div><div class="col-label anthropic">Anthropic — 多个 tool_use blocks</div><pre class="code"><span class="s">"content"</span>: [
-  {<span class="s">"type"</span>: <span class="s">"text"</span>,
-   <span class="s">"text"</span>: <span class="s">"I'll check both for you."</span>},
+]
+</code></pre><p>Anthropic — 多个 tool_use blocks</p><pre><code>&quot;content&quot;: [
+  {&quot;type&quot;: &quot;text&quot;,
+   &quot;text&quot;: &quot;I'll check both for you.&quot;},
   {
-    <span class="s">"type"</span>: <span class="s">"tool_use"</span>,
-    <span class="s">"id"</span>: <span class="s">"toolu_1"</span>,
-    <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
-    <span class="s">"input"</span>: {<span class="s">"location"</span>: <span class="s">"SF"</span>}
+    &quot;type&quot;: &quot;tool_use&quot;,
+    &quot;id&quot;: &quot;toolu_1&quot;,
+    &quot;name&quot;: &quot;get_weather&quot;,
+    &quot;input&quot;: {&quot;location&quot;: &quot;SF&quot;}
   },
   {
-    <span class="s">"type"</span>: <span class="s">"tool_use"</span>,
-    <span class="s">"id"</span>: <span class="s">"toolu_2"</span>,
-    <span class="s">"name"</span>: <span class="s">"get_time"</span>,
-    <span class="s">"input"</span>: {<span class="s">"timezone"</span>: <span class="s">"PST"</span>}
+    &quot;type&quot;: &quot;tool_use&quot;,
+    &quot;id&quot;: &quot;toolu_2&quot;,
+    &quot;name&quot;: &quot;get_time&quot;,
+    &quot;input&quot;: {&quot;timezone&quot;: &quot;PST&quot;}
   }
-]</pre></div></div><div class="sub-gap"></div><h3>回传工具结果</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 每个结果一条 role: "tool" 消息</div><pre class="code"><span class="comment">// 每个 tool_call 对应一条 tool 消息</span>
+]
+</code></pre><h3 id="回传工具结果">回传工具结果</h3><p>OpenAI — 每个结果一条 role: &ldquo;tool&rdquo; 消息</p><pre><code>// 每个 tool_call 对应一条 tool 消息
 {
-  <span class="s">"role"</span>: <span class="s">"tool"</span>,
-  <span class="s">"tool_call_id"</span>: <span class="s">"call_1"</span>,
-  <span class="s">"content"</span>: <span class="s">"24°C, sunny"</span>
+  &quot;role&quot;: &quot;tool&quot;,
+  &quot;tool_call_id&quot;: &quot;call_1&quot;,
+  &quot;content&quot;: &quot;24°C, sunny&quot;
 },
 {
-  <span class="s">"role"</span>: <span class="s">"tool"</span>,
-  <span class="s">"tool_call_id"</span>: <span class="s">"call_2"</span>,
-  <span class="s">"content"</span>: <span class="s">"2:30 PM PST"</span>
-}</pre></div><div><div class="col-label anthropic">Anthropic — 一条 user 消息含多个 tool_result</div><pre class="code"><span class="comment">// 所有结果放在一条 user 消息的 content 数组中</span>
+  &quot;role&quot;: &quot;tool&quot;,
+  &quot;tool_call_id&quot;: &quot;call_2&quot;,
+  &quot;content&quot;: &quot;2:30 PM PST&quot;
+}
+</code></pre><p>Anthropic — 一条 user 消息含多个 tool_result</p><pre><code>// 所有结果放在一条 user 消息的 content 数组中
 {
-  <span class="s">"role"</span>: <span class="s">"user"</span>,
-  <span class="s">"content"</span>: [
+  &quot;role&quot;: &quot;user&quot;,
+  &quot;content&quot;: [
     {
-      <span class="s">"type"</span>: <span class="s">"tool_result"</span>,
-      <span class="s">"tool_use_id"</span>: <span class="s">"toolu_1"</span>,
-      <span class="s">"content"</span>: <span class="s">"24°C, sunny"</span>
+      &quot;type&quot;: &quot;tool_result&quot;,
+      &quot;tool_use_id&quot;: &quot;toolu_1&quot;,
+      &quot;content&quot;: &quot;24°C, sunny&quot;
     },
     {
-      <span class="s">"type"</span>: <span class="s">"tool_result"</span>,
-      <span class="s">"tool_use_id"</span>: <span class="s">"toolu_2"</span>,
-      <span class="s">"content"</span>: <span class="s">"2:30 PM PST"</span>
+      &quot;type&quot;: &quot;tool_result&quot;,
+      &quot;tool_use_id&quot;: &quot;toolu_2&quot;,
+      &quot;content&quot;: &quot;2:30 PM PST&quot;
     }
   ]
-}</pre></div></div><div class="callout"><strong>角色差异：</strong>OpenAI 用专用 <code class="inline">role: "tool"</code>，每个结果一条独立消息。
-Anthropic 用 <code class="inline">role: "user"</code> + <code class="inline">tool_result</code> block，多个结果可合并为一条消息。<br><br><strong>ID 字段：</strong><code class="inline">tool_call_id</code>（OpenAI）vs <code class="inline">tool_use_id</code>（Anthropic）。<br><br><strong>错误回传：</strong>Anthropic 支持在 tool_result 中添加 <code class="inline">"is_error": true</code> 标记工具执行失败，OpenAI 无此机制（需在 content 中描述）。</div></div></section><section><div class="sec-head"><h2>Streaming</h2><div class="count">SSE</div></div><div class="indent"><h3>启用流式（请求体加 "stream": true）</h3><div class="dual-code"><div><div class="col-label openai">OpenAI SSE 事件流</div><pre class="code"><span class="comment">// 首个 chunk — 携带 role</span>
-data: {<span class="s">"id"</span>:<span class="s">"chatcmpl-..."</span>,<span class="s">"choices"</span>:[{
-  <span class="s">"delta"</span>:{<span class="s">"role"</span>:<span class="s">"assistant"</span>,<span class="s">"content"</span>:<span class="s">""</span>},
-  <span class="s">"index"</span>:<span class="n">0</span>}]}
+}
+</code></pre><p><strong>角色差异：</strong> OpenAI 用专用 <code>role: "tool"</code>，每个结果一条独立消息。 Anthropic 用 <code>role: "user"</code> + <code>tool_result</code> block，多个结果可合并为一条消息。</p><p><strong>ID 字段：</strong> <code>tool_call_id</code>（OpenAI）vs <code>tool_use_id</code>（Anthropic）。</p><p><strong>错误回传：</strong> Anthropic 支持在 tool_result 中添加 <code>"is_error": true</code> 标记工具执行失败，OpenAI 无此机制（需在 content 中描述）。</p><h2 id="streaming">Streaming</h2><p>SSE</p><h3 id="启用流式请求体加-stream-true">启用流式（请求体加 &ldquo;stream&rdquo;: true）</h3><p>OpenAI SSE 事件流</p><pre><code>// 首个 chunk — 携带 role
+data: {&quot;id&quot;:&quot;chatcmpl-...&quot;,&quot;choices&quot;:[{
+  &quot;delta&quot;:{&quot;role&quot;:&quot;assistant&quot;,&quot;content&quot;:&quot;&quot;},
+  &quot;index&quot;:0}]}
 
-<span class="comment">// 文本增量（逐 token）</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"content"</span>:<span class="s">"I'm"</span>},<span class="s">"index"</span>:<span class="n">0</span>}]}
+// 文本增量（逐 token）
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;content&quot;:&quot;I'm&quot;},&quot;index&quot;:0}]}
 
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"content"</span>:<span class="s">" doing"</span>},<span class="s">"index"</span>:<span class="n">0</span>}]}
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;content&quot;:&quot; doing&quot;},&quot;index&quot;:0}]}
 
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"content"</span>:<span class="s">" well!"</span>},<span class="s">"index"</span>:<span class="n">0</span>}]}
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;content&quot;:&quot; well!&quot;},&quot;index&quot;:0}]}
 
-<span class="comment">// 结束标记</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{},
-  <span class="s">"finish_reason"</span>:<span class="s">"stop"</span>}]}
+// 结束标记
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{},
+  &quot;finish_reason&quot;:&quot;stop&quot;}]}
 
-data: [DONE]</pre></div><div><div class="col-label anthropic">Anthropic SSE 事件流</div><pre class="code"><span class="comment">// 消息开始（含 message 元信息和 usage）</span>
+data: [DONE]
+</code></pre><p>Anthropic SSE 事件流</p><pre><code>// 消息开始（含 message 元信息和 usage）
 event: message_start
-data: {<span class="s">"type"</span>:<span class="s">"message_start"</span>,<span class="s">"message"</span>:{
-  <span class="s">"id"</span>:<span class="s">"msg_..."</span>,<span class="s">"role"</span>:<span class="s">"assistant"</span>,
-  <span class="s">"usage"</span>:{<span class="s">"input_tokens"</span>:<span class="n">12</span>,...}}}
+data: {&quot;type&quot;:&quot;message_start&quot;,&quot;message&quot;:{
+  &quot;id&quot;:&quot;msg_...&quot;,&quot;role&quot;:&quot;assistant&quot;,
+  &quot;usage&quot;:{&quot;input_tokens&quot;:12,...}}}
 
-<span class="comment">// 内容块开始（声明类型 → text）</span>
+// 内容块开始（声明类型 → text）
 event: content_block_start
-data: {<span class="s">"type"</span>:<span class="s">"content_block_start"</span>,
-  <span class="s">"index"</span>:<span class="n">0</span>,
-  <span class="s">"content_block"</span>:{<span class="s">"type"</span>:<span class="s">"text"</span>,<span class="s">"text"</span>:<span class="s">""</span>}}
+data: {&quot;type&quot;:&quot;content_block_start&quot;,
+  &quot;index&quot;:0,
+  &quot;content_block&quot;:{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;&quot;}}
 
-<span class="comment">// 文本增量（逐 token）</span>
+// 文本增量（逐 token）
 event: content_block_delta
-data: {<span class="s">"type"</span>:<span class="s">"content_block_delta"</span>,<span class="s">"index"</span>:<span class="n">0</span>,
-  <span class="s">"delta"</span>:{<span class="s">"type"</span>:<span class="s">"text_delta"</span>,
-    <span class="s">"text"</span>:<span class="s">"I'm doing well!"</span>}}
+data: {&quot;type&quot;:&quot;content_block_delta&quot;,&quot;index&quot;:0,
+  &quot;delta&quot;:{&quot;type&quot;:&quot;text_delta&quot;,
+    &quot;text&quot;:&quot;I'm doing well!&quot;}}
 
-<span class="comment">// 内容块结束</span>
+// 内容块结束
 event: content_block_stop
-data: {<span class="s">"type"</span>:<span class="s">"content_block_stop"</span>,<span class="s">"index"</span>:<span class="n">0</span>}
+data: {&quot;type&quot;:&quot;content_block_stop&quot;,&quot;index&quot;:0}
 
-<span class="comment">// 消息增量（含 stop_reason 和 output usage）</span>
+// 消息增量（含 stop_reason 和 output usage）
 event: message_delta
-data: {<span class="s">"type"</span>:<span class="s">"message_delta"</span>,
-  <span class="s">"delta"</span>:{<span class="s">"stop_reason"</span>:<span class="s">"end_turn"</span>},
-  <span class="s">"usage"</span>:{<span class="s">"output_tokens"</span>:<span class="n">8</span>}}
+data: {&quot;type&quot;:&quot;message_delta&quot;,
+  &quot;delta&quot;:{&quot;stop_reason&quot;:&quot;end_turn&quot;},
+  &quot;usage&quot;:{&quot;output_tokens&quot;:8}}
 
-<span class="comment">// 消息结束</span>
+// 消息结束
 event: message_stop
-data: {<span class="s">"type"</span>:<span class="s">"message_stop"</span>}</pre></div></div><div class="sub-gap"></div><h3>SSE 事件生命周期对比</h3><div class="table-wrap"><table class="compare"><thead><tr><th>阶段</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>流开始</td><td>首个 <code class="inline">data:</code>（含 <code class="inline">delta.role</code>）</td><td><code class="inline">event: message_start</code></td></tr><tr><td>内容块开始</td><td>—（无显式事件）</td><td><code class="inline">event: content_block_start</code>（声明 block 类型）</td></tr><tr><td>文本增量</td><td><code class="inline">delta.content</code></td><td><code class="inline">delta.type: "text_delta"</code> + <code class="inline">delta.text</code></td></tr><tr><td>内容块结束</td><td>—</td><td><code class="inline">event: content_block_stop</code></td></tr><tr><td>用量信息</td><td>需要 <code class="inline">"stream_options": {"include_usage": true}</code>，最后一个 chunk 携带</td><td>默认包含：<code class="inline">message_start</code> 携带 input，<code class="inline">message_delta</code> 携带 output</td></tr><tr><td>流结束</td><td><code class="inline">data: [DONE]</code></td><td><code class="inline">event: message_stop</code></td></tr></tbody></table></div><div class="sub-gap"></div><h3>工具调用的流式事件</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — tool_calls 增量</div><pre class="code"><span class="comment">// 工具调用开始（首个 chunk 含完整元信息）</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"tool_calls"</span>:[{<span class="s">"index"</span>:<span class="n">0</span>,
-    <span class="s">"id"</span>:<span class="s">"call_abc"</span>,
-    <span class="s">"type"</span>:<span class="s">"function"</span>,
-    <span class="s">"function"</span>:{<span class="s">"name"</span>:<span class="s">"get_weather"</span>,
-      <span class="s">"arguments"</span>:<span class="s">""</span>}}]}}]}
+data: {&quot;type&quot;:&quot;message_stop&quot;}
+</code></pre><h3 id="sse-事件生命周期对比">SSE 事件生命周期对比</h3><table><thead><tr><th>阶段</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>流开始</td><td>首个 <code>data:</code>（含 <code>delta.role</code>）</td><td><code>event: message_start</code></td></tr><tr><td>内容块开始</td><td>—（无显式事件）</td><td><code>event: content_block_start</code>（声明 block 类型）</td></tr><tr><td>文本增量</td><td><code>delta.content</code></td><td><code>delta.type: "text_delta"</code> + <code>delta.text</code></td></tr><tr><td>内容块结束</td><td>—</td><td><code>event: content_block_stop</code></td></tr><tr><td>用量信息</td><td>需要 <code>"stream_options": {"include_usage": true}</code>，最后一个 chunk 携带</td><td>默认包含：<code>message_start</code> 携带 input，<code>message_delta</code> 携带 output</td></tr><tr><td>流结束</td><td><code>data: [DONE]</code></td><td><code>event: message_stop</code></td></tr></tbody></table><h3 id="工具调用的流式事件">工具调用的流式事件</h3><p>OpenAI — tool_calls 增量</p><pre><code>// 工具调用开始（首个 chunk 含完整元信息）
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;tool_calls&quot;:[{&quot;index&quot;:0,
+    &quot;id&quot;:&quot;call_abc&quot;,
+    &quot;type&quot;:&quot;function&quot;,
+    &quot;function&quot;:{&quot;name&quot;:&quot;get_weather&quot;,
+      &quot;arguments&quot;:&quot;&quot;}}]}}]}
 
-<span class="comment">// arguments 分段传输（JSON 字符串片段）</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"tool_calls"</span>:[{<span class="s">"index"</span>:<span class="n">0</span>,
-    <span class="s">"function"</span>:{<span class="s">"arguments"</span>:<span class="s">"{\"lo"</span>}}]}}]}
+// arguments 分段传输（JSON 字符串片段）
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;tool_calls&quot;:[{&quot;index&quot;:0,
+    &quot;function&quot;:{&quot;arguments&quot;:&quot;{\&quot;lo&quot;}}]}}]}
 
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"tool_calls"</span>:[{<span class="s">"index"</span>:<span class="n">0</span>,
-    <span class="s">"function"</span>:{<span class="s">"arguments"</span>:<span class="s">"cation\":\"SF\"}"</span>}}]}}]}
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;tool_calls&quot;:[{&quot;index&quot;:0,
+    &quot;function&quot;:{&quot;arguments&quot;:&quot;cation\&quot;:\&quot;SF\&quot;}&quot;}}]}}]}
 
-<span class="comment">// 结束</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{},
-  <span class="s">"finish_reason"</span>:<span class="s">"tool_calls"</span>}]}
-data: [DONE]</pre></div><div><div class="col-label anthropic">Anthropic — tool_use block 事件</div><pre class="code"><span class="comment">// 工具调用块开始（声明 block 类型 + 元信息）</span>
+// 结束
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{},
+  &quot;finish_reason&quot;:&quot;tool_calls&quot;}]}
+data: [DONE]
+</code></pre><p>Anthropic — tool_use block 事件</p><pre><code>// 工具调用块开始（声明 block 类型 + 元信息）
 event: content_block_start
-data: {<span class="s">"type"</span>:<span class="s">"content_block_start"</span>,
-  <span class="s">"index"</span>:<span class="n">1</span>,
-  <span class="s">"content_block"</span>:{<span class="s">"type"</span>:<span class="s">"tool_use"</span>,
-    <span class="s">"id"</span>:<span class="s">"toolu_abc"</span>,
-    <span class="s">"name"</span>:<span class="s">"get_weather"</span>,
-    <span class="s">"input"</span>:{}}}
+data: {&quot;type&quot;:&quot;content_block_start&quot;,
+  &quot;index&quot;:1,
+  &quot;content_block&quot;:{&quot;type&quot;:&quot;tool_use&quot;,
+    &quot;id&quot;:&quot;toolu_abc&quot;,
+    &quot;name&quot;:&quot;get_weather&quot;,
+    &quot;input&quot;:{}}}
 
-<span class="comment">// input 分段传输（JSON 片段）</span>
+// input 分段传输（JSON 片段）
 event: content_block_delta
-data: {<span class="s">"type"</span>:<span class="s">"content_block_delta"</span>,
-  <span class="s">"index"</span>:<span class="n">1</span>,
-  <span class="s">"delta"</span>:{<span class="s">"type"</span>:<span class="s">"input_json_delta"</span>,
-    <span class="s">"partial_json"</span>:<span class="s">"{\"location"</span>}}
+data: {&quot;type&quot;:&quot;content_block_delta&quot;,
+  &quot;index&quot;:1,
+  &quot;delta&quot;:{&quot;type&quot;:&quot;input_json_delta&quot;,
+    &quot;partial_json&quot;:&quot;{\&quot;location&quot;}}
 
 event: content_block_delta
-data: {<span class="s">"delta"</span>:{<span class="s">"type"</span>:<span class="s">"input_json_delta"</span>,
-    <span class="s">"partial_json"</span>:<span class="s">"\":\"SF\"}"</span>}}
+data: {&quot;delta&quot;:{&quot;type&quot;:&quot;input_json_delta&quot;,
+    &quot;partial_json&quot;:&quot;\&quot;:\&quot;SF\&quot;}&quot;}}
 
-<span class="comment">// 工具调用块结束</span>
+// 工具调用块结束
 event: content_block_stop
-data: {<span class="s">"type"</span>:<span class="s">"content_block_stop"</span>,<span class="s">"index"</span>:<span class="n">1</span>}</pre></div></div><div class="callout"><strong>Anthropic 的结构化优势：</strong>每个 content block 有明确的 <code class="inline">start → delta → stop</code> 生命周期，且 <code class="inline">content_block_start</code> 事件中声明了 block 类型。
-这使得客户端可以在流式中即时知道即将到来的内容是 text、tool_use 还是 thinking，无需回溯解析。
-OpenAI 的 tool_calls 增量通过 <code class="inline">delta.tool_calls[i].index</code> 定位，相对扁平。</div></div></section><section><div class="sec-head"><h2>Thinking / Reasoning</h2><div class="count">EXTENDED THINKING</div></div><div class="indent"><h3>请求格式</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 默认开启（部分模型）</div><pre class="code"><span class="comment">// 思考默认内嵌在 content 中</span>
-<span class="comment">// 通过 reasoning_split 分离思考和回答</span>
+data: {&quot;type&quot;:&quot;content_block_stop&quot;,&quot;index&quot;:1}
+</code></pre><p><strong>Anthropic 的结构化优势：</strong> 每个 content block 有明确的 <code>start → delta → stop</code> 生命周期，且 <code>content_block_start</code> 事件中声明了 block 类型。 这使得客户端可以在流式中即时知道即将到来的内容是 text、tool_use 还是 thinking，无需回溯解析。 OpenAI 的 tool_calls 增量通过 <code>delta.tool_calls[i].index</code> 定位，相对扁平。</p><h2 id="thinking--reasoning">Thinking / Reasoning</h2><p>EXTENDED THINKING</p><h3 id="请求格式">请求格式</h3><p>OpenAI — 默认开启（部分模型）</p><pre><code>// 思考默认内嵌在 content 中
+// 通过 reasoning_split 分离思考和回答
 {
-  <span class="s">"model"</span>: <span class="s">"gpt-4o"</span>,
-  <span class="s">"messages"</span>: [...],
-  <span class="s">"reasoning_split"</span>: <span class="k">true</span>  <span class="comment">← 可选：分离思考内容</span>
+  &quot;model&quot;: &quot;gpt-4o&quot;,
+  &quot;messages&quot;: [...],
+  &quot;reasoning_split&quot;: true ← 可选：分离思考内容
 }
 
-<span class="comment">// 不使用 reasoning_split 时，思考过程
-// 以 &lt;think&gt;...&lt;/think&gt; 标签嵌入 content 字符串</span></pre></div><div><div class="col-label anthropic">Anthropic — 显式启用 + 预算控制</div><pre class="code"><span class="comment">// 通过 thinking 参数显式启用</span>
+// 不使用 reasoning_split 时，思考过程
+// 以 &lt;think&gt;...&lt;/think&gt; 标签嵌入 content 字符串
+</code></pre><p>Anthropic — 显式启用 + 预算控制</p><pre><code>// 通过 thinking 参数显式启用
 {
-  <span class="s">"model"</span>: <span class="s">"claude-sonnet-4-20250514"</span>,
-  <span class="s">"max_tokens"</span>: <span class="n">16000</span>,
-  <span class="s">"thinking"</span>: {
-    <span class="s">"type"</span>: <span class="s">"enabled"</span>,
-    <span class="s">"budget_tokens"</span>: <span class="n">10000</span>   <span class="comment">← 思考 token 预算</span>
+  &quot;model&quot;: &quot;claude-sonnet-4-20250514&quot;,
+  &quot;max_tokens&quot;: 16000,
+  &quot;thinking&quot;: {
+    &quot;type&quot;: &quot;enabled&quot;,
+    &quot;budget_tokens&quot;: 10000 ← 思考 token 预算
   },
-  <span class="s">"messages"</span>: [...]
+  &quot;messages&quot;: [...]
 }
 
-<span class="comment">// budget_tokens 控制模型可用于思考的最大 token 数
-// 必须小于 max_tokens</span></pre></div></div><div class="sub-gap"></div><h3>响应格式</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — &lt;think> 标签 / reasoning_details</div><pre class="code"><span class="comment">// 默认：思考嵌入 content 字符串</span>
+// budget_tokens 控制模型可用于思考的最大 token 数
+// 必须小于 max_tokens
+</code></pre><h3 id="响应格式">响应格式</h3><p>OpenAI — &lt;think> 标签 / reasoning_details</p><pre><code>// 默认：思考嵌入 content 字符串
 {
-  <span class="s">"choices"</span>: [{
-    <span class="s">"message"</span>: {
-      <span class="s">"role"</span>: <span class="s">"assistant"</span>,
-      <span class="s">"content"</span>: <span class="s">"&lt;think&gt;\nLet me analyze this step by step.\n1. First...\n2. Then...\n&lt;/think&gt;\n\nThe answer is 42."</span>
+  &quot;choices&quot;: [{
+    &quot;message&quot;: {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: &quot;&lt;think&gt;\nLet me analyze this step by step.\n1. First...\n2. Then...\n&lt;/think&gt;\n\nThe answer is 42.&quot;
     }
   }]
 }
 
-<span class="comment">// 使用 reasoning_split=true 时：</span>
+// 使用 reasoning_split=true 时：
 {
-  <span class="s">"choices"</span>: [{
-    <span class="s">"message"</span>: {
-      <span class="s">"content"</span>: <span class="s">"The answer is 42."</span>,
-      <span class="s">"reasoning_details"</span>: [{
-        <span class="s">"type"</span>: <span class="s">"reasoning.text"</span>,
-        <span class="s">"text"</span>: <span class="s">"Let me analyze this step by step.\n1. First...\n2. Then..."</span>
+  &quot;choices&quot;: [{
+    &quot;message&quot;: {
+      &quot;content&quot;: &quot;The answer is 42.&quot;,
+      &quot;reasoning_details&quot;: [{
+        &quot;type&quot;: &quot;reasoning.text&quot;,
+        &quot;text&quot;: &quot;Let me analyze this step by step.\n1. First...\n2. Then...&quot;
       }]
     }
   }]
-}</pre></div><div><div class="col-label anthropic">Anthropic — 独立 thinking block</div><pre class="code"><span class="comment">// 思考作为独立的 content block</span>
+}
+</code></pre><p>Anthropic — 独立 thinking block</p><pre><code>// 思考作为独立的 content block
 {
-  <span class="s">"content"</span>: [
+  &quot;content&quot;: [
     {
-      <span class="s">"type"</span>: <span class="s">"thinking"</span>,
-      <span class="s">"thinking"</span>: <span class="s">"Let me analyze this step by step.\n1. First...\n2. Then..."</span>
+      &quot;type&quot;: &quot;thinking&quot;,
+      &quot;thinking&quot;: &quot;Let me analyze this step by step.\n1. First...\n2. Then...&quot;
     },
     {
-      <span class="s">"type"</span>: <span class="s">"text"</span>,
-      <span class="s">"text"</span>: <span class="s">"The answer is 42."</span>
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;text&quot;: &quot;The answer is 42.&quot;
     }
   ]
 }
 
-<span class="comment">// 多步推理可能产生多个 thinking + text 交错：</span>
-<span class="comment">// [thinking, text, thinking, tool_use, ...]</span></pre></div></div><div class="sub-gap"></div><h3>Thinking 的流式事件</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — &lt;think> 标签嵌入 delta.content</div><pre class="code"><span class="comment">// 默认：思考和回答混在 delta.content 中</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"content"</span>:<span class="s">"&lt;think&gt;\nLet me"</span>}}]}
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"content"</span>:<span class="s">" analyze..."</span>}}]}
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"content"</span>:<span class="s">"&lt;/think&gt;\n\nThe answer"</span>}}]}
+// 多步推理可能产生多个 thinking + text 交错：
+// [thinking, text, thinking, tool_use, ...]
+</code></pre><h3 id="thinking-的流式事件">Thinking 的流式事件</h3><p>OpenAI — &lt;think> 标签嵌入 delta.content</p><pre><code>// 默认：思考和回答混在 delta.content 中
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;content&quot;:&quot;&lt;think&gt;\nLet me&quot;}}]}
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;content&quot;:&quot; analyze...&quot;}}]}
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;content&quot;:&quot;&lt;/think&gt;\n\nThe answer&quot;}}]}
 
-<span class="comment">// 使用 reasoning_split=true 时：
+// 使用 reasoning_split=true 时：
 // 思考增量通过 delta.reasoning_details 传输
-// 回答增量通过 delta.content 传输</span>
-data: {<span class="s">"choices"</span>:[{<span class="s">"delta"</span>:{
-  <span class="s">"reasoning_details"</span>:[{
-    <span class="s">"type"</span>:<span class="s">"reasoning.text"</span>,
-    <span class="s">"text"</span>:<span class="s">"Let me analyze..."</span>}]}}]}</pre></div><div><div class="col-label anthropic">Anthropic — 独立的 thinking block 事件</div><pre class="code"><span class="comment">// thinking block 开始 — 声明类型</span>
+// 回答增量通过 delta.content 传输
+data: {&quot;choices&quot;:[{&quot;delta&quot;:{
+  &quot;reasoning_details&quot;:[{
+    &quot;type&quot;:&quot;reasoning.text&quot;,
+    &quot;text&quot;:&quot;Let me analyze...&quot;}]}}]}
+</code></pre><p>Anthropic — 独立的 thinking block 事件</p><pre><code>// thinking block 开始 — 声明类型
 event: content_block_start
-data: {<span class="s">"index"</span>:<span class="n">0</span>,<span class="s">"content_block"</span>:{
-  <span class="s">"type"</span>:<span class="s">"thinking"</span>,<span class="s">"thinking"</span>:<span class="s">""</span>}}
+data: {&quot;index&quot;:0,&quot;content_block&quot;:{
+  &quot;type&quot;:&quot;thinking&quot;,&quot;thinking&quot;:&quot;&quot;}}
 
-<span class="comment">// thinking 增量（thinking_delta 类型）</span>
+// thinking 增量（thinking_delta 类型）
 event: content_block_delta
-data: {<span class="s">"index"</span>:<span class="n">0</span>,<span class="s">"delta"</span>:{
-  <span class="s">"type"</span>:<span class="s">"thinking_delta"</span>,
-  <span class="s">"thinking"</span>:<span class="s">"Let me analyze..."</span>}}
+data: {&quot;index&quot;:0,&quot;delta&quot;:{
+  &quot;type&quot;:&quot;thinking_delta&quot;,
+  &quot;thinking&quot;:&quot;Let me analyze...&quot;}}
 
 event: content_block_stop
-data: {<span class="s">"index"</span>:<span class="n">0</span>}
+data: {&quot;index&quot;:0}
 
-<span class="comment">// text block 开始 — 声明类型</span>
+// text block 开始 — 声明类型
 event: content_block_start
-data: {<span class="s">"index"</span>:<span class="n">1</span>,<span class="s">"content_block"</span>:{
-  <span class="s">"type"</span>:<span class="s">"text"</span>,<span class="s">"text"</span>:<span class="s">""</span>}}
+data: {&quot;index&quot;:1,&quot;content_block&quot;:{
+  &quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;&quot;}}
 
-<span class="comment">// text 增量（text_delta 类型）</span>
+// text 增量（text_delta 类型）
 event: content_block_delta
-data: {<span class="s">"index"</span>:<span class="n">1</span>,<span class="s">"delta"</span>:{
-  <span class="s">"type"</span>:<span class="s">"text_delta"</span>,
-  <span class="s">"text"</span>:<span class="s">"The answer is 42."</span>}}</pre></div></div><div class="callout"><strong>流式中的类型区分：</strong>Anthropic 在 <code class="inline">content_block_start</code> 中声明 block 类型（<code class="inline">"thinking"</code> / <code class="inline">"text"</code>），
-后续 delta 分别携带 <code class="inline">"thinking_delta"</code> 或 <code class="inline">"text_delta"</code>，无需解析标签边界。
-OpenAI 默认情况下需检测 <code class="inline">&lt;think></code> 标签来区分，使用 <code class="inline">reasoning_split</code> 可将二者分离到不同字段。</div><div class="sub-gap"></div><h3>多轮对话中的 Thinking 回传</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 保留完整 content / reasoning_details</div><pre class="code"><span class="comment">// 默认格式：原样回传包含 &lt;think&gt; 的 content</span>
-{<span class="s">"role"</span>: <span class="s">"assistant"</span>,
- <span class="s">"content"</span>: <span class="s">"&lt;think&gt;...&lt;/think&gt;\n\nThe answer is 42."</span>}
+data: {&quot;index&quot;:1,&quot;delta&quot;:{
+  &quot;type&quot;:&quot;text_delta&quot;,
+  &quot;text&quot;:&quot;The answer is 42.&quot;}}
+</code></pre><p><strong>流式中的类型区分：</strong> Anthropic 在 <code>content_block_start</code> 中声明 block 类型（<code>"thinking"</code> / <code>"text"</code>）， 后续 delta 分别携带 <code>"thinking_delta"</code> 或 <code>"text_delta"</code>，无需解析标签边界。 OpenAI 默认情况下需检测 <code>&lt;think></code> 标签来区分，使用 <code>reasoning_split</code> 可将二者分离到不同字段。</p><h3 id="多轮对话中的-thinking-回传">多轮对话中的 Thinking 回传</h3><p>OpenAI — 保留完整 content / reasoning_details</p><pre><code>// 默认格式：原样回传包含 &lt;think&gt; 的 content
+{&quot;role&quot;: &quot;assistant&quot;,
+ &quot;content&quot;: &quot;&lt;think&gt;...&lt;/think&gt;\n\nThe answer is 42.&quot;}
 
-<span class="comment">// reasoning_split 格式：回传 reasoning_details</span>
-{<span class="s">"role"</span>: <span class="s">"assistant"</span>,
- <span class="s">"content"</span>: <span class="s">"The answer is 42."</span>,
- <span class="s">"reasoning_details"</span>: [{
-   <span class="s">"type"</span>: <span class="s">"reasoning.text"</span>,
-   <span class="s">"text"</span>: <span class="s">"Let me analyze..."</span>
- }]}</pre></div><div><div class="col-label anthropic">Anthropic — 必须回传 thinking blocks + signature</div><pre class="code"><span class="comment">// 必须完整回传 content 数组（含 signature）</span>
-{<span class="s">"role"</span>: <span class="s">"assistant"</span>,
- <span class="s">"content"</span>: [
+// reasoning_split 格式：回传 reasoning_details
+{&quot;role&quot;: &quot;assistant&quot;,
+ &quot;content&quot;: &quot;The answer is 42.&quot;,
+ &quot;reasoning_details&quot;: [{
+   &quot;type&quot;: &quot;reasoning.text&quot;,
+   &quot;text&quot;: &quot;Let me analyze...&quot;
+ }]}
+</code></pre><p>Anthropic — 必须回传 thinking blocks + signature</p><pre><code>// 必须完整回传 content 数组（含 signature）
+{&quot;role&quot;: &quot;assistant&quot;,
+ &quot;content&quot;: [
    {
-     <span class="s">"type"</span>: <span class="s">"thinking"</span>,
-     <span class="s">"thinking"</span>: <span class="s">"Let me analyze..."</span>,
-     <span class="s">"signature"</span>: <span class="s">"WyIxNjk3..."</span>  <span class="comment">← 必须保留</span>
+     &quot;type&quot;: &quot;thinking&quot;,
+     &quot;thinking&quot;: &quot;Let me analyze...&quot;,
+     &quot;signature&quot;: &quot;WyIxNjk3...&quot; ← 必须保留
    },
    {
-     <span class="s">"type"</span>: <span class="s">"text"</span>,
-     <span class="s">"text"</span>: <span class="s">"The answer is 42."</span>
+     &quot;type&quot;: &quot;text&quot;,
+     &quot;text&quot;: &quot;The answer is 42.&quot;
    }
- ]}</pre></div></div><div class="annot">Anthropic 的 thinking block 在回传时必须包含 signature 字段（响应中自动返回），用于验证思考内容的完整性。丢弃 thinking blocks 会导致后续推理质量下降</div></div></section><section><div class="sec-head"><h2>Vision / 多模态输入</h2><div class="count">MULTIMODAL</div></div><div class="indent"><h3>通过 URL 传入图片</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — image_url block</div><pre class="code">{
-  <span class="s">"role"</span>: <span class="s">"user"</span>,
-  <span class="s">"content"</span>: [
+ ]}
+</code></pre><p>Anthropic 的 thinking block 在回传时必须包含 signature 字段（响应中自动返回），用于验证思考内容的完整性。丢弃 thinking blocks 会导致后续推理质量下降</p><h2 id="vision--多模态输入">Vision / 多模态输入</h2><p>MULTIMODAL</p><h3 id="通过-url-传入图片">通过 URL 传入图片</h3><p>OpenAI — image_url block</p><pre><code>{
+  &quot;role&quot;: &quot;user&quot;,
+  &quot;content&quot;: [
     {
-      <span class="s">"type"</span>: <span class="s">"text"</span>,
-      <span class="s">"text"</span>: <span class="s">"What's in this image?"</span>
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;text&quot;: &quot;What's in this image?&quot;
     },
     {
-      <span class="s">"type"</span>: <span class="s">"image_url"</span>,
-      <span class="s">"image_url"</span>: {
-        <span class="s">"url"</span>: <span class="s">"https://example.com/photo.jpg"</span>,
-        <span class="s">"detail"</span>: <span class="s">"auto"</span>  <span class="comment">← "low" / "high" / "auto"</span>
+      &quot;type&quot;: &quot;image_url&quot;,
+      &quot;image_url&quot;: {
+        &quot;url&quot;: &quot;https://example.com/photo.jpg&quot;,
+        &quot;detail&quot;: &quot;auto&quot; ← &quot;low&quot; / &quot;high&quot; / &quot;auto&quot;
       }
     }
   ]
-}</pre></div><div><div class="col-label anthropic">Anthropic — image block + source</div><pre class="code">{
-  <span class="s">"role"</span>: <span class="s">"user"</span>,
-  <span class="s">"content"</span>: [
+}
+</code></pre><p>Anthropic — image block + source</p><pre><code>{
+  &quot;role&quot;: &quot;user&quot;,
+  &quot;content&quot;: [
     {
-      <span class="s">"type"</span>: <span class="s">"text"</span>,
-      <span class="s">"text"</span>: <span class="s">"What's in this image?"</span>
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;text&quot;: &quot;What's in this image?&quot;
     },
     {
-      <span class="s">"type"</span>: <span class="s">"image"</span>,
-      <span class="s">"source"</span>: {
-        <span class="s">"type"</span>: <span class="s">"url"</span>,
-        <span class="s">"url"</span>: <span class="s">"https://example.com/photo.jpg"</span>
+      &quot;type&quot;: &quot;image&quot;,
+      &quot;source&quot;: {
+        &quot;type&quot;: &quot;url&quot;,
+        &quot;url&quot;: &quot;https://example.com/photo.jpg&quot;
       }
     }
   ]
-}</pre></div></div><div class="sub-gap"></div><h3>通过 Base64 传入图片</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — data URI 嵌入 url 字段</div><pre class="code">{
-  <span class="s">"type"</span>: <span class="s">"image_url"</span>,
-  <span class="s">"image_url"</span>: {
-    <span class="s">"url"</span>: <span class="s">"data:image/png;base64,iVBORw0KGgo..."</span>
+}
+</code></pre><h3 id="通过-base64-传入图片">通过 Base64 传入图片</h3><p>OpenAI — data URI 嵌入 url 字段</p><pre><code>{
+  &quot;type&quot;: &quot;image_url&quot;,
+  &quot;image_url&quot;: {
+    &quot;url&quot;: &quot;data:image/png;base64,iVBORw0KGgo...&quot;
   }
 }
 
-<span class="comment">// base64 数据嵌入 data URI scheme 中
+// base64 数据嵌入 data URI scheme 中
 // 格式：data:{media_type};base64,{data}
-// media_type 从 URI 中推断</span></pre></div><div><div class="col-label anthropic">Anthropic — 独立的 source 字段</div><pre class="code">{
-  <span class="s">"type"</span>: <span class="s">"image"</span>,
-  <span class="s">"source"</span>: {
-    <span class="s">"type"</span>: <span class="s">"base64"</span>,
-    <span class="s">"media_type"</span>: <span class="s">"image/png"</span>,
-    <span class="s">"data"</span>: <span class="s">"iVBORw0KGgo..."</span>
+// media_type 从 URI 中推断
+</code></pre><p>Anthropic — 独立的 source 字段</p><pre><code>{
+  &quot;type&quot;: &quot;image&quot;,
+  &quot;source&quot;: {
+    &quot;type&quot;: &quot;base64&quot;,
+    &quot;media_type&quot;: &quot;image/png&quot;,
+    &quot;data&quot;: &quot;iVBORw0KGgo...&quot;
   }
 }
 
-<span class="comment">// media_type 作为独立字段显式声明
-// data 为纯 base64 字符串（不含 data URI 前缀）</span></pre></div></div><div class="callout"><strong>类型名差异：</strong>OpenAI 用 <code class="inline">"image_url"</code>（即使传 base64 也用此类型名），
-Anthropic 用 <code class="inline">"image"</code> + <code class="inline">source.type</code> 区分 <code class="inline">"url"</code> 和 <code class="inline">"base64"</code>。<br><br><strong>Base64 传入方式：</strong>OpenAI 将 base64 编码为 <code class="inline">data:</code> URI 放入 <code class="inline">url</code> 字段（单字段）。
-Anthropic 将 <code class="inline">media_type</code> 和 <code class="inline">data</code> 分为独立字段（结构化）。<br><br><strong>精度控制：</strong>OpenAI 支持 <code class="inline">detail</code> 参数（<code class="inline">"low"</code> / <code class="inline">"high"</code> / <code class="inline">"auto"</code>）控制图片分析精度和 token 消耗。
-Anthropic 无对应参数。</div><div class="sub-gap"></div><h3>支持的图片格式</h3><div class="table-wrap"><table class="compare"><thead><tr><th>特性</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>支持格式</td><td>PNG, JPEG, GIF, WebP</td><td>PNG, JPEG, GIF, WebP</td></tr><tr><td>传入方式</td><td>URL 或 data URI（base64）</td><td>URL 或 base64（独立字段）</td></tr><tr><td>精度控制</td><td><code class="inline">detail: "low"/"high"/"auto"</code></td><td>—</td></tr><tr><td>PDF 支持</td><td>部分模型支持</td><td>✓ <code class="inline">type: "document"</code> + <code class="inline">source</code></td></tr><tr><td>多图输入</td><td>✓ 多个 image_url block</td><td>✓ 多个 image block</td></tr></tbody></table></div></div></section><section><div class="sec-head"><h2>多轮对话</h2><div class="count">CONVERSATION</div></div><div class="indent"><h3>基础多轮对话</h3><div class="dual-code"><div><div class="col-label openai">OpenAI 第二轮请求体</div><pre class="code">{
-  <span class="s">"model"</span>: <span class="s">"gpt-4o"</span>,
-  <span class="s">"messages"</span>: [
-    {<span class="s">"role"</span>: <span class="s">"system"</span>,
-     <span class="s">"content"</span>: <span class="s">"You are a helpful assistant."</span>},
-    {<span class="s">"role"</span>: <span class="s">"user"</span>,
-     <span class="s">"content"</span>: <span class="s">"What's 2+2?"</span>},
-    {<span class="s">"role"</span>: <span class="s">"assistant"</span>,
-     <span class="s">"content"</span>: <span class="s">"2 + 2 = 4."</span>},
-    {<span class="s">"role"</span>: <span class="s">"user"</span>,
-     <span class="s">"content"</span>: <span class="s">"Multiply that by 3"</span>}
+// media_type 作为独立字段显式声明
+// data 为纯 base64 字符串（不含 data URI 前缀）
+</code></pre><p><strong>类型名差异：</strong> OpenAI 用 <code>"image_url"</code>（即使传 base64 也用此类型名）， Anthropic 用 <code>"image"</code> + <code>source.type</code> 区分 <code>"url"</code> 和 <code>"base64"</code>。</p><p><strong>Base64 传入方式：</strong> OpenAI 将 base64 编码为 <code>data:</code> URI 放入 <code>url</code> 字段（单字段）。 Anthropic 将 <code>media_type</code> 和 <code>data</code> 分为独立字段（结构化）。</p><p><strong>精度控制：</strong> OpenAI 支持 <code>detail</code> 参数（<code>"low"</code> / <code>"high"</code> / <code>"auto"</code>）控制图片分析精度和 token 消耗。 Anthropic 无对应参数。</p><h3 id="支持的图片格式">支持的图片格式</h3><table><thead><tr><th>特性</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>支持格式</td><td>PNG, JPEG, GIF, WebP</td><td>PNG, JPEG, GIF, WebP</td></tr><tr><td>传入方式</td><td>URL 或 data URI（base64）</td><td>URL 或 base64（独立字段）</td></tr><tr><td>精度控制</td><td><code>detail: "low"/"high"/"auto"</code></td><td>—</td></tr><tr><td>PDF 支持</td><td>部分模型支持</td><td>✓ <code>type: "document"</code> + <code>source</code></td></tr><tr><td>多图输入</td><td>✓ 多个 image_url block</td><td>✓ 多个 image block</td></tr></tbody></table><h2 id="多轮对话">多轮对话</h2><p>CONVERSATION</p><h3 id="基础多轮对话">基础多轮对话</h3><p>OpenAI 第二轮请求体</p><pre><code>{
+  &quot;model&quot;: &quot;gpt-4o&quot;,
+  &quot;messages&quot;: [
+    {&quot;role&quot;: &quot;system&quot;,
+     &quot;content&quot;: &quot;You are a helpful assistant.&quot;},
+    {&quot;role&quot;: &quot;user&quot;,
+     &quot;content&quot;: &quot;What's 2+2?&quot;},
+    {&quot;role&quot;: &quot;assistant&quot;,
+     &quot;content&quot;: &quot;2 + 2 = 4.&quot;},
+    {&quot;role&quot;: &quot;user&quot;,
+     &quot;content&quot;: &quot;Multiply that by 3&quot;}
   ]
-}</pre></div><div><div class="col-label anthropic">Anthropic 第二轮请求体</div><pre class="code">{
-  <span class="s">"model"</span>: <span class="s">"claude-sonnet-4-20250514"</span>,
-  <span class="s">"max_tokens"</span>: <span class="n">1024</span>,
-  <span class="s">"system"</span>: <span class="s">"You are a helpful assistant."</span>,
-  <span class="s">"messages"</span>: [
-    {<span class="s">"role"</span>: <span class="s">"user"</span>,
-     <span class="s">"content"</span>: <span class="s">"What's 2+2?"</span>},
-    {<span class="s">"role"</span>: <span class="s">"assistant"</span>,
-     <span class="s">"content"</span>: [{<span class="s">"type"</span>:<span class="s">"text"</span>,
-       <span class="s">"text"</span>:<span class="s">"2 + 2 = 4."</span>}]},
-    {<span class="s">"role"</span>: <span class="s">"user"</span>,
-     <span class="s">"content"</span>: <span class="s">"Multiply that by 3"</span>}
+}
+</code></pre><p>Anthropic 第二轮请求体</p><pre><code>{
+  &quot;model&quot;: &quot;claude-sonnet-4-20250514&quot;,
+  &quot;max_tokens&quot;: 1024,
+  &quot;system&quot;: &quot;You are a helpful assistant.&quot;,
+  &quot;messages&quot;: [
+    {&quot;role&quot;: &quot;user&quot;,
+     &quot;content&quot;: &quot;What's 2+2?&quot;},
+    {&quot;role&quot;: &quot;assistant&quot;,
+     &quot;content&quot;: [{&quot;type&quot;:&quot;text&quot;,
+       &quot;text&quot;:&quot;2 + 2 = 4.&quot;}]},
+    {&quot;role&quot;: &quot;user&quot;,
+     &quot;content&quot;: &quot;Multiply that by 3&quot;}
   ]
-}</pre></div></div><div class="sub-gap"></div><h3>含 Tool Use 的多轮对话（完整流程）</h3><div class="dual-code"><div><div class="col-label openai">OpenAI — 4 条消息完成一次 Tool Use 循环</div><pre class="code"><span class="s">"messages"</span>: [
-  <span class="comment">// ① 用户提问</span>
-  {<span class="s">"role"</span>: <span class="s">"user"</span>,
-   <span class="s">"content"</span>: <span class="s">"SF weather?"</span>},
+}
+</code></pre><h3 id="含-tool-use-的多轮对话完整流程">含 Tool Use 的多轮对话（完整流程）</h3><p>OpenAI — 4 条消息完成一次 Tool Use 循环</p><pre><code>&quot;messages&quot;: [
+  // ① 用户提问
+  {&quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;SF weather?&quot;},
 
-  <span class="comment">// ② 模型决定调用工具（原样回传）</span>
-  {<span class="s">"role"</span>: <span class="s">"assistant"</span>,
-   <span class="s">"content"</span>: <span class="k">null</span>,
-   <span class="s">"tool_calls"</span>: [{
-     <span class="s">"id"</span>: <span class="s">"call_1"</span>,
-     <span class="s">"type"</span>: <span class="s">"function"</span>,
-     <span class="s">"function"</span>: {
-       <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
-       <span class="s">"arguments"</span>: <span class="s">"{\"location\":\"SF\"}"</span>
+  // ② 模型决定调用工具（原样回传）
+  {&quot;role&quot;: &quot;assistant&quot;,
+   &quot;content&quot;: null,
+   &quot;tool_calls&quot;: [{
+     &quot;id&quot;: &quot;call_1&quot;,
+     &quot;type&quot;: &quot;function&quot;,
+     &quot;function&quot;: {
+       &quot;name&quot;: &quot;get_weather&quot;,
+       &quot;arguments&quot;: &quot;{\&quot;location\&quot;:\&quot;SF\&quot;}&quot;
      }
    }]},
 
-  <span class="comment">// ③ 工具执行结果</span>
-  {<span class="s">"role"</span>: <span class="s">"tool"</span>,
-   <span class="s">"tool_call_id"</span>: <span class="s">"call_1"</span>,
-   <span class="s">"content"</span>: <span class="s">"24°C, sunny"</span>},
+  // ③ 工具执行结果
+  {&quot;role&quot;: &quot;tool&quot;,
+   &quot;tool_call_id&quot;: &quot;call_1&quot;,
+   &quot;content&quot;: &quot;24°C, sunny&quot;},
 
-  <span class="comment">// ④ 用户继续对话</span>
-  {<span class="s">"role"</span>: <span class="s">"user"</span>,
-   <span class="s">"content"</span>: <span class="s">"Will it rain tomorrow?"</span>}
-]</pre></div><div><div class="col-label anthropic">Anthropic — 3 条消息完成一次 Tool Use 循环</div><pre class="code"><span class="s">"messages"</span>: [
-  <span class="comment">// ① 用户提问</span>
-  {<span class="s">"role"</span>: <span class="s">"user"</span>,
-   <span class="s">"content"</span>: <span class="s">"SF weather?"</span>},
+  // ④ 用户继续对话
+  {&quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;Will it rain tomorrow?&quot;}
+]
+</code></pre><p>Anthropic — 3 条消息完成一次 Tool Use 循环</p><pre><code>&quot;messages&quot;: [
+  // ① 用户提问
+  {&quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;SF weather?&quot;},
 
-  <span class="comment">// ② 模型决定调用工具（完整 content 回传）</span>
-  {<span class="s">"role"</span>: <span class="s">"assistant"</span>,
-   <span class="s">"content"</span>: [
-     {<span class="s">"type"</span>: <span class="s">"text"</span>,
-      <span class="s">"text"</span>: <span class="s">"Let me check."</span>},
-     {<span class="s">"type"</span>: <span class="s">"tool_use"</span>,
-      <span class="s">"id"</span>: <span class="s">"toolu_1"</span>,
-      <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
-      <span class="s">"input"</span>: {<span class="s">"location"</span>: <span class="s">"SF"</span>}}
+  // ② 模型决定调用工具（完整 content 回传）
+  {&quot;role&quot;: &quot;assistant&quot;,
+   &quot;content&quot;: [
+     {&quot;type&quot;: &quot;text&quot;,
+      &quot;text&quot;: &quot;Let me check.&quot;},
+     {&quot;type&quot;: &quot;tool_use&quot;,
+      &quot;id&quot;: &quot;toolu_1&quot;,
+      &quot;name&quot;: &quot;get_weather&quot;,
+      &quot;input&quot;: {&quot;location&quot;: &quot;SF&quot;}}
    ]},
 
-  <span class="comment">// ③ 工具结果 + 用户续问（合并为一条 user 消息）</span>
-  {<span class="s">"role"</span>: <span class="s">"user"</span>,
-   <span class="s">"content"</span>: [
-     {<span class="s">"type"</span>: <span class="s">"tool_result"</span>,
-      <span class="s">"tool_use_id"</span>: <span class="s">"toolu_1"</span>,
-      <span class="s">"content"</span>: <span class="s">"24°C, sunny"</span>},
-     {<span class="s">"type"</span>: <span class="s">"text"</span>,
-      <span class="s">"text"</span>: <span class="s">"Will it rain tomorrow?"</span>}
+  // ③ 工具结果 + 用户续问（合并为一条 user 消息）
+  {&quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: [
+     {&quot;type&quot;: &quot;tool_result&quot;,
+      &quot;tool_use_id&quot;: &quot;toolu_1&quot;,
+      &quot;content&quot;: &quot;24°C, sunny&quot;},
+     {&quot;type&quot;: &quot;text&quot;,
+      &quot;text&quot;: &quot;Will it rain tomorrow?&quot;}
    ]}
-]</pre></div></div><div class="callout"><strong>assistant 内容回传：</strong>OpenAI 回传 assistant 消息时，<code class="inline">content</code> 和 <code class="inline">tool_calls</code> 各为独立字段。
-Anthropic 的 assistant <code class="inline">content</code> 需回传完整的 block 数组（包括 thinking / text / tool_use 所有类型）。<br><br><strong>消息合并：</strong>Anthropic 的 tool_result 和后续 user 文本可以合并在同一条 <code class="inline">role: "user"</code> 消息中（因为 block 数组支持混合类型）。
-OpenAI 的 <code class="inline">role: "tool"</code> 必须是独立消息。</div><div class="sub-gap"></div><h3>消息排列规则</h3><div class="table-wrap"><table class="compare"><thead><tr><th>规则</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>首条消息角色</td><td>通常 <code class="inline">system</code> 或 <code class="inline">user</code>（灵活）</td><td>必须是 <code class="inline">user</code>（system 在顶层字段）</td></tr><tr><td>末条消息角色</td><td>通常 <code class="inline">user</code>（灵活）</td><td>必须是 <code class="inline">user</code></td></tr><tr><td>角色交替</td><td>不强制——可连续多条同角色消息</td><td class="clay"><strong>强制交替</strong>——user 和 assistant 必须严格交替</td></tr><tr><td>连续 user 消息</td><td>✓ 允许</td><td>✗ 不允许（需合并为一条或插入 assistant）</td></tr><tr><td>system 位置</td><td>messages 中任意位置（通常首条）</td><td>仅在顶层 system 字段</td></tr></tbody></table></div><div class="annot">Anthropic 要求 messages 中 user 和 assistant 严格交替，这也是为什么 tool_result 用 role: "user" 而非独立角色——保持交替规则</div></div></section><section><div class="sec-head"><h2>总结速查</h2><div class="count">SUMMARY</div></div><div class="indent"><div class="grid grid-2"><div class="node accent"><div class="tag clay">OPENAI 设计哲学</div><h3>choices[] 包裹 · 字符串优先 · 灵活宽松</h3><p>Bearer token 认证，无需版本头。
-响应套在 choices 数组中（支持 n > 1 多候选）。
-content 通常是纯字符串，tool_calls 作为 message 的独立字段。
-参数丰富（penalty / logprobs / seed / response_format），允许精细控制输出分布。
-消息排列灵活，支持连续同角色消息。
-temperature 范围 0–2。</p></div><div class="node dark"><div class="tag">ANTHROPIC 设计哲学</div><h3>content blocks · 结构化优先 · 严格有序</h3><p>自定义 header 认证 + 版本控制。
-响应顶层 content block 数组，每个 block 有明确 type。
-工具参数是已解析对象，工具结果以 user 角色回传。
-System Prompt 为独立字段，max_tokens 必填。
-Thinking 有独立 block 和 budget 控制。
-消息必须 user / assistant 严格交替。
-temperature 范围 0–1。</p></div></div></div></section><section><div class="sec-head"><h2>常见问题</h2><div class="count">FAQ</div></div><div class="indent"><div class="qa-grid"><details class="qa-card"><summary><span class="qa-num">Q1</span>
-<span class="qa-q">两套 API 的请求体可以直接互转吗？</span>
-<span class="qa-toggle">+</span></summary><div class="qa-a"><span class="qa-a-label">A</span><div class="qa-a-body"><p>不可以直接互转，需要处理多个关键差异：
-① <code>system</code> 消息需从 messages 中提取为顶层字段（或反向回填）；
-② <code>max_tokens</code> 在 Anthropic 中必填；
-③ Tool 定义的 <code>"parameters"</code> 需改为 <code>"input_schema"</code>（反之亦然），并去除/添加 <code>"type":"function"</code> 包裹；
-④ Tool 结果的 role 不同（<code>"tool"</code> vs <code>"user"</code> + <code>"tool_result"</code>）；
-⑤ <code>tool_choice</code> 格式不同（字符串 vs 对象）；
-⑥ 认证 header 完全不同；
-⑦ Anthropic 要求消息严格交替，可能需要合并连续同角色消息。
-建议编写一个请求适配层做映射。</p></div></div></details><details class="qa-card"><summary><span class="qa-num">Q2</span>
-<span class="qa-q">Anthropic 为什么要把 system 提为独立字段？</span>
-<span class="qa-toggle">+</span></summary><div class="qa-a"><span class="qa-a-label">A</span><div class="qa-a-body"><p>Anthropic 认为 System Prompt 在语义上与对话消息不同——
-它是对模型行为的<strong>全局指令</strong>，而非对话的一部分。
-独立字段可以避免 system 消息被意外修改或在多轮对话中丢失，
-同时也让请求体结构更清晰：messages 只包含用户和助手的交互。
-此外，独立字段支持 <code>cache_control</code> 做精细的 prompt caching 控制。</p></div></div></details><details class="qa-card"><summary><span class="qa-num">Q3</span>
-<span class="qa-q">content blocks 相比纯字符串有什么优势？</span>
-<span class="qa-toggle">+</span></summary><div class="qa-a"><span class="qa-a-label">A</span><div class="qa-a-body"><p>content block 数组使一次响应可以包含<strong>多种类型的内容</strong>：
-text（文本）、thinking（推理过程）、tool_use（工具调用）等，
-每种类型都有明确的 <code>"type"</code> 标识和对应的数据结构。
-这让客户端可以用标准的遍历逻辑处理混合内容，
-而不需要用正则表达式从字符串中解析特殊标记（如 <code>&lt;think></code> 标签）。
-在 Agentic 场景（交错思考 + 多次工具调用）中，结构化的优势尤其明显。</p></div></div></details><details class="qa-card"><summary><span class="qa-num">Q4</span>
-<span class="qa-q">流式 SSE 中如何区分 thinking 和 text 的增量？</span>
-<span class="qa-toggle">+</span></summary><div class="qa-a"><span class="qa-a-label">A</span><div class="qa-a-body"><p><strong>OpenAI：</strong>默认情况下，thinking 和 text 混在 <code>delta.content</code> 中（以 <code>&lt;think></code> 标签区分），
-需客户端自行检测标签边界。
-如启用 <code>"reasoning_split": true</code>，thinking 增量通过 <code>delta.reasoning_details</code> 字段发送，text 通过 <code>delta.content</code>。</p><p><strong>Anthropic：</strong>每个 content block 有独立的 <code>content_block_start</code> → <code>content_block_delta</code> → <code>content_block_stop</code> 生命周期。
-<code>content_block_start</code> 事件中声明 block 类型（<code>"thinking"</code> / <code>"text"</code>），
-后续 delta 分别携带 <code>"thinking_delta"</code> 或 <code>"text_delta"</code>，无需额外解析。</p></div></div></details><details class="qa-card"><summary><span class="qa-num">Q5</span>
-<span class="qa-q">为什么 Anthropic 的 tool 参数 (input) 已经是 JSON 对象，而 OpenAI 是字符串？</span>
-<span class="qa-toggle">+</span></summary><div class="qa-a"><span class="qa-a-label">A</span><div class="qa-a-body"><p>这反映了两家 API 的不同设计选择。OpenAI 的 <code>arguments</code> 是 <strong>JSON 字符串</strong>，
-历史上沿袭了早期 function calling 的设计——在流式传输中，字符串片段更容易拼接。
-但这意味着客户端在非流式响应中需要多一步 <code>JSON.parse()</code>。</p><p>Anthropic 的 <code>input</code> 是<strong>已解析的 JSON 对象</strong>，
-与 content block 的结构化哲学一致——所有数据都已结构化，客户端无需二次解析。
-在流式模式下，Anthropic 使用 <code>input_json_delta</code>（partial JSON 字符串），客户端在 <code>content_block_stop</code> 后拿到完整的 parsed 对象。</p></div></div></details><details class="qa-card"><summary><span class="qa-num">Q6</span>
-<span class="qa-q">Anthropic 的消息交替要求会带来什么影响？</span>
-<span class="qa-toggle">+</span></summary><div class="qa-a"><span class="qa-a-label">A</span><div class="qa-a-body"><p>Anthropic 要求 <code>messages</code> 中 user 和 assistant <strong>严格交替</strong>，首尾都必须是 user。
-这带来几个实际影响：</p><p>① 不能连续发送多条 user 消息——需合并为一条（用 content block 数组组合文本和 tool_result）；<br>② 工具结果必须用 <code>role: "user"</code>——因为 tool_result 必须跟在 assistant 之后，且下一条必须是 user；<br>③ 如果要模拟"系统消息插入对话中间"，需要放在 user 消息的 content 数组里；<br>④ 合并/拆分消息时需要注意 block 类型的兼容性。</p><p>OpenAI 没有此限制，消息排列更灵活，但也更容易出现"忘记传 system 消息"等问题。</p></div></div></details></div></div></section><footer class="article-footer"><div class="quote">"Good APIs are not about being clever;<br>they are about being clear."</div><div class="meta">2026 · API FORMAT REFERENCE · AN CHENG</div></footer></div></div><footer class="post-footer"><ul class="post-tags"><li><a href="https://blog.ans20xx.com/tags/ai/">AI</a></li><li><a href="https://blog.ans20xx.com/tags/api/">API</a></li><li><a href="https://blog.ans20xx.com/tags/openai/">OpenAI</a></li><li><a href="https://blog.ans20xx.com/tags/anthropic/">Anthropic</a></li></ul></footer></article></main><footer class="footer"><span>&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span></footer><a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g"><span class="topInner"><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
-<span id="read_progress"></span>
-</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script><div id="site-toast" class="site-toast"></div><script>window.showToast=function(e,t=2e3){const n=document.getElementById("site-toast");if(!n)return;n.textContent=e,n.classList.add("show"),clearTimeout(window.__toastTimer),window.__toastTimer=setTimeout(()=>{n.classList.remove("show")},t)}</script></body></html>
+]
+</code></pre><p><strong>assistant 内容回传：</strong> OpenAI 回传 assistant 消息时，<code>content</code> 和 <code>tool_calls</code> 各为独立字段。 Anthropic 的 assistant <code>content</code> 需回传完整的 block 数组（包括 thinking / text / tool_use 所有类型）。</p><p><strong>消息合并：</strong> Anthropic 的 tool_result 和后续 user 文本可以合并在同一条 <code>role: "user"</code> 消息中（因为 block 数组支持混合类型）。 OpenAI 的 <code>role: "tool"</code> 必须是独立消息。</p><h3 id="消息排列规则">消息排列规则</h3><table><thead><tr><th>规则</th><th>OpenAI</th><th>Anthropic</th></tr></thead><tbody><tr><td>首条消息角色</td><td>通常 <code>system</code> 或 <code>user</code>（灵活）</td><td>必须是 <code>user</code>（system 在顶层字段）</td></tr><tr><td>末条消息角色</td><td>通常 <code>user</code>（灵活）</td><td>必须是 <code>user</code></td></tr><tr><td>角色交替</td><td>不强制——可连续多条同角色消息</td><td><strong>强制交替</strong> ——user 和 assistant 必须严格交替</td></tr><tr><td>连续 user 消息</td><td>✓ 允许</td><td>✗ 不允许（需合并为一条或插入 assistant）</td></tr><tr><td>system 位置</td><td>messages 中任意位置（通常首条）</td><td>仅在顶层 system 字段</td></tr></tbody></table><p>Anthropic 要求 messages 中 user 和 assistant 严格交替，这也是为什么 tool_result 用 role: &ldquo;user&rdquo; 而非独立角色——保持交替规则</p><h2 id="总结速查">总结速查</h2><p>SUMMARY</p><p>OPENAI 设计哲学</p><h3 id="choices-包裹--字符串优先--灵活宽松">choices[] 包裹 · 字符串优先 · 灵活宽松</h3><p>Bearer token 认证，无需版本头。 响应套在 choices 数组中（支持 n > 1 多候选）。 content 通常是纯字符串，tool_calls 作为 message 的独立字段。 参数丰富（penalty / logprobs / seed / response_format），允许精细控制输出分布。 消息排列灵活，支持连续同角色消息。 temperature 范围 0–2。</p><p>ANTHROPIC 设计哲学</p><h3 id="content-blocks--结构化优先--严格有序">content blocks · 结构化优先 · 严格有序</h3><p>自定义 header 认证 + 版本控制。 响应顶层 content block 数组，每个 block 有明确 type。 工具参数是已解析对象，工具结果以 user 角色回传。 System Prompt 为独立字段，max_tokens 必填。 Thinking 有独立 block 和 budget 控制。 消息必须 user / assistant 严格交替。 temperature 范围 0–1。</p><h2 id="常见问题">常见问题</h2><p>FAQ</p><h3 id="q1--两套-api-的请求体可以直接互转吗">Q1 · 两套 API 的请求体可以直接互转吗？</h3><p>A</p><p>不可以直接互转，需要处理多个关键差异： ① <code>system</code> 消息需从 messages 中提取为顶层字段（或反向回填）； ② <code>max_tokens</code> 在 Anthropic 中必填； ③ Tool 定义的 <code>"parameters"</code> 需改为 <code>"input_schema"</code>（反之亦然），并去除/添加 <code>"type":"function"</code> 包裹； ④ Tool 结果的 role 不同（<code>"tool"</code> vs <code>"user"</code> + <code>"tool_result"</code>）； ⑤ <code>tool_choice</code> 格式不同（字符串 vs 对象）； ⑥ 认证 header 完全不同； ⑦ Anthropic 要求消息严格交替，可能需要合并连续同角色消息。 建议编写一个请求适配层做映射。</p><h3 id="q2--anthropic-为什么要把-system-提为独立字段">Q2 · Anthropic 为什么要把 system 提为独立字段？</h3><p>A</p><p>Anthropic 认为 System Prompt 在语义上与对话消息不同—— 它是对模型行为的 <strong>全局指令</strong> ，而非对话的一部分。 独立字段可以避免 system 消息被意外修改或在多轮对话中丢失， 同时也让请求体结构更清晰：messages 只包含用户和助手的交互。 此外，独立字段支持 <code>cache_control</code> 做精细的 prompt caching 控制。</p><h3 id="q3--content-blocks-相比纯字符串有什么优势">Q3 · content blocks 相比纯字符串有什么优势？</h3><p>A</p><p>content block 数组使一次响应可以包含 <strong>多种类型的内容</strong> ： text（文本）、thinking（推理过程）、tool_use（工具调用）等， 每种类型都有明确的 <code>"type"</code> 标识和对应的数据结构。 这让客户端可以用标准的遍历逻辑处理混合内容， 而不需要用正则表达式从字符串中解析特殊标记（如 <code>&lt;think></code> 标签）。 在 Agentic 场景（交错思考 + 多次工具调用）中，结构化的优势尤其明显。</p><h3 id="q4--流式-sse-中如何区分-thinking-和-text-的增量">Q4 · 流式 SSE 中如何区分 thinking 和 text 的增量？</h3><p>A</p><p><strong>OpenAI：</strong> 默认情况下，thinking 和 text 混在 <code>delta.content</code> 中（以 <code>&lt;think></code> 标签区分）， 需客户端自行检测标签边界。 如启用 <code>"reasoning_split": true</code>，thinking 增量通过 <code>delta.reasoning_details</code> 字段发送，text 通过 <code>delta.content</code>。</p><p><strong>Anthropic：</strong> 每个 content block 有独立的 <code>content_block_start</code> → <code>content_block_delta</code> → <code>content_block_stop</code> 生命周期。 <code>content_block_start</code> 事件中声明 block 类型（<code>"thinking"</code> / <code>"text"</code>）， 后续 delta 分别携带 <code>"thinking_delta"</code> 或 <code>"text_delta"</code>，无需额外解析。</p><h3 id="q5--为什么-anthropic-的-tool-参数-input-已经是-json-对象而-openai-是字符串">Q5 · 为什么 Anthropic 的 tool 参数 (input) 已经是 JSON 对象，而 OpenAI 是字符串？</h3><p>A</p><p>这反映了两家 API 的不同设计选择。OpenAI 的 <code>arguments</code> 是 <strong>JSON 字符串</strong> ， 历史上沿袭了早期 function calling 的设计——在流式传输中，字符串片段更容易拼接。 但这意味着客户端在非流式响应中需要多一步 <code>JSON.parse()</code>。</p><p>Anthropic 的 <code>input</code> 是 <strong>已解析的 JSON 对象</strong> ， 与 content block 的结构化哲学一致——所有数据都已结构化，客户端无需二次解析。 在流式模式下，Anthropic 使用 <code>input_json_delta</code>（partial JSON 字符串），客户端在 <code>content_block_stop</code> 后拿到完整的 parsed 对象。</p><h3 id="q6--anthropic-的消息交替要求会带来什么影响">Q6 · Anthropic 的消息交替要求会带来什么影响？</h3><p>A</p><p>Anthropic 要求 <code>messages</code> 中 user 和 assistant <strong>严格交替</strong> ，首尾都必须是 user。 这带来几个实际影响：</p><p>① 不能连续发送多条 user 消息——需合并为一条（用 content block 数组组合文本和 tool_result）；
+② 工具结果必须用 <code>role: "user"</code>——因为 tool_result 必须跟在 assistant 之后，且下一条必须是 user；
+③ 如果要模拟"系统消息插入对话中间"，需要放在 user 消息的 content 数组里；
+④ 合并/拆分消息时需要注意 block 类型的兼容性。</p><p>OpenAI 没有此限制，消息排列更灵活，但也更容易出现"忘记传 system 消息"等问题。</p><p>&ldquo;Good APIs are not about being clever;
+they are about being clear.&rdquo;</p><p>2026 · API FORMAT REFERENCE · AN CHENG</p></div><footer class="post-footer"><ul class="post-tags"><li><a href="/tags/ai/">AI</a></li><li><a href="/tags/api/">API</a></li><li><a href="/tags/openai/">OpenAI</a></li><li><a href="/tags/anthropic/">Anthropic</a></li></ul></footer></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

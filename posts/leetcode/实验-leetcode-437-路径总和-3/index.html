@@ -1,204 +1,112 @@
-<!doctype html><html lang="zh" dir="auto"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="robots" content="index, follow"><title>实验-leetcode-437-路径总和 3 | 安橙的博客</title><meta name="keywords" content><meta name="description" content="实验元数据 (Meta Data)
-实验编号/标题：实验-leetcode-437-路径总和 3"><meta name="author" content="map[name:An]"><link rel="canonical" href="https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-437-%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-3/"><link crossorigin="anonymous" href="/assets/css/stylesheet.86604d73028cb8c469fdf1bff1b8f1221026c402d1d756728b7690b8bed9ab5e.css" integrity="sha256-hmBNcwKMuMRp/fG/8bjxIhAmxALR11Zyi3aQuL7Zq14=" rel="preload stylesheet" as="style"><link rel="icon" href="https://blog.ans20xx.com/img/ancheng-favicon.svg"><link rel="apple-touch-icon" href="https://blog.ans20xx.com/apple-touch-icon.png"><link rel="mask-icon" href="https://blog.ans20xx.com/safari-pinned-tab.svg"><meta name="theme-color" content="#2e2e33"><meta name="msapplication-TileColor" content="#2e2e33"><link rel="alternate" hreflang="zh" href="https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-437-%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-3/"><noscript><style>.top-link{display:none}</style></noscript><link rel="dns-prefetch" href="//cdn.jsdmirror.com"><link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin><link rel="dns-prefetch" href="//an-img.oss-cn-hangzhou.aliyuncs.com"><link rel="preconnect" href="https://an-img.oss-cn-hangzhou.aliyuncs.com" crossorigin><script>/Macintosh/.test(navigator.userAgent)||["https://cdn.jsdmirror.com/npm/charter-webfont@4/charter.min.css","https://cdn.jsdmirror.com/npm/@fontsource/noto-serif-sc@latest/400.css"].forEach(function(e){var t=document.createElement("link");t.rel="stylesheet",t.href=e,document.head.appendChild(t)})</script><style>.post-content .highlight{overflow-x:auto}.post-content pre code{word-break:normal}</style><link crossorigin="anonymous" href="/assets/css/fancyboxcss.min.css" integrity rel="stylesheet"><script crossorigin="anonymous" src="/assets/js/fancybox.js" integrity defer></script></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/" accesskey="h" title="安橙的博客 (Alt + H)">安橙的博客</a><div class="logo-switches"></div></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/" title="博文"><span>博文</span></a></li><li><a href="https://blog.ans20xx.com/tags/" title="标签"><span>标签</span></a></li><li><a href="https://blog.ans20xx.com/search/" title="搜索"><span>搜索</span></a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title entry-hint-parent">实验-leetcode-437-路径总和 3</h1><div class="post-meta"><span title='2026-02-25 00:00:00 +0000 UTC'>二月 25, 2026</span></div></header><aside id="toc-container" class="toc-container"><button id="toc-trigger" aria-label="目录">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg></button><div class="toc"><div class="toc-header"><span class="toc-title">目录</span>
-<button id="toc-close" aria-label="关闭目录">&#215;</button></div><div class="inner"><ul><li><a href="#%e5%ae%9e%e9%aa%8c%e5%85%83%e6%95%b0%e6%8d%ae-meta-data" aria-label="实验元数据 (Meta Data)">实验元数据 (Meta Data)</a></li><li><a href="#-%e5%ae%9e%e9%aa%8c%e5%89%8d%e5%81%87%e8%ae%be%e4%b8%8e%e7%9b%ae%e6%a0%87-plan" aria-label="🎯 实验前：假设与目标 (Plan)">🎯 实验前：假设与目标 (Plan)</a></li><li><a href="#-%e5%ae%9e%e9%aa%8c%e4%b8%ad%e6%89%a7%e8%a1%8c%e6%ad%a5%e9%aa%a4%e4%b8%8e%e5%8f%98%e9%87%8f-do" aria-label="🧪 实验中：执行步骤与变量 (Do)">🧪 实验中：执行步骤与变量 (Do)</a><ul><li><a href="#%e6%89%a7%e8%a1%8c%e6%ad%a5%e9%aa%a4-log-%e6%9a%b4%e5%8a%9b%e6%80%9d%e8%b7%af" aria-label="执行步骤 (Log) 【暴力思路】：">执行步骤 (Log) 【暴力思路】：</a><ul><li><a href="#%e7%ac%ac%e4%b8%80%e6%ad%a5-%e8%ae%a1%e7%ae%97%e4%bb%a5%e5%bd%93%e5%89%8d%e8%8a%82%e7%82%b9%e4%b8%ba%e8%b5%b7%e7%82%b9%e7%9a%84%e8%b7%af%e5%be%84%e5%92%8c%e6%95%b0%e9%87%8f" aria-label="第一步 计算以当前节点为起点的路径和数量">第一步 计算以当前节点为起点的路径和数量</a></li><li><a href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e9%80%92%e5%bd%92%e9%81%8d%e5%8e%86%e5%b7%a6%e5%8f%b3%e5%ad%90%e6%a0%91" aria-label="第二步：递归遍历左右子树">第二步：递归遍历左右子树</a></li><li><a href="#%e7%ac%ac%e4%b8%89%e6%ad%a5%e7%bb%84%e5%90%88%e4%b8%a4%e6%ae%b5" aria-label="第三步：组合两段">第三步：组合两段</a></li></ul></li><li><a href="#%e6%89%a7%e8%a1%8c%e6%ad%a5%e9%aa%a4-log-%e5%89%8d%e7%bc%80%e5%92%8c%e6%80%9d%e8%b7%af" aria-label="执行步骤 (Log) 【前缀和思路】：">执行步骤 (Log) 【前缀和思路】：</a><ul><li><a href="#%e7%ac%ac%e4%b8%80%e6%ad%a5%e7%ae%97%e5%87%ba%e5%89%8d%e7%bc%80%e5%92%8c" aria-label="第一步：算出前缀和">第一步：算出前缀和</a></li><li><a href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e5%b0%86%e5%89%8d%e7%bc%80%e5%92%8c%e5%ad%98%e5%82%a8%e5%88%b0-map-%e4%b8%ad" aria-label="第二步：将前缀和存储到 Map 中">第二步：将前缀和存储到 Map 中</a></li><li><a href="#%e7%ac%ac%e4%b8%89%e6%ad%a5%e7%ae%97%e5%87%ba%e4%bb%a5%e5%bd%93%e5%89%8d%e8%8a%82%e7%82%b9%e4%b8%ba%e7%bb%88%e7%82%b9%e7%9a%84%e5%89%8d%e7%bc%80%e5%92%8c--cursum---targetsum-%e7%9a%84%e6%95%b0%e9%87%8f" aria-label="第三步：算出以当前节点为终点的前缀和 = curSum - targetSum 的数量">第三步：算出以当前节点为终点的前缀和 = curSum - targetSum 的数量</a></li><li><a href="#%e7%ac%ac%e5%9b%9b%e6%ad%a5%e9%80%92%e5%bd%92%e9%81%8d%e5%8e%86%e5%b7%a6%e5%8f%b3%e5%ad%90%e6%a0%91" aria-label="第四步：递归遍历左右子树">第四步：递归遍历左右子树</a></li><li><a href="#%e7%ac%ac%e4%ba%94%e6%ad%a5%e7%bc%96%e5%86%99%e5%ae%8c%e6%95%b4%e7%a8%8b%e5%ba%8f" aria-label="第五步：编写完整程序">第五步：编写完整程序</a></li></ul></li></ul></li><li><a href="#-%e5%ae%9e%e9%aa%8c%e5%90%8e%e7%8e%b0%e8%b1%a1%e4%b8%8e%e6%95%b0%e6%8d%ae-check" aria-label="👁️ 实验后：现象与数据 (Check)">👁️ 实验后：现象与数据 (Check)</a></li><li><a href="#-%e6%b7%b1%e5%ba%a6%e5%a4%8d%e7%9b%98%e5%88%86%e6%9e%90%e4%b8%8e%e7%bb%93%e8%ae%ba-act" aria-label="🧠 深度复盘：分析与结论 (Act)">🧠 深度复盘：分析与结论 (Act)</a></li><li><a href="#%e4%b8%8b%e4%b8%80%e6%ad%a5%e8%a1%8c%e5%8a%a8-next-actions" aria-label="下一步行动 (Next Actions)：">下一步行动 (Next Actions)：</a></li></ul></div></div></aside><script>(function(){var t,n,s,o,e=document.getElementById("toc-container"),i=document.getElementById("toc-trigger"),l=document.getElementById("toc-close");if(!e||!i)return;function h(){e.classList.add("toc-open")}function a(){e.classList.remove("toc-open")}function c(){e.classList.toggle("toc-open")}i.addEventListener("click",function(e){e.stopPropagation(),c()}),l.addEventListener("click",function(e){e.stopPropagation(),a()}),document.addEventListener("click",function(t){e.classList.contains("toc-open")&&!e.querySelector(".toc").contains(t.target)&&a()}),s=!1,document.addEventListener("mousemove",function(t){var n=48;t.clientX<n&&!e.classList.contains("toc-open")?s||(i.classList.add("toc-trigger-visible"),s=!0):e.classList.contains("toc-open")||s&&(i.classList.remove("toc-trigger-visible"),s=!1)}),t=[],o=[];function d(e,t,n){var o,i,s=(e||"").trim().toLowerCase().replace(/[/\\?#[\]@!$&'()*+,;=:。·—–"“”‘’、，：；（）]/g,"-").replace(/\s+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");for(s||(s="section-"+(t+1)),i=s,o=2;n[s]||document.getElementById(s);)s=i+"-"+o,o+=1;return n[s]=!0,s}function u(){var n={};t=Array.from(document.querySelectorAll(".post-content h1,.post-content h2,.post-content h3,.post-content h4,.post-content h5,.post-content h6")),o=Array.from(e.querySelectorAll('.inner a[href^="#"]')),t.forEach(function(e,t){e.id?n[e.id]=!0:e.id=d(e.textContent,t,n)}),o.forEach(function(e,n){var s=t[n];if(!s)return;e.setAttribute("href","#"+s.id),e.dataset.targetId=s.id,e.addEventListener("click",function(e){e.preventDefault(),s.scrollIntoView({behavior:"smooth",block:"start"}),history.pushState?history.pushState(null,"","#"+s.id):location.hash=s.id,setTimeout(a,150)})})}function r(e){o.forEach(function(t){t.classList.toggle("active",t.dataset.targetId===e.id)})}document.addEventListener("DOMContentLoaded",function(){u(),t.length>0&&(n=t[0],r(n));var e=document.getElementById("top-link");e&&e.addEventListener("click",function(e){e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("scroll",function(){var s,o,a,c,i=window.pageYOffset||document.documentElement.scrollTop;if(i===0||!t||t.length===0)return;n=Array.from(t).find(function(e){var t=e.getBoundingClientRect().top+window.pageYOffset-i;return t>0&&t<window.innerHeight/2})||n,r(n),s=e.querySelector('.inner a[data-target-id="'+n.id+'"]'),o=e.querySelector(".toc .inner"),s&&o&&e.classList.contains("toc-open")&&(a=s.offsetTop,c=o.clientHeight,o.scrollTo({top:a-c/2+s.clientHeight/2,behavior:"smooth"}))},!1),document.querySelectorAll(".toc .inner li").forEach(function(e){var t,n,s=e.querySelector(":scope > ul");if(!s)return;t=document.createElement("button"),t.className="toc-toggle",t.setAttribute("aria-label","折叠"),t.textContent="▾",t.addEventListener("click",function(e){e.preventDefault(),e.stopPropagation();var n=s.classList.toggle("toc-collapsed");t.textContent=n?"▸":"▾",t.setAttribute("aria-label",n?"展开":"折叠")}),n=e.querySelector(":scope > a"),n&&n.after(t)})})()</script><div class="post-content"><h1 id="实验元数据-meta-data">实验元数据 (Meta Data)<a hidden class="anchor" aria-hidden="true" href="#实验元数据-meta-data">#</a></h1><p>实验编号/标题：实验-leetcode-437-路径总和 3</p><p>日期：2026-02-25</p><p>所属领域/标签：#LeetCode</p><h1 id="-实验前假设与目标-plan">🎯 实验前：假设与目标 (Plan)<a hidden class="anchor" aria-hidden="true" href="#-实验前假设与目标-plan">#</a></h1><p>当前问题 (Problem)：</p><p><div class="post-img-view"><a data-fancybox href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225094719661.png" onclick=window.Fancybox||event.preventDefault()><img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225094719661.png" alt></a></div></p><p>实验目标 (Objective)：</p><p>解决路径和问题</p><h1 id="-实验中执行步骤与变量-do">🧪 实验中：执行步骤与变量 (Do)<a hidden class="anchor" aria-hidden="true" href="#-实验中执行步骤与变量-do">#</a></h1><h2 id="执行步骤-log-暴力思路">执行步骤 (Log) 【暴力思路】：<a hidden class="anchor" aria-hidden="true" href="#执行步骤-log-暴力思路">#</a></h2><p>暴力思路：双递归</p><p>统计：</p><ol><li>以当前节点为起点，统计向下的路径和数量</li><li>递归遍历左右子树，重复上述过程</li></ol><h3 id="第一步-计算以当前节点为起点的路径和数量">第一步 计算以当前节点为起点的路径和数量<a hidden class="anchor" aria-hidden="true" href="#第一步-计算以当前节点为起点的路径和数量">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">private</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">node</span>, <span style="color:#859900;font-weight:700">long</span> <span style="color:#268bd2">target</span>) {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span> == <span style="color:#859900;font-weight:700">null</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">res</span> = <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span> == <span style="color:#268bd2">target</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">res</span> ++;
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">res</span> += <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">node</span>.<span style="color:#268bd2">left</span>, <span style="color:#268bd2">target</span> - <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>);
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">res</span> += <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">node</span>.<span style="color:#268bd2">right</span>, <span style="color:#268bd2">target</span> - <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>);
-</span></span><span style="display:flex"><span>    
-</span></span><span style="display:flex"><span>    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>;
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h3 id="第二步递归遍历左右子树">第二步：递归遍历左右子树<a hidden class="anchor" aria-hidden="true" href="#第二步递归遍历左右子树">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">9
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span>    <span style="color:#859900">public</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">pathSum</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">root</span>, <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">targetSum</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">if</span> (<span style="color:#268bd2">root</span> == <span style="color:#859900;font-weight:700">null</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">root</span>, <span style="color:#268bd2">targetSum</span>)
-</span></span><span style="display:flex"><span>                + <span style="color:#268bd2">pathSum</span>(<span style="color:#268bd2">root</span>.<span style="color:#268bd2">left</span>, <span style="color:#268bd2">targetSum</span>)
-</span></span><span style="display:flex"><span>                + <span style="color:#268bd2">pathSum</span>(<span style="color:#268bd2">root</span>.<span style="color:#268bd2">right</span>, <span style="color:#268bd2">targetSum</span>);
-</span></span><span style="display:flex"><span>    }
-</span></span></code></pre></td></tr></table></div></div><h3 id="第三步组合两段">第三步：组合两段<a hidden class="anchor" aria-hidden="true" href="#第三步组合两段">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">class</span> <span style="color:#cb4b16">Solution</span> {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">public</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">pathSum</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">root</span>, <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">targetSum</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">if</span> (<span style="color:#268bd2">root</span> == <span style="color:#859900;font-weight:700">null</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">root</span>, <span style="color:#268bd2">targetSum</span>)
-</span></span><span style="display:flex"><span>                + <span style="color:#268bd2">pathSum</span>(<span style="color:#268bd2">root</span>.<span style="color:#268bd2">left</span>, <span style="color:#268bd2">targetSum</span>)
-</span></span><span style="display:flex"><span>                + <span style="color:#268bd2">pathSum</span>(<span style="color:#268bd2">root</span>.<span style="color:#268bd2">right</span>, <span style="color:#268bd2">targetSum</span>);
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">node</span>, <span style="color:#859900;font-weight:700">long</span> <span style="color:#268bd2">target</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span> == <span style="color:#859900;font-weight:700">null</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>        <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">res</span> = <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>        <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span> == <span style="color:#268bd2">target</span>) {
-</span></span><span style="display:flex"><span>            <span style="color:#268bd2">res</span> ++;
-</span></span><span style="display:flex"><span>        }
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">res</span> += <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">node</span>.<span style="color:#268bd2">left</span>, <span style="color:#268bd2">target</span> - <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>);
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">res</span> += <span style="color:#268bd2">countFrom</span>(<span style="color:#268bd2">node</span>.<span style="color:#268bd2">right</span>, <span style="color:#268bd2">target</span> - <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>);
-</span></span><span style="display:flex"><span>        
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>;
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h2 id="执行步骤-log-前缀和思路">执行步骤 (Log) 【前缀和思路】：<a hidden class="anchor" aria-hidden="true" href="#执行步骤-log-前缀和思路">#</a></h2><p>前缀和思路</p><ol><li>当前路径和 curSum，如果存在某个历史前缀和 currSum - targetSum</li><li>说明中间这段路径和为 targetSum</li><li>DFS 遍历</li><li>维护前缀和 Map</li><li>回溯时删除当前前缀</li></ol><h3 id="第一步算出前缀和">第一步：算出前缀和<a hidden class="anchor" aria-hidden="true" href="#第一步算出前缀和">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">private</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">dfs</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">node</span>, <span style="color:#859900;font-weight:700">long</span> <span style="color:#268bd2">curSum</span>, <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">targetSum</span>) {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span> == <span style="color:#268bd2">0</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">curSum</span> += <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>;
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h3 id="第二步将前缀和存储到-map-中">第二步：将前缀和存储到 Map 中<a hidden class="anchor" aria-hidden="true" href="#第二步将前缀和存储到-map-中">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">private</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">dfs</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">node</span>, <span style="color:#859900;font-weight:700">long</span> <span style="color:#268bd2">curSum</span>, <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">Long</span>, <span style="color:#268bd2">Integer</span>&gt; <span style="color:#268bd2">prefix</span>) {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span> == <span style="color:#859900;font-weight:700">null</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">curSum</span> += <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>;
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">put</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">getOrDefault</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">0</span>) + <span style="color:#268bd2">1</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">put</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">get</span>(<span style="color:#268bd2">curSum</span>) - <span style="color:#268bd2">1</span>);
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h3 id="第三步算出以当前节点为终点的前缀和--cursum---targetsum-的数量">第三步：算出以当前节点为终点的前缀和 = curSum - targetSum 的数量<a hidden class="anchor" aria-hidden="true" href="#第三步算出以当前节点为终点的前缀和--cursum---targetsum-的数量">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">private</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">dfs</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">node</span>, <span style="color:#859900;font-weight:700">long</span> <span style="color:#268bd2">curSum</span>, <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">Long</span>, <span style="color:#268bd2">Integer</span>&gt; <span style="color:#268bd2">prefix</span>) {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span> == <span style="color:#859900;font-weight:700">null</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">curSum</span> += <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>;
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">res</span> = <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">getOrDefault</span>(<span style="color:#268bd2">curSum</span> - <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">0</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">put</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">getOrDefault</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">0</span>) + <span style="color:#268bd2">1</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">put</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">get</span>(<span style="color:#268bd2">curSum</span>) - <span style="color:#268bd2">1</span>);
-</span></span><span style="display:flex"><span>    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>;
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h3 id="第四步递归遍历左右子树">第四步：递归遍历左右子树<a hidden class="anchor" aria-hidden="true" href="#第四步递归遍历左右子树">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span><span style="color:#859900">private</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">dfs</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">node</span>, <span style="color:#859900;font-weight:700">long</span> <span style="color:#268bd2">curSum</span>, <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">Long</span>, <span style="color:#268bd2">Integer</span>&gt; <span style="color:#268bd2">prefix</span>) {
-</span></span><span style="display:flex"><span>    <span style="color:#859900">if</span> (<span style="color:#268bd2">node</span> == <span style="color:#859900;font-weight:700">null</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">0</span>;
-</span></span><span style="display:flex"><span>    }
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">curSum</span> += <span style="color:#268bd2">node</span>.<span style="color:#268bd2">val</span>;
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">res</span> = <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">getOrDefault</span>(<span style="color:#268bd2">curSum</span> - <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">0</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">put</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">getOrDefault</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">0</span>) + <span style="color:#268bd2">1</span>);
-</span></span><span style="display:flex"><span>    <span style="color:#93a1a1;font-style:italic">// 递归左右子树</span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">res</span> += <span style="color:#268bd2">dfs</span>(<span style="color:#268bd2">node</span>.<span style="color:#268bd2">left</span>, <span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">prefix</span>);
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">res</span> += <span style="color:#268bd2">dfs</span>(<span style="color:#268bd2">node</span>.<span style="color:#268bd2">right</span>, <span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">prefix</span>);
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>    <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">put</span>(<span style="color:#268bd2">curSum</span>, <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">get</span>(<span style="color:#268bd2">curSum</span>) - <span style="color:#268bd2">1</span>);
-</span></span><span style="display:flex"><span>    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>;
-</span></span><span style="display:flex"><span>}
-</span></span></code></pre></td></tr></table></div></div><h3 id="第五步编写完整程序">第五步：编写完整程序<a hidden class="anchor" aria-hidden="true" href="#第五步编写完整程序">#</a></h3><div class="highlight"><div style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><table style="border-spacing:0;padding:0;margin:0;border:0"><tr><td style="vertical-align:top;padding:0;margin:0;border:0"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span></code></pre></td><td style="vertical-align:top;padding:0;margin:0;border:0;width:100%"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none"><code class="language-java" data-lang="java"><span style="display:flex"><span>   <span style="color:#859900">public</span> <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">pathSum</span>(<span style="color:#268bd2">TreeNode</span> <span style="color:#268bd2">root</span>, <span style="color:#859900;font-weight:700">int</span> <span style="color:#268bd2">targetSum</span>) {
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">Map</span>&lt;<span style="color:#268bd2">Long</span>, <span style="color:#268bd2">Integer</span>&gt; <span style="color:#268bd2">prefix</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">HashMap</span>&lt;&gt;();
-</span></span><span style="display:flex"><span>        <span style="color:#268bd2">prefix</span>.<span style="color:#268bd2">put</span>(<span style="color:#268bd2">0L</span>, <span style="color:#268bd2">1</span>);   <span style="color:#93a1a1;font-style:italic">// 初始前缀</span>
-</span></span><span style="display:flex"><span>
-</span></span><span style="display:flex"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">dfs</span>(<span style="color:#268bd2">root</span>, <span style="color:#268bd2">0L</span>, <span style="color:#268bd2">targetSum</span>, <span style="color:#268bd2">prefix</span>);
-</span></span><span style="display:flex"><span>    }
-</span></span></code></pre></td></tr></table></div></div><h1 id="-实验后现象与数据-check">👁️ 实验后：现象与数据 (Check)<a hidden class="anchor" aria-hidden="true" href="#-实验后现象与数据-check">#</a></h1><p>解法 1：</p><p><div class="post-img-view"><a data-fancybox href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225102337369.png" onclick=window.Fancybox||event.preventDefault()><img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225102337369.png" alt></a></div></p><p>解法 2：</p><p><div class="post-img-view"><a data-fancybox href="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225102316374.png" onclick=window.Fancybox||event.preventDefault()><img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225102316374.png" alt></a></div></p><h1 id="-深度复盘分析与结论-act">🧠 深度复盘：分析与结论 (Act)<a hidden class="anchor" aria-hidden="true" href="#-深度复盘分析与结论-act">#</a></h1><h1 id="下一步行动-next-actions">下一步行动 (Next Actions)：<a hidden class="anchor" aria-hidden="true" href="#下一步行动-next-actions">#</a></h1><p>✅ 验证通过，纳入标准流程。</p><p>🔄 验证失败，修改假设，开启下一次实验（EXP-002）。</p><p>❓ 产生新问题：[记录新问题]</p></div><footer class="post-footer"><ul class="post-tags"></ul></footer></article></main><footer class="footer"><span>&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span></footer><a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g"><span class="topInner"><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
-<span id="read_progress"></span>
-</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script><div id="site-toast" class="site-toast"></div><script>window.showToast=function(e,t=2e3){const n=document.getElementById("site-toast");if(!n)return;n.textContent=e,n.classList.add("show"),clearTimeout(window.__toastTimer),window.__toastTimer=setTimeout(()=>{n.classList.remove("show")},t)}</script></body></html>
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>实验-leetcode-437-路径总和 3 | 安橙的博客</title><meta name="description" content="实验元数据 (Meta Data) 实验编号/标题：实验-leetcode-437-路径总和 3
+日期：2026-02-25
+所属领域/标签：#LeetCode
+🎯 实验前：假设与目标 (Plan) 当前问题 (Problem)：
+实验目标 (Objective)：
+解决路径和问题
+🧪 实验中：执行步骤与变量 (Do) …"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/leetcode/%E5%AE%9E%E9%AA%8C-leetcode-437-%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-3/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">实验-leetcode-437-路径总和 3</h1><div class="post-meta"><span title='2026-02-25 00:00:00 +0000 UTC'>二月 25, 2026</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#实验元数据-meta-data">实验元数据 (Meta Data)</a></li><li><a href="#-实验前假设与目标-plan">🎯 实验前：假设与目标 (Plan)</a></li><li><a href="#-实验中执行步骤与变量-do">🧪 实验中：执行步骤与变量 (Do)</a><ul><li><a href="#执行步骤-log-暴力思路">执行步骤 (Log) 【暴力思路】：</a><ul><li><a href="#第一步-计算以当前节点为起点的路径和数量">第一步 计算以当前节点为起点的路径和数量</a></li><li><a href="#第二步递归遍历左右子树">第二步：递归遍历左右子树</a></li><li><a href="#第三步组合两段">第三步：组合两段</a></li></ul></li><li><a href="#执行步骤-log-前缀和思路">执行步骤 (Log) 【前缀和思路】：</a><ul><li><a href="#第一步算出前缀和">第一步：算出前缀和</a></li><li><a href="#第二步将前缀和存储到-map-中">第二步：将前缀和存储到 Map 中</a></li><li><a href="#第三步算出以当前节点为终点的前缀和--cursum---targetsum-的数量">第三步：算出以当前节点为终点的前缀和 = curSum - targetSum 的数量</a></li><li><a href="#第四步递归遍历左右子树">第四步：递归遍历左右子树</a></li><li><a href="#第五步编写完整程序">第五步：编写完整程序</a></li></ul></li></ul></li><li><a href="#-实验后现象与数据-check">👁️ 实验后：现象与数据 (Check)</a></li><li><a href="#-深度复盘分析与结论-act">🧠 深度复盘：分析与结论 (Act)</a></li><li><a href="#下一步行动-next-actions">下一步行动 (Next Actions)：</a></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="实验元数据-meta-data">实验元数据 (Meta Data)</h1><p>实验编号/标题：实验-leetcode-437-路径总和 3</p><p>日期：2026-02-25</p><p>所属领域/标签：#LeetCode</p><h1 id="-实验前假设与目标-plan">🎯 实验前：假设与目标 (Plan)</h1><p>当前问题 (Problem)：</p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225094719661.png" alt></button></figure></p><p>实验目标 (Objective)：</p><p>解决路径和问题</p><h1 id="-实验中执行步骤与变量-do">🧪 实验中：执行步骤与变量 (Do)</h1><h2 id="执行步骤-log-暴力思路">执行步骤 (Log) 【暴力思路】：</h2><p>暴力思路：双递归</p><p>统计：</p><ol><li>以当前节点为起点，统计向下的路径和数量</li><li>递归遍历左右子树，重复上述过程</li></ol><h3 id="第一步-计算以当前节点为起点的路径和数量">第一步 计算以当前节点为起点的路径和数量</h3><pre><code class="language-java">private int countFrom(TreeNode node, long target) {
+    if (node == null) {
+        return 0;
+    }
+    int res = 0;
+    if (node.val == target) {
+        res ++;
+    }
+    res += countFrom(node.left, target - node.val);
+    res += countFrom(node.right, target - node.val);
+    
+    return res;
+}
+</code></pre><h3 id="第二步递归遍历左右子树">第二步：递归遍历左右子树</h3><pre><code class="language-java">    public int pathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return 0;
+        }
+
+        return countFrom(root, targetSum)
+                + pathSum(root.left, targetSum)
+                + pathSum(root.right, targetSum);
+    }
+</code></pre><h3 id="第三步组合两段">第三步：组合两段</h3><pre><code class="language-java">class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return 0;
+        }
+
+        return countFrom(root, targetSum)
+                + pathSum(root.left, targetSum)
+                + pathSum(root.right, targetSum);
+    }
+
+    private int countFrom(TreeNode node, long target) {
+        if (node == null) {
+            return 0;
+        }
+        int res = 0;
+        if (node.val == target) {
+            res ++;
+        }
+        res += countFrom(node.left, target - node.val);
+        res += countFrom(node.right, target - node.val);
+        
+        return res;
+    }
+}
+</code></pre><h2 id="执行步骤-log-前缀和思路">执行步骤 (Log) 【前缀和思路】：</h2><p>前缀和思路</p><ol><li>当前路径和 curSum，如果存在某个历史前缀和 currSum - targetSum</li><li>说明中间这段路径和为 targetSum</li><li>DFS 遍历</li><li>维护前缀和 Map</li><li>回溯时删除当前前缀</li></ol><h3 id="第一步算出前缀和">第一步：算出前缀和</h3><pre><code class="language-java">private int dfs(TreeNode node, long curSum, int targetSum) {
+    if (node == 0) {
+        return 0;
+    }
+    curSum += node.val;
+}
+
+</code></pre><h3 id="第二步将前缀和存储到-map-中">第二步：将前缀和存储到 Map 中</h3><pre><code class="language-java">private int dfs(TreeNode node, long curSum, int targetSum, Map&lt;Long, Integer&gt; prefix) {
+    if (node == null) {
+        return 0;
+    }
+    curSum += node.val;
+
+    prefix.put(curSum, prefix.getOrDefault(curSum, 0) + 1);
+
+    prefix.put(curSum, prefix.get(curSum) - 1);
+}
+</code></pre><h3 id="第三步算出以当前节点为终点的前缀和--cursum---targetsum-的数量">第三步：算出以当前节点为终点的前缀和 = curSum - targetSum 的数量</h3><pre><code class="language-java">private int dfs(TreeNode node, long curSum, int targetSum, Map&lt;Long, Integer&gt; prefix) {
+    if (node == null) {
+        return 0;
+    }
+    curSum += node.val;
+
+    int res = prefix.getOrDefault(curSum - targetSum, 0);
+
+    prefix.put(curSum, prefix.getOrDefault(curSum, 0) + 1);
+
+    prefix.put(curSum, prefix.get(curSum) - 1);
+    return res;
+}
+</code></pre><h3 id="第四步递归遍历左右子树">第四步：递归遍历左右子树</h3><pre><code class="language-java">private int dfs(TreeNode node, long curSum, int targetSum, Map&lt;Long, Integer&gt; prefix) {
+    if (node == null) {
+        return 0;
+    }
+    curSum += node.val;
+
+    int res = prefix.getOrDefault(curSum - targetSum, 0);
+
+    prefix.put(curSum, prefix.getOrDefault(curSum, 0) + 1);
+    // 递归左右子树
+    res += dfs(node.left, curSum, targetSum, prefix);
+    res += dfs(node.right, curSum, targetSum, prefix);
+
+    prefix.put(curSum, prefix.get(curSum) - 1);
+    return res;
+}
+</code></pre><h3 id="第五步编写完整程序">第五步：编写完整程序</h3><pre><code class="language-java">   public int pathSum(TreeNode root, int targetSum) {
+        Map&lt;Long, Integer&gt; prefix = new HashMap&lt;&gt;();
+        prefix.put(0L, 1);   // 初始前缀
+
+        return dfs(root, 0L, targetSum, prefix);
+    }
+</code></pre><h1 id="-实验后现象与数据-check">👁️ 实验后：现象与数据 (Check)</h1><p>解法 1：</p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225102337369.png" alt></button></figure></p><p>解法 2：</p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
+<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/25/20260225102316374.png" alt></button></figure></p><h1 id="-深度复盘分析与结论-act">🧠 深度复盘：分析与结论 (Act)</h1><h1 id="下一步行动-next-actions">下一步行动 (Next Actions)：</h1><p>✅ 验证通过，纳入标准流程。</p><p>🔄 验证失败，修改假设，开启下一次实验（EXP-002）。</p><p>❓ 产生新问题：[记录新问题]</p></div></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
+<output>100%</output>
+<button type="button" data-zoom-in aria-label="放大">＋</button>
+<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
