@@ -1,0 +1,18 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\"?>" | safeHTML }}
+<rss version="2.0"><channel>
+    <title>{{ if eq .Title site.Title }}{{ site.Title }}{{ else }}{{ .Title }} | {{ site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ .Description | default site.Title }}</description>
+    <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    {{- $pages := .RegularPages.ByPublishDate.Reverse }}
+    {{- if .IsHome }}{{ $pages = (where site.RegularPages "Type" "in" site.Params.mainSections).ByPublishDate.Reverse }}{{ end }}
+    {{- range first 20 $pages }}
+    <item>
+        <title>{{ .Title }}</title>
+        <link>{{ .Permalink }}</link>
+        <guid>{{ .Permalink }}</guid>
+        <pubDate>{{ .PublishDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+        <description>{{ .Description | default (.Plain | truncate 300) }}</description>
+    </item>
+    {{- end }}
+</channel></rss>

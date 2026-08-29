@@ -1,40 +1,35 @@
-{{- if lt hugo.Version "0.146.0" }}
-{{- errorf "=> hugo v0.146.0 or greater is required for hugo-PaperMod to build " }}
-{{- end -}}
-
-<!DOCTYPE html>
-<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}">
-
-<head>
-    {{- partial "head.html" . }}
-</head>
-
-<body class="
-{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) -}}
-{{- print "list" -}}
-{{- end -}}
-" id="top">
-    {{- partialCached "header.html" . .Page -}}
-    <main class="main">
-        {{- block "main" . }}{{ end }}
-    </main>
-    {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
-
-
-{{/* 放在 </body> 之前 */}}
-{{ if findRE "mindmap-container" .Content }}
-  {{ $js := resources.Get "js/mindmap.js" | js.Build (dict "format" "iife" "minify" true)}}
-  <script src="{{ $js.RelPermalink }}" defer></script>
-  {{ $hljscss := resources.Get "css/includes/atom-one-dark.min.css" | minify }}
-  <link rel="stylesheet" href="{{ $hljscss.RelPermalink }}">
-{{ end }}
-
-{{ if .Params.math }}
-  {{ $katexjs := resources.Get "js/katex.min.js" }}
-  <script defer src="{{ $katexjs.RelPermalink }}"></script>
-  {{ $autorender := resources.Get "js/auto-render.min.js" }}
-  <script defer src="{{ $autorender.RelPermalink }}" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
-{{ end }}
+{{- if lt hugo.Version "0.146.0" }}{{ errorf "Hugo v0.146.0 or greater is required" }}{{ end -}}
+<!doctype html>
+<html lang="{{ site.Language.Locale | default site.Language.Lang }}">
+<head>{{ partial "head.html" . }}</head>
+<body id="top">
+    {{ partial "header.html" . }}
+    <main class="main">{{ block "main" . }}{{ end }}</main>
+    {{- if not (.Param "hideFooter") }}{{ partial "footer.html" . }}{{ end }}
+    {{- if findRE "class=\"post-image\"" .Content }}
+    <dialog class="image-viewer" aria-label="图片预览">
+        <div class="image-viewer-bar">
+            <button type="button" data-zoom-out aria-label="缩小">−</button>
+            <output>100%</output>
+            <button type="button" data-zoom-in aria-label="放大">＋</button>
+            <button type="button" data-close>关闭</button>
+        </div>
+        <div class="image-viewer-stage"><img alt=""></div>
+    </dialog>
+    <script>
+    (()=>{const d=document.querySelector('.image-viewer'),img=d.querySelector('img'),out=d.querySelector('output');let zoom=1;const set=n=>{zoom=Math.max(.25,Math.min(5,n));img.style.transform=`scale(${zoom})`;out.value=`${Math.round(zoom*100)}%`};document.addEventListener('click',e=>{const open=e.target.closest('.image-open');if(open){const source=open.querySelector('img');img.src=source.currentSrc||source.src;img.alt=source.alt;set(1);d.showModal()}else if(e.target.closest('[data-zoom-in]'))set(zoom+.25);else if(e.target.closest('[data-zoom-out]'))set(zoom-.25);else if(e.target.closest('[data-close]')||e.target===d)d.close()});d.addEventListener('wheel',e=>{e.preventDefault();set(zoom+(e.deltaY<0?.25:-.25))},{passive:false});d.addEventListener('close',()=>img.removeAttribute('src'))})();
+    </script>
+    {{- end }}
+    {{- if findRE "<pre" .Content }}
+    <script>
+    const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll('.post-content pre').forEach(pre=>{const code=pre.querySelector('code');if(code){const text=code.textContent,frag=document.createDocumentFragment();let end=0;for(const match of text.matchAll(syntax)){frag.append(text.slice(end,match.index));const span=document.createElement('span');span.className=match[1]?'hl-s':match[2]?'hl-c':'hl-k';span.textContent=match[0];frag.append(span);end=match.index+match[0].length}frag.append(text.slice(end));code.replaceChildren(frag)}const wrap=document.createElement('div'),button=document.createElement('button');wrap.className='code-block';button.className='code-copy';button.type='button';button.textContent='复制';button.setAttribute('aria-label','复制代码');pre.before(wrap);wrap.append(pre,button);button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(pre.textContent);button.textContent='已复制';setTimeout(()=>button.textContent='复制',1200)}catch{button.textContent='复制失败'}})});
+    </script>
+    {{- end }}
+    {{- if .Params.math }}
+    {{- $katex := resources.Get "js/katex.min.js" | fingerprint }}
+    {{- $render := resources.Get "js/auto-render.min.js" | fingerprint }}
+    <script defer src="{{ $katex.RelPermalink }}" integrity="{{ $katex.Data.Integrity }}" crossorigin="anonymous"></script>
+    <script defer src="{{ $render.RelPermalink }}" integrity="{{ $render.Data.Integrity }}" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+    {{- end }}
 </body>
-
 </html>
