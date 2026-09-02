@@ -11,7 +11,6 @@ tags:
 
 # 基础认知
 
-{{< mind height="860px" >}}
 - 基础认知
     - HBase 和 MySQL、Redis、Elasticsearch、Hive 的区别
         - HBase
@@ -122,11 +121,9 @@ tags:
                 - 按 RowKey 前缀或范围扫描
                 - 设计 schema 时优先围绕查询路径设计 row key
             - 设计数据库时，优先设计 RowKey 和访问路径，而不是优先设计复杂 SQL
-{{< /mind >}}
 
 # 数据模型与表设计
 
-{{< mind height="860px" >}}
 - 数据模型与表设计
     - RowKey 设计原则
         - 总纲
@@ -226,11 +223,9 @@ tags:
             - HBase/Bigtable 这类系统的数据是按照 rowKey 的字段序排列的
             - 相邻的 Key 也会落在相邻的 key range 上，这些 key range 被分配给特定的 Region/RegionServer 来服务
             - 如果请求集中在某一个 RowKey/某一小段连续 RowKey/某个不断增长的最新 key 区间，负载就不会均匀摊开，造成热点
-{{< /mind >}}
 
 # 架构原理
 
-{{< mind height="860px" >}}
 - 架构原理
     - HMaster 做什么
         - HMaster 的定位
@@ -381,11 +376,9 @@ tags:
             - 不存储业务明细数据
             - 不承担高吞吐读写
             - 不等于 HMaster
-{{< /mind >}}
 
 # 实际操作
 
-{{< mind height="860px" >}}
 - 实操
     - 启动单机 HBase
         - 单机模式是什么
@@ -500,11 +493,9 @@ tags:
                 - 如果只是做简单的 family:qualifier:value 等值判断，推荐限制后再配 ValueFilter，这样能避免扫描无关的 family/column
         - 组合使用 filter
             - "PrefixFilter ('Row') AND PageFilter (1) AND FirstKeyOnlyFilter ()"
-{{< /mind >}}
 
 # Java 客户端开发
 
-{{< mind height="860px" >}}
 - Java 客户端开发
     - Connection/Admin/Table
         - 职责边界
@@ -515,4 +506,3 @@ tags:
         - 代码关系
             - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/24/20260324161657372.png,584,113)
         - 最小 Java 示例
-{{< /mind >}}

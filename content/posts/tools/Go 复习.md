@@ -13,7 +13,6 @@ tags:
 
 ## Go 环境搭建与工具链
 
-{{< mind height="860px" >}}
 - Go 环境搭建与工具链
     - 安装 Go
         - 官网直接安装
@@ -89,11 +88,9 @@ tags:
         - go mod tidy 清理未使用的依赖
         - go vet ./... 静态分析，检查常用错误
         - go doc <包名>
-{{< /mind >}}
 
 ## 类型系统与变量
 
-{{< mind height="860px" >}}
 - 类型系统与变量
     - 基本类型总览
         - Go 是强类型语言，每个类型都有明确的类型
@@ -292,11 +289,9 @@ tags:
         ```
         - fmt.Sprintf 万能转字符串
             - 性能不如 strconv，高频调用优先用 strconv
-{{< /mind >}}
 
 ## 流程控制
 
-{{< mind height="860px" >}}
 - 流程控制
     - if/else 条件判断
         - 条件不需要括号
@@ -620,12 +615,10 @@ tags:
             }
             // 输出 defer: 20
             ```
-{{< /mind >}}
 
 
 ## 函数
 
-{{< mind height="860px">}}
 - 函数深入
     - 函数基础
         - Go 的函数定义和 C 系列语言不一样：关键字 func 在前，返回值类型在后
@@ -940,11 +933,9 @@ tags:
                 return save(result)
             }
             ```
-{{< /mind >}}
 
 ## 数组、切片与 Map
 
-{{< mind >}}
 - 数组、切片与 Map
     - 数组：固定长度的值类型
         - Go 的数组和 C/Java 的不一样，它是值类型，长度是类型的一部分
@@ -1340,11 +1331,9 @@ tags:
                 return true  // 返回 false 停止遍历
             })
             ```
-{{< /mind >}}
 
 ## 结构体与方法
 
-{{< mind >}}
 - 结构体与方法
     - 结构体基础
         - 结构体是 Go 中组织数据的核心方式
@@ -1820,11 +1809,9 @@ tags:
             - Tag 本身只是给字段附加的字符串元数据，语言本身不处理
             - 是各个库（encoding/json、gorm、validator...）通过反射读取 tag 并做相应处理
             - tag 的语法完全由使用它的库定义
-{{< /mind >}}
 
 ## 接口与多态
 
-{{< mind height="860px" >}}
 - 接口与多态
     - 接口是什么
         - 接口是 Go 最优雅的特性。
@@ -2293,11 +2280,9 @@ tags:
             - 生产环境注入真实实现，测试时注入 Mock
             - 这让代码既解耦又易测试
             - 这是 Go 后端项目的标准架构模式
-{{< /mind >}}
 
 # 并发与工程化
 
-{{< mind height="860px" >}}
 - 并发与工程化
     - Goroutine 入门
         - Goroutine 是什么
@@ -5254,11 +5239,9 @@ tags:
                     ttl  time.Duration
                 }
                 ```
-{{< /mind >}}
 
 # Web 开发实战
 
-{{< mind height="860px" >}}
 - Web 开发实战
     - net/http 标准库
         - net/http 核心概念
@@ -8163,4 +8146,3 @@ tags:
                         return nil
                     }
                     ```
-{{< /mind >}}

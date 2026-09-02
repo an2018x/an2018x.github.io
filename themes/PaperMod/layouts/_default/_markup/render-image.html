@@ -1,7 +1,0 @@
-{{- $src := replaceRE ",[[:space:]]*[0-9]+[[:space:]]*,[[:space:]]*[0-9]+[[:space:]]*$" "" .Destination -}}
-<figure class="post-image">
-    <button class="image-open" type="button" aria-label="查看大图{{ with .Text }}：{{ . }}{{ end }}">
-        <img loading="lazy" decoding="async" src="{{ $src | safeURL }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }}>
-    </button>
-    {{- with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}
-</figure>

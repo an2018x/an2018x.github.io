@@ -11,7 +11,6 @@ tags:
 
 # CAP 与一致性模型
 
-{{< mind height="560px" >}}
 - CAP 与一致性模型
     - CAP 定理
         - 组成
@@ -78,11 +77,9 @@ tags:
         - 折中：读写分离 + 关键路径强一致
             - 下单扣库存走强一致存储：报表/BI 走 ClickHouse 最终一致导入
             - 缓存允许短暂不一致，通过失效策略、异步刷新、补偿修正
-{{< /mind >}}
 
 # 分布式存储底层
 
-{{< mind height="560px" >}}
 - 分布式存储底层
     - 分布式存储底层总览
         - Client/SDK
@@ -198,11 +195,9 @@ tags:
             - 提交规则
                 - leader 只有在日志被多数派复制后才能提交
                 - 提交后对外可见
-{{< /mind >}}
 
 # Cassandra/HBase
 
-{{< mind height="560px" >}}
 - Cassandra/HBase
     - LSM-Tree + WAL
         - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/22/20260222101553862.png,604,382)
@@ -270,11 +265,9 @@ tags:
                     - 优点：读放大更小
                     - 缺点：写放大更高
 
-{{< /mind >}}
 
 # 数据建模与查询建模
 
-{{< mind height="560px" >}}
 - 数据建模与查询建模
     - NoSQL 建模的通用原则
         - Query-driven modeling(按查询建模)
@@ -296,4 +289,3 @@ tags:
             - 避免分区键过于集中
             - 避免自增 RowKey
             - 避免单 key 计数器
-{{< /mind >}}

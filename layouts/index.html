@@ -1,12 +1,13 @@
 {{- define "main" }}
-{{- $posts := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $posts := where site.RegularPages "Section" "posts" }}
 <header class="home-masthead">
-    <h1 class="home-title">{{ site.Params.homeInfoParams.Title }}</h1>
-    <div class="home-lede">{{ site.Params.homeInfoParams.Content | markdownify }}</div>
+    <h1 class="home-title">{{ site.Title }}</h1>
+    <div class="home-lede">{{ site.Params.description | markdownify }}</div>
 </header>
 
 {{- $titles := dict
     "ai" "AI · LLM"
+    "all" "综合"
     "architecture" "架构 · 设计"
     "backend" "后端"
     "career" "成长 · 业务"

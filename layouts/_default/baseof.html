@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale | default site.Language.Lang }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ if not .IsHome }}{{ with .Title }}{{ . }} | {{ end }}{{ end }}{{ site.Title }}</title>
+    {{- $description := site.Params.description | default site.Title }}
+    {{- if .IsPage }}{{ $description = .Description | default (.Plain | truncate 160) }}{{ end }}
+    <meta name="description" content="{{ $description }}">
+    <meta name="robots" content="{{ if and hugo.IsProduction (ne .Params.robotsNoIndex true) }}index,follow{{ else }}noindex,nofollow{{ end }}">
+    <link rel="canonical" href="{{ .Params.canonicalURL | default .Permalink }}">
+    {{- $css := resources.Get "css/minimal.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" crossorigin="anonymous">
+    {{- with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}">{{ end }}
+</head>
+<body id="top">
+    <header class="header"><nav class="nav">
+        <div class="logo"><a href="{{ "" | absLangURL }}">{{ site.Title }}</a></div>
+        <ul id="menu">{{ range site.Menus.main }}<li><a href="{{ .URL | absLangURL }}"{{ if $.IsMenuCurrent "main" . }} class="active" aria-current="page"{{ end }}>{{ .Name }}</a></li>{{ end }}</ul>
+    </nav></header>
+    <main class="main">{{ block "main" . }}{{ end }}</main>
+    <footer class="footer">&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></footer>
+    {{- if findRE "class=\"post-image\"" .Content }}
+    <dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button><output>100%</output><button type="button" data-zoom-in aria-label="放大">＋</button><button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt=""></div></dialog>
+    <script>(()=>{const d=document.querySelector('.image-viewer'),img=d.querySelector('img'),out=d.querySelector('output');let zoom=1;const set=n=>{zoom=Math.max(.25,Math.min(5,n));img.style.transform=`scale(${zoom})`;out.value=`${Math.round(zoom*100)}%`};document.addEventListener('click',e=>{const open=e.target.closest('.image-open');if(open){const source=open.querySelector('img');img.src=source.currentSrc||source.src;img.alt=source.alt;set(1);d.showModal()}else if(e.target.closest('[data-zoom-in]'))set(zoom+.25);else if(e.target.closest('[data-zoom-out]'))set(zoom-.25);else if(e.target.closest('[data-close]')||e.target===d)d.close()});d.addEventListener('wheel',e=>{e.preventDefault();set(zoom+(e.deltaY<0?.25:-.25))},{passive:false});d.addEventListener('close',()=>img.removeAttribute('src'))})()</script>
+    {{- end }}
+    {{- if findRE "<pre" .Content }}
+    <script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll('.post-content pre').forEach(pre=>{const code=pre.querySelector('code');if(code){const text=code.textContent,frag=document.createDocumentFragment();let end=0;for(const match of text.matchAll(syntax)){frag.append(text.slice(end,match.index));const span=document.createElement('span');span.className=match[1]?'hl-s':match[2]?'hl-c':'hl-k';span.textContent=match[0];frag.append(span);end=match.index+match[0].length}frag.append(text.slice(end));code.replaceChildren(frag)}const wrap=document.createElement('div'),button=document.createElement('button');wrap.className='code-block';button.className='code-copy';button.type='button';button.textContent='复制';button.setAttribute('aria-label','复制代码');pre.before(wrap);wrap.append(pre,button);button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(pre.textContent);button.textContent='已复制';setTimeout(()=>button.textContent='复制',1200)}catch{button.textContent='复制失败'}})})</script>
+    {{- end }}
+</body>
+</html>

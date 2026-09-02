@@ -11,7 +11,6 @@ tags:
 
 # 基础入门
 
-{{< mind height="860px" >}}
 - 基础入门
     - 可观测性与 Grafana 概览
         - 理解可观测性
@@ -213,11 +212,9 @@ tags:
                 - Standard options 包含最常用的显示设置：Unit 单位、Min/Max 范围、Decimals 小数位数、Color Schema 配色方案
                 - Threshholds 用颜色编码数值区间，帮助快速判断好坏
                 - Overrides 允许为特定的时间序列覆盖全局设置
-{{< /mind >}}
 
 # 核心技能
 
-{{< mind height="860px" >}}
 - 核心技能
     - PromQL
         - 两种向量 - PromQL 的基石
@@ -507,11 +504,9 @@ tags:
                 - 通过 Overrides 给三条线设置不同的视觉效果：P50 绿色实线，P90 用黄色实线，P99 用红色实线
                 - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/04/12/20260412225759292.png,310,150)
 
-{{< /mind >}}
 
 # 告警与日志
 
-{{< mind height="860px" >}}
 - 告警与日志
     - Grafana 的告警系统
         - 理解 Grafana 告警架构
@@ -662,7 +657,6 @@ tags:
             - drop 和 keep 标签
                 - 当解析器提取了太多标签导致查询杂乱，可以用 drop 丢弃不需要的标签，或用 keep 只保留需要的
                 - {container="myapp"} | json | keep container, level, msg
-{{< /mind >}}
 
 
 

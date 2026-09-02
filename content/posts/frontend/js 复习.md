@@ -10,7 +10,6 @@ tags:
 
 # 语言核心基础
 
-{{< mind height="860px" >}}
 - 语言核心基础
     - 变量与数据类型
         - 变量声明
@@ -1644,11 +1643,9 @@ tags:
             // 2. Bob
             // 3. Cat
             ```
-{{< /mind >}}
 
 # 面向对象与核心机制
 
-{{< mind height="860px" >}}
 - 面向对象与核心机制
     - this 指向
         - 为什么 this 这么重要
@@ -3010,11 +3007,9 @@ tags:
             // 方式1：文件后缀用 .mjs
             // 方式2：package.json 中添加 "type": "module"
             ```
-{{< /mind >}}
 
 # 异步编程与浏览器 API
 
-{{< mind height="860px" >}}
 - 异步编程与浏览器 API
     - 异步基础与回调
         - 同步 vs 异步
@@ -3448,4 +3443,3 @@ tags:
                 return { user, orders };
             }
             ```
-{{< /mind >}}

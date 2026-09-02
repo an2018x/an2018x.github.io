@@ -5,7 +5,7 @@
     <description>{{ .Description | default site.Title }}</description>
     <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
     {{- $pages := .RegularPages.ByPublishDate.Reverse }}
-    {{- if .IsHome }}{{ $pages = (where site.RegularPages "Type" "in" site.Params.mainSections).ByPublishDate.Reverse }}{{ end }}
+    {{- if .IsHome }}{{ $pages = (where site.RegularPages "Section" "posts").ByPublishDate.Reverse }}{{ end }}
     {{- range first 20 $pages }}
     <item>
         <title>{{ .Title }}</title>

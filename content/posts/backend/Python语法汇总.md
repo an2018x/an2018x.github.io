@@ -10,7 +10,6 @@ tags:
 
 # 基础用法
 
-{{< mind height="860px" >}}
 - Python 语法
     - 注释
         - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/15/20260315235532706.png,201,109)
@@ -276,11 +275,9 @@ tags:
             - pyenv/conda
                 - 安装多个 Python 版本
                 - 管理解释器版本
-{{< /mind >}}
 
 # uv 安装包
 
-{{< mind height="860px" >}}
 - uv
     - 安装 uv
         - curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -306,5 +303,3 @@ tags:
     - 运行命令
         - uv run
         - 如果不使用 uv run，就需要先激活虚拟环境后再直接执行命令
-{{< /mind >}}
-

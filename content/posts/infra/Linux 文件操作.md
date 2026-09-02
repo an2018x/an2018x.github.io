@@ -195,7 +195,7 @@ find /var/log -name "*.log" -size +100M -mtime +30
 ```shell
 find . -type f \( -name "*.txt" -o -name "*.md" \) ! -name ".*"
 ```
-（注意：() 用于分组，需转义 \(` `\)）
+（注意：() 用于分组，需转义 `\(`、`\)`）
 
 * 对搜索结果进行操作
 

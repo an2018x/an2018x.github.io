@@ -12,7 +12,6 @@ tags:
 # Flink 整体认知
 
 
-{{< mind height="860px" >}}
 - Flink 整体认知
     - 认识 Flink
         - Flink 是什么
@@ -361,11 +360,9 @@ tags:
                     - 再怀疑 transformation
                         - 每做一步变化，就临时加一个 print()
                     - 最后怀疑 sink
-{{< /mind >}}
 
 # 时间与窗口
 
-{{< mind height="860px" >}}
 - 时间与窗口
     - 时间语义
         - processing time
@@ -538,11 +535,9 @@ tags:
         - 结果修正
             - 配置了 allow lateness 后，窗口第一次输出的结果可能不是最终结果
             - 后面如果又来了还能接受的迟到数据，窗口结果会更新并再次触发输出
-{{< /mind >}}
 
 # 状态与容错
 
-{{< mind height="860px" >}}
 - 状态与容错
     - State 基础
         - 什么是状态
@@ -661,22 +656,18 @@ tags:
             - Operator/Keyed State
             - Source 位置
             - Timers
-{{< /mind >}}
 
 
 # 连接外部系统
 
-{{< mind height="860px" >}}
 - 连接外部系统
     - Flink 读写文件与接
     - Kafka 集成
     - Flink 与数据库
     - 序列化与数据格式
-{{< /mind >}}
 
 # Flink SQL 与 Table API
 
-{{< mind height="860px" >}}
 - Flink SQL 与 Table API
     - 认识 Table API 与 Flink SQL
         - 为什么要有 Table API 与 SQL
@@ -826,13 +817,10 @@ tags:
             - 按某个时间点，去取维表在那个时刻的版本，再和事实表做关联
         - 什么是 Versioned Table
             - 一张会变化、并且保留变化历史的表
-{{< /mind >}}
 
 # 原理深入
 
-{{< mind height="860px" >}}
 - 原理深入
     - 背压与性能调优
         - 什么是背压
             - 上游发太快，下游吃不动
-{{< /mind >}}

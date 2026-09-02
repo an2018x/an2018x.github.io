@@ -11,7 +11,6 @@ tags:
 
 # IO 模型与概念框架
 
-{{< mind height="560px" >}}
 - IO 模型与概念框架
     - 四个基本概念
         - 阻塞 vs 非阻塞
@@ -70,11 +69,9 @@ tags:
             - 根据事件类型调用对于 handler
         - 单 Reactor 单线程：简单，适合低负载
         - 主从 Reactor(boss/worker)：boss 负责 accept，worker 负责读写
-{{< /mind >}}
 
 # Java BIO
 
-{{< mind height="560px" >}}
 - Java BIO
     - IO 流体系
         - 两大抽象
@@ -140,11 +137,9 @@ tags:
                 - 可能一直阻塞：对端不发数据也不关
         - 半包/粘包在 BIO 也存在
             - BIO 只是阻塞，TCP 仍然是字节流，read() 不保证一条业务消息完整到达
-{{< /mind >}}
 
 # NIO 基础 Buffer/Channel
 
-{{< mind height="560px" >}}
 - NIO 基础 
     - NIO 的核心心智模型：Buffer+Channel
         - 在 NIO 中，数据永远在 Buffer 里转
@@ -206,11 +201,9 @@ tags:
             - buffer.flip() 进入读模式
             - 从 buffer 读取处理
             - 循环直到 n == -1
-{{< /mind >}}
 
 # NIO 进阶 Selector/多路复用
 
-{{< mind height="560px" >}}
 - NIO 进阶 Selector/多路复用
     - Selector/SelectionKey/Channel：三者关系与生命周期
         - 三件套职责
@@ -250,11 +243,9 @@ tags:
         - 主从 Reactor（boss/worker）
             - boss：只负责 accept，把新 SocketChannel 分发到 worker 的 selector
             - worker：负责读写与协议解析、业务派发
-{{< /mind >}}
 
 # Netty
 
-{{< mind height="560px" >}}
 - Netty
     - 解决什么问题
         - 原生 NIO 的痛点
@@ -305,11 +296,9 @@ tags:
             - Heap：堆内
             - Direct：堆外
             - CompositeByteBuf：多个 buffer 组合成一个逻辑 buffer（减少拷贝）
-{{< /mind >}}
 
 # select/poll/epoll
 
-{{< mind height="560px" >}}
 - select/poll/epoll
     - 简介
         - 都是操作系统提供的 I/O 多路复用机制
@@ -346,4 +335,3 @@ tags:
                 - 只有从不可读 -> 可读的边缘变化才通知一次
                 - 必须把数据一次性读到不能再读，否则可能丢通知导致卡住
                 - 性能更高，但对实现要求更严格（非阻塞+循环读/写）
-{{< /mind >}}

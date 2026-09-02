@@ -11,7 +11,6 @@ tags:
 
 # Spring Core
 
-{{< mind height="560px" >}}
 - Spring Core（IoC/DI/Bean 生命周期）
     - 概述
         - Spring 的核心是 IoC 容器，它负责把对象 Bean 的创建、依赖装配、生命周期管理、扩展点回调统一托管
@@ -154,11 +153,9 @@ tags:
             - 在 @Configuration 类中，Spring 会用 CGLIB 增强它
                 - @Bean 方法被拦截
                 - 如果容器里已有该 Bean，就返回容器里的单例，而不是再次执行方法创建
-{{< /mind >}}
 
 # Spring AOP
 
-{{< mind height="560px" >}}
 - Spring AOP
     - AOP 在 Spring 里解决什么问题
         - 目标：把横切关注点从业务逻辑中剥离出来，日志，鉴权，事务，监控，限流，缓存，重试等
@@ -252,11 +249,9 @@ tags:
                 - 注入自身代理
         - 非 public 方法
         - 直接 new 出来的对象没有 AOP
-{{< /mind >}}
 
 # Spring Transaction
 
-{{< mind height="560px" >}}
 - Spring Transaction
     - 定义：Spring 事务本质是 AOP 拦截方法调用，在方法执行前后通过 TransactionManager 控制开启/加入事务、提交/回滚、资源绑定/解绑
     - 事务体系的关键对象
@@ -319,11 +314,9 @@ tags:
             - 提交/回滚后
                 - commit/rollback
                 - 解绑资源，释放连接，恢复 autoCommit 等
-{{< /mind >}}
 
 # Spring MVC
 
-{{< mind height="560px" >}}
 - SpringMVC(请求链路、参数绑定、异常处理)
     - 总控思维模型
         - Spring MVC 是一个基于 DispatcherServlet 的前端控制器框架，它把一次 HTTP 请求拆分
@@ -433,11 +426,9 @@ tags:
                 - postHandler（方法返回后，视图渲染前）
                 - afterCompletion（整个请求完成后，用于清理资源/记录异常）
             - Filter 是容器级，Interceptor 是框架级，能拿到 HandlerMethod，适合做与业务 Handler 相关的逻辑
-{{< /mind >}}
 
 # Spring boot （自动配置、启动过程、外部化配置）
 
-{{< mind height="560px" >}}
 - Spring boot
     - 解决了什么问题
         - Boot 的核心价值是：约定优于配置+自动配置+Starter依赖聚合
@@ -511,11 +502,9 @@ tags:
         - 对比 @Value
             - @Value：零散，难管理，不支持复杂层级/校验/IDE提示弱
             - @ConfigurationProperties：可以把一个前缀下的配置绑定到一个对象，支持嵌套、集合、校验
-{{< /mind >}}
 
 # 数据访问整合
 
-{{< mind height="560px" >}}
 - 数据访问整合
     - 通用底座
         - DataSource：连接的来源
@@ -546,11 +535,9 @@ tags:
         - Mapper 扫描与处理
             - @MapperScan 会注册 Mapper 接口代理 Bean
             - 调用 Mapper 方法 -> 代理 -> SqlSessionTemplate -> 执行 SQL
-{{< /mind >}}
 
 # Spring Security
 
-{{< mind height="560px" >}}
 - Spring Security
     - 核心概念
         - SecurityContext：安全上下文，存当前请求/线程的认证信息
@@ -586,4 +573,3 @@ tags:
                 - hasRole("ADMIN") 等价于检查 authority ROLE_ADMIN
                 - hasAuthority("xxx:read") 检查精确权限点
         - URL 级授权
-{{< /mind >}}

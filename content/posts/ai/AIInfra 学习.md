@@ -15,7 +15,6 @@ tags:
 
 ## AIInfra 全景 + 学习内容
 
-{{< mind >}}
 - AIInfra 全景 & 学习内容
     - 理论部分
         - AIInfra 是什么    
@@ -96,12 +95,10 @@ tags:
             ```bash
             watch -n 0.5 nvidia-smi          # 观察显存占用、SM 利用率
             ```
-{{< /mind >}}
 
 
 ## Linux 容器回顾
 
-{{< mind >}}
 - Linux/容器基础回顾
     - 理论部分
         - Linux 进程隔离三件套
@@ -227,11 +224,9 @@ tags:
             CUDA_VISIBLE_DEVICES=0 numactl --cpunodebind=0 --membind=0 \
             python first_infer.py
             ```
-{{< /mind >}}
 
 ## GPU 硬件与体系结构
 
-{{< mind >}}
 - GPU 硬件与体系结构
     - 理论部分
         - 一张图看懂 GPU
@@ -261,5 +256,4 @@ tags:
                 - 所以高性能 kernel 的核心套路就是：把数据从 HBM 搬到 Shared Memory，重复使用
                 - 这正是 FlashAttention 的核心思想
             - 
-{{< /mind >}}
 

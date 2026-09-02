@@ -11,7 +11,6 @@ tags:
 
 # 并发基础与 JMM 入门
 
-{{< mind height="560px" >}}
 - 并发基础与 JMM 入门
     - 并发三大问题
         - 原子性
@@ -85,12 +84,10 @@ tags:
         - volatile 禁止这种关键重排并建立 HB，确保安全发布
     - final 的初始化安全
         - final 字段在构造完成后有更强的可见性保障
-{{< /mind >}}
 
 
 # 线程模型与线程安全
 
-{{< mind height="560px" >}}
 - 线程模型与线程安全
     - Java 线程模型：Thread/Runnable/Callable/Future
         - 四者关系与使用场景
@@ -241,11 +238,9 @@ tags:
         - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220194816875.png,451,697)
     - Condition 版本
         - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/20/20260220195331750.png,365,599)
-{{< /mind >}}
 
 # JUC 核心与 AQS
 
-{{< mind height="560px" >}}
 - JUC 核心与 AQS
     - CAS 与原子类
         - CAS 是什么
@@ -345,11 +340,9 @@ tags:
                 - 让一组线程在栅栏处互相等待，达到数量后一起继续
                 - 可复用
                 - 用于并行计算分段后汇总
-{{< /mind >}}
 
 # 线程池与并发工程实战
 
-{{< mind height="560px" >}}
 - 线程池与并发工程实战
     - 不用线程池的问题
         - 线程创建/销毁成本高（栈、TLAB、调度）
@@ -491,11 +484,9 @@ tags:
             - 最佳实践
                 - 主链用 handler 或 exceptionally 做兜底
                 - whenComplete 做日志与 metrics
-{{< /mind >}}
 
 # 并发容器、阻塞队列、并发设计
 
-{{< mind height="560px" >}}
 - 并发容器、阻塞队列、并发设计
     - 并发容器解决的问题
         - 线程安全访问：多线程读写不会破坏结构、不丢数据
@@ -576,4 +567,3 @@ tags:
         - PriorityBlockingQueue(优先级队列)
             - 无界优先级堆
             - 高优先级先出队
-{{< /mind >}}

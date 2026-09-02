@@ -35,7 +35,6 @@ h1, h2, h3, h4 { line-height: 1.3; }
 .home-posts, .post-list, #searchResults { margin: 0; padding: 0; list-style: none; }
 .home-posts { border-top: 1px solid #ddd; }
 .home-posts li { display: flex; justify-content: space-between; gap: 1rem; padding: .4rem 0; border-bottom: 1px solid #ddd; }
-
 .post-list, #searchResults { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2.5rem; }
 .post-entry { min-width: 0; padding: .6rem 0; border-bottom: 1px solid #ddd; }
 .entry-header h2 { margin: 0; font-size: 1.1rem; }
@@ -55,6 +54,7 @@ h1, h2, h3, h4 { line-height: 1.3; }
 .post-content h3, .post-content h4 { margin: 1rem 0 .4rem; }
 .post-content h3 { font-size: 1.08rem; }
 .post-content h4 { font-size: 1rem; }
+.post-content math { font-family: math; font-size: 1.08em; font-weight: 500; }
 .post-content img, .post-content svg { display: block; max-width: 100%; max-height: min(32vh, 16rem); width: auto; height: auto; margin: auto; }
 .post-image { margin: .7rem 0; text-align: center; }
 .image-open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
@@ -76,8 +76,6 @@ pre code { padding: 0; background: none; }
 .code-block { position: relative; margin: 1rem 0; }
 .code-block pre { margin: 0; padding-top: 2.25rem; }
 .code-copy { position: absolute; top: .4rem; right: .4rem; padding: .2rem .5rem; border: 1px solid #bbb; background: #fff; color: #555; font: 12px/1.4 var(--text-font); cursor: pointer; }
-.mindmap-list { padding-left: 1rem; border-left: 3px solid #ddd; overflow-x: auto; }
-
 .toc { max-height: 35vh; margin: .75rem 0; padding: .35rem .65rem; overflow: auto; border: 1px solid #ccc; }
 .toc summary { display: flex; justify-content: space-between; cursor: pointer; font-weight: 600; list-style: none; }
 .toc summary::after { content: "▴"; color: #2222ee; }

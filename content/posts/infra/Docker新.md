@@ -10,7 +10,6 @@ tags:
 ---
 
 
-{{< mind height="960px" >}}
 - Docker
     - mac 安装 -> https://www.docker.com
     - Container 容器 
@@ -151,7 +150,6 @@ tags:
     - 国内镜像配置
         - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/06/20260206153717824.png,500,200)
         
-{{< /mind >}}
 
 
 # 容器原理

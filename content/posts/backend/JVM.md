@@ -11,7 +11,6 @@ tags:
 
 # 类加载与字节码
 
-{{< mind height="560px" >}}
 - 类加载与字节码
     - 类加载机制
         - 类的生命周期
@@ -77,11 +76,9 @@ tags:
                 - 内存泄露：容器热部署时，类加载器无法回收->元空间泄露
         - 类相等判断
             - JVM 中，一个类的唯一性由（类的全限定名）+（加载它的 ClassLoader）共同决定
-{{< /mind >}}
 
 # JVM 内存结构与对象模型
 
-{{< mind height="560px" >}}
 - JVM 内存结构与对象模型
     - 运行时数据区
         - 整体结构
@@ -190,11 +187,9 @@ tags:
             - 正确姿势
                 - 用完必须 remove()
                 - 线程池环境更好要 remove
-{{< /mind >}}
 
 # GC 体系
 
-{{< mind height="560px" >}}
 - GC 体系
     - GC 基础原理
         - GC 要解决的问题
@@ -373,11 +368,9 @@ tags:
         - 目标：极低停顿
         - 核心：并发标记+并发重定位，依赖读写屏障等机制
         - 适合：大堆、强延迟敏感
-{{< /mind >}}
 
 # JIT 与性能
 
-{{< mind height="560px" >}}
 - JIT 与性能
     - 解释器 vs JIT
         - 解释器：启动快、编译开销低，但是每次执行都要逐条解释代码，长期运行慢
@@ -390,11 +383,9 @@ tags:
         - 解释执行（Tier 0）：冷启动，收集部分 profile
         - C1（Client Compiler，Tier 1-3）：编译快，优化较轻，适合尽快提升性能并继续收集 profile
         - C2（Server Compiler，Tier 4）：编译慢，优化重，最终追求极致性能
-{{< /mind >}}
 
 # 线上排障与工具链
 
-{{< mind height="560px" >}}
 - 线上排障与工具链
     - 保存现场
         - 采集 4 件套
@@ -493,4 +484,3 @@ tags:
                     - jcmd GC.class_histogram 看大对象/大集合
                 - 必要时 heap dump:
                     - MAT 看 Dominator Tree + Path to Roots
-{{< /mind >}}

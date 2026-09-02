@@ -306,7 +306,7 @@ RECIPE 03 · CONSOLE 清理
 
 FIND
 
-^\s\*console\.log\(.\*\);?\s\*\n
+`^\s\*console\.log\(.\*\);?\s\*\n`
 
 REPLACE
 
@@ -334,7 +334,7 @@ RECIPE 05 · 命名捕获
 
 FIND
 
-\[(?\<level\>\w+)\] (?\<msg\>.+)
+`\[(?\<level\>\w+)\] (?\<msg\>.+)`
 
 REPLACE
 

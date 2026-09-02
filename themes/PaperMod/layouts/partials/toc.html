@@ -1,8 +1,0 @@
-<details class="toc" open>
-    <summary>{{ i18n "toc" | default "目录" }}</summary>
-    {{- if findRE "<h[1-4]" .Content }}
-    {{ .TableOfContents }}
-    {{- else }}
-    <nav id="TableOfContents"><ul><li><a href="#post-content">正文</a></li></ul></nav>
-    {{- end }}
-</details>

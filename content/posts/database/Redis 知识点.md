@@ -8,7 +8,6 @@ tags:
   - Redis
 ---
 
-{{< mind height="860px" >}}
 - Redis
     - 环境安装
         - docker run -d --name redis -p 6379:6379 redis
@@ -405,7 +404,6 @@ tags:
                 - 网络抖动
             - 治理方案
                 - 拆分设计
-{{< /mind >}}
 
 # 附录
 

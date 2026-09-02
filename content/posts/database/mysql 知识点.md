@@ -10,7 +10,6 @@ tags:
 
 # 环境准备
 
-{{< mind height="560px" >}}
 - 环境配置与校验
     - docker-compose 启动
     - 命令行连接
@@ -44,12 +43,10 @@ tags:
             - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214524944.png,400,150)
         - 查看权限
             - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/12/20260212214555267.png,700,161)
-{{< /mind >}}
 
 
 # 基础查询
 
-{{< mind height="560px" >}}
 - 基础查询
     - 电商数据集
     - 单表查询
@@ -219,11 +216,9 @@ tags:
         - LEFT JOIN + WHERE right.col = 会变 left join 为 inner join
         - IN 包含 NULL 导致 NOT IN 结果异常，建议用 NOT EXISTS
         - DISTINCT 是对整行去重，不是对某列去重
-{{< /mind >}}
 
 # 约束与范式基础
 
-{{< mind height="560px" >}}
 - 约束与范式基础
     - 约束
         - 目的
@@ -279,11 +274,9 @@ tags:
                 - orders 冗余 user_name 快照
             - 冗余的是快照字段，而不是事实字段
             - 事实字段在主表，订单里的是下单当时的快照
-{{< /mind >}}
 
 # 索引 + EXPLAIN
 
-{{< mind height="560px" >}}
 - 索引 + EXPLAIN
     - 准备索引
         - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214111724844.png,200,50)
@@ -487,11 +480,9 @@ tags:
         - KeySet：用上次最后一条记录的排序键继续查
         - 游标分页
             - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/14/20260214204131923.png,522,180)
-{{< /mind >}}
 
 # 事务与并发控制
 
-{{< mind height="560px" >}}
 - 事务与并发控制
     - ACID
         - A 原子性：要么全成功，要么全失败，依靠 undo log + 回滚机制
@@ -881,11 +872,9 @@ tags:
                         - 锁等待数量/时间
                         - undo 表空间增长
                         - 复制延迟
-{{< /mind >}}
 
 # 表设计与数据治理
 
-{{< mind height="560px" >}}
 - 表设计与数据治理
     - 建模方法与边界
         - 建模方法
@@ -1060,11 +1049,9 @@ tags:
                         - 历史明细导出到对象存储，提供离线查询
             - 变更与在线 DDL
                 - MDL：MySQL 对表加 Metadata Lock 来保证 DDL 与 DML 的一致性。
-{{< /mind >}}
 
 # 运维与排障
 
-{{< mind height="560px" >}}
 - 运维与排障
     - 指标体系
         - 指标分层
@@ -1090,11 +1077,9 @@ tags:
                 - 内存 (swap/page cache)
                 - 网络
                     
-{{< /mind >}}
 
 # 体系架构
 
-{{< mind height="560px" >}}
 - mysql 体系架构
     - Server 层
         - 连接与会话管理
@@ -1155,7 +1140,6 @@ tags:
             - Server 写 binlog
             - InnoDB 写 redo commit
         - 后台线程刷脏页到数据文件，不要求提交同步
-{{< /mind >}}
 
 
 # 附录
@@ -1736,5 +1720,3 @@ JOIN (
 ) x ON x.order_id = o.id
 WHERE o.total_amount <> x.item_sum;
 ```
-
-

@@ -9,7 +9,6 @@ toc: true
 # mindmap    
 
 
-{{< mind height="560px" >}}
 - 论文大纲
   - 背景与问题
     - 研究动机
@@ -21,4 +20,3 @@ toc: true
     - 数据集
     - 指标
     - ![](https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/26/20260126204259715.png,160,120)
-{{< /mind >}}

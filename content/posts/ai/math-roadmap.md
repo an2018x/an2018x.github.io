@@ -4,7 +4,6 @@ date: '2026-05-16'
 draft: false
 description: "从线性代数到 Transformer 实现：覆盖向量空间、矩阵微积分、概率论、信息论、优化算法的 40 天数学学习路线图。"
 toc: true
-math: true
 tags:
   - AI
   - Math
@@ -73,19 +72,19 @@ LLM 里的一切——词向量、注意力权重、参数矩阵——本质上�
 
 **DAY 01 · 向量与向量空间** — 点积 · L2 范数 · 余弦相似度 · 词嵌入直觉
 
-**DAY 02 · 矩阵基本运算** — 矩阵乘法 · 转置 · 逆矩阵 · $QK^\top V$ 的矩阵视角
+**DAY 02 · 矩阵基本运算** — 矩阵乘法 · 转置 · 逆矩阵 · \(QK^\top V\) 的矩阵视角
 
 **DAY 03 · 线性变换的几何直觉** — 旋转 · 缩放 · 投影 · 秩 · 3B1B 线性代数本质
 
 **DAY 04 · 特征值与特征向量** — 特征分解 · PCA · Embedding 空间主成分
 
-**DAY 05 · SVD（奇异值分解）** — $A = U\Sigma V^\top$ · 低秩近似 · LoRA 的数学基础
+**DAY 05 · SVD（奇异值分解）** — \(A = U\Sigma V^\top\) · 低秩近似 · LoRA 的数学基础
 
 **DAY 06 · 动手实践** — NumPy 实现 Embedding 查找表 · 手写矩阵乘法 · 余弦相似度
 
 **DAY 07 · 复习与自测** — 手推余弦相似度 · 矩阵乘法结合律验证
 
-核心公式: $\cos\theta = \frac{\mathbf{a} \cdot \mathbf{b}}{\lVert\mathbf{a}\rVert \cdot \lVert\mathbf{b}\rVert}$ · $A = U\Sigma V^\top$
+核心公式: \(\cos\theta = \frac{\mathbf{a} \cdot \mathbf{b}}{\lVert\mathbf{a}\rVert \cdot \lVert\mathbf{b}\rVert}\) · \(A = U\Sigma V^\top\)
 
 ## 微积分与反向传播
 
@@ -95,19 +94,19 @@ DAY 8 – 14
 
 **DAY 08 · 导数与偏导数** — 链式法则 · 偏导数几何意义 · 反向传播唯一前提
 
-**DAY 09 · 梯度（Gradient）** — 梯度向量 · 梯度方向 · $f(x,y)=x^2y+3y$ 手算
+**DAY 09 · 梯度（Gradient）** — 梯度向量 · 梯度方向 · \(f(x,y)=x^2y+3y\) 手算
 
 **DAY 10 · 计算图** — 有向计算图 · 前向 vs 反向传播 · Karpathy micrograd
 
-**DAY 11 · 手推反向传播** — 2 层 MLP 逐层手推 · $\delta = \partial L/\partial z$
+**DAY 11 · 手推反向传播** — 2 层 MLP 逐层手推 · \(\delta = \partial L/\partial z\)
 
-**DAY 12 · 矩阵求导** — $\partial(Wx)/\partial W = x^\top$ · 布局约定 · Transformer 中的矩阵梯度
+**DAY 12 · 矩阵求导** — \(\partial(Wx)/\partial W = x^\top\) · 布局约定 · Transformer 中的矩阵梯度
 
 **DAY 13 · Jacobian 矩阵** — 多输出函数导数矩阵 · Softmax 的 Jacobian 结构
 
 **DAY 14 · 动手实践 · micrograd** — 纯 Python/NumPy 实现自动求导 · 加法 · 乘法 · tanh
 
-核心公式: $\frac{\partial L}{\partial w\_{ij}} = \delta\_j \cdot a\_i$ · $\frac{\partial(Wx)}{\partial W} = x^\top$
+核心公式: \(\frac{\partial L}{\partial w\_{ij}} = \delta\_j \cdot a\_i\) · \(\frac{\partial(Wx)}{\partial W} = x^\top\)
 
 ## 概率论与统计
 
@@ -119,17 +118,17 @@ DAY 15 – 21
 
 **DAY 16 · 常见概率分布** — 高斯 · 伯努利 · Categorical 分布 · LLM 输出分布
 
-**DAY 17 · 期望与方差** — $E[X]$ · $\text{Var}[X]$ · 协方差矩阵 · Layer Normalization
+**DAY 17 · 期望与方差** — \(E[X]\) · \(\text{Var}[X]\) · 协方差矩阵 · Layer Normalization
 
 **DAY 18 · 最大似然估计（MLE）** — MLE 思想 · 预测下一个 token ≡ MLE
 
 **DAY 19 · Softmax 函数** — exp 归一化 · 数值稳定性 · 温度参数
 
-**DAY 20 · 语言模型中的概率** — $P(w\_1,\ldots,w\_n)$ 建模 · 自回归生成的数学原理
+**DAY 20 · 语言模型中的概率** — \(P(w\_1,\ldots,w\_n)\) 建模 · 自回归生成的数学原理
 
 **DAY 21 · 动手实践 · Bigram 模型** — NumPy 实现 Softmax · Bigram 语言模型 · Karpathy makemore
 
-核心公式: $\text{softmax}(z\_i) = \frac{e^{z\_i}}{\sum\_j e^{z\_j}}$ · $P(w\_t \mid w\_1,\ldots,w\_{t-1})$
+核心公式: \(\text{softmax}(z\_i) = \frac{e^{z\_i}}{\sum\_j e^{z\_j}}\) · \(P(w\_t \mid w\_1,\ldots,w\_{t-1})\)
 
 ## 信息论
 
@@ -137,15 +136,15 @@ DAY 22 – 25
 
 信息论是理解"损失函数为什么有效"的关键。 交叉熵、KL 散度、困惑度——这四天解开训练目标背后的数学逻辑。
 
-**DAY 22 · 熵（Entropy）** — $H(P) = -\sum P(x)\log P(x)$ · 不确定性度量
+**DAY 22 · 熵（Entropy）** — \(H(P) = -\sum P(x)\log P(x)\) · 不确定性度量
 
-**DAY 23 · 交叉熵（Cross-Entropy）** — $H(P,Q) = -\sum P\log Q$ · 最小化交叉熵 $\equiv$ 最大化似然
+**DAY 23 · 交叉熵（Cross-Entropy）** — \(H(P,Q) = -\sum P\log Q\) · 最小化交叉熵 \(\equiv\) 最大化似然
 
-**DAY 24 · KL 散度** — $D\_{\text{KL}}(P\|Q) = \sum P\log\frac{P}{Q}$ · RLHF 中的 KL 惩罚项
+**DAY 24 · KL 散度** — \(D\_{\text{KL}}(P\|Q) = \sum P\log\frac{P}{Q}\) · RLHF 中的 KL 惩罚项
 
-**DAY 25 · 困惑度（Perplexity）** — $\text{PPL} = \exp(H(P,Q))$ · 用 Bigram 模型计算 PPL
+**DAY 25 · 困惑度（Perplexity）** — \(\text{PPL} = \exp(H(P,Q))\) · 用 Bigram 模型计算 PPL
 
-核心推导: $\min H(P,Q) \equiv \max \sum \log Q(x\_i) \equiv \text{MLE}$
+核心推导: \(\min H(P,Q) \equiv \max \sum \log Q(x\_i) \equiv \text{MLE}\)
 
 ## 优化算法
 
@@ -153,17 +152,17 @@ DAY 26 – 30
 
 模型怎么"学习"，背后全是优化。 从最基本的梯度下降到 Adam，从学习率调度到梯度裁剪， 理解每一个超参数背后的数学直觉。
 
-**DAY 26 · 梯度下降（GD & SGD）** — $\theta \leftarrow \theta - \eta\nabla L$ · Mini-batch SGD
+**DAY 26 · 梯度下降（GD & SGD）** — \(\theta \leftarrow \theta - \eta\nabla L\) · Mini-batch SGD
 
 **DAY 27 · Momentum 与 RMSProp** — 历史梯度加速 · 自适应学习率
 
-**DAY 28 · Adam 优化器** — Momentum + RMSProp · $m\_t$ / $v\_t$ 偏差修正 · LLM 首选
+**DAY 28 · Adam 优化器** — Momentum + RMSProp · \(m\_t\) / \(v\_t\) 偏差修正 · LLM 首选
 
 **DAY 29 · 学习率调度** — Warmup + Cosine Decay · GPT / LLaMA 标准配置
 
 **DAY 30 · 梯度问题** — 梯度消失 / 爆炸 · Gradient Clipping · 残差连接
 
-Adam: $\hat{m}\_t = \frac{m\_t}{1-\beta\_1^t}$ · $\hat{v}\_t = \frac{v\_t}{1-\beta\_2^t}$ · $\theta \leftarrow \theta - \eta \cdot \frac{\hat{m}}{\sqrt{\hat{v}}+\epsilon}$
+Adam: \(\hat{m}\_t = \frac{m\_t}{1-\beta\_1^t}\) · \(\hat{v}\_t = \frac{v\_t}{1-\beta\_2^t}\) · \(\theta \leftarrow \theta - \eta \cdot \frac{\hat{m}}{\sqrt{\hat{v}}+\epsilon}\)
 
 ## Transformer 核心数学 + 动手实现
 
@@ -171,19 +170,19 @@ DAY 31 – 40
 
 最后十天，把前五个阶段的所有数学工具组合起来—— 从 Embedding 到 Self-Attention，从 Multi-Head 到 LayerNorm， 精读原论文，从零实现一个 mini-GPT。
 
-**DAY 31 · Embedding 的数学** — $|V| \times d$ 矩阵 · Position Embedding · 维度与表达能力
+**DAY 31 · Embedding 的数学** — \(|V| \times d\) 矩阵 · Position Embedding · 维度与表达能力
 
-**DAY 32 · Self-Attention 机制** — $Q$ · $K$ · $V$ 线性变换 · $\text{Att} = \text{softmax}(QK^\top\!/\!\sqrt{d\_k})\,V$
+**DAY 32 · Self-Attention 机制** — \(Q\) · \(K\) · \(V\) 线性变换 · \(\text{Att} = \text{softmax}(QK^\top\!/\!\sqrt{d\_k})\,V\)
 
-**DAY 33 · 手推 Self-Attention** — $4 \times 3$ 序列矩阵 · 手算完整 Attention 输出
+**DAY 33 · 手推 Self-Attention** — \(4 \times 3\) 序列矩阵 · 手算完整 Attention 输出
 
 **DAY 34 · Multi-Head Attention** — 多组 Q/K/V · Concat + 投影 · 每个头学不同模式
 
 **DAY 35 · 位置编码** — 正弦/余弦编码 · 相对位置表示 · RoPE 旋转位置编码
 
-**DAY 36 · Layer Normalization** — $\text{LN}(x)=\frac{x-\mu}{\sigma}\!\cdot\!\gamma+\beta$ · Pre-LN vs Post-LN
+**DAY 36 · Layer Normalization** — \(\text{LN}(x)=\frac{x-\mu}{\sigma}\!\cdot\!\gamma+\beta\) · Pre-LN vs Post-LN
 
-**DAY 37 · FFN 与残差连接** — FFN 非线性变换 · $x + \text{FFN}(x)$ 的梯度流意义
+**DAY 37 · FFN 与残差连接** — FFN 非线性变换 · \(x + \text{FFN}(x)\) 的梯度流意义
 
 **DAY 38 · 精读《Attention Is All You Need》** — Section 3 逐公式对照 · 每个公式都能解释
 
@@ -191,7 +190,7 @@ DAY 31 – 40
 
 **DAY 40 · 综合回顾 · 数学笔记** — 六阶段知识串联 · 写 LLM 数学笔记 · 长期参考
 
-核心公式: $\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d\_k}}\right)V$
+核心公式: \(\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d\_k}}\right)V\)
 
 ## 推荐资源清单
 

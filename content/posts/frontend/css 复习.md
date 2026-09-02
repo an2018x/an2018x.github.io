@@ -11,7 +11,6 @@ tags:
 # 基础核心
 
 
-{{<mind>}}
 - 基础核心
     - CSS 基础与选择器
         - CSS 的三种引入方式
@@ -1030,11 +1029,9 @@ tags:
                 /* 旧写法：word-break: break-all; 也能用但更暴力 */
             }
             ```
-{{</mind>}}
 
 # 布局体系
 
-{{< mind height="860px" >}}
 - 布局体系
     - Flex 基础与主轴
         - Flex 容器与项目
@@ -1718,12 +1715,10 @@ tags:
                 空轨道折叠了，3 个项目等分 1200px
                 ```
 
-{{< /mind >}}
 
         
 # 响应式与进阶
 
-{{< mind height="860px" >}}
 - 响应式与进阶
     - 响应式基础与媒体查询
         - viewport meta 标签
@@ -2830,10 +2825,7 @@ tags:
                 to { transform: translateY(0); }
             }
             ```
-{{< /mind >}}
 
 # 工程化与实战
 
-{{< mind height="860px" >}}
 - 标题
-{{< /mind >}}
