@@ -1,12 +1,12 @@
-<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LLM-RAG-个人知识库助手 | 安橙的博客</title><meta name="description" content="实验元数据 (Meta Data) 实验编号/标题：LLM-RAG-个人知识库助手
+<!doctype html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>LLM-RAG-个人知识库助手 | 安橙的博客</title><meta name=description content="实验元数据 (Meta Data) 实验编号/标题：LLM-RAG-个人知识库助手
 日期：2026-02-23
 所属领域/标签：例如：#RAG #LLM
-🎯 实验前：假设与目标 (Plan) 实验目标 (Objective)：通过构建一个基于你自己文档的问答助手，掌握 RAG（检索增强生成）全流程、向量数据库 …"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/ai/llm-rag-%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93%E5%8A%A9%E6%89%8B/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">LLM-RAG-个人知识库助手</h1><div class="post-meta"><span title='2026-02-23 00:00:00 +0000 UTC'>二月 23, 2026</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#实验元数据-meta-data">实验元数据 (Meta Data)</a></li><li><a href="#-实验前假设与目标-plan">🎯 实验前：假设与目标 (Plan)</a></li><li><a href="#-实验中执行步骤与变量-do">🧪 实验中：执行步骤与变量 (Do)</a><ul><li><a href="#环境准备">环境准备</a></li><li><a href="#项目结构">项目结构</a></li><li><a href="#执行步骤">执行步骤</a><ul><li><a href="#文档加载器">文档加载器</a></li><li><a href="#文档分块器">文档分块器</a></li><li><a href="#embedding-封装">Embedding 封装</a></li><li><a href="#向量数据库操作">向量数据库操作</a></li><li><a href="#检索器">检索器</a></li><li><a href="#对话记忆管理">对话记忆管理</a></li><li><a href="#rag-链">RAG 链</a></li><li><a href="#命令行入口">命令行入口</a></li></ul></li></ul></li><li><a href="#-实验后现象与数据-check">👁️ 实验后：现象与数据 (Check)</a><ul><li><a href="#索引文档">索引文档</a></li><li><a href="#单次提问">单次提问</a></li></ul></li><li><a href="#交互式对话">交互式对话</a></li><li><a href="#-深度复盘分析与结论-act">🧠 深度复盘：分析与结论 (Act)</a><ul><li><ul><li><a href="#什么是-rag">什么是 RAG？</a></li><li><a href="#相关问题">相关问题</a></li></ul></li></ul></li><li><a href="#下一步行动-next-actions">下一步行动 (Next Actions)：</a></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="实验元数据-meta-data">实验元数据 (Meta Data)</h1><p>实验编号/标题：LLM-RAG-个人知识库助手</p><p>日期：2026-02-23</p><p>所属领域/标签：例如：#RAG #LLM</p><h1 id="-实验前假设与目标-plan">🎯 实验前：假设与目标 (Plan)</h1><p>实验目标 (Objective)：通过构建一个基于你自己文档的问答助手，掌握 RAG（检索增强生成）全流程、向量数据库、Embedding、Chunk 策略、对话记忆系统等 Agent 开发的关键技术。</p><p>构建一个知识库问答助手，支持：</p><ol><li>文档导入 — 加载 TXT、Markdown、PDF 文件到知识库</li><li>智能分块 — 将长文档切分为语义完整的片段</li><li>向量索引 — 将文档片段转为 Embedding 并存入向量数据库</li><li>语义检索 — 根据用户问题找到最相关的文档片段</li><li>增强回答 — 将检索到的内容作为上下文，让 LLM 生成精准回答</li><li>对话记忆 — 记住之前的对话，支持追问和上下文引用</li></ol><h1 id="-实验中执行步骤与变量-do">🧪 实验中：执行步骤与变量 (Do)</h1><h2 id="环境准备">环境准备</h2><pre><code class="language-bash"># 安装依赖
+🎯 实验前：假设与目标 (Plan) 实验目标 (Objective)：通过构建一个基于你自己文档的问答助手，掌握 RAG（检索增强生成）全流程、向量数据库 …"><meta name=robots content="index,follow"><link rel=canonical href=https://blog.ans20xx.com/posts/ai/llm-rag-%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93%E5%8A%A9%E6%89%8B/><link rel=stylesheet href=/css/minimal.min.9cf47da2bdd3ec3ef93f70d79fe64e43f3c217b51c9da6cc77c33f72be45649a.css integrity="sha256-nPR9or3T7D75P3DXn+ZOQ/PCF7UcnabMd8M/cr5FZJo=" crossorigin=anonymous></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/>安橙的博客</a></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/>博文</a></li><li><a href=https://blog.ans20xx.com/tags/>标签</a></li><li><a href=https://blog.ans20xx.com/search/>搜索</a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>LLM-RAG-个人知识库助手</h1><time class=post-meta datetime=2026-02-23>2026-02-23</time></header><details class=toc open><summary>目录</summary><nav id=TableOfContents><ul><li><a href=#实验元数据-meta-data>实验元数据 (Meta Data)</a></li><li><a href=#-实验前假设与目标-plan>🎯 实验前：假设与目标 (Plan)</a></li><li><a href=#-实验中执行步骤与变量-do>🧪 实验中：执行步骤与变量 (Do)</a><ul><li><a href=#环境准备>环境准备</a></li><li><a href=#项目结构>项目结构</a></li><li><a href=#执行步骤>执行步骤</a><ul><li><a href=#文档加载器>文档加载器</a></li><li><a href=#文档分块器>文档分块器</a></li><li><a href=#embedding-封装>Embedding 封装</a></li><li><a href=#向量数据库操作>向量数据库操作</a></li><li><a href=#检索器>检索器</a></li><li><a href=#对话记忆管理>对话记忆管理</a></li><li><a href=#rag-链>RAG 链</a></li><li><a href=#命令行入口>命令行入口</a></li></ul></li></ul></li><li><a href=#-实验后现象与数据-check>👁️ 实验后：现象与数据 (Check)</a><ul><li><a href=#索引文档>索引文档</a></li><li><a href=#单次提问>单次提问</a></li></ul></li><li><a href=#交互式对话>交互式对话</a></li><li><a href=#-深度复盘分析与结论-act>🧠 深度复盘：分析与结论 (Act)</a><ul><li><ul><li><a href=#什么是-rag>什么是 RAG？</a></li><li><a href=#相关问题>相关问题</a></li></ul></li></ul></li><li><a href=#下一步行动-next-actions>下一步行动 (Next Actions)：</a></li></ul></nav></details><div id=post-content class=post-content><h1 id=实验元数据-meta-data>实验元数据 (Meta Data)</h1><p>实验编号/标题：LLM-RAG-个人知识库助手</p><p>日期：2026-02-23</p><p>所属领域/标签：例如：#RAG #LLM</p><h1 id=-实验前假设与目标-plan>🎯 实验前：假设与目标 (Plan)</h1><p>实验目标 (Objective)：通过构建一个基于你自己文档的问答助手，掌握 RAG（检索增强生成）全流程、向量数据库、Embedding、Chunk 策略、对话记忆系统等 Agent 开发的关键技术。</p><p>构建一个知识库问答助手，支持：</p><ol><li>文档导入 — 加载 TXT、Markdown、PDF 文件到知识库</li><li>智能分块 — 将长文档切分为语义完整的片段</li><li>向量索引 — 将文档片段转为 Embedding 并存入向量数据库</li><li>语义检索 — 根据用户问题找到最相关的文档片段</li><li>增强回答 — 将检索到的内容作为上下文，让 LLM 生成精准回答</li><li>对话记忆 — 记住之前的对话，支持追问和上下文引用</li></ol><h1 id=-实验中执行步骤与变量-do>🧪 实验中：执行步骤与变量 (Do)</h1><h2 id=环境准备>环境准备</h2><pre><code class=language-bash># 安装依赖
 pip install anthropic chromadb sentence-transformers rich typer python-dotenv
 
 # 可选：PDF 支持
 pip install pymupdf  # 或 pypdf
-</code></pre><ul><li>chromadb — 轻量级向量数据库，本地运行，适合学习和原型开发</li><li>sentence-transformers — Embedding 模型库，本地运行，免费</li><li>pymupdf — PDF 文本提取</li></ul><h2 id="项目结构">项目结构</h2><pre><code>rag-assistant/
+</code></pre><ul><li>chromadb — 轻量级向量数据库，本地运行，适合学习和原型开发</li><li>sentence-transformers — Embedding 模型库，本地运行，免费</li><li>pymupdf — PDF 文本提取</li></ul><h2 id=项目结构>项目结构</h2><pre><code>rag-assistant/
 ├── .env
 ├── src/
 │   ├── __init__.py
@@ -29,7 +29,7 @@ pip install pymupdf  # 或 pypdf
 └── examples/
     ├── basic_qa.py
     └── evaluate_retrieval.py
-</code></pre><h2 id="执行步骤">执行步骤</h2><h3 id="文档加载器">文档加载器</h3><pre><code class="language-python"># src/loader.py
+</code></pre><h2 id=执行步骤>执行步骤</h2><h3 id=文档加载器>文档加载器</h3><pre><code class=language-python># src/loader.py
 import os
 from dataclasses import dataclass
 
@@ -116,7 +116,7 @@ class DocumentLoader:
                 pages.append(f&quot;[第{page_num}页]\n{text}&quot;)
         doc.close()
         return &quot;\n\n&quot;.join(pages)
-</code></pre><h3 id="文档分块器">文档分块器</h3><pre><code class="language-python"># src/chunker.py
+</code></pre><h3 id=文档分块器>文档分块器</h3><pre><code class=language-python># src/chunker.py
 from dataclasses import dataclass
 
 @dataclass
@@ -354,7 +354,7 @@ class DocumentChunker:
                 return search_start + idx + len(sep)
 
         return position  # 没找到合适的边界，在原位置切分
-</code></pre><h3 id="embedding-封装">Embedding 封装</h3><pre><code class="language-python"># src/embedder.py
+</code></pre><h3 id=embedding-封装>Embedding 封装</h3><pre><code class=language-python># src/embedder.py
 from sentence_transformers import SentenceTransformer
 
 
@@ -392,7 +392,7 @@ class Embedder:
         return self.model.encode(
             query, normalize_embeddings=True
         ).tolist()
-</code></pre><h3 id="向量数据库操作">向量数据库操作</h3><pre><code class="language-python"># src/vectorstore.py
+</code></pre><h3 id=向量数据库操作>向量数据库操作</h3><pre><code class=language-python># src/vectorstore.py
 import chromadb
 
 from src.chunker import Chunk
@@ -501,7 +501,7 @@ class VectorStore:
             &quot;total_chunks&quot;: self.collection.count(),
             &quot;collection_name&quot;: self.collection.name,
         }
-</code></pre><h3 id="检索器">检索器</h3><pre><code class="language-python"># src/retriever.py
+</code></pre><h3 id=检索器>检索器</h3><pre><code class=language-python># src/retriever.py
 from src.vectorstore import VectorStore
 
 
@@ -576,7 +576,7 @@ class Retriever:
             context_parts.append(f&quot;{header}\n{result['content']}&quot;)
 
         return &quot;\n\n---\n\n&quot;.join(context_parts)
-</code></pre><h3 id="对话记忆管理">对话记忆管理</h3><pre><code class="language-python"># src/memory.py
+</code></pre><h3 id=对话记忆管理>对话记忆管理</h3><pre><code class=language-python># src/memory.py
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -690,7 +690,7 @@ class ConversationMemory:
             if msg.role == &quot;user&quot;:
                 return msg.content
         return None
-</code></pre><h3 id="rag-链">RAG 链</h3><pre><code class="language-python">from anthropic import Anthropic
+</code></pre><h3 id=rag-链>RAG 链</h3><pre><code class=language-python>from anthropic import Anthropic
 
 from src.chunker import DocumentChunker
 from src.loader import DocumentLoader
@@ -927,7 +927,7 @@ class RAGAssistant:
             &quot;has_summary&quot;: bool(self.memory.summary),
             &quot;llm_model&quot;: self.llm_model,
         }
-</code></pre><h3 id="命令行入口">命令行入口</h3><pre><code class="language-python"># src/cli.py
+</code></pre><h3 id=命令行入口>命令行入口</h3><pre><code class=language-python># src/cli.py
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -1014,11 +1014,7 @@ def chat(
 
 if __name__ == &quot;__main__&quot;:
     app()
-</code></pre><h1 id="-实验后现象与数据-check">👁️ 实验后：现象与数据 (Check)</h1><h2 id="索引文档">索引文档</h2><p>((venv) ) ➜ rag-assistant python -m src.cli index ./data/my_notes.md</p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224191850047.png" alt></button></figure></p><h2 id="单次提问">单次提问</h2><p>((venv) ) ➜ rag-assistant python -m src.cli ask &ldquo;失踪的账本是什么&rdquo;</p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224193444275.png" alt></button></figure></p><h1 id="交互式对话">交互式对话</h1><p>python -m src.cli chat</p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224194816006.png" alt></button></figure></p><h1 id="-深度复盘分析与结论-act">🧠 深度复盘：分析与结论 (Act)</h1><h3 id="什么是-rag">什么是 RAG？</h3><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223225619465.png" alt></button></figure></p><p>RAG = Retrieval-Augmented Generation（检索增强生成）
+</code></pre><h1 id=-实验后现象与数据-check>👁️ 实验后：现象与数据 (Check)</h1><h2 id=索引文档>索引文档</h2><p>((venv) ) ➜ rag-assistant python -m src.cli index ./data/my_notes.md</p><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224191850047.png alt></button></figure></p><h2 id=单次提问>单次提问</h2><p>((venv) ) ➜ rag-assistant python -m src.cli ask &ldquo;失踪的账本是什么&rdquo;</p><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224193444275.png alt></button></figure></p><h1 id=交互式对话>交互式对话</h1><p>python -m src.cli chat</p><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/24/20260224194816006.png alt></button></figure></p><h1 id=-深度复盘分析与结论-act>🧠 深度复盘：分析与结论 (Act)</h1><h3 id=什么是-rag>什么是 RAG？</h3><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/02/23/20260223225619465.png alt></button></figure></p><p>RAG = Retrieval-Augmented Generation（检索增强生成）
 LLM 有两个根本问题：</p><p>知识过时 — 训练数据有截止日期
 缺少私有知识 — 不知道你的文档、公司数据</p><p>RAG 的解决方案：先检索，再生成。
 传统 LLM:
@@ -1026,7 +1022,4 @@ LLM 有两个根本问题：</p><p>知识过时 — 训练数据有截止日期
 用户问题 → 从你的文档中检索相关内容 → 将内容 + 问题一起发给 LLM → 基于真实文档的回答</p><p>Embedding（向量嵌入）：
 把一段文本转换为一个高维向量（如 384 维的浮点数数组）。语义相似的文本，向量在空间中距离更近。这让我们能用"数学距离"来衡量"语义相似度"。</p><p>&ldquo;猫在睡觉&rdquo; → [0.12, -0.34, 0.78, &mldr;] ┐
 &ldquo;小猫正在休息&rdquo; → [0.11, -0.32, 0.80, &mldr;] ┤ 距离近 → 语义相似
-&ldquo;今天天气不错&rdquo; → [-0.56, 0.23, 0.01, &mldr;] ┘ 距离远 → 语义不相关</p><p>Chunk（分块）：</p><p>文档通常很长，不可能整篇塞进 LLM 的上下文。分块就是把长文档切成小片段（如每段 500 字），分别做 Embedding。检索时只返回最相关的几个片段。</p><p>向量数据库：</p><p>专门存储和检索向量的数据库。给定一个查询向量，能快速找到最相似的 K 个向量（及其对应的原始文本）。</p><h3 id="相关问题">相关问题</h3><p>Q: RAG 的检索效果不好怎么优化？</p><p>A: 分层优化：(1) 分块策略 — 调整 chunk_size、尝试语义分块；(2) Embedding 模型 — 换更好的模型（如 BGE、Cohere embed）；(3) 混合检索 — 语义检索 + BM25；(4) Reranker 重排 — Cross-Encoder 精排；(5) 查询优化 — 代词消解、查询扩展；(6) 元数据过滤 — 利用文件来源、时间等缩小范围。</p><p>Q: chunk_size 怎么选？</p><p>A: 取决于文档类型和问题粒度。经验值：FAQ → 100-200，技术文档 → 300-500，长文分析 → 500-1000。核心原则：一个 chunk 应该能独立回答一个问题。太大包含噪音，太小丢失上下文。建议用评估集测试不同大小。</p><p>Q: 向量数据库怎么选？</p><p>A: ChromaDB — 原型和小项目；Pinecone — 不想运维的云方案；Milvus — 大规模（百万级以上向量）；pgvector — 已有 PostgreSQL 基础设施时。核心考虑：数据规模、延迟要求、运维能力、成本。</p><p>Q: RAG 和 Fine-tuning 怎么选？</p><p>A: RAG 适合：知识经常变化、需要引用来源、数据量大但不需要改变模型行为。Fine-tuning 适合：需要改变模型的输出风格/格式、特定领域的专业术语理解、对延迟要求极高（省去检索步骤）。两者可以结合使用。</p><p>Q: 对话记忆为什么重要？怎么实现？</p><p>A: 没有记忆的 RAG 无法处理追问（&ldquo;它还有什么特点？"）。实现方式：(1) 最简单 — 保留完整对话历史放入 messages；(2) 窗口法 — 只保留最近 N 轮；(3) 摘要法 — 用 LLM 压缩早期对话；(4) 向量记忆 — 将历史对话也存入向量数据库检索。要注意 token 成本与记忆质量的平衡。</p><h1 id="下一步行动-next-actions">下一步行动 (Next Actions)：</h1><p>✅ 验证通过，纳入标准流程。</p><p>🔄 验证失败，修改假设，开启下一次实验（EXP-002）。</p><p>❓ 产生新问题：[记录新问题]</p></div><footer class="post-footer"><ul class="post-tags"><li><a href="/tags/llm/">LLM</a></li><li><a href="/tags/rag/">RAG</a></li><li><a href="/tags/%E5%AE%9E%E9%AA%8C/">实验</a></li></ul></footer></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
-<output>100%</output>
-<button type="button" data-zoom-in aria-label="放大">＋</button>
-<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
+&ldquo;今天天气不错&rdquo; → [-0.56, 0.23, 0.01, &mldr;] ┘ 距离远 → 语义不相关</p><p>Chunk（分块）：</p><p>文档通常很长，不可能整篇塞进 LLM 的上下文。分块就是把长文档切成小片段（如每段 500 字），分别做 Embedding。检索时只返回最相关的几个片段。</p><p>向量数据库：</p><p>专门存储和检索向量的数据库。给定一个查询向量，能快速找到最相似的 K 个向量（及其对应的原始文本）。</p><h3 id=相关问题>相关问题</h3><p>Q: RAG 的检索效果不好怎么优化？</p><p>A: 分层优化：(1) 分块策略 — 调整 chunk_size、尝试语义分块；(2) Embedding 模型 — 换更好的模型（如 BGE、Cohere embed）；(3) 混合检索 — 语义检索 + BM25；(4) Reranker 重排 — Cross-Encoder 精排；(5) 查询优化 — 代词消解、查询扩展；(6) 元数据过滤 — 利用文件来源、时间等缩小范围。</p><p>Q: chunk_size 怎么选？</p><p>A: 取决于文档类型和问题粒度。经验值：FAQ → 100-200，技术文档 → 300-500，长文分析 → 500-1000。核心原则：一个 chunk 应该能独立回答一个问题。太大包含噪音，太小丢失上下文。建议用评估集测试不同大小。</p><p>Q: 向量数据库怎么选？</p><p>A: ChromaDB — 原型和小项目；Pinecone — 不想运维的云方案；Milvus — 大规模（百万级以上向量）；pgvector — 已有 PostgreSQL 基础设施时。核心考虑：数据规模、延迟要求、运维能力、成本。</p><p>Q: RAG 和 Fine-tuning 怎么选？</p><p>A: RAG 适合：知识经常变化、需要引用来源、数据量大但不需要改变模型行为。Fine-tuning 适合：需要改变模型的输出风格/格式、特定领域的专业术语理解、对延迟要求极高（省去检索步骤）。两者可以结合使用。</p><p>Q: 对话记忆为什么重要？怎么实现？</p><p>A: 没有记忆的 RAG 无法处理追问（&ldquo;它还有什么特点？"）。实现方式：(1) 最简单 — 保留完整对话历史放入 messages；(2) 窗口法 — 只保留最近 N 轮；(3) 摘要法 — 用 LLM 压缩早期对话；(4) 向量记忆 — 将历史对话也存入向量数据库检索。要注意 token 成本与记忆质量的平衡。</p><h1 id=下一步行动-next-actions>下一步行动 (Next Actions)：</h1><p>✅ 验证通过，纳入标准流程。</p><p>🔄 验证失败，修改假设，开启下一次实验（EXP-002）。</p><p>❓ 产生新问题：[记录新问题]</p></div><footer class=post-footer><ul class=post-tags><li><a href=/tags/llm/>LLM</a></li><li><a href=/tags/rag/>RAG</a></li><li><a href=/tags/%E5%AE%9E%E9%AA%8C/>实验</a></li></ul></footer></article></main><footer class=footer>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></footer><dialog class=image-viewer aria-label=图片预览><div class=image-viewer-bar><button type=button data-zoom-out aria-label=缩小>−</button><output>100%</output><button type=button data-zoom-in aria-label=放大>＋</button><button type=button data-close>关闭</button></div><div class=image-viewer-stage><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

@@ -1,22 +1,22 @@
-<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Go 开发拾遗 | 安橙的博客</title><meta name="description" content="Go 开发拾遗"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/backend/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">Go 开发拾遗</h1><div class="post-description">Go 开发拾遗</div><div class="post-meta"><span title='2025-08-21 00:00:00 +0000 UTC'>八月 21, 2025</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#变量">变量</a><ul><li><a href="#变量声明">变量声明</a><ul><li><a href="#声明变量">声明变量</a></li><li><a href="#类型零值">类型零值</a></li><li><a href="#变量声明块">变量声明块</a></li><li><a href="#省略类型信息的声明">省略类型信息的声明</a></li><li><a href="#显式类型转型">显式类型转型</a></li><li><a href="#短变量声明">短变量声明</a></li></ul></li><li><a href="#变量作用域">变量作用域</a><ul><li><a href="#包级变量">包级变量</a></li><li><a href="#局部变量">局部变量</a></li></ul></li></ul></li><li><a href="#go-包-package">Go 包 (Package)</a></li><li><a href="#字符串">字符串</a><ul><li><a href="#不可变">不可变</a></li><li><a href="#raw-string">Raw String</a></li><li><a href="#使用-unicode-字符集">使用 Unicode 字符集</a></li><li><a href="#rune-类型与码点">rune 类型与码点</a></li><li><a href="#下标操作">下标操作</a></li><li><a href="#字符迭代">字符迭代</a></li><li><a href="#拼接字符串">拼接字符串</a></li></ul></li><li><a href="#常量">常量</a><ul><li><a href="#常量声明">常量声明</a></li><li><a href="#无类型常量">无类型常量</a></li><li><a href="#枚举">枚举</a></li></ul></li><li><a href="#数组">数组</a></li><li><a href="#if-语句">if 语句</a></li><li><a href="#switch-语句">Switch 语句</a><ul><li><a href="#基础结构">基础结构</a></li><li><a href="#type-switch">type switch</a></li></ul></li><li><a href="#for-循环">for 循环</a></li><li><a href="#切片">切片</a></li><li><a href="#map-类型">map 类型</a><ul><li><a href="#声明">声明</a></li><li><a href="#初始化">初始化</a></li><li><a href="#插入新键值对">插入新键值对</a></li><li><a href="#获取键值对数量">获取键值对数量</a></li><li><a href="#查找和数据读取">查找和数据读取</a></li><li><a href="#删除数据">删除数据</a></li><li><a href="#遍历键值对">遍历键值对</a></li></ul></li><li><a href="#函数">函数</a><ul><li><a href="#函数组成">函数组成</a></li><li><a href="#函数变量声明">函数变量声明</a></li><li><a href="#函数参数">函数参数</a></li><li><a href="#多返回值">多返回值</a></li><li><a href="#函数是一等公民">函数是一等公民</a></li><li><a href="#函数转型">函数转型</a></li><li><a href="#闭包">闭包</a></li></ul></li><li><a href="#错误处理">错误处理</a><ul><li><a href="#error-类型">error 类型</a></li><li><a href="#透明错误处理">透明错误处理</a></li><li><a href="#哨兵错误处理">哨兵错误处理</a></li><li><a href="#错误值类型检视">错误值类型检视</a></li><li><a href="#panic-处理">panic 处理</a></li></ul></li><li><a href="#方法">方法</a><ul><li><a href="#go-方法声明">Go 方法声明</a></li><li><a href="#调用方法">调用方法</a></li><li><a href="#方法本质">方法本质</a></li><li><a href="#方法集合">方法集合</a></li></ul></li><li><a href="#指针">指针</a><ul><li><a href="#指针类型">指针类型</a></li><li><a href="#指针类型赋值">指针类型赋值</a></li></ul></li><li><a href="#结构体">结构体</a><ul><li><a href="#定义新类型">定义新类型</a></li><li><a href="#类型别名">类型别名</a></li><li><a href="#结构体类型定义">结构体类型定义</a></li><li><a href="#定义空结构体">定义空结构体</a></li><li><a href="#使用其他结构体作为自定义结构体中的类型">使用其他结构体作为自定义结构体中的类型</a></li><li><a href="#结构体初始化">结构体初始化</a></li></ul></li><li><a href="#类型嵌入">类型嵌入</a><ul><li><a href="#接口类型的类型嵌入">接口类型的类型嵌入</a></li><li><a href="#结构体类型的嵌入">结构体类型的嵌入</a></li></ul></li><li><a href="#context">Context</a><ul><li><a href="#取消操作">取消操作</a></li><li><a href="#设置超时时间">设置超时时间</a></li><li><a href="#传递请求的元数据">传递请求的元数据</a></li></ul></li><li><a href="#goroutine">Goroutine</a><ul><li><a href="#基本用法">基本用法</a></li><li><a href="#goroutine-通信">Goroutine 通信</a></li><li><a href="#channel-是一等公民">Channel 是一等公民</a></li><li><a href="#创建-channel">创建 Channel</a></li><li><a href="#给-channel-赋初值">给 channel 赋初值</a></li><li><a href="#发送和接收-channel">发送和接收 Channel</a></li><li><a href="#关闭-channel">关闭 Channel</a></li><li><a href="#select-原语">select 原语</a></li></ul></li><li><a href="#reflect">Reflect</a></li><li><a href="#泛型">泛型</a><ul><li><a href="#类型参数">类型参数</a></li><li><a href="#调用泛型函数">调用泛型函数</a></li><li><a href="#泛型类型">泛型类型</a></li><li><a href="#使用泛型类型">使用泛型类型</a></li><li><a href="#泛型约束">泛型约束</a></li><li><a href="#自定义约束">自定义约束</a></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="变量">变量</h1><h2 id="变量声明">变量声明</h2><h3 id="声明变量">声明变量</h3><pre><code class="language-Go">var a int = 6 // 修饰变量声明的关键字 变量名 变量类型 = 初始值
-</code></pre><p>Go 会将变量名放在类型前。</p><pre><code class="language-Go">var a, b, c int = 5, 6, 7
-</code></pre><p>可以在一行变量声明中同时声明多个变量。</p><h3 id="类型零值">类型零值</h3><pre><code class="language-Go">var a int // a的初值为int类型的零值：0
-</code></pre><p>如果没有显式为变量赋初值，Go 会自动为变量赋予<mark>这个类型的零值</mark>。</p><ul><li>基础类型：int 为 0，bool 为 false，string 为空字符串 &ldquo;"。</li><li>复合类型：指针、slice、map、channel、interface、func 的零值为 nil。</li><li>结构体：所有字段递归初始化为各自的零值。</li></ul><h3 id="变量声明块">变量声明块</h3><pre><code class="language-Go">var (
+<!doctype html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Go 开发拾遗 | 安橙的博客</title><meta name=description content="Go 开发拾遗"><meta name=robots content="index,follow"><link rel=canonical href=https://blog.ans20xx.com/posts/backend/go-%E5%BC%80%E5%8F%91%E6%8B%BE%E9%81%97/><link rel=stylesheet href=/css/minimal.min.9cf47da2bdd3ec3ef93f70d79fe64e43f3c217b51c9da6cc77c33f72be45649a.css integrity="sha256-nPR9or3T7D75P3DXn+ZOQ/PCF7UcnabMd8M/cr5FZJo=" crossorigin=anonymous></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/>安橙的博客</a></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/>博文</a></li><li><a href=https://blog.ans20xx.com/tags/>标签</a></li><li><a href=https://blog.ans20xx.com/search/>搜索</a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>Go 开发拾遗</h1><div class=post-description>Go 开发拾遗</div><time class=post-meta datetime=2025-08-21>2025-08-21</time></header><details class=toc open><summary>目录</summary><nav id=TableOfContents><ul><li><a href=#变量>变量</a><ul><li><a href=#变量声明>变量声明</a><ul><li><a href=#声明变量>声明变量</a></li><li><a href=#类型零值>类型零值</a></li><li><a href=#变量声明块>变量声明块</a></li><li><a href=#省略类型信息的声明>省略类型信息的声明</a></li><li><a href=#显式类型转型>显式类型转型</a></li><li><a href=#短变量声明>短变量声明</a></li></ul></li><li><a href=#变量作用域>变量作用域</a><ul><li><a href=#包级变量>包级变量</a></li><li><a href=#局部变量>局部变量</a></li></ul></li></ul></li><li><a href=#go-包-package>Go 包 (Package)</a></li><li><a href=#字符串>字符串</a><ul><li><a href=#不可变>不可变</a></li><li><a href=#raw-string>Raw String</a></li><li><a href=#使用-unicode-字符集>使用 Unicode 字符集</a></li><li><a href=#rune-类型与码点>rune 类型与码点</a></li><li><a href=#下标操作>下标操作</a></li><li><a href=#字符迭代>字符迭代</a></li><li><a href=#拼接字符串>拼接字符串</a></li></ul></li><li><a href=#常量>常量</a><ul><li><a href=#常量声明>常量声明</a></li><li><a href=#无类型常量>无类型常量</a></li><li><a href=#枚举>枚举</a></li></ul></li><li><a href=#数组>数组</a></li><li><a href=#if-语句>if 语句</a></li><li><a href=#switch-语句>Switch 语句</a><ul><li><a href=#基础结构>基础结构</a></li><li><a href=#type-switch>type switch</a></li></ul></li><li><a href=#for-循环>for 循环</a></li><li><a href=#切片>切片</a></li><li><a href=#map-类型>map 类型</a><ul><li><a href=#声明>声明</a></li><li><a href=#初始化>初始化</a></li><li><a href=#插入新键值对>插入新键值对</a></li><li><a href=#获取键值对数量>获取键值对数量</a></li><li><a href=#查找和数据读取>查找和数据读取</a></li><li><a href=#删除数据>删除数据</a></li><li><a href=#遍历键值对>遍历键值对</a></li></ul></li><li><a href=#函数>函数</a><ul><li><a href=#函数组成>函数组成</a></li><li><a href=#函数变量声明>函数变量声明</a></li><li><a href=#函数参数>函数参数</a></li><li><a href=#多返回值>多返回值</a></li><li><a href=#函数是一等公民>函数是一等公民</a></li><li><a href=#函数转型>函数转型</a></li><li><a href=#闭包>闭包</a></li></ul></li><li><a href=#错误处理>错误处理</a><ul><li><a href=#error-类型>error 类型</a></li><li><a href=#透明错误处理>透明错误处理</a></li><li><a href=#哨兵错误处理>哨兵错误处理</a></li><li><a href=#错误值类型检视>错误值类型检视</a></li><li><a href=#panic-处理>panic 处理</a></li></ul></li><li><a href=#方法>方法</a><ul><li><a href=#go-方法声明>Go 方法声明</a></li><li><a href=#调用方法>调用方法</a></li><li><a href=#方法本质>方法本质</a></li><li><a href=#方法集合>方法集合</a></li></ul></li><li><a href=#指针>指针</a><ul><li><a href=#指针类型>指针类型</a></li><li><a href=#指针类型赋值>指针类型赋值</a></li></ul></li><li><a href=#结构体>结构体</a><ul><li><a href=#定义新类型>定义新类型</a></li><li><a href=#类型别名>类型别名</a></li><li><a href=#结构体类型定义>结构体类型定义</a></li><li><a href=#定义空结构体>定义空结构体</a></li><li><a href=#使用其他结构体作为自定义结构体中的类型>使用其他结构体作为自定义结构体中的类型</a></li><li><a href=#结构体初始化>结构体初始化</a></li></ul></li><li><a href=#类型嵌入>类型嵌入</a><ul><li><a href=#接口类型的类型嵌入>接口类型的类型嵌入</a></li><li><a href=#结构体类型的嵌入>结构体类型的嵌入</a></li></ul></li><li><a href=#context>Context</a><ul><li><a href=#取消操作>取消操作</a></li><li><a href=#设置超时时间>设置超时时间</a></li><li><a href=#传递请求的元数据>传递请求的元数据</a></li></ul></li><li><a href=#goroutine>Goroutine</a><ul><li><a href=#基本用法>基本用法</a></li><li><a href=#goroutine-通信>Goroutine 通信</a></li><li><a href=#channel-是一等公民>Channel 是一等公民</a></li><li><a href=#创建-channel>创建 Channel</a></li><li><a href=#给-channel-赋初值>给 channel 赋初值</a></li><li><a href=#发送和接收-channel>发送和接收 Channel</a></li><li><a href=#关闭-channel>关闭 Channel</a></li><li><a href=#select-原语>select 原语</a></li></ul></li><li><a href=#reflect>Reflect</a></li><li><a href=#泛型>泛型</a><ul><li><a href=#类型参数>类型参数</a></li><li><a href=#调用泛型函数>调用泛型函数</a></li><li><a href=#泛型类型>泛型类型</a></li><li><a href=#使用泛型类型>使用泛型类型</a></li><li><a href=#泛型约束>泛型约束</a></li><li><a href=#自定义约束>自定义约束</a></li></ul></li></ul></nav></details><div id=post-content class=post-content><h1 id=变量>变量</h1><h2 id=变量声明>变量声明</h2><h3 id=声明变量>声明变量</h3><pre><code class=language-Go>var a int = 6 // 修饰变量声明的关键字 变量名 变量类型 = 初始值
+</code></pre><p>Go 会将变量名放在类型前。</p><pre><code class=language-Go>var a, b, c int = 5, 6, 7
+</code></pre><p>可以在一行变量声明中同时声明多个变量。</p><h3 id=类型零值>类型零值</h3><pre><code class=language-Go>var a int // a的初值为int类型的零值：0
+</code></pre><p>如果没有显式为变量赋初值，Go 会自动为变量赋予<mark>这个类型的零值</mark>。</p><ul><li>基础类型：int 为 0，bool 为 false，string 为空字符串 &ldquo;"。</li><li>复合类型：指针、slice、map、channel、interface、func 的零值为 nil。</li><li>结构体：所有字段递归初始化为各自的零值。</li></ul><h3 id=变量声明块>变量声明块</h3><pre><code class=language-Go>var (
     a, b, c int = 5, 6, 7
     c, d, e rune = 'C', 'D', 'E'
 ) 
-</code></pre><p>用一个 var 关键字将多个变量声明放在一起。</p><h3 id="省略类型信息的声明">省略类型信息的声明</h3><pre><code class="language-Go">var b = 13
-</code></pre><p>Go 编译器会根据右侧变量初值自动推导出变量的类型，并给这个变量赋予初值所对应的默认类型。</p><p>整型值的默认类型 int，浮点值的默认类型为 float64，复数值的默认类型为 complex128。</p><pre><code class="language-Go">var a
-</code></pre><p>注意：不允许不带初值的，省略类型信息的声明。</p><h3 id="显式类型转型">显式类型转型</h3><pre><code class="language-Go">var b = int32(13)
-</code></pre><p>当不接受默认类型，而是要显式地为变量指定类型，除了通用的声明形式，我们还可以通过显式类型转型达到我们的目的。</p><h3 id="短变量声明">短变量声明</h3><pre><code class="language-Go">a := 12
+</code></pre><p>用一个 var 关键字将多个变量声明放在一起。</p><h3 id=省略类型信息的声明>省略类型信息的声明</h3><pre><code class=language-Go>var b = 13
+</code></pre><p>Go 编译器会根据右侧变量初值自动推导出变量的类型，并给这个变量赋予初值所对应的默认类型。</p><p>整型值的默认类型 int，浮点值的默认类型为 float64，复数值的默认类型为 complex128。</p><pre><code class=language-Go>var a
+</code></pre><p>注意：不允许不带初值的，省略类型信息的声明。</p><h3 id=显式类型转型>显式类型转型</h3><pre><code class=language-Go>var b = int32(13)
+</code></pre><p>当不接受默认类型，而是要显式地为变量指定类型，除了通用的声明形式，我们还可以通过显式类型转型达到我们的目的。</p><h3 id=短变量声明>短变量声明</h3><pre><code class=language-Go>a := 12
 b := 'A'
 c := &quot;hello&quot;
-</code></pre><p>通过短变量声明，可以省略 var 和类型信息。</p><h2 id="变量作用域">变量作用域</h2><h3 id="包级变量">包级变量</h3><p>包级变量在包级别可见。</p><p>包级变量只能使用带有 var 变量的声明形式，不能使用短变量声明形式。</p><pre><code class="language-Go">var (
+</code></pre><p>通过短变量声明，可以省略 var 和类型信息。</p><h2 id=变量作用域>变量作用域</h2><h3 id=包级变量>包级变量</h3><p>包级变量在包级别可见。</p><p>包级变量只能使用带有 var 变量的声明形式，不能使用短变量声明形式。</p><pre><code class=language-Go>var (
   a = 13
   b = int32(17)
   f = float32(3.14)
 )
-</code></pre><p>使用显式类型转型，是 Go 官方推荐的包变量声明形式。</p><pre><code class="language-Go">// $GOROOT/src/net/net.go
+</code></pre><p>使用显式类型转型，是 Go 官方推荐的包变量声明形式。</p><pre><code class=language-Go>// $GOROOT/src/net/net.go
 var (
     netGo  bool 
     netCgo bool 
@@ -27,14 +27,14 @@ var (
     noDeadline = time.Time{}
     noCancel   = (chan struct{})(nil)
 )
-</code></pre><p>声明聚类：</p><ol><li>将同一类的变量声明放在一个 var 块中。</li><li>将延迟初始化的变量声明放在一个 var 块中。</li></ol><h3 id="局部变量">局部变量</h3><pre><code class="language-Go">a := 17
+</code></pre><p>声明聚类：</p><ol><li>将同一类的变量声明放在一个 var 块中。</li><li>将延迟初始化的变量声明放在一个 var 块中。</li></ol><h3 id=局部变量>局部变量</h3><pre><code class=language-Go>a := 17
 f := 3.14
 s := &quot;hello, gopher!&quot;
 
 a := int32(17)
 f := float32(3.14)
 s := []byte(&quot;hello, gopher!&quot;)
-</code></pre><p>对于声明且显式初始化的变量，建议采用短变量声明。</p><pre><code class="language-Go">if as, isASCII := makeASCIISet(chars); isASCII { 
+</code></pre><p>对于声明且显式初始化的变量，建议采用短变量声明。</p><pre><code class=language-Go>if as, isASCII := makeASCIISet(chars); isASCII { 
     for i := len(s) - 1; i &gt;= 0; i-- {
         if as.contains(s[i]) {
             return i
@@ -42,7 +42,7 @@ s := []byte(&quot;hello, gopher!&quot;)
     }
     return -1
 }
-</code></pre><p>尽量在分支控制时，使用短变量声明。</p><h1 id="go-包-package">Go 包 (Package)</h1><p>包是公共源代码的集合，一个包可以包含多个 go 文件， 每个 go 文件的第一行必须为 <code>packge [所属包名]</code>。</p><pre><code class="language-go">// main.go
+</code></pre><p>尽量在分支控制时，使用短变量声明。</p><h1 id=go-包-package>Go 包 (Package)</h1><p>包是公共源代码的集合，一个包可以包含多个 go 文件， 每个 go 文件的第一行必须为 <code>packge [所属包名]</code>。</p><pre><code class=language-go>// main.go
 package main
 
 import &quot;fmt&quot;
@@ -50,7 +50,7 @@ import &quot;fmt&quot;
 func main() {
     fmt.Println(&quot;hi&quot;)
 }
-</code></pre><pre><code class="language-go">// helper.go
+</code></pre><pre><code class=language-go>// helper.go
 package main
 
 import &quot;fmt&quot;
@@ -58,10 +58,10 @@ import &quot;fmt&quot;
 func helper() {
     fmt.Println(&quot;helper&quot;)
 }
-</code></pre><p>包分为可执行包 (Executable Package) 和可重用包 (Reusable Package)。</p><p>可执行包就是 main 包，main 包是一个特殊的包，可以被编译和执行，<mark>必须包含一个 main 函数</mark>。</p><p>可重用包可以定义一个可以被用作依赖的包，当编译可重用包的时候什么都不会输出。</p><p>使用 import 语句可以导入其他包。</p><h1 id="字符串">字符串</h1><h2 id="不可变">不可变</h2><pre><code class="language-go">var s string = &quot;hello&quot;
+</code></pre><p>包分为可执行包 (Executable Package) 和可重用包 (Reusable Package)。</p><p>可执行包就是 main 包，main 包是一个特殊的包，可以被编译和执行，<mark>必须包含一个 main 函数</mark>。</p><p>可重用包可以定义一个可以被用作依赖的包，当编译可重用包的时候什么都不会输出。</p><p>使用 import 语句可以导入其他包。</p><h1 id=字符串>字符串</h1><h2 id=不可变>不可变</h2><pre><code class=language-go>var s string = &quot;hello&quot;
 s[0] = 'k'   // 错误：字符串的内容是不可改变的
 s = &quot;gopher&quot; // ok
-</code></pre><p>Go 中，不能改变字符串的内容，无需担心并发问题。</p><h2 id="raw-string">Raw String</h2><p>可以通过反引号支持『所见即所得』的原始字符串 (Raw String)</p><pre><code class="language-Go">var s string = `         ,_---~~~~~----._
+</code></pre><p>Go 中，不能改变字符串的内容，无需担心并发问题。</p><h2 id=raw-string>Raw String</h2><p>可以通过反引号支持『所见即所得』的原始字符串 (Raw String)</p><pre><code class=language-Go>var s string = `         ,_---~~~~~----._
     _,,_,*^____      _____*g*\&quot;*,--,
    / __/ /'     ^.  /      \ ^@q   f
   [  @f | @))    |  | @))   l  0 _/
@@ -73,29 +73,29 @@ s = &quot;gopher&quot; // ok
     |                            |
      |                           |`
 fmt.Println(s)
-</code></pre><h2 id="使用-unicode-字符集">使用 Unicode 字符集</h2><p>Go 源文件默认使用 Unicode 字符集。</p><p>Go 字符串中的每个字符都是一个 Unicode 字符，这些 Unicode 字符是以 UTF-8 编码存储在内存中。</p><h2 id="rune-类型与码点">rune 类型与码点</h2><p>Go 使用 rune 来表示一个 Unicode 码点，本质上是 int32 类型的别名。</p><pre><code class="language-go">// $GOROOT/src/builtin.go
+</code></pre><h2 id=使用-unicode-字符集>使用 Unicode 字符集</h2><p>Go 源文件默认使用 Unicode 字符集。</p><p>Go 字符串中的每个字符都是一个 Unicode 字符，这些 Unicode 字符是以 UTF-8 编码存储在内存中。</p><h2 id=rune-类型与码点>rune 类型与码点</h2><p>Go 使用 rune 来表示一个 Unicode 码点，本质上是 int32 类型的别名。</p><pre><code class=language-go>// $GOROOT/src/builtin.go
 type rune = int32
-</code></pre><p>一般使用单引号括起来的字符字面值来初始化 rune 变量。</p><pre><code class="language-go">var a rune = 'a' 
-</code></pre><h2 id="下标操作">下标操作</h2><pre><code class="language-Go">var s = &quot;中国人&quot;
+</code></pre><p>一般使用单引号括起来的字符字面值来初始化 rune 变量。</p><pre><code class=language-go>var a rune = 'a' 
+</code></pre><h2 id=下标操作>下标操作</h2><pre><code class=language-Go>var s = &quot;中国人&quot;
 fmt.Printf(&quot;0x%x\n&quot;, s[0]) // 0xe4：字符“中” utf-8编码的第一个字节
-</code></pre><p>通过下标操作，获取到的是第一个字节，而不是字符。</p><p>通过 <code>len(s)</code> 获取到的也是字节数量。</p><h2 id="字符迭代">字符迭代</h2><pre><code class="language-Go">var s = &quot;中国人&quot;
+</code></pre><p>通过下标操作，获取到的是第一个字节，而不是字符。</p><p>通过 <code>len(s)</code> 获取到的也是字节数量。</p><h2 id=字符迭代>字符迭代</h2><pre><code class=language-Go>var s = &quot;中国人&quot;
 
 for i, v := range s {
     fmt.Printf(&quot;index: %d, value: 0x%x\n&quot;, i, v)
 } 
-</code></pre><p>通过 for range 迭代，得到的是码点，以及该字符在字符串中的偏移值。</p><h2 id="拼接字符串">拼接字符串</h2><pre><code class="language-Go">s := &quot;Rob Pike, &quot;
+</code></pre><p>通过 for range 迭代，得到的是码点，以及该字符在字符串中的偏移值。</p><h2 id=拼接字符串>拼接字符串</h2><pre><code class=language-Go>s := &quot;Rob Pike, &quot;
 s = s + &quot;Robert Griesemer, &quot;
 s += &quot; Ken Thompson&quot;
 
 fmt.Println(s) // Rob Pike, Robert Griesemer, Ken Thompson
-</code></pre><p>支持通过 + 和 += 拼接字符串</p><h1 id="常量">常量</h1><h2 id="常量声明">常量声明</h2><pre><code class="language-Go">const Pi float64 = 3.14159265358979323846 // 单行常量声明
+</code></pre><p>支持通过 + 和 += 拼接字符串</p><h1 id=常量>常量</h1><h2 id=常量声明>常量声明</h2><pre><code class=language-Go>const Pi float64 = 3.14159265358979323846 // 单行常量声明
 
 // 以const代码块形式声明常量
 const (
     size int64 = 4096
     i, j, s = 13, 14, &quot;bar&quot; // 单行声明多个常量
 )
-</code></pre><p>Go 通过 const 关键字声明常量。</p><blockquote><p>注意：Go 常量的类型只局限于 Go 基本数据类型</p></blockquote><h2 id="无类型常量">无类型常量</h2><p>在 Go 中，即使两个类型的底层类型是一样的，它们仍然是不同的数据类型，不可以被互相比较或者混在一个表达式中进行运算。</p><pre><code class="language-Go">type myInt int
+</code></pre><p>Go 通过 const 关键字声明常量。</p><blockquote><p>注意：Go 常量的类型只局限于 Go 基本数据类型</p></blockquote><h2 id=无类型常量>无类型常量</h2><p>在 Go 中，即使两个类型的底层类型是一样的，它们仍然是不同的数据类型，不可以被互相比较或者混在一个表达式中进行运算。</p><pre><code class=language-Go>type myInt int
 const n myInt = 13
 const m int = n + 5 // 编译器报错：cannot use n + 5 (type myInt) as type int in const initializer
 
@@ -103,24 +103,24 @@ func main() {
     var a int = 5
     fmt.Println(a + n) // 编译器报错：invalid operation: a + n (mismatched types int and myInt)
 }
-</code></pre><pre><code class="language-Go">type myInt int
+</code></pre><pre><code class=language-Go>type myInt int
 const n = 13
 
 func main() {
     var a myInt = 5
     fmt.Println(a + n)  // 输出：18
 }
-</code></pre><p>对于无类型的常量参与的表达式求值，Go 编译器会根据上下文中的类型信息把无类型常量自动转换为相应的类型，再参与求值计算，该操作是隐式进行的。</p><h2 id="枚举">枚举</h2><p>Go 语言没有原生提供枚举类型，但是可以通过 const 代码定义的常量集合来实现枚举。</p><pre><code class="language-Go">const (
+</code></pre><p>对于无类型的常量参与的表达式求值，Go 编译器会根据上下文中的类型信息把无类型常量自动转换为相应的类型，再参与求值计算，该操作是隐式进行的。</p><h2 id=枚举>枚举</h2><p>Go 语言没有原生提供枚举类型，但是可以通过 const 代码定义的常量集合来实现枚举。</p><pre><code class=language-Go>const (
     Apple, Banana = 11, 22
     Strawberry, Grape 
     Pear, Watermelon 
 )
-</code></pre><pre><code class="language-Go">const (
+</code></pre><pre><code class=language-Go>const (
     Apple, Banana = 11, 22
     Strawberry, Grape  = 11, 22 // 使用上一行的初始化表达式
     Pear, Watermelon  = 11, 22 // 使用上一行的初始化表达式
 )
-</code></pre><p>Go 的 const 语法会隐式重复前一个非空表达式，所以上面两段代码是等价的。</p><pre><code class="language-Go">// $GOROOT/src/sync/mutex.go 
+</code></pre><p>Go 的 const 语法会隐式重复前一个非空表达式，所以上面两段代码是等价的。</p><pre><code class=language-Go>// $GOROOT/src/sync/mutex.go 
 const ( 
     mutexLocked = 1 &lt;&lt; iota  // 1
     mutexWoken   // 2
@@ -128,12 +128,12 @@ const (
     mutexWaiterShift = iota // 3
     starvationThresholdNs = 1e6 // 1e6
 )
-</code></pre><p>iota 是 Go 语言的一个预定义标识符，表示的是 const 声明块中么个常量所处位置在块中的声明值(从 0 开始)</p><h1 id="数组">数组</h1><p>Go 中的数组是一个长度固定的，由同构类型元素组成的连续序列。</p><pre><code class="language-Go">var arr [N]T
-</code></pre><p>上面声明了一个数组变量 arr，它的类型为 [N]T，元素的类型是 T，数组长度为 N。</p><p>数组的长度需要在声明数组变量时提供，Go 编译器需要再编译阶段就知道数组类型的长度。</p><p>如果两个数组类型的元素类型 T 和数组长度 N 都是一样的，那么这两个数组是等价的。</p><pre><code class="language-Go">var mArr [2][3][4]int
-</code></pre><p>可以定义多维数组。</p><p>数组类型变量是一个整体，一整个数组变量表示的是整个数组，无论是迭代还是作为实际参数传给一个函数/方法，Go 传递数组都是使用值拷贝。</p><h1 id="if-语句">if 语句</h1><pre><code class="language-Go">if runtime.GOOS == &quot;linux&quot; {
+</code></pre><p>iota 是 Go 语言的一个预定义标识符，表示的是 const 声明块中么个常量所处位置在块中的声明值(从 0 开始)</p><h1 id=数组>数组</h1><p>Go 中的数组是一个长度固定的，由同构类型元素组成的连续序列。</p><pre><code class=language-Go>var arr [N]T
+</code></pre><p>上面声明了一个数组变量 arr，它的类型为 [N]T，元素的类型是 T，数组长度为 N。</p><p>数组的长度需要在声明数组变量时提供，Go 编译器需要再编译阶段就知道数组类型的长度。</p><p>如果两个数组类型的元素类型 T 和数组长度 N 都是一样的，那么这两个数组是等价的。</p><pre><code class=language-Go>var mArr [2][3][4]int
+</code></pre><p>可以定义多维数组。</p><p>数组类型变量是一个整体，一整个数组变量表示的是整个数组，无论是迭代还是作为实际参数传给一个函数/方法，Go 传递数组都是使用值拷贝。</p><h1 id=if-语句>if 语句</h1><pre><code class=language-Go>if runtime.GOOS == &quot;linux&quot; {
     println(&quot;we are on linux os&quot;)    
 }
-</code></pre><p>if 语句的布尔表达式不需要括号包裹，后面的表达式的求值结果也必须是布尔类型。</p><pre><code class="language-Go">func main() {
+</code></pre><p>if 语句的布尔表达式不需要括号包裹，后面的表达式的求值结果也必须是布尔类型。</p><pre><code class=language-Go>func main() {
     if a, c := f(), h(); a &gt; 0 {
         println(a)
     } else if b := f(); b &gt; 0 {
@@ -142,7 +142,7 @@ const (
         println(a, b, c)
     }
 }
-</code></pre><p>可以在 if 后的布尔表达式前，进行变量的声明，在 if 布尔表达式前声明的变量，被叫做 if 语句的的自用变量。</p><h1 id="switch-语句">Switch 语句</h1><h2 id="基础结构">基础结构</h2><pre><code class="language-go">switch initStmt; expr {
+</code></pre><p>可以在 if 后的布尔表达式前，进行变量的声明，在 if 布尔表达式前声明的变量，被叫做 if 语句的的自用变量。</p><h1 id=switch-语句>Switch 语句</h1><h2 id=基础结构>基础结构</h2><pre><code class=language-go>switch initStmt; expr {
     case expr1:
         // 执行分支1
     case expr2:
@@ -157,7 +157,7 @@ const (
     default: 
         // 执行默认分支
 }
-</code></pre><pre><code class="language-go">func readByExtBySwitch(ext string) {
+</code></pre><pre><code class=language-go>func readByExtBySwitch(ext string) {
     switch ext {
     case &quot;json&quot;:
         println(&quot;read json file&quot;)
@@ -173,7 +173,7 @@ const (
         println(&quot;unsupported file extension:&quot;, ext)
     }
 }
-</code></pre><h2 id="type-switch">type switch</h2><pre><code class="language-Go">func main() {
+</code></pre><h2 id=type-switch>type switch</h2><pre><code class=language-Go>func main() {
     var x interface{} = 13
     switch x.(type) {
     case nil:
@@ -188,7 +188,7 @@ const (
         println(&quot;don't support the type&quot;)
     }
 }
-</code></pre><p>switch 关键字后跟着的表达式为 x.(type) ，这种表达式类型是 switch 语句特有的，只能在 switch 语句中使用。</p><p>表达式中的 x 必须是一个接口类型变量，表达式的求值结果是这个接口类型变量对应的动态类型。</p><pre><code class="language-Go">func main() {
+</code></pre><p>switch 关键字后跟着的表达式为 x.(type) ，这种表达式类型是 switch 语句特有的，只能在 switch 语句中使用。</p><p>表达式中的 x 必须是一个接口类型变量，表达式的求值结果是这个接口类型变量对应的动态类型。</p><pre><code class=language-Go>func main() {
     var x interface{} = 13
     switch v := x.(type) {
     case nil:
@@ -203,46 +203,46 @@ const (
         println(&quot;don't support the type&quot;)
     }
 }
-</code></pre><p>可以通过 v:=x.(type) 获取类型对应的值信息，注意 v 存储的不是类型信息，而是变量 x 的动态类型对应的值信息。</p><h1 id="for-循环">for 循环</h1><pre><code class="language-Go">var sum int
+</code></pre><p>可以通过 v:=x.(type) 获取类型对应的值信息，注意 v 存储的不是类型信息，而是变量 x 的动态类型对应的值信息。</p><h1 id=for-循环>for 循环</h1><pre><code class=language-Go>var sum int
 for i := 0; i &lt; 10; i++ {
     sum += i
 }
 println(sum)
-</code></pre><pre><code class="language-Go">for i, j, k := 0, 1, 2; (i &lt; 20) &amp;&amp; (j &lt; 10) &amp;&amp; (k &lt; 30); i, j, k = i+1, j+1, k+5 {
+</code></pre><pre><code class=language-Go>for i, j, k := 0, 1, 2; (i &lt; 20) &amp;&amp; (j &lt; 10) &amp;&amp; (k &lt; 30); i, j, k = i+1, j+1, k+5 {
     sum += (i + j + k)
     println(sum)
 }
-</code></pre><p>Go 语言的 for 循环支持声明多循环变量，可以应用在循环体以及判断条件中。</p><pre><code class="language-Go">i := 0
+</code></pre><p>Go 语言的 for 循环支持声明多循环变量，可以应用在循环体以及判断条件中。</p><pre><code class=language-Go>i := 0
 for i &lt; 10 {
     println(i)
     i++
 }  
-</code></pre><p>可以仅保留条件表达式，这样就等价于 while</p><pre><code class="language-Go">for { 
+</code></pre><p>可以仅保留条件表达式，这样就等价于 while</p><pre><code class=language-Go>for { 
    // 循环体代码
 }
-</code></pre><p>无限循环可以省略表达式。</p><pre><code class="language-Go">for i, v := range sl {
+</code></pre><p>无限循环可以省略表达式。</p><pre><code class=language-Go>for i, v := range sl {
     fmt.Printf(&quot;sl[%d] = %d\n&quot;, i, v)
 }
-</code></pre><p>for-range 可以变量切片的元素。</p><h1 id="切片">切片</h1><pre><code class="language-Go">var nums = []int{1, 2, 3, 4, 5, 6}
+</code></pre><p>for-range 可以变量切片的元素。</p><h1 id=切片>切片</h1><pre><code class=language-Go>var nums = []int{1, 2, 3, 4, 5, 6}
 fmt.Println(len(nums)) // 6
-</code></pre><p>切片声明不需要传入长度属性，切片的长度不是固定的，而是随着切片中元素个数的变化而变化的，可以通过 len 获取切片的长度。</p><pre><code class="language-Go">nums = append(nums, 7) // 切片变为[1 2 3 4 5 6 7]
+</code></pre><p>切片声明不需要传入长度属性，切片的长度不是固定的，而是随着切片中元素个数的变化而变化的，可以通过 len 获取切片的长度。</p><pre><code class=language-Go>nums = append(nums, 7) // 切片变为[1 2 3 4 5 6 7]
 fmt.Println(len(nums)) // 7
-</code></pre><p>可以通过 append 函数，向切片中动态添加元素。</p><pre><code class="language-Go">var s []int // s 是 nil 切片
+</code></pre><p>可以通过 append 函数，向切片中动态添加元素。</p><pre><code class=language-Go>var s []int // s 是 nil 切片
 s = append(s, 1, 2, 3) // 无需提前分配空间
-</code></pre><p>nil 切片可以安全调用 append 方法动态扩展。</p><pre><code class="language-Go">var a []int
+</code></pre><p>nil 切片可以安全调用 append 方法动态扩展。</p><pre><code class=language-Go>var a []int
 for i := range a {
     fmt.Println(i)
 }
-</code></pre><p>nil 切片可以安全调用 for-range 遍历。</p><pre><code class="language-Go">sl := make([]byte, 6, 10) // 其中10为cap值，即底层数组长度，6为切片的初始长度
+</code></pre><p>nil 切片可以安全调用 for-range 遍历。</p><pre><code class=language-Go>sl := make([]byte, 6, 10) // 其中10为cap值，即底层数组长度，6为切片的初始长度
 sl := make([]byte, 6) // cap = len = 6
-</code></pre><p>可以通过 make 函数来创建切片，并指定底层数组的长度。</p><pre><code class="language-Go">arr := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+</code></pre><p>可以通过 make 函数来创建切片，并指定底层数组的长度。</p><pre><code class=language-Go>arr := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 sl := arr[3:7:9]
-</code></pre><p>可以基于 <code>array[low:high:max]</code> 从数组或者已有的切片中创建切片。</p><p>起始元素是 low，长度是 high - low，容量是 max - low。</p><h1 id="map-类型">map 类型</h1><h2 id="声明">声明</h2><p>map 类型用来表示一组无序的键值对。</p><pre><code class="language-Go">map[string]string // key与value元素的类型相同
+</code></pre><p>可以基于 <code>array[low:high:max]</code> 从数组或者已有的切片中创建切片。</p><p>起始元素是 low，长度是 high - low，容量是 max - low。</p><h1 id=map-类型>map 类型</h1><h2 id=声明>声明</h2><p>map 类型用来表示一组无序的键值对。</p><pre><code class=language-Go>map[string]string // key与value元素的类型相同
 map[int]string    // key与value元素的类型不同
-</code></pre><blockquote><p>注意：函数类型、map 类型自身、切片类型不能作为 map 的 key 类型。</p></blockquote><pre><code class="language-Go">var m map[string]int // 一个map[string]int类型的变量
-</code></pre><h2 id="初始化">初始化</h2><p>map 无法零值可用，因此直接对 map 进行操作，会触发 panic。</p><pre><code class="language-Go">var m map[string]int // m = nil
+</code></pre><blockquote><p>注意：函数类型、map 类型自身、切片类型不能作为 map 的 key 类型。</p></blockquote><pre><code class=language-Go>var m map[string]int // 一个map[string]int类型的变量
+</code></pre><h2 id=初始化>初始化</h2><p>map 无法零值可用，因此直接对 map 进行操作，会触发 panic。</p><pre><code class=language-Go>var m map[string]int // m = nil
 m[&quot;key&quot;] = 1         // 发生运行时异常：panic: assignment to entry in nil map
-</code></pre><pre><code class="language-Go">m := map[int]string{}
+</code></pre><pre><code class=language-Go>m := map[int]string{}
 m1 := map[int][]string{
     1: []string{&quot;val1_1&quot;, &quot;val1_2&quot;},
     3: []string{&quot;val3_1&quot;, &quot;val3_2&quot;, &quot;val3_3&quot;},
@@ -261,11 +261,11 @@ m2 := map[Position]string{
 }
 m1 := make(map[int]string) // 未指定初始容量
 m2 := make(map[int]string, 8) // 指定初始容量为8
-</code></pre><p>通过复合字面值或者 make 函数可以初始化 map。</p><h2 id="插入新键值对">插入新键值对</h2><pre><code class="language-Go">m := make(map[int]string)
+</code></pre><p>通过复合字面值或者 make 函数可以初始化 map。</p><h2 id=插入新键值对>插入新键值对</h2><pre><code class=language-Go>m := make(map[int]string)
 m[1] = &quot;value1&quot;
 m[2] = &quot;value2&quot;
 m[3] = &quot;value3&quot;
-</code></pre><h2 id="获取键值对数量">获取键值对数量</h2><pre><code class="language-Go">m := map[string]int {
+</code></pre><h2 id=获取键值对数量>获取键值对数量</h2><pre><code class=language-Go>m := map[string]int {
   &quot;key1&quot; : 1,
   &quot;key2&quot; : 2,
 }
@@ -273,14 +273,14 @@ m[3] = &quot;value3&quot;
 fmt.Println(len(m)) // 2
 m[&quot;key3&quot;] = 3  
 fmt.Println(len(m)) // 3
-</code></pre><h2 id="查找和数据读取">查找和数据读取</h2><pre><code class="language-Go">m := make(map[string]int)
+</code></pre><h2 id=查找和数据读取>查找和数据读取</h2><pre><code class=language-Go>m := make(map[string]int)
 v, ok := m[&quot;key1&quot;]
 if !ok {
     // &quot;key1&quot;不在map中
 }
 
 // &quot;key1&quot;在map中，v将被赋予&quot;key1&quot;键对应的value
-</code></pre><p>通过 comma ok 语法，进行对 key 的查询。</p><h2 id="删除数据">删除数据</h2><pre><code class="language-Go">m := map[string]int {
+</code></pre><p>通过 comma ok 语法，进行对 key 的查询。</p><h2 id=删除数据>删除数据</h2><pre><code class=language-Go>m := map[string]int {
   &quot;key1&quot; : 1,
   &quot;key2&quot; : 2,
 }
@@ -288,7 +288,7 @@ if !ok {
 fmt.Println(m) // map[key1:1 key2:2]
 delete(m, &quot;key2&quot;) // 删除&quot;key2&quot;
 fmt.Println(m) // map[key1:1]
-</code></pre><p>如果 key 不存在，delete 也不会抛出异常。</p><h2 id="遍历键值对">遍历键值对</h2><pre><code class="language-Go">m := map[int]int{
+</code></pre><p>如果 key 不存在，delete 也不会抛出异常。</p><h2 id=遍历键值对>遍历键值对</h2><pre><code class=language-Go>m := map[int]int{
     1: 11,
     2: 12,
     3: 13,
@@ -299,17 +299,17 @@ for k, v := range m {
     fmt.Printf(&quot;[%d, %d] &quot;, k, v)
 }
 fmt.Printf(&quot;}\n&quot;)
-</code></pre><pre><code class="language-Go">for k, _ := range m { 
+</code></pre><pre><code class=language-Go>for k, _ := range m { 
   // 使用k
   
 }
 for k := range m {
   // 使用k
 }
-</code></pre><p>只关心键的话，使用上面的方式进行迭代。</p><pre><code class="language-Go">for _, v := range m {
+</code></pre><p>只关心键的话，使用上面的方式进行迭代。</p><pre><code class=language-Go>for _, v := range m {
   // 使用v
 }
-</code></pre><blockquote><p>注意，Go 语言中对于 map 类型的顺序是随机的，不能依赖遍历 map 得到的元素次序。</p></blockquote><h1 id="函数">函数</h1><h2 id="函数组成">函数组成</h2><pre><code class="language-Go">//关键字 函数名  参数列表                                      返回值列表
+</code></pre><blockquote><p>注意，Go 语言中对于 map 类型的顺序是随机的，不能依赖遍历 map 得到的元素次序。</p></blockquote><h1 id=函数>函数</h1><h2 id=函数组成>函数组成</h2><pre><code class=language-Go>//关键字 函数名  参数列表                                      返回值列表
 func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
     // 函数体
     p := newPrinter()
@@ -318,12 +318,12 @@ func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
     p.free()
     return
 }
-</code></pre><h2 id="函数变量声明">函数变量声明</h2><pre><code class="language-Go">// 变量名 = 函数类型
+</code></pre><h2 id=函数变量声明>函数变量声明</h2><pre><code class=language-Go>// 变量名 = 函数类型
 var Fprintf = func(w io.Writer, format string, a ...interface{}) (n int, err error) {
 }
-</code></pre><p>声明一个类型为函数类型的变量。</p><p>函数声明中的函数名就是变量名，函数声明中的 func 关键字、参数列表和返回值列表共同构成了函数类型。</p><p>参数列表和返回值列表的组合被称为函数签名，函数类型也可以看作是 func 关键字 + 函数签名组成。</p><pre><code class="language-Go">func(io.Writer, string, ...interface{}) (int, error)
-</code></pre><p>在表述函数类型时，也会省略函数签名参数列表中的参数名，以及返回值列表中的返回值变量名。</p><p>每个函数声明所定义的函数，仅仅是对于函数类型的一个实例。</p><pre><code class="language-Go">f := func(){}
-</code></pre><p>func(){} 被称为函数字面值，函数字面值由函数类型与函数体组成，也叫做匿名函数。</p><h2 id="函数参数">函数参数</h2><p>参数列表中的参数叫做形式参数，函数调用实际传入的参数叫做实际参数。</p><p>Go 中，函数参数传递采用的是值传递，就是将实际参数在内存中的表示逐位拷贝到形式参数中。</p><pre><code class="language-Go">func myAppend(sl []int, elems ...int) []int {
+</code></pre><p>声明一个类型为函数类型的变量。</p><p>函数声明中的函数名就是变量名，函数声明中的 func 关键字、参数列表和返回值列表共同构成了函数类型。</p><p>参数列表和返回值列表的组合被称为函数签名，函数类型也可以看作是 func 关键字 + 函数签名组成。</p><pre><code class=language-Go>func(io.Writer, string, ...interface{}) (int, error)
+</code></pre><p>在表述函数类型时，也会省略函数签名参数列表中的参数名，以及返回值列表中的返回值变量名。</p><p>每个函数声明所定义的函数，仅仅是对于函数类型的一个实例。</p><pre><code class=language-Go>f := func(){}
+</code></pre><p>func(){} 被称为函数字面值，函数字面值由函数类型与函数体组成，也叫做匿名函数。</p><h2 id=函数参数>函数参数</h2><p>参数列表中的参数叫做形式参数，函数调用实际传入的参数叫做实际参数。</p><p>Go 中，函数参数传递采用的是值传递，就是将实际参数在内存中的表示逐位拷贝到形式参数中。</p><pre><code class=language-Go>func myAppend(sl []int, elems ...int) []int {
     fmt.Printf(&quot;%T\n&quot;, elems) // []int
     if len(elems) == 0 {
         println(&quot;no elems to append&quot;)
@@ -341,10 +341,10 @@ func main() {
     sl = myAppend(sl, 4, 5, 6)
     fmt.Println(sl) // [1 2 3 4 5 6]
 }
-</code></pre><p>变长参数通过切片来实现，可以使用切片支持的所有操作来操作变长参数。</p><h2 id="多返回值">多返回值</h2><pre><code class="language-Go">func foo()                       // 无返回值
+</code></pre><p>变长参数通过切片来实现，可以使用切片支持的所有操作来操作变长参数。</p><h2 id=多返回值>多返回值</h2><pre><code class=language-Go>func foo()                       // 无返回值
 func foo() error                 // 仅有一个返回值
 func foo() (int, string, error)  // 有2或2个以上返回值
-</code></pre><p>如果一个函数仅有一个返回值，那么不需要用括号括起来，否则需要。</p><pre><code class="language-Go">// $GOROOT/src/time/format.go
+</code></pre><p>如果一个函数仅有一个返回值，那么不需要用括号括起来，否则需要。</p><pre><code class=language-Go>// $GOROOT/src/time/format.go
 func parseNanoseconds(value string, nbytes int) (ns int, rangeErrString string, err error) {
     if !commaOrPeriod(value[0]) {
         err = errBad
@@ -364,23 +364,23 @@ func parseNanoseconds(value string, nbytes int) (ns int, rangeErrString string, 
     }
     return
 }
-</code></pre><p>在返回值个数较多时，可以使用具名返回值让函数可读性更好。</p><h2 id="函数是一等公民">函数是一等公民</h2><p>如果一门编程语言对某种语言元素的创建和使用没有限制，我们可以像对待值一样对待这种元素，那么就称之为一等公民。</p><p>拥有一等公民待遇的语法元素可以存储在变量中，可以作为参数传递给函数，可以在函数内部创建并可以作为返回值从函数返回。</p><h2 id="函数转型">函数转型</h2><pre><code class="language-Go">func greeting(w http.ResponseWriter, r *http.Request) {
+</code></pre><p>在返回值个数较多时，可以使用具名返回值让函数可读性更好。</p><h2 id=函数是一等公民>函数是一等公民</h2><p>如果一门编程语言对某种语言元素的创建和使用没有限制，我们可以像对待值一样对待这种元素，那么就称之为一等公民。</p><p>拥有一等公民待遇的语法元素可以存储在变量中，可以作为参数传递给函数，可以在函数内部创建并可以作为返回值从函数返回。</p><h2 id=函数转型>函数转型</h2><pre><code class=language-Go>func greeting(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, &quot;Welcome, Gopher!\n&quot;)
 }                    
 
 func main() {
     http.ListenAndServe(&quot;:8080&quot;, http.HandlerFunc(greeting))
 }
-</code></pre><pre><code class="language-Go">// $GOROOT/src/net/http/server.go
+</code></pre><pre><code class=language-Go>// $GOROOT/src/net/http/server.go
 func ListenAndServe(addr string, handler Handler) error {
     server := &amp;Server{Addr: addr, Handler: handler}
     return server.ListenAndServe()
 }
-</code></pre><pre><code class="language-Go">// $GOROOT/src/net/http/server.go
+</code></pre><pre><code class=language-Go>// $GOROOT/src/net/http/server.go
 type Handler interface {
     ServeHTTP(ResponseWriter, *Request)
 }
-</code></pre><pre><code class="language-Go">// $GOROOT/src/net/http/server.go
+</code></pre><pre><code class=language-Go>// $GOROOT/src/net/http/server.go
 
 type HandlerFunc func(ResponseWriter, *Request)
 
@@ -388,15 +388,15 @@ type HandlerFunc func(ResponseWriter, *Request)
 func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
     f(w, r)
 }
-</code></pre><p>HandlerFunc 是一个基于函数类型定义的新类型，它的底层类型为函数类型 <code>func(ResponseWriter, *Request)</code>。这个类型有一个方法 ServeHTTP，实现了 Handler 接口。</p><p><code>http.HandlerFunc(greeting)</code> 可以将函数 greeting 显式转换为 HandlerFunc 类型，后者实现了 Handler 接口。</p><h2 id="闭包">闭包</h2><p>Go 闭包是在函数内部创建的匿名函数，匿名函数可以访问创建它的函数的参数与局部变量。</p><pre><code class="language-Go">func partialTimes(x int) func(int) int {
+</code></pre><p>HandlerFunc 是一个基于函数类型定义的新类型，它的底层类型为函数类型 <code>func(ResponseWriter, *Request)</code>。这个类型有一个方法 ServeHTTP，实现了 Handler 接口。</p><p><code>http.HandlerFunc(greeting)</code> 可以将函数 greeting 显式转换为 HandlerFunc 类型，后者实现了 Handler 接口。</p><h2 id=闭包>闭包</h2><p>Go 闭包是在函数内部创建的匿名函数，匿名函数可以访问创建它的函数的参数与局部变量。</p><pre><code class=language-Go>func partialTimes(x int) func(int) int {
   return func(y int) int {
     return times(x, y)
   }
 }
-</code></pre><pre><code class="language-Go">timesTwo = func(y int) int {
+</code></pre><pre><code class=language-Go>timesTwo = func(y int) int {
     return times(2, y)
 }
-</code></pre><pre><code class="language-Go">func main() {
+</code></pre><pre><code class=language-Go>func main() {
   timesTwo := partialTimes(2)   // 以高频乘数2为固定乘数的乘法函数
   timesThree := partialTimes(3) // 以高频乘数3为固定乘数的乘法函数
   timesFour := partialTimes(4)  // 以高频乘数4为固定乘数的乘法函数
@@ -407,13 +407,13 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
   fmt.Println(timesFour(5))  // 20，等价于times(4, 5)
   fmt.Println(timesFour(6))  // 24，等价于times(4, 6)
 }
-</code></pre><h1 id="错误处理">错误处理</h1><h2 id="error-类型">error 类型</h2><pre><code class="language-Go">// $GOROOT/src/builtin/builtin.go
+</code></pre><h1 id=错误处理>错误处理</h1><h2 id=error-类型>error 类型</h2><pre><code class=language-Go>// $GOROOT/src/builtin/builtin.go
 type error interface {
     Error() string
 }
-</code></pre><p>error 接口是 Go 元素内置的类型，任何实现了 error 的 Error 方法的类型的实例，都可以作为错误值赋值给 error 接口变量。</p><pre><code class="language-Go">err := errors.New(&quot;your first demo error&quot;)
+</code></pre><p>error 接口是 Go 元素内置的类型，任何实现了 error 的 Error 方法的类型的实例，都可以作为错误值赋值给 error 接口变量。</p><pre><code class=language-Go>err := errors.New(&quot;your first demo error&quot;)
 errWithCtx = fmt.Errorf(&quot;index %d is out of bounds&quot;, i)
-</code></pre><p>可以通过 <code>errors.New</code> 和 <code>fmt.Errorof</code> 来方便构造错误值。</p><pre><code class="language-Go">// $GOROOT/src/errors/errors.go
+</code></pre><p>可以通过 <code>errors.New</code> 和 <code>fmt.Errorof</code> 来方便构造错误值。</p><pre><code class=language-Go>// $GOROOT/src/errors/errors.go
 
 type errorString struct {
     s string
@@ -422,7 +422,7 @@ type errorString struct {
 func (e *errorString) Error() string {
     return e.s
 }
-</code></pre><pre><code class="language-Go">// $GOROOT/src/net/net.go
+</code></pre><pre><code class=language-Go>// $GOROOT/src/net/net.go
 type OpError struct {
     Op string
     Net string
@@ -443,14 +443,14 @@ func isCommonNetReadError(err error) bool {
     }
     return false
 }
-</code></pre><p>可以通过自定义错误类型来从错误值中取出更多信息。</p><h2 id="透明错误处理">透明错误处理</h2><p>错误处理策略，就是根据函数/方法返回的 error 类型变量中携带的错误值信息做决策，并选择后续代码执行路径。</p><p>透明错误处理，就是不关心返回错误值携带的具体上下文信息，只要发生错误就进入唯一的错误处理执行路径。</p><pre><code class="language-Go">err := doSomething()
+</code></pre><p>可以通过自定义错误类型来从错误值中取出更多信息。</p><h2 id=透明错误处理>透明错误处理</h2><p>错误处理策略，就是根据函数/方法返回的 error 类型变量中携带的错误值信息做决策，并选择后续代码执行路径。</p><p>透明错误处理，就是不关心返回错误值携带的具体上下文信息，只要发生错误就进入唯一的错误处理执行路径。</p><pre><code class=language-Go>err := doSomething()
 if err != nil {
     // 不关心err变量底层错误值所携带的具体上下文信息
     // 执行简单错误处理逻辑并返回
     ... ...
     return err
 }
-</code></pre><h2 id="哨兵错误处理">哨兵错误处理</h2><pre><code class="language-Go">// $GOROOT/src/bufio/bufio.go
+</code></pre><h2 id=哨兵错误处理>哨兵错误处理</h2><pre><code class=language-Go>// $GOROOT/src/bufio/bufio.go
 var (
     ErrInvalidUnreadByte = errors.New(&quot;bufio: invalid use of UnreadByte&quot;)
     ErrInvalidUnreadRune = errors.New(&quot;bufio: invalid use of UnreadRune&quot;)
@@ -475,7 +475,7 @@ if err != nil {
         return
     }
 }
-</code></pre><p>可以通过 errors.Is 方法沿着包装错误所在的错误链，与链上所有被包装的错误进行比较，直到找到一个匹配的错误。</p><pre><code class="language-Go">var ErrSentinel = errors.New(&quot;the underlying sentinel error&quot;)
+</code></pre><p>可以通过 errors.Is 方法沿着包装错误所在的错误链，与链上所有被包装的错误进行比较，直到找到一个匹配的错误。</p><pre><code class=language-Go>var ErrSentinel = errors.New(&quot;the underlying sentinel error&quot;)
 
 func main() {
   err1 := fmt.Errorf(&quot;wrap sentinel: %w&quot;, ErrSentinel)
@@ -488,7 +488,7 @@ func main() {
 
   println(&quot;err2 is not ErrSentinel&quot;)
 }
-</code></pre><h2 id="错误值类型检视">错误值类型检视</h2><pre><code class="language-Go">// $GOROOT/src/encoding/json/decode.go
+</code></pre><h2 id=错误值类型检视>错误值类型检视</h2><pre><code class=language-Go>// $GOROOT/src/encoding/json/decode.go
 func (d *decodeState) addErrorContext(err error) error {
     if d.errorContext.Struct != nil || len(d.errorContext.FieldStack) &gt; 0 {
         switch err := err.(type) {
@@ -500,7 +500,7 @@ func (d *decodeState) addErrorContext(err error) error {
     }
     return err
 }
-</code></pre><h2 id="panic-处理">panic 处理</h2><pre><code class="language-Go">func foo() {
+</code></pre><h2 id=panic-处理>panic 处理</h2><pre><code class=language-Go>func foo() {
     println(&quot;call foo&quot;)
     bar()
     println(&quot;exit foo&quot;)
@@ -523,11 +523,11 @@ func main() {
     foo()
     println(&quot;exit main&quot;)
 }
-</code></pre><pre><code class="language-shell">call main
+</code></pre><pre><code class=language-shell>call main
 call foo
 call bar
 panic: panic occurs in bar
-</code></pre><pre><code class="language-Go">func bar() {
+</code></pre><pre><code class=language-Go>func bar() {
     defer func() {
         if e := recover(); e != nil {
             fmt.Println(&quot;recover the panic:&quot;, e)
@@ -539,7 +539,7 @@ panic: panic occurs in bar
     zoo()
     println(&quot;exit bar&quot;)
 }
-</code></pre><p>可以通过 recover 函数来捕捉 panic 并恢复程序正常执行，recover 函数只能放在 defer 函数中才能生效。</p><p>注意：无论哪个 Goroutine 中发生未被捕获的 panic，整个程序都会退出。</p><h1 id="方法">方法</h1><h2 id="go-方法声明">Go 方法声明</h2><pre><code class="language-Go">// 关键字 receiver  方法名             参数列表                   返回值列表
+</code></pre><p>可以通过 recover 函数来捕捉 panic 并恢复程序正常执行，recover 函数只能放在 defer 函数中才能生效。</p><p>注意：无论哪个 Goroutine 中发生未被捕获的 panic，整个程序都会退出。</p><h1 id=方法>方法</h1><h2 id=go-方法声明>Go 方法声明</h2><pre><code class=language-Go>// 关键字 receiver  方法名             参数列表                   返回值列表
 func (srv *Server) ListenAndServeTLS(certFile, keyFile string) error {
     // 方法体
     if srv.shuttingDown() {
@@ -547,7 +547,7 @@ func (srv *Server) ListenAndServeTLS(certFile, keyFile string) error {
     }
     // ...
 }
-</code></pre><p>Go 中的方法必须归属于一个类型，receiver 参数的类型就是这个方法归属的类型，这个方法就是这个类型的一个方法。</p><p>上面的 ListenAndServeTLS 就是 *Server 类型的方法，而不是 Server 类型的方法。</p><pre><code class="language-Go">type MyInt *int
+</code></pre><p>Go 中的方法必须归属于一个类型，receiver 参数的类型就是这个方法归属的类型，这个方法就是这个类型的一个方法。</p><p>上面的 ListenAndServeTLS 就是 *Server 类型的方法，而不是 Server 类型的方法。</p><pre><code class=language-Go>type MyInt *int
 func (r MyInt) String() string { // r的基类型为MyInt，编译器报错：invalid receiver type MyInt (MyInt is a pointer type)
     return fmt.Sprintf(&quot;%d&quot;, *(*int)(r))
 }
@@ -556,14 +556,14 @@ type MyReader io.Reader
 func (r MyReader) Read(p []byte) (int, error) { // r的基类型为MyReader，编译器报错：invalid receiver type MyReader (MyReader is an interface type)
     return r.Read(p)
 }
-</code></pre><p>Receiver 参数的基类型不能为指针类型或者接口类型。</p><p>方法声明要和 receiver 参数的基类型声明放在同一个包中，因此：</p><ul><li>不能为原生类型添加方法</li></ul><pre><code class="language-Go">func (i int) Foo() string { // 编译器报错：cannot define new methods on non-local type int
+</code></pre><p>Receiver 参数的基类型不能为指针类型或者接口类型。</p><p>方法声明要和 receiver 参数的基类型声明放在同一个包中，因此：</p><ul><li>不能为原生类型添加方法</li></ul><pre><code class=language-Go>func (i int) Foo() string { // 编译器报错：cannot define new methods on non-local type int
     return fmt.Sprintf(&quot;%d&quot;, i) 
 }
-</code></pre><ul><li>不能跨越包为其他包的类型声明新方法</li></ul><pre><code class="language-Go">import &quot;net/http&quot;
+</code></pre><ul><li>不能跨越包为其他包的类型声明新方法</li></ul><pre><code class=language-Go>import &quot;net/http&quot;
 
 func (s http.Server) Foo() { // 编译器报错：cannot define new methods on non-local type http.Server
 }
-</code></pre><h2 id="调用方法">调用方法</h2><pre><code class="language-Go">type T struct{}
+</code></pre><h2 id=调用方法>调用方法</h2><pre><code class=language-Go>type T struct{}
 
 func (t T) M(n int) {
 }
@@ -575,7 +575,7 @@ func main() {
     p := &amp;T{}
     p.M(2) // 通过类型*T的变量实例调用方法M
 }
-</code></pre><p>可以通过 *T 或者 T 的变量实例调用方法。</p><h2 id="方法本质">方法本质</h2><p>Go 编译器会将 receiver 参数以第一个参数的身份并入到方法的参数列表中。</p><pre><code class="language-Go">type T struct { 
+</code></pre><p>可以通过 *T 或者 T 的变量实例调用方法。</p><h2 id=方法本质>方法本质</h2><p>Go 编译器会将 receiver 参数以第一个参数的身份并入到方法的参数列表中。</p><pre><code class=language-Go>type T struct { 
     a int
 }
 
@@ -598,10 +598,10 @@ func Set(t *T, a int) int {
     t.a = a 
     return t.a 
 }
-</code></pre><pre><code class="language-Go">var t T
+</code></pre><pre><code class=language-Go>var t T
 T.Get(t)
 (*T).Set(&amp;t, 1)
-</code></pre><p>直接以类型名调用方法的表达方式，被称为 Method Expression，通过 Method Express，类型 T 只能调用 T 的方法集合中的方法，类型 *T 也只能调用 *T 的方法集合中的方法。</p><p>可以将方法作为右值，赋值给函数类型的变量。</p><pre><code class="language-Go">func main() {
+</code></pre><p>直接以类型名调用方法的表达方式，被称为 Method Expression，通过 Method Express，类型 T 只能调用 T 的方法集合中的方法，类型 *T 也只能调用 *T 的方法集合中的方法。</p><p>可以将方法作为右值，赋值给函数类型的变量。</p><pre><code class=language-Go>func main() {
     var t T
     f1 := (*T).Set // f1的类型，也是*T类型Set方法的类型：func (t *T, int)int
     f2 := T.Get    // f2的类型，也是T类型Get方法的类型：func(t T)int
@@ -610,7 +610,7 @@ T.Get(t)
     f1(&amp;t, 3)
     fmt.Println(f2(t)) // 3
 }
-</code></pre><h2 id="方法集合">方法集合</h2><p>Go 任何一个类型都有属于自己的方法集合，方法集合是 Go 类型的一个属性。</p><p>方法集合是判断一个类型是否实现了某个接口类型的唯一手段。</p><pre><code class="language-Go">func dumpMethodSet(i interface{}) {
+</code></pre><h2 id=方法集合>方法集合</h2><p>Go 任何一个类型都有属于自己的方法集合，方法集合是 Go 类型的一个属性。</p><p>方法集合是判断一个类型是否实现了某个接口类型的唯一手段。</p><pre><code class=language-Go>func dumpMethodSet(i interface{}) {
     dynTyp := reflect.TypeOf(i)
 
     if dynTyp == nil {
@@ -630,7 +630,7 @@ T.Get(t)
     }
     fmt.Printf(&quot;\n&quot;)
 }
-</code></pre><pre><code class="language-Go">type T struct{}
+</code></pre><pre><code class=language-Go>type T struct{}
 
 func (T) M1() {}
 func (T) M2() {}
@@ -647,7 +647,7 @@ func main() {
     dumpMethodSet(t)
     dumpMethodSet(&amp;t)
 }
-</code></pre><pre><code class="language-shell">int's method set is empty!
+</code></pre><pre><code class=language-shell>int's method set is empty!
 *int's method set is empty!
 main.T's method set:
 - M1
@@ -658,12 +658,12 @@ main.T's method set:
 - M2
 - M3
 - M4
-</code></pre><p>*T 类型的方法集合包含所有以 *T 为 receiver 参数类型的方法，以及所有以 T 为 receiver 参数类型的方法。</p><p>如果某个类型 T 的方法集合与接口类型的犯法集合相同，或者类型 T 的方法集合是接口类型 I 方法集合的超集，那么就说类型 T 实现了接口 I。</p><h1 id="指针">指针</h1><h2 id="指针类型">指针类型</h2><p>指针类型依托于某一个类型而存在，例如 int 就是 *int 指针类型的基类型。</p><p>如果拥有一个类型 T，那么以 T 作为基类型的指针类型为 *T。</p><h2 id="指针类型赋值">指针类型赋值</h2><pre><code class="language-Go">var a int = 13
+</code></pre><p>*T 类型的方法集合包含所有以 *T 为 receiver 参数类型的方法，以及所有以 T 为 receiver 参数类型的方法。</p><p>如果某个类型 T 的方法集合与接口类型的犯法集合相同，或者类型 T 的方法集合是接口类型 I 方法集合的超集，那么就说类型 T 实现了接口 I。</p><h1 id=指针>指针</h1><h2 id=指针类型>指针类型</h2><p>指针类型依托于某一个类型而存在，例如 int 就是 *int 指针类型的基类型。</p><p>如果拥有一个类型 T，那么以 T 作为基类型的指针类型为 *T。</p><h2 id=指针类型赋值>指针类型赋值</h2><pre><code class=language-Go>var a int = 13
 var p *int = &amp;a  // 给整型指针变量p赋初值
-</code></pre><h1 id="结构体">结构体</h1><h2 id="定义新类型">定义新类型</h2><pre><code class="language-Go">type T S // 定义一个新类型T
-</code></pre><pre><code class="language-Go">type T1 int 
+</code></pre><h1 id=结构体>结构体</h1><h2 id=定义新类型>定义新类型</h2><pre><code class=language-Go>type T S // 定义一个新类型T
+</code></pre><pre><code class=language-Go>type T1 int 
 type T2 T1  
-</code></pre><pre><code class="language-Go">type T1 int
+</code></pre><pre><code class=language-Go>type T1 int
 type T2 T1
 type T3 string
 
@@ -675,27 +675,27 @@ func main() {
     var s T3 = &quot;hello&quot;
     n1 = T1(s) // 错误：cannot convert s (type T3) to type T1
 }
-</code></pre><p>如果一个新类型是基于某个 Go 原生类型定义的，那么这个 Go 的原生类型就是新类型的底层类型。</p><p>底层类型相同的两个类型，它们的变量可以通过显式转型进行相互赋值。</p><h2 id="类型别名">类型别名</h2><pre><code class="language-Go">type T = S // type alias
+</code></pre><p>如果一个新类型是基于某个 Go 原生类型定义的，那么这个 Go 的原生类型就是新类型的底层类型。</p><p>底层类型相同的两个类型，它们的变量可以通过显式转型进行相互赋值。</p><h2 id=类型别名>类型别名</h2><pre><code class=language-Go>type T = S // type alias
 type T = string 
   
 var s string = &quot;hello&quot; 
 var t T = s // ok
 fmt.Printf(&quot;%T\n&quot;, t) // string
-</code></pre><p>类型别名没有定义类型，T 和 S 仍然是同种类型。</p><h2 id="结构体类型定义">结构体类型定义</h2><pre><code class="language-Go">type T struct {
+</code></pre><p>类型别名没有定义类型，T 和 S 仍然是同种类型。</p><h2 id=结构体类型定义>结构体类型定义</h2><pre><code class=language-Go>type T struct {
     Field1 T1
     Field2 T2
     ... ...
     FieldN Tn
 }
-</code></pre><pre><code class="language-Go">package book
+</code></pre><pre><code class=language-Go>package book
 
 type Book struct {
      Title string              // 书名
      Pages int                 // 书的页数
      Indexes map[string]int    // 书的索引
 }
-</code></pre><h2 id="定义空结构体">定义空结构体</h2><pre><code class="language-Go">type Empty struct{} // Empty是一个不包含任何字段的空结构体类型
-</code></pre><h2 id="使用其他结构体作为自定义结构体中的类型">使用其他结构体作为自定义结构体中的类型</h2><pre><code class="language-Go">type Person struct {
+</code></pre><h2 id=定义空结构体>定义空结构体</h2><pre><code class=language-Go>type Empty struct{} // Empty是一个不包含任何字段的空结构体类型
+</code></pre><h2 id=使用其他结构体作为自定义结构体中的类型>使用其他结构体作为自定义结构体中的类型</h2><pre><code class=language-Go>type Person struct {
     Name string
     Phone string
     Addr string
@@ -706,30 +706,30 @@ type Book struct {
     Author Person
     ... ...
 }
-</code></pre><pre><code class="language-Go">var book Book 
+</code></pre><pre><code class=language-Go>var book Book 
 println(book.Author.Phone)
-</code></pre><pre><code class="language-Go">type Book struct {
+</code></pre><pre><code class=language-Go>type Book struct {
     Title string
     Person
     ... ...
 }
-</code></pre><p>对于包含结构体类型字段的结构体来说，可以无需提供字段名字，只要使用其类型即可，这种被称为嵌入字段。</p><pre><code class="language-Go">var book Book 
+</code></pre><p>对于包含结构体类型字段的结构体来说，可以无需提供字段名字，只要使用其类型即可，这种被称为嵌入字段。</p><pre><code class=language-Go>var book Book 
 println(book.Person.Phone) // 将类型名当作嵌入字段的名字
 println(book.Phone)        // 支持直接访问嵌入字段所属类型中字段
-</code></pre><h2 id="结构体初始化">结构体初始化</h2><pre><code class="language-Go">var t = T{
+</code></pre><h2 id=结构体初始化>结构体初始化</h2><pre><code class=language-Go>var t = T{
     F2: &quot;hello&quot;,
     F1: 11,
     F4: 14,
 }
-</code></pre><p>推荐使用 <code>field:value</code> 形式的复合字面值，进行显式初始化。</p><h1 id="类型嵌入">类型嵌入</h1><p>类型嵌入是指在一个类型的定义中嵌入了其他类型。</p><h2 id="接口类型的类型嵌入">接口类型的类型嵌入</h2><p>接口类型声明了由一个方法集合代表的接口。</p><pre><code class="language-Go">type E interface {
+</code></pre><p>推荐使用 <code>field:value</code> 形式的复合字面值，进行显式初始化。</p><h1 id=类型嵌入>类型嵌入</h1><p>类型嵌入是指在一个类型的定义中嵌入了其他类型。</p><h2 id=接口类型的类型嵌入>接口类型的类型嵌入</h2><p>接口类型声明了由一个方法集合代表的接口。</p><pre><code class=language-Go>type E interface {
     M1()
     M2()
 }
-</code></pre><pre><code class="language-Go">type I interface {
+</code></pre><pre><code class=language-Go>type I interface {
     E
     M3()
 }
-</code></pre><h2 id="结构体类型的嵌入">结构体类型的嵌入</h2><pre><code class="language-Go">type MyInt int
+</code></pre><h2 id=结构体类型的嵌入>结构体类型的嵌入</h2><pre><code class=language-Go>type MyInt int
 
 func (n *MyInt) Add(m int) {
     *n = *n + MyInt(m)
@@ -767,7 +767,7 @@ func main() {
     s.MyInt.Add(5)
     fmt.Println(*(s.MyInt)) // 22
 }
-</code></pre><h1 id="context">Context</h1><p>Context 用于在并发编程中传递上下文信息，用来解决 goroutine 之间的协作和控制问题。</p><h2 id="取消操作">取消操作</h2><pre><code class="language-Go">package main
+</code></pre><h1 id=context>Context</h1><p>Context 用于在并发编程中传递上下文信息，用来解决 goroutine 之间的协作和控制问题。</p><h2 id=取消操作>取消操作</h2><pre><code class=language-Go>package main
 
 import (
 	&quot;context&quot;
@@ -793,7 +793,7 @@ func main() {
 	cancel()
 	time.Sleep(3 * time.Second)
 }
-</code></pre><h2 id="设置超时时间">设置超时时间</h2><pre><code class="language-Go">// 设置 3 秒超时
+</code></pre><h2 id=设置超时时间>设置超时时间</h2><pre><code class=language-Go>// 设置 3 秒超时
 ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 defer cancel()
 
@@ -807,7 +807,7 @@ go func(ctx context.Context) {
         fmt.Println(&quot;操作完成&quot;)
     }
 }(ctx)
-</code></pre><h2 id="传递请求的元数据">传递请求的元数据</h2><pre><code class="language-Go">// 传递用户 ID
+</code></pre><h2 id=传递请求的元数据>传递请求的元数据</h2><pre><code class=language-Go>// 传递用户 ID
 ctx := context.WithValue(context.Background(), &quot;userID&quot;, 123)
 
 // 在下游函数中获取
@@ -815,7 +815,7 @@ func handle(ctx context.Context) {
     userID := ctx.Value(&quot;userID&quot;).(int)
     fmt.Printf(&quot;处理用户 %d 的请求\n&quot;, userID)
 }
-</code></pre><h1 id="goroutine">Goroutine</h1><h2 id="基本用法">基本用法</h2><pre><code class="language-Go">go fmt.Println(&quot;I am a goroutine&quot;)
+</code></pre><h1 id=goroutine>Goroutine</h1><h2 id=基本用法>基本用法</h2><pre><code class=language-Go>go fmt.Println(&quot;I am a goroutine&quot;)
 
 var c = make(chan int)
 go func(a, b int) {
@@ -825,7 +825,7 @@ go func(a, b int) {
 // $GOROOT/src/net/http/server.go
 c := srv.newConn(rw)
 go c.serve(connCtx)
-</code></pre><p>通过 go 关键字 + 函数/方法的方式创造一个 goroutine</p><h2 id="goroutine-通信">Goroutine 通信</h2><p>CSP 并发模型：输入输出应该是基本的编程原语，数据处理逻辑 P 只需要调用原语获取数据，顺序处理数据，将结果数据通过输出原语输出即可。</p><p>一个符合 CSP 模型的并发程序应该是一组通过输入输出原语连接起来的 P 的集合。</p><p>在 Go 中，与 Process 对应的是 goroutine，同时引入了 channel，goroutine 可以从 channel 获取输入数据，再将处理后得到的结果数据通过 channel 输出。</p><pre><code class="language-Go">func spawn(f func() error) &lt;-chan error {
+</code></pre><p>通过 go 关键字 + 函数/方法的方式创造一个 goroutine</p><h2 id=goroutine-通信>Goroutine 通信</h2><p>CSP 并发模型：输入输出应该是基本的编程原语，数据处理逻辑 P 只需要调用原语获取数据，顺序处理数据，将结果数据通过输出原语输出即可。</p><p>一个符合 CSP 模型的并发程序应该是一组通过输入输出原语连接起来的 P 的集合。</p><p>在 Go 中，与 Process 对应的是 goroutine，同时引入了 channel，goroutine 可以从 channel 获取输入数据，再将处理后得到的结果数据通过 channel 输出。</p><pre><code class=language-Go>func spawn(f func() error) &lt;-chan error {
     c := make(chan error)
 
     go func() {
@@ -842,36 +842,36 @@ func main() {
     })
     fmt.Println(&lt;-c)
 }
-</code></pre><h2 id="channel-是一等公民">Channel 是一等公民</h2><p>Channel 是一等公民，意味着可以像使用普通变量一样使用 channel。</p><h2 id="创建-channel">创建 Channel</h2><pre><code class="language-Go">var ch chan int
-</code></pre><h2 id="给-channel-赋初值">给 channel 赋初值</h2><pre><code class="language-Go">ch1 := make(chan int)   
+</code></pre><h2 id=channel-是一等公民>Channel 是一等公民</h2><p>Channel 是一等公民，意味着可以像使用普通变量一样使用 channel。</p><h2 id=创建-channel>创建 Channel</h2><pre><code class=language-Go>var ch chan int
+</code></pre><h2 id=给-channel-赋初值>给 channel 赋初值</h2><pre><code class=language-Go>ch1 := make(chan int)   
 ch2 := make(chan int, 5) 
-</code></pre><p>第一个创建了一个无缓冲的 channel，第二个创建了一个待缓冲的 channel</p><h2 id="发送和接收-channel">发送和接收 Channel</h2><pre><code class="language-Go">ch1 &lt;- 13    // 将整型字面值13发送到无缓冲channel类型变量ch1中
+</code></pre><p>第一个创建了一个无缓冲的 channel，第二个创建了一个待缓冲的 channel</p><h2 id=发送和接收-channel>发送和接收 Channel</h2><pre><code class=language-Go>ch1 &lt;- 13    // 将整型字面值13发送到无缓冲channel类型变量ch1中
 n := &lt;- ch1  // 从无缓冲channel类型变量ch1中接收一个整型值存储到整型变量n中
 ch2 &lt;- 17    // 将整型字面值17发送到带缓冲channel类型变量ch2中
 m := &lt;- ch2  // 从带缓冲channel类型变量ch2中接收一个整型值存储到整型变量m中
-</code></pre><p>channel 是用于 Goroutine 间通信，绝大多数对 Channel 的读写都被分别放在了不同的 Goroutine 中。</p><p>Goroutine 对于无缓冲 channel 的接收和发送操作是同步的，只有对它进行接收操作的 Goroutine 和对它进行发送操作的 Goroutine 都存在的情况下，通信才能得以进行。</p><pre><code class="language-Go">func main() {
+</code></pre><p>channel 是用于 Goroutine 间通信，绝大多数对 Channel 的读写都被分别放在了不同的 Goroutine 中。</p><p>Goroutine 对于无缓冲 channel 的接收和发送操作是同步的，只有对它进行接收操作的 Goroutine 和对它进行发送操作的 Goroutine 都存在的情况下，通信才能得以进行。</p><pre><code class=language-Go>func main() {
     ch1 := make(chan int)
     ch1 &lt;- 13 // fatal error: all goroutines are asleep - deadlock!
     n := &lt;-ch1
     println(n)
 }
-</code></pre><p>对于带缓冲 channel 的发送操作在缓冲区未满，接收操作在缓冲区非空的情况下是异步的。</p><pre><code class="language-Go">ch2 := make(chan int, 1)
+</code></pre><p>对于带缓冲 channel 的发送操作在缓冲区未满，接收操作在缓冲区非空的情况下是异步的。</p><pre><code class=language-Go>ch2 := make(chan int, 1)
 n := &lt;-ch2 // 由于此时ch2的缓冲区中无数据，因此对其进行接收操作将导致goroutine挂起
 
 ch3 := make(chan int, 1)
 ch3 &lt;- 17  // 向ch3发送一个整型数17
 ch3 &lt;- 27  // 由于此时ch3中缓冲区已满，再向ch3发送数据也将导致goroutine挂起
-</code></pre><p>可以通过 &lt;- 来声明只发送 channel 类型和只接收 channel 类型。</p><pre><code class="language-Go">ch1 := make(chan&lt;- int, 1) // 只发送channel类型
+</code></pre><p>可以通过 &lt;- 来声明只发送 channel 类型和只接收 channel 类型。</p><pre><code class=language-Go>ch1 := make(chan&lt;- int, 1) // 只发送channel类型
 ch2 := make(&lt;-chan int, 1) // 只接收channel类型
 
 &lt;-ch1       // invalid operation: &lt;-ch1 (receive from send-only type chan&lt;- int)
 ch2 &lt;- 13   // invalid operation: ch2 &lt;- 13 (send to receive-only type &lt;-chan int)
-</code></pre><h2 id="关闭-channel">关闭 Channel</h2><p>调用 Go 内置的 close 函数关闭了 channel，channel 关闭后，所有等待从这个 channel 接收数据的操作都返回。</p><pre><code class="language-Go">n := &lt;- ch      // 当ch被关闭后，n将被赋值为ch元素类型的零值
+</code></pre><h2 id=关闭-channel>关闭 Channel</h2><p>调用 Go 内置的 close 函数关闭了 channel，channel 关闭后，所有等待从这个 channel 接收数据的操作都返回。</p><pre><code class=language-Go>n := &lt;- ch      // 当ch被关闭后，n将被赋值为ch元素类型的零值
 m, ok := &lt;-ch   // 当ch被关闭后，m将被赋值为ch元素类型的零值, ok值为false
 for v := range ch { // 当ch被关闭后，for range循环结束
     ... ...
 }
-</code></pre><h2 id="select-原语">select 原语</h2><p>通过 select，可以同时在多个 channel 上进行发送/接收操作：</p><pre><code class="language-Go">select {
+</code></pre><h2 id=select-原语>select 原语</h2><p>通过 select，可以同时在多个 channel 上进行发送/接收操作：</p><pre><code class=language-Go>select {
 case x := &lt;-ch1:     // 从channel ch1接收数据
   ... ...
 
@@ -883,7 +883,7 @@ case ch3 &lt;- z:       // 将z值发送到channel ch3中:
 
 default:             // 当上面case中的channel通信均无法实施时，执行该默认分支
 }
-</code></pre><h1 id="reflect">Reflect</h1><p>reflect 围绕两个基础类型展开，对应类型信息和值信息。</p><p><code>reflect.Type</code> 表示 Go 中静态类型的元信息，包括类型名称、种类、方法、字段等属性，通过 <code>reflect.TypeOf(x)</code> 获取。</p><p><code>reflect.Value</code> 表示变量的动态值信息，提供了读取和修改值的方法，通过 <code>relect.ValueOf(x)</code> 获取。</p><p><code>Kind</code> 类型表示类型的底层种类，例如 int、struct、slice 等，<code>Type</code> 则区分具体类型，例如自定义类型。</p><pre><code class="language-Go">package main
+</code></pre><h1 id=reflect>Reflect</h1><p>reflect 围绕两个基础类型展开，对应类型信息和值信息。</p><p><code>reflect.Type</code> 表示 Go 中静态类型的元信息，包括类型名称、种类、方法、字段等属性，通过 <code>reflect.TypeOf(x)</code> 获取。</p><p><code>reflect.Value</code> 表示变量的动态值信息，提供了读取和修改值的方法，通过 <code>relect.ValueOf(x)</code> 获取。</p><p><code>Kind</code> 类型表示类型的底层种类，例如 int、struct、slice 等，<code>Type</code> 则区分具体类型，例如自定义类型。</p><pre><code class=language-Go>package main
 
 import (
 	&quot;fmt&quot;
@@ -912,7 +912,7 @@ func main() {
 	// 字段名: Name, 类型: string
 	// 字段名: Age, 类型: int
 }
-</code></pre><pre><code class="language-Go">func main() {
+</code></pre><pre><code class=language-Go>func main() {
 	num := 42
 	v := reflect.ValueOf(&amp;num).Elem() // 传入指针并解引用，确保可修改
 
@@ -925,7 +925,7 @@ func main() {
 		fmt.Println(&quot;修改后:&quot;, num) // 输出: 100
 	}
 }
-</code></pre><pre><code class="language-Go">type Calculator struct{}
+</code></pre><pre><code class=language-Go>type Calculator struct{}
 
 func (c Calculator) Add(a, b int) int {
 	return a + b
@@ -952,7 +952,7 @@ func main() {
 	results := method.Call(args)
 	fmt.Println(&quot;结果:&quot;, results[0].Int()) // 输出: 30
 }
-</code></pre><h1 id="泛型">泛型</h1><h2 id="类型参数">类型参数</h2><pre><code class="language-Go">// max_generics.go
+</code></pre><h1 id=泛型>泛型</h1><h2 id=类型参数>类型参数</h2><pre><code class=language-Go>// max_generics.go
 type ordered interface {
     ~int | ~int8 | ~int16 | ~int32 | ~int64 |
         ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
@@ -984,29 +984,29 @@ func main() {
     fmt.Println(maxGenerics([]int8{1, 2, -4, -6, 7, 0})) // 输出：7
     fmt.Println(maxGenerics([]myString{&quot;11&quot;, &quot;22&quot;, &quot;44&quot;, &quot;66&quot;, &quot;77&quot;, &quot;10&quot;})) // 输出：77
 }
-</code></pre><p>maxGenerics 函数原型多出的代码 [T ordered] 就是 Go 泛型的类型参数列表，这个列表中仅有一个类型参数 T，ordered 为类型参数的类型约束。</p><p>函数的类型参数列表位于函数名与参数列表之间，由方括号括起来的固定个数的，由逗号分隔的类型参数声明组成。</p><pre><code class="language-Go">func genericsFunc[T1 constraint1, T2, constraint2, ..., Tn constraintN](ordinary parameters list) (return values list)
-</code></pre><p>类型参数通常用大写，且必须是具名的。</p><pre><code class="language-Go">func print[T any]() { // 正确
+</code></pre><p>maxGenerics 函数原型多出的代码 [T ordered] 就是 Go 泛型的类型参数列表，这个列表中仅有一个类型参数 T，ordered 为类型参数的类型约束。</p><p>函数的类型参数列表位于函数名与参数列表之间，由方括号括起来的固定个数的，由逗号分隔的类型参数声明组成。</p><pre><code class=language-Go>func genericsFunc[T1 constraint1, T2, constraint2, ..., Tn constraintN](ordinary parameters list) (return values list)
+</code></pre><p>类型参数通常用大写，且必须是具名的。</p><pre><code class=language-Go>func print[T any]() { // 正确
 }     
 
 func print[any]() {   // 编译错误：all type parameters must be named 
 }
-</code></pre><h2 id="调用泛型函数">调用泛型函数</h2><pre><code class="language-Go">// 泛型函数声明：T为类型形参
+</code></pre><h2 id=调用泛型函数>调用泛型函数</h2><pre><code class=language-Go>// 泛型函数声明：T为类型形参
 func maxGenerics[T ordered](sl []T) T
 
 // 调用泛型函数：int为类型实参
 m := maxGenerics[int]([]int{1, 2, -4, -6, 7, 0})
-</code></pre><h2 id="泛型类型">泛型类型</h2><pre><code class="language-Go">// maxable_slice.go
+</code></pre><h2 id=泛型类型>泛型类型</h2><pre><code class=language-Go>// maxable_slice.go
 
 type maxableSlice[T ordered] struct {
     elems []T
 }
-</code></pre><p>泛型类型是类型声明中带有类型参数的 Go 类型。</p><h2 id="使用泛型类型">使用泛型类型</h2><pre><code class="language-Go">var sl = maxableSlice[int]{
+</code></pre><p>泛型类型是类型声明中带有类型参数的 Go 类型。</p><h2 id=使用泛型类型>使用泛型类型</h2><pre><code class=language-Go>var sl = maxableSlice[int]{
     elems: []int{1, 2, -4, -6, 7, 0},
 } 
-</code></pre><h2 id="泛型约束">泛型约束</h2><p>any 是最宽松的约束，本质上是 interface{} 的一个类型别名。</p><pre><code class="language-Go">// $GOROOT/src/builtin/buildin.go
+</code></pre><h2 id=泛型约束>泛型约束</h2><p>any 是最宽松的约束，本质上是 interface{} 的一个类型别名。</p><pre><code class=language-Go>// $GOROOT/src/builtin/buildin.go
 // any is an alias for interface{} and is equivalent to interface{} in all ways.
 type any = interface{}
-</code></pre><h2 id="自定义约束">自定义约束</h2><pre><code class="language-Go">// stringify.go
+</code></pre><h2 id=自定义约束>自定义约束</h2><pre><code class=language-Go>// stringify.go
 
 func Stringify[T fmt.Stringer](s []T) (ret []string) {
     for _, v := range s {
@@ -1025,9 +1025,9 @@ func main() {
     sl := Stringify([]MyString{&quot;I&quot;, &quot;love&quot;, &quot;golang&quot;})
     fmt.Println(sl) // 输出：[I love golang]
 }
-</code></pre><pre><code class="language-Go">type ordered interface {
+</code></pre><pre><code class=language-Go>type ordered interface {
   ~int | ~int8 | ~int16 | ~int32 | ~int64 |
   ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
   ~float32 | ~float64 | ~string
 }
-</code></pre><p>类型元素信息，代表以它们为底层类型的类型都满足 ordered 约束。</p></div><footer class="post-footer"><ul class="post-tags"><li><a href="/tags/go/">Go</a></li></ul></footer></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
+</code></pre><p>类型元素信息，代表以它们为底层类型的类型都满足 ordered 约束。</p></div><footer class=post-footer><ul class=post-tags><li><a href=/tags/go/>Go</a></li></ul></footer></article></main><footer class=footer>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></footer><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

@@ -1,8 +1,7 @@
-<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>和为 k 的子数组 | 安橙的博客</title><meta name="description" content="题目 思路 把子数组求和转换为前缀和差值计数。
+<!doctype html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>和为 k 的子数组 | 安橙的博客</title><meta name=description content="题目 思路 把子数组求和转换为前缀和差值计数。
 子数组和 = 两个前缀和之差
 用哈希表维护前缀和为 sum - k 的个数。
-Java class Solution { public int subarraySum(int[] nums, int k) { Map&amp;lt;Integer, Integer&amp;gt; cnt …"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/leetcode/leetcode-560-%E5%92%8C%E4%B8%BA-k-%E7%9A%84%E6%95%B0%E7%BB%84/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">和为 k 的子数组</h1><div class="post-meta"><span title='2026-01-30 00:00:00 +0000 UTC'>一月 30, 2026</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#题目">题目</a><ul><li><a href="#思路">思路</a></li><li><a href="#java">Java</a></li><li><a href="#python">Python</a></li><li><a href="#js">JS</a></li><li><a href="#go">Go</a></li><li><a href="#ts">ts</a></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="题目">题目</h1><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130115530284.png" alt></button></figure></p><h2 id="思路">思路</h2><p>把子数组求和转换为前缀和差值计数。</p><p>子数组和 = 两个前缀和之差</p><p>用哈希表维护前缀和为 sum - k 的个数。</p><h2 id="java">Java</h2><pre><code class="language-java">class Solution {
+Java class Solution { public int subarraySum(int[] nums, int k) { Map&amp;lt;Integer, Integer&amp;gt; cnt …"><meta name=robots content="index,follow"><link rel=canonical href=https://blog.ans20xx.com/posts/leetcode/leetcode-560-%E5%92%8C%E4%B8%BA-k-%E7%9A%84%E6%95%B0%E7%BB%84/><link rel=stylesheet href=/css/minimal.min.9cf47da2bdd3ec3ef93f70d79fe64e43f3c217b51c9da6cc77c33f72be45649a.css integrity="sha256-nPR9or3T7D75P3DXn+ZOQ/PCF7UcnabMd8M/cr5FZJo=" crossorigin=anonymous></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/>安橙的博客</a></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/>博文</a></li><li><a href=https://blog.ans20xx.com/tags/>标签</a></li><li><a href=https://blog.ans20xx.com/search/>搜索</a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>和为 k 的子数组</h1><time class=post-meta datetime=2026-01-30>2026-01-30</time></header><details class=toc open><summary>目录</summary><nav id=TableOfContents><ul><li><a href=#题目>题目</a><ul><li><a href=#思路>思路</a></li><li><a href=#java>Java</a></li><li><a href=#python>Python</a></li><li><a href=#js>JS</a></li><li><a href=#go>Go</a></li><li><a href=#ts>ts</a></li></ul></li></ul></nav></details><div id=post-content class=post-content><h1 id=题目>题目</h1><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/30/20260130115530284.png alt></button></figure></p><h2 id=思路>思路</h2><p>把子数组求和转换为前缀和差值计数。</p><p>子数组和 = 两个前缀和之差</p><p>用哈希表维护前缀和为 sum - k 的个数。</p><h2 id=java>Java</h2><pre><code class=language-java>class Solution {
     public int subarraySum(int[] nums, int k) {
         Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;&gt;();
         cnt.put(0, 1);
@@ -20,7 +19,7 @@ Java class Solution { public int subarraySum(int[] nums, int k) { Map&amp;lt;Int
         return ans;
     }
 }
-</code></pre><h2 id="python">Python</h2><pre><code class="language-python">class Solution:
+</code></pre><h2 id=python>Python</h2><pre><code class=language-python>class Solution:
     def subarraySum(self, nums: List[int], k: int) -&gt; int:
         cnt = defaultdict(int)
         cnt[0] = 1
@@ -32,7 +31,7 @@ Java class Solution { public int subarraySum(int[] nums, int k) { Map&amp;lt;Int
             ans += cnt[s-k]
             cnt[s] += 1
         return ans
-</code></pre><h2 id="js">JS</h2><pre><code class="language-js">var subarraySum = function(nums, k) {
+</code></pre><h2 id=js>JS</h2><pre><code class=language-js>var subarraySum = function(nums, k) {
     const cnt = new Map();
     cnt.set(0, 1);
 
@@ -46,7 +45,7 @@ Java class Solution { public int subarraySum(int[] nums, int k) { Map&amp;lt;Int
     }
     return ans;
 };
-</code></pre><h2 id="go">Go</h2><pre><code class="language-Go">func subarraySum(nums []int, k int) int {
+</code></pre><h2 id=go>Go</h2><pre><code class=language-Go>func subarraySum(nums []int, k int) int {
     cnt := make(map[int]int)
     cnt[0] = 1
 
@@ -58,7 +57,7 @@ Java class Solution { public int subarraySum(int[] nums, int k) { Map&amp;lt;Int
     }
     return ans
 }
-</code></pre><h2 id="ts">ts</h2><pre><code class="language-typescript">function subarraySum(nums: number[], k: number): number {
+</code></pre><h2 id=ts>ts</h2><pre><code class=language-typescript>function subarraySum(nums: number[], k: number): number {
     const cnt = new Map&lt;number, number&gt;();
     cnt.set(0, 1);
 
@@ -72,7 +71,4 @@ Java class Solution { public int subarraySum(int[] nums, int k) { Map&amp;lt;Int
     }
     return ans;
 };
-</code></pre></div></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
-<output>100%</output>
-<button type="button" data-zoom-in aria-label="放大">＋</button>
-<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
+</code></pre></div></article></main><footer class=footer>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></footer><dialog class=image-viewer aria-label=图片预览><div class=image-viewer-bar><button type=button data-zoom-out aria-label=缩小>−</button><output>100%</output><button type=button data-zoom-in aria-label=放大>＋</button><button type=button data-close>关闭</button></div><div class=image-viewer-stage><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

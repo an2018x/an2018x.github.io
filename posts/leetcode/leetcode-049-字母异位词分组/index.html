@@ -1,7 +1,4 @@
-<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>字母异位词分组 | 安橙的博客</title><meta name="description" content="字母异位词分组"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/leetcode/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">字母异位词分组</h1><div class="post-description">字母异位词分组</div><div class="post-meta"><span title='2025-01-12 00:00:00 +0000 UTC'>一月 12, 2025</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#字母异位词分组">字母异位词分组</a><ul><li><a href="#解法-1先排序再-hash">解法 1：先排序，再 hash</a></li><li><a href="#go-语言写法">Go 语言写法</a></li><li><a href="#python-写法">Python 写法</a></li><li><a href="#js-写法">JS 写法</a></li></ul></li><li><a href="#onk-复杂度写法">O(n*k) 复杂度写法</a><ul><li><a href="#java-写法">Java 写法</a></li><li><a href="#go-写法">Go 写法</a></li><li><a href="#python-写法-1">Python 写法</a></li><li><a href="#js-写法-1">JS 写法</a></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="字母异位词分组">字母异位词分组</h1><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112155138006.png" alt></button></figure></p><h2 id="解法-1先排序再-hash">解法 1：先排序，再 hash</h2><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160332483.png" alt></button></figure></p><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160659850.png" alt></button></figure></p><p>优点：简单，易于实施。</p><p>使用 lambda 表达式解题：</p><pre><code class="language-java">class Solution {
+<!doctype html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>字母异位词分组 | 安橙的博客</title><meta name=description content="字母异位词分组"><meta name=robots content="index,follow"><link rel=canonical href=https://blog.ans20xx.com/posts/leetcode/leetcode-049-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/><link rel=stylesheet href=/css/minimal.min.9cf47da2bdd3ec3ef93f70d79fe64e43f3c217b51c9da6cc77c33f72be45649a.css integrity="sha256-nPR9or3T7D75P3DXn+ZOQ/PCF7UcnabMd8M/cr5FZJo=" crossorigin=anonymous></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/>安橙的博客</a></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/>博文</a></li><li><a href=https://blog.ans20xx.com/tags/>标签</a></li><li><a href=https://blog.ans20xx.com/search/>搜索</a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>字母异位词分组</h1><div class=post-description>字母异位词分组</div><time class=post-meta datetime=2025-01-12>2025-01-12</time></header><details class=toc open><summary>目录</summary><nav id=TableOfContents><ul><li><a href=#字母异位词分组>字母异位词分组</a><ul><li><a href=#解法-1先排序再-hash>解法 1：先排序，再 hash</a></li><li><a href=#go-语言写法>Go 语言写法</a></li><li><a href=#python-写法>Python 写法</a></li><li><a href=#js-写法>JS 写法</a></li></ul></li><li><a href=#onk-复杂度写法>O(n*k) 复杂度写法</a><ul><li><a href=#java-写法>Java 写法</a></li><li><a href=#go-写法>Go 写法</a></li><li><a href=#python-写法-1>Python 写法</a></li><li><a href=#js-写法-1>JS 写法</a></li></ul></li></ul></nav></details><div id=post-content class=post-content><h1 id=字母异位词分组>字母异位词分组</h1><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112155138006.png alt></button></figure></p><h2 id=解法-1先排序再-hash>解法 1：先排序，再 hash</h2><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160332483.png alt></button></figure></p><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/12/20260112160659850.png alt></button></figure></p><p>优点：简单，易于实施。</p><p>使用 lambda 表达式解题：</p><pre><code class=language-java>class Solution {
     public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
         return Arrays.stream(strs)
                 .collect(Collectors.groupingBy(s -&gt; {
@@ -14,7 +11,7 @@
                 .collect(Collectors.toList());
     }
 }
-</code></pre><p>更加简化写法：</p><pre><code class="language-java">class Solution {
+</code></pre><p>更加简化写法：</p><pre><code class=language-java>class Solution {
     public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
         Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();
         for (String str : strs) {
@@ -25,7 +22,7 @@
         return new ArrayList&lt;&gt;(map.values());
     }
 }
-</code></pre><p>当 Map 里没有某个 key 时，就用你传入的 lambda 生成一个默认值放进去，并返回这个值；如果 key 已存在，就直接返回已有值。它非常适合“分组/聚合”这类场景。</p><h2 id="go-语言写法">Go 语言写法</h2><pre><code class="language-Go">func groupAnagrams(strs []string) [][]string {
+</code></pre><p>当 Map 里没有某个 key 时，就用你传入的 lambda 生成一个默认值放进去，并返回这个值；如果 key 已存在，就直接返回已有值。它非常适合“分组/聚合”这类场景。</p><h2 id=go-语言写法>Go 语言写法</h2><pre><code class=language-Go>func groupAnagrams(strs []string) [][]string {
     m := make(map[string][]string, len(strs))
 
     for _, s := range strs {
@@ -41,7 +38,7 @@
     }
     return res
 }
-</code></pre><h2 id="python-写法">Python 写法</h2><pre><code class="language-python">class Solution:
+</code></pre><h2 id=python-写法>Python 写法</h2><pre><code class=language-python>class Solution:
     def groupAnagrams(self, strs: List[str]) -&gt; List[List[str]]:
         mp = defaultdict(list)
 
@@ -50,7 +47,7 @@
             mp[key].append(s)
 
         return list(mp.values())
-</code></pre><ul><li>defaultdict 会创建一个默认的 dict，在访问某个 value 不存在的 key 时，会自动调用传入的工厂函数来设置 value 值。</li></ul><h2 id="js-写法">JS 写法</h2><pre><code class="language-js">/**
+</code></pre><ul><li>defaultdict 会创建一个默认的 dict，在访问某个 value 不存在的 key 时，会自动调用传入的工厂函数来设置 value 值。</li></ul><h2 id=js-写法>JS 写法</h2><pre><code class=language-js>/**
  * LeetCode 49 - Group Anagrams
  * 通用写法：排序后字符串作为 key
  * 时间复杂度：O(n * k log k)（k 为单词平均长度）
@@ -70,8 +67,7 @@ function groupAnagrams(strs) {
 
   return Array.from(map.values());
 }
-</code></pre><h1 id="onk-复杂度写法">O(n*k) 复杂度写法</h1><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/14/20260114151158277.png" alt></button></figure></p><h2 id="java-写法">Java 写法</h2><pre><code class="language-java">class Solution {
+</code></pre><h1 id=onk-复杂度写法>O(n*k) 复杂度写法</h1><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/01/14/20260114151158277.png alt></button></figure></p><h2 id=java-写法>Java 写法</h2><pre><code class=language-java>class Solution {
     public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
         Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;(strs.length * 2);
 
@@ -94,7 +90,7 @@ function groupAnagrams(strs) {
         return new ArrayList&lt;&gt;(map.values());
     }
 }
-</code></pre><p>更加简洁的写法是，可以直接生成 array 的 hashcode，虽然有概率哈希冲突。</p><pre><code class="language-java">class Solution {
+</code></pre><p>更加简洁的写法是，可以直接生成 array 的 hashcode，虽然有概率哈希冲突。</p><pre><code class=language-java>class Solution {
     public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
         Map&lt;Integer, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;(strs.length * 2);
 
@@ -110,7 +106,7 @@ function groupAnagrams(strs) {
         return new ArrayList&lt;&gt;(map.values());
     }
 }
-</code></pre><p>同时，我们甚至能直接使用 list<integer> 作为 key：</p><pre><code class="language-java">class Solution {
+</code></pre><p>同时，我们甚至能直接使用 list<integer> 作为 key：</p><pre><code class=language-java>class Solution {
     public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
         Map&lt;List&lt;Integer&gt;, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;(strs.length * 2);
 
@@ -126,7 +122,7 @@ function groupAnagrams(strs) {
         return new ArrayList&lt;&gt;(map.values());
     }
 }
-</code></pre><h2 id="go-写法">Go 写法</h2><pre><code class="language-Go">func groupAnagrams(strs []string) [][]string {
+</code></pre><h2 id=go-写法>Go 写法</h2><pre><code class=language-Go>func groupAnagrams(strs []string) [][]string {
     mp := make(map[[26]byte][]string)
 
     for _, s := range strs {
@@ -143,7 +139,7 @@ function groupAnagrams(strs) {
     }
     return res
 }
-</code></pre><p>Go 语言还可以这么写：</p><pre><code class="language-Go">func groupAnagrams(strs []string) [][]string {
+</code></pre><p>Go 语言还可以这么写：</p><pre><code class=language-Go>func groupAnagrams(strs []string) [][]string {
     mp := make(map[string][]string)
 
     for _, s := range strs {
@@ -161,7 +157,7 @@ function groupAnagrams(strs) {
     }
     return res
 }
-</code></pre><h2 id="python-写法-1">Python 写法</h2><pre><code class="language-python">class Solution:
+</code></pre><h2 id=python-写法-1>Python 写法</h2><pre><code class=language-python>class Solution:
     def groupAnagrams(self, strs: List[str]) -&gt; List[List[str]]:
         mp = defaultdict(list)
 
@@ -173,7 +169,7 @@ function groupAnagrams(strs) {
             mp[tuple(cnt)].append(s)  # O(1) 哈希 key（按 26 维计数）
 
         return list(mp.values())
-</code></pre><p>python 写法中需要注意的是，字符转整数需要通过 ord 转，不能直接进行计算。</p><p>tuple 可以作为 map 的 key，其他不行。</p><h2 id="js-写法-1">JS 写法</h2><pre><code class="language-js">function groupAnagrams(strs) {
+</code></pre><p>python 写法中需要注意的是，字符转整数需要通过 ord 转，不能直接进行计算。</p><p>tuple 可以作为 map 的 key，其他不行。</p><h2 id=js-写法-1>JS 写法</h2><pre><code class=language-js>function groupAnagrams(strs) {
   const map = new Map(); // key -&gt; string[]
 
   for (const s of strs) {
@@ -191,7 +187,4 @@ function groupAnagrams(strs) {
 
   return Array.from(map.values());
 }
-</code></pre><p>需要注意的是，js 中，charAt 返回的是字符串，而 charCodeAt 才返回整数。</p></div></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
-<output>100%</output>
-<button type="button" data-zoom-in aria-label="放大">＋</button>
-<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
+</code></pre><p>需要注意的是，js 中，charAt 返回的是字符串，而 charCodeAt 才返回整数。</p></div></article></main><footer class=footer>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></footer><dialog class=image-viewer aria-label=图片预览><div class=image-viewer-bar><button type=button data-zoom-out aria-label=缩小>−</button><output>100%</output><button type=button data-zoom-in aria-label=放大>＋</button><button type=button data-close>关闭</button></div><div class=image-viewer-stage><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

@@ -1,7 +1,7 @@
-<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>移动零 | 安橙的博客</title><meta name="description" content="移动零"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/leetcode/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">移动零</h1><div class="post-description">移动零</div><div class="post-meta"><span title='2025-01-12 00:00:00 +0000 UTC'>一月 12, 2025</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#移动零">移动零</a></li><li><a href="#思路">思路</a><ul><li><a href="#java-写法">Java 写法</a></li><li><a href="#go-写法">Go 写法</a></li><li><a href="#python-写法">Python 写法</a></li><li><a href="#js-解法">JS 解法</a></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="移动零">移动零</h1><p>给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。</p><p>请注意 ，必须在不复制数组的情况下原地对数组进行操作。</p><p>示例 1:</p><p>输入: nums = [0,1,0,3,12]
+<!doctype html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>移动零 | 安橙的博客</title><meta name=description content="移动零"><meta name=robots content="index,follow"><link rel=canonical href=https://blog.ans20xx.com/posts/leetcode/leetcode-283-%E7%A7%BB%E5%8A%A8%E9%9B%B6/><link rel=stylesheet href=/css/minimal.min.9cf47da2bdd3ec3ef93f70d79fe64e43f3c217b51c9da6cc77c33f72be45649a.css integrity="sha256-nPR9or3T7D75P3DXn+ZOQ/PCF7UcnabMd8M/cr5FZJo=" crossorigin=anonymous></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/>安橙的博客</a></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/>博文</a></li><li><a href=https://blog.ans20xx.com/tags/>标签</a></li><li><a href=https://blog.ans20xx.com/search/>搜索</a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>移动零</h1><div class=post-description>移动零</div><time class=post-meta datetime=2025-01-12>2025-01-12</time></header><details class=toc open><summary>目录</summary><nav id=TableOfContents><ul><li><a href=#移动零>移动零</a></li><li><a href=#思路>思路</a><ul><li><a href=#java-写法>Java 写法</a></li><li><a href=#go-写法>Go 写法</a></li><li><a href=#python-写法>Python 写法</a></li><li><a href=#js-解法>JS 解法</a></li></ul></li></ul></nav></details><div id=post-content class=post-content><h1 id=移动零>移动零</h1><p>给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。</p><p>请注意 ，必须在不复制数组的情况下原地对数组进行操作。</p><p>示例 1:</p><p>输入: nums = [0,1,0,3,12]
 输出: [1,3,12,0,0]
 示例 2:</p><p>输入: nums = [0]
-输出: [0]</p><h1 id="思路">思路</h1><h2 id="java-写法">Java 写法</h2><p>双指针，目的就是为了把头部的元素往最后移动，第一个指针指向当前要移动到末尾的元素，第二个指针指向需要移动到的位置（从后往前遍历）。</p><pre><code class="language-java">class Solution {
+输出: [0]</p><h1 id=思路>思路</h1><h2 id=java-写法>Java 写法</h2><p>双指针，目的就是为了把头部的元素往最后移动，第一个指针指向当前要移动到末尾的元素，第二个指针指向需要移动到的位置（从后往前遍历）。</p><pre><code class=language-java>class Solution {
     public void moveZeroes(int[] nums) {
         int slow = 0; // 指向下一个应放非零的位置
 
@@ -16,7 +16,7 @@
         }
     }
 }
-</code></pre><p>另外一种解法如下，单指针，将元素往前移动，该解法是覆盖非零 + 末尾补零的方法，时间复杂度更优秀。</p><pre><code class="language-java">class Solution {
+</code></pre><p>另外一种解法如下，单指针，将元素往前移动，该解法是覆盖非零 + 末尾补零的方法，时间复杂度更优秀。</p><pre><code class=language-java>class Solution {
     public void moveZeroes(int[] nums) {
         int k = 0; // 下一个非零元素应放的位置
 
@@ -29,7 +29,7 @@
         }
     }
 }
-</code></pre><h2 id="go-写法">Go 写法</h2><pre><code class="language-go">func moveZeroes(nums []int)  {
+</code></pre><h2 id=go-写法>Go 写法</h2><pre><code class=language-go>func moveZeroes(nums []int)  {
     k := 0
     for _, x := range nums {
         if x != 0 {
@@ -41,7 +41,7 @@
         nums[i] = 0
     }
 }
-</code></pre><pre><code class="language-Go">func moveZeroes(nums []int)  {
+</code></pre><pre><code class=language-Go>func moveZeroes(nums []int)  {
     slow := 0
     for fast := 0; fast &lt; len(nums); fast ++ {
         if nums[fast] != 0 {
@@ -50,7 +50,7 @@
         }
     }
 }
-</code></pre><h2 id="python-写法">Python 写法</h2><pre><code class="language-python">class Solution:
+</code></pre><h2 id=python-写法>Python 写法</h2><pre><code class=language-python>class Solution:
     def moveZeroes(self, nums: List[int]) -&gt; None:
         &quot;&quot;&quot;
         Do not return anything, modify nums in-place instead.
@@ -60,7 +60,7 @@
             if nums[fast] != 0:
                 nums[slow], nums[fast] = nums[fast], nums[slow]
                 slow += 1
-</code></pre><p>python 和 Go 一样也支持交换赋值，注意的是，python 不支持 ++ 运算</p><p>注意上面的便利写法通常不推荐，一般推荐使用 enumerate(nums)</p><pre><code class="language-python">class Solution:
+</code></pre><p>python 和 Go 一样也支持交换赋值，注意的是，python 不支持 ++ 运算</p><p>注意上面的便利写法通常不推荐，一般推荐使用 enumerate(nums)</p><pre><code class=language-python>class Solution:
     def moveZeroes(self, nums: List[int]) -&gt; None:
         &quot;&quot;&quot;
         Do not return anything, modify nums in-place instead.
@@ -70,7 +70,7 @@
             if num != 0:
                 nums[slow], nums[fast] = nums[fast], nums[slow]
                 slow += 1
-</code></pre><p>range 的用法：</p><pre><code class="language-python"># 不是列表，但是可以转成列表
+</code></pre><p>range 的用法：</p><pre><code class=language-python># 不是列表，但是可以转成列表
 r = range(3)
 print(r)          # range(0, 3)
 print(list(r))    # [0, 1, 2]
@@ -96,7 +96,7 @@ for _ in range(3):
     do_something()
 
 
-</code></pre><p>需要特别注意的是，在 python 中的 for 循环实际上是遍历的可迭代对象，python 中没有 java 等其他语言中的 for;; 这种语法</p><pre><code class="language-python">class Solution:
+</code></pre><p>需要特别注意的是，在 python 中的 for 循环实际上是遍历的可迭代对象，python 中没有 java 等其他语言中的 for;; 这种语法</p><pre><code class=language-python>class Solution:
     def moveZeroes(self, nums: List[int]) -&gt; None:
         &quot;&quot;&quot;
         Do not return anything, modify nums in-place instead.
@@ -112,7 +112,7 @@ for _ in range(3):
 # 可以指定起始下标，需要特别注意，这里的 end 是 start + len - 1，所以上面的解法是有问题的
 for i, x in enumerate(nums, start=1):
     ...
-</code></pre><p>正确的解法如下：</p><pre><code class="language-python">class Solution:
+</code></pre><p>正确的解法如下：</p><pre><code class=language-python>class Solution:
     def moveZeroes(self, nums: List[int]) -&gt; None:
         k = 0
         for num in nums:
@@ -122,7 +122,7 @@ for i, x in enumerate(nums, start=1):
         for i in range(k, len(nums)):
             nums[i] = 0
 
-</code></pre><h2 id="js-解法">JS 解法</h2><pre><code class="language-js">/**
+</code></pre><h2 id=js-解法>JS 解法</h2><pre><code class=language-js>/**
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
  */
@@ -138,7 +138,7 @@ var moveZeroes = function(nums) {
         nums[k++] = 0;
     }
 };
-</code></pre><p>双指针</p><pre><code class="language-js">var moveZeroes = function(nums) {
+</code></pre><p>双指针</p><pre><code class=language-js>var moveZeroes = function(nums) {
     let slow = 0;
 
     for (let fast = 0; fast &lt; nums.length; fast ++) {
@@ -148,4 +148,4 @@ var moveZeroes = function(nums) {
         }
     }
 };
-</code></pre></div></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
+</code></pre></div></article></main><footer class=footer>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></footer><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

@@ -1,13 +1,12 @@
-<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【Anthropic】使用 MCP 进行 Code 执行 | 安橙的博客</title><meta name="description" content="1. 学习主题 我要学习的内容： 我为什么要学它： 我希望达到的程度： 了解基本概念
+<!doctype html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>【Anthropic】使用 MCP 进行 Code 执行 | 安橙的博客</title><meta name=description content="1. 学习主题 我要学习的内容： 我为什么要学它： 我希望达到的程度： 了解基本概念
 能向别人讲清楚
 能用于面试回答
 能写代码/做项目
 能深入分析原理
 2. 我当前的理解 在正式学习前，我认为它是什么： 为了节省上下文，可以不把工具的元数据披露给大模型，而是让代码去调用 MCP 工具。
-我已经知道的相关知识： 我目前不 …"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/posts/tools/%E4%BD%BF%E7%94%A8mcp%E8%BF%9B%E8%A1%8Ccode%E6%89%A7%E8%A1%8C/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">【Anthropic】使用 MCP 进行 Code 执行</h1><div class="post-meta"><span title='2026-03-14 00:00:00 +0000 UTC'>三月 14, 2026</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><a href="#1-学习主题">1. 学习主题</a><ul><li><a href="#我要学习的内容">我要学习的内容：</a></li><li><a href="#我为什么要学它">我为什么要学它：</a></li><li><a href="#我希望达到的程度">我希望达到的程度：</a></li></ul></li><li><a href="#2-我当前的理解">2. 我当前的理解</a></li><li><a href="#3-第一轮学习记录">3. 第一轮学习记录</a></li><li><a href="#4-用小白能听懂的话解释">4. 用“小白能听懂的话”解释</a></li><li><a href="#5-找出讲不清楚的地方">5. 找出“讲不清楚”的地方</a></li><li><a href="#6-回炉补缺">6. 回炉补缺</a></li><li><a href="#7-压缩成自己的知识表达">7. 压缩成自己的知识表达</a></li><li><a href="#8-输出检验">8. 输出检验</a></li><li><a href="#9-一页总结">9. 一页总结</a></li></ul></nav></details><div id="post-content" class="post-content"><h1 id="1-学习主题">1. 学习主题</h1><h2 id="我要学习的内容">我要学习的内容：</h2><h2 id="我为什么要学它">我为什么要学它：</h2><h2 id="我希望达到的程度">我希望达到的程度：</h2><ul><li><p><input disabled type="checkbox"> 了解基本概念</p></li><li><p><input disabled type="checkbox"> 能向别人讲清楚</p></li><li><p><input disabled type="checkbox"> 能用于面试回答</p></li><li><p><input disabled type="checkbox"> 能写代码/做项目</p></li><li><p><input disabled type="checkbox"> 能深入分析原理</p></li></ul><h1 id="2-我当前的理解">2. 我当前的理解</h1><p>在正式学习前，我认为它是什么：
+我已经知道的相关知识： 我目前不 …"><meta name=robots content="index,follow"><link rel=canonical href=https://blog.ans20xx.com/posts/tools/%E4%BD%BF%E7%94%A8mcp%E8%BF%9B%E8%A1%8Ccode%E6%89%A7%E8%A1%8C/><link rel=stylesheet href=/css/minimal.min.9cf47da2bdd3ec3ef93f70d79fe64e43f3c217b51c9da6cc77c33f72be45649a.css integrity="sha256-nPR9or3T7D75P3DXn+ZOQ/PCF7UcnabMd8M/cr5FZJo=" crossorigin=anonymous></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/>安橙的博客</a></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/>博文</a></li><li><a href=https://blog.ans20xx.com/tags/>标签</a></li><li><a href=https://blog.ans20xx.com/search/>搜索</a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>【Anthropic】使用 MCP 进行 Code 执行</h1><time class=post-meta datetime=2026-03-14>2026-03-14</time></header><details class=toc open><summary>目录</summary><nav id=TableOfContents><ul><li><a href=#1-学习主题>1. 学习主题</a><ul><li><a href=#我要学习的内容>我要学习的内容：</a></li><li><a href=#我为什么要学它>我为什么要学它：</a></li><li><a href=#我希望达到的程度>我希望达到的程度：</a></li></ul></li><li><a href=#2-我当前的理解>2. 我当前的理解</a></li><li><a href=#3-第一轮学习记录>3. 第一轮学习记录</a></li><li><a href=#4-用小白能听懂的话解释>4. 用“小白能听懂的话”解释</a></li><li><a href=#5-找出讲不清楚的地方>5. 找出“讲不清楚”的地方</a></li><li><a href=#6-回炉补缺>6. 回炉补缺</a></li><li><a href=#7-压缩成自己的知识表达>7. 压缩成自己的知识表达</a></li><li><a href=#8-输出检验>8. 输出检验</a></li><li><a href=#9-一页总结>9. 一页总结</a></li></ul></nav></details><div id=post-content class=post-content><h1 id=1-学习主题>1. 学习主题</h1><h2 id=我要学习的内容>我要学习的内容：</h2><h2 id=我为什么要学它>我为什么要学它：</h2><h2 id=我希望达到的程度>我希望达到的程度：</h2><ul><li><p><input disabled type=checkbox> 了解基本概念</p></li><li><p><input disabled type=checkbox> 能向别人讲清楚</p></li><li><p><input disabled type=checkbox> 能用于面试回答</p></li><li><p><input disabled type=checkbox> 能写代码/做项目</p></li><li><p><input disabled type=checkbox> 能深入分析原理</p></li></ul><h1 id=2-我当前的理解>2. 我当前的理解</h1><p>在正式学习前，我认为它是什么：
 为了节省上下文，可以不把工具的元数据披露给大模型，而是让代码去调用 MCP 工具。</p><p>我已经知道的相关知识：
-我目前不清楚的问题：</p><h1 id="3-第一轮学习记录">3. 第一轮学习记录</h1><p>资料来源：https://www.anthropic.com/engineering/code-execution-with-mcp</p><p>书籍 / 博客 / 视频 / 论文 / 官方文档</p><p>核心概念提炼：</p><ol><li>MCP 带来的问题<ul><li>工具定义占用上下文窗口</li><li>中间工具调用结果消耗额外的 token</li><li><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314190122200.png" alt></button></figure></li></ul></li><li>使用代码调用来和 MCP 进行交互（文件树和文件内容）<ul><li>根据 mcp 服务生成文件树</li></ul><pre><code class="language-shell">servers
+我目前不清楚的问题：</p><h1 id=3-第一轮学习记录>3. 第一轮学习记录</h1><p>资料来源：https://www.anthropic.com/engineering/code-execution-with-mcp</p><p>书籍 / 博客 / 视频 / 论文 / 官方文档</p><p>核心概念提炼：</p><ol><li>MCP 带来的问题<ul><li>工具定义占用上下文窗口</li><li>中间工具调用结果消耗额外的 token</li><li><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://an-img.oss-cn-hangzhou.aliyuncs.com/2026/03/14/20260314190122200.png alt></button></figure></li></ul></li><li>使用代码调用来和 MCP 进行交互（文件树和文件内容）<ul><li>根据 mcp 服务生成文件树</li></ul><pre><code class=language-shell>servers
 ├── google-drive
 │   ├── getDocument.ts
 │   ├── ... (other tools)
@@ -17,7 +16,7 @@
 │   ├── ... (other tools)
 │   └── index.ts
 └── ... (other servers)
-</code></pre><ul><li>每个文件的内容</li></ul><pre><code class="language-ts">// ./servers/google-drive/getDocument.ts
+</code></pre><ul><li>每个文件的内容</li></ul><pre><code class=language-ts>// ./servers/google-drive/getDocument.ts
 import { callMCPTool } from &quot;../../../client.js&quot;;
 
 interface GetDocumentInput {
@@ -32,7 +31,7 @@ interface GetDocumentResponse {
 export async function getDocument(input: GetDocumentInput): Promise&lt;GetDocumentResponse&gt; {
     return callMCPTool&lt;GetDocumentResponse&gt;('google_drive__get_document', input);
 }
-</code></pre></li><li>执行流程<ul><li>遍历文件系统：列出 ./servers/ 目录下的文件来得到所有可用的 server</li><li>查看需要的工具文件来理解每个文件的接口</li><li>这样模型只需要知道当前任务的定义</li></ul></li><li>使用 Code 执行 MCP 带来的优势<ul><li>模型擅长搜索文件系统，这样可以让模型能够按需加载工具定义</li><li>可以定义一个 search_tools 工具来帮助模型查找相关的工具定义</li><li>Agent 可以通过代码过滤和转换代码返回的结果</li></ul><pre><code class="language-ts">// Without code execution - all rows flow through context
+</code></pre></li><li>执行流程<ul><li>遍历文件系统：列出 ./servers/ 目录下的文件来得到所有可用的 server</li><li>查看需要的工具文件来理解每个文件的接口</li><li>这样模型只需要知道当前任务的定义</li></ul></li><li>使用 Code 执行 MCP 带来的优势<ul><li>模型擅长搜索文件系统，这样可以让模型能够按需加载工具定义</li><li>可以定义一个 search_tools 工具来帮助模型查找相关的工具定义</li><li>Agent 可以通过代码过滤和转换代码返回的结果</li></ul><pre><code class=language-ts>// Without code execution - all rows flow through context
 TOOL CALL: gdrive.getSheet(sheetId: 'abc123')
         → returns 10,000 rows in context to filter manually
 
@@ -43,14 +42,14 @@ const pendingOrders = allRows.filter(row =&gt;
 );
 console.log(`Found ${pendingOrders.length} pending orders`);
 console.log(pendingOrders.slice(0, 5)); // Only log first 5 for review
-</code></pre><ul><li>代码可以方便的处理循环、条件和异常处理</li></ul><pre><code class="language-ts">let found = false;
+</code></pre><ul><li>代码可以方便的处理循环、条件和异常处理</li></ul><pre><code class=language-ts>let found = false;
 while (!found) {
     const messages = await slack.getChannelHistory({ channel: 'C123456' });
     found = messages.some(m =&gt; m.text.includes('deployment complete'));
     if (!found) await new Promise(r =&gt; setTimeout(r, 5000));
 }
 console.log('Deployment notification received');
-</code></pre><ul><li>代码可以做更好的隐私控制</li></ul><pre><code class="language-ts">const sheet = await gdrive.getSheet({ sheetId: 'abc123' });
+</code></pre><ul><li>代码可以做更好的隐私控制</li></ul><pre><code class=language-ts>const sheet = await gdrive.getSheet({ sheetId: 'abc123' });
 for (const row of sheet.rows) {
 await salesforce.updateRecord({
     objectType: 'Lead',
@@ -63,7 +62,7 @@ await salesforce.updateRecord({
 });
 }
 console.log(`Updated ${sheet.rows.length} leads`);
-</code></pre><ul><li>Code execution 可以让 agent 在操作间共享状态，agent 可以将结果输出到文件，从而在后续的流程中追踪</li></ul><pre><code class="language-ts">const leads = await salesforce.query({ 
+</code></pre><ul><li>Code execution 可以让 agent 在操作间共享状态，agent 可以将结果输出到文件，从而在后续的流程中追踪</li></ul><pre><code class=language-ts>const leads = await salesforce.query({ 
     query: 'SELECT Id, Email FROM Lead LIMIT 1000' 
 });
 const csvData = leads.map(l =&gt; `${l.Id},${l.Email}`).join('\n');
@@ -71,7 +70,7 @@ await fs.writeFile('./workspace/leads.csv', csvData);
 
 // Later execution picks up where it left off
 const saved = await fs.readFile('./workspace/leads.csv', 'utf-8');
-</code></pre><ul><li>Agent 可以将自己的代码保存为可复用的函数</li></ul><pre><code class="language-ts">// In ./skills/save-sheet-as-csv.ts
+</code></pre><ul><li>Agent 可以将自己的代码保存为可复用的函数</li></ul><pre><code class=language-ts>// In ./skills/save-sheet-as-csv.ts
 import * as gdrive from './servers/google-drive';
 export async function saveSheetAsCsv(sheetId: string) {
 const data = await gdrive.getSheet({ sheetId });
@@ -83,26 +82,23 @@ await fs.writeFile(`./workspace/sheet-${sheetId}.csv`, csv);
 // Later, in any agent execution:
 import { saveSheetAsCsv } from './skills/save-sheet-as-csv';
 const csvPath = await saveSheetAsCsv('abc123');
-</code></pre></li></ol><p>关键术语：</p><p>术语 1：</p><p>术语 2：</p><p>术语 3：</p><h1 id="4-用小白能听懂的话解释">4. 用“小白能听懂的话”解释</h1><p>假设我要把这个知识讲给一个完全不懂的人听。</p><p>一句话解释它是什么：
+</code></pre></li></ol><p>关键术语：</p><p>术语 1：</p><p>术语 2：</p><p>术语 3：</p><h1 id=4-用小白能听懂的话解释>4. 用“小白能听懂的话”解释</h1><p>假设我要把这个知识讲给一个完全不懂的人听。</p><p>一句话解释它是什么：
 mcp 解决了 Agent 工具调用的问题，但是会带来上下文膨胀，通过封装 mcp 为代码文件，能够实现工具的按需加载，减少上下文的长度。</p><p>它解决了什么问题：
 （这个知识存在的原因是什么）</p><p>它是怎么工作的：
 （按步骤写，像讲流程一样）</p><p>举一个最简单的例子：
 （最好是生活化类比 + 技术例子）</p><p>如果让我口头讲 1 分钟，我会怎么讲：
-（直接写成可说出口的话）</p><h1 id="5-找出讲不清楚的地方">5. 找出“讲不清楚”的地方</h1><p>我在哪些地方卡住了：
+（直接写成可说出口的话）</p><h1 id=5-找出讲不清楚的地方>5. 找出“讲不清楚”的地方</h1><p>我在哪些地方卡住了：
 哪些概念我一解释就变模糊：
-哪些地方只是“背会了”，但没有真正理解：</p><h1 id="6-回炉补缺">6. 回炉补缺</h1><p>针对卡点，我重新查到的内容：</p><p>问题 1：</p><p>重新理解：</p><p>问题 2：</p><p>重新理解：</p><p>问题 3：</p><p>重新理解：</p><p>新的理解和原来有什么不同：
-（写出修正点）</p><h1 id="7-压缩成自己的知识表达">7. 压缩成自己的知识表达</h1><p>最终版通俗解释：
+哪些地方只是“背会了”，但没有真正理解：</p><h1 id=6-回炉补缺>6. 回炉补缺</h1><p>针对卡点，我重新查到的内容：</p><p>问题 1：</p><p>重新理解：</p><p>问题 2：</p><p>重新理解：</p><p>问题 3：</p><p>重新理解：</p><p>新的理解和原来有什么不同：
+（写出修正点）</p><h1 id=7-压缩成自己的知识表达>7. 压缩成自己的知识表达</h1><p>最终版通俗解释：
 （要求自己能不用资料直接讲清楚）</p><p>最终版技术解释：
 （适合面试 / 写作 / 项目说明）</p><p>核心公式 / 关键流程 / 重点机制：</p><p>最容易被问到的问题：
 1.
 2.
 3.
 4.
-5.</p><p>对应回答：</p><p>Q1：</p><p>Q2：</p><p>Q3：</p><p>Q4：</p><p>Q5：</p><h1 id="8-输出检验">8. 输出检验</h1><p>我是否能做到以下几点：</p><p>不看资料讲 3 分钟</p><p>用大白话解释清楚</p><p>解释它为什么出现</p><p>解释它和相近概念的区别</p><p>举出一个实际应用场景</p><p>回答常见追问</p><p>写出简单代码 / 例子 / 流程图</p><p>如果还不能，卡在哪：</p><h1 id="9-一页总结">9. 一页总结</h1><p>主题：</p><p>一句话本质：</p><p>核心作用：</p><p>关键原理：
+5.</p><p>对应回答：</p><p>Q1：</p><p>Q2：</p><p>Q3：</p><p>Q4：</p><p>Q5：</p><h1 id=8-输出检验>8. 输出检验</h1><p>我是否能做到以下几点：</p><p>不看资料讲 3 分钟</p><p>用大白话解释清楚</p><p>解释它为什么出现</p><p>解释它和相近概念的区别</p><p>举出一个实际应用场景</p><p>回答常见追问</p><p>写出简单代码 / 例子 / 流程图</p><p>如果还不能，卡在哪：</p><h1 id=9-一页总结>9. 一页总结</h1><p>主题：</p><p>一句话本质：</p><p>核心作用：</p><p>关键原理：
 1.
 2.
 3.</p><p>常见误区：</p><p>面试中怎么说最合适：
-（写成一段完整答题模板）</p></div><footer class="post-footer"><ul class="post-tags"><li><a href="/tags/mcp/">MCP</a></li><li><a href="/tags/claude-code/">Claude Code</a></li></ul></footer></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
-<output>100%</output>
-<button type="button" data-zoom-in aria-label="放大">＋</button>
-<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
+（写成一段完整答题模板）</p></div><footer class=post-footer><ul class=post-tags><li><a href=/tags/mcp/>MCP</a></li><li><a href=/tags/claude-code/>Claude Code</a></li></ul></footer></article></main><footer class=footer>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></footer><dialog class=image-viewer aria-label=图片预览><div class=image-viewer-bar><button type=button data-zoom-out aria-label=缩小>−</button><output>100%</output><button type=button data-zoom-in aria-label=放大>＋</button><button type=button data-close>关闭</button></div><div class=image-viewer-stage><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>

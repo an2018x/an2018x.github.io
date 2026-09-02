@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>5-CSS 列表、表格和表单 | 安橙的博客</title><meta name="description" content="描述CSS中如何控制列表、表格和表单的样式"><meta name="robots" content="index,follow"><link rel="canonical" href="https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-5/"><link rel="stylesheet" href="/css/minimal.min.ab8848143657db1d6ea8d9f4faf99b78c80cf59473c695b889c5b96f09f04e77.css" integrity="sha256-q4hIFDZX2x1uqNn0+vmbeMgM9ZRzxpW4icW5bwnwTnc=" crossorigin="anonymous"></head><body id="top"><header class="header"><nav class="nav"><div class="logo"><a href="https://blog.ans20xx.com/">安橙的博客</a></div><ul id="menu"><li><a href="https://blog.ans20xx.com/posts/">博文</a></li><li><a href="https://blog.ans20xx.com/tags/">标签</a></li><li><a href="https://blog.ans20xx.com/search/">搜索</a></li></ul></nav></header><main class="main"><article class="post-single"><header class="post-header"><h1 class="post-title">5-CSS 列表、表格和表单</h1><div class="post-description">描述CSS中如何控制列表、表格和表单的样式</div><div class="post-meta"><span title='2023-01-20 19:16:46 +0800 +0800'>一月 20, 2023</span></div></header><details class="toc" open><summary>目录</summary><nav id="TableOfContents"><ul><li><ul><li><a href="#1-项目符号样式">1. 项目符号样式</a></li><li><a href="#2-项目图像">2. 项目图像</a></li><li><a href="#3-标记的定位">3. 标记的定位</a></li><li><a href="#4-列表快捷方式">4. 列表快捷方式</a></li><li><a href="#5-表格属性">5. 表格属性</a></li><li><a href="#6-空单元格的边框">6. 空单元格的边框</a></li><li><a href="#7-单元格之间的空隙">7. 单元格之间的空隙</a></li><li><a href="#8-定义表单样式">8. 定义表单样式</a></li><li><a href="#9-定义单行文本框样式">9. 定义单行文本框样式</a></li><li><a href="#10-光标样式">10. 光标样式</a></li><li><a href="#11-小结">11. 小结</a></li></ul></li></ul></nav></details><div id="post-content" class="post-content"><h2 id="1-项目符号样式">1. 项目符号样式</h2><ol><li><code>list-style-type</code> 属性允许你控制项目符号的形状或样式。</li><li>该属性可以应用到 <code>&lt;ol></code>、<code>&lt;ul></code> 和 <code>&lt;li></code> 元素的规则中。</li><li>对于无序列表的 <code>list-style-type</code> 属性，可以使用如下值：<ul><li>none</li><li>disc</li><li>circle</li><li>square</li></ul></li><li>对于有序列表的 <code>list-style-type</code> 属性，可以使用如下值：<ul><li>decimal</li><li>decimal-leading-zero</li><li>lower-alpha</li><li>upper-alpha</li><li>lower-roman</li><li>upper-roman</li></ul></li></ol><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+<!doctype html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>5-CSS 列表、表格和表单 | 安橙的博客</title><meta name=description content="描述CSS中如何控制列表、表格和表单的样式"><meta name=robots content="index,follow"><link rel=canonical href=https://blog.ans20xx.com/docs/%E5%89%8D%E7%AB%AF/css/chapter-5/><link rel=stylesheet href=/css/minimal.min.9cf47da2bdd3ec3ef93f70d79fe64e43f3c217b51c9da6cc77c33f72be45649a.css integrity="sha256-nPR9or3T7D75P3DXn+ZOQ/PCF7UcnabMd8M/cr5FZJo=" crossorigin=anonymous></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://blog.ans20xx.com/>安橙的博客</a></div><ul id=menu><li><a href=https://blog.ans20xx.com/posts/>博文</a></li><li><a href=https://blog.ans20xx.com/tags/>标签</a></li><li><a href=https://blog.ans20xx.com/search/>搜索</a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>5-CSS 列表、表格和表单</h1><div class=post-description>描述CSS中如何控制列表、表格和表单的样式</div><time class=post-meta datetime=2023-01-20>2023-01-20</time></header><details class=toc open><summary>目录</summary><nav id=TableOfContents><ul><li><ul><li><a href=#1-项目符号样式>1. 项目符号样式</a></li><li><a href=#2-项目图像>2. 项目图像</a></li><li><a href=#3-标记的定位>3. 标记的定位</a></li><li><a href=#4-列表快捷方式>4. 列表快捷方式</a></li><li><a href=#5-表格属性>5. 表格属性</a></li><li><a href=#6-空单元格的边框>6. 空单元格的边框</a></li><li><a href=#7-单元格之间的空隙>7. 单元格之间的空隙</a></li><li><a href=#8-定义表单样式>8. 定义表单样式</a></li><li><a href=#9-定义单行文本框样式>9. 定义单行文本框样式</a></li><li><a href=#10-光标样式>10. 光标样式</a></li><li><a href=#11-小结>11. 小结</a></li></ul></li></ul></nav></details><div id=post-content class=post-content><h2 id=1-项目符号样式>1. 项目符号样式</h2><ol><li><code>list-style-type</code> 属性允许你控制项目符号的形状或样式。</li><li>该属性可以应用到 <code>&lt;ol></code>、<code>&lt;ul></code> 和 <code>&lt;li></code> 元素的规则中。</li><li>对于无序列表的 <code>list-style-type</code> 属性，可以使用如下值：<ul><li>none</li><li>disc</li><li>circle</li><li>square</li></ul></li><li>对于有序列表的 <code>list-style-type</code> 属性，可以使用如下值：<ul><li>decimal</li><li>decimal-leading-zero</li><li>lower-alpha</li><li>upper-alpha</li><li>lower-roman</li><li>upper-roman</li></ul></li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;项目符号样式&lt;/title&gt;
@@ -11,11 +11,10 @@
         &lt;/ul&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><pre><code class="language-css">ul {
+</code></pre><pre><code class=language-css>ul {
     list-style-type: circle;
 }
-</code></pre><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120191312.png" alt></button></figure></p><h2 id="2-项目图像">2. 项目图像</h2><ol><li>可以利用 <code>list-style-image</code> 属性将一个图像作为项目符号使用。</li><li>该属性的值以字母 url 开头，后面跟着一对圆括号。</li><li>该属性可以应用到 <code>&lt;ul></code> 和 <code>&lt;li></code> 元素中。</li></ol><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+</code></pre><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120191312.png alt></button></figure></p><h2 id=2-项目图像>2. 项目图像</h2><ol><li>可以利用 <code>list-style-image</code> 属性将一个图像作为项目符号使用。</li><li>该属性的值以字母 url 开头，后面跟着一对圆括号。</li><li>该属性可以应用到 <code>&lt;ul></code> 和 <code>&lt;li></code> 元素中。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;项目图像&lt;/title&gt;
@@ -28,11 +27,10 @@
         &lt;/ul&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><pre><code class="language-css">ul {
+</code></pre><pre><code class=language-css>ul {
     list-style-image: url(&quot;add.png&quot;);
 }
-</code></pre><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120191601.png" alt></button></figure></p><h2 id="3-标记的定位">3. 标记的定位</h2><ol><li>默认情况下，列表会缩进到页面中。</li><li><code>list-style-position</code> 属性用来表明标记显示的位置，是包含主体内容的盒子的内部，还是在其外部。</li><li>该属性可以选用如下两个值：<ul><li><code>outside</code>：表明标记位于文本块的左侧（默认）。</li><li><code>inside</code> 表明标记位于文本块的内部，同时文本块会被缩进。</li></ul></li></ol><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+</code></pre><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120191601.png alt></button></figure></p><h2 id=3-标记的定位>3. 标记的定位</h2><ol><li>默认情况下，列表会缩进到页面中。</li><li><code>list-style-position</code> 属性用来表明标记显示的位置，是包含主体内容的盒子的内部，还是在其外部。</li><li>该属性可以选用如下两个值：<ul><li><code>outside</code>：表明标记位于文本块的左侧（默认）。</li><li><code>inside</code> 表明标记位于文本块的内部，同时文本块会被缩进。</li></ul></li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;标记的定位&lt;/title&gt;
@@ -49,15 +47,14 @@
         &lt;/ul&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><pre><code class="language-css">ul.one {
+</code></pre><pre><code class=language-css>ul.one {
     list-style-position: outside;
 }
 ul.two {
     list-style-position: inside;
 }
-</code></pre><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120192321.png" alt></button></figure></p><h2 id="4-列表快捷方式">4. 列表快捷方式</h2><ol><li>可以使用 <code>list-style</code> 一次定义多个列表属性。</li></ol><pre><code class="language-css">list-style: inside circle;
-</code></pre><h2 id="5-表格属性">5. 表格属性</h2><ol><li><code>width</code> 用来指定表格的宽度。</li><li><code>padding</code> 用来设置每个单元格边框与内容之间的空隙。</li><li><code>text-transform</code> 用来将表格标题中的内容转换为大写。</li><li><code>letter-spacing</code>、<code>font-size</code> 用来为表格标题的内容增加额外的样式。</li><li><code>border-top</code>、<code>border-bottom</code> 用于设置表格标题上方和下方的边框。</li><li><code>text-align</code> 用来将某些单元格中的书写方式设置为向左或向右对齐。</li><li><code>background-color</code> 用来改变表格行的背景颜色。</li><li><code>:hover</code> 在用户把光标悬停在某个表格行时将此行高亮显示。</li></ol><h2 id="6-空单元格的边框">6. 空单元格的边框</h2><ol><li>可以使用 <code>empty-cells</code> 属性来指定是否显示空单元格的边框。</li><li><code>slow</code> 值用于显示空单元格的边框。</li><li><code>hide</code> 值用于隐藏空单元格的边框。</li><li><code>inherit</code> 值表示单元格遵循外部表格的规则。</li></ol><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+</code></pre><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120192321.png alt></button></figure></p><h2 id=4-列表快捷方式>4. 列表快捷方式</h2><ol><li>可以使用 <code>list-style</code> 一次定义多个列表属性。</li></ol><pre><code class=language-css>list-style: inside circle;
+</code></pre><h2 id=5-表格属性>5. 表格属性</h2><ol><li><code>width</code> 用来指定表格的宽度。</li><li><code>padding</code> 用来设置每个单元格边框与内容之间的空隙。</li><li><code>text-transform</code> 用来将表格标题中的内容转换为大写。</li><li><code>letter-spacing</code>、<code>font-size</code> 用来为表格标题的内容增加额外的样式。</li><li><code>border-top</code>、<code>border-bottom</code> 用于设置表格标题上方和下方的边框。</li><li><code>text-align</code> 用来将某些单元格中的书写方式设置为向左或向右对齐。</li><li><code>background-color</code> 用来改变表格行的背景颜色。</li><li><code>:hover</code> 在用户把光标悬停在某个表格行时将此行高亮显示。</li></ol><h2 id=6-空单元格的边框>6. 空单元格的边框</h2><ol><li>可以使用 <code>empty-cells</code> 属性来指定是否显示空单元格的边框。</li><li><code>slow</code> 值用于显示空单元格的边框。</li><li><code>hide</code> 值用于隐藏空单元格的边框。</li><li><code>inherit</code> 值表示单元格遵循外部表格的规则。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;空单元格边框&lt;/title&gt;
@@ -72,12 +69,11 @@ ul.two {
         &lt;/table&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><pre><code class="language-css">td {
+</code></pre><pre><code class=language-css>td {
     border: 1px solid;
     empty-cells: hide;
 }
-</code></pre><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120194635.png" alt></button></figure></p><h2 id="7-单元格之间的空隙">7. 单元格之间的空隙</h2><ol><li><code>border-spacing</code> 属性允许你控制相邻单元格之间的距离，默认情况下，浏览器会在每个单元格之间留有一个小的空隙。</li><li><code>border-collapse</code> 属性用来合并相邻的边框，它的值有：<ul><li><code>collapse</code> 值表示尽可能将单元格相邻的边框合并为一个单独的边框，此时 <code>border-spacing</code> 属性不会生效。</li><li><code>separate</code> 表示将相邻的边框分离。</li></ul></li></ol><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+</code></pre><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120194635.png alt></button></figure></p><h2 id=7-单元格之间的空隙>7. 单元格之间的空隙</h2><ol><li><code>border-spacing</code> 属性允许你控制相邻单元格之间的距离，默认情况下，浏览器会在每个单元格之间留有一个小的空隙。</li><li><code>border-collapse</code> 属性用来合并相邻的边框，它的值有：<ul><li><code>collapse</code> 值表示尽可能将单元格相邻的边框合并为一个单独的边框，此时 <code>border-spacing</code> 属性不会生效。</li><li><code>separate</code> 表示将相邻的边框分离。</li></ul></li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;单元格之间的空隙&lt;/title&gt;
@@ -92,14 +88,13 @@ ul.two {
         &lt;/table&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><pre><code class="language-css">table {
+</code></pre><pre><code class=language-css>table {
     border-spacing: 10px;    
 }
 td {
     border: 1px solid;
 }
-</code></pre><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120195821.png" alt></button></figure></p><h2 id="8-定义表单样式">8. 定义表单样式</h2><ol><li>CSS 对表单样式的处理主要体现下定义下列控件的样式。<ul><li>文本输入框和文本域</li><li>提交按钮</li><li>表单中的标签，可以精确地对表单控件进行对齐。</li></ul></li></ol><h2 id="9-定义单行文本框样式">9. 定义单行文本框样式</h2><ol><li><code>font-size</code> 用于设置用户输入文本的大小。</li><li><code>color</code> 用于设置文本颜色，<code>background-color</code> 用于设置文本输入框的背景色。</li><li><code>border</code> 用于在文本输入框的边缘增加边框，<code>border-radius</code> 可以创建圆角。</li><li><code>background-image</code> 为文本框增加背景图像。</li></ol><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+</code></pre><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120195821.png alt></button></figure></p><h2 id=8-定义表单样式>8. 定义表单样式</h2><ol><li>CSS 对表单样式的处理主要体现下定义下列控件的样式。<ul><li>文本输入框和文本域</li><li>提交按钮</li><li>表单中的标签，可以精确地对表单控件进行对齐。</li></ul></li></ol><h2 id=9-定义单行文本框样式>9. 定义单行文本框样式</h2><ol><li><code>font-size</code> 用于设置用户输入文本的大小。</li><li><code>color</code> 用于设置文本颜色，<code>background-color</code> 用于设置文本输入框的背景色。</li><li><code>border</code> 用于在文本输入框的边缘增加边框，<code>border-radius</code> 可以创建圆角。</li><li><code>background-image</code> 为文本框增加背景图像。</li></ol><pre><code class=language-html>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;定义单行文本框样式&lt;/title&gt;
@@ -111,7 +106,7 @@ td {
         &lt;/form&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><pre><code class="language-css">input {
+</code></pre><pre><code class=language-css>input {
     font-size: 120%;
     border-radius: 5px;
     padding: 5px 5px 5px 30px;
@@ -120,8 +115,4 @@ td {
     background-position: 8px 8px;
     background-image: url(&quot;add.png&quot;);
 }
-</code></pre><p><figure class="post-image"><button class="image-open" type="button" aria-label="查看大图">
-<img loading="lazy" decoding="async" src="https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120201023.png" alt></button></figure></p><h2 id="10-光标样式">10. 光标样式</h2><ol><li><code>cursor</code> 属性用于控制显示给用户的光标的类型。</li><li>通常有下列值：<ul><li>auto</li><li>crosshair</li><li>default</li><li>pointer</li><li>move</li><li>text</li><li>wait</li><li>help</li><li>url(&ldquo;xxxx.png&rdquo;)</li></ul></li></ol><h2 id="11-小结">11. 小结</h2><ol><li>可以使用 <code>list-style-type</code> 属性和 <code>list-style</code> 图像属性为列表标记定义不同的外观。</li><li>表格中的单元格在不同的浏览器中可以有不同的边框和间距，可以利用一些属性来控制它们。</li></ol></div></article></main><footer class="footer">&copy; 2026 <a href="https://blog.ans20xx.com/">安橙的博客</a></footer><dialog class="image-viewer" aria-label="图片预览"><div class="image-viewer-bar"><button type="button" data-zoom-out aria-label="缩小">−</button>
-<output>100%</output>
-<button type="button" data-zoom-in aria-label="放大">＋</button>
-<button type="button" data-close>关闭</button></div><div class="image-viewer-stage"><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
+</code></pre><p><figure class=post-image><button class=image-open type=button aria-label=查看大图><img loading=lazy decoding=async src=https://animg.oss-cn-shanghai.aliyuncs.com/2023/01/20/20230120201023.png alt></button></figure></p><h2 id=10-光标样式>10. 光标样式</h2><ol><li><code>cursor</code> 属性用于控制显示给用户的光标的类型。</li><li>通常有下列值：<ul><li>auto</li><li>crosshair</li><li>default</li><li>pointer</li><li>move</li><li>text</li><li>wait</li><li>help</li><li>url(&ldquo;xxxx.png&rdquo;)</li></ul></li></ol><h2 id=11-小结>11. 小结</h2><ol><li>可以使用 <code>list-style-type</code> 属性和 <code>list-style</code> 图像属性为列表标记定义不同的外观。</li><li>表格中的单元格在不同的浏览器中可以有不同的边框和间距，可以利用一些属性来控制它们。</li></ol></div></article></main><footer class=footer>&copy; 2026 <a href=https://blog.ans20xx.com/>安橙的博客</a></footer><dialog class=image-viewer aria-label=图片预览><div class=image-viewer-bar><button type=button data-zoom-out aria-label=缩小>−</button><output>100%</output><button type=button data-zoom-in aria-label=放大>＋</button><button type=button data-close>关闭</button></div><div class=image-viewer-stage><img alt></div></dialog><script>(()=>{const e=document.querySelector(".image-viewer"),n=e.querySelector("img"),o=e.querySelector("output");let t=1;const s=e=>{t=Math.max(.25,Math.min(5,e)),n.style.transform=`scale(${t})`,o.value=`${Math.round(t*100)}%`};document.addEventListener("click",o=>{const i=o.target.closest(".image-open");if(i){const t=i.querySelector("img");n.src=t.currentSrc||t.src,n.alt=t.alt,s(1),e.showModal()}else o.target.closest("[data-zoom-in]")?s(t+.25):o.target.closest("[data-zoom-out]")?s(t-.25):(o.target.closest("[data-close]")||o.target===e)&&e.close()}),e.addEventListener("wheel",e=>{e.preventDefault(),s(t+(e.deltaY<0?.25:-.25))},{passive:!1}),e.addEventListener("close",()=>n.removeAttribute("src"))})()</script><script>const syntax=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|\b(?:break|case|catch|class|const|continue|def|else|export|false|for|from|function|if|import|in|let|new|null|return|true|try|var|while)\b/g;document.querySelectorAll(".post-content pre").forEach(e=>{const n=e.querySelector("code");if(n){const t=n.textContent,e=document.createDocumentFragment();let s=0;for(const n of t.matchAll(syntax)){e.append(t.slice(s,n.index));const o=document.createElement("span");o.className=n[1]?"hl-s":n[2]?"hl-c":"hl-k",o.textContent=n[0],e.append(o),s=n.index+n[0].length}e.append(t.slice(s)),n.replaceChildren(e)}const s=document.createElement("div"),t=document.createElement("button");s.className="code-block",t.className="code-copy",t.type="button",t.textContent="复制",t.setAttribute("aria-label","复制代码"),e.before(s),s.append(e,t),t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent),t.textContent="已复制",setTimeout(()=>t.textContent="复制",1200)}catch{t.textContent="复制失败"}})})</script></body></html>
