@@ -1,5 +1,8 @@
 {{- define "main" }}
-{{- $posts := where site.RegularPages "Section" "posts" }}
+{{- $allPosts := where site.RegularPages "Section" "posts" }}
+{{- $featured := where $allPosts "Params.featuredOnHome" true }}
+{{- /* 首页只展示标记了 featuredOnHome 的文章；没有标记时回退到全部 */ -}}
+{{- $posts := or $featured $allPosts }}
 <header class="home-masthead">
     <h1 class="home-title">{{ site.Title }}</h1>
     <div class="home-lede">{{ site.Params.description | markdownify }}</div>
